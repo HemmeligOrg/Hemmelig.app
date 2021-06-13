@@ -1,0 +1,79 @@
+@import url('https://rsms.me/inter/inter.css');
+html {
+    font-family: 'Inter', sans-serif;
+}
+@supports (font-variation-settings: normal) {
+    html {
+        font-family: 'Inter var', sans-serif;
+    }
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: var(--color-background);
+    font-weight: 400;
+    color: var(--color-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+a:visited {
+    color: var(--color-font);
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+h1,
+h2 {
+    margin: 7px;
+    text-align: center;
+    font-size: 22px;
+}
+
+h2 {
+    font-size: 18px;
+    text-align: left;
+}
+
+p {
+    margin: 7px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#app {
+    padding: 20px 10px;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 850px;
+    display: flex;
+    flex-direction: column;
+}
+
+:root {
+    --color-contrast: #2a9d8f;
+    --color-font-contrast: #fcfcfc;
+    --color-contrast-second: #577590;
+    --color-background: #f9f9f9;
+    --color-font: #232323;
+    --color-dark: #030303;
+    --color-success: #43aa8b;
+    --color-error: #f94144;
+    --border-radius: 10px;
+}
+
+@media only screen and (min-width: 768px) {
+    #app {
+        padding: 56px 20px;
+    }
+}

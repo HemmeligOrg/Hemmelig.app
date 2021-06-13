@@ -1,0 +1,43 @@
+{
+  "name": "hemmelig",
+  "version": "1.0.0",
+  "description": "Paste a password, secret message or private information",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "preact build --inline-css src/client",
+    "server-dev": "NODE_ENV=development nodemon server.js",
+    "client-dev": "NODE_ENV=development preact watch src/client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HemmeligOrg/hemmelig.git"
+  },
+  "author": "Bjarne Øverli",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HemmeligOrg/hemmelig/issues"
+  },
+  "homepage": "https://github.com/HemmeligOrg/hemmelig#readme",
+  "dependencies": {
+    "config": "^3.3.6",
+    "fastify": "^3.17.0",
+    "fastify-cors": "^6.0.1",
+    "fastify-static": "^4.2.2",
+    "nanoid": "^3.1.23",
+    "preact-render-to-string": "^5.1.4",
+    "preact-router": "^3.2.1",
+    "pretty-bytes": "^4.0.2",
+    "redis": "^3.1.2",
+    "replace-in-file": "^6.2.0",
+    "unfetch": "^4.2.0"
+  },
+  "devDependencies": {
+    "classcat": "^5.0.3",
+    "deepmerge": "^4.2.2",
+    "dlv": "^1.1.3",
+    "nodemon": "^2.0.7",
+    "preact": "^10.5.13",
+    "preact-cli": "^3.2.2"
+  }
+}
