@@ -7,7 +7,10 @@
     "start": "node server.js",
     "build": "preact build --inline-css src/client",
     "server-dev": "NODE_ENV=development nodemon server.js",
-    "client-dev": "NODE_ENV=development preact watch src/client"
+    "client-dev": "NODE_ENV=development preact watch src/client",
+    "docker-build": "docker build -t hemmelig .",
+    "docker-run": "docker run -d --rm -e SECRET_REDIS_HOST=172.17.0.2 -p 1234:3000 --name=hemmelig-test hemmelig",
+    "production-test": "NODE_ENV=production npm run build && npm run docker-build && npm run docker-run"
   },
   "repository": {
     "type": "git",
