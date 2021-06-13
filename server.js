@@ -26,11 +26,16 @@ if (process.env.NODE_ENV !== 'development') {
         root: staticPath,
         route: '/*',
     });
-}
 
-fastify.get('/secret/*', function (_, reply) {
-    return reply.sendFile('index.html');
-});
+    function serveIndex(_, reply) {
+        return reply.sendFile('index.html');
+    }
+
+    fastify.get('/secret/*', serveIndex);
+    fastify.get('/about', serveIndex);
+    fastify.get('/privacy', serveIndex);
+    fastify.get('/api', serveIndex);
+}
 
 const startServer = async () => {
     try {
