@@ -10,7 +10,8 @@
     "client-dev": "NODE_ENV=development preact watch src/client",
     "docker-build": "docker build -t hemmelig .",
     "docker-run": "docker run -d --rm -e SECRET_REDIS_HOST=172.17.0.2 -p 1234:3000 --name=hemmelig-test hemmelig",
-    "production-test": "NODE_ENV=production npm run build && npm run docker-build && npm run docker-run"
+    "production-test": "NODE_ENV=production npm run build && npm run docker-build && npm run docker-run",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -39,8 +40,14 @@
     "classcat": "^5.0.3",
     "deepmerge": "^4.2.2",
     "dlv": "^1.1.3",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
     "nodemon": "^2.0.7",
     "preact": "^10.5.13",
-    "preact-cli": "^3.2.2"
+    "preact-cli": "^3.2.2",
+    "prettier": "^2.3.1"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
