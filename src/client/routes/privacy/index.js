@@ -12,7 +12,7 @@ const Privacy = () => {
                 <h2>Is my data secure?</h2>
                 <Info align="left">
                     Yes, your data is secure. Hemmelig is encrypting every message with the AES 256
-                    algoritm with a dynamic IV before saving it toour database with a master
+                    algoritm with a dynamic IV before saving it to our database with a master
                     password.
                 </Info>
 
