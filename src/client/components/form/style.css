@@ -12,6 +12,10 @@
     height: 75px;
 }
 
+.thick {
+    border: 7px solid #eee;
+}
+
 .select,
 .input {
     width: 100%;

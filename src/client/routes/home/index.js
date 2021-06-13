@@ -98,6 +98,7 @@ const Home = () => {
                         onChange={onChangeHandler}
                         value={text}
                         readonly={!!secretId}
+                        thickBorder={!!secretId}
                     />
 
                     <Select value={ttl} onChange={onSelectChange}>
