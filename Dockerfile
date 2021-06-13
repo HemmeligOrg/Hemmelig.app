@@ -5,7 +5,7 @@
 #
 # Bare minimum run
 # ------------------------------
-# $ docker run -p 3000:3000 -d --name=secret \
+# $ docker run -p 3000:3000 -d --name=hemmelig \
 #   -e SECRET_MASTER_KEY=11111222223333344444555556666677 \ # has to be a secret key of 32 characters
 #   -e SECRET_REDIS_HOST=127.0.0.1 \
 #   hemmeligapp/hemmelig:latest
