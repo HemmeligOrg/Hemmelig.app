@@ -84,8 +84,10 @@ const Home = () => {
     return (
         <>
             <Wrapper>
-                <h1 class={style.h1}>Paste a password, secret message or private information.</h1>
-                <Info>Keep your sensitive information out of chat logs, emails, sms, etc.</Info>
+                <h1 class={style.h1}>Paste a password, secret message, or private information.</h1>
+                <Info>
+                    Keep your sensitive information out of chat logs, emails, SMS, and more.
+                </Info>
                 <Info>
                     <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
                 </Info>
