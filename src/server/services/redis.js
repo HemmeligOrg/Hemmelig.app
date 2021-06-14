@@ -51,10 +51,15 @@ function redisCommands() {
         await deleteAsync(id);
     }
 
+    async function getServerInfo() {
+        return await client.server_info.redis_version;
+    }
+
     return {
         createSecret,
         getSecret,
         deleteSecret,
+        getServerInfo,
     };
 }
 

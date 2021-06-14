@@ -11,11 +11,14 @@ fastify.register(require('fastify-cors'), { origin: '*' });
 
 // Register our routes before the static content
 fastify.register(require('./src/server/controllers/secret'), { prefix: '/api/secret' });
+fastify.register(require('./src/server/controllers/healthz'), { prefix: '/api/healthz' });
+fastify.register(require('./src/server/controllers/healthz'), { prefix: '/api/health' });
 
 // Static frontend for the production build
 if (process.env.NODE_ENV !== 'development') {
     const staticPath = path.join(__dirname, 'build');
 
+    // Filthy hack, but it works for now. Soon to implement config from the server.
     replace.sync({
         files: staticPath + '/index.html',
         from: /{{NODE_ENV}}/g,
