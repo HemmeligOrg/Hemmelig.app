@@ -21,8 +21,8 @@ if (process.env.NODE_ENV !== 'development') {
     // Filthy hack, but it works for now. Soon to implement config from the server.
     replace.sync({
         files: staticPath + '/index.html',
-        from: /{{NODE_ENV}}/g,
-        to: process.env.NODE_ENV,
+        from: [/{{NODE_ENV}}/g, /{{__SECRET_CONFIG}}/g],
+        to: [process.env.NODE_ENV, JSON.stringify(config.get('__client_config'))],
     });
 
     fastify.register(require('fastify-static'), {

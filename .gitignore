@@ -106,3 +106,5 @@ dist
 build/
 
 hemmelig.yaml
+
+size-plugin.json

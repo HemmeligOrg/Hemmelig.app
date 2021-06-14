@@ -2,20 +2,19 @@ import merge from 'deepmerge';
 import delve from 'dlv';
 import defaultConfig from './config/default';
 
-let NODE_ENV;
+let SERVER_CONFIG;
 
 if (typeof window !== 'undefined') {
-    NODE_ENV = window.__ENV === '{{NODE_ENV}}' ? 'development' : window.__ENV;
+    SERVER_CONFIG =
+        window.__SECRET_CONFIG === '{{__SECRET_CONFIG}}' ? {} : JSON.parse(window.__SECRET_CONFIG);
 } else {
-    NODE_ENV = 'production';
+    SERVER_CONFIG = {};
 }
 
 const config = () => {
     try {
-        return merge(defaultConfig, require(`./config/${NODE_ENV}.js`).default);
+        return merge(defaultConfig, SERVER_CONFIG);
     } catch (e) {
-        console.log(` CONFIG: Environment "${NODE_ENV}" not found.`);
-
         return defaultConfig;
     }
 };

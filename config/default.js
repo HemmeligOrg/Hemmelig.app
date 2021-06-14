@@ -22,4 +22,9 @@ module.exports = {
     },
     logger: true,
     cors: '*',
+    __client_config: {
+        api: {
+            host: '/api',
+        },
+    },
 };
