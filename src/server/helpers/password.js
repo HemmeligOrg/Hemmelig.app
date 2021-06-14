@@ -4,7 +4,7 @@ const config = require('config');
 // https://www.npmjs.com/package/bcrypt
 async function hash(password) {
     try {
-        return await bcrypt.hash(password, 10);
+        return await bcrypt.hash(password, 8);
     } catch (err) {
         console.error(err);
     }
