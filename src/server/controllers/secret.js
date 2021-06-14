@@ -1,6 +1,7 @@
 const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
 const { encrypt, decrypt } = require('../helpers/crypto');
+const { hash, compare } = require('../helpers/password');
 const redis = require('../services/redis');
 
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
@@ -24,7 +25,8 @@ async function secret(fastify) {
             return reply.code(404).send({ error: 'Secret not found' });
         }
 
-        if (decrypt(JSON.parse(data.password)) !== password) {
+        const isPasswordValid = await compare(password, data.password);
+        if (!isPasswordValid) {
             return reply.code(401).send({ error: 'Wrong password!' });
         }
 
@@ -50,7 +52,7 @@ async function secret(fastify) {
         const data = {
             id,
             secret: JSON.stringify(encrypt(text)),
-            password: JSON.stringify(encrypt(password)),
+            password: await hash(password),
         };
 
         redis.createSecret(data, ttl);
