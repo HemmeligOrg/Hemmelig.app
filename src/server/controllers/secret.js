@@ -67,6 +67,20 @@ async function secret(fastify) {
         return reply.code(201).send({ id });
     });
 
+    // This will burn the secret 🔥
+    fastify.get('/:id/burn', async (request) => {
+        const { id } = request.params;
+
+        if (!validIdRegExp.test(id)) {
+            return reply.code(403).send({ error: 'Not a valid secret id' });
+        }
+
+        redis.deleteSecret(id);
+
+        return { success: 'Secret burned' };
+    });
+
+    // This will burn the secret 🔥
     fastify.get('/:id/exist', async (request, reply) => {
         const { id } = request.params;
 
