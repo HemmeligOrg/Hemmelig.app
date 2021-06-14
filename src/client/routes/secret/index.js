@@ -9,7 +9,7 @@ import Button from '../../components/form/button';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
-import { getSecret, burnSecret } from '../../api/secret';
+import { getSecret, secretExists } from '../../api/secret';
 
 const Secret = ({ secretId }) => {
     const [secret, setSecret] = useState(null);
@@ -54,7 +54,7 @@ const Secret = ({ secretId }) => {
 
     useEffect(() => {
         (async () => {
-            const response = await getSecret(secretId, password);
+            const response = await secretExists(secretId, password);
 
             if (response.statusCode === 401) {
                 setIsPasswordRequired(true);
@@ -62,19 +62,11 @@ const Secret = ({ secretId }) => {
                 return () => {};
             }
 
-            if (!response.error) {
-                setSecret(response.secret);
-            } else {
+            if (response.error) {
                 setError(response.error);
             }
         })();
     }, []);
-
-    useEffect(() => {
-        if (isSecretOpen) {
-            burnSecret(secretId);
-        }
-    }, [isSecretOpen, secretId]);
 
     const onPasswordChange = (event) => {
         setPassword(event.target.value);

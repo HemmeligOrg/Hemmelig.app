@@ -25,12 +25,16 @@ async function secret(fastify) {
             return reply.code(404).send({ error: 'Secret not found' });
         }
 
-        const isPasswordValid = await compare(password, data.password);
-        if (!isPasswordValid) {
-            return reply.code(401).send({ error: 'Wrong password!' });
+        if (data.password) {
+            const isPasswordValid = await compare(password, data.password);
+            if (!isPasswordValid) {
+                return reply.code(401).send({ error: 'Wrong password!' });
+            }
         }
 
         const secret = decrypt(JSON.parse(data.secret));
+
+        redis.deleteSecret(id);
 
         return { secret };
     });
@@ -52,12 +56,15 @@ async function secret(fastify) {
         const data = {
             id,
             secret: JSON.stringify(encrypt(text)),
-            password: await hash(password),
         };
+
+        if (password) {
+            Object.assign(data, { password: await hash(password) });
+        }
 
         redis.createSecret(data, ttl);
 
-        return { id };
+        return reply.code(201).send({ id });
     });
 
     // This will burn the secret 🔥
@@ -71,6 +78,27 @@ async function secret(fastify) {
         redis.deleteSecret(id);
 
         return { success: 'Secret burned' };
+    });
+
+    // This will burn the secret 🔥
+    fastify.get('/:id/exist', async (request, reply) => {
+        const { id } = request.params;
+
+        if (!validIdRegExp.test(id)) {
+            return reply.code(403).send({ error: 'Not a valid secret id' });
+        }
+
+        const data = await redis.getSecret(id);
+
+        if (!data) {
+            return reply.code(404).send({ error: 'Secret not found' });
+        }
+
+        if (data.password) {
+            return reply.code(401).send({ error: 'Password required' });
+        }
+
+        return { id };
     });
 }
 

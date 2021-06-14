@@ -1,8 +1,6 @@
 const bcrypt = require('bcrypt');
 const config = require('config');
 
-const SECRET_KEY = config.get('secret_key');
-
 // https://www.npmjs.com/package/bcrypt
 async function hash(password) {
     try {

@@ -37,3 +37,15 @@ export const burnSecret = async (secretId) => {
 
     return await data.json();
 };
+
+export const secretExists = async (secretId) => {
+    const data = await fetch(`${config.get('api.host')}/secret/${secretId}/exist`);
+
+    if (data.status === 401) {
+        return {
+            statusCode: 401,
+        };
+    }
+
+    return await data.json();
+};

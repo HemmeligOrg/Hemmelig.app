@@ -30,7 +30,13 @@ function redisCommands() {
     function createSecret(data, ttl) {
         const key = data.id;
 
-        client.hmset(key, 'secret', data.secret, 'password', data.password);
+        const prepare = [key, 'secret', data.secret];
+
+        if (data.password) {
+            prepare.push(...['password', data.password]);
+        }
+
+        client.hmset(prepare);
 
         client.expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE);
     }
