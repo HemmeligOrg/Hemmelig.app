@@ -80,7 +80,7 @@ const Secret = ({ secretId }) => {
                 <Info>We will only show the secret once.</Info>
 
                 {isSecretOpen && (
-                    <Textarea class={style.textarea} thickBorder={true} readonly>
+                    <Textarea thickBorder={true} readonly>
                         {secret}
                     </Textarea>
                 )}
