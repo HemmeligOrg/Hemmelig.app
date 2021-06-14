@@ -32,12 +32,6 @@ export const getSecret = async (secretId, password) => {
     return await data.json();
 };
 
-export const burnSecret = async (secretId) => {
-    const data = await fetch(`${config.get('api.host')}/secret/${secretId}/burn`);
-
-    return await data.json();
-};
-
 export const secretExists = async (secretId) => {
     const data = await fetch(`${config.get('api.host')}/secret/${secretId}/exist`);
 
