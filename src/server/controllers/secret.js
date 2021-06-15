@@ -11,7 +11,7 @@ const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 async function getSecretRoute(request, reply) {
     const { id } = request.params;
 
-    const { password = '' } = (request.body = {});
+    const { password = '' } = request.body ? request.body : {};
 
     // If it does not match the valid characters set for nanoid, return 403
     if (!validIdRegExp.test(id)) {
