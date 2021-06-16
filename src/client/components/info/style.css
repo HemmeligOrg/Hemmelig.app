@@ -1,10 +1,16 @@
-.error {
+.error,
+.success {
     color: var(--color-error);
     font-size: 14px;
     border: 2px solid var(--color-error);
     border-radius: var(--border-radius);
     padding: 10px;
     text-align: center;
+}
+
+.success {
+    color: var(--color-success);
+    border: 2px solid var(--color-success);
 }
 
 .info {
