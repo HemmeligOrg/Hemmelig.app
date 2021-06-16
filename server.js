@@ -1,7 +1,6 @@
 const replace = require('replace-in-file');
 const config = require('config');
 const path = require('path');
-const jwt = require('fastify-jwt');
 
 const fastify = require('fastify')({
     logger: config.get('logger'),
@@ -10,24 +9,11 @@ const fastify = require('fastify')({
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: '*' });
 
-fastify.register(require('fastify-cookie'));
-
-// https://github.com/fastify/fastify-jwt
-fastify.register(jwt, {
-    secret: config.get('secret_key'),
-    cookie: {
-        cookieName: '_hemmelig_auth_token',
-        signed: false,
-    },
-});
+fastify.register(require('./src/server/decorators/jwt'));
 
 // Register our routes before the static content
 fastify.register(require('./src/server/controllers/authentication'), {
     prefix: '/api/authentication',
-});
-
-fastify.register(async function bjarne(fastify, opts) {
-    console.log(fastify);
 });
 
 fastify.register(require('./src/server/controllers/account'), {
