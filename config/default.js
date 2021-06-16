@@ -7,6 +7,7 @@ const {
     SECRET_REDIS_USER = null,
     SECRET_REDIS_PASSWORD = null,
     SECRET_REDIS_TLS = false,
+    SECRET_JWT_SECRET = 'good_luck_have_fun',
 } = process.env;
 
 module.exports = {
@@ -19,6 +20,9 @@ module.exports = {
         user: SECRET_REDIS_USER,
         password: SECRET_REDIS_PASSWORD,
         tls: SECRET_REDIS_TLS === 'true',
+    },
+    jwt: {
+        secret: SECRET_JWT_SECRET,
     },
     logger: true,
     cors: '*',

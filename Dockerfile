@@ -23,6 +23,7 @@
 #   -e SECRET_REDIS_TLS=true \
 #   -e SECRET_REDIS_USER=username \
 #   -e SECRET_REDIS_PASSWORD=glhf \
+#   -e SECRET_JWT_SECRET=good_luck_have_fun \
 #   hemmeligapp/hemmelig:latest
 
 FROM node:lts-alpine
