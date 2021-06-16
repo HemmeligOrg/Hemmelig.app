@@ -33,20 +33,14 @@ async function authentication(fastify) {
             });
         }
 
-        const token = await reply.jwtSign({
-            username,
-        });
+        const token = await fastify.jwt.sign(
+            {
+                username,
+            },
+            { expiresIn: '7d' } // expires in seven days
+        );
 
-        reply
-            .setCookie('_hemmelig_auth_token', token, {
-                domain: request.hostname,
-                path: '/',
-                secure: true, // send cookie over HTTPS only
-                httpOnly: true,
-                sameSite: true, // alternative CSRF protection
-            })
-            .code(200)
-            .send({ token });
+        return { token };
     });
 
     fastify.post('/signin', async (request, reply) => {
@@ -58,9 +52,12 @@ async function authentication(fastify) {
             return reply.code(401).send({ error: 'Incorrect username or password.' });
         }
 
-        const token = fastify.jwt.sign({
-            username,
-        });
+        const token = fastify.jwt.sign(
+            {
+                username,
+            },
+            { expiresIn: '7d' }
+        );
 
         return { token };
     });
