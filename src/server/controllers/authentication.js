@@ -67,8 +67,14 @@ async function authentication(fastify) {
         {
             preValidation: [fastify.authenticate],
         },
-        async () => {
-            return { status: 'verified' };
+        async (request) => {
+            const user = await redis.getUser(request.user.username);
+            return {
+                user: {
+                    username: user.username,
+                    basicAuthToken: user.basic_auth_token,
+                },
+            };
         }
     );
 }

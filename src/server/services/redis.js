@@ -1,6 +1,7 @@
 const config = require('config');
 const redis = require('redis');
 const { promisify } = require('util');
+const { nanoid } = require('nanoid');
 
 const isValidTTL = require('../helpers/validate-ttl');
 
@@ -53,7 +54,15 @@ async function getServerInfo() {
 }
 
 async function createUser(username, password) {
-    return await client.hmset(`user:${username}`, 'username', username, 'password', password);
+    return await client.hmset(
+        `user:${username}`,
+        'username',
+        username,
+        'password',
+        password,
+        'basic_auth_token',
+        nanoid()
+    );
 }
 
 async function getUser(username) {

@@ -9,6 +9,7 @@ import Home from '../routes/home';
 import Secret from '../routes/secret';
 import Privacy from '../routes/privacy';
 import SignIn from '../routes/signin';
+import Account from '../routes/account';
 
 const App = () => (
     <>
@@ -19,6 +20,7 @@ const App = () => (
                 <Secret path="/secret/:secretId" />
                 <SignIn path="/signin" />
                 <Privacy path="/privacy" />
+                <Account path="/account" />
             </Router>
             <Footer />
         </div>
