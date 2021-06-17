@@ -61,6 +61,16 @@ async function authentication(fastify) {
 
         return { token };
     });
+
+    fastify.get(
+        '/verify',
+        {
+            preValidation: [fastify.authenticate],
+        },
+        async () => {
+            return { status: 'verified' };
+        }
+    );
 }
 
 module.exports = authentication;
