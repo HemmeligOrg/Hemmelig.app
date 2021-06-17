@@ -2,7 +2,7 @@ const fp = require('fastify-plugin');
 const config = require('config');
 
 // https://github.com/fastify/fastify-jwt
-module.exports = fp(async (fastify, opts) => {
+module.exports = fp(async (fastify) => {
     fastify.register(require('fastify-jwt'), {
         secret: config.get('jwt.secret'),
     });

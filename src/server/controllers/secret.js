@@ -39,10 +39,14 @@ async function getSecretRoute(request, reply) {
 }
 
 async function secret(fastify) {
-    fastify.get('/:id', getSecretRoute);
-    fastify.post('/:id', getSecretRoute);
+    const options = {
+        preValidation: [fastify.basicAuth],
+    };
 
-    fastify.post('/', async (request, reply) => {
+    fastify.get('/:id', options, getSecretRoute);
+    fastify.post('/:id', options, getSecretRoute);
+
+    fastify.post('/', options, async (request, reply) => {
         const { text, ttl, password } = request.body;
 
         if (Buffer.byteLength(text) > MAX_BYTES) {
@@ -71,7 +75,7 @@ async function secret(fastify) {
     });
 
     // This will burn the secret 🔥
-    fastify.get('/:id/burn', async (request) => {
+    fastify.get('/:id/burn', options, async (request) => {
         const { id } = request.params;
 
         if (!validIdRegExp.test(id)) {
@@ -84,7 +88,7 @@ async function secret(fastify) {
     });
 
     // This will burn the secret 🔥
-    fastify.get('/:id/exist', async (request, reply) => {
+    fastify.get('/:id/exist', options, async (request, reply) => {
         const { id } = request.params;
 
         if (!validIdRegExp.test(id)) {

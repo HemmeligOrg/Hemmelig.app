@@ -9,7 +9,9 @@ const fastify = require('fastify')({
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: '*' });
 
+// Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
+fastify.register(require('./src/server/decorators/basic-auth'));
 
 // Register our routes before the static content
 fastify.register(require('./src/server/controllers/authentication'), {
