@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { getToken, hasToken } from '../../helpers/token';
-import { route } from 'preact-router';
+import { Link, route } from 'preact-router';
 import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
@@ -65,14 +65,18 @@ const Account = () => {
                 <h1>Account</h1>
                 <Info>Hi, {user.username}</Info>
 
-                <h2>API Access:</h2>
+                <h2>Basic auth:</h2>
 
-                <Input
-                    type="text"
-                    placeholder="key:token"
-                    value={`${user.username}:${user.basicAuthToken}@${window.location.host}/api/*`}
-                    readonly
-                />
+                <Info align="left">User</Info>
+                <Input type="text" placeholder="key" value={user.username} readonly />
+
+                <Info align="left">Token</Info>
+                <Input type="text" placeholder="key" value={user.basicAuthToken} readonly />
+
+                <Info align="left">
+                    For information about how to use the API, please have a look at the{' '}
+                    <Link href="/api-docs">API documentation</Link>.
+                </Info>
 
                 <Button buttonType="burn" onClick={onSignOut}>
                     Sign out
