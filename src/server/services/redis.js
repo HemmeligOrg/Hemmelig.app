@@ -28,7 +28,8 @@ const deleteAsync = promisify(client.del).bind(client);
 const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
 
 function createSecret(data, ttl) {
-    const prepare = [`secret:${data.id}`, 'secret', data.secret];
+    const key = `secret:${data.id}`;
+    const prepare = [key, 'secret', data.secret];
 
     if (data.password) {
         prepare.push(...['password', data.password]);

@@ -99,10 +99,10 @@ const Secret = () => {
                         required
                     />
                     <div class={style.buttonWrapper}>
-                        <Button buttonType="create" onClick={onSignIn}>
+                        <Button buttonType="burn" onClick={onSignIn}>
                             Sign in
                         </Button>
-                        <Button buttonType="burn" onClick={onSignUp}>
+                        <Button buttonType="create" onClick={onSignUp}>
                             Sign up
                         </Button>
                     </div>
