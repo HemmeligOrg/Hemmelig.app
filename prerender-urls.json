@@ -14,13 +14,5 @@
     {
         "url": "/api-docs",
         "title": "API documentation"
-    },
-    {
-        "url": "/account",
-        "title": "Account"
-    },
-    {
-        "url": "/signin",
-        "title": "Sign in"
     }
 ]
