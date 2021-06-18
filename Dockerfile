@@ -15,8 +15,9 @@
 # ------------------------------
 #
 # $ docker run -p 3000:3000 -d --name=hemmelig \
-#   -e SECRET_HOSTNAME=example.com \
+#   -e SECRET_LOCAL_HOSTNAME=0.0.0.0 \
 #   -e SECRET_PORT=3000 \
+#   -e SECRET_HOST=example.com \
 #   -e SECRET_MASTER_KEY=11111222223333344444555556666677 \
 #   -e SECRET_REDIS_HOST=the_redis_host_name \
 #   -e SECRET_REDIS_PORT=6379 \

@@ -1,6 +1,7 @@
 const {
-    SECRET_HOSTNAME = '0.0.0.0',
+    SECRET_LOCAL_HOSTNAME = '0.0.0.0',
     SECRET_PORT = '3000',
+    SECRET_HOST = '',
     SECRET_MASTER_KEY = '11111222223333344444555556666677', // has to be 32 in length
     SECRET_REDIS_HOST = '0.0.0.0',
     SECRET_REDIS_PORT = 6379,
@@ -11,7 +12,7 @@ const {
 } = process.env;
 
 module.exports = {
-    hostname: SECRET_HOSTNAME,
+    hostname: SECRET_LOCAL_HOSTNAME,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
     redis: {

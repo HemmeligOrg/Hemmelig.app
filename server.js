@@ -54,7 +54,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 const startServer = async () => {
     try {
-        await fastify.listen(config.get('port'), config.get('hostname'));
+        await fastify.listen(config.get('port'), config.get('localHostname'));
     } catch (err) {
         fastify.log.error(err);
     }
