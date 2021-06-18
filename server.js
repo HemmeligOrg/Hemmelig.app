@@ -8,8 +8,6 @@ const fastify = require('fastify')({
 
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: '*' });
-//github.com/fastify/fastify-helmet
-https: fastify.register(require('fastify-helmet'), { origin: '*' });
 
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
