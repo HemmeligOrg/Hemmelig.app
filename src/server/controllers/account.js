@@ -1,11 +1,19 @@
+const redis = require('../services/redis');
+
 async function account(fastify) {
     fastify.get(
         '/',
         {
             preValidation: [fastify.authenticate],
         },
-        async (request, _) => {
-            return { status: 'woow, ma, look at me: ' + request.user.username };
+        async (request) => {
+            const user = await redis.getUser(request.user.username);
+            return {
+                user: {
+                    username: user.username,
+                    basicAuthToken: user.basic_auth_token,
+                },
+            };
         }
     );
 }

@@ -13,7 +13,7 @@ import Info from '../../components/info/info';
 
 import { removeToken } from '../../helpers/token';
 
-import { verify } from '../../api/authentication';
+import { getUser } from '../../api/account';
 
 const Account = () => {
     const [token, _] = useState(hasToken() ? getToken() : '');
@@ -22,29 +22,31 @@ const Account = () => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        if (token) {
-            (async () => {
-                try {
-                    const verified = await verify(token);
-
-                    if (verified.statusCode === 401) {
-                        setError('Not logged in');
-
-                        return;
-                    }
-
-                    const { user } = verified;
-
-                    setIsLoggedIn(true);
-                    setUser(user);
-                    setError(null);
-                } catch (e) {
-                    setError(e);
-                }
-            })();
-        } else {
+        if (!token) {
             route('/signin', true);
+
+            return () => {};
         }
+
+        (async () => {
+            try {
+                const response = await getUser(token);
+
+                if (response.statusCode === 401) {
+                    setError('Not logged in');
+
+                    return;
+                }
+
+                const { user } = response;
+
+                setIsLoggedIn(true);
+                setUser(user);
+                setError(null);
+            } catch (e) {
+                setError(e);
+            }
+        })();
     }, [token]);
 
     const onSignOut = () => {
