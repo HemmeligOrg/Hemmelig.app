@@ -12,7 +12,7 @@ const {
 } = process.env;
 
 module.exports = {
-    hostname: SECRET_LOCAL_HOSTNAME,
+    localHostname: SECRET_LOCAL_HOSTNAME,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
     redis: {
