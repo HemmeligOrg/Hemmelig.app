@@ -1,3 +1,5 @@
+const { SECRET_HOST = '' } = process.env;
+
 module.exports = {
-    logger: true,
+    cors: SECRET_HOST !== '' ? SECRET_HOST : '*',
 };

@@ -1,3 +1,1 @@
-module.exports = {
-    logger: true,
-};
+module.exports = {};

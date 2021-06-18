@@ -11,7 +11,7 @@
     "server-dev": "NODE_ENV=development nodemon server.js",
     "client-dev": "NODE_ENV=development preact watch src/client",
     "docker-build": "docker build -t hemmelig .",
-    "docker-run": "docker run -d --rm -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
+    "docker-run": "docker run -d --rm -e SECRET_HOST=localhost:3000 -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
     "production-test": "npm run docker-build && npm run docker-run",
     "prepare": "husky install"
   },

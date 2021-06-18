@@ -7,7 +7,7 @@ const fastify = require('fastify')({
 });
 
 // https://github.com/fastify/fastify-cors
-fastify.register(require('fastify-cors'), { origin: '*' });
+fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
