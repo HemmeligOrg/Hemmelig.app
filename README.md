@@ -12,6 +12,10 @@ Hemmelig is available at https://hemmelig.app
 
 Currently, Hemmelig is a MVP (minimum viable product), however, we aim to add many features going forward.
 
+## Docker image
+
+`hemmeligapp/hemmelig:latest`
+
 ## Self host
 
 It is possible to self host. The instructions (all env variables) are located as comments within the Dockerfile. Here is the bare minimum of running Hemmelig.
@@ -28,6 +32,19 @@ docker run -p 3000:3000 -d --name=hemmelig \
     -e SECRET_REDIS_HOST=127.0.0.1 \
     hemmeligapp/hemmelig:latest
 ```
+
+## Environment variables
+
+-   `SECRET_LOCAL_HOSTNAME` Default: 0.0.0.0. - The local hostname for the fastify instance
+-   `SECRET_PORT` Default: 3000. - The port number for the fastify instance
+-   `SECRET_HOST` Default: "". - Used for i.e. set cors to your domain name
+-   `SECRET_MASTER_KEY` Default: 11111222223333344444555556666677 - Override this with your SECRET master key for encryption of your secrets
+-   `SECRET_REDIS_HOST` Default: 0.0.0.0 - Override this for your redis host adress
+-   `SECRET_REDIS_PORT` Default: 6379 - The redis port number
+-   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls
+-   `SECRET_REDIS_USER` Default: "" - You redis user name
+-   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
+-   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
 
 ## Run locally
 
