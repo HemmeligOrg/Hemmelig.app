@@ -9,10 +9,22 @@ const fastify = require('fastify')({
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: '*' });
 
+// Define decorators
+fastify.register(require('./src/server/decorators/jwt'));
+fastify.register(require('./src/server/decorators/basic-auth'));
+
 // Register our routes before the static content
+fastify.register(require('./src/server/controllers/authentication'), {
+    prefix: '/api/authentication',
+});
+
+fastify.register(require('./src/server/controllers/account'), {
+    prefix: '/api/account',
+});
+
 fastify.register(require('./src/server/controllers/secret'), { prefix: '/api/secret' });
 fastify.register(require('./src/server/controllers/healthz'), { prefix: '/api/healthz' });
-fastify.register(require('./src/server/controllers/healthz'), { prefix: '/api/health' });
+fastify.register(require('./src/server/controllers/healthz'), { prefix: '/healthz' });
 
 // Static frontend for the production build
 if (process.env.NODE_ENV !== 'development') {
@@ -42,7 +54,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 const startServer = async () => {
     try {
-        await fastify.listen(config.get('port'), config.get('hostname'));
+        await fastify.listen(config.get('port'), config.get('localHostname'));
     } catch (err) {
         fastify.log.error(err);
     }

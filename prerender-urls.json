@@ -1,12 +1,18 @@
 [
     {
         "url": "/",
-        "title": "Homepage"
+        "title": "Secret"
     },
     {
-        "url": "/secret"
+        "url": "/secret",
+        "title": "View Secret"
     },
     {
-        "url": "/privacy"
+        "url": "/privacy",
+        "title": "Privacy"
+    },
+    {
+        "url": "/api-docs",
+        "title": "API documentation"
     }
 ]

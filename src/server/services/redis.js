@@ -1,6 +1,7 @@
 const config = require('config');
 const redis = require('redis');
 const { promisify } = require('util');
+const { nanoid } = require('nanoid');
 
 const isValidTTL = require('../helpers/validate-ttl');
 
@@ -26,41 +27,59 @@ const deleteAsync = promisify(client.del).bind(client);
 
 const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
 
-function redisCommands() {
-    function createSecret(data, ttl) {
-        const key = data.id;
+function createSecret(data, ttl) {
+    const key = `secret:${data.id}`;
+    const prepare = [key, 'secret', data.secret];
 
-        const prepare = [key, 'secret', data.secret];
-
-        if (data.password) {
-            prepare.push(...['password', data.password]);
-        }
-
-        client.hmset(prepare);
-
-        client.expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE);
+    if (data.password) {
+        prepare.push(...['password', data.password]);
     }
 
-    async function getSecret(id) {
-        const data = await hgetallAsync(id);
+    client.hmset(prepare);
 
-        return data;
-    }
-
-    async function deleteSecret(id) {
-        await deleteAsync(id);
-    }
-
-    async function getServerInfo() {
-        return await client.server_info.redis_version;
-    }
-
-    return {
-        createSecret,
-        getSecret,
-        deleteSecret,
-        getServerInfo,
-    };
+    client.expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE);
 }
 
-module.exports = redisCommands();
+async function getSecret(id) {
+    const data = await hgetallAsync(`secret:${id}`);
+
+    return data;
+}
+
+async function deleteSecret(id) {
+    await deleteAsync(`secret:${id}`);
+}
+
+async function getServerInfo() {
+    return await client.server_info.redis_version;
+}
+
+async function createUser(username, password) {
+    return await client.hmset(
+        `user:${username}`,
+        'username',
+        username,
+        'password',
+        password,
+        'basic_auth_token',
+        nanoid()
+    );
+}
+
+async function getUser(username) {
+    return await hgetallAsync(`user:${username}`);
+}
+
+async function deleteUser(username) {
+    return await deleteAsync(`user:${username}`);
+}
+
+module.exports = {
+    createSecret,
+    getSecret,
+    deleteSecret,
+    getServerInfo,
+    createUser,
+    getUser,
+    deleteUser,
+};

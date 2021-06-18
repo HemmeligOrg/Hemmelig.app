@@ -8,6 +8,9 @@ import Footer from './footer';
 import Home from '../routes/home';
 import Secret from '../routes/secret';
 import Privacy from '../routes/privacy';
+import SignIn from '../routes/signin';
+import Account from '../routes/account';
+import ApiDocs from '../routes/api-docs';
 
 const App = () => (
     <>
@@ -16,7 +19,10 @@ const App = () => (
             <Router>
                 <Home path="/" />
                 <Secret path="/secret/:secretId" />
+                <SignIn path="/signin" />
                 <Privacy path="/privacy" />
+                <Account path="/account" />
+                <ApiDocs path="/api-docs" />
             </Router>
             <Footer />
         </div>
