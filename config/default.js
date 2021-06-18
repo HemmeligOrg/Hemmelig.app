@@ -13,6 +13,7 @@ const {
 
 module.exports = {
     localHostname: SECRET_LOCAL_HOSTNAME,
+    host: SECRET_HOST,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
     redis: {

@@ -3,6 +3,8 @@ const { getUser } = require('../services/redis');
 
 //TODO: IMPORTANT, in order to make this work we have to allow other requests without the basic auth
 //TODO: ONLY from the hostname of the web application
+// request.raw.connection.remoteAddress might solve this
+// For now, let anyone create secrets, and look into this later on.
 module.exports = fp(async (fastify) => {
     fastify.decorate('basicAuth', async (request, reply) => {
         const { headers } = request;
