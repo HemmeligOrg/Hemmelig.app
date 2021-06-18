@@ -65,9 +65,11 @@ const Account = () => {
         <>
             <Wrapper>
                 <h1>Account</h1>
-                <Info>Hi, {user.username}</Info>
-
-                <h2>Basic auth:</h2>
+                <Info align="left">Hi, {user.username}</Info>
+                <br />
+                <Info align="left">
+                    <strong>Basic auth:</strong>
+                </Info>
 
                 <Info align="left">User</Info>
                 <Input type="text" placeholder="key" value={user.username} readonly />
