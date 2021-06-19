@@ -79,4 +79,12 @@
         justify-content: space-between;
         flex-direction: row;
     }
+
+    .inputGroup > select {
+        margin-right: calc(var(--margin-basic) / 2);
+    }
+
+    .inputGroup > input {
+        margin-left: calc(var(--margin-basic) / 2);
+    }
 }

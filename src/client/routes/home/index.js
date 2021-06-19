@@ -123,11 +123,11 @@ const Home = () => {
                     {secretId && (
                         <>
                             <Info align="left">
-                                Copy and share this secret link{' '}
                                 <IconButton
                                     icon="copy"
                                     onClick={() => navigator.clipboard.writeText(getSecretURL())}
                                 />
+                                Copy and share the secret link
                             </Info>
 
                             <Input
