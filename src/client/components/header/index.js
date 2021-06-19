@@ -12,7 +12,7 @@ const Header = () => (
         </Link>
 
         <Link class={style.linkButton} href="/signin">
-            <Account />
+            <span>Sign in</span> <Account />
         </Link>
     </header>
 );
