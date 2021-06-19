@@ -54,7 +54,7 @@ p {
 #app {
     background-color: #fff;
     width: 100%;
-    width: 1024px;
+    max-width: 1024px;
     height: auto;
     margin: 0 auto;
     margin-bottom: 10px;

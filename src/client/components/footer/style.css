@@ -1,5 +1,6 @@
 .footer {
-    height: 25px;
+    height: auto;
+    padding: 10px;
     font-size: 10px;
     text-align: center;
 }
