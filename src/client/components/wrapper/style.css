@@ -1,6 +1,5 @@
 .wrapper {
     padding: 25px 25px;
-    background-color: #fff;
     width: 100%;
     height: auto;
     margin-bottom: 10px;
@@ -8,6 +7,4 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }

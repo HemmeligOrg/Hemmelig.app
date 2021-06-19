@@ -52,12 +52,18 @@ p {
 }
 
 #app {
-    padding: 20px 10px;
+    background-color: #fff;
     width: 100%;
+    width: 1024px;
+    height: auto;
     margin: 0 auto;
-    max-width: 850px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
 
 :root {
@@ -74,6 +80,5 @@ p {
 
 @media only screen and (min-width: 768px) {
     #app {
-        padding: 56px 20px;
     }
 }
