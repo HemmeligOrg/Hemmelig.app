@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'preact/hooks';
 import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
+import InputGroup from '../../components/form/input-group';
 import Input from '../../components/form/input';
 import Textarea from '../../components/form/textarea';
 import Select from '../../components/form/select';
@@ -100,26 +101,25 @@ const Home = () => {
                         readonly={!!secretId}
                         thickBorder={!!secretId}
                     />
-
-                    <Select value={ttl} onChange={onSelectChange}>
-                        <option value="604800">7 days</option>
-                        <option value="259200">3 days</option>
-                        <option value="86400">1 day</option>
-                        <option value="43200">12 hours</option>
-                        <option value="14400">4 hours</option>
-                        <option value="3600">1 hour</option>
-                        <option value="1800">30 minutes</option>
-                        <option value="300">5 minutes</option>
-                    </Select>
-
-                    <Input
-                        placeholder="Your optional password"
-                        type="password"
-                        value={password}
-                        onChange={onPasswordChange}
-                        readonly={!!secretId}
-                    />
-
+                    <InputGroup>
+                        <Select value={ttl} onChange={onSelectChange}>
+                            <option value="604800">7 days</option>
+                            <option value="259200">3 days</option>
+                            <option value="86400">1 day</option>
+                            <option value="43200">12 hours</option>
+                            <option value="14400">4 hours</option>
+                            <option value="3600">1 hour</option>
+                            <option value="1800">30 minutes</option>
+                            <option value="300">5 minutes</option>
+                        </Select>
+                        <Input
+                            placeholder="Your optional password"
+                            type="password"
+                            value={password}
+                            onChange={onPasswordChange}
+                            readonly={!!secretId}
+                        />
+                    </InputGroup>
                     {secretId && (
                         <>
                             <Info align="left">
@@ -138,7 +138,6 @@ const Home = () => {
                             />
                         </>
                     )}
-
                     <div class={style.buttonWrapper}>
                         {!secretId && (
                             <Button buttonType="create" onClick={onSubmit}>
