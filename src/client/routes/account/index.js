@@ -2,11 +2,11 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { getToken, hasToken } from '../../helpers/token';
 import { Link, route } from 'preact-router';
-import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
 import Button from '../../components/form/button';
+import Spinner from '../../components/spinner';
 
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
@@ -57,8 +57,12 @@ const Account = () => {
         route('/signin', true);
     };
 
-    if (!isLoggedIn) {
+    if (error) {
         return <Error>{error}</Error>;
+    }
+
+    if (!isLoggedIn) {
+        return <Spinner />;
     }
 
     return (
