@@ -10,6 +10,8 @@ import Button from '../../components/form/button';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
+import IconButton from '../../components/icon/icon-button';
+
 import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
@@ -122,12 +124,18 @@ const Home = () => {
 
                     {secretId && (
                         <>
-                            <p class={style.info}>Share this link:</p>
+                            <Info align="left">Share this link: </Info>
+
                             <Input
                                 value={getSecretURL()}
                                 onFocus={handleFocus}
                                 ref={secretRef}
                                 readonly
+                            />
+
+                            <IconButton
+                                icon="copy"
+                                onClick={() => navigator.clipboard.writeText(getSecretURL())}
                             />
                         </>
                     )}
