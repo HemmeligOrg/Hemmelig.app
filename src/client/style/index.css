@@ -59,8 +59,8 @@ p {
     height: auto;
     padding: 15px;
     margin: 0 auto;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: var(--margin-basic);
+    margin-top: var(--margin-basic);
     display: flex;
     flex-direction: column;
     justify-content: center;
