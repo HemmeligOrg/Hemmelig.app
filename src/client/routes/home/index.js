@@ -122,7 +122,13 @@ const Home = () => {
 
                     {secretId && (
                         <>
-                            <Info align="left">Share this link: </Info>
+                            <Info align="left">
+                                Copy and share this secret link{' '}
+                                <IconButton
+                                    icon="copy"
+                                    onClick={() => navigator.clipboard.writeText(getSecretURL())}
+                                />
+                            </Info>
 
                             <Input
                                 value={getSecretURL()}
@@ -130,14 +136,6 @@ const Home = () => {
                                 ref={secretRef}
                                 readonly
                             />
-
-                            <Info align="left">
-                                Copy the link:{' '}
-                                <IconButton
-                                    icon="copy"
-                                    onClick={() => navigator.clipboard.writeText(getSecretURL())}
-                                />
-                            </Info>
                         </>
                     )}
 

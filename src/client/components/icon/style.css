@@ -6,11 +6,6 @@
     cursor: pointer;
 }
 
-.button:active {
-    width: 26px;
-    transition: all 0.1s linear;
-}
-
 .button svg {
     align-self: center;
     fill: #999;
