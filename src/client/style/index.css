@@ -36,15 +36,22 @@ h1,
 h2 {
     margin: var(--margin-basic);
     text-align: center;
-    font-size: 22px;
+    font-size: 28px;
 }
 
 h2 {
+    font-size: 22px;
+    margin: var(--margin-basic) 0;
+    text-align: left;
+}
+
+h3 {
     font-size: 18px;
     text-align: left;
 }
 
 p {
+    font-size: 14px;
     margin: var(--margin-basic) 0;
 }
 
