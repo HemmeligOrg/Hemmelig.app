@@ -88,7 +88,8 @@ const Home = () => {
             <Wrapper>
                 <h1 class={style.h1}>Paste a password, secret message, or private information.</h1>
                 <Info>
-                    Keep your sensitive information out of chat logs, emails, SMS, and more.
+                    Keep your sensitive information out of chat logs, emails, and more with heavily
+                    encrypted secrets.
                 </Info>
                 <div class={style.form}>
                     <Textarea
