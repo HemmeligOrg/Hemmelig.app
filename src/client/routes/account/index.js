@@ -32,7 +32,7 @@ const Account = () => {
             try {
                 const response = await getUser(token);
 
-                if (response.statusCode === 401) {
+                if (response.statusCode === 401 || response.statusCode === 500) {
                     setError('Not logged in');
 
                     return;

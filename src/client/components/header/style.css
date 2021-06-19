@@ -2,16 +2,52 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
 }
 
 .link {
     text-decoration: none;
 }
 
+.link svg {
+    fill: var(--color-contrast);
+}
+
 .link,
 .logo {
     width: 60px;
     height: auto;
+}
+
+.linkButton {
+    display: flex;
+    justify-content: center;
+    margin: var(--margin-basic) 0;
+    width: 100%;
+    max-width: 100px;
+    padding: 5px;
+    height: 40px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--color-font);
+    border: 2px solid var(--color-contrast);
+    background-color: #fff;
+}
+
+.linkButton:hover {
+    border: 1px solid var(--color-contrast);
+}
+
+.linkButton:active {
+    filter: brightness(95%);
+}
+
+.linkButton svg {
+    width: 20px;
+    height: auto;
+    fill: var(--color-contrast);
 }
 
 @media only screen and (min-width: 768px) {

@@ -1,12 +1,14 @@
 import { h } from 'preact';
 import style from './style.css';
 
-import Copy from './Copy';
+import { Copy, Account } from '.';
 
 const getIcon = (type) => {
     switch (type) {
         case 'copy':
             return Copy;
+        case 'account':
+            return Account;
 
         default:
             return () => {};
