@@ -4,13 +4,16 @@ const { hash, compare } = require('../helpers/password');
 const validUsername = new RegExp('^[A-Za-z0-9_-]*$');
 
 const PASSWORD_LENGTH = 5;
+const USERNAME_LENGTH = 4;
 
 async function authentication(fastify) {
     fastify.post('/signup', async (request, reply) => {
         const { username = '', password = '' } = request.body;
 
-        if (!validUsername.test(username)) {
-            return reply.code(403).send({ error: 'Not a valid username' });
+        if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
+            return reply.code(403).send({
+                error: `Has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
+            });
         }
 
         if (password.length < PASSWORD_LENGTH) {
