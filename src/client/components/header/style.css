@@ -4,28 +4,14 @@
     flex-direction: row;
 }
 
-.logoWrapper {
-    display: flex;
-    flex-direction: row;
-    width: 300px;
-    align-items: center;
-}
-
 .link {
     text-decoration: none;
 }
 
 .link,
 .logo {
-    width: 50px;
+    width: 60px;
     height: auto;
-}
-
-.logoText {
-    height: auto;
-    text-transform: capitalize;
-    padding-left: 5px;
-    font-weight: 600;
 }
 
 @media only screen and (min-width: 768px) {
