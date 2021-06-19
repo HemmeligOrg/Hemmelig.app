@@ -4,7 +4,7 @@
     border-radius: var(--border-radius);
     background-color: var(--color-background);
     border: 1px solid #eee;
-    margin-bottom: 7px;
+    margin-bottom: var(--margin-basic);
     padding: 10px;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .thick {
-    border: 7px solid #eee;
+    border: var(--margin-basic) solid #eee;
 }
 
 .select,
@@ -29,7 +29,7 @@
 
 .buttonBurn,
 .buttonCreate {
-    margin: 7px 0;
+    margin: var(--margin-basic) 0;
     width: 100%;
     max-width: 150px;
     height: 50px;

@@ -90,9 +90,6 @@ const Home = () => {
                 <Info>
                     Keep your sensitive information out of chat logs, emails, SMS, and more.
                 </Info>
-                <Info>
-                    <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
-                </Info>
                 <div class={style.form}>
                     <Textarea
                         compress={secretId}
@@ -133,10 +130,13 @@ const Home = () => {
                                 readonly
                             />
 
-                            <IconButton
-                                icon="copy"
-                                onClick={() => navigator.clipboard.writeText(getSecretURL())}
-                            />
+                            <Info align="left">
+                                Copy the link:{' '}
+                                <IconButton
+                                    icon="copy"
+                                    onClick={() => navigator.clipboard.writeText(getSecretURL())}
+                                />
+                            </Info>
                         </>
                     )}
 
@@ -165,6 +165,10 @@ const Home = () => {
             {error && <Error>{error}</Error>}
 
             <Info>The secret link only works once, and then it will disappear.</Info>
+
+            <Info>
+                <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
+            </Info>
         </>
     );
 };
