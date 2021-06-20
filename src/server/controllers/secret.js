@@ -2,6 +2,7 @@ const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
+const getRandomAdjective = require('../helpers/adjective');
 const redis = require('../services/redis');
 
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
@@ -58,7 +59,7 @@ async function secret(fastify) {
         }
 
         // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
-        const id = nanoid();
+        const id = getRandomAdjective() + '_' + nanoid();
 
         const data = {
             id,
