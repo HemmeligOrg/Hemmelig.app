@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: #fff;
+    background-color: var(--color-background);
     max-width: 1024px;
     height: auto;
     padding: 5px 15px;
@@ -16,7 +16,7 @@
     text-decoration: none;
 }
 
-.link svg {
+.logo image {
     fill: var(--color-contrast);
 }
 
@@ -41,7 +41,6 @@
     color: var(--color-contrast) !important;
     text-decoration: none;
     border: 2px solid var(--color-contrast);
-    background-color: #fff;
 }
 
 .linkButton:hover {
