@@ -35,9 +35,11 @@ function createSecret(data, ttl) {
         prepare.push(...['password', data.password]);
     }
 
-    client.hmset(prepare);
-
-    client.expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE);
+    client
+        .multi()
+        .hmset(prepare)
+        .expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE)
+        .exec();
 }
 
 async function getSecret(id) {
