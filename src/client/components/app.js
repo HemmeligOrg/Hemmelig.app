@@ -16,14 +16,16 @@ const App = () => (
     <>
         <div id="app">
             <Header />
-            <Router>
-                <Home path="/" />
-                <Secret path="/secret/:secretId" />
-                <SignIn path="/signin" />
-                <Privacy path="/privacy" />
-                <Account path="/account" />
-                <ApiDocs path="/api-docs" />
-            </Router>
+            <div id="app-inner">
+                <Router>
+                    <Home path="/" />
+                    <Secret path="/secret/:secretId" />
+                    <SignIn path="/signin" />
+                    <Privacy path="/privacy" />
+                    <Account path="/account" />
+                    <ApiDocs path="/api-docs" />
+                </Router>
+            </div>
             <Footer />
         </div>
     </>

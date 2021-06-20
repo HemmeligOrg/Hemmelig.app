@@ -59,7 +59,7 @@ p {
     box-sizing: border-box;
 }
 
-#app {
+#app-inner {
     width: 100%;
     background-color: #fff;
     max-width: 1024px;
