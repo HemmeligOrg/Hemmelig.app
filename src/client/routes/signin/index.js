@@ -82,30 +82,32 @@ const Secret = () => {
                     <h1>Sign in</h1>
 
                     <Info>Everything you need to access, and manage the Hemmelig secrets.</Info>
+                    <form>
+                        <Input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={onUsernameChange}
+                            required
+                        />
 
-                    <Input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={onUsernameChange}
-                        required
-                    />
+                        <Input
+                            type="password"
+                            placeholder="Your password"
+                            value={password}
+                            onChange={onPasswordChange}
+                            required
+                        />
 
-                    <Input
-                        type="password"
-                        placeholder="Your password"
-                        value={password}
-                        onChange={onPasswordChange}
-                        required
-                    />
-                    <div class={style.buttonWrapper}>
-                        <Button buttonType="burn" onClick={onSignIn}>
-                            Sign in
-                        </Button>
-                        <Button buttonType="create" onClick={onSignUp}>
-                            Sign up
-                        </Button>
-                    </div>
+                        <div class={style.buttonWrapper}>
+                            <Button buttonType="burn" onClick={onSignIn}>
+                                Sign in
+                            </Button>
+                            <Button buttonType="create" onClick={onSignUp}>
+                                Sign up
+                            </Button>
+                        </div>
+                    </form>
                 </div>
             </Wrapper>
 
