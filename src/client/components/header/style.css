@@ -22,7 +22,8 @@
 
 .link,
 .logo {
-    width: 60px;
+    width: 45px;
+    display: flex;
     height: auto;
 }
 
@@ -58,6 +59,10 @@
 }
 
 @media only screen and (min-width: 768px) {
+    .link,
+    .logo {
+        width: 60px;
+    }
     .header {
         margin-bottom: 20px;
     }
