@@ -46,10 +46,12 @@ if (process.env.NODE_ENV !== 'development') {
         return reply.sendFile('index.html');
     }
 
-    fastify.get('/secret/*', serveIndex);
+    fastify.get('/secret/*', (_, reply) => reply.sendFile('secret/index.html'));
     fastify.get('/about', serveIndex);
-    fastify.get('/privacy', serveIndex);
-    fastify.get('/api', serveIndex);
+    fastify.get('/privacy', (_, reply) => reply.sendFile('privacy/index.html'));
+    fastify.get('/api-docs', (_, reply) => reply.sendFile('api-docs/index.html'));
+    fastify.get('/signin', serveIndex);
+    fastify.get('/account', serveIndex);
 }
 
 const startServer = async () => {
