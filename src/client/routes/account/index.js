@@ -11,8 +11,7 @@ import Spinner from '../../components/spinner';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
-import { removeToken } from '../../helpers/token';
-
+import emitter from '../../helpers/state-emitter';
 import { getUser } from '../../api/account';
 
 const Account = () => {
@@ -49,13 +48,9 @@ const Account = () => {
         })();
     }, [token]);
 
-    const onSignOut = () => {
-        removeToken();
-        setIsLoggedIn(false);
-        setUser({});
-
-        route('/signin', true);
-    };
+    useEffect(() => {
+        emitter.emit('isLoggedIn', isLoggedIn);
+    }, [isLoggedIn]);
 
     if (error) {
         return <Error>{error}</Error>;
@@ -85,10 +80,6 @@ const Account = () => {
                     For information about how to use the API, please have a look at the{' '}
                     <Link href="/api-docs">API documentation</Link>.
                 </Info>
-
-                <Button buttonType="burn" onClick={onSignOut}>
-                    Sign out
-                </Button>
             </Wrapper>
         </>
     );
