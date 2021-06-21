@@ -21,6 +21,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
 a,
 a:visited {
     color: var(--color-font);
