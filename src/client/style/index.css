@@ -21,6 +21,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
 a,
 a:visited {
     color: var(--color-font);
@@ -33,47 +37,59 @@ a:hover {
 
 h1,
 h2 {
-    margin: 7px;
+    margin: var(--margin-basic);
     text-align: center;
-    font-size: 22px;
+    font-size: 28px;
 }
 
 h2 {
+    font-size: 22px;
+    margin: var(--margin-basic) 0;
+    text-align: left;
+}
+
+h3 {
     font-size: 18px;
     text-align: left;
 }
 
 p {
-    margin: 7px 0;
+    font-size: 14px;
+    margin: var(--margin-basic) 0;
 }
 
 * {
     box-sizing: border-box;
 }
 
-#app {
-    padding: 20px 10px;
+#app-inner {
     width: 100%;
+    background-color: #fff;
+    max-width: 1024px;
+    height: auto;
+    padding: 15px;
     margin: 0 auto;
-    max-width: 850px;
+    margin-bottom: var(--margin-basic);
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
 
 :root {
     --color-contrast: #2a9d8f;
     --color-font-contrast: #fcfcfc;
     --color-contrast-second: #577590;
-    --color-background: #f9f9f9;
+    --color-background: #fcfcfc;
     --color-font: #232323;
     --color-dark: #030303;
     --color-success: #43aa8b;
     --color-error: #f94144;
     --border-radius: 10px;
+    --margin-basic: 10px;
 }
 
 @media only screen and (min-width: 768px) {
     #app {
-        padding: 56px 20px;
     }
 }

@@ -1,0 +1,16 @@
+.button {
+    width: 28px;
+    height: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.button svg {
+    align-self: center;
+    fill: #999;
+}
+
+.button svg:active {
+    fill: #666;
+}

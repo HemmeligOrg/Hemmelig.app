@@ -4,7 +4,7 @@
     border-radius: var(--border-radius);
     background-color: var(--color-background);
     border: 1px solid #eee;
-    margin-bottom: 7px;
+    margin-bottom: var(--margin-basic);
     padding: 10px;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .thick {
-    border: 7px solid #eee;
+    border: var(--margin-basic) solid #eee;
 }
 
 .select,
@@ -24,12 +24,12 @@
     background-color: var(--color-background);
     border: 1px solid #eee;
     padding: 5px;
-    margin-bottom: 10px;
+    margin-bottom: var(--margin-basic);
 }
 
 .buttonBurn,
 .buttonCreate {
-    margin: 7px 0;
+    margin: var(--margin-basic) 0;
     width: 100%;
     max-width: 150px;
     height: 50px;
@@ -62,9 +62,29 @@
 .buttonBurn {
     color: var(--color-font);
     border: 2px solid var(--color-contrast);
-    background-color: #fff;
+    background-color: var(--color-background);
 }
 
 .full {
     max-width: 100%;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 768px) {
+    .inputGroup {
+        justify-content: space-between;
+        flex-direction: row;
+    }
+
+    .inputGroup > select {
+        margin-right: calc(var(--margin-basic) / 2);
+    }
+
+    .inputGroup > input {
+        margin-left: calc(var(--margin-basic) / 2);
+    }
 }

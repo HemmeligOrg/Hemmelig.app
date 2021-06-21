@@ -1,25 +1,64 @@
 .header {
     width: 100%;
-    padding: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #fff;
+    max-width: 1024px;
+    height: auto;
+    padding: 5px 15px;
+    margin: 0 auto;
+    margin-bottom: var(--margin-basic);
+    box-shadow: 0 0 5px rgb(0 0 0 / 10%);
+}
+
+.link {
+    text-decoration: none;
+}
+
+.logo g {
+    fill: var(--color-contrast);
 }
 
 .link,
 .logo {
-    width: 110px;
+    width: 60px;
     height: auto;
-    align-self: center;
+}
+
+.linkButton {
+    display: flex;
+    justify-content: space-around;
+    margin: var(--margin-basic) 0;
+    width: 100%;
+    max-width: 110px;
+    padding: 8px;
+    height: 40px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--color-contrast) !important;
+    text-decoration: none;
+    border: 2px solid var(--color-contrast);
+}
+
+.linkButton:hover {
+    border: 2px solid var(--color-contrast);
+}
+
+.linkButton:active {
+    filter: brightness(95%);
+}
+
+.linkButton svg {
+    width: 20px;
+    height: auto;
+    fill: var(--color-contrast);
 }
 
 @media only screen and (min-width: 768px) {
     .header {
         margin-bottom: 20px;
-    }
-
-    .link,
-    .logo {
-        width: 150px;
     }
 }

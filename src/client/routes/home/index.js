@@ -3,12 +3,15 @@ import { useEffect, useState, useRef } from 'preact/hooks';
 import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
+import InputGroup from '../../components/form/input-group';
 import Input from '../../components/form/input';
 import Textarea from '../../components/form/textarea';
 import Select from '../../components/form/select';
 import Button from '../../components/form/button';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
+
+import IconButton from '../../components/icon/icon-button';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
@@ -86,10 +89,8 @@ const Home = () => {
             <Wrapper>
                 <h1 class={style.h1}>Paste a password, secret message, or private information.</h1>
                 <Info>
-                    Keep your sensitive information out of chat logs, emails, SMS, and more.
-                </Info>
-                <Info>
-                    <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
+                    Keep your sensitive information out of chat logs, emails, and more with heavily
+                    encrypted secrets.
                 </Info>
                 <div class={style.form}>
                     <Textarea
@@ -100,29 +101,35 @@ const Home = () => {
                         readonly={!!secretId}
                         thickBorder={!!secretId}
                     />
-
-                    <Select value={ttl} onChange={onSelectChange}>
-                        <option value="604800">7 days</option>
-                        <option value="259200">3 days</option>
-                        <option value="86400">1 day</option>
-                        <option value="43200">12 hours</option>
-                        <option value="14400">4 hours</option>
-                        <option value="3600">1 hour</option>
-                        <option value="1800">30 minutes</option>
-                        <option value="300">5 minutes</option>
-                    </Select>
-
-                    <Input
-                        placeholder="Your optional password"
-                        type="password"
-                        value={password}
-                        onChange={onPasswordChange}
-                        readonly={!!secretId}
-                    />
-
+                    <InputGroup>
+                        <Select value={ttl} onChange={onSelectChange}>
+                            <option value="604800">7 days</option>
+                            <option value="259200">3 days</option>
+                            <option value="86400">1 day</option>
+                            <option value="43200">12 hours</option>
+                            <option value="14400">4 hours</option>
+                            <option value="3600">1 hour</option>
+                            <option value="1800">30 minutes</option>
+                            <option value="300">5 minutes</option>
+                        </Select>
+                        <Input
+                            placeholder="Your optional password"
+                            type="password"
+                            value={password}
+                            onChange={onPasswordChange}
+                            readonly={!!secretId}
+                        />
+                    </InputGroup>
                     {secretId && (
                         <>
-                            <p class={style.info}>Share this link:</p>
+                            <Info align="left">
+                                <IconButton
+                                    icon="copy"
+                                    onClick={() => navigator.clipboard.writeText(getSecretURL())}
+                                />
+                                Copy and share the secret link
+                            </Info>
+
                             <Input
                                 value={getSecretURL()}
                                 onFocus={handleFocus}
@@ -131,7 +138,6 @@ const Home = () => {
                             />
                         </>
                     )}
-
                     <div class={style.buttonWrapper}>
                         {!secretId && (
                             <Button buttonType="create" onClick={onSubmit}>
@@ -157,6 +163,10 @@ const Home = () => {
             {error && <Error>{error}</Error>}
 
             <Info>The secret link only works once, and then it will disappear.</Info>
+
+            <Info>
+                <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
+            </Info>
         </>
     );
 };

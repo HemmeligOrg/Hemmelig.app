@@ -1,5 +1,5 @@
 .code {
-    margin: 7px 0;
+    margin: var(--margin-basic) 0;
     width: 100%;
     white-space: pre-wrap;
     display: block;

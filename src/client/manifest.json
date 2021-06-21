@@ -1,10 +1,9 @@
 {
     "name": "Hemmelig",
     "short_name": "Hemmelig",
-    "theme_color": "#2a9d8f",
-    "background_color": "#fff",
-    "description": "Paste a password, secret message or private information",
-    "display": "fullscreen",
+    "theme_color": "#deefea",
+    "background_color": "#231e23",
+    "display": "fullScreen",
     "orientation": "portrait",
     "scope": "/",
     "start_url": "/",
@@ -45,7 +44,7 @@
             "type": "image/png"
         },
         {
-            "src": "assets/icons/icon-512x512.png",
+            "src": "images/icons/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
