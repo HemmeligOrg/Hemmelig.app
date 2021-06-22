@@ -6,6 +6,9 @@ const fastify = require('fastify')({
     logger: config.get('logger'),
 });
 
+// https://github.com/fastify/fastify-helmet
+fastify.register(require('fastify-helmet'), { contentSecurityPolicy: false });
+
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 
