@@ -12,6 +12,7 @@ fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
 fastify.register(require('./src/server/decorators/basic-auth'));
+fastify.register(require('./src/server/decorators/rate-limit'));
 
 // Register our routes before the static content
 fastify.register(require('./src/server/controllers/authentication'), {
