@@ -17,7 +17,7 @@ if (config.get('redis.user', null) && config.get('redis.password', null)) {
     });
 }
 
-const client = asyncRedis.createClient();
+const client = asyncRedis.createClient(options);
 
 client.on('error', (error) => console.error(error));
 
