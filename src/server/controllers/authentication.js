@@ -7,44 +7,50 @@ const PASSWORD_LENGTH = 5;
 const USERNAME_LENGTH = 4;
 
 async function authentication(fastify) {
-    fastify.post('/signup', async (request, reply) => {
-        const { username = '', password = '' } = request.body;
+    fastify.post(
+        '/signup',
+        {
+            preValidation: [fastify.rateLimit],
+        },
+        async (request, reply) => {
+            const { username = '', password = '' } = request.body;
 
-        if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
-            return reply.code(403).send({
-                error: `Has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
-            });
+            if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
+                return reply.code(403).send({
+                    error: `Has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
+                });
+            }
+
+            if (password.length < PASSWORD_LENGTH) {
+                return reply.code(403).send({
+                    error: `Password has to be longer than ${PASSWORD_LENGTH} characters`,
+                });
+            }
+
+            if (await redis.getUser(username)) {
+                return reply.code(403).send({ error: `This username has already been taken.` });
+            }
+
+            const userPassword = await hash(password);
+
+            const user = await redis.createUser(username, userPassword);
+
+            if (!user) {
+                return reply.code(403).send({
+                    error: 'Something happened while creating a new user. Please try again later.',
+                });
+            }
+
+            const token = await fastify.jwt.sign(
+                {
+                    username,
+                },
+                { expiresIn: '7d' } // expires in seven days
+            );
+
+            return { token };
         }
-
-        if (password.length < PASSWORD_LENGTH) {
-            return reply
-                .code(403)
-                .send({ error: `Password has to be longer than ${PASSWORD_LENGTH} characters` });
-        }
-
-        if (await redis.getUser(username)) {
-            return reply.code(403).send({ error: `This username has already been taken.` });
-        }
-
-        const userPassword = await hash(password);
-
-        const user = await redis.createUser(username, userPassword);
-
-        if (!user) {
-            return reply.code(403).send({
-                error: 'Something happened while creating a new user. Please try again later.',
-            });
-        }
-
-        const token = await fastify.jwt.sign(
-            {
-                username,
-            },
-            { expiresIn: '7d' } // expires in seven days
-        );
-
-        return { token };
-    });
+    );
 
     fastify.post('/signin', async (request, reply) => {
         const { username = '', password = '' } = request.body;

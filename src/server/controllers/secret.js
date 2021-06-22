@@ -47,33 +47,39 @@ async function secret(fastify) {
     fastify.get('/:id', options, getSecretRoute);
     fastify.post('/:id', options, getSecretRoute);
 
-    fastify.post('/', options, async (request, reply) => {
-        const { text, ttl, password } = request.body;
+    fastify.post(
+        '/',
+        {
+            preValidation: [fastify.rateLimit, fastify.basicAuth],
+        },
+        async (request, reply) => {
+            const { text, ttl, password } = request.body;
 
-        if (Buffer.byteLength(text) > MAX_BYTES) {
-            return reply.code(413).send({
-                error: `The secret size (${prettyBytes(
-                    Buffer.byteLength(text)
-                )}) exceeded our limit of ${prettyBytes(MAX_BYTES)}.`,
-            });
+            if (Buffer.byteLength(text) > MAX_BYTES) {
+                return reply.code(413).send({
+                    error: `The secret size (${prettyBytes(
+                        Buffer.byteLength(text)
+                    )}) exceeded our limit of ${prettyBytes(MAX_BYTES)}.`,
+                });
+            }
+
+            // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
+            const id = getRandomAdjective() + '_' + nanoid();
+
+            const data = {
+                id,
+                secret: JSON.stringify(encrypt(text)),
+            };
+
+            if (password) {
+                Object.assign(data, { password: await hash(password) });
+            }
+
+            redis.createSecret(data, ttl);
+
+            return reply.code(201).send({ id });
         }
-
-        // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
-        const id = getRandomAdjective() + '_' + nanoid();
-
-        const data = {
-            id,
-            secret: JSON.stringify(encrypt(text)),
-        };
-
-        if (password) {
-            Object.assign(data, { password: await hash(password) });
-        }
-
-        redis.createSecret(data, ttl);
-
-        return reply.code(201).send({ id });
-    });
+    );
 
     // This will burn the secret 🔥
     fastify.get('/:id/burn', options, async (request) => {

@@ -47,7 +47,7 @@ async function getSecret(id) {
 }
 
 async function deleteSecret(id) {
-    await client.delete(`secret:${id}`);
+    await client.del(`secret:${id}`);
 }
 
 async function isAlive() {
@@ -75,7 +75,7 @@ async function getUser(username) {
 }
 
 async function deleteUser(username) {
-    return await client.delete(`user:${username}`);
+    return await client.del(`user:${username}`);
 }
 
 async function createRateLimit(ip) {
