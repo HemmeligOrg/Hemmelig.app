@@ -64,16 +64,24 @@ const Account = () => {
         <>
             <Wrapper>
                 <h1>Account</h1>
-                <Info align="left">Hi, {user.username}</Info>
-                <br />
                 <Info align="left">
-                    <strong>Basic auth:</strong>
+                    Hi, <strong>{user.username}</strong>
+                </Info>
+                <Info align="left">
+                    This page does not really give you much. Basically just basic auth for the API.
+                    Which still does not give you anything extra than using the API without basic
+                    auth. However, I would suggest you to use basic auth, because restrictions are
+                    coming.
                 </Info>
 
-                <Info align="left">User</Info>
+                <Info align="left">
+                    <strong>User</strong>
+                </Info>
                 <Input type="text" placeholder="key" value={user.username} readonly />
 
-                <Info align="left">Token</Info>
+                <Info align="left">
+                    <strong>Token</strong>
+                </Info>
                 <Input type="text" placeholder="key" value={user.basicAuthToken} readonly />
 
                 <Info align="left">
