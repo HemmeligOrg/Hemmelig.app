@@ -1,8 +1,12 @@
-# Hemmelig
+<div align="center">
+  <img src="banner.png" alt="hemmelig" />
+</div>
 
-_Hemmelig_, [he`m:(ə)li], means secret in Norwegian.
+<h1 align="center">Hemmelig aims to be the modern version of onetimesecret.</h1>
 
-Hemmelig aims to be the modern version of onetimesecret. This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
+<div align="center">
+  This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
+</div>
 
 ## SaaS
 
@@ -16,9 +20,9 @@ Currently, Hemmelig is a MVP (minimum viable product), however, we aim to add ma
 
 `hemmeligapp/hemmelig:latest`
 
-## Self host
+## Self-hosting
 
-It is possible to self host. The instructions (all env variables) are located as comments within the Dockerfile. Here is the bare minimum of running Hemmelig.
+If you do not trust https://hemmelig.app, or you want to hide it from the public Internet. Hemmelig is available as a Docker image for self-hosting. Here is the bare minimum of running Hemmelig.
 
 ```bash
 # To use this image you need a redis database enabled.
@@ -32,6 +36,8 @@ docker run -p 3000:3000 -d --name=hemmelig \
     -e SECRET_REDIS_HOST=127.0.0.1 \
     hemmeligapp/hemmelig:latest
 ```
+
+Have a look at the Dockerfile for a full example of how to run this application.
 
 ## Environment variables
 
