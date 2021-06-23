@@ -23,6 +23,7 @@
 .link,
 .logo {
     width: 45px;
+    max-height: 45px;
     display: flex;
     height: auto;
 }
@@ -62,6 +63,7 @@
     .link,
     .logo {
         width: 60px;
+        max-height: 60px;
     }
     .header {
         margin-bottom: 20px;
