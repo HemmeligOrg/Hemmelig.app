@@ -3,7 +3,7 @@
     "short_name": "Hemmelig",
     "theme_color": "#deefea",
     "background_color": "#231e23",
-    "display": "fullScreen",
+    "display": "standalone",
     "orientation": "portrait",
     "scope": "/",
     "start_url": "/",
