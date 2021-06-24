@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import style from './style.css';
 
-import IconButton from '../icon/icon-button';
+import { Copy, Share } from '../icon';
 
-const Share = ({ url }) => {
+const ShareButton = ({ url }) => {
     // For the sake of pre rendered html
     if (!window) {
         return '';
@@ -24,19 +24,19 @@ const Share = ({ url }) => {
 
     if (!navigator.share) {
         return (
-            <div class={style.share}>
-                <IconButton icon="copy" onClick={() => navigator.clipboard.writeText(url)} />
-                Copy and share the secret link
-            </div>
+            <button class={style.share} onClick={() => navigator.clipboard.writeText(url)}>
+                <Copy />
+                <span class={style.text}>Click to copy and share the secret link</span>
+            </button>
         );
     }
 
     return (
-        <div class={style.share}>
-            <IconButton icon="share" onClick={onClick} />
-            Share the secret link
-        </div>
+        <button class={style.share} onClick={onClick}>
+            <Share />
+            <span class={style.text}>Click to Share the secret link</span>
+        </button>
     );
 };
 
-export default Share;
+export default ShareButton;

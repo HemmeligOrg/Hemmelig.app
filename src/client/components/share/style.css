@@ -1,0 +1,32 @@
+.share {
+    border: 1px dotted #eee;
+    border-radius: calc(var(--border-radius) / 2);
+    display: flex;
+    padding: calc(var(--margin-basic) / 2);
+    align-content: center;
+    width: 100%;
+    background: none;
+    color: #333;
+    margin-top: -10px;
+    cursor: pointer;
+}
+
+.share:active {
+    border: 1px solid #ddd;
+    transition: border 0.1s;
+}
+
+.share svg {
+    height: 18px;
+    align-self: center;
+    fill: #999;
+    margin-right: 5px;
+}
+
+.button svg:active {
+    fill: #666;
+}
+
+.text {
+    align-self: center;
+}
