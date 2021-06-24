@@ -14,7 +14,8 @@ const ShareButton = ({ url }) => {
 
         try {
             await navigator.share({
-                title: 'Hemmelig.app: Here is your URL with sensitive information. It can only be opened once!',
+                title: 'Hemmelig.app - Your secret URL',
+                text: 'Hemmelig.app - Here is your URL with sensitive information. It can only be opened once!',
                 url,
             });
         } catch (e) {
