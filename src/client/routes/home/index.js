@@ -16,7 +16,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
-    const [ttl, setTTL] = useState(3600);
+    const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
@@ -97,7 +97,7 @@ const Home = () => {
                 <div class={style.form}>
                     <Textarea
                         compress={secretId}
-                        placeholder="Insert secret.."
+                        placeholder="Write your sensitive information.."
                         onChange={onChangeHandler}
                         value={text}
                         readonly={!!secretId}
