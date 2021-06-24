@@ -13,7 +13,7 @@ $ curl 'https://user:token@hemmelig.app/api/secret' \\
     -H 'Content-Type: application/json' \\
     --data-raw '{"text":"MY SECRET :)","password":"not_today","ttl":3600}'
 
-// response: {"id":"jMyQ2wU6Fw-WIEOPOsYzy"}
+// response: {"id":"jMyQ2wU6Fw-WIEOPOsYzy", "key": "2ASjdhk3UdhawasSeAa" }
 
 
 // Example of fetching a secret
@@ -21,7 +21,7 @@ $ curl 'https://user:token@hemmelig.app/api/secret' \\
 // https://user:token@hemmelig.app/api/secret/:id
 $ curl 'https://user:token@hemmelig.app/api/secret/jMyQ2wU6Fw-WIEOPOsYzy' \\
     -H 'Content-Type: application/json' \\
-    --data-raw '{"password":"not_today"}'
+    --data-raw '{"password":"not_today", "key": "2ASjdhk3UdhawasSeAa" }'
 
 // response: {"secret":"MY SECRET :)"}
 
