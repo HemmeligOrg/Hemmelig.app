@@ -11,10 +11,9 @@ function encrypt(text, key) {
 
     // We need a 32 length key for the cipher
     const MASTER_KEY = crypto
-        .createHash('sha256')
+        .createHash('md5')
         .update(SECRET_KEY + key)
-        .digest('hex')
-        .substring(0, 32);
+        .digest('hex');
 
     const cipher = crypto.createCipheriv(ALGORITHM, MASTER_KEY, IV);
 
@@ -29,10 +28,9 @@ function encrypt(text, key) {
 function decrypt(hash, key) {
     // We need a 32 length key for the cipher
     const MASTER_KEY = crypto
-        .createHash('sha256')
+        .createHash('md5')
         .update(SECRET_KEY + key)
-        .digest('hex')
-        .substring(0, 32);
+        .digest('hex');
 
     const decipher = crypto.createDecipheriv(ALGORITHM, MASTER_KEY, Buffer.from(hash.iv, 'hex'));
 
