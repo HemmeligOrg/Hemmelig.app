@@ -11,7 +11,7 @@ import Info from '../../components/info/info';
 
 import { getSecret, secretExists } from '../../api/secret';
 
-const Secret = ({ secretId }) => {
+const Secret = ({ secretId, encryptionKey = null }) => {
     const [secret, setSecret] = useState(null);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
@@ -31,7 +31,7 @@ const Secret = ({ secretId }) => {
             return;
         }
 
-        const json = await getSecret(secretId, password);
+        const json = await getSecret(secretId, encryptionKey, password);
 
         if (json.statusCode === 401) {
             setIsPasswordRequired(true);

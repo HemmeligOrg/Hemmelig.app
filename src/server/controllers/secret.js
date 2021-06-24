@@ -12,7 +12,7 @@ const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 async function getSecretRoute(request, reply) {
     const { id } = request.params;
 
-    const { password = '' } = request.body ? request.body : {};
+    const { password = '', encryptionKey = '' } = request.body ? request.body : {};
 
     // If it does not match the valid characters set for nanoid, return 403
     if (!validIdRegExp.test(id)) {
@@ -32,7 +32,7 @@ async function getSecretRoute(request, reply) {
         }
     }
 
-    const secret = decrypt(JSON.parse(data.secret));
+    const secret = decrypt(JSON.parse(data.secret), encryptionKey);
 
     redis.deleteSecret(id);
 
@@ -66,9 +66,11 @@ async function secret(fastify) {
             // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
             const id = getRandomAdjective() + '_' + nanoid();
 
+            const key = nanoid();
+
             const data = {
                 id,
-                secret: JSON.stringify(encrypt(text)),
+                secret: JSON.stringify(encrypt(text, key)),
             };
 
             if (password) {
@@ -77,7 +79,13 @@ async function secret(fastify) {
 
             redis.createSecret(data, ttl);
 
-            return reply.code(201).send({ id });
+            // Return the secret ID, and encryptet KEY to be used for the URL
+            // By generating an encryption key per secret, we will never be able to open the
+            // secret by using the master_secret_key
+            // This is how it will work: SECRET_MASTER_KEY + RANDOM_KEY to decrypt the message.
+            // The RANDOM_KEY will be within the URL.
+            // Example: https://hemmelig.app/secret/RANDOM_KEY/SECRET_ID
+            return reply.code(201).send({ id, key });
         }
     );
 

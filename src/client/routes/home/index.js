@@ -20,6 +20,7 @@ const Home = () => {
     const [ttl, setTTL] = useState(3600);
     const [password, setPassword] = useState('');
     const [secretId, setSecretId] = useState('');
+    const [encryptionKey, setEncryptionKey] = useState('');
     const [error, setError] = useState('');
 
     const secretRef = useRef(null);
@@ -54,7 +55,7 @@ const Home = () => {
         const json = await createSecret(text, password, ttl);
 
         setSecretId(json.id);
-
+        setEncryptionKey(json.key);
         setError('');
     };
 
@@ -65,6 +66,7 @@ const Home = () => {
         setSecretId('');
         setError('');
         setPassword('');
+        setEncryptionKey('');
     };
 
     const onBurn = async (event) => {
@@ -78,11 +80,12 @@ const Home = () => {
 
         setText('');
         setSecretId('');
+        setEncryptionKey('');
     };
 
     const handleFocus = (event) => event.target.select();
 
-    const getSecretURL = () => `${window.location.href}secret/${secretId}`;
+    const getSecretURL = () => `${window.location.href}secret/${encryptionKey}/${secretId}`;
 
     return (
         <>

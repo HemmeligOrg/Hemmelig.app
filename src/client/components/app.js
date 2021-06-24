@@ -20,6 +20,7 @@ const App = () => (
                 <Router>
                     <Home path="/" />
                     <Secret path="/secret/:secretId" />
+                    <Secret path="/secret/:encryptionKey/:secretId" />
                     <SignIn path="/signin" />
                     <Privacy path="/privacy" />
                     <Account path="/account" />
