@@ -10,8 +10,7 @@ import Select from '../../components/form/select';
 import Button from '../../components/form/button';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
-
-import IconButton from '../../components/icon/icon-button';
+import Share from '../../components/share';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
@@ -126,11 +125,7 @@ const Home = () => {
                     {secretId && (
                         <>
                             <Info align="left">
-                                <IconButton
-                                    icon="copy"
-                                    onClick={() => navigator.clipboard.writeText(getSecretURL())}
-                                />
-                                Copy and share the secret link
+                                <Share url={getSecretURL()}></Share>
                             </Info>
 
                             <Input

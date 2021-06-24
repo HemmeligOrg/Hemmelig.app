@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import style from './style.css';
 
-import { Copy, Account } from '.';
+import { Copy, Account, Share } from '.';
 
 const getIcon = (type) => {
     switch (type) {
@@ -9,7 +9,8 @@ const getIcon = (type) => {
             return Copy;
         case 'account':
             return Account;
-
+        case 'share':
+            return Share;
         default:
             return () => {};
     }
