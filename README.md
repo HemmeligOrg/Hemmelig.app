@@ -12,6 +12,11 @@
 
 Hemmelig is available at https://hemmelig.app
 
+## How it works
+
+You enter https://hemmelig.app, write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `hash(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
+
 ## State of Hemmelig
 
 Currently, Hemmelig is a MVP (minimum viable product), however, we aim to add many features going forward.
