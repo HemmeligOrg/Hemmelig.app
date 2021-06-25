@@ -140,7 +140,7 @@ const Home = () => {
 
                     <Expandable>
                         <Input
-                            placeholder="Allowed IP address for viewing the secret link"
+                            placeholder="Restrict by IP address"
                             value={allowedIp}
                             onChange={onIpChange}
                             readonly={!!secretId}
