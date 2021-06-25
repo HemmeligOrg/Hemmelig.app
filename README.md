@@ -17,9 +17,14 @@ Hemmelig is available at https://hemmelig.app
 You enter https://hemmelig.app, write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
 When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `hash(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
 
-## State of Hemmelig
+## Features
 
-Currently, Hemmelig is a MVP (minimum viable product), however, we aim to add many features going forward.
+-   Encryptet sensitive information sharing.
+-   Optional password protection.
+-   Optional IP address restriction.
+-   Encryptet key is part of the URL, and not saved to the database for an extra layer of security.
+-   Available as PWA, which means you can download it as an app for your device.
+-   Self-hosted version. Keywords: Regulatory compliance.
 
 ## Docker image
 
@@ -27,7 +32,7 @@ Currently, Hemmelig is a MVP (minimum viable product), however, we aim to add ma
 
 ## Self-hosting
 
-If you do not trust https://hemmelig.app, or you want to hide it from the public Internet. Hemmelig is available as a Docker image for self-hosting. Here is the bare minimum of running Hemmelig.
+If you have to follow some sort of compliance, and have to self-host, https://hemmelig.app is available as a docker image. The following is the bare minimum to run the docker image.
 
 ```bash
 # To use this image you need a redis database enabled.

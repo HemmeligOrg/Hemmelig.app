@@ -33,6 +33,10 @@ function createSecret(data, ttl) {
         prepare.push(...['password', data.password]);
     }
 
+    if (data.allowedIp) {
+        prepare.push(...['allowed_ip', data.allowedIp]);
+    }
+
     client
         .multi()
         .hmset(prepare)
@@ -44,6 +48,16 @@ async function getSecret(id) {
     const data = await client.hgetall(`secret:${id}`);
 
     return data;
+}
+
+async function getSecretKey(id, key) {
+    const data = await client.hgetall(`secret:${id}`);
+
+    if (data[key]) {
+        return data[key];
+    }
+
+    return null;
 }
 
 async function deleteSecret(id) {
@@ -107,6 +121,7 @@ async function createRateLimit(ip) {
 module.exports = {
     createSecret,
     getSecret,
+    getSecretKey,
     deleteSecret,
     isAlive,
     createUser,

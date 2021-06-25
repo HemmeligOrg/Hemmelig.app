@@ -11,6 +11,7 @@ import Button from '../../components/form/button';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 import Share from '../../components/share';
+import Expandable from '../../components/expandable';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
@@ -20,6 +21,7 @@ const Home = () => {
     const [password, setPassword] = useState('');
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
+    const [allowedIp, setAllowedIp] = useState('');
     const [error, setError] = useState('');
 
     const secretRef = useRef(null);
@@ -42,6 +44,19 @@ const Home = () => {
         setPassword(event.target.value);
     };
 
+    const onIpChange = (event) => {
+        setAllowedIp(event.target.value);
+    };
+
+    const reset = () => {
+        setText('');
+        setSecretId('');
+        setError('');
+        setPassword('');
+        setEncryptionKey('');
+        setAllowedIp('');
+    };
+
     const onSubmit = async (event) => {
         if (!text) {
             setError('Please add a secret.');
@@ -51,7 +66,13 @@ const Home = () => {
 
         event.preventDefault();
 
-        const json = await createSecret(text, password, ttl);
+        const json = await createSecret(text, { password, ttl, allowedIp });
+
+        if (json.statusCode !== 201) {
+            setError(json.error);
+
+            return;
+        }
 
         setSecretId(json.id);
         setEncryptionKey(json.key);
@@ -61,11 +82,7 @@ const Home = () => {
     const onNewSecret = async (event) => {
         event.preventDefault();
 
-        setText('');
-        setSecretId('');
-        setError('');
-        setPassword('');
-        setEncryptionKey('');
+        reset();
     };
 
     const onBurn = async (event) => {
@@ -77,9 +94,7 @@ const Home = () => {
 
         burnSecret(secretId);
 
-        setText('');
-        setSecretId('');
-        setEncryptionKey('');
+        reset();
     };
 
     const handleFocus = (event) => event.target.select();
@@ -122,6 +137,16 @@ const Home = () => {
                             readonly={!!secretId}
                         />
                     </InputGroup>
+
+                    <Expandable>
+                        <Input
+                            placeholder="Allowed IP address for viewing the secret link"
+                            value={allowedIp}
+                            onChange={onIpChange}
+                            readonly={!!secretId}
+                        />
+                    </Expandable>
+
                     {secretId && (
                         <>
                             <Info align="left">
@@ -136,6 +161,7 @@ const Home = () => {
                             />
                         </>
                     )}
+
                     <div class={style.buttonWrapper}>
                         {!secretId && (
                             <Button buttonType="create" onClick={onSubmit}>

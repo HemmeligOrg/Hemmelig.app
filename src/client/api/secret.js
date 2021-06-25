@@ -1,16 +1,18 @@
 import config from '../config';
 
-export const createSecret = async (text, password, ttl) => {
+export const createSecret = async (text, { password, ttl, allowedIp }) => {
     const data = await fetch(`${config.get('api.host')}/secret`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text, password, ttl }),
+        body: JSON.stringify({ text, password, ttl, allowedIp }),
     });
 
-    return await data.json();
+    const json = await data.json();
+
+    return await { ...json, statusCode: data.status };
 };
 
 export const getSecret = async (secretId, encryptionKey, password) => {

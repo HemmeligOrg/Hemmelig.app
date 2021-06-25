@@ -1,13 +1,23 @@
 const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
+const isIp = require('is-ip');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
 const getRandomAdjective = require('../helpers/adjective');
 const redis = require('../services/redis');
+const { all } = require('deepmerge');
 
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
+
+const ipCheck = (ip) => {
+    if (ip === 'localhost') {
+        return true;
+    }
+
+    return isIp(ip);
+};
 
 async function getSecretRoute(request, reply) {
     const { id } = request.params;
@@ -44,8 +54,20 @@ async function secret(fastify) {
         preValidation: [fastify.basicAuth],
     };
 
-    fastify.get('/:id', options, getSecretRoute);
-    fastify.post('/:id', options, getSecretRoute);
+    fastify.get(
+        '/:id',
+        {
+            preValidation: [fastify.basicAuth, fastify.allowedIp],
+        },
+        getSecretRoute
+    );
+    fastify.post(
+        '/:id',
+        {
+            preValidation: [fastify.basicAuth, fastify.allowedIp],
+        },
+        getSecretRoute
+    );
 
     fastify.post(
         '/',
@@ -53,7 +75,7 @@ async function secret(fastify) {
             preValidation: [fastify.rateLimit, fastify.basicAuth],
         },
         async (request, reply) => {
-            const { text, ttl, password } = request.body;
+            const { text, ttl, password, allowedIp } = request.body;
 
             if (Buffer.byteLength(text) > MAX_BYTES) {
                 return reply.code(413).send({
@@ -61,6 +83,10 @@ async function secret(fastify) {
                         Buffer.byteLength(text)
                     )}) exceeded our limit of ${prettyBytes(MAX_BYTES)}.`,
                 });
+            }
+
+            if (allowedIp && !ipCheck(allowedIp)) {
+                return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
             // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
@@ -71,6 +97,7 @@ async function secret(fastify) {
             const data = {
                 id,
                 secret: JSON.stringify(encrypt(text, key)),
+                allowedIp,
             };
 
             if (password) {
