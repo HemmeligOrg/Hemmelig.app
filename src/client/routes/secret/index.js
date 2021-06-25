@@ -89,10 +89,10 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                     <>
                         <Info>A password is required to open this secret</Info>
                         <Input
-                            type="password"
                             placeholder="Your password"
                             value={password}
                             onChange={onPasswordChange}
+                            style="-webkit-text-security: disc;" // hack for password prompt
                         />
                     </>
                 )}

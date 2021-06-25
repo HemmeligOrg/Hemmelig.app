@@ -131,10 +131,10 @@ const Home = () => {
                         </Select>
                         <Input
                             placeholder="Your optional password"
-                            type="password"
                             value={password}
                             onChange={onPasswordChange}
                             readonly={!!secretId}
+                            style="-webkit-text-security: disc;" // hack for password prompt
                         />
                     </InputGroup>
 
