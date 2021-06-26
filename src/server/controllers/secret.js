@@ -2,10 +2,9 @@ const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
 const isIp = require('is-ip');
 const { encrypt, decrypt } = require('../helpers/crypto');
-const { hash, compare } = require('../helpers/password');
+const { createHash, compare } = require('../helpers/password');
 const getRandomAdjective = require('../helpers/adjective');
 const redis = require('../services/redis');
-const { all } = require('deepmerge');
 
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
 
@@ -36,7 +35,7 @@ async function getSecretRoute(request, reply) {
     }
 
     if (data.password) {
-        const isPasswordValid = await compare(password, data.password);
+        const isPasswordValid = await compare(password, encryptionKey, data.password);
         if (!isPasswordValid) {
             return reply.code(401).send({ error: 'Wrong password!' });
         }
@@ -101,7 +100,7 @@ async function secret(fastify) {
             };
 
             if (password) {
-                Object.assign(data, { password: await hash(password) });
+                Object.assign(data, { password: await createHash(password, key) });
             }
 
             redis.createSecret(data, ttl);
