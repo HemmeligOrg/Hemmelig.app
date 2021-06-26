@@ -15,7 +15,8 @@ const Privacy = () => {
                     algorithm with a dynamic IV before saving it to our database. The salt used is
                     both a master key defined by the server, and a user key that is generated for
                     each secret which is not saved to the database. The same is valid for password
-                    generation. The only difference is that the password is using SHA 256 algorithm.
+                    generation. The only difference is that the password is using the bcrypt
+                    algorithm.
                 </Info>
 
                 <h2>Do you track me?</h2>
