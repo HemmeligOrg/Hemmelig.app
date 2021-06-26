@@ -1,20 +1,23 @@
-const crypto = require('crypto');
-const config = require('config');
+const bcrypt = require('bcrypt');
 
-async function createHash(password, key) {
-    return crypto
-        .createHash('sha256')
-        .update(config.get('secret_key') + key + password)
-        .digest('hex');
+// https://www.npmjs.com/package/bcrypt
+async function hash(password) {
+    try {
+        return await bcrypt.hash(password, 8);
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-async function compare(password, key, hash) {
-    const newHash = await createHash(password, key);
-
-    return newHash === hash;
+async function compare(password, hash) {
+    try {
+        return await bcrypt.compare(password, hash);
+    } catch (_) {
+        return false;
+    }
 }
 
 module.exports = {
-    createHash,
+    hash,
     compare,
 };
