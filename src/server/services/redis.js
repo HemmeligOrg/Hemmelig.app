@@ -53,7 +53,7 @@ async function getSecret(id) {
 async function getSecretKey(id, key) {
     const data = await client.hgetall(`secret:${id}`);
 
-    if (key in data) {
+    if (data && key in data) {
         return data[key];
     }
 
