@@ -19,14 +19,14 @@ export const signIn = async (username, password) => {
     return await data.json();
 };
 
-export const signUp = async (username, password) => {
+export const signUp = async (email, username, password) => {
     const data = await fetch(`${config.get('api.host')}/authentication/signup`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, username, password }),
     });
 
     return await data.json();

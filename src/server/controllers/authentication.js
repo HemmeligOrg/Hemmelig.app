@@ -1,3 +1,5 @@
+const emailValidator = require('email-validator');
+
 const redis = require('../services/redis');
 const { hash, compare } = require('../helpers/password');
 
@@ -13,11 +15,16 @@ async function authentication(fastify) {
             preValidation: [fastify.rateLimit],
         },
         async (request, reply) => {
-            const { username = '', password = '' } = request.body;
+            const { email = '', username = '', password = '' } = request.body;
 
+            if (!emailValidator.validate(email)) {
+                return reply.code(403).send({
+                    error: `Your email: "${email}" is not valid.`,
+                });
+            }
             if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
                 return reply.code(403).send({
-                    error: `Has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
+                    error: `Username has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
                 });
             }
 
@@ -33,7 +40,7 @@ async function authentication(fastify) {
 
             const userPassword = await hash(password);
 
-            const user = await redis.createUser(username, userPassword);
+            const user = await redis.createUser(username, email, userPassword);
 
             if (!user) {
                 return reply.code(403).send({
@@ -44,6 +51,7 @@ async function authentication(fastify) {
             const token = await fastify.jwt.sign(
                 {
                     username,
+                    email,
                 },
                 { expiresIn: '7d' } // expires in seven days
             );

@@ -55,7 +55,8 @@ if (process.env.NODE_ENV !== 'development') {
     fastify.get('/about', serveIndex);
     fastify.get('/privacy', (_, reply) => reply.sendFile('privacy/index.html'));
     fastify.get('/api-docs', (_, reply) => reply.sendFile('api-docs/index.html'));
-    fastify.get('/signin', serveIndex);
+    fastify.get('/signin', (_, reply) => reply.sendFile('signin/index.html'));
+    fastify.get('/signup', (_, reply) => reply.sendFile('signup/index.html'));
     fastify.get('/account', serveIndex);
 }
 

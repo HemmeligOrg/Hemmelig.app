@@ -29,12 +29,21 @@
     height: auto;
 }
 
-.linkButton {
+.signWrapper {
+    display: flex;
+    width: 100%;
+    max-width: 250px;
+    justify-content: flex-end;
+}
+
+.signOutButton,
+.signUpButton,
+.signInButton {
     display: flex;
     justify-content: space-around;
     margin: var(--margin-basic) 0;
     width: 100%;
-    max-width: 110px;
+    max-width: 105px;
     padding: 8px;
     height: 40px;
     font-weight: 600;
@@ -46,18 +55,28 @@
     border: 2px solid var(--color-contrast);
 }
 
-.linkButton:hover {
-    border: 2px solid var(--color-contrast);
-}
-
-.linkButton:active {
-    filter: brightness(95%);
-}
-
-.linkButton svg {
+.signOutButton svg,
+.signUpButton svg,
+.signInButton svg {
     width: 20px;
     height: auto;
     fill: var(--color-contrast);
+}
+
+.signUpButton:hover,
+.signOutButton:hover {
+    border: 2px solid var(--color-contrast);
+}
+
+.signUpButton:active,
+.signOutButton:hover {
+    filter: brightness(95%);
+}
+
+.signInButton {
+    border-radius: 0;
+    border: none;
+    padding: var(--margin-basic);
 }
 
 @media only screen and (min-width: 768px) {

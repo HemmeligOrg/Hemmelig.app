@@ -10,13 +10,14 @@ import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 import Success from '../../components/info/success';
 
-import { signIn } from '../../api/authentication';
+import { signUp } from '../../api/authentication';
 
 import { setToken } from '../../helpers/token';
 
 const Secret = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [error, setError] = useState(null);
     const [token, setTokenState] = useState('');
     const [success, setSuccess] = useState(false);
@@ -41,13 +42,17 @@ const Secret = () => {
         setPassword(event.target.value);
     };
 
-    const onSignIn = async (event) => {
+    const onEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const onSignUp = async (event) => {
         event.preventDefault();
 
-        const data = await signIn(username, password);
+        const data = await signUp(email, username, password);
 
-        if (data.statusCode === 401) {
-            setError('Wrong username or password. Please try again.');
+        if (data.error) {
+            setError(data.error);
             setSuccess(false);
 
             return;
@@ -62,10 +67,18 @@ const Secret = () => {
         <>
             <Wrapper>
                 <div class={style.form}>
-                    <h1>Sign in</h1>
+                    <h1>Sign up</h1>
 
                     <Info>Everything you need to access, and manage the Hemmelig secrets.</Info>
                     <form>
+                        <Input
+                            type="text"
+                            placeholder="Email"
+                            value={email}
+                            onChange={onEmailChange}
+                            required
+                        />
+
                         <Input
                             type="text"
                             placeholder="Username"
@@ -83,8 +96,8 @@ const Secret = () => {
                         />
 
                         <div class={style.buttonWrapper}>
-                            <Button buttonType="burn" onClick={onSignIn}>
-                                Sign in
+                            <Button buttonType="create" onClick={onSignUp}>
+                                Sign up
                             </Button>
                         </div>
                     </form>

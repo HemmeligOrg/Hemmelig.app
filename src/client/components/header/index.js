@@ -37,15 +37,21 @@ const Header = () => {
                 <Logo class={style.logo} />
             </Link>
             {isLoggedIn && (
-                <Link class={style.linkButton} onClick={onSignOut}>
+                <Link class={style.signOutButton} onClick={onSignOut}>
                     <span>Sign out</span> <Account />
                 </Link>
             )}
 
             {!isLoggedIn && (
-                <Link class={style.linkButton} href="/signin">
-                    <span>Sign in</span> <Account />
-                </Link>
+                <div class={style.signWrapper}>
+                    <Link class={style.signInButton} href="/signin">
+                        <span>Sign in</span>
+                    </Link>
+
+                    <Link class={style.signUpButton} href="/signup">
+                        <span>Sign up</span> <Account />
+                    </Link>
+                </div>
             )}
         </header>
     );

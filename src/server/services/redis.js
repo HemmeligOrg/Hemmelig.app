@@ -72,11 +72,13 @@ async function isAlive() {
     return false;
 }
 
-async function createUser(username, password) {
+async function createUser(username, email, password) {
     return await client.hmset(
         `user:${username}`,
         'username',
         username,
+        'email',
+        email,
         'password',
         password,
         'basic_auth_token',
