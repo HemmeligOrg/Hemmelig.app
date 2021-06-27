@@ -17,6 +17,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
+    const [file, setFile] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [secretId, setSecretId] = useState('');
@@ -34,6 +35,15 @@ const Home = () => {
 
     const onChangeHandler = (event) => {
         setText(event.target.value);
+    };
+
+    const onFileChange = (event) => {
+        const [file] = event.target.files;
+        const formData = new FormData();
+
+        formData.append('file', file, file.name);
+
+        setFile(formData);
     };
 
     const onSelectChange = (event) => {
@@ -66,7 +76,7 @@ const Home = () => {
 
         event.preventDefault();
 
-        const json = await createSecret(text, { password, ttl, allowedIp });
+        const json = await createSecret(text, { file, password, ttl, allowedIp });
 
         if (json.statusCode !== 201) {
             setError(json.error);
@@ -101,6 +111,8 @@ const Home = () => {
 
     const getSecretURL = () => `${window.location.href}secret/${encryptionKey}/${secretId}`;
 
+    const inputReadOnly = inputReadOnly;
+
     return (
         <>
             <Wrapper>
@@ -115,8 +127,14 @@ const Home = () => {
                         placeholder="Write your sensitive information.."
                         onChange={onChangeHandler}
                         value={text}
-                        readonly={!!secretId}
-                        thickBorder={!!secretId}
+                        readonly={inputReadOnly}
+                        thickBorder={inputReadOnly}
+                    />
+                    <Input
+                        placeholder="File upload"
+                        type="file"
+                        onChange={onFileChange}
+                        readonly={inputReadOnly}
                     />
                     <InputGroup>
                         <Select value={ttl} onChange={onSelectChange}>
@@ -133,7 +151,7 @@ const Home = () => {
                             placeholder="Your optional password"
                             value={password}
                             onChange={onPasswordChange}
-                            readonly={!!secretId}
+                            readonly={inputReadOnly}
                             style="-webkit-text-security: disc;" // hack for password prompt
                         />
                     </InputGroup>
@@ -143,7 +161,7 @@ const Home = () => {
                             placeholder="Restrict by IP address"
                             value={allowedIp}
                             onChange={onIpChange}
-                            readonly={!!secretId}
+                            readonly={inputReadOnly}
                         />
                     </Expandable>
 

@@ -75,8 +75,8 @@ async function secret(fastify) {
             preValidation: [fastify.rateLimit, fastify.basicAuth],
         },
         async (request, reply) => {
-            const { text, ttl, password, allowedIp } = request.body;
-
+            const { text, file, ttl, password, allowedIp } = request.body;
+            console.log(request.body);
             if (Buffer.byteLength(text) > MAX_BYTES) {
                 return reply.code(413).send({
                     error: `The secret size (${prettyBytes(
