@@ -41,7 +41,7 @@ function decrypt(hash, key) {
         decipher.final(),
     ]);
 
-    return decrypted.toString();
+    return decrypted;
 }
 
 module.exports = {

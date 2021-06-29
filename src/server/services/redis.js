@@ -37,6 +37,19 @@ function createSecret(data, ttl) {
         prepare.push(...['allowed_ip', data.allowedIp]);
     }
 
+    if (data.file) {
+        prepare.push(
+            ...[
+                'file_extension',
+                data.file.ext,
+                'file_mimetype',
+                data.file.mime,
+                'file_key',
+                data.file.key,
+            ]
+        );
+    }
+
     client
         .multi()
         .hmset(prepare)

@@ -10,6 +10,7 @@ import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
 import { getSecret, secretExists } from '../../api/secret';
+import { downloadFile } from '../../api/upload';
 
 const Secret = ({ secretId, encryptionKey = null }) => {
     const [secret, setSecret] = useState(null);
@@ -45,6 +46,16 @@ const Secret = ({ secretId, encryptionKey = null }) => {
             setError(json.error);
         } else {
             setSecret(json.secret);
+
+            if (json.file_key) {
+                downloadFile({
+                    key: json.file_key,
+                    extension: json.file_extension,
+                    mimetype: json.file_mimetype,
+                    encryptionKey,
+                    secretId,
+                });
+            }
 
             setIsSecretOpen(true);
 

@@ -12,6 +12,8 @@ fastify.register(require('fastify-helmet'), { contentSecurityPolicy: false });
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 
+fastify.register(require('fastify-multipart'));
+
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
 fastify.register(require('./src/server/decorators/basic-auth'));
@@ -26,7 +28,7 @@ fastify.register(require('./src/server/controllers/authentication'), {
 fastify.register(require('./src/server/controllers/account'), {
     prefix: '/api/account',
 });
-
+fastify.register(require('./src/server/controllers/upload'), { prefix: '/api/upload' });
 fastify.register(require('./src/server/controllers/secret'), { prefix: '/api/secret' });
 fastify.register(require('./src/server/controllers/healthz'), { prefix: '/api/healthz' });
 fastify.register(require('./src/server/controllers/healthz'), { prefix: '/healthz' });

@@ -1,18 +1,14 @@
 import config from '../config';
 
-export const createSecret = async (text, { file, password, ttl, allowedIp }) => {
+export const createSecret = async (formData = {}) => {
     const data = await fetch(`${config.get('api.host')}/secret`, {
         method: 'POST',
         cache: 'no-cache',
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        body: JSON.stringify({ text, file, password, ttl, allowedIp }),
+        body: formData,
     });
-
     const json = await data.json();
 
-    return await { ...json, statusCode: data.status };
+    return { ...json, statusCode: data.status };
 };
 
 export const getSecret = async (secretId, encryptionKey, password) => {

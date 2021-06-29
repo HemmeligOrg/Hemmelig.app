@@ -13,19 +13,27 @@ import Info from '../../components/info/info';
 import Share from '../../components/share';
 import Expandable from '../../components/expandable';
 
-import { createSecret, burnSecret } from '../../api/secret';
+import { createSecret, burnSecret, updateSecret } from '../../api/secret';
+import { uploadFile } from '../../api/upload';
 
 const Home = () => {
     const [text, setText] = useState('');
     const [file, setFile] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
+    const [allowedIp, setAllowedIp] = useState('');
+    const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
-    const [allowedIp, setAllowedIp] = useState('');
+
     const [error, setError] = useState('');
 
     const secretRef = useRef(null);
+
+    useEffect(() => {
+        // Run once to initialize the form data to post
+        setFormData(new FormData());
+    }, []);
 
     useEffect(() => {
         if (secretId) {
@@ -38,12 +46,10 @@ const Home = () => {
     };
 
     const onFileChange = (event) => {
+        // Support multi upload at a later stage
         const [file] = event.target.files;
-        const formData = new FormData();
 
-        formData.append('file', file, file.name);
-
-        setFile(formData);
+        setFile(file);
     };
 
     const onSelectChange = (event) => {
@@ -65,6 +71,7 @@ const Home = () => {
         setPassword('');
         setEncryptionKey('');
         setAllowedIp('');
+        setFile('');
     };
 
     const onSubmit = async (event) => {
@@ -76,7 +83,13 @@ const Home = () => {
 
         event.preventDefault();
 
-        const json = await createSecret(text, { file, password, ttl, allowedIp });
+        formData.append('text', text);
+        formData.append('password', password);
+        formData.append('ttl', ttl);
+        formData.append('allowedIp', allowedIp);
+        formData.append('file', file);
+
+        const json = await createSecret(formData);
 
         if (json.statusCode !== 201) {
             setError(json.error);
@@ -111,7 +124,7 @@ const Home = () => {
 
     const getSecretURL = () => `${window.location.href}secret/${encryptionKey}/${secretId}`;
 
-    const inputReadOnly = inputReadOnly;
+    const inputReadOnly = !!secretId;
 
     return (
         <>
@@ -134,6 +147,7 @@ const Home = () => {
                         placeholder="File upload"
                         type="file"
                         onChange={onFileChange}
+                        value={file}
                         readonly={inputReadOnly}
                     />
                     <InputGroup>
