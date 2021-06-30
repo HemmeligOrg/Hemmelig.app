@@ -108,3 +108,5 @@ build/
 hemmelig.yaml
 
 size-plugin.json
+
+.env.local

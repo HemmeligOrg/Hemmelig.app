@@ -27,6 +27,7 @@
   "homepage": "https://github.com/HemmeligOrg/hemmelig#readme",
   "dependencies": {
     "async-redis": "^2.0.0",
+    "aws-sdk": "^2.935.0",
     "bcrypt": "^5.0.1",
     "config": "^3.3.6",
     "email-validator": "^2.0.4",
@@ -34,8 +35,10 @@
     "fastify-cors": "^6.0.1",
     "fastify-helmet": "^5.3.1",
     "fastify-jwt": "^3.0.0",
+    "fastify-multipart": "^4.0.6",
     "fastify-plugin": "^3.0.0",
     "fastify-static": "^4.2.2",
+    "file-type": "^16.5.0",
     "is-ip": "^3.1.0",
     "nanoid": "^3.1.23",
     "preact-render-to-string": "^5.1.4",

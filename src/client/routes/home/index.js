@@ -13,18 +13,31 @@ import Info from '../../components/info/info';
 import Share from '../../components/share';
 import Expandable from '../../components/expandable';
 
+import { getToken, hasToken } from '../../helpers/token';
+
 import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
+    const [file, setFile] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
+    const [allowedIp, setAllowedIp] = useState('');
+    const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
-    const [allowedIp, setAllowedIp] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const [error, setError] = useState('');
 
     const secretRef = useRef(null);
+
+    useEffect(() => {
+        // Run once to initialize the form data to post
+        setFormData(new FormData());
+
+        setIsLoggedIn(hasToken());
+    }, []);
 
     useEffect(() => {
         if (secretId) {
@@ -34,6 +47,13 @@ const Home = () => {
 
     const onChangeHandler = (event) => {
         setText(event.target.value);
+    };
+
+    const onFileChange = (event) => {
+        // Support multi upload at a later stage
+        const [file] = event.target.files;
+
+        setFile(file);
     };
 
     const onSelectChange = (event) => {
@@ -55,6 +75,7 @@ const Home = () => {
         setPassword('');
         setEncryptionKey('');
         setAllowedIp('');
+        setFile('');
     };
 
     const onSubmit = async (event) => {
@@ -66,7 +87,13 @@ const Home = () => {
 
         event.preventDefault();
 
-        const json = await createSecret(text, { password, ttl, allowedIp });
+        formData.append('text', text);
+        formData.append('password', password);
+        formData.append('ttl', ttl);
+        formData.append('allowedIp', allowedIp);
+        formData.append('file', file);
+
+        const json = await createSecret(formData, getToken());
 
         if (json.statusCode !== 201) {
             setError(json.error);
@@ -101,6 +128,8 @@ const Home = () => {
 
     const getSecretURL = () => `${window.location.href}secret/${encryptionKey}/${secretId}`;
 
+    const inputReadOnly = !!secretId;
+
     return (
         <>
             <Wrapper>
@@ -115,9 +144,24 @@ const Home = () => {
                         placeholder="Write your sensitive information.."
                         onChange={onChangeHandler}
                         value={text}
-                        readonly={!!secretId}
-                        thickBorder={!!secretId}
+                        readonly={inputReadOnly}
+                        thickBorder={inputReadOnly}
                     />
+
+                    {!isLoggedIn && (
+                        <Info align="right">You have to sign in to upload an image.</Info>
+                    )}
+                    {isLoggedIn && (
+                        <Info align="right">Only one image is currently supported.</Info>
+                    )}
+                    <Input
+                        placeholder="Image upload"
+                        type="file"
+                        onChange={onFileChange}
+                        value={file}
+                        disabled={!isLoggedIn}
+                    />
+
                     <InputGroup>
                         <Select value={ttl} onChange={onSelectChange}>
                             <option value="604800">7 days</option>
@@ -133,7 +177,7 @@ const Home = () => {
                             placeholder="Your optional password"
                             value={password}
                             onChange={onPasswordChange}
-                            readonly={!!secretId}
+                            readonly={inputReadOnly}
                             style="-webkit-text-security: disc;" // hack for password prompt
                         />
                     </InputGroup>
@@ -143,7 +187,7 @@ const Home = () => {
                             placeholder="Restrict by IP address"
                             value={allowedIp}
                             onChange={onIpChange}
-                            readonly={!!secretId}
+                            readonly={inputReadOnly}
                         />
                     </Expandable>
 

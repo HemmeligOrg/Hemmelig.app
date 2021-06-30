@@ -1,13 +1,17 @@
 const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
 const isIp = require('is-ip');
+const FileType = require('file-type');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
 const getRandomAdjective = require('../helpers/adjective');
 const redis = require('../services/redis');
-const { all } = require('deepmerge');
+
+const { upload, download, remove } = require('../services/do');
 
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
+
+const MAX_FILE_BYTES = 1024 * 16 * 1000; // 16mb - 16 024 000 bytes
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -23,6 +27,8 @@ async function getSecretRoute(request, reply) {
     const { id } = request.params;
 
     const { password = '', encryptionKey = '' } = request.body ? request.body : {};
+
+    const result = {};
 
     // If it does not match the valid characters set for nanoid, return 403
     if (!validIdRegExp.test(id)) {
@@ -42,11 +48,19 @@ async function getSecretRoute(request, reply) {
         }
     }
 
-    const secret = decrypt(JSON.parse(data.secret), encryptionKey);
+    if (data.file_key) {
+        Object.assign(result, {
+            file_mimetype: data.file_mimetype,
+            file_extension: data.file_extension,
+            file_key: data.file_key,
+        });
+    }
+
+    Object.assign(result, { secret: decrypt(JSON.parse(data.secret), encryptionKey).toString() });
 
     redis.deleteSecret(id);
 
-    return { secret };
+    return result;
 }
 
 async function secret(fastify) {
@@ -72,20 +86,21 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [fastify.rateLimit, fastify.basicAuth],
+            preValidation: [fastify.rateLimit],
         },
-        async (request, reply) => {
-            const { text, ttl, password, allowedIp } = request.body;
+        async (req, reply) => {
+            const formData = await req.file();
+            const { file, text, ttl, password, allowedIp } = formData.fields;
 
-            if (Buffer.byteLength(text) > MAX_BYTES) {
+            if (Buffer.byteLength(text?.value) > MAX_BYTES) {
                 return reply.code(413).send({
                     error: `The secret size (${prettyBytes(
-                        Buffer.byteLength(text)
+                        Buffer.byteLength(text?.value)
                     )}) exceeded our limit of ${prettyBytes(MAX_BYTES)}.`,
                 });
             }
 
-            if (allowedIp && !ipCheck(allowedIp)) {
+            if (allowedIp.value && !ipCheck(allowedIp.value)) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
@@ -96,15 +111,44 @@ async function secret(fastify) {
 
             const data = {
                 id,
-                secret: JSON.stringify(encrypt(text, key)),
-                allowedIp,
+                secret: JSON.stringify(encrypt(text?.value, key)),
+                allowedIp: allowedIp.value,
             };
 
-            if (password) {
-                Object.assign(data, { password: await hash(password) });
+            // First release it will be images only. Have to look into how
+            // to solve this for the ext, and mime types for other files.
+            if (file.filename && file.mimetype.startsWith('image/')) {
+                try {
+                    await req.jwtVerify();
+                } catch (err) {
+                    return reply.send({
+                        error: 'You have to create an account and sign in to upload images',
+                    });
+                }
+
+                const fileData = await file.toBuffer();
+                const byteLength = Buffer.byteLength(fileData);
+
+                if (byteLength > MAX_FILE_BYTES) {
+                    return reply.code(413).send({
+                        error: `The file size (${prettyBytes(
+                            byteLength
+                        )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
+                    });
+                }
+
+                const imageData = await upload(key, fileData);
+
+                const { ext, mime } = await FileType.fromBuffer(fileData);
+
+                Object.assign(data, { file: { ext, mime, key: imageData.key } });
             }
 
-            redis.createSecret(data, ttl);
+            if (password.value) {
+                Object.assign(data, { password: await hash(password.value) });
+            }
+
+            redis.createSecret(data, ttl.value);
 
             // Return the secret ID, and encryptet KEY to be used for the URL
             // By generating an encryption key per secret, we will never be able to open the
@@ -129,7 +173,6 @@ async function secret(fastify) {
         return { success: 'Secret burned' };
     });
 
-    // This will burn the secret 🔥
     fastify.get('/:id/exist', options, async (request, reply) => {
         const { id } = request.params;
 

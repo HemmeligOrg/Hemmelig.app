@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -10,12 +9,15 @@ import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
 import { getSecret, secretExists } from '../../api/secret';
+import { downloadFile } from '../../api/upload';
 
 const Secret = ({ secretId, encryptionKey = null }) => {
     const [secret, setSecret] = useState(null);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+    const [file, setFile] = useState(null);
+    const [isDownloaded, setIsDownloaded] = useState(false);
     const [error, setError] = useState(null);
 
     const fetchSecret = async (event) => {
@@ -46,6 +48,14 @@ const Secret = ({ secretId, encryptionKey = null }) => {
         } else {
             setSecret(json.secret);
 
+            if (json.file_key) {
+                setFile({
+                    key: json.file_key,
+                    extension: json.file_extension,
+                    mimetype: json.file_mimetype,
+                });
+            }
+
             setIsSecretOpen(true);
 
             setError(null);
@@ -70,6 +80,20 @@ const Secret = ({ secretId, encryptionKey = null }) => {
 
     const onPasswordChange = (event) => {
         setPassword(event.target.value);
+    };
+
+    const onFileDownload = (event) => {
+        event.preventDefault();
+
+        downloadFile({
+            key: file.key,
+            extension: file.extension,
+            mimetype: file.mimetype,
+            encryptionKey,
+            secretId,
+        });
+
+        setIsDownloaded(true);
     };
 
     return (
@@ -100,6 +124,11 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                 {!isSecretOpen && (
                     <Button buttonType="create" onClick={fetchSecret} full>
                         View secret
+                    </Button>
+                )}
+                {file && !isDownloaded && (
+                    <Button buttonType="burn" onClick={onFileDownload} full>
+                        Download the secret file
                     </Button>
                 )}
             </Wrapper>

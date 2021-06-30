@@ -15,11 +15,12 @@ Hemmelig is available at https://hemmelig.app
 ## How it works
 
 You enter https://hemmelig.app, write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `hash(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
 
 ## Features
 
 -   Encryptet sensitive information sharing.
+-   Encryptet attachment for signed in users.
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encryptet key is part of the URL, and not saved to the database for an extra layer of security.
@@ -61,6 +62,11 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_REDIS_USER` Default: "" - You redis user name
 -   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
+-   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces endpoint
+-   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces key
+-   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces secret
+-   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces bucket name
+-   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces folder for uploading
 
 ## Run locally
 

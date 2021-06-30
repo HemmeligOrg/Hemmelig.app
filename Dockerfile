@@ -25,6 +25,11 @@
 #   -e SECRET_REDIS_USER=username \
 #   -e SECRET_REDIS_PASSWORD=glhf \
 #   -e SECRET_JWT_SECRET=good_luck_have_fun \
+#   -e SECRET_DO_SPACES_ENDPOINT = 'https://ams3.digitaloceanspaces.com' \
+#   -e SECRET_DO_SPACES_KEY = '72WS3GOR2ASJFO27FC4A' \
+#   -e SECRET_DO_SPACES_SECRET = w6XLSH+BNLmPDyiyzA6wrIZ4riCf94uM3Cpw83B3ldg \
+#   -e SECRET_DO_SPACES_BUCKET = hemmelig \
+#   -e SECRET_DO_SPACES_FOLDER = localhost.hemmelig.app \
 #   hemmeligapp/hemmelig:latest
 
 FROM node:lts-alpine
