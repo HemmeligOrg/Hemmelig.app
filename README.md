@@ -20,6 +20,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 ## Features
 
 -   Encryptet sensitive information sharing.
+-   Encryptet attachment for signed in users.
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encryptet key is part of the URL, and not saved to the database for an extra layer of security.
