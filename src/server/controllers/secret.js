@@ -89,8 +89,8 @@ async function secret(fastify) {
             preValidation: [fastify.rateLimit],
         },
         async (req, reply) => {
-            const formData = await req.file();
-            const { file, text, ttl, password, allowedIp } = formData.fields;
+            const file = await req.body.file;
+            const { text, ttl, password, allowedIp } = req.body;
 
             if (Buffer.byteLength(text?.value) > MAX_BYTES) {
                 return reply.code(413).send({

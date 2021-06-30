@@ -12,7 +12,7 @@ fastify.register(require('fastify-helmet'), { contentSecurityPolicy: false });
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 
-fastify.register(require('fastify-multipart'));
+fastify.register(require('fastify-multipart'), { attachFieldsToBody: true });
 
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
