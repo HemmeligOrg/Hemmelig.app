@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import style from './style.css';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -18,6 +17,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
     const [file, setFile] = useState(null);
+    const [isDownloaded, setIsDownloaded] = useState(false);
     const [error, setError] = useState(null);
 
     const fetchSecret = async (event) => {
@@ -92,6 +92,8 @@ const Secret = ({ secretId, encryptionKey = null }) => {
             encryptionKey,
             secretId,
         });
+
+        setIsDownloaded(true);
     };
 
     return (
@@ -124,7 +126,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                         View secret
                     </Button>
                 )}
-                {file && (
+                {file && !isDownloaded && (
                     <Button buttonType="burn" onClick={onFileDownload} full>
                         Download the secret file
                     </Button>

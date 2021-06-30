@@ -68,12 +68,13 @@ const Account = () => {
                     Hi, <strong>{user.username}</strong>
                 </Info>
                 <Info align="left">
-                    This page does not really give you much. Basically just basic auth for the API.
-                    Which still does not give you anything extra than using the API without basic
-                    auth. However, I would suggest you to use basic auth, because restrictions are
-                    coming.
+                    We are glad you logged in. Now you earned the right to upload images that will
+                    be encryptet to be shared with anyone!
                 </Info>
 
+                <Info align="left">
+                    <strong>BASIC AUTH:</strong>
+                </Info>
                 <Info align="left">
                     <strong>User</strong>
                 </Info>
