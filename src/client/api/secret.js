@@ -1,11 +1,21 @@
 import config from '../config';
 
-export const createSecret = async (formData = {}) => {
-    const data = await fetch(`${config.get('api.host')}/secret`, {
+export const createSecret = async (formData = {}, token = '') => {
+    const options = {
         method: 'POST',
         cache: 'no-cache',
         body: formData,
-    });
+    };
+
+    if (token) {
+        Object.assign(options, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    }
+
+    const data = await fetch(`${config.get('api.host')}/secret`, options);
     const json = await data.json();
 
     return { ...json, statusCode: data.status };

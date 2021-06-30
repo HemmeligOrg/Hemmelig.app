@@ -17,6 +17,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+    const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
 
     const fetchSecret = async (event) => {
@@ -48,12 +49,10 @@ const Secret = ({ secretId, encryptionKey = null }) => {
             setSecret(json.secret);
 
             if (json.file_key) {
-                downloadFile({
+                setFile({
                     key: json.file_key,
                     extension: json.file_extension,
                     mimetype: json.file_mimetype,
-                    encryptionKey,
-                    secretId,
                 });
             }
 
@@ -81,6 +80,18 @@ const Secret = ({ secretId, encryptionKey = null }) => {
 
     const onPasswordChange = (event) => {
         setPassword(event.target.value);
+    };
+
+    const onFileDownload = (event) => {
+        event.preventDefault();
+
+        downloadFile({
+            key: file.key,
+            extension: file.extension,
+            mimetype: file.mimetype,
+            encryptionKey,
+            secretId,
+        });
     };
 
     return (
@@ -111,6 +122,11 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                 {!isSecretOpen && (
                     <Button buttonType="create" onClick={fetchSecret} full>
                         View secret
+                    </Button>
+                )}
+                {file && (
+                    <Button buttonType="burn" onClick={onFileDownload} full>
+                        Download the secret file
                     </Button>
                 )}
             </Wrapper>

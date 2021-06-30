@@ -13,8 +13,9 @@ import Info from '../../components/info/info';
 import Share from '../../components/share';
 import Expandable from '../../components/expandable';
 
-import { createSecret, burnSecret, updateSecret } from '../../api/secret';
-import { uploadFile } from '../../api/upload';
+import { getToken, hasToken } from '../../helpers/token';
+
+import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
@@ -25,6 +26,7 @@ const Home = () => {
     const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [error, setError] = useState('');
 
@@ -33,6 +35,8 @@ const Home = () => {
     useEffect(() => {
         // Run once to initialize the form data to post
         setFormData(new FormData());
+
+        setIsLoggedIn(hasToken());
     }, []);
 
     useEffect(() => {
@@ -89,7 +93,7 @@ const Home = () => {
         formData.append('allowedIp', allowedIp);
         formData.append('file', file);
 
-        const json = await createSecret(formData);
+        const json = await createSecret(formData, getToken());
 
         if (json.statusCode !== 201) {
             setError(json.error);
@@ -143,13 +147,21 @@ const Home = () => {
                         readonly={inputReadOnly}
                         thickBorder={inputReadOnly}
                     />
+
+                    {!isLoggedIn && (
+                        <Info align="right">You have to sign in to upload an image.</Info>
+                    )}
+                    {isLoggedIn && (
+                        <Info align="right">Only one image is currently supported.</Info>
+                    )}
                     <Input
-                        placeholder="File upload"
+                        placeholder="Image upload"
                         type="file"
                         onChange={onFileChange}
                         value={file}
-                        readonly={inputReadOnly}
+                        disabled={!isLoggedIn}
                     />
+
                     <InputGroup>
                         <Select value={ttl} onChange={onSelectChange}>
                             <option value="604800">7 days</option>

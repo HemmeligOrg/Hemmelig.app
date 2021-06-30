@@ -86,7 +86,7 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [fastify.rateLimit, fastify.basicAuth],
+            preValidation: [fastify.rateLimit],
         },
         async (req, reply) => {
             const formData = await req.file();
@@ -115,13 +115,23 @@ async function secret(fastify) {
                 allowedIp: allowedIp.value,
             };
 
+            // First release it will be images only. Have to look into how
+            // to solve this for the ext, and mime types for other files.
             if (file.filename && file.mimetype.startsWith('image/')) {
+                try {
+                    await req.jwtVerify();
+                } catch (err) {
+                    return reply.send({
+                        error: 'You have to create an account and sign in to upload images',
+                    });
+                }
+
                 const fileData = await file.toBuffer();
                 const byteLength = Buffer.byteLength(fileData);
 
                 if (byteLength > MAX_FILE_BYTES) {
                     return reply.code(413).send({
-                        error: `The secret size (${prettyBytes(
+                        error: `The file size (${prettyBytes(
                             byteLength
                         )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
                     });
@@ -163,7 +173,6 @@ async function secret(fastify) {
         return { success: 'Secret burned' };
     });
 
-    // This will burn the secret 🔥
     fastify.get('/:id/exist', options, async (request, reply) => {
         const { id } = request.params;
 
