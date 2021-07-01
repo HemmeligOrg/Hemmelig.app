@@ -38,16 +38,7 @@ function createSecret(data, ttl) {
     }
 
     if (data.file) {
-        prepare.push(
-            ...[
-                'file_extension',
-                data.file.ext,
-                'file_mimetype',
-                data.file.mime,
-                'file_key',
-                data.file.key,
-            ]
-        );
+        prepare.push(...['file', JSON.stringify(data.file)]);
     }
 
     client

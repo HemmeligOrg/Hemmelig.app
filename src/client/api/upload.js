@@ -1,7 +1,7 @@
 import config from '../config';
 
 export const downloadFile = async (fileData) => {
-    const { key, encryptionKey, extension, mimetype, secretId } = fileData;
+    const { key, encryptionKey, ext, mime, secretId } = fileData;
 
     const data = await fetch(`${config.get('api.host')}/upload/get_image`, {
         method: 'POST',
@@ -9,7 +9,7 @@ export const downloadFile = async (fileData) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ key, encryptionKey, extension, mimetype }),
+        body: JSON.stringify({ key, encryptionKey, ext, mime }),
     });
 
     if (data.status === 401) {
@@ -22,7 +22,7 @@ export const downloadFile = async (fileData) => {
     const imageUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = imageUrl;
-    link.download = `${secretId}.${extension}`;
+    link.download = `${secretId}.${ext}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

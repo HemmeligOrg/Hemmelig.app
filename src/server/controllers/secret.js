@@ -1,17 +1,11 @@
-const { nanoid } = require('nanoid');
 const prettyBytes = require('pretty-bytes');
 const isIp = require('is-ip');
-const FileType = require('file-type');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
-const getRandomAdjective = require('../helpers/adjective');
+
 const redis = require('../services/redis');
 
-const { upload, download, remove } = require('../services/do');
-
 const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
-
-const MAX_FILE_BYTES = 1024 * 16 * 1000; // 16mb - 16 024 000 bytes
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -48,12 +42,8 @@ async function getSecretRoute(request, reply) {
         }
     }
 
-    if (data.file_key) {
-        Object.assign(result, {
-            file_mimetype: data.file_mimetype,
-            file_extension: data.file_extension,
-            file_key: data.file_key,
-        });
+    if (data.file) {
+        Object.assign(result, { file: JSON.parse(data.file) });
     }
 
     Object.assign(result, { secret: decrypt(JSON.parse(data.secret), encryptionKey).toString() });
@@ -86,11 +76,11 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [fastify.rateLimit],
+            preValidation: [fastify.rateLimit, fastify.keyGeneration, fastify.attachment],
         },
         async (req, reply) => {
-            const file = await req.body.file;
             const { text, ttl, password, allowedIp } = req.body;
+            const { encryptionKey, secretId, file } = req.secret;
 
             if (Buffer.byteLength(text?.value) > MAX_BYTES) {
                 return reply.code(413).send({
@@ -104,48 +94,18 @@ async function secret(fastify) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
-            // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
-            const id = getRandomAdjective() + '_' + nanoid();
-
-            const key = nanoid();
-
             const data = {
-                id,
-                secret: JSON.stringify(encrypt(text?.value, key)),
+                id: secretId,
+                secret: JSON.stringify(encrypt(text?.value, encryptionKey)),
                 allowedIp: allowedIp.value,
             };
 
-            // First release it will be images only. Have to look into how
-            // to solve this for the ext, and mime types for other files.
-            if (file.filename && file.mimetype.startsWith('image/')) {
-                try {
-                    await req.jwtVerify();
-                } catch (err) {
-                    return reply.send({
-                        error: 'You have to create an account and sign in to upload images',
-                    });
-                }
-
-                const fileData = await file.toBuffer();
-                const byteLength = Buffer.byteLength(fileData);
-
-                if (byteLength > MAX_FILE_BYTES) {
-                    return reply.code(413).send({
-                        error: `The file size (${prettyBytes(
-                            byteLength
-                        )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
-                    });
-                }
-
-                const imageData = await upload(key, fileData);
-
-                const { ext, mime } = await FileType.fromBuffer(fileData);
-
-                Object.assign(data, { file: { ext, mime, key: imageData.key } });
-            }
-
             if (password.value) {
                 Object.assign(data, { password: await hash(password.value) });
+            }
+
+            if (file) {
+                Object.assign(data, { file });
             }
 
             redis.createSecret(data, ttl.value);
@@ -153,10 +113,10 @@ async function secret(fastify) {
             // Return the secret ID, and encryptet KEY to be used for the URL
             // By generating an encryption key per secret, we will never be able to open the
             // secret by using the master_secret_key
-            // This is how it will work: SECRET_MASTER_KEY + RANDOM_KEY to decrypt the message.
+            // This is how it will work: SECRET_MASTER_KEY + RANDOM_ENCRYPTION_KEY to decrypt the message.
             // The RANDOM_KEY will be within the URL.
-            // Example: https://hemmelig.app/secret/RANDOM_KEY/SECRET_ID
-            return reply.code(201).send({ id, key });
+            // Example: https://hemmelig.app/secret/RANDOM_ENCRYPTION_KEY/SECRET_ID
+            return reply.code(201).send({ id: secretId, key: encryptionKey });
         }
     );
 

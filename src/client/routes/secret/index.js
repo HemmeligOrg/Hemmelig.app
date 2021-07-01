@@ -48,12 +48,8 @@ const Secret = ({ secretId, encryptionKey = null }) => {
         } else {
             setSecret(json.secret);
 
-            if (json.file_key) {
-                setFile({
-                    key: json.file_key,
-                    extension: json.file_extension,
-                    mimetype: json.file_mimetype,
-                });
+            if (json.file) {
+                setFile(json.file);
             }
 
             setIsSecretOpen(true);
@@ -86,9 +82,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
         event.preventDefault();
 
         downloadFile({
-            key: file.key,
-            extension: file.extension,
-            mimetype: file.mimetype,
+            ...file,
             encryptionKey,
             secretId,
         });
