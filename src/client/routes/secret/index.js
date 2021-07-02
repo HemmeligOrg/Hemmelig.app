@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import isBase64 from 'is-base64';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -18,6 +19,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
     const [file, setFile] = useState(null);
     const [isDownloaded, setIsDownloaded] = useState(false);
+    const [isBase64Content, setIsBase64Content] = useState(false);
     const [error, setError] = useState(null);
 
     const fetchSecret = async (event) => {
@@ -59,6 +61,12 @@ const Secret = ({ secretId, encryptionKey = null }) => {
     };
 
     useEffect(() => {
+        if (secret && isBase64(secret)) {
+            setIsBase64Content(true);
+        }
+    }, [secret]);
+
+    useEffect(() => {
         (async () => {
             const response = await secretExists(secretId, password);
 
@@ -90,6 +98,11 @@ const Secret = ({ secretId, encryptionKey = null }) => {
         setIsDownloaded(true);
     };
 
+    const convertBase64ToPlain = () => {
+        setSecret(atob(secret));
+        setIsBase64Content(false);
+    };
+
     return (
         <>
             <Wrapper>
@@ -118,6 +131,11 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                 {!isSecretOpen && (
                     <Button buttonType="create" onClick={fetchSecret} full>
                         View secret
+                    </Button>
+                )}
+                {isBase64Content && (
+                    <Button buttonType="create" onClick={convertBase64ToPlain} full>
+                        Convert base64 to plain text
                     </Button>
                 )}
                 {file && !isDownloaded && (
