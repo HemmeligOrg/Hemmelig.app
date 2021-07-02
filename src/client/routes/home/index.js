@@ -19,6 +19,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
+    const [isTextActive, setIsTextActive] = useState(false);
     const [file, setFile] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
@@ -45,8 +46,12 @@ const Home = () => {
         }
     }, [secretId]);
 
-    const onChangeHandler = (event) => {
+    const onTextareChange = (event) => {
         setText(event.target.value);
+    };
+
+    const onTextareaActive = () => {
+        setIsTextActive(!isTextActive);
     };
 
     const onFileChange = (event) => {
@@ -142,10 +147,13 @@ const Home = () => {
                     <Textarea
                         compress={secretId}
                         placeholder="Write your sensitive information.."
-                        onChange={onChangeHandler}
+                        onChange={onTextareChange}
                         value={text}
                         readonly={inputReadOnly}
                         thickBorder={inputReadOnly}
+                        onFocus={onTextareaActive}
+                        onBlur={onTextareaActive}
+                        isActive={isTextActive}
                     />
 
                     {!isLoggedIn && (

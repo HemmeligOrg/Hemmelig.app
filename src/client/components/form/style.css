@@ -1,11 +1,12 @@
 .textarea {
     width: 100%;
-    height: 200px;
+    height: 100px;
     border-radius: var(--border-radius);
     background-color: var(--color-background);
     border: 1px solid #eee;
     margin-bottom: var(--margin-basic);
     padding: 10px;
+    transition: height 0.1s;
 }
 
 .compress {
@@ -14,6 +15,10 @@
 
 .thick {
     border: var(--margin-basic) solid #eee;
+}
+
+.isActive {
+    height: 200px;
 }
 
 .select,
