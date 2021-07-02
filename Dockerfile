@@ -30,6 +30,7 @@
 #   -e SECRET_DO_SPACES_SECRET = w6XLSH+BNLmPDyiyzA6wrIZ4riCf94uM3Cpw83B3ldg \
 #   -e SECRET_DO_SPACES_BUCKET = hemmelig \
 #   -e SECRET_DO_SPACES_FOLDER = localhost.hemmelig.app \
+#   -e SECRET_MAX_TEXT_SIZE = 1024 \
 #   hemmeligapp/hemmelig:latest
 
 FROM node:lts-alpine

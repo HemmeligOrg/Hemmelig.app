@@ -67,6 +67,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces secret
 -   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces bucket name
 -   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces folder for uploading
+-   `SECRET_MAX_TEXT_SIZE` Default: "256" - The max text size for the secret. Is set in kb. i.e. 256 for 256kb.
 
 ## Run locally
 
