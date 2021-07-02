@@ -1,11 +1,10 @@
 const prettyBytes = require('pretty-bytes');
 const isIp = require('is-ip');
+const config = require('config');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
 
 const redis = require('../services/redis');
-
-const MAX_BYTES = 256 * 1000; // 256 kb - 256 000 bytes
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -82,25 +81,25 @@ async function secret(fastify) {
             const { text, ttl, password, allowedIp } = req.body;
             const { encryptionKey, secretId, file } = req.secret;
 
-            if (Buffer.byteLength(text?.value) > MAX_BYTES) {
+            if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
                     error: `The secret size (${prettyBytes(
                         Buffer.byteLength(text?.value)
-                    )}) exceeded our limit of ${prettyBytes(MAX_BYTES)}.`,
+                    )}) exceeded our limit of ${config.get('api.maxTextSize')}.`,
                 });
             }
 
-            if (allowedIp.value && !ipCheck(allowedIp.value)) {
+            if (allowedIp?.value && !ipCheck(allowedIp.value)) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
             const data = {
                 id: secretId,
                 secret: JSON.stringify(encrypt(text?.value, encryptionKey)),
-                allowedIp: allowedIp.value,
+                allowedIp: allowedIp?.value,
             };
 
-            if (password.value) {
+            if (password?.value) {
                 Object.assign(data, { password: await hash(password.value) });
             }
 

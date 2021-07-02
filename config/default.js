@@ -14,6 +14,7 @@ const {
     SECRET_DO_SPACES_SECRET = '',
     SECRET_DO_SPACES_BUCKET = 'hemmelig',
     SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
+    SECRET_MAX_TEXT_SIZE = 256, // 256 kb
 } = process.env;
 
 module.exports = {
@@ -30,6 +31,9 @@ module.exports = {
     },
     jwt: {
         secret: SECRET_JWT_SECRET,
+    },
+    api: {
+        maxTextSize: SECRET_MAX_TEXT_SIZE * 1000, //  256 000 bytes
     },
     // Digital Ocean
     do: {

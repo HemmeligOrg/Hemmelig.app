@@ -10,7 +10,7 @@ module.exports = fp(async (fastify) => {
 
         // First release it will be images only. Have to look into how
         // to solve this for the ext, and mime types for other files.
-        if (file.filename && file.mimetype.startsWith('image/')) {
+        if (file?.filename && file.mimetype.startsWith('image/')) {
             try {
                 await req.jwtVerify();
             } catch (err) {
@@ -37,7 +37,7 @@ module.exports = fp(async (fastify) => {
             Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
         }
 
-        if (file.filename && !file.mimetype.startsWith('image/')) {
+        if (file?.filename && !file.mimetype.startsWith('image/')) {
             return reply.code(415).send({
                 error: `This file type "${file.mimetype}" is not supported, yet.`,
             });
