@@ -2,8 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title><% preact.title %> - paste a password, secret message or private information.</title>
+        <title>Hemmelig.app - paste a password, secret message or private information.</title>
 
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <!-- Primary Meta Tags -->
         <meta name="title" content="Paste a password, secret message or private information." />
         <meta
@@ -24,7 +25,7 @@
             content="Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets."
         />
-        <meta property="og:image" content="/assets/icons/icon-512x512.png" />
+        <meta property="og:image" content="%PUBLIC_URL%/icons/icon-512x512.png" />
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
@@ -38,21 +39,24 @@
             content="Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets."
         />
-        <meta property="twitter:image" content="/assets/icons/icon-512x512.png" />
+        <meta property="twitter:image" content="%PUBLIC_URL%/icons/icon-512x512.png" />
 
         <meta name="theme-color" content="#231e23" />
 
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/apple-touch-icon.png" />
         <script>
-            window.__ENV = '{{NODE_ENV}}';
-            window.__SECRET_CONFIG = '{{__SECRET_CONFIG}}';
+            try {
+                window.__SECRET_CONFIG = __SECRET_CONFIG__;
+            } catch (e) {
+                window.__SECRET_CONFIG = '';
+            }
         </script>
-        <% preact.headEnd %>
     </head>
     <body>
-        <% preact.bodyEnd %>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root"></div>
     </body>
 </html>

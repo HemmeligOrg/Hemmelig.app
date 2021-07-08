@@ -7,9 +7,9 @@
     "start": "node server.js",
     "test": "mocha tests/**/*.test.js --reporter nyan",
     "test-watch": "mocha --watch tests/**/*.test.js --reporter nyan",
-    "build": "preact build --prerenderUrls prerender-urls.json --inline-css src/client",
+    "build": "react-scripts build",
     "server-dev": "NODE_ENV=development nodemon server.js",
-    "client-dev": "NODE_ENV=development preact watch src/client",
+    "client-dev": "NODE_ENV=development react-scripts start",
     "docker-build": "docker build -t hemmelig .",
     "docker-run": "docker run -d --rm -e SECRET_HOST=localhost:3000 -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
     "production-test": "npm run docker-build && npm run docker-run",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HemmeligOrg/hemmelig.git"
+    "url": "git+https://github.com/HemmeligOrg/Hemmelig.app.git"
   },
   "author": "Bjarne Øverli",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/HemmeligOrg/hemmelig/issues"
+    "url": "https://github.com/HemmeligOrg/Hemmelig.app/issues"
   },
-  "homepage": "https://github.com/HemmeligOrg/hemmelig#readme",
+  "homepage": "/",
   "dependencies": {
     "async-redis": "^2.0.0",
     "aws-sdk": "^2.935.0",
@@ -42,8 +42,6 @@
     "is-base64": "^1.1.0",
     "is-ip": "^3.1.0",
     "nanoid": "^3.1.23",
-    "preact-render-to-string": "^5.1.4",
-    "preact-router": "^3.2.1",
     "pretty-bytes": "^4.0.2",
     "redis": "^3.1.2",
     "replace-in-file": "^6.2.0",
@@ -58,11 +56,26 @@
     "mitt": "^2.1.0",
     "mocha": "^9.0.0",
     "nodemon": "^2.0.7",
-    "preact": "^10.5.13",
-    "preact-cli": "^3.2.2",
-    "prettier": "^2.3.1"
+    "prettier": "^2.3.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.1.2"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,5 +1,6 @@
-import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import isBase64 from 'is-base64';
 
 import Wrapper from '../../components/wrapper';
@@ -12,7 +13,8 @@ import Info from '../../components/info/info';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
 
-const Secret = ({ secretId, encryptionKey = null }) => {
+const Secret = () => {
+    const { secretId, encryptionKey = null } = useParams();
     const [secret, setSecret] = useState(null);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
@@ -110,11 +112,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
 
                 <Info>We will only show the secret once.</Info>
 
-                {isSecretOpen && (
-                    <Textarea thickBorder={true} readonly>
-                        {secret}
-                    </Textarea>
-                )}
+                {isSecretOpen && <Textarea thickBorder={true} value={secret} readOnly></Textarea>}
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>
@@ -123,7 +121,7 @@ const Secret = ({ secretId, encryptionKey = null }) => {
                             placeholder="Your password"
                             value={password}
                             onChange={onPasswordChange}
-                            style="-webkit-text-security: disc;" // hack for password prompt
+                            style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
                         />
                     </>
                 )}

@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Copy = ({ ...rest }) => (
     <svg viewBox="0 0 1792 1792" aria-labelledby="glsi-awesome-copy-title" id="si-awesome-copy">
         <title id="glsi-awesome-copy-title">icon copy</title>

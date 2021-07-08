@@ -1,5 +1,5 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
 import { Copy, Share } from '../icon';
 
@@ -24,17 +24,17 @@ const ShareButton = ({ url }) => {
 
     if (!navigator.share) {
         return (
-            <button class={style.share} onClick={() => navigator.clipboard.writeText(url)}>
+            <button className={style.share} onClick={() => navigator.clipboard.writeText(url)}>
                 <Copy />
-                <span class={style.text}>Click to copy and share the secret link</span>
+                <span className={style.text}>Click to copy and share the secret link</span>
             </button>
         );
     }
 
     return (
-        <button class={style.share} onClick={onClick}>
+        <button className={style.share} onClick={onClick}>
             <Share />
-            <span class={style.text}>Click to Share the secret link</span>
+            <span className={style.text}>Click to Share the secret link</span>
         </button>
     );
 };

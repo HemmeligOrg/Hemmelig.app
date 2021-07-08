@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Share = ({ ...rest }) => (
     <svg
         viewBox="0 0 1536 1536"

@@ -1,10 +1,10 @@
-import { h } from 'preact';
+import React from 'react';
 
-import style from './style.css';
+import style from './style.module.css';
 
 const Expandable = ({ summary = 'Advanced configuration', children }) => (
-    <details class={style.expandable}>
-        <summary class={style.title}>{summary}</summary>
+    <details className={style.expandable}>
+        <summary className={style.title}>{summary}</summary>
         {children}
     </details>
 );

@@ -1,6 +1,6 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
-const Spinner = () => <div class={style.loader}>Loading...</div>;
+const Spinner = () => <div className={style.loader}>Loading...</div>;
 
 export default Spinner;

@@ -42,8 +42,8 @@ if (process.env.NODE_ENV !== 'development') {
     // Filthy hack, but it works for now. Soon to implement config from the server.
     replace.sync({
         files: staticPath + '/**/*.html',
-        from: [/{{NODE_ENV}}/g, /{{__SECRET_CONFIG}}/g],
-        to: [process.env.NODE_ENV, JSON.stringify(config.get('__client_config'))],
+        from: [/{{NODE_ENV}}/g, /__SECRET_CONFIG__/g],
+        to: [process.env.NODE_ENV, `'${JSON.stringify(config.get('__client_config'))}';`],
     });
 
     fastify.register(require('fastify-static'), {
@@ -55,12 +55,12 @@ if (process.env.NODE_ENV !== 'development') {
         return reply.sendFile('index.html');
     }
 
-    fastify.get('/secret/*', (_, reply) => reply.sendFile('secret/index.html'));
+    fastify.get('/secret/*', serveIndex);
     fastify.get('/about', serveIndex);
-    fastify.get('/privacy', (_, reply) => reply.sendFile('privacy/index.html'));
-    fastify.get('/api-docs', (_, reply) => reply.sendFile('api-docs/index.html'));
-    fastify.get('/signin', (_, reply) => reply.sendFile('signin/index.html'));
-    fastify.get('/signup', (_, reply) => reply.sendFile('signup/index.html'));
+    fastify.get('/privacy', serveIndex);
+    fastify.get('/api-docs', serveIndex);
+    fastify.get('/signin', serveIndex);
+    fastify.get('/signup', serveIndex);
     fastify.get('/account', serveIndex);
 }
 

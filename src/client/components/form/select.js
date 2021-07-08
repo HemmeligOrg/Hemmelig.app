@@ -1,8 +1,8 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
 const Select = ({ compress, children, ...rest }) => (
-    <select class={style.select} {...rest}>
+    <select className={style.select} {...rest}>
         {children}
     </select>
 );

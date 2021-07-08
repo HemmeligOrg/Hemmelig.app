@@ -1,8 +1,8 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
 const Error = ({ children }) => (
-    <p class={style.error}>
+    <p className={style.error}>
         An error occured: <strong>{children}</strong>
     </p>
 );

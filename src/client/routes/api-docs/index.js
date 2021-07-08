@@ -1,6 +1,6 @@
-import { h } from 'preact';
-import { Link } from 'preact-router';
-import style from './style.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import style from './style.module.css';
 
 import Wrapper from '../../components/wrapper';
 
@@ -14,12 +14,12 @@ const ApiDocs = () => {
 
                 <h2>How can I use Hemmelig programmatically?</h2>
                 <Info align="left">
-                    First of all you have to create an <Link href="/signin">account</Link> to obtain
+                    First of all you have to create an <Link to="/signin">account</Link> to obtain
                     your basic auth token.
                 </Info>
 
                 <h2>Endpoints</h2>
-                <code class={style.code}>Coming..</code>
+                <code className={style.code}>Coming..</code>
             </Wrapper>
         </>
     );

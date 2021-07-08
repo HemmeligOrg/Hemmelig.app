@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import React from 'react';
 
 import Wrapper from '../../components/wrapper';
 import Info from '../../components/info/info';

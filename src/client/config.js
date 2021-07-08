@@ -5,8 +5,7 @@ import defaultConfig from './config/default';
 let SERVER_CONFIG;
 
 if (typeof window !== 'undefined') {
-    SERVER_CONFIG =
-        window.__SECRET_CONFIG === '{{__SECRET_CONFIG}}' ? {} : JSON.parse(window.__SECRET_CONFIG);
+    SERVER_CONFIG = window.__SECRET_CONFIG === '' ? {} : JSON.parse(window.__SECRET_CONFIG);
 } else {
     SERVER_CONFIG = {};
 }

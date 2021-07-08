@@ -1,17 +1,17 @@
-import { h } from 'preact';
+import React from 'react';
 import cc from 'classcat';
-import style from './style.css';
+import style from './style.module.css';
 
 const Textarea = ({ compress, thickBorder, isActive, children, ...rest }) => (
     <textarea
-        class={cc({
+        className={cc({
             [style.textarea]: true,
             [style.compress]: compress,
             [style.thick]: thickBorder,
             [style.isActive]: isActive,
         })}
-        spellcheck="false"
-        autocomplete="off"
+        spellCheck="false"
+        autoComplete="off"
         data-gramm_editor="false"
         {...rest}
     >

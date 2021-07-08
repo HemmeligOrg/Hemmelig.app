@@ -1,13 +1,12 @@
-import { h } from 'preact';
-import { forwardRef } from 'preact/compat';
-import style from './style.css';
+import React, { forwardRef } from 'react';
+import style from './style.module.css';
 
 const Input = forwardRef((props, ref) => (
     <input
-        class={style.input}
+        className={style.input}
         data-gramm_editor="false"
         data-lpignore="true"
-        autocomplete="new-password"
+        autoComplete="new-password"
         ref={ref}
         {...props}
     />

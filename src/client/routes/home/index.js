@@ -1,6 +1,6 @@
-import { h } from 'preact';
-import { useEffect, useState, useRef } from 'preact/hooks';
-import style from './style.css';
+import React from 'react';
+import { useEffect, useState, useRef } from 'react';
+import style from './style.module.css';
 
 import Wrapper from '../../components/wrapper';
 import InputGroup from '../../components/form/input-group';
@@ -138,18 +138,20 @@ const Home = () => {
     return (
         <>
             <Wrapper>
-                <h1 class={style.h1}>Paste a password, secret message, or private information.</h1>
+                <h1 className={style.h1}>
+                    Paste a password, secret message, or private information.
+                </h1>
                 <Info>
                     Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets.
                 </Info>
-                <div class={style.form}>
+                <div className={style.form}>
                     <Textarea
                         compress={secretId}
                         placeholder="Write your sensitive information.."
                         onChange={onTextareChange}
                         value={text}
-                        readonly={inputReadOnly}
+                        readOnly={inputReadOnly}
                         thickBorder={inputReadOnly}
                         onFocus={onTextareaActive}
                         onBlur={onTextareaActive}
@@ -166,7 +168,6 @@ const Home = () => {
                         placeholder="Image upload"
                         type="file"
                         onChange={onFileChange}
-                        value={file}
                         disabled={!isLoggedIn}
                     />
 
@@ -185,8 +186,8 @@ const Home = () => {
                             placeholder="Your optional password"
                             value={password}
                             onChange={onPasswordChange}
-                            readonly={inputReadOnly}
-                            style="-webkit-text-security: disc;" // hack for password prompt
+                            readOnly={inputReadOnly}
+                            style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
                         />
                     </InputGroup>
 
@@ -195,7 +196,7 @@ const Home = () => {
                             placeholder="Restrict by IP address"
                             value={allowedIp}
                             onChange={onIpChange}
-                            readonly={inputReadOnly}
+                            readOnly={inputReadOnly}
                         />
                     </Expandable>
 
@@ -209,12 +210,12 @@ const Home = () => {
                                 value={getSecretURL()}
                                 onFocus={handleFocus}
                                 ref={secretRef}
-                                readonly
+                                readOnly
                             />
                         </>
                     )}
 
-                    <div class={style.buttonWrapper}>
+                    <div className={style.buttonWrapper}>
                         {!secretId && (
                             <Button buttonType="create" onClick={onSubmit}>
                                 Create a secret link

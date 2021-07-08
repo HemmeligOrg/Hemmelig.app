@@ -1,5 +1,5 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
 import { Copy, Account, Share } from '.';
 
@@ -20,7 +20,7 @@ const IconButton = ({ icon = '', ...rest }) => {
     const Icon = getIcon(icon);
 
     return (
-        <button class={style.button} {...rest}>
+        <button className={style.button} {...rest}>
             <Icon />
         </button>
     );

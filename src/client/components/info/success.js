@@ -1,8 +1,8 @@
-import { h } from 'preact';
-import style from './style.css';
+import React from 'react';
+import style from './style.module.css';
 
 const Success = ({ children }) => (
-    <p class={style.success}>
+    <p className={style.success}>
         Success: <strong>{children}</strong>
     </p>
 );

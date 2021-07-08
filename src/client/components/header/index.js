@@ -1,17 +1,17 @@
-import { h } from 'preact';
-import { Link } from 'preact-router/match';
-import { useEffect, useState } from 'preact/hooks';
-import { route } from 'preact-router';
+import React from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Logo from './logo.js';
 import { Account } from '../icon';
 
 import emitter from '../../helpers/state-emitter';
 import { hasToken, removeToken } from '../../helpers/token';
 
-import style from './style.css';
+import style from './style.module.css';
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [onSignOutRedirect, setOnSignOutRedirect] = useState(false);
 
     useEffect(() => {
         emitter.on('isLoggedIn', (e) => setIsLoggedIn(e));
@@ -28,31 +28,32 @@ const Header = () => {
 
         emitter.emit('isLoggedIn', false);
 
-        route('/signin', true);
+        setOnSignOutRedirect(true);
     };
 
     return (
-        <header class={style.header}>
-            <Link class={style.link} href="/">
-                <Logo class={style.logo} />
+        <header className={style.header}>
+            <Link className={style.link} to="/">
+                <Logo className={style.logo} />
             </Link>
             {isLoggedIn && (
-                <Link class={style.signOutButton} onClick={onSignOut}>
+                <Link className={style.signOutButton} onClick={onSignOut} to="signin">
                     <span>Sign out</span> <Account />
                 </Link>
             )}
 
             {!isLoggedIn && (
-                <div class={style.signWrapper}>
-                    <Link class={style.signInButton} href="/signin">
+                <div className={style.signWrapper}>
+                    <Link className={style.signInButton} to="/signin">
                         <span>Sign in</span>
                     </Link>
 
-                    <Link class={style.signUpButton} href="/signup">
+                    <Link className={style.signUpButton} to="/signup">
                         <span>Sign up</span> <Account />
                     </Link>
                 </div>
             )}
+            {onSignOutRedirect && <Redirect to="/signin" />}
         </header>
     );
 };

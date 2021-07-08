@@ -1,7 +1,7 @@
-import { h } from 'preact';
+import React from 'react';
 
-import style from './style.css';
+import style from './style.module.css';
 
-const InputGroup = ({ children }) => <div class={style.inputGroup}>{children}</div>;
+const InputGroup = ({ children }) => <div className={style.inputGroup}>{children}</div>;
 
 export default InputGroup;

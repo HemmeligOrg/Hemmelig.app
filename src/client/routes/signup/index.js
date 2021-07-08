@@ -1,7 +1,7 @@
-import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import { route } from 'preact-router';
-import style from './style.css';
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import style from './style.module.css';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -27,12 +27,6 @@ const Secret = () => {
             setToken(token);
         }
     }, [token]);
-
-    useEffect(() => {
-        if (success) {
-            route('/account', true);
-        }
-    }, [success]);
 
     const onUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -66,7 +60,7 @@ const Secret = () => {
     return (
         <>
             <Wrapper>
-                <div class={style.form}>
+                <div className={style.form}>
                     <h1>Sign up</h1>
 
                     <Info>Everything you need to access, and manage the Hemmelig secrets.</Info>
@@ -95,7 +89,7 @@ const Secret = () => {
                             required
                         />
 
-                        <div class={style.buttonWrapper}>
+                        <div className={style.buttonWrapper}>
                             <Button buttonType="create" onClick={onSignUp}>
                                 Sign up
                             </Button>
@@ -104,7 +98,12 @@ const Secret = () => {
                 </div>
             </Wrapper>
 
-            {success && <Success>Redirecting to your account page.</Success>}
+            {success && (
+                <Success>
+                    Redirecting to your account page.
+                    <Redirect to="/account" />
+                </Success>
+            )}
             {error && <Error>{error}</Error>}
         </>
     );

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import React from 'react';
 const Logo = ({ ...rest }) => (
     <svg
         version="1.0"

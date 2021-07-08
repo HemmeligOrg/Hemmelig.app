@@ -1,14 +1,14 @@
-import { h } from 'preact';
-import { Link } from 'preact-router/match';
-import style from './style.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import style from './style.module.css';
 
 const Footer = () => (
-    <footer class={style.footer}>
+    <footer className={style.footer}>
         <nav>
-            <Link href="/signin">SIGN IN</Link> | <Link href="/account">ACCOUNT</Link> |{' '}
-            <Link href="/privacy">PRIVACY</Link> | <Link href="/api-docs">API</Link> |{' '}
-            <Link href="/about">ABOUT</Link> |{' '}
-            <Link href="https://www.github.com/HemmeligOrg/hemmelig">❤️ BY HEMMELIG</Link>
+            <Link to="/signin">SIGN IN</Link> | <Link to="/account">ACCOUNT</Link> |{' '}
+            <Link to="/privacy">PRIVACY</Link> | <Link to="/api-docs">API</Link> |{' '}
+            <Link to="/about">ABOUT</Link> |{' '}
+            <Link to="https://www.github.com/HemmeligOrg/hemmelig">❤️ BY HEMMELIG</Link>
         </nav>
     </footer>
 );

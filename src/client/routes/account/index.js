@@ -1,11 +1,10 @@
-import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { getToken, hasToken } from '../../helpers/token';
-import { Link, route } from 'preact-router';
+import { Link, Redirect } from 'react-router-dom';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
-import Button from '../../components/form/button';
 import Spinner from '../../components/spinner';
 
 import Error from '../../components/info/error';
@@ -22,9 +21,7 @@ const Account = () => {
 
     useEffect(() => {
         if (!token) {
-            route('/signin', true);
-
-            return () => {};
+            return;
         }
 
         (async () => {
@@ -56,6 +53,10 @@ const Account = () => {
         return <Error>{error}</Error>;
     }
 
+    if (!token) {
+        return <Redirect to="/signin" />;
+    }
+
     if (!isLoggedIn) {
         return <Spinner />;
     }
@@ -78,16 +79,16 @@ const Account = () => {
                 <Info align="left">
                     <strong>User</strong>
                 </Info>
-                <Input type="text" placeholder="key" value={user.username} readonly />
+                <Input type="text" placeholder="key" value={user.username} readOnly />
 
                 <Info align="left">
                     <strong>Token</strong>
                 </Info>
-                <Input type="text" placeholder="key" value={user.basicAuthToken} readonly />
+                <Input type="text" placeholder="key" value={user.basicAuthToken} readOnly />
 
                 <Info align="left">
                     For information about how to use the API, please have a look at the{' '}
-                    <Link href="/api-docs">API documentation</Link>.
+                    <Link to="/api-docs">API documentation</Link>.
                 </Info>
             </Wrapper>
         </>

@@ -1,9 +1,9 @@
-import { h } from 'preact';
+import React from 'react';
 import cc from 'classcat';
-import style from './style.css';
+import style from './style.module.css';
 
 const Error = ({ children, align = '' }) => (
-    <p class={cc([style.info, style[align]])}>{children}</p>
+    <p className={cc([style.info, style[align]])}>{children}</p>
 );
 
 export default Error;
