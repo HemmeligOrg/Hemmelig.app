@@ -2,7 +2,7 @@
   <img src="banner.png" alt="hemmelig" />
 </div>
 
-<h1 align="center">Free encryptet secret sharing for everyone!</h1>
+<h1 align="center">Free encrypted secret sharing for everyone!</h1>
 
 <div align="center">
   This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
