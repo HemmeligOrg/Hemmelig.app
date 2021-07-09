@@ -21,23 +21,19 @@ function encrypt(text, userEncryptionKey) {
     // encrypt the given text
     const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
 
-    // extract the auth tag
     const tag = cipher.getAuthTag();
 
-    // generate output
     return Buffer.concat([salt, iv, tag, encrypted]).toString('hex');
 }
 
 function decrypt(encryptedData, userEncryptionKey) {
     const data = Buffer.from(encryptedData, 'hex');
 
-    // We need a 32 length key for the cipher
     const MASTER_KEY = crypto
         .createHash('sha256')
         .update(SECRET_KEY + userEncryptionKey)
         .digest('hex');
 
-    // convert data to buffers
     const salt = data.slice(0, 64);
     const iv = data.slice(64, 80);
     const tag = data.slice(80, 96);
