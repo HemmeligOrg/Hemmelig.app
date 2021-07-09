@@ -1,4 +1,5 @@
 const emailValidator = require('email-validator');
+const validator = require('validator');
 
 const redis = require('../services/redis');
 const { hash, compare } = require('../helpers/password');
