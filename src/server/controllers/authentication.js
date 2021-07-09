@@ -38,7 +38,7 @@ async function authentication(fastify) {
                 return reply.code(403).send({ error: `This username has already been taken.` });
             }
 
-            const userPassword = await hash(password);
+            const userPassword = await hash(validator.escape(password));
 
             const user = await redis.createUser(username, email, userPassword);
 
@@ -63,9 +63,9 @@ async function authentication(fastify) {
     fastify.post('/signin', async (request, reply) => {
         const { username = '', password = '' } = request.body;
 
-        const user = await redis.getUser(username);
+        const user = await redis.getUser(validator.escape(username));
 
-        if (!user || !(await compare(password, user.password))) {
+        if (!user || !(await compare(validator.escape(password), user.password))) {
             return reply.code(401).send({ error: 'Incorrect username or password.' });
         }
 
@@ -85,7 +85,7 @@ async function authentication(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request) => {
-            const user = await redis.getUser(request.user.username);
+            const user = await redis.getUser(validator.escape(request.user.username));
             return {
                 user: {
                     username: user.username,

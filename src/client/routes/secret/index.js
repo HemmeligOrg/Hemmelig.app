@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import isBase64 from 'is-base64';
+import validator from 'validator';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -50,7 +50,7 @@ const Secret = () => {
         if (json.error) {
             setError(json.error);
         } else {
-            setSecret(json.secret);
+            setSecret(validator.unescape(json.secret));
 
             if (json.file) {
                 setFile(json.file);
@@ -63,7 +63,7 @@ const Secret = () => {
     };
 
     useEffect(() => {
-        if (secret && isBase64(secret)) {
+        if (secret && validator.isBase64(secret)) {
             setIsBase64Content(true);
         }
     }, [secret]);

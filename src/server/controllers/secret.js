@@ -1,5 +1,6 @@
 const prettyBytes = require('pretty-bytes');
 const isIp = require('is-ip');
+const validator = require('validator');
 const config = require('config');
 const { encrypt, decrypt } = require('../helpers/crypto');
 const { hash, compare } = require('../helpers/password');
@@ -24,8 +25,8 @@ async function getSecretRoute(request, reply) {
     const result = {};
 
     // If it does not match the valid characters set for nanoid, return 403
-    if (!validIdRegExp.test(id)) {
-        return reply.code(403).send({ error: 'Not a valid secret id' });
+    if (!validIdRegExp.test(id) || !validIdRegExp.test(encryptionKey)) {
+        return reply.code(403).send({ error: 'Not a valid secret id / encryption key' });
     }
 
     const data = await redis.getSecret(id);
@@ -35,7 +36,7 @@ async function getSecretRoute(request, reply) {
     }
 
     if (data.password) {
-        const isPasswordValid = await compare(password, data.password);
+        const isPasswordValid = await compare(validator.escape(password), data.password);
         if (!isPasswordValid) {
             return reply.code(401).send({ error: 'Wrong password!' });
         }
@@ -95,12 +96,12 @@ async function secret(fastify) {
 
             const data = {
                 id: secretId,
-                secret: JSON.stringify(encrypt(text?.value, encryptionKey)),
+                secret: JSON.stringify(encrypt(validator.escape(text?.value), encryptionKey)),
                 allowedIp: allowedIp?.value,
             };
 
             if (password?.value) {
-                Object.assign(data, { password: await hash(password.value) });
+                Object.assign(data, { password: await hash(validator.escape(password.value)) });
             }
 
             if (file) {
