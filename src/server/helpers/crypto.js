@@ -18,7 +18,6 @@ function encrypt(text, userEncryptionKey) {
 
     const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
 
-    // encrypt the given text
     const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
 
     const tag = cipher.getAuthTag();
