@@ -24,7 +24,7 @@ async function upload(encryptionKey, fileUpload) {
         .upload({
             Bucket: config.get('do.spaces.bucket'),
             Key: `${config.get('do.spaces.folder')}/images/${filename}.json`,
-            Body: JSON.stringify(encryptedFile),
+            Body: JSON.stringify({ encryptedFile }),
         })
         .promise();
 
@@ -41,7 +41,9 @@ async function download(key, encryptionKey) {
         })
         .promise();
 
-    return decrypt(JSON.parse(data.Body), encryptionKey);
+    const { encryptedFile } = JSON.parse(data.Body);
+
+    return decrypt(encryptedFile, encryptionKey);
 }
 
 async function remove(key) {

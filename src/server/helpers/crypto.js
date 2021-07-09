@@ -1,45 +1,54 @@
 const crypto = require('crypto');
 const config = require('config');
 
-const ALGORITHM = 'aes-256-ctr';
+const ALGORITHM = 'aes-256-gcm';
 const SECRET_KEY = config.get('secret_key');
 
-// Change algorithm? https://stackoverflow.com/questions/1220751/how-to-choose-an-aes-encryption-mode-cbc-ecb-ctr-ocb-cfb
+function encrypt(text, userEncryptionKey) {
+    const iv = crypto.randomBytes(16);
 
-function encrypt(text, key) {
-    const IV = crypto.randomBytes(16);
+    const salt = crypto.randomBytes(64);
 
-    // We need a 32 length key for the cipher
     const MASTER_KEY = crypto
         .createHash('sha256')
-        .update(SECRET_KEY + key)
-        .digest('hex')
-        .substring(0, 32);
+        .update(SECRET_KEY + userEncryptionKey)
+        .digest('hex');
 
-    const cipher = crypto.createCipheriv(ALGORITHM, MASTER_KEY, IV);
+    const key = crypto.pbkdf2Sync(MASTER_KEY, salt, 2145, 32, 'sha512');
 
-    const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
 
-    return {
-        iv: IV.toString('hex'),
-        content: encrypted.toString('hex'),
-    };
+    // encrypt the given text
+    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+
+    // extract the auth tag
+    const tag = cipher.getAuthTag();
+
+    // generate output
+    return Buffer.concat([salt, iv, tag, encrypted]).toString('hex');
 }
 
-function decrypt(hash, key) {
+function decrypt(encryptedData, userEncryptionKey) {
+    const data = Buffer.from(encryptedData, 'hex');
+
     // We need a 32 length key for the cipher
     const MASTER_KEY = crypto
         .createHash('sha256')
-        .update(SECRET_KEY + key)
-        .digest('hex')
-        .substring(0, 32);
+        .update(SECRET_KEY + userEncryptionKey)
+        .digest('hex');
 
-    const decipher = crypto.createDecipheriv(ALGORITHM, MASTER_KEY, Buffer.from(hash.iv, 'hex'));
+    // convert data to buffers
+    const salt = data.slice(0, 64);
+    const iv = data.slice(64, 80);
+    const tag = data.slice(80, 96);
+    const text = data.slice(96);
 
-    const decrypted = Buffer.concat([
-        decipher.update(Buffer.from(hash.content, 'hex')),
-        decipher.final(),
-    ]);
+    const key = crypto.pbkdf2Sync(MASTER_KEY, salt, 2145, 32, 'sha512');
+
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    decipher.setAuthTag(tag);
+
+    const decrypted = Buffer.concat([decipher.update(Buffer.from(text, 'hex')), decipher.final()]);
 
     return decrypted;
 }

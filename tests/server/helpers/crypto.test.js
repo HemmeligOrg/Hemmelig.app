@@ -10,10 +10,6 @@ describe('Crypto', () => {
     describe('#encrypt(string)', () => {
         it('should encrypt, and decrypt a secret', async () => {
             const encrypted = await encrypt(SECRET, RANDOM_KEY);
-
-            assert.equal('iv' in encrypted, true);
-            assert.equal('content' in encrypted, true);
-
             const decrypted = await decrypt(encrypted, RANDOM_KEY);
 
             assert.equal(decrypted, SECRET);
