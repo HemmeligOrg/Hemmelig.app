@@ -21,7 +21,7 @@ module.exports = fp(async (fastify) => {
         const ip = 'do-connecting-ip' in headers ? headers['do-connecting-ip'] : '';
 
         if (ip) {
-            const shouldRateLimit = await createRateLimit(headers.host);
+            const shouldRateLimit = await createRateLimit(ip);
 
             if (shouldRateLimit) {
                 reply.code(429).send({ error: 'Too many requests, please try again later.' });
