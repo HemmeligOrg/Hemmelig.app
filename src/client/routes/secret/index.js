@@ -118,6 +118,7 @@ const Secret = () => {
                     <>
                         <Info>A password is required to open this secret</Info>
                         <Input
+                            id="lemon-password"
                             placeholder="Your password"
                             value={password}
                             onChange={onPasswordChange}
