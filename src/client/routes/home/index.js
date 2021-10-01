@@ -76,6 +76,7 @@ const Home = () => {
         setEncryptionKey('');
         setAllowedIp('');
         setFile('');
+        setFormData(new FormData());
     };
 
     const onSubmit = async (event) => {
