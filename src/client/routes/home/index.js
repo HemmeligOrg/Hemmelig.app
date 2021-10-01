@@ -19,7 +19,6 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
-    const [isTextActive, setIsTextActive] = useState(false);
     const [file, setFile] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
@@ -48,10 +47,6 @@ const Home = () => {
 
     const onTextareChange = (event) => {
         setText(event.target.value);
-    };
-
-    const onTextareaActive = () => {
-        setIsTextActive(!isTextActive);
     };
 
     const onFileChange = (event) => {
@@ -153,9 +148,6 @@ const Home = () => {
                         value={text}
                         readOnly={inputReadOnly}
                         thickBorder={inputReadOnly}
-                        onFocus={onTextareaActive}
-                        onBlur={onTextareaActive}
-                        isActive={isTextActive}
                     />
 
                     {!isLoggedIn && (
