@@ -30,6 +30,7 @@
     "aws-sdk": "^2.935.0",
     "bcrypt": "^5.0.1",
     "config": "^3.3.6",
+    "dayjs": "^1.10.7",
     "email-validator": "^2.0.4",
     "fastify": "^3.17.0",
     "fastify-cors": "^6.0.1",

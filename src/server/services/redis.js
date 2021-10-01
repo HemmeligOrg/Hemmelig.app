@@ -1,5 +1,6 @@
 const config = require('config');
 const asyncRedis = require('async-redis');
+const dayjs = require('dayjs');
 const { nanoid } = require('nanoid');
 
 const isValidTTL = require('../helpers/validate-ttl');
@@ -40,6 +41,8 @@ function createSecret(data, ttl) {
     if (data.file) {
         prepare.push(...['file', JSON.stringify(data.file)]);
     }
+
+    createStatistics('secrets_created');
 
     client
         .multi()
@@ -124,6 +127,16 @@ async function createRateLimit(ip) {
     return false;
 }
 
+async function createStatistics(type = '') {
+    const types = ['secrets_created'];
+
+    if (types.indexOf(type) === -1) {
+        console.log(` [*] Type "${type}" not supported`);
+    }
+
+    return await client.incr(`statistics:${type}:${dayjs().format('YYYY-MM-DD')}`);
+}
+
 module.exports = {
     createSecret,
     getSecret,
@@ -134,4 +147,5 @@ module.exports = {
     getUser,
     deleteUser,
     createRateLimit,
+    createStatistics,
 };
