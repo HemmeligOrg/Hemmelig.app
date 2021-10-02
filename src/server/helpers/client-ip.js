@@ -4,6 +4,7 @@ module.exports = function getClientIp(headers) {
     // Iterate through a list of headers allowed to fetch the ip from
     const checkHeaders = [
         'do-connecting-ip', // digital ocean app platform
+        'x-real-ip',
         'x-forwarded-for',
     ];
 
@@ -11,6 +12,9 @@ module.exports = function getClientIp(headers) {
         checkHeaders.push('host');
     }
 
+    const header = checkHeaders.find((header) => headers[header]);
+
     // return the first existing header
-    return checkHeaders.find((header) => header in headers);
+    return headers[header] ? headers[header] : '';
 };
+// redux
