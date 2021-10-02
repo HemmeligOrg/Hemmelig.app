@@ -3,7 +3,8 @@ const bcrypt = require('bcrypt');
 // https://www.npmjs.com/package/bcrypt
 async function hash(password) {
     try {
-        return await bcrypt.hash(password, 8);
+        // salt rounds https://www.npmjs.com/package/bcrypt#user-content-a-note-on-rounds
+        return await bcrypt.hash(password, 10);
     } catch (err) {
         console.error(err);
     }
