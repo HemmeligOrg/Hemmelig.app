@@ -83,3 +83,7 @@ $ npm run client-dev
 $ npm run server-dev
 # http://0.0.0.0:3000
 ```
+
+## Contribution
+
+Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for guidelines.
