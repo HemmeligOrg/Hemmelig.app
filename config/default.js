@@ -15,10 +15,12 @@ const {
     SECRET_DO_SPACES_BUCKET = 'hemmelig',
     SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
+    NODE_ENV = 'development',
 } = process.env;
 
 module.exports = {
     localHostname: SECRET_LOCAL_HOSTNAME,
+    env: NODE_ENV,
     host: SECRET_HOST,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,

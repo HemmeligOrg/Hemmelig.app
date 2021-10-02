@@ -1,6 +1,7 @@
 // do-connecting-ip
 const fp = require('fastify-plugin');
 const { createRateLimit } = require('../services/redis');
+const getClientIp = require('../helpers/client-ip');
 
 /*
  *
@@ -18,7 +19,7 @@ module.exports = fp(async (fastify) => {
         // Currently, hemmelig.app only have rate limiting available for non self-hosted version.
         // However, future wise it might be doable to add a setting for what header to check for an ip
         // For local testing, use this:  const ip = headers.host;
-        const ip = 'do-connecting-ip' in headers ? headers['do-connecting-ip'] : '';
+        const ip = getClientIp(headers);
 
         if (ip) {
             const shouldRateLimit = await createRateLimit(ip);
