@@ -1,23 +1,23 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLoginChanged } from '../../actions/';
 import Logo from './logo.js';
 import { Account } from '../icon';
 
-import emitter from '../../helpers/state-emitter';
 import { hasToken, removeToken } from '../../helpers/token';
 
 import style from './style.module.css';
 
 const Header = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(state => state.isLoggedIn);
     const [onSignOutRedirect, setOnSignOutRedirect] = useState(false);
 
     useEffect(() => {
-        emitter.on('isLoggedIn', (e) => setIsLoggedIn(e));
-
         if (hasToken()) {
-            emitter.emit('isLoggedIn', true);
+            dispatch(userLoginChanged(true));
         }
     }, [hasToken]);
 
@@ -26,7 +26,7 @@ const Header = () => {
 
         removeToken();
 
-        emitter.emit('isLoggedIn', false);
+        dispatch(userLoginChanged(false));
 
         setOnSignOutRedirect(true);
     };

@@ -2,6 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { getToken, hasToken } from '../../helpers/token';
 import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { userLoginChanged } from '../../actions';
 
 import Wrapper from '../../components/wrapper';
 import Input from '../../components/form/input';
@@ -10,14 +12,15 @@ import Spinner from '../../components/spinner';
 import Error from '../../components/info/error';
 import Info from '../../components/info/info';
 
-import emitter from '../../helpers/state-emitter';
 import { getUser } from '../../api/account';
 
 const Account = () => {
     const [token, _] = useState(hasToken() ? getToken() : '');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!token) {
@@ -26,6 +29,7 @@ const Account = () => {
 
         (async () => {
             try {
+                setLoading(true);
                 const response = await getUser(token);
 
                 if (response.statusCode === 401 || response.statusCode === 500) {
@@ -34,9 +38,10 @@ const Account = () => {
                     return;
                 }
 
-                const { user } = response;
+                dispatch(userLoginChanged(true));
+                setLoading(false);
 
-                setIsLoggedIn(true);
+                const { user } = response;
                 setUser(user);
                 setError(null);
             } catch (e) {
@@ -44,10 +49,6 @@ const Account = () => {
             }
         })();
     }, [token]);
-
-    useEffect(() => {
-        emitter.emit('isLoggedIn', isLoggedIn);
-    }, [isLoggedIn]);
 
     if (error) {
         return <Error>{error}</Error>;
@@ -57,7 +58,7 @@ const Account = () => {
         return <Redirect to="/signin" />;
     }
 
-    if (!isLoggedIn) {
+    if (loading) {
         return <Spinner />;
     }
 
