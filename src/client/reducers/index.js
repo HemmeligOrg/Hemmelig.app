@@ -5,9 +5,9 @@ const initialState = {
 
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
-      case 'USER_LOGIN_CHANGED':
-        return {...state, isLoggedIn: action.payload }
-      default:
-        return state
+        case 'USER_LOGIN_CHANGED':
+            return {...state, isLoggedIn: action.payload }
+        default:
+            return state
     }
 }
