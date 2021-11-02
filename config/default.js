@@ -53,5 +53,8 @@ module.exports = {
         api: {
             host: '/api',
         },
+        settings: {
+            enableFileUpload: !!SECRET_DO_SPACES_SECRET,
+        },
     },
 };

@@ -2,6 +2,8 @@ import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import style from './style.module.css';
 
+import config from '../../config';
+
 import Wrapper from '../../components/wrapper';
 import InputGroup from '../../components/form/input-group';
 import Input from '../../components/form/input';
@@ -20,6 +22,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 const Home = () => {
     const [text, setText] = useState('');
     const [file, setFile] = useState('');
+    const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [allowedIp, setAllowedIp] = useState('');
@@ -151,18 +154,21 @@ const Home = () => {
                         thickBorder={inputReadOnly}
                     />
 
-                    {!isLoggedIn && (
+                    {enableFileUpload && !isLoggedIn && (
                         <Info align="right">You have to sign in to upload an image.</Info>
                     )}
-                    {isLoggedIn && (
+                    {enableFileUpload && isLoggedIn && (
                         <Info align="right">Only one image is currently supported.</Info>
                     )}
-                    <Input
-                        placeholder="Image upload"
-                        type="file"
-                        onChange={onFileChange}
-                        disabled={!isLoggedIn}
-                    />
+
+                    {enableFileUpload && (
+                        <Input
+                            placeholder="Image upload"
+                            type="file"
+                            onChange={onFileChange}
+                            disabled={!isLoggedIn}
+                        />
+                    )}
 
                     <InputGroup>
                         <Select value={ttl} onChange={onSelectChange}>
