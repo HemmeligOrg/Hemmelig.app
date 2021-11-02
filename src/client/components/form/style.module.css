@@ -27,6 +27,12 @@
     margin-bottom: var(--margin-basic);
 }
 
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 0;
+}
+
 .buttonBurn,
 .buttonCreate {
     margin: var(--margin-basic) 0;
@@ -72,6 +78,11 @@
 .inputGroup {
     display: flex;
     flex-direction: column;
+}
+
+.inputGroupRow {
+    flex-direction: row;
+    align-items: center;
 }
 
 @media only screen and (min-width: 768px) {

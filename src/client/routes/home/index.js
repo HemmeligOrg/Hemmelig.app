@@ -26,6 +26,7 @@ const Home = () => {
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [allowedIp, setAllowedIp] = useState('');
+    const [preventBurn, setPreventBurn] = useState(false);
     const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
@@ -71,6 +72,10 @@ const Home = () => {
         setAllowedIp(event.target.value);
     };
 
+    const onPreventBurnChange = () => {
+        setPreventBurn(!preventBurn);
+    };
+
     const reset = () => {
         setText('');
         setSecretId('');
@@ -79,6 +84,7 @@ const Home = () => {
         setEncryptionKey('');
         setAllowedIp('');
         setFile('');
+        setPreventBurn(false);
         setFormData(new FormData());
     };
 
@@ -96,6 +102,7 @@ const Home = () => {
         formData.append('ttl', ttl);
         formData.append('allowedIp', allowedIp);
         formData.append('file', file);
+        formData.append('preventBurn', preventBurn);
 
         const json = await createSecret(formData, getToken());
 
@@ -197,6 +204,16 @@ const Home = () => {
                             onChange={onIpChange}
                             readOnly={inputReadOnly}
                         />
+
+                        <InputGroup direction="row">
+                            <Input
+                                type="checkbox"
+                                checked={preventBurn}
+                                onChange={onPreventBurnChange}
+                                readOnly={inputReadOnly}
+                            />
+                            <label>Burn the secret only after the expired date</label>
+                        </InputGroup>
                     </Expandable>
 
                     {secretId && (

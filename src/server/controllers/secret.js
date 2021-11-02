@@ -79,7 +79,7 @@ async function secret(fastify) {
             preValidation: [fastify.rateLimit, fastify.keyGeneration, fastify.attachment],
         },
         async (req, reply) => {
-            const { text, ttl, password, allowedIp } = req.body;
+            const { text, ttl, password, allowedIp, preventBurn } = req.body;
             const { encryptionKey, secretId, file } = req.secret;
 
             if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
@@ -108,6 +108,10 @@ async function secret(fastify) {
                 Object.assign(data, { file });
             }
 
+            if (preventBurn?.value === 'true') {
+                Object.assign(data, { preventBurn: true });
+            }
+
             redis.createSecret(data, ttl.value);
 
             // Return the secret ID, and encryptet KEY to be used for the URL
@@ -128,9 +132,13 @@ async function secret(fastify) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 
-        redis.deleteSecret(id);
+        const response = await redis.deleteSecret(id);
 
-        return { success: 'Secret burned' };
+        if (!response) {
+            return { error: 'Secret can not be burned before the expiration date' };
+        } else {
+            return { success: 'Secret is burned' };
+        }
     });
 
     fastify.get('/:id/exist', options, async (request, reply) => {

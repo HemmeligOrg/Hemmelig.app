@@ -42,6 +42,10 @@ function createSecret(data, ttl) {
         prepare.push(...['file', JSON.stringify(data.file)]);
     }
 
+    if (data.preventBurn) {
+        prepare.push(...['preventBurn', true]);
+    }
+
     createStatistics('secrets_created');
 
     client
@@ -68,7 +72,13 @@ async function getSecretKey(id, key) {
 }
 
 async function deleteSecret(id) {
-    await client.del(`secret:${id}`);
+    const preventBurn = (await getSecretKey(id, 'preventBurn')) === 'true';
+
+    if (!preventBurn) {
+        await client.del(`secret:${id}`);
+    }
+
+    return Promise.resolve(!preventBurn);
 }
 
 async function isAlive() {
