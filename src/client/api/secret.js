@@ -41,7 +41,10 @@ export const getSecret = async (secretId, encryptionKey, password) => {
 };
 
 export const burnSecret = async (secretId) => {
-    const data = await fetch(`${config.get('api.host')}/secret/${secretId}/burn`);
+    const data = await fetch(`${config.get('api.host')}/secret/${secretId}/burn`, {
+        method: 'POST',
+        cache: 'no-cache',
+    });
 
     return await data.json();
 };

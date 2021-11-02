@@ -125,7 +125,7 @@ async function secret(fastify) {
     );
 
     // This will burn the secret 🔥
-    fastify.get('/:id/burn', options, async (request) => {
+    fastify.post('/:id/burn', options, async (request) => {
         const { id } = request.params;
 
         if (!validIdRegExp.test(id)) {
