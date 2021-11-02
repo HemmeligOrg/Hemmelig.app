@@ -29,7 +29,7 @@
   "dependencies": {
     "async-redis": "^2.0.0",
     "aws-sdk": "^2.935.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
     "dayjs": "^1.10.7",
     "email-validator": "^2.0.4",
