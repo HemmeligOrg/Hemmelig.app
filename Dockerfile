@@ -55,7 +55,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm ci --production
+RUN npm ci --production --ignore-scripts
 
 RUN mkdir build
 COPY --from=0 /usr/src/app/build build/
