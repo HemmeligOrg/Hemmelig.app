@@ -95,6 +95,10 @@
         flex-direction: row;
     }
 
+    .inputGroupRow {
+        justify-content: flex-start;
+    }
+
     .inputGroup > select {
         margin-right: calc(var(--margin-basic) / 2);
     }
