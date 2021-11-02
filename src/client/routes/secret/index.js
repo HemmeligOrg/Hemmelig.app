@@ -82,7 +82,8 @@ const Secret = () => {
                 setError(response.error);
             }
         })();
-    }, []);
+        // eslint-disable-next-line
+    }, [secretId]);
 
     const onPasswordChange = (event) => {
         setPassword(event.target.value);

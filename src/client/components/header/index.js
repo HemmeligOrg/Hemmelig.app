@@ -12,14 +12,14 @@ import style from './style.module.css';
 
 const Header = () => {
     const dispatch = useDispatch();
-    const isLoggedIn = useSelector(state => state.isLoggedIn);
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const [onSignOutRedirect, setOnSignOutRedirect] = useState(false);
 
     useEffect(() => {
         if (hasToken()) {
             dispatch(userLoginChanged(true));
         }
-    }, [hasToken]);
+    }, [dispatch]);
 
     const onSignOut = (event) => {
         event.preventDefault();

@@ -15,7 +15,7 @@ import Info from '../../components/info/info';
 import { getUser } from '../../api/account';
 
 const Account = () => {
-    const [token, _] = useState(hasToken() ? getToken() : '');
+    const [token] = useState(hasToken() ? getToken() : '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
@@ -48,7 +48,7 @@ const Account = () => {
                 setError(e);
             }
         })();
-    }, [token]);
+    }, [token, dispatch]);
 
     if (error) {
         return <Error>{error}</Error>;
