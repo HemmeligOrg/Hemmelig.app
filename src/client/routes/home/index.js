@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
+import passwordGenerator from 'generate-password';
 import style from './style.module.css';
 
 import config from '../../config';
@@ -25,6 +26,7 @@ const Home = () => {
     const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
+    const [enablePassword, setOnEnablePassword] = useState(false);
     const [allowedIp, setAllowedIp] = useState('');
     const [preventBurn, setPreventBurn] = useState(false);
     const [formData, setFormData] = useState(null);
@@ -48,6 +50,20 @@ const Home = () => {
             secretRef.current.focus();
         }
     }, [secretId]);
+
+    useEffect(() => {
+        if (enablePassword) {
+            setPassword(
+                passwordGenerator.generate({
+                    length: 12,
+                    numbers: true,
+                    strict: true,
+                })
+            );
+        } else {
+            setPassword('');
+        }
+    }, [enablePassword]);
 
     const onTextareChange = (event) => {
         setText(event.target.value);
@@ -74,6 +90,10 @@ const Home = () => {
 
     const onPreventBurnChange = () => {
         setPreventBurn(!preventBurn);
+    };
+
+    const onEnablePassword = () => {
+        setOnEnablePassword(!enablePassword);
     };
 
     const reset = () => {
@@ -188,12 +208,22 @@ const Home = () => {
                             <option value="1800">30 minutes</option>
                             <option value="300">5 minutes</option>
                         </Select>
+
+                        <InputGroup direction="row">
+                            <Input
+                                type="checkbox"
+                                checked={enablePassword}
+                                onChange={onEnablePassword}
+                                readOnly={inputReadOnly}
+                            />
+                            <label>Enable password</label>
+                        </InputGroup>
                         <Input
                             placeholder="Your optional password"
                             value={password}
                             onChange={onPasswordChange}
-                            readOnly={inputReadOnly}
-                            style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
+                            readOnly={!enablePassword || inputReadOnly}
+                            //style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
                         />
                     </InputGroup>
 

@@ -35,6 +35,10 @@ a:hover {
     text-decoration: none;
 }
 
+label {
+    font-size: 12px;
+}
+
 h1,
 h2 {
     margin: var(--margin-basic);
