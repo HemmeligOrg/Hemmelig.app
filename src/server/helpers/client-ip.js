@@ -17,4 +17,3 @@ module.exports = function getClientIp(headers) {
     // return the first existing header
     return headers[header] ? headers[header] : '';
 };
-// redux
