@@ -26,7 +26,7 @@ const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
 const DEFAULT_RATE_LIMIT_EXPIRE = 60; // 1 minute
 const DEFAULT_RATE_LIMIT_QTY = 100;
 
-function createSecret(data, ttl) {
+async function createSecret(data, ttl) {
     const key = `secret:${data.id}`;
     const prepare = [key, 'secret', data.secret];
 
@@ -48,7 +48,11 @@ function createSecret(data, ttl) {
 
     createStatistics('secrets_created');
 
-    client
+    if (isValidTTL(Number(ttl)) && Number(ttl) === 0) {
+        return await client.multi().hmset(prepare).exec();
+    }
+
+    return await client
         .multi()
         .hmset(prepare)
         .expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE)

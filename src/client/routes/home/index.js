@@ -207,6 +207,7 @@ const Home = () => {
                             <option value="3600">1 hour</option>
                             <option value="1800">30 minutes</option>
                             <option value="300">5 minutes</option>
+                            <option value="0">Never expire</option>
                         </Select>
 
                         <InputGroup direction="row">
