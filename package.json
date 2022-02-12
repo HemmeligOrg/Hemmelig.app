@@ -48,7 +48,7 @@
     "redis": "^3.1.2",
     "replace-in-file": "^6.2.0",
     "unfetch": "^4.2.0",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "classcat": "^5.0.3",
