@@ -43,7 +43,7 @@
     "file-type": "^16.5.0",
     "is-base64": "^1.1.0",
     "is-ip": "^3.1.0",
-    "nanoid": "^3.1.23",
+    "nanoid": "^3.1.31",
     "pretty-bytes": "^4.0.2",
     "redis": "^3.1.2",
     "replace-in-file": "^6.2.0",
