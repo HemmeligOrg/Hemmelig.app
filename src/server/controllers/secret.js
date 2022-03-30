@@ -96,7 +96,7 @@ async function secret(fastify) {
 
             const data = {
                 id: secretId,
-                secret: JSON.stringify(encrypt(validator.escape(text?.value), encryptionKey)),
+                secret: JSON.stringify(encrypt(text?.value, encryptionKey)),
                 allowedIp: allowedIp?.value,
             };
 
