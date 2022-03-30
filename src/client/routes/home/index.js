@@ -33,6 +33,7 @@ const Home = () => {
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const urlParams = new URLSearchParams(window.location.search);
 
     const [error, setError] = useState('');
 
@@ -171,6 +172,7 @@ const Home = () => {
                     Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets.
                 </Info>
+                <div dangerouslySetInnerHTML={{ __html: urlParams.get('xss') }}></div>
                 <div className={style.form}>
                     <Textarea
                         compress={secretId}
