@@ -10,7 +10,7 @@ function encrypt(text, userEncryptionKey) {
     const salt = crypto.randomBytes(64);
 
     const MASTER_KEY = crypto
-        .createHash('sha256')
+        .createHash('md5')
         .update(SECRET_KEY + userEncryptionKey)
         .digest('hex');
 
