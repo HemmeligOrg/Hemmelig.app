@@ -15,4 +15,4 @@ jobs:
             - name: ZAP Scan
               uses: zaproxy/action-full-scan@v0.3.0
               with:
-                  docker_name: 'owasp/zap2docker-stable'
+                  target: 'https://hemmelig.app'
