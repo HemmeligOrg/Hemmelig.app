@@ -1,16 +1,14 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { getToken, hasToken } from '../../helpers/token';
+import { Container, TextInput, Stack, Title, Text, Anchor } from '@mantine/core';
+import { IconUser, IconKey } from '@tabler/icons';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { getToken, hasToken } from '../../helpers/token';
 import { userLoginChanged } from '../../actions';
 
-import Wrapper from '../../components/wrapper';
-import Input from '../../components/form/input';
 import Spinner from '../../components/spinner';
-
 import Error from '../../components/info/error';
-import Info from '../../components/info/info';
 
 import { getUser } from '../../api/account';
 
@@ -63,36 +61,46 @@ const Account = () => {
     }
 
     return (
-        <>
-            <Wrapper>
-                <h1>Account</h1>
-                <Info align="left">
+        <Container>
+            <Stack>
+                <Title order={1}>Account</Title>
+                <Text size="sm">
                     Hi, <strong>{user.username}</strong>
-                </Info>
-                <Info align="left">
+                </Text>
+                <Text size="sm">
                     We are glad you logged in. Now you earned the right to upload images that will
                     be encryptet to be shared with anyone!
-                </Info>
+                </Text>
 
-                <Info align="left">
-                    <strong>BASIC AUTH:</strong>
-                </Info>
-                <Info align="left">
-                    <strong>User</strong>
-                </Info>
-                <Input type="text" placeholder="key" value={user.username} readOnly />
+                <Title order={4}>
+                    <strong>BASIC AUTH</strong>
+                </Title>
 
-                <Info align="left">
-                    <strong>Token</strong>
-                </Info>
-                <Input type="text" placeholder="key" value={user.basicAuthToken} readOnly />
+                <TextInput
+                    label="User"
+                    icon={<IconUser />}
+                    placeholder="Username"
+                    value={user.username}
+                    readOnly
+                />
 
-                <Info align="left">
+                <TextInput
+                    label="Token"
+                    icon={<IconKey />}
+                    placeholder="Token"
+                    value={user.basicAuthToken}
+                    readOnly
+                />
+
+                <Text size="sm">
                     For information about how to use the API, please have a look at the{' '}
-                    <Link to="/api-docs">API documentation</Link>.
-                </Info>
-            </Wrapper>
-        </>
+                    <Anchor component={Link} to="/api-docs">
+                        API documentation
+                    </Anchor>
+                    .
+                </Text>
+            </Stack>
+        </Container>
     );
 };
 

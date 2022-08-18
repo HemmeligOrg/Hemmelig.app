@@ -27,6 +27,10 @@
   },
   "homepage": "/",
   "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@mantine/core": "^5.1.7",
+    "@mantine/hooks": "^5.1.7",
+    "@tabler/icons": "^1.83.1",
     "async-redis": "^2.0.0",
     "aws-sdk": "^2.935.0",
     "bcryptjs": "^2.4.3",
