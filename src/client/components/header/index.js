@@ -35,7 +35,7 @@ const Header = () => {
     return (
         <Container>
             <Grid columns={24} align="center">
-                <Grid.Col span={isLoggedIn ? 18 : 18}>
+                <Grid.Col span={18}>
                     <Anchor component={Link} to="/">
                         <Logo className={style.logo} />
                     </Anchor>
