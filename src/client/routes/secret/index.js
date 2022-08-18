@@ -1,14 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import validator from 'validator';
 
-import Wrapper from '../../components/wrapper';
-import Input from '../../components/form/input';
-import Textarea from '../../components/form/textarea';
-import Button from '../../components/form/button';
+import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';
+import { IconSquarePlus, IconDownload, IconLock, IconEye, IconPerspective } from '@tabler/icons';
+
 import Error from '../../components/info/error';
-import Info from '../../components/info/info';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
@@ -107,46 +105,117 @@ const Secret = () => {
     };
 
     return (
-        <>
-            <Wrapper>
-                <h1>View your secret</h1>
+        <Container>
+            <Stack>
+                <Title order={1}>View your secret</Title>
 
-                <Info>We will only show the secret once.</Info>
+                <Text>We will only show the secret once.</Text>
 
-                {isSecretOpen && <Textarea thickBorder={true} value={secret} readOnly></Textarea>}
+                {isSecretOpen && (
+                    <Textarea minRows={10} maxRows={30} value={secret} autosize readOnly />
+                )}
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>
-                        <Info>A password is required to open this secret</Info>
-                        <Input
+                        <Text>A password is required to open this secret</Text>
+
+                        <TextInput
                             id="lemon-password"
+                            icon={<IconLock />}
                             placeholder="Your password"
                             value={password}
                             onChange={onPasswordChange}
-                            style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
+                            required
+                            style={{ WebkitTextSecurity: 'disc' }}
                         />
                     </>
                 )}
 
-                {!isSecretOpen && (
-                    <Button buttonType="create" onClick={fetchSecret} full>
-                        View secret
-                    </Button>
-                )}
-                {isBase64Content && (
-                    <Button buttonType="create" onClick={convertBase64ToPlain} full>
-                        Convert base64 to plain text
-                    </Button>
-                )}
-                {file && !isDownloaded && (
-                    <Button buttonType="burn" onClick={onFileDownload} full>
-                        Download the secret file
-                    </Button>
-                )}
-            </Wrapper>
+                <Group>
+                    {!isSecretOpen && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconEye size={14} />}
+                            onClick={fetchSecret}
+                        >
+                            View secret
+                        </Button>
+                    )}
+                </Group>
+
+                <Group>
+                    {isSecretOpen && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconSquarePlus size={14} />}
+                            component={Link}
+                            to="/"
+                        >
+                            Create a new secret
+                        </Button>
+                    )}
+
+                    {isBase64Content && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconPerspective size={14} />}
+                            onClick={convertBase64ToPlain}
+                        >
+                            Convert base64 to plain text
+                        </Button>
+                    )}
+
+                    {file && !isDownloaded && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            onClick={onFileDownload}
+                            disabled={!secretId}
+                            leftIcon={<IconDownload size={14} />}
+                        >
+                            Download the secret file
+                        </Button>
+                    )}
+                </Group>
+            </Stack>
 
             {error && <Error>{error}</Error>}
-        </>
+        </Container>
     );
 };
 

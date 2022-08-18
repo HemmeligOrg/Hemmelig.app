@@ -8,76 +8,8 @@ html {
     }
 }
 
-html,
-body {
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background: var(--color-background);
-    font-weight: 400;
-    color: var(--color-font);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-    -webkit-tap-highlight-color: transparent;
-}
-
-a,
-a:visited {
-    color: var(--color-font);
-    text-decoration: underline;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-label {
-    font-size: 12px;
-}
-
-h1,
-h2 {
-    margin: var(--margin-basic);
-    text-align: center;
-    font-size: 28px;
-}
-
-h2 {
-    font-size: 22px;
-    margin: var(--margin-basic) 0;
-    text-align: left;
-}
-
-h3 {
-    font-size: 18px;
-    text-align: left;
-}
-
-p {
-    font-size: 14px;
-    margin: var(--margin-basic) 0;
-}
-
 * {
     box-sizing: border-box;
-}
-
-#app-inner {
-    width: 100%;
-    background-color: #fff;
-    max-width: 1024px;
-    height: auto;
-    padding: 15px;
-    margin: 0 auto;
-    margin-bottom: var(--margin-basic);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
 
 :root {
@@ -91,9 +23,4 @@ p {
     --color-error: #f94144;
     --border-radius: 10px;
     --margin-basic: 10px;
-}
-
-@media only screen and (min-width: 768px) {
-    #app {
-    }
 }

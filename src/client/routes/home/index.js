@@ -1,20 +1,35 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import passwordGenerator from 'generate-password';
-import style from './style.module.css';
+import {
+    Button,
+    Checkbox,
+    Container,
+    Textarea,
+    TextInput,
+    Select,
+    CopyButton,
+    ActionIcon,
+    Tooltip,
+    Group,
+    Stack,
+    Title,
+    Text,
+    Collapse,
+    Divider,
+} from '@mantine/core';
+import {
+    IconSquarePlus,
+    IconTrash,
+    IconLock,
+    IconLockAccess,
+    IconLink,
+    IconCopy,
+    IconCheck,
+    IconSettings,
+} from '@tabler/icons';
 
-import config from '../../config';
-
-import Wrapper from '../../components/wrapper';
-import InputGroup from '../../components/form/input-group';
-import Input from '../../components/form/input';
-import Textarea from '../../components/form/textarea';
-import Select from '../../components/form/select';
-import Button from '../../components/form/button';
 import Error from '../../components/info/error';
-import Info from '../../components/info/info';
-import Share from '../../components/share';
-import Expandable from '../../components/expandable';
 
 import { getToken, hasToken } from '../../helpers/token';
 
@@ -22,8 +37,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
-    const [file, setFile] = useState('');
-    const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
+
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [enablePassword, setOnEnablePassword] = useState(false);
@@ -32,9 +46,11 @@ const Home = () => {
     const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [_, setIsLoggedIn] = useState(false);
+    const [settings, setOpenSettings] = useState(false);
 
     const [error, setError] = useState('');
+    const [secretError, setSecretError] = useState('');
 
     const secretRef = useRef(null);
 
@@ -69,15 +85,8 @@ const Home = () => {
         setText(event.target.value);
     };
 
-    const onFileChange = (event) => {
-        // Support multi upload at a later stage
-        const [file] = event.target.files;
-
-        setFile(file);
-    };
-
-    const onSelectChange = (event) => {
-        setTTL(event.target.value);
+    const onSelectChange = (value) => {
+        setTTL(value);
     };
 
     const onPasswordChange = (event) => {
@@ -103,14 +112,13 @@ const Home = () => {
         setPassword('');
         setEncryptionKey('');
         setAllowedIp('');
-        setFile('');
         setPreventBurn(false);
         setFormData(new FormData());
     };
 
     const onSubmit = async (event) => {
         if (!text) {
-            setError('Please add a secret.');
+            setSecretError('Please add a secret.');
 
             return;
         }
@@ -121,7 +129,6 @@ const Home = () => {
         formData.append('password', password);
         formData.append('ttl', ttl);
         formData.append('allowedIp', allowedIp);
-        formData.append('file', file);
         formData.append('preventBurn', preventBurn);
 
         const json = await createSecret(formData, getToken());
@@ -162,136 +169,195 @@ const Home = () => {
     const inputReadOnly = !!secretId;
 
     return (
-        <>
-            <Wrapper>
-                <h1 className={style.h1}>
+        <Container>
+            <Stack>
+                <Title order={1} align="center">
                     Paste a password, secret message, or private information.
-                </h1>
-                <Info>
+                </Title>
+                <Text size="sm" align="center">
                     Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets.
-                </Info>
-                <div className={style.form}>
-                    <Textarea
-                        compress={secretId}
-                        placeholder="Write your sensitive information.."
-                        onChange={onTextareChange}
-                        value={text}
-                        readOnly={inputReadOnly}
-                        thickBorder={inputReadOnly}
+                </Text>
+
+                <Textarea
+                    minRows={10}
+                    maxRows={secretId ? 4 : 1000}
+                    autosize
+                    placeholder="Write your sensitive information.."
+                    onChange={onTextareChange}
+                    value={text}
+                    readOnly={inputReadOnly}
+                    error={secretError}
+                />
+
+                <Group spacing="lg">
+                    <Select
+                        value={ttl}
+                        onChange={onSelectChange}
+                        data={[
+                            { value: 604800, label: '7 days' },
+                            { value: 259200, label: '3 days' },
+                            { value: 86400, label: '1 day' },
+                            { value: 43200, label: '12 hours' },
+                            { value: 14400, label: '4 hours' },
+                            { value: 3600, label: '1 hour' },
+                            { value: 1800, label: '30 minutes' },
+                            { value: 300, label: '5 minutes' },
+                            { value: 0, label: 'Never expire' },
+                        ]}
                     />
 
-                    {enableFileUpload && !isLoggedIn && (
-                        <Info align="right">You have to sign in to upload an image.</Info>
+                    <Checkbox
+                        checked={enablePassword}
+                        onChange={onEnablePassword}
+                        readOnly={inputReadOnly}
+                        color="hemmelig"
+                        label="Enable password"
+                    />
+
+                    <TextInput
+                        icon={<IconLock />}
+                        placeholder="Your optional password"
+                        value={password}
+                        onChange={onPasswordChange}
+                        readOnly={!enablePassword || inputReadOnly}
+                    />
+                </Group>
+
+                <Group>
+                    <Stack>
+                        <Button
+                            leftIcon={<IconSettings size={14} />}
+                            compact
+                            variant={settings ? 'outline' : 'subtle'}
+                            color="gray"
+                            onClick={() => setOpenSettings((o) => !o)}
+                        >
+                            More options
+                        </Button>
+
+                        <Collapse
+                            in={settings}
+                            transitionDuration={50}
+                            transitionTimingFunction="linear"
+                        >
+                            <Stack>
+                                <TextInput
+                                    icon={<IconLockAccess />}
+                                    placeholder="Restrict by IP address"
+                                    value={allowedIp}
+                                    onChange={onIpChange}
+                                    readOnly={inputReadOnly}
+                                />
+
+                                <Checkbox
+                                    checked={preventBurn}
+                                    onChange={onPreventBurnChange}
+                                    readOnly={inputReadOnly}
+                                    color="hemmelig"
+                                    label="Burn the secret only after the expired date"
+                                />
+                            </Stack>
+                        </Collapse>
+                    </Stack>
+                </Group>
+
+                {secretId && (
+                    <TextInput
+                        icon={<IconLink />}
+                        value={getSecretURL()}
+                        onFocus={handleFocus}
+                        ref={secretRef}
+                        readOnly
+                        rightSection={
+                            <CopyButton value={getSecretURL()} timeout={2000}>
+                                {({ copied, copy }) => (
+                                    <Tooltip
+                                        label={copied ? 'Copied' : 'Copy'}
+                                        withArrow
+                                        position="right"
+                                    >
+                                        <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                            {copied ? (
+                                                <IconCheck size={16} />
+                                            ) : (
+                                                <IconCopy size={16} />
+                                            )}
+                                        </ActionIcon>
+                                    </Tooltip>
+                                )}
+                            </CopyButton>
+                        }
+                    />
+                )}
+
+                <Group>
+                    {!secretId && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconSquarePlus size={14} />}
+                            onClick={onSubmit}
+                        >
+                            Create a secret link
+                        </Button>
                     )}
-                    {enableFileUpload && isLoggedIn && (
-                        <Info align="right">Only one image is currently supported.</Info>
-                    )}
-
-                    {enableFileUpload && (
-                        <Input
-                            placeholder="Image upload"
-                            type="file"
-                            onChange={onFileChange}
-                            disabled={!isLoggedIn}
-                        />
-                    )}
-
-                    <InputGroup>
-                        <Select value={ttl} onChange={onSelectChange}>
-                            <option value="604800">7 days</option>
-                            <option value="259200">3 days</option>
-                            <option value="86400">1 day</option>
-                            <option value="43200">12 hours</option>
-                            <option value="14400">4 hours</option>
-                            <option value="3600">1 hour</option>
-                            <option value="1800">30 minutes</option>
-                            <option value="300">5 minutes</option>
-                            <option value="0">Never expire</option>
-                        </Select>
-
-                        <InputGroup direction="row">
-                            <Input
-                                type="checkbox"
-                                checked={enablePassword}
-                                onChange={onEnablePassword}
-                                readOnly={inputReadOnly}
-                            />
-                            <label>Enable password</label>
-                        </InputGroup>
-                        <Input
-                            placeholder="Your optional password"
-                            value={password}
-                            onChange={onPasswordChange}
-                            readOnly={!enablePassword || inputReadOnly}
-                            //style={{ WebkitTextSecurity: 'disc' }} // hack for password prompt
-                        />
-                    </InputGroup>
-
-                    <Expandable>
-                        <Input
-                            placeholder="Restrict by IP address"
-                            value={allowedIp}
-                            onChange={onIpChange}
-                            readOnly={inputReadOnly}
-                        />
-
-                        <InputGroup direction="row">
-                            <Input
-                                type="checkbox"
-                                checked={preventBurn}
-                                onChange={onPreventBurnChange}
-                                readOnly={inputReadOnly}
-                            />
-                            <label>Burn the secret only after the expired date</label>
-                        </InputGroup>
-                    </Expandable>
 
                     {secretId && (
-                        <>
-                            <Info align="left">
-                                <Share url={getSecretURL()}></Share>
-                            </Info>
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
 
-                            <Input
-                                value={getSecretURL()}
-                                onFocus={handleFocus}
-                                ref={secretRef}
-                                readOnly
-                            />
-                        </>
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconSquarePlus size={14} />}
+                            onClick={onNewSecret}
+                        >
+                            Create a new secret
+                        </Button>
                     )}
 
-                    <div className={style.buttonWrapper}>
-                        {!secretId && (
-                            <Button buttonType="create" onClick={onSubmit}>
-                                Create a secret link
-                            </Button>
-                        )}
-
-                        {secretId && (
-                            <Button buttonType="create" onClick={onNewSecret}>
-                                Create a new secret
-                            </Button>
-                        )}
-
-                        {secretId && (
-                            <Button buttonType="burn" onClick={onBurn} disabled={!secretId}>
-                                Burn the secret
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </Wrapper>
+                    {secretId && (
+                        <Button
+                            variant="gradient"
+                            gradient={{ from: 'orange', to: 'red' }}
+                            onClick={onBurn}
+                            disabled={!secretId}
+                            leftIcon={<IconTrash size={14} />}
+                        >
+                            Burn the secret
+                        </Button>
+                    )}
+                </Group>
+            </Stack>
 
             {error && <Error>{error}</Error>}
 
-            <Info>The secret link only works once, and then it will disappear.</Info>
+            <Divider my="sm" variant="dashed" />
 
-            <Info>
-                <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
-            </Info>
-        </>
+            <Stack spacing="xs">
+                <Text size="sm" align="center">
+                    The secret link only works once, and then it will disappear.
+                </Text>
+
+                <Text size="sm" align="center">
+                    <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
+                </Text>
+            </Stack>
+        </Container>
     );
 };
 

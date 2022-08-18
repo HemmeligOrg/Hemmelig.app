@@ -1,13 +1,9 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import style from './style.module.css';
+import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from '@mantine/core';
+import { IconLock, IconUser, IconLogin, IconAt } from '@tabler/icons';
 
-import Wrapper from '../../components/wrapper';
-import Input from '../../components/form/input';
-import Button from '../../components/form/button';
-import Error from '../../components/info/error';
-import Info from '../../components/info/info';
 import Success from '../../components/info/success';
 
 import { signUp } from '../../api/authentication';
@@ -58,45 +54,60 @@ const Secret = () => {
     };
 
     return (
-        <>
-            <Wrapper>
-                <div className={style.form}>
-                    <h1>Sign up</h1>
+        <Container size="xs">
+            <Stack>
+                <Title order={1} align="center">
+                    Sign up
+                </Title>
 
-                    <Info>Everything you need to access, and manage the Hemmelig secrets.</Info>
-                    <form>
-                        <Input
-                            type="text"
-                            placeholder="Email"
-                            value={email}
-                            onChange={onEmailChange}
-                            required
-                        />
+                <Text size="sm" align="center">
+                    Everything you need to access, and manage the Hemmelig secrets.
+                </Text>
 
-                        <Input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={onUsernameChange}
-                            required
-                        />
+                <TextInput
+                    icon={<IconAt />}
+                    placeholder="Email"
+                    value={email}
+                    onChange={onEmailChange}
+                    required
+                    error={error}
+                />
 
-                        <Input
-                            type="password"
-                            placeholder="Your password"
-                            value={password}
-                            onChange={onPasswordChange}
-                            required
-                        />
+                <TextInput
+                    icon={<IconUser />}
+                    placeholder="Username"
+                    value={username}
+                    onChange={onUsernameChange}
+                    required
+                    error={error}
+                />
 
-                        <div className={style.buttonWrapper}>
-                            <Button buttonType="create" onClick={onSignUp}>
-                                Sign up
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            </Wrapper>
+                <PasswordInput
+                    icon={<IconLock />}
+                    placeholder="Your password"
+                    value={password}
+                    onChange={onPasswordChange}
+                    required
+                    error={error}
+                />
+
+                <Button
+                    styles={() => ({
+                        root: {
+                            backgroundColor: 'var(--color-contrast)',
+
+                            '&:hover': {
+                                backgroundColor: 'var(--color-contrast)',
+                                filter: 'brightness(115%)',
+                            },
+                        },
+                    })}
+                    leftIcon={<IconLogin size={14} />}
+                    onClick={onSignUp}
+                >
+                    Sign up
+                </Button>
+            </Stack>
 
             {success && (
                 <Success>
@@ -104,8 +115,7 @@ const Secret = () => {
                     <Redirect to="/account" />
                 </Success>
             )}
-            {error && <Error>{error}</Error>}
-        </>
+        </Container>
     );
 };
 
