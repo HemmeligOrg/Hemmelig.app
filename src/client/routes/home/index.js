@@ -46,7 +46,6 @@ const Home = () => {
     const [formData, setFormData] = useState(null);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
-    const [_, setIsLoggedIn] = useState(false);
     const [settings, setOpenSettings] = useState(false);
 
     const [error, setError] = useState('');
@@ -57,8 +56,6 @@ const Home = () => {
     useEffect(() => {
         // Run once to initialize the form data to post
         setFormData(new FormData());
-
-        setIsLoggedIn(hasToken());
     }, []);
 
     useEffect(() => {
