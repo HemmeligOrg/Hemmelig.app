@@ -1,52 +1,64 @@
 const crypto = require('crypto');
+const { secretbox, randomBytes } = require('tweetnacl');
+const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = require('tweetnacl-util');
 const config = require('config');
 
-const ALGORITHM = 'aes-256-gcm';
 const SECRET_KEY = config.get('secret_key');
 
-function encrypt(text, userEncryptionKey) {
-    const iv = crypto.randomBytes(16);
+const newNonce = () => randomBytes(secretbox.nonceLength);
 
-    const salt = crypto.randomBytes(64);
+const encrypt = (text, userEncryptionKey) => {
+    const keyUint8Array = new Uint8Array(
+        Buffer.from(
+            crypto
+                .createHash('sha256')
+                .update(SECRET_KEY + userEncryptionKey)
+                .digest('hex'),
+            'hex'
+        )
+    );
 
-    const MASTER_KEY = crypto
-        .createHash('sha256')
-        .update(SECRET_KEY + userEncryptionKey)
-        .digest('hex');
+    const nonce = newNonce();
+    const messageUint8 = decodeUTF8(text);
 
-    const key = crypto.pbkdf2Sync(MASTER_KEY, salt, 2145, 32, 'sha512');
+    const box = secretbox(messageUint8, nonce, keyUint8Array);
 
-    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+    const fullMessage = new Uint8Array(nonce.length + box.length);
+    fullMessage.set(nonce);
+    fullMessage.set(box, nonce.length);
 
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+    const base64FullMessage = encodeBase64(fullMessage);
 
-    const tag = cipher.getAuthTag();
+    return base64FullMessage;
+};
 
-    return Buffer.concat([salt, iv, tag, encrypted]).toString('hex');
-}
+const decrypt = (messageWithNonce, userEncryptionKey) => {
+    const keyUint8Array = new Uint8Array(
+        Buffer.from(
+            crypto
+                .createHash('sha256')
+                .update(SECRET_KEY + userEncryptionKey)
+                .digest('hex'),
+            'hex'
+        )
+    );
 
-function decrypt(encryptedData, userEncryptionKey) {
-    const data = Buffer.from(encryptedData, 'hex');
+    const messageWithNonceAsUint8Array = decodeBase64(messageWithNonce);
+    const nonce = messageWithNonceAsUint8Array.slice(0, secretbox.nonceLength);
+    const message = messageWithNonceAsUint8Array.slice(
+        secretbox.nonceLength,
+        messageWithNonce.length
+    );
 
-    const MASTER_KEY = crypto
-        .createHash('sha256')
-        .update(SECRET_KEY + userEncryptionKey)
-        .digest('hex');
+    const decrypted = secretbox.open(message, nonce, keyUint8Array);
 
-    const salt = data.slice(0, 64);
-    const iv = data.slice(64, 80);
-    const tag = data.slice(80, 96);
-    const text = data.slice(96);
+    if (!decrypted) {
+        throw new Error('Could not decrypt message');
+    }
 
-    const key = crypto.pbkdf2Sync(MASTER_KEY, salt, 2145, 32, 'sha512');
-
-    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-    decipher.setAuthTag(tag);
-
-    const decrypted = Buffer.concat([decipher.update(Buffer.from(text, 'hex')), decipher.final()]);
-
-    return decrypted;
-}
+    const base64DecryptedMessage = encodeUTF8(decrypted);
+    return base64DecryptedMessage;
+};
 
 module.exports = {
     encrypt,
