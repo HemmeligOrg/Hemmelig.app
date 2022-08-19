@@ -88,7 +88,10 @@ const Account = () => {
                 <Text size="sm">
                     We are glad you logged in. Currently, there is nothing here for you... BUT, we
                     plan to add features for signed in users going forward. This just shows us you
-                    are intrested. Thanks 🎉
+                    are intrested. Thanks{' '}
+                    <span role="img" aria-label="celebration icon">
+                        🎉
+                    </span>
                 </Text>
 
                 <Text size="sm">
