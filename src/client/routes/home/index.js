@@ -31,7 +31,7 @@ import {
 
 import Error from '../../components/info/error';
 
-import { getToken, hasToken } from '../../helpers/token';
+import { getToken } from '../../helpers/token';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
