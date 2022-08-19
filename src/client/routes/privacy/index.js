@@ -9,12 +9,11 @@ const Privacy = () => {
 
                 <Title order={2}>Is my data secure?</Title>
                 <Text>
-                    Yes, your data is secure. Hemmelig is encrypting every message with the AES 256
-                    algorithm with a dynamic IV before saving it to our database. The salt used is
-                    both a master key defined by the server, and a user key that is generated for
-                    each secret which is not saved to the database. The same is valid for password
-                    generation. The only difference is that the password is using the bcrypt
-                    algorithm.
+                    Yes, your data is secure. Hemmelig is encrypting every message with TweetNACL
+                    before saving it to our database. The salt used is both a master key defined by
+                    the server, and a user key that is generated for each secret which is not saved
+                    to the database. The same is valid for password generation. The only difference
+                    is that the password is using the bcrypt algorithm.
                 </Text>
 
                 <Title order={2}>Do you track me?</Title>
