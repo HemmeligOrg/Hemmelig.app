@@ -4,6 +4,7 @@ module.exports = function getClientIp(headers) {
     // Iterate through a list of headers allowed to fetch the ip from
     const checkHeaders = [
         'do-connecting-ip', // digital ocean app platform
+        'true-client-ip', // used for cloudflare and cloudfront
         'x-real-ip',
         'x-forwarded-for',
     ];
