@@ -1,21 +1,31 @@
 name: Publish Docker image
 on:
-  release:
-    types: [published]
+    release:
+        types: [published]
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push to Docker Hub
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: hemmeligapp/hemmelig:latest
+    push_to_registry:
+        name: Push Docker image to Docker Hub
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the repo
+              uses: actions/checkout@v2
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+            - name: Get latest git tag
+              id: latest_tag
+              uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+              with:
+                  fallback: no-tag
+            - name: Push to Docker Hub
+              uses: docker/build-push-action@v2
+              with:
+                  push: true
+                  tags: hemmeligapp/hemmelig:latest
+            - name: Push to Docker Hub
+              uses: docker/build-push-action@v2
+              with:
+                  push: true
+                  tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
