@@ -14,7 +14,7 @@ const Secret = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [error, setError] = useState(null);
+    const [error, setError] = useState({});
     const [token, setTokenState] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -42,14 +42,14 @@ const Secret = () => {
         const data = await signUp(email, username, password);
 
         if (data.error) {
-            setError(data.error);
+            setError(data);
             setSuccess(false);
 
             return;
         }
 
         setTokenState(data.token);
-        setError(null);
+        setError({});
         setSuccess(true);
     };
 
@@ -70,7 +70,7 @@ const Secret = () => {
                     value={email}
                     onChange={onEmailChange}
                     required
-                    error={error}
+                    error={error?.type === 'email' ? error?.error : ''}
                 />
 
                 <TextInput
@@ -79,7 +79,7 @@ const Secret = () => {
                     value={username}
                     onChange={onUsernameChange}
                     required
-                    error={error}
+                    error={error?.type === 'username' ? error?.error : ''}
                 />
 
                 <PasswordInput
@@ -88,7 +88,7 @@ const Secret = () => {
                     value={password}
                     onChange={onPasswordChange}
                     required
-                    error={error}
+                    error={error?.type === 'password' ? error?.error : ''}
                 />
 
                 <Button

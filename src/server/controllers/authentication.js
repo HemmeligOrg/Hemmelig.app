@@ -20,23 +20,28 @@ async function authentication(fastify) {
 
             if (!emailValidator.validate(email)) {
                 return reply.code(403).send({
+                    type: 'email',
                     error: `Your email: "${email}" is not valid.`,
                 });
             }
             if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
                 return reply.code(403).send({
+                    type: 'username',
                     error: `Username has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
                 });
             }
 
             if (password.length < PASSWORD_LENGTH) {
                 return reply.code(403).send({
+                    type: 'password',
                     error: `Password has to be longer than ${PASSWORD_LENGTH} characters`,
                 });
             }
 
             if (await redis.getUser(username)) {
-                return reply.code(403).send({ error: `This username has already been taken.` });
+                return reply
+                    .code(403)
+                    .send({ type: 'username', error: `This username has already been taken.` });
             }
 
             const userPassword = await hash(validator.escape(password));
