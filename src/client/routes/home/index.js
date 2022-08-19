@@ -68,9 +68,10 @@ const Home = () => {
         if (enablePassword) {
             setPassword(
                 passwordGenerator.generate({
-                    length: 12,
+                    length: 16,
                     numbers: true,
                     strict: true,
+                    symbols: true,
                 })
             );
         } else {
