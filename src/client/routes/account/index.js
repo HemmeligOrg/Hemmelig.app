@@ -1,19 +1,19 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container, TextInput, Stack, Title, Text, Anchor } from '@mantine/core';
-import { IconUser, IconKey } from '@tabler/icons';
+import { Container, TextInput, Stack, Title, Text, Anchor, Button, Group } from '@mantine/core';
+import { IconUser, IconKey, IconTrash } from '@tabler/icons';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getToken, hasToken } from '../../helpers/token';
+import { getToken, hasToken, removeToken } from '../../helpers/token';
 import { userLoginChanged } from '../../actions';
 
 import Spinner from '../../components/spinner';
 import Error from '../../components/info/error';
 
-import { getUser } from '../../api/account';
+import { getUser, deleteUser } from '../../api/account';
 
 const Account = () => {
-    const [token] = useState(hasToken() ? getToken() : '');
+    const [token, setToken] = useState(hasToken() ? getToken() : '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
@@ -60,6 +60,24 @@ const Account = () => {
         return <Spinner />;
     }
 
+    const onDeleteUser = async () => {
+        try {
+            const response = await deleteUser(token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                setError('Could not delete the user');
+
+                return;
+            }
+        } catch (e) {
+            setError(e);
+        }
+
+        removeToken();
+
+        setToken('');
+    };
+
     return (
         <Container>
             <Stack>
@@ -68,8 +86,15 @@ const Account = () => {
                     Hi, <strong>{user.username}</strong>
                 </Text>
                 <Text size="sm">
-                    We are glad you logged in. Now you earned the right to upload images that will
-                    be encryptet to be shared with anyone!
+                    We are glad you logged in. Currently, there is nothing here for you... BUT, we
+                    plan to add features for signed in users going forward. This just shows us you
+                    are intrested. Thanks 🎉
+                </Text>
+
+                <Text size="sm">
+                    Since there are still no use case for this sign in, feel free to delete your
+                    account. Hemmelig.app actually deletes your account with all the information.
+                    This can be verified by looking at our github codebase.
                 </Text>
 
                 <Title order={4}>
@@ -99,6 +124,17 @@ const Account = () => {
                     </Anchor>
                     .
                 </Text>
+
+                <Group position="right">
+                    <Button
+                        variant="gradient"
+                        gradient={{ from: 'orange', to: 'red' }}
+                        onClick={onDeleteUser}
+                        leftIcon={<IconTrash size={14} />}
+                    >
+                        Delete profile
+                    </Button>
+                </Group>
             </Stack>
         </Container>
     );
