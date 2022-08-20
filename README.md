@@ -10,11 +10,13 @@
 
 ## SaaS
 
-Hemmelig is available at https://hemmelig.app
+Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
+
+![Desktop](desktop.png)
 
 ## How it works
 
-You enter https://hemmelig.app, write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
+You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
 When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
 
 ## Features
@@ -24,7 +26,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encryptet key is part of the URL, and not saved to the database for an extra layer of security.
--   Available as PWA, which means you can download it as an app for your device.
+-   ~~Available as PWA, which means you can download it as an app for your device.~~
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
 
