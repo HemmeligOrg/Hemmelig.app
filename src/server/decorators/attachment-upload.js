@@ -3,6 +3,18 @@ const FileType = require('file-type');
 const MAX_FILE_BYTES = 1024 * 16 * 1000; // 16mb - 16 024 000 bytes
 const { upload } = require('../services/do');
 
+function acceptedFileType(file) {
+    if (file.mimetype.startsWith('image/')) {
+        return true;
+    }
+
+    if (file.mimetype.startsWith('application/pdf')) {
+        return true;
+    }
+
+    return false;
+}
+
 module.exports = fp(async (fastify) => {
     fastify.decorate('attachment', async (req, reply) => {
         const file = await req.body.file;
@@ -10,7 +22,7 @@ module.exports = fp(async (fastify) => {
 
         // First release it will be images only. Have to look into how
         // to solve this for the ext, and mime types for other files.
-        if (file?.filename && file.mimetype.startsWith('image/')) {
+        if (file?.filename && acceptedFileType(file)) {
             try {
                 await req.jwtVerify();
             } catch (err) {
@@ -37,7 +49,7 @@ module.exports = fp(async (fastify) => {
             Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
         }
 
-        if (file?.filename && !file.mimetype.startsWith('image/')) {
+        if (file?.filename && !acceptedFileType(file)) {
             return reply.code(415).send({
                 error: `This file type "${file.mimetype}" is not supported, yet.`,
             });

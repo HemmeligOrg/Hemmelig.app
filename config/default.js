@@ -9,7 +9,7 @@ const {
     SECRET_REDIS_PASSWORD = null,
     SECRET_REDIS_TLS = false,
     SECRET_JWT_SECRET = 'good_luck_have_fun',
-    SECRET_DO_SPACES_ENDPOINT = 'https://ams3.digitaloceanspaces.com',
+    SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
     SECRET_DO_SPACES_KEY = '',
     SECRET_DO_SPACES_SECRET = '',
     SECRET_DO_SPACES_BUCKET = 'hemmelig',

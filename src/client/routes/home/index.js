@@ -17,6 +17,7 @@ import {
     Text,
     Collapse,
     Divider,
+    FileButton,
 } from '@mantine/core';
 import {
     IconSquarePlus,
@@ -30,19 +31,23 @@ import {
     IconHeading,
 } from '@tabler/icons';
 
+import config from '../../config';
+
 import Error from '../../components/info/error';
 
-import { getToken } from '../../helpers/token';
+import { getToken, hasToken } from '../../helpers/token';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
-
+    const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
+    const [file, setFile] = useState(null);
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [enablePassword, setOnEnablePassword] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(hasToken() ? true : false);
     const [allowedIp, setAllowedIp] = useState('');
     const [preventBurn, setPreventBurn] = useState(false);
     const [formData, setFormData] = useState(null);
@@ -116,6 +121,7 @@ const Home = () => {
         setPassword('');
         setEncryptionKey('');
         setAllowedIp('');
+        setFile('');
         setPreventBurn(false);
         setFormData(new FormData());
     };
@@ -130,7 +136,7 @@ const Home = () => {
         event.preventDefault();
 
         formData.append('text', text);
-
+        formData.append('file', file);
         formData.append('title', title);
         formData.append('password', password);
         formData.append('ttl', ttl);
@@ -255,6 +261,47 @@ const Home = () => {
                             </CopyButton>
                         }
                     />
+                </Group>
+
+                <Group>
+                    {enableFileUpload && (
+                        <FileButton
+                            onChange={setFile}
+                            accept="image/*,application/pdf"
+                            disabled={!isLoggedIn}
+                        >
+                            {(props) => (
+                                <Button
+                                    {...props}
+                                    label={!isLoggedIn ? 'Sign in to upload images' : ''}
+                                    styles={() => ({
+                                        root: {
+                                            backgroundColor: 'var(--color-contrast)',
+
+                                            '&:hover': {
+                                                backgroundColor: 'var(--color-contrast)',
+                                                filter: 'brightness(115%)',
+                                            },
+                                        },
+                                    })}
+                                >
+                                    Upload image
+                                </Button>
+                            )}
+                        </FileButton>
+                    )}
+
+                    {enableFileUpload && !isLoggedIn && (
+                        <Text size="sm" align="center" mt="sm">
+                            Sign in to upload images
+                        </Text>
+                    )}
+
+                    {file && (
+                        <Text size="sm" align="center" mt="sm">
+                            Picked file: {file.name}
+                        </Text>
+                    )}
                 </Group>
 
                 <Group>

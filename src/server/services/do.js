@@ -18,7 +18,7 @@ const s3 = new AWS.S3({
 async function upload(encryptionKey, fileUpload) {
     const filename = nanoid();
 
-    const encryptedFile = encrypt(fileUpload, encryptionKey);
+    const encryptedFile = encrypt(fileUpload.toString('hex'), encryptionKey);
 
     const data = await s3
         .upload({
@@ -43,7 +43,9 @@ async function download(key, encryptionKey) {
 
     const { encryptedFile } = JSON.parse(data.Body);
 
-    return decrypt(encryptedFile, encryptionKey);
+    const file = decrypt(encryptedFile, encryptionKey);
+
+    return Buffer.from(file, 'hex');
 }
 
 async function remove(key) {
