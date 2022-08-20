@@ -187,25 +187,6 @@ const Secret = () => {
                         </Button>
                     )}
 
-                    {isBase64Content && (
-                        <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: 'var(--color-contrast)',
-
-                                    '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
-                            leftIcon={<IconPerspective size={14} />}
-                            onClick={convertBase64ToPlain}
-                        >
-                            Convert base64 to plain text
-                        </Button>
-                    )}
-
                     {file && !isDownloaded && (
                         <Button
                             styles={() => ({
@@ -223,6 +204,25 @@ const Secret = () => {
                             leftIcon={<IconDownload size={14} />}
                         >
                             Download the secret file
+                        </Button>
+                    )}
+
+                    {isBase64Content && (
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast)',
+
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconPerspective size={14} />}
+                            onClick={convertBase64ToPlain}
+                        >
+                            Convert base64 to plain text
                         </Button>
                     )}
                 </Group>
