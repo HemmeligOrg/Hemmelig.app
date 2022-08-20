@@ -27,6 +27,7 @@ import {
     IconCopy,
     IconCheck,
     IconSettings,
+    IconHeading,
 } from '@tabler/icons';
 
 import Error from '../../components/info/error';
@@ -37,6 +38,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 
 const Home = () => {
     const [text, setText] = useState('');
+    const [title, setTitle] = useState('');
 
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
@@ -79,8 +81,12 @@ const Home = () => {
         }
     }, [enablePassword]);
 
-    const onTextareChange = (event) => {
+    const onTextareaChange = (event) => {
         setText(event.target.value);
+    };
+
+    const onTitleChange = (event) => {
+        setTitle(event.target.value);
     };
 
     const onSelectChange = (value) => {
@@ -124,6 +130,8 @@ const Home = () => {
         event.preventDefault();
 
         formData.append('text', text);
+
+        formData.append('title', title);
         formData.append('password', password);
         formData.append('ttl', ttl);
         formData.append('allowedIp', allowedIp);
@@ -182,10 +190,18 @@ const Home = () => {
                     maxRows={secretId ? 4 : 1000}
                     autosize
                     placeholder="Write your sensitive information.."
-                    onChange={onTextareChange}
+                    onChange={onTextareaChange}
                     value={text}
                     readOnly={inputReadOnly}
                     error={secretError}
+                />
+
+                <TextInput
+                    icon={<IconHeading />}
+                    placeholder="Title"
+                    value={title}
+                    onChange={onTitleChange}
+                    readOnly={inputReadOnly}
                 />
 
                 <Group spacing="lg">

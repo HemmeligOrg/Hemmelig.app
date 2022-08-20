@@ -30,6 +30,10 @@ async function createSecret(data, ttl) {
     const key = `secret:${data.id}`;
     const prepare = [key, 'secret', data.secret];
 
+    if (data.title) {
+        prepare.push(...['title', data.title]);
+    }
+
     if (data.password) {
         prepare.push(...['password', data.password]);
     }

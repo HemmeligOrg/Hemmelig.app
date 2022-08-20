@@ -46,6 +46,10 @@ async function getSecretRoute(request, reply) {
         Object.assign(result, { file: JSON.parse(data.file) });
     }
 
+    if (data.title) {
+        Object.assign(result, { title: data.title });
+    }
+
     Object.assign(result, { secret: decrypt(JSON.parse(data.secret), encryptionKey).toString() });
 
     redis.deleteSecret(id);
@@ -79,7 +83,7 @@ async function secret(fastify) {
             preValidation: [fastify.rateLimit, fastify.keyGeneration, fastify.attachment],
         },
         async (req, reply) => {
-            const { text, ttl, password, allowedIp, preventBurn } = req.body;
+            const { text, title, ttl, password, allowedIp, preventBurn } = req.body;
             const { encryptionKey, secretId, file } = req.secret;
 
             if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
@@ -90,14 +94,21 @@ async function secret(fastify) {
                 });
             }
 
+            if (title?.value.length > 255) {
+                return reply.code(413).send({
+                    error: `The title is longer than 255 characters which is not allowed.`,
+                });
+            }
+
             if (allowedIp?.value && !ipCheck(allowedIp.value)) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
             const data = {
                 id: secretId,
+                title: validator.escape(title?.value),
                 secret: JSON.stringify(encrypt(validator.escape(text?.value), encryptionKey)),
-                allowedIp: allowedIp?.value,
+                allowedIp: validator.escape(allowedIp?.value),
             };
 
             if (password?.value) {

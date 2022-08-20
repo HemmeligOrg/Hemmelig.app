@@ -4,7 +4,14 @@ import { useParams, Link } from 'react-router-dom';
 import validator from 'validator';
 
 import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';
-import { IconSquarePlus, IconDownload, IconLock, IconEye, IconPerspective } from '@tabler/icons';
+import {
+    IconSquarePlus,
+    IconDownload,
+    IconLock,
+    IconEye,
+    IconPerspective,
+    IconHeading,
+} from '@tabler/icons';
 
 import Error from '../../components/info/error';
 
@@ -14,6 +21,7 @@ import { downloadFile } from '../../api/upload';
 const Secret = () => {
     const { secretId, encryptionKey = null } = useParams();
     const [secret, setSecret] = useState(null);
+    const [title, setTitle] = useState(null);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
@@ -49,6 +57,10 @@ const Secret = () => {
             setError(json.error);
         } else {
             setSecret(validator.unescape(json.secret));
+
+            if (json.title) {
+                setTitle(validator.unescape(json.title));
+            }
 
             if (json.file) {
                 setFile(json.file);
@@ -110,6 +122,8 @@ const Secret = () => {
                 <Title order={1}>View your secret</Title>
 
                 <Text>We will only show the secret once.</Text>
+
+                {title && <TextInput icon={<IconHeading />} value={title} readOnly />}
 
                 {isSecretOpen && (
                     <Textarea minRows={10} maxRows={30} value={secret} autosize readOnly />
