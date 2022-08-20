@@ -122,6 +122,7 @@ const Home = () => {
         setEncryptionKey('');
         setAllowedIp('');
         setFile('');
+        setTitle('');
         setPreventBurn(false);
         setFormData(new FormData());
     };
