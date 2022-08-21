@@ -62,6 +62,7 @@ if (process.env.NODE_ENV !== 'development') {
     fastify.get('/signin', serveIndex);
     fastify.get('/signup', serveIndex);
     fastify.get('/account', serveIndex);
+    fastify.get('/terms', serveIndex);
 }
 
 const startServer = async () => {
