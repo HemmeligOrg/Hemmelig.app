@@ -101,19 +101,17 @@ const Account = () => {
                 <Text size="sm">
                     Hi, <strong>{user.username}</strong>
                 </Text>
-                <Text size="sm">
-                    We are glad you logged in. Currently, there is nothing here for you... BUT, we
-                    plan to add features for signed in users going forward. This just shows us you
-                    are intrested. Thanks{' '}
-                    <span role="img" aria-label="celebration icon">
-                        🎉
-                    </span>
-                </Text>
 
                 <Text size="sm">
-                    Since there are still no use case for this sign in, feel free to delete your
-                    account. Hemmelig.app actually deletes your account with all the information.
-                    This can be verified by looking at our github codebase.
+                    We are glad you logged in. Here is the list of features signed in users get:
+                    <ul>
+                        <li>Upload files</li>
+                        <li>Set secrets that never expires</li>
+                    </ul>
+                    More features are coming! Thanks for joining Hemmelig.app!
+                    <span role="img" aria-label="celebration icon">
+                        🎉 🎉 🎉 🎉
+                    </span>
                 </Text>
 
                 <Title order={4}>
@@ -137,11 +135,9 @@ const Account = () => {
                 />
 
                 <Text size="sm">
-                    For information about how to use the API, please have a look at the{' '}
-                    <Anchor component={Link} to="/api-docs">
-                        API documentation
-                    </Anchor>
-                    .
+                    If you do not feel to be part of the Hemmelig.app journey anymore. Feel free to
+                    delete your profile. Hemmelig will remove all the information connected to your
+                    account!
                 </Text>
 
                 <Group position="right">
