@@ -181,6 +181,23 @@ const Home = () => {
 
     const inputReadOnly = !!secretId;
 
+    const ttlValues = [
+        { value: 604800, label: '7 days' },
+        { value: 259200, label: '3 days' },
+        { value: 86400, label: '1 day' },
+        { value: 43200, label: '12 hours' },
+        { value: 14400, label: '4 hours' },
+        { value: 3600, label: '1 hour' },
+        { value: 1800, label: '30 minutes' },
+        { value: 300, label: '5 minutes' },
+    ];
+
+    // Features allowed for signed in users only
+    // This is validated from the server as well
+    if (isLoggedIn) {
+        ttlValues.push({ value: 0, label: 'Never expire' });
+    }
+
     return (
         <Container>
             <Stack>
@@ -212,21 +229,7 @@ const Home = () => {
                 />
 
                 <Group spacing="lg">
-                    <Select
-                        value={ttl}
-                        onChange={onSelectChange}
-                        data={[
-                            { value: 604800, label: '7 days' },
-                            { value: 259200, label: '3 days' },
-                            { value: 86400, label: '1 day' },
-                            { value: 43200, label: '12 hours' },
-                            { value: 14400, label: '4 hours' },
-                            { value: 3600, label: '1 hour' },
-                            { value: 1800, label: '30 minutes' },
-                            { value: 300, label: '5 minutes' },
-                            { value: 0, label: 'Never expire' },
-                        ]}
-                    />
+                    <Select value={ttl} onChange={onSelectChange} data={ttlValues} />
 
                     <Checkbox
                         checked={enablePassword}

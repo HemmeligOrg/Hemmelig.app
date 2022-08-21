@@ -16,6 +16,7 @@ fastify.register(require('fastify-multipart'), { attachFieldsToBody: true });
 
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));
+fastify.register(require('./src/server/decorators/user-features'));
 fastify.register(require('./src/server/decorators/basic-auth'));
 fastify.register(require('./src/server/decorators/rate-limit'));
 fastify.register(require('./src/server/decorators/allowed-ip'));

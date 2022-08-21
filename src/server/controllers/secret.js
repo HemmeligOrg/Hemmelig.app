@@ -80,7 +80,12 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [fastify.rateLimit, fastify.keyGeneration, fastify.attachment],
+            preValidation: [
+                fastify.rateLimit,
+                fastify.userFeatures,
+                fastify.keyGeneration,
+                fastify.attachment,
+            ],
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn } = req.body;

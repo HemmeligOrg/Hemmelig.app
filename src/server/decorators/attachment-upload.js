@@ -46,14 +46,6 @@ module.exports = fp(async (fastify) => {
         // First release it will be images only. Have to look into how
         // to solve this for the ext, and mime types for other files.
         if (file?.filename && acceptedFileType(file)) {
-            try {
-                await req.jwtVerify();
-            } catch (err) {
-                return reply.send({
-                    error: 'You have to create an account and sign in to upload images',
-                });
-            }
-
             const fileData = await file.toBuffer();
             const byteLength = Buffer.byteLength(fileData);
 
