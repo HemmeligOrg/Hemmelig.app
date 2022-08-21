@@ -268,13 +268,13 @@ const Home = () => {
                     {enableFileUpload && (
                         <FileButton
                             onChange={setFile}
-                            accept="image/*,application/pdf"
+                            accept="image/*,text/*,application/*"
                             disabled={!isLoggedIn}
                         >
                             {(props) => (
                                 <Button
                                     {...props}
-                                    label={!isLoggedIn ? 'Sign in to upload images' : ''}
+                                    label={!isLoggedIn ? 'Sign in to upload files' : ''}
                                     styles={() => ({
                                         root: {
                                             backgroundColor: 'var(--color-contrast)',
@@ -286,7 +286,7 @@ const Home = () => {
                                         },
                                     })}
                                 >
-                                    Upload image
+                                    Upload file
                                 </Button>
                             )}
                         </FileButton>
@@ -294,7 +294,7 @@ const Home = () => {
 
                     {enableFileUpload && !isLoggedIn && (
                         <Text size="sm" align="center" mt="sm">
-                            Sign in to upload images
+                            Sign in to upload files
                         </Text>
                     )}
 

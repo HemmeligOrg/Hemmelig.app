@@ -203,7 +203,7 @@ const Secret = () => {
                             disabled={!secretId}
                             leftIcon={<IconDownload size={14} />}
                         >
-                            Download the secret file
+                            Download file
                         </Button>
                     )}
 

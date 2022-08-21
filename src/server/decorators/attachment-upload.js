@@ -3,12 +3,35 @@ const FileType = require('file-type');
 const MAX_FILE_BYTES = 1024 * 16 * 1000; // 16mb - 16 024 000 bytes
 const { upload } = require('../services/do');
 
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+const notAllowed = [
+    'application/zip',
+    'application/x-7z-compressed',
+    'application/x-tar',
+    'application/vnd.rar',
+    'application/ogg',
+    'application/java-archive',
+    'application/gzip',
+    'application/x-bzip2',
+    'application/x-bzip',
+    'application/x-cdf',
+    'application/x-freearc',
+];
+
 function acceptedFileType(file) {
+    if (notAllowed.indexOf(file.mimetype) > -1) {
+        return false;
+    }
+
     if (file.mimetype.startsWith('image/')) {
         return true;
     }
 
-    if (file.mimetype.startsWith('application/pdf')) {
+    if (file.mimetype.startsWith('application/')) {
+        return true;
+    }
+
+    if (file.mimetype.startsWith('text/')) {
         return true;
     }
 
