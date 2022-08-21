@@ -21,7 +21,7 @@ import Privacy from './routes/privacy';
 import SignIn from './routes/signin';
 import SignUp from './routes/signup';
 import Account from './routes/account';
-import ApiDocs from './routes/api-docs';
+import Terms from './routes/terms';
 
 const App = () => {
     const theme = useMantineTheme();
@@ -64,8 +64,8 @@ const App = () => {
                                         <Text size="xs">PRIVACY</Text>
                                     </Anchor>
                                     |
-                                    <Anchor component={Link} to="/api-docs" color="dimmed">
-                                        <Text size="xs">API</Text>
+                                    <Anchor component={Link} to="/terms" color="dimmed">
+                                        <Text size="xs">TERMS & CONDITION</Text>
                                     </Anchor>
                                     |
                                     <Anchor component={Link} to="/" color="dimmed">
@@ -108,8 +108,8 @@ const App = () => {
                             <Route path="/account" exact>
                                 <Account />
                             </Route>
-                            <Route path="/api-docs" exact>
-                                <ApiDocs />
+                            <Route path="/terms" exact>
+                                <Terms />
                             </Route>
                             <Route path="/">
                                 <Home />
