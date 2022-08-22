@@ -19,20 +19,20 @@ const notAllowed = [
     'application/x-freearc',
 ];
 
-function acceptedFileType(file) {
-    if (notAllowed.indexOf(file.mimetype) > -1) {
+function acceptedFileType(mimetype) {
+    if (notAllowed.indexOf(mimetype) > -1) {
         return false;
     }
 
-    if (file.mimetype.startsWith('image/')) {
+    if (mimetype.startsWith('image/')) {
         return true;
     }
 
-    if (file.mimetype.startsWith('application/')) {
+    if (mimetype.startsWith('application/')) {
         return true;
     }
 
-    if (file.mimetype.startsWith('text/')) {
+    if (mimetype.startsWith('text/')) {
         return true;
     }
 
@@ -40,14 +40,25 @@ function acceptedFileType(file) {
 }
 
 module.exports = fp(async (fastify) => {
-    fastify.decorate('attachment', async (req, reply) => {
+    fastify.decorate('attachment', async (req, reply, done) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
 
-        // First release it will be images only. Have to look into how
-        // to solve this for the ext, and mime types for other files.
-        if (file?.filename && acceptedFileType(file)) {
-            const fileData = await file.toBuffer();
+        if (!file) {
+            done();
+        }
+
+        const fileData = await file.toBuffer();
+
+        const { ext, mime } = await FileType.fromBuffer(fileData);
+
+        if (file?.filename && !acceptedFileType(mime)) {
+            return reply.code(415).send({
+                error: `This file type "${mime}" is not supported, yet.`,
+            });
+        }
+
+        if (file?.filename) {
             const byteLength = Buffer.byteLength(fileData);
 
             if (byteLength > MAX_FILE_BYTES) {
@@ -60,15 +71,7 @@ module.exports = fp(async (fastify) => {
 
             const imageData = await upload(encryptionKey, fileData);
 
-            const { ext, mime } = await FileType.fromBuffer(fileData);
-
             Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
-        }
-
-        if (file?.filename && !acceptedFileType(file)) {
-            return reply.code(415).send({
-                error: `This file type "${file.mimetype}" is not supported, yet.`,
-            });
         }
     });
 });
