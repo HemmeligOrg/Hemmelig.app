@@ -32,11 +32,14 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 ## Docker image
 
-`hemmeligapp/hemmelig:latest`
+-   hemmeligapp/hemmelig:bleeding-edge (pushed on every commit to main)
+-   hemmeligapp/hemmelig:weekly (pushed every week on Friday)
+-   hemmeligapp/hemmelig:v3.4.0 (see the github tags)
+-   hemmeligapp/hemmelig:latest (pushed on releases)
 
 ## Self-hosting
 
-If you have to follow some sort of compliance, and have to self-host, https://hemmelig.app is available as a docker image. The following is the bare minimum to run the docker image.
+If you have to follow some sort of compliance, and have to self-host, [https://hemmelig.app](https://hemmelig.app) is available as a docker image. The following is the bare minimum to run the docker image.
 
 ```bash
 # To use this image you need a redis database enabled.
