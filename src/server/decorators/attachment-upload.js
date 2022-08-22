@@ -1,6 +1,6 @@
 const fp = require('fastify-plugin');
 const FileType = require('file-type');
-const MAX_FILE_BYTES = 1024 * 16 * 1000; // 16mb - 16 024 000 bytes
+const MAX_FILE_BYTES = 1024 * 8 * 1000; // 8mb - 8 024 000 bytes
 const { upload } = require('../services/do');
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
