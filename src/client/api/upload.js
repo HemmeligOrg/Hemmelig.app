@@ -1,13 +1,14 @@
 import config from '../config';
 
-export const downloadFile = async (fileData) => {
+export const downloadFile = async (fileData, token) => {
     const { key, encryptionKey, ext, mime, secretId } = fileData;
 
-    const data = await fetch(`${config.get('api.host')}/upload/get_image`, {
+    const data = await fetch(`${config.get('api.host')}/upload/download`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ key, encryptionKey, ext, mime }),
     });

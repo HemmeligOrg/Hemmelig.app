@@ -17,6 +17,7 @@ import Error from '../../components/info/error';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
+import { getToken, hasToken } from '../../helpers/token';
 
 const Secret = () => {
     const { secretId, encryptionKey = null } = useParams();
@@ -102,11 +103,14 @@ const Secret = () => {
     const onFileDownload = (event) => {
         event.preventDefault();
 
-        downloadFile({
-            ...file,
-            encryptionKey,
-            secretId,
-        });
+        downloadFile(
+            {
+                ...file,
+                encryptionKey,
+                secretId,
+            },
+            getToken()
+        );
 
         setIsDownloaded(true);
     };
@@ -200,10 +204,10 @@ const Secret = () => {
                                 },
                             })}
                             onClick={onFileDownload}
-                            disabled={!secretId}
+                            disabled={!secretId || !hasToken()}
                             leftIcon={<IconDownload size={14} />}
                         >
-                            Download file
+                            {!hasToken() ? 'Sign in to download files' : 'Download file'}
                         </Button>
                     )}
 

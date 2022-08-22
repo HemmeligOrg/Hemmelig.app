@@ -29,7 +29,7 @@ async function upload(encryptionKey, fileUpload) {
         .promise();
 
     return {
-        key: data.key,
+        key: data.Key,
     };
 }
 
