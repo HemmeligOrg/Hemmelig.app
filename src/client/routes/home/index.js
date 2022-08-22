@@ -221,7 +221,7 @@ const Home = () => {
                 />
 
                 <TextInput
-                    icon={<IconHeading />}
+                    icon={<IconHeading size={14} />}
                     placeholder="Title"
                     value={title}
                     onChange={onTitleChange}
@@ -240,7 +240,7 @@ const Home = () => {
                     />
 
                     <TextInput
-                        icon={<IconLock />}
+                        icon={<IconLock size={14} />}
                         placeholder="Your optional password"
                         value={password}
                         onChange={onPasswordChange}
@@ -327,7 +327,7 @@ const Home = () => {
                         >
                             <Stack>
                                 <TextInput
-                                    icon={<IconLockAccess />}
+                                    icon={<IconLockAccess size={14} />}
                                     placeholder="Restrict by IP address"
                                     value={allowedIp}
                                     onChange={onIpChange}
@@ -348,7 +348,7 @@ const Home = () => {
 
                 {secretId && (
                     <TextInput
-                        icon={<IconLink />}
+                        icon={<IconLink size={14} />}
                         value={getSecretURL()}
                         onFocus={handleFocus}
                         ref={secretRef}

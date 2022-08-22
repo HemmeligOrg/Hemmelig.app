@@ -123,7 +123,7 @@ const Secret = () => {
 
                 <Text>We will only show the secret once.</Text>
 
-                {title && <TextInput icon={<IconHeading />} value={title} readOnly />}
+                {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 
                 {isSecretOpen && (
                     <Textarea minRows={10} maxRows={30} value={secret} autosize readOnly />
@@ -135,7 +135,7 @@ const Secret = () => {
 
                         <TextInput
                             id="lemon-password"
-                            icon={<IconLock />}
+                            icon={<IconLock size={14} />}
                             placeholder="Your password"
                             value={password}
                             onChange={onPasswordChange}

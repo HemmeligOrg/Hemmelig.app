@@ -60,7 +60,7 @@ const Secret = () => {
                 </Text>
 
                 <TextInput
-                    icon={<IconUser />}
+                    icon={<IconUser size={14} />}
                     placeholder="Username"
                     value={username}
                     onChange={onUsernameChange}
@@ -69,7 +69,7 @@ const Secret = () => {
                 />
 
                 <PasswordInput
-                    icon={<IconLock />}
+                    icon={<IconLock size={14} />}
                     placeholder="Your password"
                     value={password}
                     onChange={onPasswordChange}
