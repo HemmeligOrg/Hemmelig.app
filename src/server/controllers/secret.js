@@ -50,6 +50,10 @@ async function getSecretRoute(request, reply) {
         Object.assign(result, { title: data.title });
     }
 
+    if (data.preventBurn) {
+        Object.assign(result, { preventBurn: JSON.parse(data.preventBurn) });
+    }
+
     Object.assign(result, { secret: decrypt(JSON.parse(data.secret), encryptionKey).toString() });
 
     redis.deleteSecret(id);

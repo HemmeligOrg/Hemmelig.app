@@ -23,6 +23,7 @@ const Secret = () => {
     const { secretId, encryptionKey = null } = useParams();
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
+    const [preventBurn, setPreventBurn] = useState(null);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
@@ -65,6 +66,10 @@ const Secret = () => {
 
             if (json.file) {
                 setFile(json.file);
+            }
+
+            if (json.preventBurn) {
+                setPreventBurn(json.preventBurn);
             }
 
             setIsSecretOpen(true);
@@ -112,7 +117,9 @@ const Secret = () => {
             getToken()
         );
 
-        setIsDownloaded(true);
+        if (!preventBurn) {
+            setIsDownloaded(true);
+        }
     };
 
     const convertBase64ToPlain = () => {

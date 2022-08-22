@@ -34,18 +34,22 @@ async function upload(encryptionKey, fileUpload) {
 }
 
 async function download(key, encryptionKey) {
-    const data = await s3
-        .getObject({
-            Bucket: config.get('do.spaces.bucket'),
-            Key: key,
-        })
-        .promise();
+    try {
+        const data = await s3
+            .getObject({
+                Bucket: config.get('do.spaces.bucket'),
+                Key: key,
+            })
+            .promise();
 
-    const { encryptedFile } = JSON.parse(data.Body);
+        const { encryptedFile } = JSON.parse(data.Body);
 
-    const file = decrypt(encryptedFile, encryptionKey);
+        const file = decrypt(encryptedFile, encryptionKey);
 
-    return Buffer.from(file, 'hex');
+        return Buffer.from(file, 'hex');
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function remove(key) {
