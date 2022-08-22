@@ -44,7 +44,7 @@ module.exports = fp(async (fastify) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
 
-        if (!file) {
+        if (!file.mimetype) {
             done();
         }
 
