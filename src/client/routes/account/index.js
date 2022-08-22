@@ -172,7 +172,7 @@ const Account = () => {
                             get:
                             <ul>
                                 <li>Upload files</li>
-                                <li>Set secrets that never expires</li>
+                                <li>Expire time of 14 and 28 days for secrets</li>
                             </ul>
                             More features are coming! Thanks for joining Hemmelig.app!
                             <span role="img" aria-label="celebration icon">
