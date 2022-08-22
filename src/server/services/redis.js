@@ -105,10 +105,14 @@ async function createUser(username, email, password) {
         'email',
         email,
         'password',
-        password,
-        'basic_auth_token',
-        nanoid()
+        password
     );
+}
+
+async function updateUser(username, data = {}) {
+    const update = Object.entries(data).flat();
+
+    return await client.hmset(`user:${username}`, ...update);
 }
 
 async function getUser(username) {
@@ -162,6 +166,7 @@ module.exports = {
     deleteSecret,
     isAlive,
     createUser,
+    updateUser,
     getUser,
     deleteUser,
     createRateLimit,

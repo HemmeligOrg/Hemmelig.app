@@ -24,6 +24,7 @@ async function authentication(fastify) {
                     error: `Your email: "${email}" is not valid.`,
                 });
             }
+
             if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
                 return reply.code(403).send({
                     type: 'username',

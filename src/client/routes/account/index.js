@@ -1,9 +1,19 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container, TextInput, Stack, Title, Text, Anchor, Button, Group } from '@mantine/core';
+import {
+    Container,
+    TextInput,
+    PasswordInput,
+    Stack,
+    Text,
+    Button,
+    Group,
+    Tabs,
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
-import { IconUser, IconKey, IconTrash } from '@tabler/icons';
-import { Link, Redirect } from 'react-router-dom';
+import { IconUser, IconAt, IconLock, IconTrash, IconSettings, IconEdit } from '@tabler/icons';
+import { Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getToken, hasToken, removeToken } from '../../helpers/token';
 import { userLoginChanged } from '../../actions';
@@ -11,15 +21,23 @@ import { userLoginChanged } from '../../actions';
 import Spinner from '../../components/spinner';
 import Error from '../../components/info/error';
 
-import { getUser, deleteUser } from '../../api/account';
+import { getUser, updateUser, deleteUser } from '../../api/account';
 
 const Account = () => {
     const [token, setToken] = useState(hasToken() ? getToken() : '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
+    const [activeTab, setActiveTab] = useState('account');
 
     const dispatch = useDispatch();
+
+    const form = useForm({
+        initialValues: {
+            password: '',
+            email: '',
+        },
+    });
 
     useEffect(() => {
         if (!token) {
@@ -41,7 +59,11 @@ const Account = () => {
                 setLoading(false);
 
                 const { user } = response;
+
                 setUser(user);
+
+                form.setValues({ email: user.email });
+
                 setError(null);
             } catch (e) {
                 setError(e);
@@ -50,7 +72,7 @@ const Account = () => {
     }, [token, dispatch]);
 
     if (error) {
-        return <Error>{error}</Error>;
+        return <Error>{error.error}</Error>;
     }
 
     if (!token) {
@@ -79,6 +101,44 @@ const Account = () => {
         setToken('');
     };
 
+    const onProfileUpdate = async (e) => {
+        e.preventDefault();
+
+        setActiveTab('settings');
+
+        const values = form.values;
+
+        try {
+            setLoading(true);
+
+            const response = await updateUser(values, token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                setError('Could not update your user profile');
+
+                return;
+            }
+
+            setLoading(false);
+
+            const { user, error, type } = response;
+
+            if (error) {
+                if (type === 'no-data') {
+                    form.setErrors({ email: error });
+                } else {
+                    form.setErrors({ [type]: error });
+                }
+            } else {
+                setUser(user);
+
+                form.setValues({ email: user.email });
+            }
+        } catch (e) {
+            setError(e);
+        }
+    };
+
     const openDeleteModal = () =>
         openConfirmModal({
             title: 'Delete your profile',
@@ -91,61 +151,93 @@ const Account = () => {
 
     return (
         <Container>
-            <Stack>
-                <Title order={1}>Account</Title>
-                <Text size="sm">
-                    Hi, <strong>{user.username}</strong>
-                </Text>
+            <Tabs color="orange" defaultValue={activeTab}>
+                <Tabs.List>
+                    <Tabs.Tab value="account" icon={<IconUser size={14} />}>
+                        Account
+                    </Tabs.Tab>
+                    <Tabs.Tab value="settings" icon={<IconSettings size={14} />}>
+                        Settings
+                    </Tabs.Tab>
+                </Tabs.List>
 
-                <Text size="sm">
-                    We are glad you logged in. Here is the list of features signed in users get:
-                    <ul>
-                        <li>Upload files</li>
-                        <li>Set secrets that never expires</li>
-                    </ul>
-                    More features are coming! Thanks for joining Hemmelig.app!
-                    <span role="img" aria-label="celebration icon">
-                        🎉 🎉 🎉 🎉
-                    </span>
-                </Text>
+                <Tabs.Panel value="account" pt="xs">
+                    <Stack>
+                        <Text size="sm">
+                            Hi, <strong>{user.username}</strong>
+                        </Text>
 
-                <Title order={4}>
-                    <strong>BASIC AUTH</strong>
-                </Title>
+                        <Text size="sm">
+                            We are glad you logged in. Here is the list of features signed in users
+                            get:
+                            <ul>
+                                <li>Upload files</li>
+                                <li>Set secrets that never expires</li>
+                            </ul>
+                            More features are coming! Thanks for joining Hemmelig.app!
+                            <span role="img" aria-label="celebration icon">
+                                🎉 🎉 🎉 🎉
+                            </span>
+                        </Text>
 
-                <TextInput
-                    label="User"
-                    icon={<IconUser />}
-                    placeholder="Username"
-                    value={user.username}
-                    readOnly
-                />
+                        <Text size="sm">
+                            If you do not feel to be part of the Hemmelig.app journey anymore. Feel
+                            free to delete your profile. Hemmelig will remove all the information
+                            connected to your account!
+                        </Text>
 
-                <TextInput
-                    label="Token"
-                    icon={<IconKey />}
-                    placeholder="Token"
-                    value={user.basicAuthToken}
-                    readOnly
-                />
+                        <Group position="right">
+                            <Button
+                                variant="gradient"
+                                gradient={{ from: 'orange', to: 'red' }}
+                                onClick={openDeleteModal}
+                                leftIcon={<IconTrash size={14} />}
+                            >
+                                Delete profile
+                            </Button>
+                        </Group>
+                    </Stack>
+                </Tabs.Panel>
 
-                <Text size="sm">
-                    If you do not feel to be part of the Hemmelig.app journey anymore. Feel free to
-                    delete your profile. Hemmelig will remove all the information connected to your
-                    account!
-                </Text>
+                <Tabs.Panel value="settings" pt="xs">
+                    <Container size="xs">
+                        <Stack>
+                            <TextInput
+                                label="Email"
+                                icon={<IconAt size={14} />}
+                                placeholder="Email"
+                                {...form.getInputProps('email')}
+                            />
 
-                <Group position="right">
-                    <Button
-                        variant="gradient"
-                        gradient={{ from: 'orange', to: 'red' }}
-                        onClick={openDeleteModal}
-                        leftIcon={<IconTrash size={14} />}
-                    >
-                        Delete profile
-                    </Button>
-                </Group>
-            </Stack>
+                            <PasswordInput
+                                label="Password"
+                                icon={<IconLock size={14} />}
+                                placeholder="Update your password"
+                                {...form.getInputProps('password')}
+                            />
+
+                            <Group position="right">
+                                <Button
+                                    leftIcon={<IconEdit size={14} />}
+                                    onClick={onProfileUpdate}
+                                    styles={() => ({
+                                        root: {
+                                            backgroundColor: 'var(--color-contrast)',
+
+                                            '&:hover': {
+                                                backgroundColor: 'var(--color-contrast)',
+                                                filter: 'brightness(115%)',
+                                            },
+                                        },
+                                    })}
+                                >
+                                    Update details
+                                </Button>
+                            </Group>
+                        </Stack>
+                    </Container>
+                </Tabs.Panel>
+            </Tabs>
         </Container>
     );
 };

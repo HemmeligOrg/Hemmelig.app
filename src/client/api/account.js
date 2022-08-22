@@ -20,7 +20,7 @@ export const getUser = async (token) => {
 };
 
 export const deleteUser = async (token) => {
-    const data = await fetch(`${config.get('api.host')}/account/delete_user`, {
+    const data = await fetch(`${config.get('api.host')}/account/delete`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
@@ -39,4 +39,24 @@ export const deleteUser = async (token) => {
     }
 
     return await data.json();
+};
+
+export const updateUser = async (data, token) => {
+    const response = await fetch(`${config.get('api.host')}/account/update`, {
+        method: 'PUT',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (response.status === 401) {
+        return {
+            statusCode: 401,
+        };
+    }
+
+    return await response.json();
 };
