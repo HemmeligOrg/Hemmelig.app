@@ -5,7 +5,7 @@ module.exports = fp(async (fastify) => {
         const { ttl } = req.body;
         const file = await req.body.file;
 
-        if (Number(ttl?.value) === 0) {
+        if ([2419200, 1209600].indexOf(Number(ttl?.value)) > -1) {
             // TODO: do not write dublicates
             try {
                 await req.jwtVerify();

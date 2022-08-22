@@ -195,7 +195,10 @@ const Home = () => {
     // Features allowed for signed in users only
     // This is validated from the server as well
     if (isLoggedIn) {
-        ttlValues.push({ value: 0, label: 'Never expire' });
+        ttlValues.unshift(
+            { value: 2419200, label: '28 days' },
+            { value: 1209600, label: '14 days' }
+        );
     }
 
     return (

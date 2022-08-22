@@ -1,4 +1,6 @@
 const VALID_TTL = [
+    2419200, // 28 days
+    1209600, // 14 days
     604800, // 7 days
     259200, // 3 days
     86400, // 1 day
@@ -7,7 +9,6 @@ const VALID_TTL = [
     3600, // 1 hour
     1800, // 30 minutes
     300, // 5 minutes
-    0, // never expire
 ];
 
 module.exports = function isValidTTL(ttl) {
