@@ -1,5 +1,6 @@
 const fp = require('fastify-plugin');
 const FileType = require('file-type');
+const prettyBytes = require('pretty-bytes');
 const MAX_FILE_BYTES = 1024 * 8 * 1000; // 8mb - 8 024 000 bytes
 const { upload } = require('../services/do');
 
