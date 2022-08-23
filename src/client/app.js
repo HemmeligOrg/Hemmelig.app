@@ -87,7 +87,7 @@ const App = () => {
                             </Footer>
                         }
                         header={
-                            <Header height={85} p="md">
+                            <Header height={75} p="xs">
                                 <HeaderContent />
                             </Header>
                         }
