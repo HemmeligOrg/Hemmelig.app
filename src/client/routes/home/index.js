@@ -15,10 +15,11 @@ import {
     Stack,
     Title,
     Text,
-    Collapse,
     Divider,
     FileButton,
 } from '@mantine/core';
+
+import { useMediaQuery } from '@mantine/hooks';
 import {
     IconSquarePlus,
     IconTrash,
@@ -27,7 +28,6 @@ import {
     IconLink,
     IconCopy,
     IconCheck,
-    IconSettings,
     IconHeading,
 } from '@tabler/icons';
 
@@ -53,12 +53,13 @@ const Home = () => {
     const [formData, setFormData] = useState(new FormData());
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
-    const [settings, setOpenSettings] = useState(false);
 
     const [error, setError] = useState('');
     const [secretError, setSecretError] = useState('');
 
     const secretRef = useRef(null);
+
+    const isMobile = useMediaQuery('(max-width: 915px)');
 
     useEffect(() => {
         if (secretId) {
@@ -218,17 +219,19 @@ const Home = () => {
                     error={secretError}
                 />
 
-                <TextInput
-                    icon={<IconHeading size={14} />}
-                    placeholder="Title"
-                    value={title}
-                    onChange={onTitleChange}
-                    readOnly={inputReadOnly}
-                />
+                <Group grow>
+                    <TextInput
+                        icon={<IconHeading size={14} />}
+                        placeholder="Title"
+                        value={title}
+                        onChange={onTitleChange}
+                        readOnly={inputReadOnly}
+                    />
 
-                <Group spacing="lg">
                     <Select value={ttl} onChange={onSelectChange} data={ttlValues} />
+                </Group>
 
+                <Group grow>
                     <Checkbox
                         checked={enablePassword}
                         onChange={onEnablePassword}
@@ -262,6 +265,24 @@ const Home = () => {
                                 )}
                             </CopyButton>
                         }
+                    />
+                </Group>
+
+                <Group grow>
+                    <Checkbox
+                        checked={preventBurn}
+                        onChange={onPreventBurnChange}
+                        readOnly={inputReadOnly}
+                        color="hemmelig"
+                        label="Burn the secret only after the expired date"
+                    />
+
+                    <TextInput
+                        icon={<IconLockAccess size={14} />}
+                        placeholder="Restrict by IP address"
+                        value={allowedIp}
+                        onChange={onIpChange}
+                        readOnly={inputReadOnly}
                     />
                 </Group>
 
@@ -306,74 +327,42 @@ const Home = () => {
                     )}
                 </Group>
 
-                <Group>
-                    <Stack>
-                        <Button
-                            leftIcon={<IconSettings size={14} />}
-                            compact
-                            variant={settings ? 'outline' : 'subtle'}
-                            color="gray"
-                            onClick={() => setOpenSettings((o) => !o)}
-                        >
-                            More options
-                        </Button>
-
-                        <Collapse
-                            in={settings}
-                            transitionDuration={50}
-                            transitionTimingFunction="linear"
-                        >
-                            <Stack>
-                                <TextInput
-                                    icon={<IconLockAccess size={14} />}
-                                    placeholder="Restrict by IP address"
-                                    value={allowedIp}
-                                    onChange={onIpChange}
-                                    readOnly={inputReadOnly}
-                                />
-
-                                <Checkbox
-                                    checked={preventBurn}
-                                    onChange={onPreventBurnChange}
-                                    readOnly={inputReadOnly}
-                                    color="hemmelig"
-                                    label="Burn the secret only after the expired date"
-                                />
-                            </Stack>
-                        </Collapse>
-                    </Stack>
-                </Group>
-
                 {secretId && (
-                    <TextInput
-                        icon={<IconLink size={14} />}
-                        value={getSecretURL()}
-                        onFocus={handleFocus}
-                        ref={secretRef}
-                        readOnly
-                        rightSection={
-                            <CopyButton value={getSecretURL()} timeout={2000}>
-                                {({ copied, copy }) => (
-                                    <Tooltip
-                                        label={copied ? 'Copied' : 'Copy'}
-                                        withArrow
-                                        position="right"
-                                    >
-                                        <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                                            {copied ? (
-                                                <IconCheck size={16} />
-                                            ) : (
-                                                <IconCopy size={16} />
-                                            )}
-                                        </ActionIcon>
-                                    </Tooltip>
-                                )}
-                            </CopyButton>
-                        }
-                    />
+                    <Group grow>
+                        <TextInput
+                            label="Your secret URL"
+                            icon={<IconLink size={14} />}
+                            value={getSecretURL()}
+                            onFocus={handleFocus}
+                            ref={secretRef}
+                            readOnly
+                            rightSection={
+                                <CopyButton value={getSecretURL()} timeout={2000}>
+                                    {({ copied, copy }) => (
+                                        <Tooltip
+                                            label={copied ? 'Copied' : 'Copy'}
+                                            withArrow
+                                            position="right"
+                                        >
+                                            <ActionIcon
+                                                color={copied ? 'teal' : 'gray'}
+                                                onClick={copy}
+                                            >
+                                                {copied ? (
+                                                    <IconCheck size={16} />
+                                                ) : (
+                                                    <IconCopy size={16} />
+                                                )}
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    )}
+                                </CopyButton>
+                            }
+                        />
+                    </Group>
                 )}
 
-                <Group>
+                <Group position="right" grow={isMobile}>
                     {!secretId && (
                         <Button
                             styles={() => ({
