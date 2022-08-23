@@ -202,10 +202,10 @@ const Secret = () => {
                         <Button
                             styles={() => ({
                                 root: {
-                                    backgroundColor: 'var(--color-contrast)',
+                                    backgroundColor: '#FF9769',
 
                                     '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
+                                        backgroundColor: '#FF9769',
                                         filter: 'brightness(115%)',
                                     },
                                 },

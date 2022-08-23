@@ -278,10 +278,10 @@ const Home = () => {
                                     label={!isLoggedIn ? 'Sign in to upload files' : ''}
                                     styles={() => ({
                                         root: {
-                                            backgroundColor: 'var(--color-contrast)',
+                                            backgroundColor: '#FF9769',
 
                                             '&:hover': {
-                                                backgroundColor: 'var(--color-contrast)',
+                                                backgroundColor: '#FF9769',
                                                 filter: 'brightness(115%)',
                                             },
                                         },
