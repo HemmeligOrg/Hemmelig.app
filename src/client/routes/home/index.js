@@ -50,7 +50,7 @@ const Home = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(hasToken() ? true : false);
     const [allowedIp, setAllowedIp] = useState('');
     const [preventBurn, setPreventBurn] = useState(false);
-    const [formData, setFormData] = useState(null);
+    const [formData, setFormData] = useState(new FormData());
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
     const [settings, setOpenSettings] = useState(false);
@@ -59,11 +59,6 @@ const Home = () => {
     const [secretError, setSecretError] = useState('');
 
     const secretRef = useRef(null);
-
-    useEffect(() => {
-        // Run once to initialize the form data to post
-        setFormData(new FormData());
-    }, []);
 
     useEffect(() => {
         if (secretId) {

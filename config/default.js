@@ -9,6 +9,7 @@ const {
     SECRET_REDIS_PASSWORD = null,
     SECRET_REDIS_TLS = false,
     SECRET_JWT_SECRET = 'good_luck_have_fun',
+    SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
     SECRET_DO_SPACES_KEY = '',
     SECRET_DO_SPACES_SECRET = '',
@@ -24,6 +25,8 @@ module.exports = {
     host: SECRET_HOST,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
+    // choose digital ocean/s3 or disk
+    fileAdapter: !!SECRET_DO_SPACES_SECRET ? 'do' : 'disk',
     redis: {
         host: SECRET_REDIS_HOST,
         port: SECRET_REDIS_PORT,
@@ -47,6 +50,10 @@ module.exports = {
             folder: SECRET_DO_SPACES_FOLDER,
         },
     },
+    disk: {
+        // /var/tmp files can live up to 30 days
+        folder: `/var/tmp/hemmelig/upload/files/`,
+    },
     logger: true,
     cors: '*',
     __client_config: {
@@ -54,7 +61,7 @@ module.exports = {
             host: '/api',
         },
         settings: {
-            enableFileUpload: !!SECRET_DO_SPACES_SECRET,
+            enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
         },
     },
 };

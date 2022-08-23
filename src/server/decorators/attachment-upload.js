@@ -1,8 +1,8 @@
 const fp = require('fastify-plugin');
 const FileType = require('file-type');
 const prettyBytes = require('pretty-bytes');
-const MAX_FILE_BYTES = 1024 * 8 * 1000; // 8mb - 8 024 000 bytes
-const { upload } = require('../services/do');
+const MAX_FILE_BYTES = 1024 * 2 * 1000; // 2mb - 2 024 000 bytes
+const { upload } = require('../services/file-adapter');
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 const notAllowed = [
@@ -44,7 +44,7 @@ module.exports = fp(async (fastify) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
 
-        if (!file.mimetype) {
+        if (!file?.mimetype) {
             done();
         }
 

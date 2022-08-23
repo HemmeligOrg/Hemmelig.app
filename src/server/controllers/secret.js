@@ -140,7 +140,11 @@ async function secret(fastify) {
             // This is how it will work: SECRET_MASTER_KEY + RANDOM_ENCRYPTION_KEY to decrypt the message.
             // The RANDOM_KEY will be within the URL.
             // Example: https://hemmelig.app/secret/RANDOM_ENCRYPTION_KEY/SECRET_ID
-            return reply.code(201).send({ id: secretId, key: encryptionKey });
+            return reply.code(201).send({
+                id: secretId,
+                key: encryptionKey,
+                route: `/secret/${encryptionKey}/${secretId}`,
+            });
         }
     );
 

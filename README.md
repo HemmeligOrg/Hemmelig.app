@@ -51,6 +51,7 @@ If you have to follow some sort of compliance, and have to self-host, [https://h
 docker run -p 3000:3000 -d --name=hemmelig \
     -e SECRET_MASTER_KEY=11111222223333344444555556666677 \ # has to be a secret key of 32 characters
     -e SECRET_REDIS_HOST=127.0.0.1 \
+    -v /var/tmp/hemmelig:/var/tmp/hemmelig/upload/files # this is how you mount a local directory if you choose to use disk upload, and not do/s3
     hemmeligapp/hemmelig:latest
 ```
 
@@ -68,6 +69,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_REDIS_USER` Default: "" - You redis user name
 -   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
+-   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
 -   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces endpoint
 -   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces key
 -   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces secret

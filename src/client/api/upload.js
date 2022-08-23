@@ -10,7 +10,7 @@ export const downloadFile = async (fileData, token) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ key, encryptionKey, ext, mime }),
+        body: JSON.stringify({ key, encryptionKey, ext, mime, secretId }),
     });
 
     if (data.status === 401) {

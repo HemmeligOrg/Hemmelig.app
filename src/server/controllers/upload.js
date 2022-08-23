@@ -1,4 +1,4 @@
-const { download, remove } = require('../services/do');
+const { download, remove } = require('../services/file-adapter');
 const redis = require('../services/redis');
 
 // https://stackabuse.com/uploading-files-to-aws-s3-with-node-js
@@ -11,11 +11,11 @@ async function uploadFiles(fastify) {
         async (request, reply) => {
             const { key, encryptionKey, secretId, ext, mime } = request.body;
 
-            const secret = (await redis.getSecretKey(secretId, 'preventBurn')) === 'true';
+            const preventBurn = (await redis.getSecretKey(secretId, 'preventBurn')) === 'true';
 
             const file = await download(key, encryptionKey);
 
-            if (secret.preventBurn === 'true') {
+            if (!preventBurn) {
                 await remove(key);
             }
 
