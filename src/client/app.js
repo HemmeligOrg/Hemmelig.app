@@ -50,37 +50,69 @@ const App = () => {
                         }}
                         navbarOffsetBreakpoint="sm"
                         footer={
-                            <Footer height={60} p="md">
-                                <Group position="center">
-                                    <Anchor component={Link} to="/signin" color="dimmed">
-                                        <Text size="xs">SIGN IN</Text>
+                            <Footer height={45} p="xs">
+                                <Group position="center" spacing="xs">
+                                    <Anchor
+                                        component={Link}
+                                        to="/signin"
+                                        color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
+                                    >
+                                        Sign in
                                     </Anchor>
                                     |
-                                    <Anchor component={Link} to="/account" color="dimmed">
-                                        <Text size="xs">ACCOUNT</Text>
+                                    <Anchor
+                                        component={Link}
+                                        to="/account"
+                                        color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
+                                    >
+                                        Account
                                     </Anchor>
                                     |
-                                    <Anchor component={Link} to="/privacy" color="dimmed">
-                                        <Text size="xs">PRIVACY</Text>
+                                    <Anchor
+                                        component={Link}
+                                        to="/privacy"
+                                        color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
+                                    >
+                                        Privacy
                                     </Anchor>
                                     |
-                                    <Anchor component={Link} to="/terms" color="dimmed">
-                                        <Text size="xs">TERMS & CONDITION</Text>
+                                    <Anchor
+                                        component={Link}
+                                        to="/terms"
+                                        color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
+                                    >
+                                        Terms & Condition
                                     </Anchor>
                                     |
-                                    <Anchor component={Link} to="/" color="dimmed">
-                                        <Text size="xs">ABOUT</Text>
+                                    <Anchor
+                                        component={Link}
+                                        to="/"
+                                        color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
+                                    >
+                                        About
                                     </Anchor>
                                     |
                                     <Anchor
                                         href="https://www.github.com/HemmeligOrg/hemmelig"
                                         color="dimmed"
+                                        size="xs"
+                                        transform="uppercase"
                                     >
                                         <Text size="xs">
                                             <span role="img" aria-label="a heart">
                                                 ❤️
                                             </span>{' '}
-                                            BY HEMMELIG
+                                            By Hemmelig
                                         </Text>
                                     </Anchor>
                                 </Group>
