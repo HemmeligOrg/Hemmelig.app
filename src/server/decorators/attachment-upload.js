@@ -44,34 +44,32 @@ module.exports = fp(async (fastify) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
 
-        if (!file?.mimetype) {
-            done();
-        }
+        if (file.mimetype) {
+            const fileData = await file.toBuffer();
 
-        const fileData = await file.toBuffer();
+            const { ext, mime } = await FileType.fromBuffer(fileData);
 
-        const { ext, mime } = await FileType.fromBuffer(fileData);
-
-        if (file?.filename && !acceptedFileType(mime)) {
-            return reply.code(415).send({
-                error: `This file type "${mime}" is not supported, yet.`,
-            });
-        }
-
-        if (file?.filename) {
-            const byteLength = Buffer.byteLength(fileData);
-
-            if (byteLength > MAX_FILE_BYTES) {
-                return reply.code(413).send({
-                    error: `The file size (${prettyBytes(
-                        byteLength
-                    )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
+            if (file?.filename && !acceptedFileType(mime)) {
+                return reply.code(415).send({
+                    error: `This file type "${mime}" is not supported, yet.`,
                 });
             }
 
-            const imageData = await upload(encryptionKey, fileData);
+            if (file?.filename) {
+                const byteLength = Buffer.byteLength(fileData);
 
-            Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
+                if (byteLength > MAX_FILE_BYTES) {
+                    return reply.code(413).send({
+                        error: `The file size (${prettyBytes(
+                            byteLength
+                        )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
+                    });
+                }
+
+                const imageData = await upload(encryptionKey, fileData);
+
+                Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
+            }
         }
     });
 });
