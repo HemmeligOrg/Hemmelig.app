@@ -29,8 +29,8 @@ const Secret = () => {
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
     const [file, setFile] = useState(null);
     const [isDownloaded, setIsDownloaded] = useState(false);
-    const [isBase64Content, setIsBase64Content] = useState(false);
     const [error, setError] = useState(null);
+    const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
 
     const fetchSecret = async (event) => {
         event.preventDefault();
@@ -79,12 +79,6 @@ const Secret = () => {
     };
 
     useEffect(() => {
-        if (secret && validator.isBase64(secret)) {
-            setIsBase64Content(true);
-        }
-    }, [secret]);
-
-    useEffect(() => {
         (async () => {
             const response = await secretExists(secretId, password);
 
@@ -124,7 +118,7 @@ const Secret = () => {
 
     const convertBase64ToPlain = () => {
         setSecret(atob(secret));
-        setIsBase64Content(false);
+        setHasConvertedBase64ToPlain(true);
     };
 
     return (
@@ -172,12 +166,12 @@ const Secret = () => {
                             leftIcon={<IconEye size={14} />}
                             onClick={fetchSecret}
                         >
-                            View secret
+                            View the secret
                         </Button>
                     )}
                 </Group>
 
-                <Group>
+                <Group position="right">
                     {isSecretOpen && (
                         <Button
                             styles={() => ({
@@ -218,20 +212,21 @@ const Secret = () => {
                         </Button>
                     )}
 
-                    {isBase64Content && (
+                    {isSecretOpen && (
                         <Button
                             styles={() => ({
                                 root: {
-                                    backgroundColor: 'var(--color-contrast)',
+                                    backgroundColor: '#FF9769',
 
                                     '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
+                                        backgroundColor: '#FF9769',
                                         filter: 'brightness(115%)',
                                     },
                                 },
                             })}
                             leftIcon={<IconPerspective size={14} />}
                             onClick={convertBase64ToPlain}
+                            disabled={hasConvertedBase64ToPlain}
                         >
                             Convert base64 to plain text
                         </Button>

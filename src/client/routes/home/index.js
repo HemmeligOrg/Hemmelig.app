@@ -18,7 +18,6 @@ import {
     Divider,
     FileButton,
 } from '@mantine/core';
-
 import { useMediaQuery } from '@mantine/hooks';
 import {
     IconSquarePlus,
@@ -274,7 +273,7 @@ const Home = () => {
                         onChange={onPreventBurnChange}
                         readOnly={inputReadOnly}
                         color="hemmelig"
-                        label="Burn the secret only after the expired date"
+                        label="Burn the secret only after the time expires"
                     />
 
                     <TextInput
