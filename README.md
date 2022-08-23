@@ -26,9 +26,9 @@ When a secret link is created, it gets its unique encryption key that is not sav
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encryptet key is part of the URL, and not saved to the database for an extra layer of security.
--   ~~Available as PWA, which means you can download it as an app for your device.~~
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
+-   ~~Available as PWA, which means you can download it as an app for your device.~~
 
 ## Docker image
 
