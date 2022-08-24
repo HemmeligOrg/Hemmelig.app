@@ -56,8 +56,6 @@ const Header = () => {
                                     },
                                 })}
                                 leftIcon={<IconLockOff size={14} />}
-                                component={Link}
-                                to="/signin"
                                 onClick={onSignOut}
                             >
                                 Sign out

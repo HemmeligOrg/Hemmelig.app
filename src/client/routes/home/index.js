@@ -29,12 +29,13 @@ import {
     IconCheck,
     IconHeading,
 } from '@tabler/icons';
+import { useSelector } from 'react-redux';
 
 import config from '../../config';
 
 import Error from '../../components/info/error';
 
-import { getToken, hasToken } from '../../helpers/token';
+import { getToken } from '../../helpers/token';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
@@ -59,7 +60,7 @@ const Home = () => {
 
     const isMobile = useMediaQuery('(max-width: 915px)');
 
-    const isLoggedIn = hasToken();
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
     useEffect(() => {
         if (secretId) {
