@@ -1,3 +1,4 @@
+const sanitize = require('sanitize-filename');
 const { download, remove } = require('../services/file-adapter');
 const redis = require('../services/redis');
 
@@ -13,10 +14,12 @@ async function uploadFiles(fastify) {
 
             const preventBurn = (await redis.getSecretKey(secretId, 'preventBurn')) === 'true';
 
-            const file = await download(key, encryptionKey);
+            const fileKey = sanitize(key);
+
+            const file = await download(fileKey, encryptionKey);
 
             if (!preventBurn) {
-                await remove(key);
+                await remove(fileKey);
             }
 
             return reply

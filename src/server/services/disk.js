@@ -3,34 +3,29 @@ const { nanoid } = require('nanoid');
 const config = require('config');
 
 const { encrypt, decrypt } = require('../helpers/crypto');
-const isLFIAttempt = require('../helpers/lfi');
+
+const getFilePath = (key) => `${config.get('disk.folder')}${key}.json`;
 
 async function upload(encryptionKey, fileUpload) {
     const filename = nanoid();
 
     const encryptedFile = encrypt(fileUpload.toString('hex'), encryptionKey);
 
-    const path = `${config.get('disk.folder')}${filename}.json`;
-
     try {
         await fs.mkdir(config.get('disk.folder'), { recursive: true });
-        await fs.writeFile(path, JSON.stringify({ encryptedFile }));
+        await fs.writeFile(getFilePath(filename), JSON.stringify({ encryptedFile }));
     } catch (e) {
         console.error(e);
     }
 
     return {
-        key: path,
+        key: filename,
     };
 }
 
 async function download(key, encryptionKey) {
-    if (isLFIAttempt(key)) {
-        return 'LFI attempt';
-    }
-
     try {
-        const data = await fs.readFile(key, 'utf-8');
+        const data = await fs.readFile(getFilePath(key), 'utf-8');
 
         const { encryptedFile } = JSON.parse(data);
 
@@ -43,11 +38,7 @@ async function download(key, encryptionKey) {
 }
 
 async function remove(key) {
-    if (isLFIAttempt(key)) {
-        return 'LFI attempt';
-    }
-
-    const data = await fs.unlink(key);
+    const data = await fs.unlink(getFilePath(key));
 
     return data;
 }

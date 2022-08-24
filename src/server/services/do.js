@@ -23,13 +23,13 @@ async function upload(encryptionKey, fileUpload) {
     const data = await s3
         .upload({
             Bucket: config.get('do.spaces.bucket'),
-            Key: `${config.get('do.spaces.folder')}/images/${filename}.json`,
+            Key: `${config.get('do.spaces.folder')}/${filename}.json`,
             Body: JSON.stringify({ encryptedFile }),
         })
         .promise();
 
     return {
-        key: data.Key,
+        key: filename,
     };
 }
 
@@ -38,7 +38,7 @@ async function download(key, encryptionKey) {
         const data = await s3
             .getObject({
                 Bucket: config.get('do.spaces.bucket'),
-                Key: key,
+                Key: `${config.get('do.spaces.folder')}/${key}.json`,
             })
             .promise();
 
@@ -56,7 +56,7 @@ async function remove(key) {
     const data = await s3
         .deleteObject({
             Bucket: config.get('do.spaces.bucket'),
-            Key: key,
+            Key: `${config.get('do.spaces.folder')}/${key}.json`,
         })
         .promise();
 
