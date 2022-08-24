@@ -52,7 +52,6 @@
     "pretty-bytes": "^4.0.2",
     "redis": "^3.1.2",
     "replace-in-file": "^6.2.0",
-    "sanitize-filename": "^1.6.3",
     "tweetnacl": "^0.14.5",
     "tweetnacl-util": "^0.15.1",
     "unfetch": "^4.2.0",

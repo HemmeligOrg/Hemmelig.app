@@ -1,11 +1,8 @@
 const config = require('config');
-const sanitize = require('sanitize-filename');
 
 // Prevent some bad LFI
 function isLFIAttempt(file) {
-    const filePath = sanitize(file);
-
-    if (!filePath.startsWith(config.get('disk.folder'))) {
+    if (!file.startsWith(config.get('disk.folder')) || file.includes('..')) {
         return true;
     }
 
