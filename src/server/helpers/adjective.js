@@ -960,8 +960,10 @@ const adjectives = [
     'zippy',
 ];
 
-module.exports = getRandomAdjective = () => {
+const getRandomAdjective = () => {
     const len = adjectives.length;
 
     return adjectives[Math.floor(Math.random() * len - 1)];
 };
+
+module.exports = getRandomAdjective;
