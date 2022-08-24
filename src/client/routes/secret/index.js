@@ -17,7 +17,7 @@ import Error from '../../components/info/error';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
-import { getToken, hasToken } from '../../helpers/token';
+import { getToken } from '../../helpers/token';
 
 const Secret = () => {
     const { secretId, encryptionKey = null } = useParams();
