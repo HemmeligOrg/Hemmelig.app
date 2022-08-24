@@ -71,11 +71,11 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
 -   `SECRET_FILE_SIZE` Default: 4 - Set the allowed upload file size in mb.
 -   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
--   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces endpoint
--   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces key
--   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces secret
--   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces bucket name
--   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces folder for uploading
+-   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces/s3 endpoint
+-   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces/s3 key
+-   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces/s3 secret
+-   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces/s3 bucket name
+-   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces/s3 folder for uploading
 -   `SECRET_MAX_TEXT_SIZE` Default: "256" - The max text size for the secret. Is set in kb. i.e. 256 for 256kb.
 
 ## Run locally
