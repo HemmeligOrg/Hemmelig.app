@@ -4,7 +4,7 @@ const disk = require('./disk');
 const digitalocean = require('./do');
 
 function fileAdapter() {
-    const adapter = config.get('fileAdapter');
+    const adapter = config.get('file.adapter');
 
     if (adapter === 'do') {
         return digitalocean;
