@@ -205,10 +205,10 @@ const Secret = () => {
                                 },
                             })}
                             onClick={onFileDownload}
-                            disabled={!secretId || !hasToken()}
+                            disabled={!secretId}
                             leftIcon={<IconDownload size={14} />}
                         >
-                            {!hasToken() ? 'Sign in to download files' : 'Download file'}
+                            Download the file
                         </Button>
                     )}
 
