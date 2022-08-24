@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 const config = require('config');
 
 const { encrypt, decrypt } = require('../helpers/crypto');
+const isLFIAttempt = require('../helpers/lfi');
 
 async function upload(encryptionKey, fileUpload) {
     const filename = nanoid();
@@ -24,6 +25,10 @@ async function upload(encryptionKey, fileUpload) {
 }
 
 async function download(key, encryptionKey) {
+    if (isLFIAttempt(key)) {
+        return 'LFI attempt';
+    }
+
     try {
         const data = await fs.readFile(key, 'utf-8');
 
@@ -38,6 +43,10 @@ async function download(key, encryptionKey) {
 }
 
 async function remove(key) {
+    if (isLFIAttempt(key)) {
+        return 'LFI attempt';
+    }
+
     const data = await fs.unlink(key);
 
     return data;
