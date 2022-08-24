@@ -1,7 +1,8 @@
 name: 'Owasp ZAP DAST'
 on:
-    push:
-        branches: [main]
+    schedule:
+        # https://crontab.guru/daily
+        - cron: '0 0 * * *'
 
 jobs:
     zap_scan:
