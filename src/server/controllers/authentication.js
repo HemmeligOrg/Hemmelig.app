@@ -96,7 +96,6 @@ async function authentication(fastify) {
             return {
                 user: {
                     username: user.username,
-                    basicAuthToken: user.basic_auth_token,
                 },
             };
         }

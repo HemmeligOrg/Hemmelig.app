@@ -62,21 +62,17 @@ async function getSecretRoute(request, reply) {
 }
 
 async function secret(fastify) {
-    const options = {
-        preValidation: [fastify.basicAuth],
-    };
-
     fastify.get(
         '/:id',
         {
-            preValidation: [fastify.basicAuth, fastify.allowedIp],
+            preValidation: [fastify.allowedIp],
         },
         getSecretRoute
     );
     fastify.post(
         '/:id',
         {
-            preValidation: [fastify.basicAuth, fastify.allowedIp],
+            preValidation: [fastify.allowedIp],
         },
         getSecretRoute
     );
@@ -149,7 +145,7 @@ async function secret(fastify) {
     );
 
     // This will burn the secret 🔥
-    fastify.post('/:id/burn', options, async (request) => {
+    fastify.post('/:id/burn', async (request) => {
         const { id } = request.params;
 
         if (!validIdRegExp.test(id)) {
@@ -165,7 +161,7 @@ async function secret(fastify) {
         }
     });
 
-    fastify.get('/:id/exist', options, async (request, reply) => {
+    fastify.get('/:id/exist', async (request, reply) => {
         const { id } = request.params;
 
         if (!validIdRegExp.test(id)) {
