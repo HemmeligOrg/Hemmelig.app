@@ -1,4 +1,4 @@
-name: Publish bleeding Eedge Docker image
+name: Publish bleeding Edge Docker image
 on:
     push:
         branches: [main]
