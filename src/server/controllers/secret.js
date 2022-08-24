@@ -54,7 +54,12 @@ async function getSecretRoute(request, reply) {
         Object.assign(result, { preventBurn: JSON.parse(data.preventBurn) });
     }
 
-    Object.assign(result, { secret: decrypt(JSON.parse(data.secret), encryptionKey).toString() });
+    Object.assign(result, {
+        secret: decrypt(
+            JSON.parse(data.secret),
+            encryptionKey + password ? validator.escape(password) : ''
+        ).toString(),
+    });
 
     redis.deleteSecret(id);
 
@@ -112,7 +117,12 @@ async function secret(fastify) {
             const data = {
                 id: secretId,
                 title: validator.escape(title?.value),
-                secret: JSON.stringify(encrypt(validator.escape(text?.value), encryptionKey)),
+                secret: JSON.stringify(
+                    encrypt(
+                        validator.escape(text?.value),
+                        encryptionKey + password?.value ? validator.escape(password.value) : ''
+                    )
+                ),
                 allowedIp: validator.escape(allowedIp?.value),
             };
 
