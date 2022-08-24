@@ -46,7 +46,6 @@ const Home = () => {
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [enablePassword, setOnEnablePassword] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(hasToken() ? true : false);
     const [allowedIp, setAllowedIp] = useState('');
     const [preventBurn, setPreventBurn] = useState(false);
     const [formData, setFormData] = useState(new FormData());
@@ -59,6 +58,8 @@ const Home = () => {
     const secretRef = useRef(null);
 
     const isMobile = useMediaQuery('(max-width: 915px)');
+
+    const isLoggedIn = hasToken();
 
     useEffect(() => {
         if (secretId) {
