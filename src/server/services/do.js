@@ -20,17 +20,21 @@ async function upload(encryptionKey, fileUpload) {
 
     const encryptedFile = encrypt(fileUpload.toString('hex'), encryptionKey);
 
-    const data = await s3
-        .upload({
-            Bucket: config.get('do.spaces.bucket'),
-            Key: `${config.get('do.spaces.folder')}/${filename}.json`,
-            Body: JSON.stringify({ encryptedFile }),
-        })
-        .promise();
+    try {
+        await s3
+            .upload({
+                Bucket: config.get('do.spaces.bucket'),
+                Key: `${config.get('do.spaces.folder')}/${filename}.json`,
+                Body: JSON.stringify({ encryptedFile }),
+            })
+            .promise();
 
-    return {
-        key: filename,
-    };
+        return {
+            key: filename,
+        };
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function download(key, encryptionKey) {
