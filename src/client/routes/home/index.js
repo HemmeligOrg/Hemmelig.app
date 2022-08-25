@@ -123,6 +123,7 @@ const Home = () => {
         setTitle('');
         setPreventBurn(false);
         setFormData(new FormData());
+        setOnEnablePassword(false);
     };
 
     const onSubmit = async (event) => {
