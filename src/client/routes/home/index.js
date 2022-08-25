@@ -28,6 +28,7 @@ import {
     IconCopy,
     IconCheck,
     IconHeading,
+    IconShare,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 
@@ -172,6 +173,21 @@ const Home = () => {
         burnSecret(secretId);
 
         reset();
+    };
+
+    const onShare = (event) => {
+        event.preventDefault();
+
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: 'hemmelig.app',
+                    text: 'Get your secret at hemmelig.app.',
+                    url: 'getSecretURL()',
+                })
+                .then(() => console.log('Successful share'))
+                .catch(console.error);
+        }
     };
 
     const handleFocus = (event) => event.target.select();
@@ -431,6 +447,30 @@ const Home = () => {
                     <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
                 </Text>
             </Stack>
+
+            {isMobile && secretId && navigator.share && (
+                <Button
+                    styles={() => ({
+                        root: {
+                            backgroundColor: 'var(--color-contrast)',
+                            position: 'fixed',
+                            right: '32px',
+                            bottom: '50px',
+                            height: '50px',
+                            width: '50px',
+                            padding: '0',
+
+                            '&:hover': {
+                                backgroundColor: 'var(--color-contrast)',
+                                filter: 'brightness(115%)',
+                            },
+                        },
+                    })}
+                    onClick={onShare}
+                >
+                    <IconShare size={18} />
+                </Button>
+            )}
         </Container>
     );
 };
