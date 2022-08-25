@@ -305,7 +305,7 @@ const Home = () => {
                     />
                 </Group>
 
-                <Group>
+                <Group grow={isMobile}>
                     {enableFileUpload && (
                         <FileButton
                             onChange={setFile}
@@ -381,6 +381,26 @@ const Home = () => {
                     </Group>
                 )}
 
+                {isMobile && secretId && navigator.share && (
+                    <Group grow>
+                        <Button
+                            styles={() => ({
+                                root: {
+                                    backgroundColor: 'var(--color-contrast-second)',
+                                    '&:hover': {
+                                        backgroundColor: 'var(--color-contrast-second)',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            onClick={onShare}
+                            leftIcon={<IconShare size={16} />}
+                        >
+                            Share
+                        </Button>
+                    </Group>
+                )}
+
                 <Group position="right" grow={isMobile}>
                     {!secretId && (
                         <Button
@@ -447,30 +467,6 @@ const Home = () => {
                     <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
                 </Text>
             </Stack>
-
-            {isMobile && secretId && navigator.share && (
-                <Button
-                    styles={() => ({
-                        root: {
-                            backgroundColor: 'var(--color-contrast)',
-                            position: 'fixed',
-                            right: '32px',
-                            bottom: '50px',
-                            height: '50px',
-                            width: '50px',
-                            padding: '0',
-
-                            '&:hover': {
-                                backgroundColor: 'var(--color-contrast)',
-                                filter: 'brightness(115%)',
-                            },
-                        },
-                    })}
-                    onClick={onShare}
-                >
-                    <IconShare size={18} />
-                </Button>
-            )}
         </Container>
     );
 };
