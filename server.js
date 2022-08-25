@@ -6,13 +6,21 @@ const fastify = require('fastify')({
     logger: config.get('logger'),
 });
 
+const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
+
 // https://github.com/fastify/fastify-helmet
 fastify.register(require('fastify-helmet'), { contentSecurityPolicy: false });
 
 // https://github.com/fastify/fastify-cors
 fastify.register(require('fastify-cors'), { origin: config.get('cors') });
 
-fastify.register(require('fastify-multipart'), { attachFieldsToBody: true });
+fastify.register(require('fastify-multipart'), {
+    attachFieldsToBody: true,
+    limits: {
+        files: 1,
+        fileSize: MAX_FILE_BYTES,
+    },
+});
 
 // Define decorators
 fastify.register(require('./src/server/decorators/jwt'));

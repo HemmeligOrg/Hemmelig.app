@@ -144,7 +144,9 @@ const Home = () => {
         const json = await createSecret(formData, getToken());
 
         if (json.statusCode !== 201) {
-            setError(json.error);
+            setError(
+                json.error === 'Payload Too Large' ? 'The file size is too large' : json.error
+            );
 
             return;
         }

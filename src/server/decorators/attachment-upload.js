@@ -1,8 +1,6 @@
 const fp = require('fastify-plugin');
 const FileType = require('file-type');
-const prettyBytes = require('pretty-bytes');
-const config = require('config');
-const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
+
 const { upload } = require('../services/file-adapter');
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
@@ -41,7 +39,7 @@ function acceptedFileType(mimetype) {
 }
 
 module.exports = fp(async (fastify) => {
-    fastify.decorate('attachment', async (req, reply, done) => {
+    fastify.decorate('attachment', async (req, reply) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
 
@@ -50,27 +48,15 @@ module.exports = fp(async (fastify) => {
 
             const { ext, mime } = await FileType.fromBuffer(fileData);
 
-            if (file?.filename && !acceptedFileType(mime)) {
+            if (!acceptedFileType(mime)) {
                 return reply.code(415).send({
                     error: `This file type "${mime}" is not supported, yet.`,
                 });
             }
 
-            if (file?.filename) {
-                const byteLength = Buffer.byteLength(fileData);
+            const imageData = await upload(encryptionKey, fileData);
 
-                if (byteLength > MAX_FILE_BYTES) {
-                    return reply.code(413).send({
-                        error: `The file size (${prettyBytes(
-                            byteLength
-                        )}) exceeded our limit of ${prettyBytes(MAX_FILE_BYTES)}.`,
-                    });
-                }
-
-                const imageData = await upload(encryptionKey, fileData);
-
-                Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
-            }
+            Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
         }
     });
 });
