@@ -216,6 +216,18 @@ const Home = () => {
         );
     }
 
+    const groupMobileStyle = () => {
+        if (!isMobile) {
+            return {};
+        }
+
+        return {
+            root: {
+                maxWidth: '100% !important',
+            },
+        };
+    };
+
     return (
         <Container>
             <Stack>
@@ -240,6 +252,7 @@ const Home = () => {
 
                 <Group grow>
                     <TextInput
+                        styles={groupMobileStyle}
                         icon={<IconHeading size={14} />}
                         placeholder="Title"
                         value={title}
@@ -247,11 +260,17 @@ const Home = () => {
                         readOnly={inputReadOnly}
                     />
 
-                    <Select value={ttl} onChange={onSelectChange} data={ttlValues} />
+                    <Select
+                        styles={groupMobileStyle}
+                        value={ttl}
+                        onChange={onSelectChange}
+                        data={ttlValues}
+                    />
                 </Group>
 
                 <Group grow>
                     <Checkbox
+                        styles={groupMobileStyle}
                         checked={enablePassword}
                         onChange={onEnablePassword}
                         readOnly={inputReadOnly}
@@ -260,6 +279,7 @@ const Home = () => {
                     />
 
                     <TextInput
+                        styles={groupMobileStyle}
                         icon={<IconLock size={14} />}
                         placeholder="Your optional password"
                         value={password}
@@ -289,6 +309,7 @@ const Home = () => {
 
                 <Group grow>
                     <Checkbox
+                        styles={groupMobileStyle}
                         checked={preventBurn}
                         onChange={onPreventBurnChange}
                         readOnly={inputReadOnly}
@@ -297,6 +318,7 @@ const Home = () => {
                     />
 
                     <TextInput
+                        styles={groupMobileStyle}
                         icon={<IconLockAccess size={14} />}
                         placeholder="Restrict by IP address"
                         value={allowedIp}
