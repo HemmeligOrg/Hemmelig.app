@@ -183,7 +183,7 @@ const Home = () => {
                 .share({
                     title: 'hemmelig.app',
                     text: 'Get your secret at hemmelig.app.',
-                    url: 'getSecretURL()',
+                    url: getSecretURL(),
                 })
                 .then(() => console.log('Successful share'))
                 .catch(console.error);
