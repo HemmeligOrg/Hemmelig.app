@@ -1,8 +1,8 @@
 name: Trivy - Scan
 on:
-    push:
-        branches:
-            - main
+    schedule:
+        # https://crontab.guru/daily
+        - cron: '0 0 * * *'
     pull_request:
 jobs:
     scan_repository:

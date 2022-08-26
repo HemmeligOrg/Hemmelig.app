@@ -2,6 +2,9 @@ name: Publish bleeding Edge Docker image
 on:
     push:
         branches: [main]
+        paths-ignore:
+            - '**.md'
+            - '.github/**'
 jobs:
     push_to_registry:
         name: Push the bleeding edge docker image to Docker Hub
