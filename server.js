@@ -1,6 +1,7 @@
 import replace from 'replace-in-file';
 import config from 'config';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import importFastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
@@ -64,6 +65,9 @@ fastify.register(healthzRoute, { prefix: '/healthz' });
 
 // Static frontend for the production build
 if (process.env.NODE_ENV !== 'development') {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
     const staticPath = path.join(__dirname, 'build');
 
     // Filthy hack, but it works for now. Soon to implement config from the server.
