@@ -1,8 +1,8 @@
-const AWS = require('aws-sdk');
-const { nanoid } = require('nanoid');
-const config = require('config');
+import AWS from 'aws-sdk';
+import { nanoid } from 'nanoid';
+import config from 'config';
 
-const { encrypt, decrypt } = require('../helpers/crypto');
+import { encrypt, decrypt } from '../helpers/crypto.js';
 
 // Set the Region
 AWS.config.update({
@@ -15,7 +15,7 @@ const s3 = new AWS.S3({
     endpoint: new AWS.Endpoint(config.get('do.spaces.endpoint')),
 });
 
-async function upload(encryptionKey, fileUpload) {
+export async function upload(encryptionKey, fileUpload) {
     const filename = nanoid();
 
     const encryptedFile = encrypt(fileUpload.toString('hex'), encryptionKey);
@@ -37,7 +37,7 @@ async function upload(encryptionKey, fileUpload) {
     }
 }
 
-async function download(key, encryptionKey) {
+export async function download(key, encryptionKey) {
     try {
         const data = await s3
             .getObject({
@@ -56,7 +56,7 @@ async function download(key, encryptionKey) {
     }
 }
 
-async function remove(key) {
+export async function remove(key) {
     const data = await s3
         .deleteObject({
             Bucket: config.get('do.spaces.bucket'),
@@ -66,9 +66,3 @@ async function remove(key) {
 
     return data;
 }
-
-module.exports = {
-    upload,
-    download,
-    remove,
-};

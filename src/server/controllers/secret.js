@@ -1,11 +1,10 @@
-const prettyBytes = require('pretty-bytes');
-const isIp = require('is-ip');
-const validator = require('validator');
-const config = require('config');
-const { encrypt, decrypt } = require('../helpers/crypto');
-const { hash, compare } = require('../helpers/password');
-
-const redis = require('../services/redis');
+import prettyBytes from 'pretty-bytes';
+import isIp from 'is-ip';
+import validator from 'validator';
+import config from 'config';
+import { encrypt, decrypt } from '../helpers/crypto.js';
+import { hash, compare } from '../helpers/password.js';
+import * as redis from '../services/redis.js';
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -192,4 +191,4 @@ async function secret(fastify) {
     });
 }
 
-module.exports = secret;
+export default secret;

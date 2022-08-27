@@ -1,6 +1,6 @@
-const sanitize = require('sanitize-filename');
-const { download, remove } = require('../services/file-adapter');
-const redis = require('../services/redis');
+import sanitize from 'sanitize-filename';
+import fileadapter from '../services/file-adapter.js';
+import * as redis from '../services/redis.js';
 
 // https://stackabuse.com/uploading-files-to-aws-s3-with-node-js
 async function uploadFiles(fastify) {
@@ -11,10 +11,10 @@ async function uploadFiles(fastify) {
 
         const fileKey = sanitize(key);
 
-        const file = await download(fileKey, encryptionKey);
+        const file = await fileadapter.download(fileKey, encryptionKey);
 
         if (!preventBurn) {
-            await remove(fileKey);
+            await fileadapter.remove(fileKey);
         }
 
         return reply
@@ -25,4 +25,4 @@ async function uploadFiles(fastify) {
     });
 }
 
-module.exports = uploadFiles;
+export default uploadFiles;

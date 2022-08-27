@@ -1,6 +1,6 @@
-const fp = require('fastify-plugin');
+import fp from 'fastify-plugin';
 
-module.exports = fp(async (fastify) => {
+export default fp(async (fastify) => {
     fastify.decorate('userFeatures', async (req, reply) => {
         const { ttl } = req.body;
         const file = await req.body.file;

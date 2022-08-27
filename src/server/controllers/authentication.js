@@ -1,8 +1,8 @@
-const emailValidator = require('email-validator');
-const validator = require('validator');
+import emailValidator from 'email-validator';
+import validator from 'validator';
 
-const redis = require('../services/redis');
-const { hash, compare } = require('../helpers/password');
+import * as redis from '../services/redis.js';
+import { hash, compare } from '../helpers/password.js';
 
 const validUsername = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -102,4 +102,4 @@ async function authentication(fastify) {
     );
 }
 
-module.exports = authentication;
+export default authentication;

@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
 // https://www.npmjs.com/package/bcrypt
-async function hash(password) {
+export async function hash(password) {
     try {
         // salt rounds https://www.npmjs.com/package/bcrypt#user-content-a-note-on-rounds
         return await bcrypt.hash(password, 10);
@@ -10,15 +10,10 @@ async function hash(password) {
     }
 }
 
-async function compare(password, hash) {
+export async function compare(password, hash) {
     try {
         return await bcrypt.compare(password, hash);
     } catch (_) {
         return false;
     }
 }
-
-module.exports = {
-    hash,
-    compare,
-};

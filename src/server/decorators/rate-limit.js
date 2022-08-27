@@ -1,7 +1,7 @@
 // do-connecting-ip
-const fp = require('fastify-plugin');
-const { createRateLimit } = require('../services/redis');
-const getClientIp = require('../helpers/client-ip');
+import fp from 'fastify-plugin';
+import { createRateLimit } from '../services/redis.js';
+import getClientIp from '../helpers/client-ip.js';
 
 /*
  *
@@ -12,7 +12,7 @@ const getClientIp = require('../helpers/client-ip');
  *
  */
 
-module.exports = fp(async (fastify) => {
+export default fp(async (fastify) => {
     fastify.decorate('rateLimit', async (request, reply) => {
         const { headers } = request;
 

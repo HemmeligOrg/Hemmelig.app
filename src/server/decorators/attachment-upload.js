@@ -1,7 +1,7 @@
-const fp = require('fastify-plugin');
-const FileType = require('file-type');
+import fp from 'fastify-plugin';
+import FileType from 'file-type';
 
-const { upload } = require('../services/file-adapter');
+import fileAdapter from '../services/file-adapter.js';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 const notAllowed = [
@@ -38,7 +38,7 @@ function acceptedFileType(mimetype) {
     return false;
 }
 
-module.exports = fp(async (fastify) => {
+export default fp(async (fastify) => {
     fastify.decorate('attachment', async (req, reply) => {
         const file = await req.body.file;
         const { encryptionKey } = req.secret;
@@ -54,7 +54,7 @@ module.exports = fp(async (fastify) => {
                 });
             }
 
-            const imageData = await upload(encryptionKey, fileData);
+            const imageData = await fileAdapter.upload(encryptionKey, fileData);
 
             Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
         }

@@ -1,12 +1,12 @@
-const fs = require('fs').promises;
-const { nanoid } = require('nanoid');
-const config = require('config');
+import fs from 'fs/promises';
+import { nanoid } from 'nanoid';
+import config from 'config';
 
-const { encrypt, decrypt } = require('../helpers/crypto');
+import { encrypt, decrypt } from '../helpers/crypto.js';
 
 const getFilePath = (key) => `${config.get('disk.folder')}${key}.json`;
 
-async function upload(encryptionKey, fileUpload) {
+export async function upload(encryptionKey, fileUpload) {
     const filename = nanoid();
 
     const encryptedFile = encrypt(fileUpload.toString('hex'), encryptionKey);
@@ -23,7 +23,7 @@ async function upload(encryptionKey, fileUpload) {
     };
 }
 
-async function download(key, encryptionKey) {
+export async function download(key, encryptionKey) {
     try {
         const data = await fs.readFile(getFilePath(key), 'utf-8');
 
@@ -37,14 +37,8 @@ async function download(key, encryptionKey) {
     }
 }
 
-async function remove(key) {
+export async function remove(key) {
     const data = await fs.unlink(getFilePath(key));
 
     return data;
 }
-
-module.exports = {
-    upload,
-    download,
-    remove,
-};

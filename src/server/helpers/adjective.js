@@ -966,4 +966,4 @@ const getRandomAdjective = () => {
     return adjectives[Math.floor(Math.random() * len - 1)];
 };
 
-module.exports = getRandomAdjective;
+export default getRandomAdjective;

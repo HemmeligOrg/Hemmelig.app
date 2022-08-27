@@ -1,9 +1,10 @@
-const fp = require('fastify-plugin');
-const config = require('config');
+import fp from 'fastify-plugin';
+import jwt from 'fastify-jwt';
+import config from 'config';
 
 // https://github.com/fastify/fastify-jwt
-module.exports = fp(async (fastify) => {
-    fastify.register(require('fastify-jwt'), {
+export default fp(async (fastify) => {
+    fastify.register(jwt, {
         secret: config.get('jwt.secret'),
     });
 

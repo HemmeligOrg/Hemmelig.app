@@ -20,7 +20,7 @@ const {
     NODE_ENV = 'development',
 } = process.env;
 
-module.exports = {
+const config = {
     localHostname: SECRET_LOCAL_HOSTNAME,
     env: NODE_ENV,
     host: SECRET_HOST,
@@ -69,3 +69,5 @@ module.exports = {
         },
     },
 };
+
+module.exports = config;

@@ -1,13 +1,16 @@
-const crypto = require('crypto');
-const { secretbox, randomBytes } = require('tweetnacl');
-const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = require('tweetnacl-util');
-const config = require('config');
+import crypto from 'crypto';
+import tweetnacl from 'tweetnacl';
+import tweetnaclUtil from 'tweetnacl-util';
+import config from 'config';
+
+const { secretbox, randomBytes } = tweetnacl;
+const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = tweetnaclUtil;
 
 const SECRET_KEY = config.get('secret_key');
 
 const newNonce = () => randomBytes(secretbox.nonceLength);
 
-const encrypt = (text, userEncryptionKey) => {
+export const encrypt = (text, userEncryptionKey) => {
     const keyUint8Array = new Uint8Array(
         Buffer.from(
             crypto
@@ -32,7 +35,7 @@ const encrypt = (text, userEncryptionKey) => {
     return base64FullMessage;
 };
 
-const decrypt = (messageWithNonce, userEncryptionKey) => {
+export const decrypt = (messageWithNonce, userEncryptionKey) => {
     const keyUint8Array = new Uint8Array(
         Buffer.from(
             crypto
@@ -58,9 +61,4 @@ const decrypt = (messageWithNonce, userEncryptionKey) => {
 
     const base64DecryptedMessage = encodeUTF8(decrypted);
     return base64DecryptedMessage;
-};
-
-module.exports = {
-    encrypt,
-    decrypt,
 };

@@ -1,9 +1,8 @@
-const config = require('config');
-const asyncRedis = require('async-redis');
-const dayjs = require('dayjs');
-const { nanoid } = require('nanoid');
+import config from 'config';
+import asyncRedis from 'async-redis';
+import dayjs from 'dayjs';
 
-const isValidTTL = require('../helpers/validate-ttl');
+import isValidTTL from '../helpers/validate-ttl.js';
 
 const options = {
     host: config.get('redis.host'),
@@ -26,7 +25,7 @@ const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
 const DEFAULT_RATE_LIMIT_EXPIRE = 60; // 1 minute
 const DEFAULT_RATE_LIMIT_QTY = 100;
 
-async function createSecret(data, ttl) {
+export async function createSecret(data, ttl) {
     const key = `secret:${data.id}`;
     const prepare = [key, 'secret', data.secret];
 
@@ -63,13 +62,13 @@ async function createSecret(data, ttl) {
         .exec();
 }
 
-async function getSecret(id) {
+export async function getSecret(id) {
     const data = await client.hgetall(`secret:${id}`);
 
     return data;
 }
 
-async function getSecretKey(id, key) {
+export async function getSecretKey(id, key) {
     const data = await client.hgetall(`secret:${id}`);
 
     if (data && key in data) {
@@ -79,7 +78,7 @@ async function getSecretKey(id, key) {
     return null;
 }
 
-async function deleteSecret(id) {
+export async function deleteSecret(id) {
     const preventBurn = (await getSecretKey(id, 'preventBurn')) === 'true';
 
     if (!preventBurn) {
@@ -89,7 +88,7 @@ async function deleteSecret(id) {
     return Promise.resolve(!preventBurn);
 }
 
-async function isAlive() {
+export async function isAlive() {
     if ((await client.ping()) === 'PONG') {
         return true;
     }
@@ -97,7 +96,7 @@ async function isAlive() {
     return false;
 }
 
-async function createUser(username, email, password) {
+export async function createUser(username, email, password) {
     return await client.hmset(
         `user:${username}`,
         'username',
@@ -109,21 +108,21 @@ async function createUser(username, email, password) {
     );
 }
 
-async function updateUser(username, data = {}) {
+export async function updateUser(username, data = {}) {
     const update = Object.entries(data).flat();
 
     return await client.hmset(`user:${username}`, ...update);
 }
 
-async function getUser(username) {
+export async function getUser(username) {
     return await client.hgetall(`user:${username}`);
 }
 
-async function deleteUser(username) {
+export async function deleteUser(username) {
     return await client.del(`user:${username}`);
 }
 
-async function createRateLimit(ip) {
+export async function createRateLimit(ip) {
     const key = `rate_limit:${ip}`;
 
     const increments = await new Promise((resolve, reject) => {
@@ -149,7 +148,7 @@ async function createRateLimit(ip) {
     return false;
 }
 
-async function createStatistics(type = '') {
+export async function createStatistics(type = '') {
     const types = ['secrets_created'];
 
     if (types.indexOf(type) === -1) {
@@ -158,17 +157,3 @@ async function createStatistics(type = '') {
 
     return await client.incr(`statistics:${type}:${dayjs().format('YYYY-MM-DD')}`);
 }
-
-module.exports = {
-    createSecret,
-    getSecret,
-    getSecretKey,
-    deleteSecret,
-    isAlive,
-    createUser,
-    updateUser,
-    getUser,
-    deleteUser,
-    createRateLimit,
-    createStatistics,
-};

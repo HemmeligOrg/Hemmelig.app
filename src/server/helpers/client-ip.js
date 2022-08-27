@@ -1,6 +1,6 @@
-const config = require('config');
+import config from 'config';
 
-module.exports = function getClientIp(headers) {
+export default function getClientIp(headers) {
     // Iterate through a list of headers allowed to fetch the ip from
     const checkHeaders = [
         'do-connecting-ip', // digital ocean app platform
@@ -17,4 +17,4 @@ module.exports = function getClientIp(headers) {
 
     // return the first existing header
     return headers[header] ? headers[header] : '';
-};
+}

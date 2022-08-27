@@ -11,6 +11,6 @@ const VALID_TTL = [
     300, // 5 minutes
 ];
 
-module.exports = function isValidTTL(ttl) {
+export default function isValidTTL(ttl) {
     return VALID_TTL.some((_ttl) => _ttl === ttl);
-};
+}

@@ -1,7 +1,7 @@
-const redis = require('../services/redis');
-const validator = require('validator');
-const emailValidator = require('email-validator');
-const { hash } = require('../helpers/password');
+import validator from 'validator';
+import emailValidator from 'email-validator';
+import { hash } from '../helpers/password.js';
+import * as redis from '../services/redis.js';
 
 const PASSWORD_LENGTH = 5;
 
@@ -94,4 +94,4 @@ async function account(fastify) {
     );
 }
 
-module.exports = account;
+export default account;

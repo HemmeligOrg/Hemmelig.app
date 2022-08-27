@@ -1,4 +1,4 @@
-const redis = require('../services/redis');
+import * as redis from '../services/redis.js';
 
 async function healthz(fastify) {
     fastify.get('/', async (_, reply) => {
@@ -10,4 +10,4 @@ async function healthz(fastify) {
     });
 }
 
-module.exports = healthz;
+export default healthz;

@@ -1,9 +1,9 @@
 // do-connecting-ip
-const fp = require('fastify-plugin');
-const { getSecretKey } = require('../services/redis');
-const getClientIp = require('../helpers/client-ip');
+import fp from 'fastify-plugin';
+import { getSecretKey } from '../services/redis.js';
+import getClientIp from '../helpers/client-ip.js';
 
-module.exports = fp(async (fastify) => {
+export default fp(async (fastify) => {
     fastify.decorate('allowedIp', async (request, reply) => {
         const { headers } = request;
         const { id } = request.params;

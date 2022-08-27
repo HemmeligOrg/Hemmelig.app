@@ -1,5 +1,7 @@
 const { SECRET_HOST = '' } = process.env;
 
-module.exports = {
+const config = {
     cors: SECRET_HOST !== '' ? SECRET_HOST : '*',
 };
+
+module.exports = config;

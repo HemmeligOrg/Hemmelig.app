@@ -1,10 +1,10 @@
-const fp = require('fastify-plugin');
-const { nanoid } = require('nanoid');
-const getRandomAdjective = require('../helpers/adjective');
+import fp from 'fastify-plugin';
+import { nanoid } from 'nanoid';
+import getRandomAdjective from '../helpers/adjective.js';
 
 const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
-module.exports = fp(async (fastify) => {
+export default fp(async (fastify) => {
     fastify.decorate('keyGeneration', async (req) => {
         // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
         const encryptionKey = nanoid();

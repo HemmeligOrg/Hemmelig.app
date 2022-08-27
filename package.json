@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Paste a password, secret message or private information",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "test": "mocha tests/**/*.test.js --reporter nyan",

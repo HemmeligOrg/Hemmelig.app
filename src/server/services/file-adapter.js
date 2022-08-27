@@ -1,7 +1,7 @@
-const config = require('config');
-const disk = require('./disk');
+import config from 'config';
+import * as disk from './disk.js';
 // It is using the s3 package, which means it works for s3 buckets as well
-const digitalocean = require('./do');
+import * as digitalocean from './do.js';
 
 function fileAdapter() {
     const adapter = config.get('file.adapter');
@@ -19,4 +19,6 @@ function fileAdapter() {
     }
 }
 
-module.exports = fileAdapter();
+const adapter = fileAdapter();
+
+export default adapter;
