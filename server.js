@@ -2,10 +2,10 @@ import replace from 'replace-in-file';
 import config from 'config';
 import path from 'path';
 import importFastify from 'fastify';
-import helmet from 'fastify-helmet';
-import cors from 'fastify-cors';
-import multipart from 'fastify-multipart';
-import fstatic from 'fastify-static';
+import helmet from '@fastify/helmet';
+import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
+import fstatic from '@fastify/static';
 import jwt from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import rateLimit from './src/server/decorators/rate-limit.js';
@@ -24,6 +24,8 @@ const fastify = importFastify({
 });
 
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
+
+fastify.register(import('@fastify/compress'));
 
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, { contentSecurityPolicy: false });
@@ -92,7 +94,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 const startServer = async () => {
     try {
-        await fastify.listen(config.get('port'), config.get('localHostname'));
+        await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);
     }
