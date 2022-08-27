@@ -29,7 +29,7 @@ const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 *
 fastify.register(import('@fastify/compress'));
 
 // https://github.com/fastify/fastify-helmet
-fastify.register(helmet, { contentSecurityPolicy: false });
+fastify.register(helmet, { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false });
 
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
