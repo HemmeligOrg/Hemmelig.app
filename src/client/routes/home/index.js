@@ -478,7 +478,7 @@ const Home = () => {
                             leftIcon={<IconSquarePlus size={14} />}
                             onClick={onNewSecret}
                         >
-                            Create a new secret
+                            Create new
                         </Button>
                     )}
 
@@ -490,7 +490,7 @@ const Home = () => {
                             disabled={!secretId}
                             leftIcon={<IconTrash size={14} />}
                         >
-                            Burn the secret
+                            Delete
                         </Button>
                     )}
                 </Group>
