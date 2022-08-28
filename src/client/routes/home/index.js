@@ -55,6 +55,7 @@ const Home = () => {
     const [formData, setFormData] = useState(new FormData());
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
+    const [creatingSecret, setCreatingSecret] = useState(false);
 
     const [error, setError] = useState('');
     const [secretError, setSecretError] = useState('');
@@ -131,6 +132,7 @@ const Home = () => {
         setFormData(new FormData());
         setOnEnablePassword(false);
         setMaxViews(1);
+        setCreatingSecret(false);
     };
 
     const onSubmit = async (event) => {
@@ -139,6 +141,8 @@ const Home = () => {
 
             return;
         }
+
+        setCreatingSecret(true);
 
         event.preventDefault();
 
@@ -158,12 +162,15 @@ const Home = () => {
                 json.error === 'Payload Too Large' ? 'The file size is too large' : json.error
             );
 
+            setCreatingSecret(false);
+
             return;
         }
 
         setSecretId(json.id);
         setEncryptionKey(json.key);
         setError('');
+        setCreatingSecret(false);
     };
 
     const onNewSecret = async (event) => {
@@ -458,6 +465,7 @@ const Home = () => {
                             })}
                             leftIcon={<IconSquarePlus size={14} />}
                             onClick={onSubmit}
+                            loading={creatingSecret}
                         >
                             Create a secret link
                         </Button>
