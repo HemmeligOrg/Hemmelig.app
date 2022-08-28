@@ -11,6 +11,18 @@ async function uploadFiles(fastify) {
 
         const file = await fileAdapter.download(fileKey, encryptionKey);
 
+        const secret = await redis.getSecret(secretId);
+
+        if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
+            await client.del(`secret:${id}`);
+
+            if (secret?.file) {
+                const { key } = JSON.parse(secret?.file);
+
+                await fileAdapter.remove(key);
+            }
+        }
+
         return reply
             .header('Content-Disposition', `attachment; filename=${secretId}.${ext}`)
             .type(mime)

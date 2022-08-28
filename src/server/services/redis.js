@@ -2,8 +2,6 @@ import config from 'config';
 import asyncRedis from 'async-redis';
 import dayjs from 'dayjs';
 
-import fileAdapter from '../services/file-adapter.js';
-
 import isValidTTL from '../helpers/validate-ttl.js';
 
 const options = {
@@ -84,9 +82,6 @@ export async function getSecretKey(id, key) {
     return null;
 }
 
-// TODO: Remove all delete "logic" from this function.
-// Not it includes the file deletion as well. So it is not a pure "redis" action at all
-// Move this to its own service that uses redis behind the "hood"
 export async function deleteSecret(id) {
     const secret = await getSecret(id);
 
@@ -98,12 +93,6 @@ export async function deleteSecret(id) {
 
     if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
         await client.del(`secret:${id}`);
-
-        if (secret?.file) {
-            const { key } = JSON.parse(secret?.file);
-
-            await fileAdapter.remove(key);
-        }
     }
 
     return Promise.resolve(!secret?.preventBurn);
