@@ -7,15 +7,9 @@ async function uploadFiles(fastify) {
     fastify.post('/download', async (request, reply) => {
         const { key, encryptionKey, secretId, ext, mime } = request.body;
 
-        const preventBurn = (await redis.getSecretKey(secretId, 'preventBurn')) === 'true';
-
         const fileKey = sanitize(key);
 
         const file = await fileAdapter.download(fileKey, encryptionKey);
-
-        if (!preventBurn) {
-            await fileAdapter.remove(fileKey);
-        }
 
         return reply
             .header('Content-Disposition', `attachment; filename=${secretId}.${ext}`)

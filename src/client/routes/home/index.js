@@ -17,6 +17,7 @@ import {
     Text,
     Divider,
     FileButton,
+    NumberInput,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -43,6 +44,7 @@ import { createSecret, burnSecret } from '../../api/secret';
 const Home = () => {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [maxViews, setMaxViews] = useState(1);
     const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
     const [file, setFile] = useState(null);
     const [ttl, setTTL] = useState(14400);
@@ -92,6 +94,10 @@ const Home = () => {
         setTitle(event.target.value);
     };
 
+    const onMaxViewsChange = (value) => {
+        setMaxViews(value);
+    };
+
     const onSelectChange = (value) => {
         setTTL(value);
     };
@@ -124,6 +130,7 @@ const Home = () => {
         setPreventBurn(false);
         setFormData(new FormData());
         setOnEnablePassword(false);
+        setMaxViews(1);
     };
 
     const onSubmit = async (event) => {
@@ -142,6 +149,7 @@ const Home = () => {
         formData.append('ttl', ttl);
         formData.append('allowedIp', allowedIp);
         formData.append('preventBurn', preventBurn);
+        formData.append('maxViews', maxViews);
 
         const json = await createSecret(formData, getToken());
 
@@ -260,12 +268,23 @@ const Home = () => {
                         onChange={onTitleChange}
                         readOnly={inputReadOnly}
                     />
+                </Group>
 
+                <Group grow>
                     <Select
-                        styles={groupMobileStyle}
                         value={ttl}
                         onChange={onSelectChange}
                         data={ttlValues}
+                        label="Lifetime"
+                    />
+
+                    <NumberInput
+                        onChange={onMaxViewsChange}
+                        defaultValue={1}
+                        min={0}
+                        max={999}
+                        placeholder="1"
+                        label="Max views"
                     />
                 </Group>
 

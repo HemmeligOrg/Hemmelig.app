@@ -2,6 +2,8 @@ import config from 'config';
 import asyncRedis from 'async-redis';
 import dayjs from 'dayjs';
 
+import fileAdapter from '../services/file-adapter.js';
+
 import isValidTTL from '../helpers/validate-ttl.js';
 
 const options = {
@@ -49,6 +51,10 @@ export async function createSecret(data, ttl) {
         prepare.push(...['preventBurn', true]);
     }
 
+    if (data.maxViews) {
+        prepare.push(...['maxViews', data.maxViews]);
+    }
+
     createStatistics('secrets_created');
 
     if (isValidTTL(Number(ttl)) && Number(ttl) === 0) {
@@ -78,14 +84,29 @@ export async function getSecretKey(id, key) {
     return null;
 }
 
+// TODO: Remove all delete "logic" from this function.
+// Not it includes the file deletion as well. So it is not a pure "redis" action at all
+// Move this to its own service that uses redis behind the "hood"
 export async function deleteSecret(id) {
-    const preventBurn = (await getSecretKey(id, 'preventBurn')) === 'true';
+    const secret = await getSecret(id);
 
-    if (!preventBurn) {
-        await client.del(`secret:${id}`);
+    if (secret?.maxViews > 1) {
+        await client.hincrby(`secret:${id}`, 'maxViews', -1);
+
+        return Promise.resolve(false);
     }
 
-    return Promise.resolve(!preventBurn);
+    if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
+        await client.del(`secret:${id}`);
+
+        if (secret?.file) {
+            const { key } = JSON.parse(secret?.file);
+
+            await fileAdapter.remove(key);
+        }
+    }
+
+    return Promise.resolve(!secret?.preventBurn);
 }
 
 export async function isAlive() {

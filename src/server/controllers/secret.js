@@ -92,7 +92,7 @@ async function secret(fastify) {
             ],
         },
         async (req, reply) => {
-            const { text, title, ttl, password, allowedIp, preventBurn } = req.body;
+            const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
             const { encryptionKey, secretId, file } = req.secret;
 
             if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
@@ -116,6 +116,7 @@ async function secret(fastify) {
             const data = {
                 id: secretId,
                 title: validator.escape(title?.value),
+                maxViews: Number(maxViews?.value) <= 999 ? Number(maxViews?.value) : 1,
                 secret: JSON.stringify(
                     encrypt(
                         validator.escape(text?.value),
