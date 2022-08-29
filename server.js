@@ -18,6 +18,7 @@ import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
 import uploadRoute from './src/server/controllers/upload.js';
 import secretRoute from './src/server/controllers/secret.js';
+import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
 const fastify = importFastify({
@@ -60,6 +61,7 @@ fastify.register(accountRoute, {
 });
 fastify.register(uploadRoute, { prefix: '/api/upload' });
 fastify.register(secretRoute, { prefix: '/api/secret' });
+fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });
 fastify.register(healthzRoute, { prefix: '/healthz' });
 

@@ -25,6 +25,8 @@ const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
 const DEFAULT_RATE_LIMIT_EXPIRE = 60; // 1 minute
 const DEFAULT_RATE_LIMIT_QTY = 100;
 
+const STATISTIC_TYPES = ['secrets_created'];
+
 export async function createSecret(data, ttl) {
     const key = `secret:${data.id}`;
     const prepare = [key, 'secret', data.secret];
@@ -159,11 +161,27 @@ export async function createRateLimit(ip) {
 }
 
 export async function createStatistics(type = '') {
-    const types = ['secrets_created'];
-
-    if (types.indexOf(type) === -1) {
+    if (STATISTIC_TYPES.indexOf(type) === -1) {
         console.log(` [*] Type "${type}" not supported`);
     }
 
-    return await client.incr(`statistics:${type}:${dayjs().format('YYYY-MM-DD')}`);
+    const current = `statistics:${type}`;
+
+    const hasDate = await client.hget(current, dayjs().format('YYYY-MM-DD'));
+
+    if (!hasDate) {
+        return await client.hmset(current, dayjs().format('YYYY-MM-DD'), 1);
+    }
+
+    return await client.hincrby(current, dayjs().format('YYYY-MM-DD'), 1);
+}
+
+export async function getStatistics(type = '') {
+    if (STATISTIC_TYPES.indexOf(type) === -1) {
+        console.log(` [*] Type "${type}" not supported`);
+    }
+
+    const current = `statistics:${type}`;
+
+    return await client.hgetall(current);
 }
