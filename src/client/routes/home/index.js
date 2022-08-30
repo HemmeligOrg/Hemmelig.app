@@ -358,11 +358,7 @@ const Home = () => {
 
                 <Group grow={isMobile}>
                     {enableFileUpload && (
-                        <FileButton
-                            onChange={setFile}
-                            accept="image/*,text/*,application/*"
-                            disabled={!isLoggedIn}
-                        >
+                        <FileButton onChange={setFile} disabled={!isLoggedIn}>
                             {(props) => (
                                 <Button
                                     {...props}
