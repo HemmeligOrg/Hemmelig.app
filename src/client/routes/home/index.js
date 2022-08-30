@@ -162,6 +162,8 @@ const Home = () => {
         if (json.statusCode !== 201) {
             if (json.message === 'request file too large, please check multipart config') {
                 setError('The file size is too large');
+            } else if (json.message === 'reach files limit') {
+                setError(`Max ${config.get('settings.fileLimit', 3)} files allowed`);
             } else {
                 setError(json.error);
             }

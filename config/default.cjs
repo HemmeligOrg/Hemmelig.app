@@ -68,6 +68,7 @@ const config = {
         },
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
+            fileLimit: SECRET_FILE_LIMIT,
         },
     },
 };
