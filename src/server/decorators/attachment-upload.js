@@ -1,5 +1,4 @@
 import path from 'path';
-import validator from 'validator';
 import fp from 'fastify-plugin';
 import { fileTypeFromBuffer } from 'file-type';
 
