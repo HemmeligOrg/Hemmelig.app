@@ -23,8 +23,12 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 -   Encrypted sensitive information sharing.
 -   Encrypted attachment for signed in users.
+-   Optional title
+-   Secret lifetime
+-   Set max views per secret
 -   Optional password protection.
 -   Optional IP address restriction.
+-   Optional
 -   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
