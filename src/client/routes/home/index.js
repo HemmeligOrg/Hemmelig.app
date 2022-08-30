@@ -18,6 +18,7 @@ import {
     Divider,
     FileButton,
     NumberInput,
+    Badge,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -46,7 +47,7 @@ const Home = () => {
     const [title, setTitle] = useState('');
     const [maxViews, setMaxViews] = useState(1);
     const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const [ttl, setTTL] = useState(14400);
     const [password, setPassword] = useState('');
     const [enablePassword, setOnEnablePassword] = useState(false);
@@ -126,7 +127,7 @@ const Home = () => {
         setPassword('');
         setEncryptionKey('');
         setAllowedIp('');
-        setFile('');
+        setFiles([]);
         setTitle('');
         setPreventBurn(false);
         setFormData(new FormData());
@@ -147,7 +148,6 @@ const Home = () => {
         event.preventDefault();
 
         formData.append('text', text);
-        formData.append('file', file);
         formData.append('title', title);
         formData.append('password', password);
         formData.append('ttl', ttl);
@@ -155,12 +155,16 @@ const Home = () => {
         formData.append('preventBurn', preventBurn);
         formData.append('maxViews', maxViews);
 
+        files.forEach((file) => formData.append('files[]', file));
+
         const json = await createSecret(formData, getToken());
 
         if (json.statusCode !== 201) {
-            setError(
-                json.error === 'Payload Too Large' ? 'The file size is too large' : json.error
-            );
+            if (json.message === 'request file too large, please check multipart config') {
+                setError('The file size is too large');
+            } else {
+                setError(json.error);
+            }
 
             setCreatingSecret(false);
 
@@ -358,7 +362,12 @@ const Home = () => {
 
                 <Group grow={isMobile}>
                     {enableFileUpload && (
-                        <FileButton onChange={setFile} disabled={!isLoggedIn}>
+                        <FileButton
+                            onChange={setFiles}
+                            disabled={!isLoggedIn}
+                            styles={groupMobileStyle}
+                            multiple
+                        >
                             {(props) => (
                                 <Button
                                     {...props}
@@ -374,7 +383,7 @@ const Home = () => {
                                         },
                                     })}
                                 >
-                                    Upload file
+                                    Upload files
                                 </Button>
                             )}
                         </FileButton>
@@ -385,13 +394,17 @@ const Home = () => {
                             Sign in to upload files
                         </Text>
                     )}
-
-                    {file && (
-                        <Text size="sm" align="center" mt="sm">
-                            Picked file: {file.name}
-                        </Text>
-                    )}
                 </Group>
+
+                {files.length > 0 && (
+                    <Group>
+                        {files.map((file) => (
+                            <Badge color="orange" key={file.name}>
+                                {file.name}
+                            </Badge>
+                        ))}
+                    </Group>
+                )}
 
                 {secretId && (
                     <Group grow>

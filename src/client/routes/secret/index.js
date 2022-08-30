@@ -27,7 +27,7 @@ const Secret = () => {
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState(null);
     const [isDownloaded, setIsDownloaded] = useState(false);
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
@@ -64,8 +64,8 @@ const Secret = () => {
                 setTitle(validator.unescape(json.title));
             }
 
-            if (json.file) {
-                setFile(json.file);
+            if (json.files) {
+                setFiles(json.files);
             }
 
             if (json.preventBurn) {
@@ -99,12 +99,12 @@ const Secret = () => {
         setPassword(event.target.value);
     };
 
-    const onFileDownload = (event) => {
+    const onFilesDownload = (event) => {
         event.preventDefault();
 
         downloadFile(
             {
-                ...file,
+                files,
                 encryptionKey,
                 secretId,
             },
@@ -192,7 +192,7 @@ const Secret = () => {
                         </Button>
                     )}
 
-                    {file && !isDownloaded && (
+                    {files && !isDownloaded && (
                         <Button
                             styles={() => ({
                                 root: {
@@ -204,11 +204,11 @@ const Secret = () => {
                                     },
                                 },
                             })}
-                            onClick={onFileDownload}
+                            onClick={onFilesDownload}
                             disabled={!secretId}
                             leftIcon={<IconDownload size={14} />}
                         >
-                            Download the file
+                            Download files
                         </Button>
                     )}
 

@@ -11,6 +11,7 @@ const {
     SECRET_JWT_SECRET = 'good_luck_have_fun',
     SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_FILE_SIZE = 4, // 4 mb
+    SECRET_FILE_LIMIT = 3, // maximum of 3 files allowed to be uploaded
     SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
     SECRET_DO_SPACES_KEY = '',
     SECRET_DO_SPACES_SECRET = '',
@@ -30,6 +31,7 @@ const config = {
     file: {
         size: SECRET_FILE_SIZE,
         adapter: !!SECRET_DO_SPACES_SECRET ? 'do' : 'disk',
+        limit: SECRET_FILE_LIMIT,
     },
     redis: {
         host: SECRET_REDIS_HOST,

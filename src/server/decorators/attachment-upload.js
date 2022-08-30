@@ -6,20 +6,31 @@ import fileAdapter from '../services/file-adapter.js';
 
 export default fp(async (fastify) => {
     fastify.decorate('attachment', async (req, reply) => {
-        const file = await req.body.file;
+        const reqFiles = await req.body['files[]'];
         const { encryptionKey } = req.secret;
 
-        if (file.mimetype) {
-            const fileData = await file.toBuffer();
+        const files = (reqFiles?.length ? reqFiles : [reqFiles]).filter(Boolean);
 
-            const metadata = await fileTypeFromBuffer(fileData);
+        if (files?.length) {
+            req.secret.files = [];
 
-            const mime = metadata?.mime ? metadata.mime : file.mimetype.toString();
-            const ext = metadata?.ext ? metadata.ext : path.extname(file.filename).replace('.', '');
+            // yeah, for loop, I know. Could easily be reduce or what not
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
 
-            const imageData = await fileAdapter.upload(encryptionKey, fileData);
+                const fileData = await file.toBuffer();
 
-            Object.assign(req.secret, { file: { ext, mime, key: imageData.key } });
+                const metadata = await fileTypeFromBuffer(fileData);
+
+                const mime = metadata?.mime ? metadata.mime : file.mimetype.toString();
+                const ext = metadata?.ext
+                    ? metadata.ext
+                    : path.extname(file.filename).replace('.', '');
+
+                const imageData = await fileAdapter.upload(encryptionKey, fileData);
+
+                req.secret.files.push({ ext, mime, key: imageData.key });
+            }
         }
     });
 });

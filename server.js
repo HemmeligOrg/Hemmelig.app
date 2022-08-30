@@ -16,7 +16,7 @@ import keyGeneration from './src/server/decorators/key-generation.js';
 
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
-import uploadRoute from './src/server/controllers/upload.js';
+import downloadROute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
@@ -38,7 +38,7 @@ fastify.register(cors, { origin: config.get('cors') });
 fastify.register(multipart, {
     attachFieldsToBody: true,
     limits: {
-        files: 1,
+        files: config.get('file.limit'),
         fileSize: MAX_FILE_BYTES,
     },
 });
@@ -59,7 +59,7 @@ fastify.register(authenticationRoute, {
 fastify.register(accountRoute, {
     prefix: '/api/account',
 });
-fastify.register(uploadRoute, { prefix: '/api/upload' });
+fastify.register(downloadROute, { prefix: '/api/download' });
 fastify.register(secretRoute, { prefix: '/api/secret' });
 fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });

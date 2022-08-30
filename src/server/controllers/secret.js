@@ -44,8 +44,8 @@ async function getSecretRoute(request, reply) {
         }
     }
 
-    if (data.file) {
-        Object.assign(result, { file: JSON.parse(data.file) });
+    if (data.files) {
+        Object.assign(result, { files: JSON.parse(data.files) });
     }
 
     if (data.title) {
@@ -96,7 +96,7 @@ async function secret(fastify) {
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
-            const { encryptionKey, secretId, file } = req.secret;
+            const { encryptionKey, secretId, files } = req.secret;
 
             if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
@@ -133,8 +133,8 @@ async function secret(fastify) {
                 Object.assign(data, { password: await hash(validator.escape(password.value)) });
             }
 
-            if (file) {
-                Object.assign(data, { file });
+            if (files) {
+                Object.assign(data, { files });
             }
 
             if (preventBurn?.value === 'true') {

@@ -43,8 +43,8 @@ export async function createSecret(data, ttl) {
         prepare.push(...['allowed_ip', data.allowedIp]);
     }
 
-    if (data.file) {
-        prepare.push(...['file', JSON.stringify(data.file)]);
+    if (data.files) {
+        prepare.push(...['files', JSON.stringify(data.files)]);
     }
 
     if (data.preventBurn) {

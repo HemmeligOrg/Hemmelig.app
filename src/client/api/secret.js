@@ -14,11 +14,14 @@ export const createSecret = async (formData = {}, token = '') => {
             },
         });
     }
+    try {
+        const data = await fetch(`${config.get('api.host')}/secret`, options);
+        const json = await data.json();
 
-    const data = await fetch(`${config.get('api.host')}/secret`, options);
-    const json = await data.json();
-
-    return { ...json, statusCode: data.status };
+        return { ...json, statusCode: data.status };
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 export const getSecret = async (secretId, encryptionKey, password) => {
