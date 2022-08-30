@@ -1,5 +1,7 @@
+import path from 'path';
+import validator from 'validator';
 import fp from 'fastify-plugin';
-import FileType from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
 
 import fileAdapter from '../services/file-adapter.js';
 
@@ -46,7 +48,10 @@ export default fp(async (fastify) => {
         if (file.mimetype) {
             const fileData = await file.toBuffer();
 
-            const { ext, mime } = await FileType.fromBuffer(fileData);
+            const metadata = await fileTypeFromBuffer(fileData);
+
+            const mime = metadata?.mime ? metadata.mime : file.mimetype.toString();
+            const ext = metadata?.ext ? metadata.ext : path.extname(file.filename);
 
             if (!acceptedFileType(mime)) {
                 return reply.code(415).send({

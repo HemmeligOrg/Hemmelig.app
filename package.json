@@ -47,7 +47,7 @@
     "fastify": "^4.5.3",
     "fastify-jwt": "^3.0.0",
     "fastify-plugin": "^3.0.0",
-    "file-type": "^16.5.4",
+    "file-type": "^18.0.0",
     "is-base64": "^1.1.0",
     "is-ip": "^3.1.0",
     "nanoid": "^3.1.31",
