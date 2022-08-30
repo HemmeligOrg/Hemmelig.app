@@ -1,5 +1,4 @@
 import prettyBytes from 'pretty-bytes';
-import isIp from 'is-ip';
 import validator from 'validator';
 import config from 'config';
 import { encrypt, decrypt } from '../helpers/crypto.js';
@@ -13,7 +12,11 @@ const ipCheck = (ip) => {
         return true;
     }
 
-    return isIp(ip);
+    if (!validator.isIP(ip) && !validator.isIPRange(ip)) {
+        return false;
+    }
+
+    return validator.isIP(ip) || validator.isIPRange(ip);
 };
 
 async function getSecretRoute(request, reply) {

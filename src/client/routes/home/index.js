@@ -344,14 +344,16 @@ const Home = () => {
                         label="Burn the secret only after the time expires"
                     />
 
-                    <TextInput
-                        styles={groupMobileStyle}
-                        icon={<IconLockAccess size={14} />}
-                        placeholder="Restrict by IP address"
-                        value={allowedIp}
-                        onChange={onIpChange}
-                        readOnly={inputReadOnly}
-                    />
+                    <Tooltip label="Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.">
+                        <TextInput
+                            styles={groupMobileStyle}
+                            icon={<IconLockAccess size={14} />}
+                            placeholder="Restrict by IP or CIDR"
+                            value={allowedIp}
+                            onChange={onIpChange}
+                            readOnly={inputReadOnly}
+                        />
+                    </Tooltip>
                 </Group>
 
                 <Group grow={isMobile}>

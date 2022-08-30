@@ -1,5 +1,7 @@
 // do-connecting-ip
 import fp from 'fastify-plugin';
+import ipRangeCheck from 'ip-range-check';
+import validator from 'validator';
 import { getSecretKey } from '../services/redis.js';
 import getClientIp from '../helpers/client-ip.js';
 
@@ -15,7 +17,12 @@ export default fp(async (fastify) => {
         // For local testing, use this:  const ip = headers.host;
         const ip = getClientIp(headers);
 
-        if (ip && allowedIp && ip !== allowedIp) {
+        if (
+            ip &&
+            allowedIp &&
+            ip !== allowedIp &&
+            !ipRangeCheck(ip, validator.unescape(allowedIp))
+        ) {
             reply.code(403).send({ error: 'Invalid IP address' });
         }
     });
