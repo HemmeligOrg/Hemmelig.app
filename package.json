@@ -28,7 +28,6 @@
   },
   "homepage": "/",
   "dependencies": {
-    "@fastify/compress": "^6.1.1",
     "@fastify/cors": "^8.1.0",
     "@fastify/helmet": "^9.1.0",
     "@fastify/multipart": "^7.1.1",

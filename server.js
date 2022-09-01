@@ -27,8 +27,6 @@ const fastify = importFastify({
 
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
 
-fastify.register(import('@fastify/compress'));
-
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false });
 
