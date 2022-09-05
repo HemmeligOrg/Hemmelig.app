@@ -42,6 +42,8 @@ import { getToken } from '../../helpers/token';
 
 import { createSecret, burnSecret } from '../../api/secret';
 
+import { useTranslation } from 'react-i18next';
+
 const Home = () => {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
@@ -67,6 +69,7 @@ const Home = () => {
 
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
+    const { t } = useTranslation();
     useEffect(() => {
         if (secretId) {
             secretRef.current.focus();
@@ -254,18 +257,16 @@ const Home = () => {
         <Container>
             <Stack>
                 <Title order={1} align="center">
-                    Paste a password, secret message, or private information.
+                    {t('home.app_subtitle')}
                 </Title>
                 <Text size="sm" align="center">
-                    Keep your sensitive information out of chat logs, emails, and more with heavily
-                    encrypted secrets.
+                    {t('home.welcome')}
                 </Text>
-
                 <Textarea
                     minRows={10}
                     maxRows={secretId ? 4 : 1000}
                     autosize
-                    placeholder="Write your sensitive information.."
+                    placeholder={t('home.maintxtarea')}
                     onChange={onTextareaChange}
                     value={text}
                     readOnly={inputReadOnly}
@@ -276,7 +277,7 @@ const Home = () => {
                     <TextInput
                         styles={groupMobileStyle}
                         icon={<IconHeading size={14} />}
-                        placeholder="Title"
+                        placeholder={t('home.title')}
                         value={title}
                         onChange={onTitleChange}
                         readOnly={inputReadOnly}
@@ -288,7 +289,7 @@ const Home = () => {
                         value={ttl}
                         onChange={onSelectChange}
                         data={ttlValues}
-                        label="Lifetime"
+                        label={t('home.lifetime')}
                     />
 
                     <NumberInput
@@ -297,7 +298,7 @@ const Home = () => {
                         min={0}
                         max={999}
                         placeholder="1"
-                        label="Max views"
+                        label={t('home.max_views')}
                     />
                 </Group>
 
@@ -308,13 +309,13 @@ const Home = () => {
                         onChange={onEnablePassword}
                         readOnly={inputReadOnly}
                         color="hemmelig"
-                        label="Enable password"
+                        label={t('home.enable_password')}
                     />
 
                     <TextInput
                         styles={groupMobileStyle}
                         icon={<IconLock size={14} />}
-                        placeholder="Your optional password"
+                        placeholder={t('home.optional_password')}
                         value={password}
                         onChange={onPasswordChange}
                         readOnly={!enablePassword || inputReadOnly}
@@ -347,10 +348,10 @@ const Home = () => {
                         onChange={onPreventBurnChange}
                         readOnly={inputReadOnly}
                         color="hemmelig"
-                        label="Burn the secret only after the time expires"
+                        label={t('home.burn_aftertime')}
                     />
 
-                    <Tooltip label="Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.">
+                    <Tooltip label={t('home.restrict_from_ip')}>
                         <TextInput
                             styles={groupMobileStyle}
                             icon={<IconLockAccess size={14} />}
@@ -373,7 +374,7 @@ const Home = () => {
                             {(props) => (
                                 <Button
                                     {...props}
-                                    label={!isLoggedIn ? 'Sign in to upload files' : ''}
+                                    label={!isLoggedIn ? t('login_to_upload') : ''}
                                     styles={() => ({
                                         root: {
                                             backgroundColor: '#FF9769',
@@ -385,7 +386,7 @@ const Home = () => {
                                         },
                                     })}
                                 >
-                                    Upload files
+                                    {t('home.upload_files')}
                                 </Button>
                             )}
                         </FileButton>
@@ -393,7 +394,7 @@ const Home = () => {
 
                     {enableFileUpload && !isLoggedIn && (
                         <Text size="sm" align="center" mt="sm">
-                            Sign in to upload files
+                            {t('home.login_to_upload')}
                         </Text>
                     )}
                 </Group>
@@ -411,7 +412,7 @@ const Home = () => {
                 {secretId && (
                     <Group grow>
                         <TextInput
-                            label="Your secret URL"
+                            label={t('home.your_secret_url')}
                             icon={<IconLink size={14} />}
                             value={getSecretURL()}
                             onFocus={handleFocus}
@@ -458,7 +459,7 @@ const Home = () => {
                             onClick={onShare}
                             leftIcon={<IconShare size={16} />}
                         >
-                            Share
+                            {t('home.share')}
                         </Button>
                     </Group>
                 )}
@@ -480,7 +481,7 @@ const Home = () => {
                             onClick={onSubmit}
                             loading={creatingSecret}
                         >
-                            Create a secret link
+                            {t('home.create_secret_link')}
                         </Button>
                     )}
 
@@ -499,7 +500,7 @@ const Home = () => {
                             leftIcon={<IconSquarePlus size={14} />}
                             onClick={onNewSecret}
                         >
-                            Create new
+                            {t('home.create_new')}
                         </Button>
                     )}
 
@@ -511,7 +512,7 @@ const Home = () => {
                             disabled={!secretId}
                             leftIcon={<IconTrash size={14} />}
                         >
-                            Delete
+                            {t('home.delete')}
                         </Button>
                     )}
                 </Group>
@@ -523,11 +524,11 @@ const Home = () => {
 
             <Stack spacing="xs">
                 <Text size="sm" align="center">
-                    The secret link only works once, and then it will disappear.
+                    {t('home.link_only_works_once')}
                 </Text>
 
                 <Text size="sm" align="center">
-                    <strong>Hemmelig</strong>, [he`m:(ə)li], means secret in Norwegian.
+                    <strong>Hemmelig</strong>, {t('home.app_name_meaning')}
                 </Text>
             </Stack>
         </Container>

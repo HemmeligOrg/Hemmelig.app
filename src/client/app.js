@@ -14,6 +14,8 @@ import { ModalsProvider } from '@mantine/modals';
 
 import HeaderContent from './components/header';
 
+import { useTranslation } from 'react-i18next';
+
 // Code-splitting is automated for `routes` directory
 import Home from './routes/home';
 import Secret from './routes/secret';
@@ -24,8 +26,9 @@ import Account from './routes/account';
 import Terms from './routes/terms';
 
 const App = () => {
-    const theme = useMantineTheme();
+    const { t } = useTranslation();
 
+    const theme = useMantineTheme();
     return (
         <Router>
             <MantineProvider
@@ -59,7 +62,7 @@ const App = () => {
                                         size="xs"
                                         transform="uppercase"
                                     >
-                                        Sign in
+                                        {t('sign_in')}
                                     </Anchor>
                                     |
                                     <Anchor
@@ -69,7 +72,7 @@ const App = () => {
                                         size="xs"
                                         transform="uppercase"
                                     >
-                                        Account
+                                        {t('account')}
                                     </Anchor>
                                     |
                                     <Anchor
