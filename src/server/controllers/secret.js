@@ -118,7 +118,7 @@ async function secret(fastify) {
 
             const data = {
                 id: secretId,
-                title: validator.escape(title?.value),
+                title: title?.value ? validator.escape(title?.value) : '',
                 maxViews: Number(maxViews?.value) <= 999 ? Number(maxViews?.value) : 1,
                 secret: JSON.stringify(
                     encrypt(
@@ -126,7 +126,7 @@ async function secret(fastify) {
                         encryptionKey + password?.value ? validator.escape(password.value) : ''
                     )
                 ),
-                allowedIp: validator.escape(allowedIp?.value),
+                allowedIp: allowedIp?.value ? validator.escape(allowedIp?.value) : '',
             };
 
             if (password?.value) {
