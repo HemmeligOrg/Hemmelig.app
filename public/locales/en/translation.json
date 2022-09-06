@@ -4,6 +4,8 @@
     "sign_up": "Sign up",
     "account": "Account",
     "settings": "Settings",
+    "copied": "Copied",
+    "copy": "Copy",
     "home": {
         "app_subtitle": "Paste a password, secret message, or private information.",
         "welcome": "Keep your sensitive information out of chat logs, emails, and more with heavily encrypted secrets.",
@@ -14,7 +16,8 @@
         "enable_password": "Enable password",
         "optional_password": "Your optional password",
         "burn_aftertime": "Burn the secret only after the time expires",
-        "restric_from_ip": "Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.",
+        "restrict_from_ip": "Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Restrict by IP or CIDR",
         "login_to_upload": "Sign in to upload files",
         "upload_files": "Upload files",
         "your_secret_url": "Your secret URL",
@@ -23,7 +26,8 @@
         "create_new": "Create new",
         "delete": "Delete",
         "link_only_works_once": "The secret link only works once, and then it will disappear.",
-        "app_name_meaning": "[he`m:(ə)li], means secret in Norwegian."
+        "app_name_meaning": "[he`m:(ə)li], means secret in Norwegian.",
+        "please_add_secret": "Please add a secret."
     },
     "secret": {
         "view_your_secret": "View your secret",

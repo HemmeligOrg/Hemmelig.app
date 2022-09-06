@@ -141,7 +141,7 @@ const Home = () => {
 
     const onSubmit = async (event) => {
         if (!text) {
-            setSecretError('Please add a secret.');
+            setSecretError(t('home.please_add_secret'));
 
             return;
         }
@@ -323,7 +323,7 @@ const Home = () => {
                             <CopyButton value={password} timeout={2000}>
                                 {({ copied, copy }) => (
                                     <Tooltip
-                                        label={copied ? 'Copied' : 'Copy'}
+                                        label={copied ? t('copied') : t('copy')}
                                         withArrow
                                         position="right"
                                     >
@@ -355,7 +355,7 @@ const Home = () => {
                         <TextInput
                             styles={groupMobileStyle}
                             icon={<IconLockAccess size={14} />}
-                            placeholder="Restrict by IP or CIDR"
+                            placeholder={t('home.restrict_from_ip_placeholder')}
                             value={allowedIp}
                             onChange={onIpChange}
                             readOnly={inputReadOnly}
@@ -374,7 +374,7 @@ const Home = () => {
                             {(props) => (
                                 <Button
                                     {...props}
-                                    label={!isLoggedIn ? t('login_to_upload') : ''}
+                                    label={!isLoggedIn ? t('home.login_to_upload') : ''}
                                     styles={() => ({
                                         root: {
                                             backgroundColor: '#FF9769',
@@ -422,7 +422,7 @@ const Home = () => {
                                 <CopyButton value={getSecretURL()} timeout={2000}>
                                     {({ copied, copy }) => (
                                         <Tooltip
-                                            label={copied ? 'Copied' : 'Copy'}
+                                            label={copied ? t('copied') : t('copy')}
                                             withArrow
                                             position="right"
                                         >

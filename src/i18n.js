@@ -8,6 +8,7 @@ i18next
     .init({
         // Remove resources from here
         lng: 'en',
+        fallbackLng: 'en',
         interpolation: {
             escapeValue: false,
         },
