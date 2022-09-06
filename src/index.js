@@ -1,9 +1,8 @@
-import React from 'react';
+import { React, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import './i18n';
-import { Suspense } from 'react';
 import { LoadingOverlay } from '@mantine/core';
 
 import App from './client/app';
