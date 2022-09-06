@@ -1,4 +1,4 @@
-import { React, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
