@@ -19,7 +19,11 @@ import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
 import { getToken } from '../../helpers/token';
 
+import { useTranslation } from 'react-i18next';
+
 const Secret = () => {
+    const { t } = useTranslation();
+
     const { secretId, encryptionKey = null } = useParams();
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
@@ -124,9 +128,9 @@ const Secret = () => {
     return (
         <Container>
             <Stack>
-                <Title order={1}>View your secret</Title>
+                <Title order={1}>{t('secret.view_your_secret')}</Title>
 
-                <Text>We will only show the secret once.</Text>
+                <Text>{t('secret.will_show_once')}</Text>
 
                 {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 
@@ -136,7 +140,7 @@ const Secret = () => {
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>
-                        <Text>A password is required to open this secret</Text>
+                        <Text>{t('secret.password_required')}</Text>
 
                         <TextInput
                             id="lemon-password"
@@ -166,7 +170,7 @@ const Secret = () => {
                             leftIcon={<IconEye size={14} />}
                             onClick={fetchSecret}
                         >
-                            View the secret
+                            {t('secret.view_secret')}
                         </Button>
                     )}
                 </Group>
@@ -188,7 +192,7 @@ const Secret = () => {
                             component={Link}
                             to="/"
                         >
-                            Create a new secret
+                            {t('secret.create_secret')}
                         </Button>
                     )}
 
@@ -208,7 +212,7 @@ const Secret = () => {
                             disabled={!secretId}
                             leftIcon={<IconDownload size={14} />}
                         >
-                            Download files
+                            {t('secret.download_files')}
                         </Button>
                     )}
 
@@ -228,7 +232,7 @@ const Secret = () => {
                             onClick={convertBase64ToPlain}
                             disabled={hasConvertedBase64ToPlain}
                         >
-                            Convert base64 to plain text
+                            {t('secret.convert_b64')}
                         </Button>
                     )}
                 </Group>

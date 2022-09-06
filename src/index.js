@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+
+import './i18n';
+import { LoadingOverlay } from '@mantine/core';
 
 import App from './client/app';
 import configureStore from './client/helpers/configureStore';
@@ -10,7 +13,18 @@ const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <Suspense
+            fallback={
+                <LoadingOverlay
+                    loaderProps={{ size: 'xl', color: 'green', variant: 'bars' }}
+                    overlayOpacity={0.3}
+                    overlayColor="#1A1B1E"
+                    visible
+                />
+            }
+        >
+            <App />
+        </Suspense>
     </Provider>,
     document.getElementById('root')
 );
