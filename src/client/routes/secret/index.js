@@ -84,7 +84,7 @@ const Secret = () => {
             }
 
             if (json.title) {
-                setTitle(validator.unescape(json.title));
+                setTitle(decrypt(json.title, encryptionKey));
             }
 
             if (json.files) {

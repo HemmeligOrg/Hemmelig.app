@@ -1,5 +1,4 @@
 import fp from 'fastify-plugin';
-import validator from 'validator';
 import fileAdapter from '../services/file-adapter.js';
 
 export default fp(async (fastify) => {

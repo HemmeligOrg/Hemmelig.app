@@ -153,7 +153,7 @@ const Home = () => {
         const body = {
             text: encrypt(text, userEncryptionKey),
             files: [],
-            title,
+            title: encrypt(title, userEncryptionKey),
             password,
             ttl,
             allowedIp,

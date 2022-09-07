@@ -48,7 +48,7 @@ async function getSecretRoute(request, reply) {
     }
 
     if (data.title) {
-        Object.assign(result, { title: data.title });
+        Object.assign(result, { title: validator.unescape(data.title) });
     }
 
     if (data.preventBurn) {
@@ -56,7 +56,7 @@ async function getSecretRoute(request, reply) {
     }
 
     Object.assign(result, {
-        secret: JSON.parse(data.secret),
+        secret: validator.unescape(data.secret),
     });
 
     redis.deleteSecret(id);
@@ -116,7 +116,7 @@ async function secret(fastify) {
                 id: secretId,
                 title: title ? validator.escape(title) : '',
                 maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
-                secret: JSON.stringify(text),
+                secret: validator.escape(text),
                 allowedIp: allowedIp ? validator.escape(allowedIp) : '',
             };
 
