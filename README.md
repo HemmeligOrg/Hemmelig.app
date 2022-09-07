@@ -17,7 +17,7 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 ## How it works
 
 You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This means NO ONE can decrypt your secret without the `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`, and access to the Redis instance.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`.
 
 ## Features
 
@@ -28,7 +28,6 @@ When a secret link is created, it gets its unique encryption key that is not sav
 -   Set max views per secret
 -   Optional password protection.
 -   Optional IP address restriction.
--   Optional
 -   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
@@ -96,6 +95,10 @@ $ npm run client-dev
 $ npm run server-dev
 # http://0.0.0.0:3000
 ```
+
+## Gotchas
+
+-   Since the encryption is done at the server, the server administrator is the one responsible for the security of the server. Possible attack vectors on this application is if anyone are able to inject logging to the code on the server, or some kind of MITM.
 
 ## Contribution
 
