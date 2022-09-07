@@ -1,7 +1,7 @@
 import sanitize from 'sanitize-filename';
 import fileAdapter from '../services/file-adapter.js';
 import * as redis from '../services/redis.js';
-import { validIdRegExp } from '../decorators/key-generation.js';
+import { validIdRegExp } from '../helpers/valid-id.js';
 
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {

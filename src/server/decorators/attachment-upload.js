@@ -3,7 +3,9 @@ import fileAdapter from '../services/file-adapter.js';
 
 export default fp(async (fastify) => {
     fastify.decorate('attachment', async (req, reply) => {
-        req.secret.files = [];
+        req.secret = {
+            files: [],
+        };
 
         const { files } = await req.body;
 

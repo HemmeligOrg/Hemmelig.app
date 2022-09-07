@@ -2,9 +2,8 @@ import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
 import { hash, compare } from '../helpers/password.js';
+import { validIdRegExp } from '../helpers/valid-id.js';
 import * as redis from '../services/redis.js';
-
-const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
 const ipCheck = (ip) => {
     if (ip === 'localhost') {
@@ -83,12 +82,7 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [
-                fastify.rateLimit,
-                fastify.userFeatures,
-                fastify.keyGeneration,
-                fastify.attachment,
-            ],
+            preValidation: [fastify.rateLimit, fastify.userFeatures, fastify.attachment],
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
