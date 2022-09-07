@@ -33,7 +33,7 @@ export async function upload(fileUpload) {
     }
 }
 
-export async function download(key, encryptionKey) {
+export async function download(key) {
     try {
         const data = await s3
             .getObject({

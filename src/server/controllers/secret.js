@@ -21,12 +21,12 @@ const ipCheck = (ip) => {
 async function getSecretRoute(request, reply) {
     const { id } = request.params;
 
-    const { password = '', encryptionKey = '' } = request.body ? request.body : {};
+    const { password = '' } = request.body ? request.body : {};
 
     const result = {};
 
     // If it does not match the valid characters set for nanoid, return 403
-    if (!validIdRegExp.test(id) || !validIdRegExp.test(encryptionKey)) {
+    if (!validIdRegExp.test(id)) {
         return reply.code(403).send({ error: 'Not a valid secret id / encryption key' });
     }
 
