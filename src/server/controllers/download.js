@@ -19,7 +19,7 @@ async function downloadFiles(fastify) {
         const secret = await redis.getSecret(secretId);
 
         if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
-            await client.del(`secret:${id}`);
+            await client.del(`secret:${secretId}`);
 
             if (secret?.file) {
                 const { key } = JSON.parse(secret?.file);
