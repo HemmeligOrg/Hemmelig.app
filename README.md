@@ -52,7 +52,6 @@ If you have to follow some sort of compliance, and have to self-host, [https://h
 #
 
 docker run -p 3000:3000 -d --name=hemmelig \
-    -e SECRET_MASTER_KEY=11111222223333344444555556666677 \ # has to be a secret key of 32 characters
     -e SECRET_REDIS_HOST=127.0.0.1 \
     -v /var/tmp/hemmelig:/var/tmp/hemmelig/upload/files # this is how you mount a local directory if you choose to use disk upload, and not do/s3
     hemmeligapp/hemmelig:latest
