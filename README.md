@@ -17,7 +17,7 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 ## How it works
 
 You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA + YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA, YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
 
 ## Features
 
@@ -26,13 +26,12 @@ When a secret link is created, it gets its unique encryption key that is not sav
 -   Encrypted attachment for signed in users.
 -   Secret lifetime
 -   Set max views per secret
--   Optional title
+-   Optional encryptet title
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
--   ~~Available as PWA, which means you can download it as an app for your device.~~
 
 ## Docker image
 
