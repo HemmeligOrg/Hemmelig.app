@@ -3,8 +3,7 @@ import validator from 'validator';
 import config from 'config';
 import { hash, compare } from '../helpers/password.js';
 import * as redis from '../services/redis.js';
-
-const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
+import { validIdRegExp } from '../decorators/key-generation.js';
 
 const ipCheck = (ip) => {
     if (ip === 'localhost') {
@@ -27,7 +26,7 @@ async function getSecretRoute(request, reply) {
 
     // If it does not match the valid characters set for nanoid, return 403
     if (!validIdRegExp.test(id)) {
-        return reply.code(403).send({ error: 'Not a valid secret id / encryption key' });
+        return reply.code(403).send({ error: 'Not a valid secret ID' });
     }
 
     const data = await redis.getSecret(id);
