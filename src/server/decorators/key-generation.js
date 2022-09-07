@@ -5,21 +5,18 @@ import getRandomAdjective from '../helpers/adjective.js';
 
 export const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
-function createKeys() {
-    return {
-        // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
-        encryptionKey: nanoid(),
-        secretId: getRandomAdjective() + '_' + nanoid(),
-    };
+function createSecretId() {
+    // Test id collision by using 32 characters https://zelark.github.io/nano-id-cc/
+    return getRandomAdjective() + '_' + nanoid(32);
 }
 
-async function getKeys() {
-    let keys = createKeys();
+async function getSecretId() {
+    let secretId = createSecretId();
 
     let retries = 5;
 
-    while ((await redis.keyExists(`secret:${keys.secretId}`)) && retries !== 0) {
-        keys = createKeys();
+    while ((await redis.keyExists(`secret:${secretId}`)) && retries !== 0) {
+        secretId = createSecretId();
         retries--;
     }
 
@@ -27,7 +24,7 @@ async function getKeys() {
         throw 'Too many attempts. Please try again.';
     }
 
-    return keys;
+    return secretId;
 }
 
 export default fp(async (fastify) => {
@@ -35,9 +32,9 @@ export default fp(async (fastify) => {
         req.secret = {};
 
         try {
-            const keys = await getKeys();
+            const secretId = await getSecretId();
 
-            Object.assign(req.secret, keys);
+            req.secret.secretId = secretId;
         } catch (error) {
             console.error(error);
 

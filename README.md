@@ -17,21 +17,21 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 ## How it works
 
 You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA, YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
 
 ## Features
 
+-   Client side encryption.
 -   Encrypted sensitive information sharing.
 -   Encrypted attachment for signed in users.
--   Optional title
 -   Secret lifetime
 -   Set max views per secret
+-   Optional encryptet title
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
 -   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
 -   Self-hosted version. Keywords: Regulatory compliance.
--   ~~Available as PWA, which means you can download it as an app for your device.~~
 
 ## Docker image
 
@@ -52,7 +52,6 @@ If you have to follow some sort of compliance, and have to self-host, [https://h
 #
 
 docker run -p 3000:3000 -d --name=hemmelig \
-    -e SECRET_MASTER_KEY=11111222223333344444555556666677 \ # has to be a secret key of 32 characters
     -e SECRET_REDIS_HOST=127.0.0.1 \
     -v /var/tmp/hemmelig:/var/tmp/hemmelig/upload/files # this is how you mount a local directory if you choose to use disk upload, and not do/s3
     hemmeligapp/hemmelig:latest
@@ -65,15 +64,13 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_LOCAL_HOSTNAME` Default: 0.0.0.0. - The local hostname for the fastify instance
 -   `SECRET_PORT` Default: 3000. - The port number for the fastify instance
 -   `SECRET_HOST` Default: "". - Used for i.e. set cors to your domain name
--   `SECRET_MASTER_KEY` Default: 11111222223333344444555556666677 - Override this with your SECRET master key for encryption of your secrets
 -   `SECRET_REDIS_HOST` Default: 0.0.0.0 - Override this for your redis host adress
 -   `SECRET_REDIS_PORT` Default: 6379 - The redis port number
 -   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls
 -   `SECRET_REDIS_USER` Default: "" - You redis user name
 -   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
--   `SECRET_FILE_SIZE` Default: 4 - Set the allowed upload file size in mb.
--   `SECRET_FILE_LIMIT` Default: 3 - Set the amount of files allowed to be uploaded
+-   `SECRET_FILE_SIZE` Default: 4 - Set the total allowed upload file size in mb.
 -   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
 -   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces/s3 endpoint
 -   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces/s3 key
@@ -95,10 +92,6 @@ $ npm run client-dev
 $ npm run server-dev
 # http://0.0.0.0:3000
 ```
-
-## Gotchas
-
--   Since the encryption is done at the server, the server administrator is the one responsible for the security of the server. Possible attack vectors on this application is if anyone are able to inject logging to the code on the server, or some kind of MITM.
 
 ## Contribution
 

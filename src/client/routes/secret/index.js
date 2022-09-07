@@ -1,9 +1,18 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import validator from 'validator';
 
-import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';
+import {
+    Button,
+    Divider,
+    Group,
+    Container,
+    Textarea,
+    TextInput,
+    Stack,
+    Title,
+    Text,
+} from '@mantine/core';
 import {
     IconSquarePlus,
     IconDownload,
@@ -18,6 +27,7 @@ import Error from '../../components/info/error';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
 import { getToken } from '../../helpers/token';
+import { decrypt } from '../../../shared/helpers/crypto';
 
 import { useTranslation } from 'react-i18next';
 
@@ -27,12 +37,12 @@ const Secret = () => {
     const { secretId, encryptionKey = null } = useParams();
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
-    const [preventBurn, setPreventBurn] = useState(null);
+    const [preventBurn, setPreventBurn] = useState(false);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
     const [files, setFiles] = useState(null);
-    const [isDownloaded, setIsDownloaded] = useState(false);
+    const [isDownloaded, setIsDownloaded] = useState([]);
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
 
@@ -49,7 +59,7 @@ const Secret = () => {
             return;
         }
 
-        const json = await getSecret(secretId, encryptionKey, password);
+        const json = await getSecret(secretId, password);
 
         if (json.statusCode === 401) {
             setIsPasswordRequired(true);
@@ -62,10 +72,18 @@ const Secret = () => {
         if (json.error) {
             setError(json.error);
         } else {
-            setSecret(validator.unescape(json.secret));
+            try {
+                const text = decrypt(json.secret, encryptionKey);
+
+                setSecret(text);
+            } catch (error) {
+                setError(error.message);
+
+                return;
+            }
 
             if (json.title) {
-                setTitle(validator.unescape(json.title));
+                setTitle(decrypt(json.title, encryptionKey));
             }
 
             if (json.files) {
@@ -103,20 +121,18 @@ const Secret = () => {
         setPassword(event.target.value);
     };
 
-    const onFilesDownload = (event) => {
-        event.preventDefault();
-
+    const onFileDownload = (file) => {
         downloadFile(
             {
-                files,
-                encryptionKey,
+                file,
                 secretId,
+                encryptionKey,
             },
             getToken()
         );
 
         if (!preventBurn) {
-            setIsDownloaded(true);
+            setIsDownloaded([...isDownloaded, file.key]);
         }
     };
 
@@ -196,26 +212,6 @@ const Secret = () => {
                         </Button>
                     )}
 
-                    {files && !isDownloaded && (
-                        <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: '#FF9769',
-
-                                    '&:hover': {
-                                        backgroundColor: '#FF9769',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
-                            onClick={onFilesDownload}
-                            disabled={!secretId}
-                            leftIcon={<IconDownload size={14} />}
-                        >
-                            {t('secret.download_files')}
-                        </Button>
-                    )}
-
                     {isSecretOpen && (
                         <Button
                             styles={() => ({
@@ -236,6 +232,36 @@ const Secret = () => {
                         </Button>
                     )}
                 </Group>
+
+                {files && (
+                    <>
+                        <Divider my="sm" variant="dashed" />
+                        <Stack align="flex-end">
+                            <Title order={4}>{t('secret.download_files')}</Title>
+                            {files.map((file) => (
+                                <Button
+                                    key={file.key}
+                                    styles={() => ({
+                                        root: {
+                                            backgroundColor: '#FF9769',
+
+                                            '&:hover': {
+                                                backgroundColor: '#FF9769',
+                                                filter: 'brightness(115%)',
+                                            },
+                                        },
+                                    })}
+                                    compact
+                                    onClick={() => onFileDownload(file)}
+                                    disabled={isDownloaded.some((key) => key === file.key)}
+                                    leftIcon={<IconDownload size={14} />}
+                                >
+                                    {file.key + file.ext}
+                                </Button>
+                            ))}
+                        </Stack>
+                    </>
+                )}
             </Stack>
 
             {error && <Error>{error}</Error>}

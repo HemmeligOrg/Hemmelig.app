@@ -1,11 +1,9 @@
 import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
-import { encrypt, decrypt } from '../helpers/crypto.js';
 import { hash, compare } from '../helpers/password.js';
 import * as redis from '../services/redis.js';
-
-const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
+import { validIdRegExp } from '../decorators/key-generation.js';
 
 const ipCheck = (ip) => {
     if (ip === 'localhost') {
@@ -22,13 +20,13 @@ const ipCheck = (ip) => {
 async function getSecretRoute(request, reply) {
     const { id } = request.params;
 
-    const { password = '', encryptionKey = '' } = request.body ? request.body : {};
+    const { password = '' } = request.body ? request.body : {};
 
     const result = {};
 
     // If it does not match the valid characters set for nanoid, return 403
-    if (!validIdRegExp.test(id) || !validIdRegExp.test(encryptionKey)) {
-        return reply.code(403).send({ error: 'Not a valid secret id / encryption key' });
+    if (!validIdRegExp.test(id)) {
+        return reply.code(403).send({ error: 'Not a valid secret ID' });
     }
 
     const data = await redis.getSecret(id);
@@ -49,7 +47,7 @@ async function getSecretRoute(request, reply) {
     }
 
     if (data.title) {
-        Object.assign(result, { title: data.title });
+        Object.assign(result, { title: validator.unescape(data.title) });
     }
 
     if (data.preventBurn) {
@@ -57,10 +55,7 @@ async function getSecretRoute(request, reply) {
     }
 
     Object.assign(result, {
-        secret: decrypt(
-            JSON.parse(data.secret),
-            encryptionKey + password ? validator.escape(password) : ''
-        ).toString(),
+        secret: validator.unescape(data.secret),
     });
 
     redis.deleteSecret(id);
@@ -96,63 +91,50 @@ async function secret(fastify) {
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
-            const { encryptionKey, secretId, files } = req.secret;
+            const { secretId, files } = req.secret;
 
-            if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
+            if (Buffer.byteLength(text) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
                     error: `The secret size (${prettyBytes(
-                        Buffer.byteLength(text?.value)
+                        Buffer.byteLength(text)
                     )}) exceeded our limit of ${config.get('api.maxTextSize')}.`,
                 });
             }
 
-            if (title?.value.length > 255) {
+            if (title?.length > 255) {
                 return reply.code(413).send({
                     error: `The title is longer than 255 characters which is not allowed.`,
                 });
             }
 
-            if (allowedIp?.value && !ipCheck(allowedIp.value)) {
+            if (allowedIp && !ipCheck(allowedIp)) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
             const data = {
                 id: secretId,
-                title: title?.value ? validator.escape(title?.value) : '',
-                maxViews: Number(maxViews?.value) <= 999 ? Number(maxViews?.value) : 1,
-                secret: JSON.stringify(
-                    encrypt(
-                        validator.escape(text?.value),
-                        encryptionKey + password?.value ? validator.escape(password.value) : ''
-                    )
-                ),
-                allowedIp: allowedIp?.value ? validator.escape(allowedIp?.value) : '',
+                title: title ? validator.escape(title) : '',
+                maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
+                secret: validator.escape(text),
+                allowedIp: allowedIp ? validator.escape(allowedIp) : '',
             };
 
-            if (password?.value) {
-                Object.assign(data, { password: await hash(validator.escape(password.value)) });
+            if (password) {
+                Object.assign(data, { password: await hash(validator.escape(password)) });
             }
 
             if (files) {
                 Object.assign(data, { files });
             }
 
-            if (preventBurn?.value === 'true') {
+            if (preventBurn === 'true') {
                 Object.assign(data, { preventBurn: true });
             }
 
-            redis.createSecret(data, ttl.value);
+            redis.createSecret(data, ttl);
 
-            // Return the secret ID, and encryptet KEY to be used for the URL
-            // By generating an encryption key per secret, we will never be able to open the
-            // secret by using the master_secret_key
-            // This is how it will work: SECRET_MASTER_KEY + RANDOM_ENCRYPTION_KEY to decrypt the message.
-            // The RANDOM_KEY will be within the URL.
-            // Example: https://hemmelig.app/secret/RANDOM_ENCRYPTION_KEY/SECRET_ID
             return reply.code(201).send({
                 id: secretId,
-                key: encryptionKey,
-                route: `/secret/${encryptionKey}/${secretId}`,
             });
         }
     );

@@ -5,7 +5,7 @@ import { validIdRegExp } from '../decorators/key-generation.js';
 
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {
-        const { key, encryptionKey, secretId, ext, mime } = request.body;
+        const { key, secretId } = request.body;
 
         if (!validIdRegExp.test(secretId)) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
@@ -13,12 +13,12 @@ async function downloadFiles(fastify) {
 
         const fileKey = sanitize(key);
 
-        const file = await fileAdapter.download(fileKey, encryptionKey);
+        const file = await fileAdapter.download(fileKey);
 
         const secret = await redis.getSecret(secretId);
 
         if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
-            await client.del(`secret:${id}`);
+            await client.del(`secret:${secretId}`);
 
             if (secret?.file) {
                 const { key } = JSON.parse(secret?.file);
@@ -27,11 +27,9 @@ async function downloadFiles(fastify) {
             }
         }
 
-        return reply
-            .header('Content-Disposition', `attachment; filename=${secretId}.${ext}`)
-            .type(mime)
-            .code(200)
-            .send(file);
+        return reply.code(201).send({
+            content: file,
+        });
     });
 }
 

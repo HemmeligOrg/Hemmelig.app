@@ -4,15 +4,14 @@ export const createSecret = async (formData = {}, token = '') => {
     const options = {
         method: 'POST',
         cache: 'no-cache',
-        body: formData,
+        body: JSON.stringify(formData),
+        headers: {
+            'Content-Type': 'application/json',
+        },
     };
 
     if (token) {
-        Object.assign(options, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        options.headers.authorization = `Bearer ${token}`;
     }
     try {
         const data = await fetch(`${config.get('api.host')}/secret`, options);
@@ -24,14 +23,14 @@ export const createSecret = async (formData = {}, token = '') => {
     }
 };
 
-export const getSecret = async (secretId, encryptionKey, password) => {
+export const getSecret = async (secretId, password) => {
     const data = await fetch(`${config.get('api.host')}/secret/${secretId}`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, encryptionKey }),
+        body: JSON.stringify({ password }),
     });
 
     if (data.status === 401) {

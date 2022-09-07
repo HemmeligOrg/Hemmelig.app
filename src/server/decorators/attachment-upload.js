@@ -1,35 +1,30 @@
-import path from 'path';
 import fp from 'fastify-plugin';
-import { fileTypeFromBuffer } from 'file-type';
-
 import fileAdapter from '../services/file-adapter.js';
 
 export default fp(async (fastify) => {
     fastify.decorate('attachment', async (req, reply) => {
-        const reqFiles = await req.body['files[]'];
-        const { encryptionKey } = req.secret;
+        req.secret.files = [];
 
-        const files = (reqFiles?.length ? reqFiles : [reqFiles]).filter(Boolean);
+        const { files } = await req.body;
 
         if (files?.length) {
-            req.secret.files = [];
+            for (const file of files) {
+                try {
+                    const imageData = await fileAdapter.upload(file.content);
 
-            // yeah, for loop, I know. Could easily be reduce or what not
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+                    req.secret.files.push({
+                        type: file.type,
+                        ext: file.ext,
+                        key: imageData.key,
+                    });
+                } catch (error) {
+                    console.error(error.message);
 
-                const fileData = await file.toBuffer();
-
-                const metadata = await fileTypeFromBuffer(fileData);
-
-                const mime = metadata?.mime ? metadata.mime : file.mimetype.toString();
-                const ext = metadata?.ext
-                    ? metadata.ext
-                    : path.extname(file.filename).replace('.', '');
-
-                const imageData = await fileAdapter.upload(encryptionKey, fileData);
-
-                req.secret.files.push({ ext, mime, key: imageData.key });
+                    return reply.code(403).send({
+                        type: 'files',
+                        error: `Something went wrong uploading your files. Please try again.`,
+                    });
+                }
             }
         }
     });

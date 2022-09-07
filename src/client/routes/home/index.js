@@ -39,9 +39,9 @@ import config from '../../config';
 import Error from '../../components/info/error';
 
 import { getToken } from '../../helpers/token';
-
+import { fileEncryption } from '../../helpers/file-encryption';
 import { createSecret, burnSecret } from '../../api/secret';
-
+import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
 
 const Home = () => {
@@ -55,7 +55,6 @@ const Home = () => {
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [allowedIp, setAllowedIp] = useState('');
     const [preventBurn, setPreventBurn] = useState(false);
-    const [formData, setFormData] = useState(new FormData());
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
     const [creatingSecret, setCreatingSecret] = useState(false);
@@ -133,7 +132,6 @@ const Home = () => {
         setFiles([]);
         setTitle('');
         setPreventBurn(false);
-        setFormData(new FormData());
         setOnEnablePassword(false);
         setMaxViews(1);
         setCreatingSecret(false);
@@ -146,27 +144,32 @@ const Home = () => {
             return;
         }
 
+        const userEncryptionKey = generateKey();
+
         setCreatingSecret(true);
 
         event.preventDefault();
 
-        formData.append('text', text);
-        formData.append('title', title);
-        formData.append('password', password);
-        formData.append('ttl', ttl);
-        formData.append('allowedIp', allowedIp);
-        formData.append('preventBurn', preventBurn);
-        formData.append('maxViews', maxViews);
+        const body = {
+            text: encrypt(text, userEncryptionKey),
+            files: [],
+            title: encrypt(title, userEncryptionKey),
+            password,
+            ttl,
+            allowedIp,
+            preventBurn,
+            maxViews,
+        };
 
-        files.forEach((file) => formData.append('files[]', file));
+        for (const file of files) {
+            body.files.push(await fileEncryption(file, userEncryptionKey));
+        }
 
-        const json = await createSecret(formData, getToken());
+        const json = await createSecret(body, getToken());
 
         if (json.statusCode !== 201) {
             if (json.message === 'request file too large, please check multipart config') {
                 setError('The file size is too large');
-            } else if (json.message === 'reach files limit') {
-                setError(`Max ${config.get('settings.fileLimit', 3)} files allowed`);
             } else {
                 setError(json.error);
             }
@@ -177,7 +180,7 @@ const Home = () => {
         }
 
         setSecretId(json.id);
-        setEncryptionKey(json.key);
+        setEncryptionKey(userEncryptionKey);
         setError('');
         setCreatingSecret(false);
     };
