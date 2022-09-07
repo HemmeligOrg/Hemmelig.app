@@ -3,7 +3,6 @@ import fileAdapter from '../services/file-adapter.js';
 import * as redis from '../services/redis.js';
 import { validIdRegExp } from '../decorators/key-generation.js';
 
-// https://stackabuse.com/uploading-files-to-aws-s3-with-node-js
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {
         const { key, encryptionKey, secretId, ext, mime } = request.body;
