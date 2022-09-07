@@ -4,15 +4,14 @@ export const createSecret = async (formData = {}, token = '') => {
     const options = {
         method: 'POST',
         cache: 'no-cache',
-        body: formData,
+        body: JSON.stringify(formData),
+        headers: {
+            'Content-Type': 'application/json',
+        },
     };
 
     if (token) {
-        Object.assign(options, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        options.headers.authorization = `Bearer ${token}`;
     }
     try {
         const data = await fetch(`${config.get('api.host')}/secret`, options);

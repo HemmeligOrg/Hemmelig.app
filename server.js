@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 import importFastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
-import multipart from '@fastify/multipart';
 import fstatic from '@fastify/static';
 import jwt from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
@@ -21,25 +20,18 @@ import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
+const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
+
 const fastify = importFastify({
     logger: config.get('logger'),
+    bodyLimit: MAX_FILE_BYTES,
 });
-
-const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
 
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false });
 
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
-
-fastify.register(multipart, {
-    attachFieldsToBody: true,
-    limits: {
-        files: config.get('file.limit'),
-        fileSize: MAX_FILE_BYTES,
-    },
-});
 
 // Define decorators
 fastify.register(jwt);

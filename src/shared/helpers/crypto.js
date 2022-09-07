@@ -9,11 +9,11 @@ export const generateKey = () => nanoid(32);
 
 const newNonce = () => randomBytes(secretbox.nonceLength);
 
-export const encrypt = (text, userEncryptionKey) => {
+export const encrypt = (data, userEncryptionKey) => {
     const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
 
     const nonce = newNonce();
-    const messageUint8 = decodeUTF8(text);
+    const messageUint8 = decodeUTF8(data);
 
     const box = secretbox(messageUint8, nonce, keyUint8Array);
 

@@ -1,7 +1,6 @@
 import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
-import { decrypt } from '../../shared/helpers/crypto.js';
 import { hash, compare } from '../helpers/password.js';
 import * as redis from '../services/redis.js';
 
@@ -95,45 +94,45 @@ async function secret(fastify) {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
             const { secretId, files } = req.secret;
 
-            if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
+            if (Buffer.byteLength(text) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
                     error: `The secret size (${prettyBytes(
-                        Buffer.byteLength(text?.value)
+                        Buffer.byteLength(text)
                     )}) exceeded our limit of ${config.get('api.maxTextSize')}.`,
                 });
             }
 
-            if (title?.value.length > 255) {
+            if (title?.length > 255) {
                 return reply.code(413).send({
                     error: `The title is longer than 255 characters which is not allowed.`,
                 });
             }
 
-            if (allowedIp?.value && !ipCheck(allowedIp.value)) {
+            if (allowedIp && !ipCheck(allowedIp)) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
             const data = {
                 id: secretId,
-                title: title?.value ? validator.escape(title?.value) : '',
-                maxViews: Number(maxViews?.value) <= 999 ? Number(maxViews?.value) : 1,
-                secret: JSON.stringify(text.value),
-                allowedIp: allowedIp?.value ? validator.escape(allowedIp?.value) : '',
+                title: title ? validator.escape(title) : '',
+                maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
+                secret: JSON.stringify(text),
+                allowedIp: allowedIp ? validator.escape(allowedIp) : '',
             };
 
-            if (password?.value) {
-                Object.assign(data, { password: await hash(validator.escape(password.value)) });
+            if (password) {
+                Object.assign(data, { password: await hash(validator.escape(password)) });
             }
 
             if (files) {
                 Object.assign(data, { files });
             }
 
-            if (preventBurn?.value === 'true') {
+            if (preventBurn === 'true') {
                 Object.assign(data, { preventBurn: true });
             }
 
-            redis.createSecret(data, ttl.value);
+            redis.createSecret(data, ttl);
 
             return reply.code(201).send({
                 id: secretId,

@@ -72,8 +72,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_REDIS_USER` Default: "" - You redis user name
 -   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
--   `SECRET_FILE_SIZE` Default: 4 - Set the allowed upload file size in mb.
--   `SECRET_FILE_LIMIT` Default: 3 - Set the amount of files allowed to be uploaded
+-   `SECRET_FILE_SIZE` Default: 4 - Set the total allowed upload file size in mb.
 -   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
 -   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces/s3 endpoint
 -   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces/s3 key
