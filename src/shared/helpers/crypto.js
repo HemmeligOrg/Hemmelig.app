@@ -1,25 +1,16 @@
-import crypto from 'crypto';
+import { nanoid } from 'nanoid';
 import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
-import config from 'config';
 
 const { secretbox, randomBytes } = tweetnacl;
 const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = tweetnaclUtil;
 
-const SECRET_KEY = config.get('secret_key');
+export const generateKey = () => nanoid(32);
 
 const newNonce = () => randomBytes(secretbox.nonceLength);
 
 export const encrypt = (text, userEncryptionKey) => {
-    const keyUint8Array = new Uint8Array(
-        Buffer.from(
-            crypto
-                .createHash('sha256')
-                .update(SECRET_KEY + userEncryptionKey)
-                .digest('hex'),
-            'hex'
-        )
-    );
+    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
 
     const nonce = newNonce();
     const messageUint8 = decodeUTF8(text);
@@ -36,15 +27,7 @@ export const encrypt = (text, userEncryptionKey) => {
 };
 
 export const decrypt = (messageWithNonce, userEncryptionKey) => {
-    const keyUint8Array = new Uint8Array(
-        Buffer.from(
-            crypto
-                .createHash('sha256')
-                .update(SECRET_KEY + userEncryptionKey)
-                .digest('hex'),
-            'hex'
-        )
-    );
+    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
 
     const messageWithNonceAsUint8Array = decodeBase64(messageWithNonce);
     const nonce = messageWithNonceAsUint8Array.slice(0, secretbox.nonceLength);
@@ -60,5 +43,6 @@ export const decrypt = (messageWithNonce, userEncryptionKey) => {
     }
 
     const base64DecryptedMessage = encodeUTF8(decrypted);
+
     return base64DecryptedMessage;
 };

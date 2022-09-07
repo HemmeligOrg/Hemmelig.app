@@ -1,7 +1,7 @@
 import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
-import { encrypt, decrypt } from '../helpers/crypto.js';
+import { decrypt } from '../../shared/helpers/crypto.js';
 import { hash, compare } from '../helpers/password.js';
 import * as redis from '../services/redis.js';
 
@@ -57,10 +57,7 @@ async function getSecretRoute(request, reply) {
     }
 
     Object.assign(result, {
-        secret: decrypt(
-            JSON.parse(data.secret),
-            encryptionKey + password ? validator.escape(password) : ''
-        ).toString(),
+        secret: JSON.parse(data.secret),
     });
 
     redis.deleteSecret(id);
@@ -96,7 +93,7 @@ async function secret(fastify) {
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
-            const { encryptionKey, secretId, files } = req.secret;
+            const { secretId, files } = req.secret;
 
             if (Buffer.byteLength(text?.value) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
@@ -120,12 +117,7 @@ async function secret(fastify) {
                 id: secretId,
                 title: title?.value ? validator.escape(title?.value) : '',
                 maxViews: Number(maxViews?.value) <= 999 ? Number(maxViews?.value) : 1,
-                secret: JSON.stringify(
-                    encrypt(
-                        validator.escape(text?.value),
-                        encryptionKey + password?.value ? validator.escape(password.value) : ''
-                    )
-                ),
+                secret: JSON.stringify(text.value),
                 allowedIp: allowedIp?.value ? validator.escape(allowedIp?.value) : '',
             };
 
@@ -143,16 +135,8 @@ async function secret(fastify) {
 
             redis.createSecret(data, ttl.value);
 
-            // Return the secret ID, and encryptet KEY to be used for the URL
-            // By generating an encryption key per secret, we will never be able to open the
-            // secret by using the master_secret_key
-            // This is how it will work: SECRET_MASTER_KEY + RANDOM_ENCRYPTION_KEY to decrypt the message.
-            // The RANDOM_KEY will be within the URL.
-            // Example: https://hemmelig.app/secret/RANDOM_ENCRYPTION_KEY/SECRET_ID
             return reply.code(201).send({
                 id: secretId,
-                key: encryptionKey,
-                route: `/secret/${encryptionKey}/${secretId}`,
             });
         }
     );

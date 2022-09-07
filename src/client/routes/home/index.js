@@ -39,9 +39,8 @@ import config from '../../config';
 import Error from '../../components/info/error';
 
 import { getToken } from '../../helpers/token';
-
 import { createSecret, burnSecret } from '../../api/secret';
-
+import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
 
 const Home = () => {
@@ -146,11 +145,13 @@ const Home = () => {
             return;
         }
 
+        const userEncryptionKey = generateKey();
+
         setCreatingSecret(true);
 
         event.preventDefault();
 
-        formData.append('text', text);
+        formData.append('text', encrypt(text, userEncryptionKey));
         formData.append('title', title);
         formData.append('password', password);
         formData.append('ttl', ttl);
@@ -177,7 +178,7 @@ const Home = () => {
         }
 
         setSecretId(json.id);
-        setEncryptionKey(json.key);
+        setEncryptionKey(userEncryptionKey);
         setError('');
         setCreatingSecret(false);
     };

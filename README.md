@@ -17,15 +17,16 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 ## How it works
 
 You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(SECRET_MASTER_KEY + YOUR_UNIQUE_ENCRYPTION_KEY)`.
+When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA + YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
 
 ## Features
 
+-   Client side encryption.
 -   Encrypted sensitive information sharing.
 -   Encrypted attachment for signed in users.
--   Optional title
 -   Secret lifetime
 -   Set max views per secret
+-   Optional title
 -   Optional password protection.
 -   Optional IP address restriction.
 -   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
@@ -65,7 +66,6 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_LOCAL_HOSTNAME` Default: 0.0.0.0. - The local hostname for the fastify instance
 -   `SECRET_PORT` Default: 3000. - The port number for the fastify instance
 -   `SECRET_HOST` Default: "". - Used for i.e. set cors to your domain name
--   `SECRET_MASTER_KEY` Default: 11111222223333344444555556666677 - Override this with your SECRET master key for encryption of your secrets
 -   `SECRET_REDIS_HOST` Default: 0.0.0.0 - Override this for your redis host adress
 -   `SECRET_REDIS_PORT` Default: 6379 - The redis port number
 -   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls
@@ -95,10 +95,6 @@ $ npm run client-dev
 $ npm run server-dev
 # http://0.0.0.0:3000
 ```
-
-## Gotchas
-
--   Since the encryption is done at the server, the server administrator is the one responsible for the security of the server. Possible attack vectors on this application is if anyone are able to inject logging to the code on the server, or some kind of MITM.
 
 ## Contribution
 

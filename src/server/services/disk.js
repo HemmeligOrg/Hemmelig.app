@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { nanoid } from 'nanoid';
 import config from 'config';
 
-import { encrypt, decrypt } from '../helpers/crypto.js';
+import { encrypt, decrypt } from '../../shared/helpers/crypto.js';
 
 const getFilePath = (key) => `${config.get('disk.folder')}${key}.json`;
 

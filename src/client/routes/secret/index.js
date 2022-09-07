@@ -18,6 +18,7 @@ import Error from '../../components/info/error';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
 import { getToken } from '../../helpers/token';
+import { decrypt } from '../../../shared/helpers/crypto';
 
 import { useTranslation } from 'react-i18next';
 
@@ -49,7 +50,7 @@ const Secret = () => {
             return;
         }
 
-        const json = await getSecret(secretId, encryptionKey, password);
+        const json = await getSecret(secretId, password);
 
         if (json.statusCode === 401) {
             setIsPasswordRequired(true);
@@ -62,7 +63,15 @@ const Secret = () => {
         if (json.error) {
             setError(json.error);
         } else {
-            setSecret(validator.unescape(json.secret));
+            try {
+                const text = decrypt(json.secret, encryptionKey);
+
+                setSecret(text);
+            } catch (error) {
+                setError(error.message);
+
+                return;
+            }
 
             if (json.title) {
                 setTitle(validator.unescape(json.title));

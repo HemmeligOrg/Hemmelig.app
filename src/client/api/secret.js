@@ -24,14 +24,14 @@ export const createSecret = async (formData = {}, token = '') => {
     }
 };
 
-export const getSecret = async (secretId, encryptionKey, password) => {
+export const getSecret = async (secretId, password) => {
     const data = await fetch(`${config.get('api.host')}/secret/${secretId}`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, encryptionKey }),
+        body: JSON.stringify({ password }),
     });
 
     if (data.status === 401) {
