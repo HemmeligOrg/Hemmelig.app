@@ -2,7 +2,7 @@ import fp from 'fastify-plugin';
 import { nanoid } from 'nanoid';
 import getRandomAdjective from '../helpers/adjective.js';
 
-const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
+export const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
 export default fp(async (fastify) => {
     fastify.decorate('keyGeneration', async (req) => {
