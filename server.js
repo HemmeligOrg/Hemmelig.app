@@ -11,6 +11,7 @@ import userFeatures from './src/server/decorators/user-features.js';
 import rateLimit from './src/server/decorators/rate-limit.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
+import keyGeneration from './src/server/decorators/key-generation.js';
 
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
@@ -38,6 +39,7 @@ fastify.register(userFeatures);
 fastify.register(rateLimit);
 fastify.register(allowedIp);
 fastify.register(attachment);
+fastify.register(keyGeneration);
 
 // Register our routes before the static content
 fastify.register(authenticationRoute, {
