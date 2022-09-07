@@ -23,7 +23,11 @@ import Error from '../../components/info/error';
 
 import { getUser, updateUser, deleteUser } from '../../api/account';
 
+import { useTranslation } from 'react-i18next';
+
 const Account = () => {
+    const { t } = useTranslation();
+
     const [token, setToken] = useState(hasToken() ? getToken() : '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -154,10 +158,10 @@ const Account = () => {
             <Tabs color="orange" defaultValue={activeTab}>
                 <Tabs.List>
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
-                        Account
+                        {t('account')}
                     </Tabs.Tab>
                     <Tabs.Tab value="settings" icon={<IconSettings size={14} />}>
-                        Settings
+                        {t('settings')}
                     </Tabs.Tab>
                 </Tabs.List>
 

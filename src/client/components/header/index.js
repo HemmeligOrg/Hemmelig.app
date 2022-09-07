@@ -10,8 +10,10 @@ import Logo from './logo.js';
 import { hasToken, removeToken } from '../../helpers/token';
 
 import style from './style.module.css';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const [onSignOutRedirect, setOnSignOutRedirect] = useState(false);
@@ -58,7 +60,7 @@ const Header = () => {
                                 leftIcon={<IconLockOff size={14} />}
                                 onClick={onSignOut}
                             >
-                                Sign out
+                                {t('sign_out')}
                             </Button>
                         </Group>
                     </Grid.Col>
@@ -83,7 +85,7 @@ const Header = () => {
                                     component={Link}
                                     to="/signin"
                                 >
-                                    Sign in
+                                    {t('sign_in')}
                                 </Button>
                             </Group>
                         </Grid.Col>
@@ -105,7 +107,7 @@ const Header = () => {
                                     component={Link}
                                     to="/signup"
                                 >
-                                    Sign up
+                                    {t('sign_up')}
                                 </Button>
                             </Group>
                         </Grid.Col>
