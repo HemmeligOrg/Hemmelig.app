@@ -1,25 +1,49 @@
 import fp from 'fastify-plugin';
 import { nanoid } from 'nanoid';
+import * as redis from '../services/redis.js';
 import getRandomAdjective from '../helpers/adjective.js';
 
 export const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
-export default fp(async (fastify) => {
-    fastify.decorate('keyGeneration', async (req) => {
+function createKeys() {
+    return {
         // Test id collision by using 21 characters https://zelark.github.io/nano-id-cc/
-        const encryptionKey = nanoid();
-        const secretId = getRandomAdjective() + '_' + nanoid();
+        encryptionKey: nanoid(),
+        secretId: getRandomAdjective() + '_' + nanoid(),
+    };
+}
 
-        // If it does not match the valid characters set for nanoid, return 403
-        if (!validIdRegExp.test(secretId) || !validIdRegExp.test(encryptionKey)) {
-            return reply.code(403).send({ error: 'Not a valid secret id / encryption key' });
-        }
+async function getKeys() {
+    let keys = createKeys();
 
+    let retries = 5;
+
+    while ((await redis.keyExists(`secret:${keys.secretId}`)) && retries !== 0) {
+        keys = createKeys();
+        retries--;
+    }
+
+    if (retries === 0) {
+        throw 'Too many attempts. Please try again.';
+    }
+
+    return keys;
+}
+
+export default fp(async (fastify) => {
+    fastify.decorate('keyGeneration', async (req, reply) => {
         req.secret = {};
 
-        Object.assign(req.secret, {
-            encryptionKey,
-            secretId,
-        });
+        try {
+            const keys = await getKeys();
+
+            Object.assign(req.secret, keys);
+        } catch (error) {
+            console.error(error);
+
+            return reply.code(403).send({
+                error: 'Something happened while creating the secret. Please try again.',
+            });
+        }
     });
 });

@@ -100,6 +100,10 @@ export async function deleteSecret(id) {
     return Promise.resolve(!secret?.preventBurn);
 }
 
+export async function keyExists(key) {
+    return await client.exists(key);
+}
+
 export async function isAlive() {
     if ((await client.ping()) === 'PONG') {
         return true;
