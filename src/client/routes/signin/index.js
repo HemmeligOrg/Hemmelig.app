@@ -5,10 +5,9 @@ import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from 
 import { IconLock, IconUser, IconLogin } from '@tabler/icons';
 
 import Success from '../../components/info/success';
-
 import { signIn } from '../../api/authentication';
-
 import { setToken } from '../../helpers/token';
+import config from '../../config';
 
 const Secret = () => {
     const [username, setUsername] = useState('');
@@ -16,6 +15,8 @@ const Secret = () => {
     const [error, setError] = useState(null);
     const [token, setTokenState] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const userDisabled = config.get('settings.disableUsers');
 
     useEffect(() => {
         if (token) {
@@ -52,7 +53,7 @@ const Secret = () => {
         <Container size="xs">
             <Stack>
                 <Title order={1} align="center">
-                    Sign in
+                    {userDisabled ? 'User creation has been disabled' : 'Sign in'}
                 </Title>
 
                 <Text size="sm" align="center">
@@ -66,6 +67,7 @@ const Secret = () => {
                     onChange={onUsernameChange}
                     required
                     error={error}
+                    disabled={userDisabled}
                 />
 
                 <PasswordInput
@@ -75,6 +77,7 @@ const Secret = () => {
                     onChange={onPasswordChange}
                     required
                     error={error}
+                    disabled={userDisabled}
                 />
 
                 <Button
@@ -90,6 +93,7 @@ const Secret = () => {
                     })}
                     leftIcon={<IconLogin size={14} />}
                     onClick={onSignIn}
+                    disabled={userDisabled}
                 >
                     Sign in
                 </Button>
