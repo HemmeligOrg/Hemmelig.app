@@ -21,17 +21,17 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 ## Features
 
--   Client side encryption.
--   Encrypted sensitive information sharing.
--   Encrypted attachment for signed in users.
+-   Client side encryption
+-   Encrypted sensitive information sharing
+-   Encrypted file upload for signed in users
 -   Secret lifetime
 -   Set max views per secret
 -   Optional encryptet title
--   Optional password protection.
--   Optional IP address restriction.
--   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
--   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
--   Self-hosted version. Keywords: Regulatory compliance.
+-   Optional password protection
+-   Optional IP address restriction
+-   Encrypted key is part of the URL, and not saved to the database for an extra layer of security
+-   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
+-   Self-hosted version. Keywords: Regulatory compliance
 
 ## Docker image
 
