@@ -73,6 +73,8 @@ const Account = () => {
                 setError(e);
             }
         })();
+
+        // eslint-disable-next-line
     }, [token, dispatch]);
 
     if (error) {
