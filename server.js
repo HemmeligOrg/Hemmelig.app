@@ -15,7 +15,7 @@ import keyGeneration from './src/server/decorators/key-generation.js';
 
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
-import downloadROute from './src/server/controllers/download.js';
+import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
@@ -42,14 +42,17 @@ fastify.register(attachment);
 fastify.register(keyGeneration);
 
 // Register our routes before the static content
-fastify.register(authenticationRoute, {
-    prefix: '/api/authentication',
-});
+if (!config.get('user.disabled')) {
+    fastify.register(authenticationRoute, {
+        prefix: '/api/authentication',
+    });
 
-fastify.register(accountRoute, {
-    prefix: '/api/account',
-});
-fastify.register(downloadROute, { prefix: '/api/download' });
+    fastify.register(accountRoute, {
+        prefix: '/api/account',
+    });
+}
+
+fastify.register(downloadRoute, { prefix: '/api/download' });
 fastify.register(secretRoute, { prefix: '/api/secret' });
 fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });

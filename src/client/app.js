@@ -11,10 +11,9 @@ import {
     Group,
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { useTranslation } from 'react-i18next';
 
 import HeaderContent from './components/header';
-
-import { useTranslation } from 'react-i18next';
 
 // Code-splitting is automated for `routes` directory
 import Home from './routes/home';

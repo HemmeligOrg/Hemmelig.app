@@ -21,17 +21,17 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 ## Features
 
--   Client side encryption.
--   Encrypted sensitive information sharing.
--   Encrypted attachment for signed in users.
+-   Client side encryption
+-   Encrypted sensitive information sharing
+-   Encrypted file upload for signed in users
 -   Secret lifetime
 -   Set max views per secret
 -   Optional encryptet title
--   Optional password protection.
--   Optional IP address restriction.
--   Encrypted key is part of the URL, and not saved to the database for an extra layer of security.
--   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read.
--   Self-hosted version. Keywords: Regulatory compliance.
+-   Optional password protection
+-   Optional IP address restriction
+-   Encrypted key is part of the URL, and not saved to the database for an extra layer of security
+-   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
+-   Self-hosted version. Keywords: Regulatory compliance
 
 ## Docker image
 
@@ -69,6 +69,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls
 -   `SECRET_REDIS_USER` Default: "" - You redis user name
 -   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
+-   `SECRET_MAX_TEXT_SIZE` Default: "256" - The max text size for the secret. Is set in kb. i.e. 256 for 256kb.
 -   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
 -   `SECRET_FILE_SIZE` Default: 4 - Set the total allowed upload file size in mb.
 -   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
@@ -77,7 +78,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 -   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces/s3 secret
 -   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces/s3 bucket name
 -   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces/s3 folder for uploading
--   `SECRET_MAX_TEXT_SIZE` Default: "256" - The max text size for the secret. Is set in kb. i.e. 256 for 256kb.
+-   `SECRET_USER_DISABLE` Default: false - Disable user registration
 
 ## Run locally
 

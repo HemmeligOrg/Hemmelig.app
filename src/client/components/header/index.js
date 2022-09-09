@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
 import { IconLockOff, IconLogin } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 import { userLoginChanged } from '../../actions/';
 import Logo from './logo.js';
-
 import { hasToken, removeToken } from '../../helpers/token';
+import config from '../../config';
 
 import style from './style.module.css';
-import { useTranslation } from 'react-i18next';
 
 const Header = () => {
     const { t } = useTranslation();
@@ -43,7 +43,7 @@ const Header = () => {
                     </Anchor>
                 </Grid.Col>
 
-                {isLoggedIn && (
+                {isLoggedIn && !config.get('settings.disableUsers') && (
                     <Grid.Col span={8}>
                         <Group position="right">
                             <Button
@@ -66,7 +66,7 @@ const Header = () => {
                     </Grid.Col>
                 )}
 
-                {!isLoggedIn && (
+                {!isLoggedIn && !config.get('settings.disableUsers') && (
                     <>
                         <Grid.Col span={4}>
                             <Group position="right">
