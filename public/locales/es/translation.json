@@ -1,0 +1,41 @@
+{
+    "sign_in": "Ingresar",
+    "sign_out": "Salir",
+    "sign_up": "Registrarse",
+    "account": "Cuenta",
+    "settings": "Opciones",
+    "copied": "Copiado",
+    "copy": "Copiar",
+    "home": {
+        "welcome": "Mantenga la información sensible fuera de los registro de chats, correos y otros con secretos altamente cifrados.",
+        "title": "Título",
+        "app_subtitle": "Pegue una contraseña, mensaje secreto o información privada.",
+        "maintxtarea": "Escriba la información sensible...",
+        "lifetime": "Tiempo de vida",
+        "max_views": "Vistas máximas",
+        "enable_password": "Usar contraseña",
+        "optional_password": "Contraseña opcional",
+        "burn_aftertime": "Quemar el secreto luego de expirado el tiempo de vida",
+        "restrict_from_ip": "Limitar el secreto para que solo puedar ser abierto segun una IP or un rango CIDR. Por Ejemplo CIDR: 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Restringir por IP o CIDR",
+        "login_to_upload": "Ingrese para subir archivos",
+        "upload_files": "Subir archivos",
+        "your_secret_url": "Su URL secreta",
+        "share": "Compartir",
+        "create_secret_link": "Crear enlace secreto",
+        "create_new": "Crear nuevo",
+        "delete": "Eliminar",
+        "link_only_works_once": "El enlace secreto solo funciona única vez, luego desaparece.",
+        "app_name_meaning": "[he`m:(ə)li], significa secreto en Noruego.",
+        "please_add_secret": "Por favor agregue un secreto."
+    },
+    "secret": {
+        "view_your_secret": "Ver su secreto",
+        "will_show_once": "Solo lo mostraremos una vez.",
+        "password_required": "Se requiere una contraseña para abrir este secreto",
+        "view_secret": "Ver secreto",
+        "create_secret": "Crear secreto nuevo",
+        "download_files": "Descargar archivos",
+        "convert_b64": "Convertir base64 a texto plano"
+    }
+}
