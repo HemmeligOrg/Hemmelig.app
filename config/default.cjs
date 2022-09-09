@@ -7,7 +7,7 @@ const {
     SECRET_REDIS_PORT = 6379,
     SECRET_REDIS_USER = null,
     SECRET_REDIS_PASSWORD = null,
-    SECRET_REDIS_TLS = false,
+    SECRET_REDIS_TLS = 'false',
     SECRET_JWT_SECRET = 'good_luck_have_fun',
     SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_FILE_SIZE = 4, // 4 mb
@@ -17,6 +17,7 @@ const {
     SECRET_DO_SPACES_BUCKET = 'hemmelig',
     SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
+    SECRET_USER_DISABLE = 'false',
     NODE_ENV = 'development',
 } = process.env;
 
@@ -58,6 +59,9 @@ const config = {
         // /var/tmp files can live up to 30 days
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
+    user: {
+        disabled: JSON.parse(SECRET_USER_DISABLE),
+    },
     logger: true,
     cors: '*',
     __client_config: {
@@ -66,6 +70,7 @@ const config = {
         },
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
+            disableUsers: JSON.parse(SECRET_USER_DISABLE),
         },
     },
 };

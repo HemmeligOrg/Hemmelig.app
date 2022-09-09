@@ -5,10 +5,9 @@ import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from 
 import { IconLock, IconUser, IconLogin, IconAt } from '@tabler/icons';
 
 import Success from '../../components/info/success';
-
 import { signUp } from '../../api/authentication';
-
 import { setToken } from '../../helpers/token';
+import config from '../../config';
 
 const Secret = () => {
     const [username, setUsername] = useState('');
@@ -17,6 +16,8 @@ const Secret = () => {
     const [error, setError] = useState({});
     const [token, setTokenState] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const userDisabled = config.get('settings.disableUsers');
 
     useEffect(() => {
         if (token) {
@@ -57,7 +58,7 @@ const Secret = () => {
         <Container size="xs">
             <Stack>
                 <Title order={1} align="center">
-                    Sign up
+                    {userDisabled ? 'User creation has been disabled' : 'Sign up'}
                 </Title>
 
                 <Text size="sm" align="center">
@@ -71,6 +72,7 @@ const Secret = () => {
                     onChange={onEmailChange}
                     required
                     error={error?.type === 'email' ? error?.error : ''}
+                    disabled={userDisabled}
                 />
 
                 <TextInput
@@ -80,6 +82,7 @@ const Secret = () => {
                     onChange={onUsernameChange}
                     required
                     error={error?.type === 'username' ? error?.error : ''}
+                    disabled={userDisabled}
                 />
 
                 <PasswordInput
@@ -89,6 +92,7 @@ const Secret = () => {
                     onChange={onPasswordChange}
                     required
                     error={error?.type === 'password' ? error?.error : ''}
+                    disabled={userDisabled}
                 />
 
                 <Button
@@ -104,6 +108,7 @@ const Secret = () => {
                     })}
                     leftIcon={<IconLogin size={14} />}
                     onClick={onSignUp}
+                    disabled={userDisabled}
                 >
                     Sign up
                 </Button>

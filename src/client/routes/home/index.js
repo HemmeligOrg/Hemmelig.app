@@ -39,7 +39,7 @@ import config from '../../config';
 import Error from '../../components/info/error';
 
 import { getToken } from '../../helpers/token';
-import { fileEncryption } from '../../helpers/file-encryption';
+import { zipFiles } from '../../helpers/zip';
 import { createSecret, burnSecret } from '../../api/secret';
 import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
@@ -161,8 +161,14 @@ const Home = () => {
             maxViews,
         };
 
-        for (const file of files) {
-            body.files.push(await fileEncryption(file, userEncryptionKey));
+        const zipFile = await zipFiles(files);
+
+        if (zipFile) {
+            body.files.push({
+                type: 'application/zip',
+                ext: '.zip',
+                content: encrypt(zipFile, userEncryptionKey),
+            });
         }
 
         const json = await createSecret(body, getToken());

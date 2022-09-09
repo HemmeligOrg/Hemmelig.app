@@ -16,9 +16,9 @@ ReactDOM.render(
         <Suspense
             fallback={
                 <LoadingOverlay
-                    loaderProps={{ size: 'xl', color: 'green', variant: 'bars' }}
-                    overlayOpacity={0.3}
-                    overlayColor="#1A1B1E"
+                    loaderProps={{ size: 'xl', color: 'green', variant: 'oval' }}
+                    overlayOpacity={1}
+                    overlayColor="#131313"
                     visible
                 />
             }

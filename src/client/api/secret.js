@@ -13,13 +13,16 @@ export const createSecret = async (formData = {}, token = '') => {
     if (token) {
         options.headers.authorization = `Bearer ${token}`;
     }
+
     try {
         const data = await fetch(`${config.get('api.host')}/secret`, options);
         const json = await data.json();
 
         return { ...json, statusCode: data.status };
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
+
+        return { error: 'Failed to create your secret' };
     }
 };
 
