@@ -216,10 +216,10 @@ const Home = () => {
             navigator
                 .share({
                     title: 'hemmelig.app',
-                    text: 'Get your secret at hemmelig.app.',
+                    text: t('home.get_your_secret'),
                     url: getSecretURL(),
                 })
-                .then(() => console.log('Successful share'))
+                .then(() => console.log(t('home.successful_share')))
                 .catch(console.error);
         }
     };
@@ -231,22 +231,22 @@ const Home = () => {
     const inputReadOnly = !!secretId;
 
     const ttlValues = [
-        { value: 604800, label: '7 days' },
-        { value: 259200, label: '3 days' },
-        { value: 86400, label: '1 day' },
-        { value: 43200, label: '12 hours' },
-        { value: 14400, label: '4 hours' },
-        { value: 3600, label: '1 hour' },
-        { value: 1800, label: '30 minutes' },
-        { value: 300, label: '5 minutes' },
+        { value: 604800, label: t('home.7_days') },
+        { value: 259200, label: t('home.3_days') },
+        { value: 86400, label: t('home.1_day') },
+        { value: 43200, label: t('home.12_hours') },
+        { value: 14400, label: t('home.4_hours') },
+        { value: 3600, label: t('home.1_hour') },
+        { value: 1800, label: t('home.30_minutes') },
+        { value: 300, label: t('home.5_minutes') },
     ];
 
     // Features allowed for signed in users only
     // This is validated from the server as well
     if (isLoggedIn) {
         ttlValues.unshift(
-            { value: 2419200, label: '28 days' },
-            { value: 1209600, label: '14 days' }
+            { value: 2419200, label: t('home.28_days') },
+            { value: 1209600, label: t('home.14_days') }
         );
     }
 
