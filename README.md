@@ -88,12 +88,9 @@ Have a look at the Dockerfile for a full example of how to run this application.
 $ npm install
 
 # Start the frontend
-$ npm run client-dev
-# http://0.0.0.0:8080
-
-# Start the backend
-$ npm run server-dev
+$ npm run dev
 # http://0.0.0.0:3000
+
 ```
 
 ## Contribution

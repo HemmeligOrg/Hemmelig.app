@@ -1,6 +1,6 @@
 export default {
     api: {
-        host: 'http://localhost:3000/api',
+        host: '/api',
     },
     settings: {
         enableFileUpload: true,

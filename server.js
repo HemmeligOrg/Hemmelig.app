@@ -65,7 +65,6 @@ if (process.env.NODE_ENV !== 'development') {
 
     const staticPath = path.join(__dirname, 'build');
 
-    // Filthy hack, but it works for now. Soon to implement config from the server.
     replace.sync({
         files: staticPath + '/**/*.html',
         from: [/{{NODE_ENV}}/g, /__SECRET_CONFIG__/g],
