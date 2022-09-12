@@ -18,7 +18,7 @@
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-unknown src/"
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3000",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HemmeligOrg/Hemmelig.app.git"
