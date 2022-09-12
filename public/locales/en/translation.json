@@ -27,7 +27,19 @@
         "delete": "Delete",
         "link_only_works_once": "The secret link only works once, and then it will disappear.",
         "app_name_meaning": "[he`m:(ə)li], means secret in Norwegian.",
-        "please_add_secret": "Please add a secret."
+        "please_add_secret": "Please add a secret.",
+        "14_days": "14 days",
+        "28_days": "28 days",
+        "7_days": "7 days",
+        "3_days": "3 days",
+        "1_day": "1 day",
+        "12_hours": "12 hours",
+        "4_hours": "4 hours",
+        "1_hour": "1 hour",
+        "30_minutes": "30 minutes",
+        "5_minutes": "5 minutes",
+        "successful_share": "Successful share",
+        "get_your_secret": "Get your secret at hemmelig.app."
     },
     "secret": {
         "view_your_secret": "View your secret",
