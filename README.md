@@ -1,3 +1,5 @@
+[![Better Uptime Badge](https://betteruptime.com/status-badges/v1/monitor/he71.svg)](https://betteruptime.com/?utm_source=status_badge)
+
 <div align="center">
   <img src="banner.png" alt="hemmelig" />
 </div>
