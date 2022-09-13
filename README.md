@@ -39,6 +39,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 -   hemmeligapp/hemmelig:bleeding-edge (pushed on every commit to main)
 -   hemmeligapp/hemmelig:weekly (pushed every week on Friday)
+-   hemmeligapp/hemmelig:daily
 -   hemmeligapp/hemmelig:v3.4.0 (see the github tags)
 -   hemmeligapp/hemmelig:latest (pushed on releases)
 
