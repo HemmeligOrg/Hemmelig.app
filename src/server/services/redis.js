@@ -103,11 +103,7 @@ export async function keyExists(key) {
 }
 
 export async function isAlive() {
-    if ((await client.ping()) === 'PONG') {
-        return true;
-    }
-
-    return false;
+    return (await client.ping()) === 'PONG';
 }
 
 export async function createUser(username, email, password) {
@@ -155,11 +151,7 @@ export async function createRateLimit(ip) {
             });
     });
 
-    if (increments > DEFAULT_RATE_LIMIT_QTY) {
-        return true;
-    }
-
-    return false;
+    return increments > DEFAULT_RATE_LIMIT_QTY;
 }
 
 export async function createStatistics(type = '') {

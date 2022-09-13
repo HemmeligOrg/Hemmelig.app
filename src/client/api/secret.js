@@ -42,7 +42,7 @@ export const getSecret = async (secretId, password) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };
 
 export const burnSecret = async (secretId) => {
@@ -51,7 +51,7 @@ export const burnSecret = async (secretId) => {
         cache: 'no-cache',
     });
 
-    return await data.json();
+    return data.json();
 };
 
 export const secretExists = async (secretId) => {
@@ -63,5 +63,5 @@ export const secretExists = async (secretId) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };

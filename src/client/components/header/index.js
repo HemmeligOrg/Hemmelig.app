@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
 import { IconLockOff, IconLogin } from '@tabler/icons';

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';

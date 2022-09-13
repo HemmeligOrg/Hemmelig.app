@@ -16,7 +16,7 @@ export const signIn = async (username, password) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };
 
 export const signUp = async (email, username, password) => {
@@ -29,7 +29,7 @@ export const signUp = async (email, username, password) => {
         body: JSON.stringify({ email, username, password }),
     });
 
-    return await data.json();
+    return data.json();
 };
 
 export const verify = async (token) => {
@@ -48,5 +48,5 @@ export const verify = async (token) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };
