@@ -1,10 +1,10 @@
-const assert = require('assert');
+import assert from 'assert';
 
-const { encrypt, decrypt } = require('../../../src/server/helpers/crypto');
+import { encrypt, decrypt, generateKey } from '../../../src/shared/helpers/crypto.js';
 
 const SECRET = 'MASTER_KEY=1337-super-secret';
 
-const RANDOM_KEY = '321312312312312312312312312';
+const RANDOM_KEY = generateKey();
 
 describe('Crypto', () => {
     describe('#encrypt(string)', () => {

@@ -1,6 +1,6 @@
-const assert = require('assert');
+import assert from 'assert';
 
-const isValidTTL = require('../../../src/server/helpers/validate-ttl');
+import isValidTTL from '../../../src/server/helpers/validate-ttl.js';
 
 describe('Validate TTL', () => {
     describe('#isValidTTL(ttl)', () => {
