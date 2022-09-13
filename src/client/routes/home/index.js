@@ -265,7 +265,7 @@ const Home = () => {
     return (
         <Container>
             <Stack>
-                <Title order={1} align="center">
+                <Title order={1} size="h2" align="center">
                     {t('home.app_subtitle')}
                 </Title>
                 <Text size="sm" align="center">
