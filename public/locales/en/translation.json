@@ -25,7 +25,7 @@
         "create_secret_link": "Create a secret link",
         "create_new": "Create new",
         "delete": "Delete",
-        "link_only_works_once": "The secret link only works once, and then it will disappear.",
+        "link_only_works_once": "By default the secret link only works once, and then it will disappear.",
         "app_name_meaning": "[he`m:(ə)li], means secret in Norwegian.",
         "please_add_secret": "Please add a secret.",
         "14_days": "14 days",
