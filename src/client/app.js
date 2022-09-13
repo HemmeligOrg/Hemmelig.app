@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
     MantineProvider,
@@ -13,16 +13,15 @@ import {
 import { ModalsProvider } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
-import HeaderContent from './components/header';
+const HeaderContent = lazy(() => import('./components/header'));
 
-// Code-splitting is automated for `routes` directory
-import Home from './routes/home';
-import Secret from './routes/secret';
-import Privacy from './routes/privacy';
-import SignIn from './routes/signin';
-import SignUp from './routes/signup';
-import Account from './routes/account';
-import Terms from './routes/terms';
+const Home = lazy(() => import('./routes/home'));
+const Secret = lazy(() => import('./routes/secret'));
+const Privacy = lazy(() => import('./routes/privacy'));
+const SignIn = lazy(() => import('./routes/signin'));
+const SignUp = lazy(() => import('./routes/signup'));
+const Account = lazy(() => import('./routes/account'));
+const Terms = lazy(() => import('./routes/terms'));
 
 const App = () => {
     const { t } = useTranslation();
