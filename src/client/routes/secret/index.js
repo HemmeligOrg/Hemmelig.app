@@ -178,16 +178,7 @@ const Secret = () => {
                 <Group>
                     {!isSecretOpen && (
                         <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: 'var(--color-contrast)',
-
-                                    '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
+                            color="hemmelig"
                             leftIcon={<IconEye size={14} />}
                             onClick={fetchSecret}
                         >
@@ -220,16 +211,7 @@ const Secret = () => {
 
                     {isSecretOpen && (
                         <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: 'var(--color-contrast)',
-
-                                    '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
+                            color="hemmelig"
                             leftIcon={<IconSquarePlus size={14} />}
                             component={Link}
                             to="/"

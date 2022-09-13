@@ -35,7 +35,19 @@ const App = () => {
                 theme={{
                     colorScheme: 'dark',
                     colors: {
-                        hemmelig: ['#2a9d8f'],
+                        hemmelig: [
+                            '#ffffff',
+                            '#eaf5f4',
+                            '#d4ebe9',
+                            '#bfe2dd',
+                            '#aad8d2',
+                            '#95cec7',
+                            '#7fc4bc',
+                            '#6abab1',
+                            '#55b1a5',
+                            '#3fa79a',
+                            '#2a9d8f',
+                        ],
                     },
                     fontFamily: 'Inter, sans-serif',
                     fontFamilyMonospace: 'Inter, sans-serif',

@@ -81,16 +81,7 @@ const Secret = () => {
                 />
 
                 <Button
-                    styles={() => ({
-                        root: {
-                            backgroundColor: 'var(--color-contrast)',
-
-                            '&:hover': {
-                                backgroundColor: 'var(--color-contrast)',
-                                filter: 'brightness(115%)',
-                            },
-                        },
-                    })}
+                    color="hemmelig"
                     leftIcon={<IconLogin size={14} />}
                     onClick={onSignIn}
                     disabled={userDisabled}

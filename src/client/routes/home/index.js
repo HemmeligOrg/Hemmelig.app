@@ -476,16 +476,7 @@ const Home = () => {
                 <Group position="right" grow={isMobile}>
                     {!secretId && (
                         <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: 'var(--color-contrast)',
-
-                                    '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
+                            color="hemmelig"
                             leftIcon={<IconSquarePlus size={14} />}
                             onClick={onSubmit}
                             loading={creatingSecret}
@@ -496,16 +487,7 @@ const Home = () => {
 
                     {secretId && (
                         <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: 'var(--color-contrast)',
-
-                                    '&:hover': {
-                                        backgroundColor: 'var(--color-contrast)',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
+                            color="hemmelig"
                             leftIcon={<IconSquarePlus size={14} />}
                             onClick={onNewSecret}
                         >

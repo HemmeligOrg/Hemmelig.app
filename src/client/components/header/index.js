@@ -47,16 +47,7 @@ const Header = () => {
                     <Grid.Col span={6}>
                         <Group position="right">
                             <Button
-                                styles={() => ({
-                                    root: {
-                                        backgroundColor: 'var(--color-contrast)',
-
-                                        '&:hover': {
-                                            backgroundColor: 'var(--color-contrast)',
-                                            filter: 'brightness(115%)',
-                                        },
-                                    },
-                                })}
+                                color="hemmelig"
                                 leftIcon={<IconLockOff size={14} />}
                                 onClick={onSignOut}
                             >
@@ -72,16 +63,7 @@ const Header = () => {
                             <Group position="right">
                                 <Button
                                     variant="subtle"
-                                    styles={() => ({
-                                        root: {
-                                            color: 'var(--color-contrast)',
-
-                                            '&:hover': {
-                                                color: 'var(--color-contrast)',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig"
                                     component={Link}
                                     to="/signin"
                                 >
@@ -93,16 +75,7 @@ const Header = () => {
                         <Grid.Col span={3}>
                             <Group position="right">
                                 <Button
-                                    styles={() => ({
-                                        root: {
-                                            backgroundColor: 'var(--color-contrast)',
-
-                                            '&:hover': {
-                                                backgroundColor: 'var(--color-contrast)',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig"
                                     leftIcon={<IconLogin size={14} />}
                                     component={Link}
                                     to="/signup"
