@@ -190,16 +190,7 @@ const Secret = () => {
                 <Group position="right">
                     {isSecretOpen && (
                         <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: '#FF9769',
-
-                                    '&:hover': {
-                                        backgroundColor: '#FF9769',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
+                            color="hemmelig-orange"
                             leftIcon={<IconPerspective size={14} />}
                             onClick={convertBase64ToPlain}
                         >
@@ -224,16 +215,7 @@ const Secret = () => {
                         files.map((file) => (
                             <Button
                                 key={file.key}
-                                styles={() => ({
-                                    root: {
-                                        backgroundColor: '#FF9769',
-
-                                        '&:hover': {
-                                            backgroundColor: '#FF9769',
-                                            filter: 'brightness(115%)',
-                                        },
-                                    },
-                                })}
+                                color="hemmelig-orange"
                                 onClick={() => onFileDownload(file)}
                                 disabled={isDownloaded.some((key) => key === file.key)}
                                 leftIcon={<IconDownload size={14} />}

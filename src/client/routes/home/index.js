@@ -384,16 +384,7 @@ const Home = () => {
                                 <Button
                                     {...props}
                                     label={!isLoggedIn ? t('home.login_to_upload') : ''}
-                                    styles={() => ({
-                                        root: {
-                                            backgroundColor: '#FF9769',
-
-                                            '&:hover': {
-                                                backgroundColor: '#FF9769',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig-orange"
                                 >
                                     {t('home.upload_files')}
                                 </Button>
