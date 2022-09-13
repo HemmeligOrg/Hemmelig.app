@@ -137,8 +137,13 @@ const Secret = () => {
     };
 
     const convertBase64ToPlain = () => {
-        setSecret(atob(secret));
-        setHasConvertedBase64ToPlain(true);
+        if (!hasConvertedBase64ToPlain) {
+            setSecret(btoa(secret));
+        } else {
+            setSecret(atob(secret));
+        }
+
+        setHasConvertedBase64ToPlain(!hasConvertedBase64ToPlain);
     };
 
     return (
@@ -196,6 +201,27 @@ const Secret = () => {
                         <Button
                             styles={() => ({
                                 root: {
+                                    backgroundColor: '#FF9769',
+
+                                    '&:hover': {
+                                        backgroundColor: '#FF9769',
+                                        filter: 'brightness(115%)',
+                                    },
+                                },
+                            })}
+                            leftIcon={<IconPerspective size={14} />}
+                            onClick={convertBase64ToPlain}
+                        >
+                            {!hasConvertedBase64ToPlain
+                                ? t('secret.convert_b64')
+                                : t('secret.convert_utf8')}
+                        </Button>
+                    )}
+
+                    {isSecretOpen && (
+                        <Button
+                            styles={() => ({
+                                root: {
                                     backgroundColor: 'var(--color-contrast)',
 
                                     '&:hover': {
@@ -212,56 +238,28 @@ const Secret = () => {
                         </Button>
                     )}
 
-                    {isSecretOpen && (
-                        <Button
-                            styles={() => ({
-                                root: {
-                                    backgroundColor: '#FF9769',
-
-                                    '&:hover': {
+                    {files?.length &&
+                        files.map((file) => (
+                            <Button
+                                key={file.key}
+                                styles={() => ({
+                                    root: {
                                         backgroundColor: '#FF9769',
-                                        filter: 'brightness(115%)',
-                                    },
-                                },
-                            })}
-                            leftIcon={<IconPerspective size={14} />}
-                            onClick={convertBase64ToPlain}
-                            disabled={hasConvertedBase64ToPlain}
-                        >
-                            {t('secret.convert_b64')}
-                        </Button>
-                    )}
-                </Group>
 
-                {files && (
-                    <>
-                        <Divider my="sm" variant="dashed" />
-                        <Stack align="flex-end">
-                            <Title order={4}>{t('secret.download_files')}</Title>
-                            {files.map((file) => (
-                                <Button
-                                    key={file.key}
-                                    styles={() => ({
-                                        root: {
+                                        '&:hover': {
                                             backgroundColor: '#FF9769',
-
-                                            '&:hover': {
-                                                backgroundColor: '#FF9769',
-                                                filter: 'brightness(115%)',
-                                            },
+                                            filter: 'brightness(115%)',
                                         },
-                                    })}
-                                    compact
-                                    onClick={() => onFileDownload(file)}
-                                    disabled={isDownloaded.some((key) => key === file.key)}
-                                    leftIcon={<IconDownload size={14} />}
-                                >
-                                    {file.key + file.ext}
-                                </Button>
-                            ))}
-                        </Stack>
-                    </>
-                )}
+                                    },
+                                })}
+                                onClick={() => onFileDownload(file)}
+                                disabled={isDownloaded.some((key) => key === file.key)}
+                                leftIcon={<IconDownload size={14} />}
+                            >
+                                {file.key + file.ext}
+                            </Button>
+                        ))}
+                </Group>
             </Stack>
 
             {error && <Error>{error}</Error>}

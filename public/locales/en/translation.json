@@ -47,7 +47,7 @@
         "password_required": "A password is required to open this secret",
         "view_secret": "View the secret",
         "create_secret": "Create a new secret",
-        "download_files": "Download files",
-        "convert_b64": "Convert base64 to plain text"
+        "convert_b64": "Convert text to base64",
+        "convert_utf8": "Convert base64 to plain text"
     }
 }
