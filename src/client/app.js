@@ -129,7 +129,7 @@ const App = () => {
                                     </Anchor>
                                     |
                                     <Anchor
-                                        href="https://www.github.com/HemmeligOrg/hemmelig"
+                                        href="https://github.com/HemmeligOrg/Hemmelig.app"
                                         color="dimmed"
                                         size="xs"
                                         transform="uppercase"
