@@ -2,17 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-import {
-    Button,
-    Divider,
-    Group,
-    Container,
-    Textarea,
-    TextInput,
-    Stack,
-    Title,
-    Text,
-} from '@mantine/core';
+import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';
 import {
     IconSquarePlus,
     IconDownload,
