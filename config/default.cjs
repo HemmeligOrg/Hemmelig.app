@@ -9,7 +9,8 @@ const {
     SECRET_REDIS_PASSWORD = null,
     SECRET_REDIS_TLS = 'false',
     SECRET_JWT_SECRET = 'good_luck_have_fun',
-    SECRET_ENABLE_FILE_UPLOAD = 'true',
+    SECRET_ENABLE_FILE_UPLOAD = 'false',
+    SECRET_DISABLE_USERS = 'false',
     SECRET_FILE_SIZE = 4, // 4 mb
     SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
     SECRET_DO_SPACES_KEY = '',
@@ -17,7 +18,6 @@ const {
     SECRET_DO_SPACES_BUCKET = 'hemmelig',
     SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
-    SECRET_USER_DISABLE = 'false',
     NODE_ENV = 'development',
 } = process.env;
 
@@ -70,7 +70,7 @@ const config = {
         },
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
-            disableUsers: JSON.parse(SECRET_USER_DISABLE),
+            disableUsers: JSON.parse(SECRET_DISABLE_USERS),
         },
     },
 };
