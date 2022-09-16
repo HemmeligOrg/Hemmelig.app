@@ -1,3 +1,6 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=HemmeligOrg_Hemmelig.app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=HemmeligOrg_Hemmelig.app)
+[![Better Uptime Badge](https://betteruptime.com/status-badges/v1/monitor/he71.svg)](https://betteruptime.com/?utm_source=status_badge)
+
 <div align="center">
   <img src="banner.png" alt="hemmelig" />
 </div>
@@ -21,24 +24,25 @@ When a secret link is created, it gets its unique encryption key that is not sav
 
 ## Features
 
--   Client side encryption
--   Encrypted sensitive information sharing
--   Encrypted file upload for signed in users
--   Secret lifetime
--   Set max views per secret
--   Optional encryptet title
--   Optional password protection
--   Optional IP address restriction
--   Encrypted key is part of the URL, and not saved to the database for an extra layer of security
--   It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
--   Self-hosted version. Keywords: Regulatory compliance
+- Client side encryption
+- Encrypted sensitive information sharing
+- Encrypted file upload for signed in users
+- Secret lifetime
+- Set max views per secret
+- Optional encryptet title
+- Optional password protection
+- Optional IP address restriction
+- Encrypted key is part of the URL, and not saved to the database for an extra layer of security
+- It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
+- Self-hosted version. Keywords: Regulatory compliance
 
 ## Docker image
 
--   hemmeligapp/hemmelig:bleeding-edge (pushed on every commit to main)
--   hemmeligapp/hemmelig:weekly (pushed every week on Friday)
--   hemmeligapp/hemmelig:v3.4.0 (see the github tags)
--   hemmeligapp/hemmelig:latest (pushed on releases)
+- hemmeligapp/hemmelig:bleeding-edge (pushed on every commit to main)
+- hemmeligapp/hemmelig:weekly (pushed every week on Friday)
+- hemmeligapp/hemmelig:daily
+- hemmeligapp/hemmelig:v3.4.0 (see the github tags)
+- hemmeligapp/hemmelig:latest (pushed on releases)
 
 ## Self-hosting
 
@@ -61,24 +65,27 @@ Have a look at the Dockerfile for a full example of how to run this application.
 
 ## Environment variables
 
--   `SECRET_LOCAL_HOSTNAME` Default: 0.0.0.0. - The local hostname for the fastify instance
--   `SECRET_PORT` Default: 3000. - The port number for the fastify instance
--   `SECRET_HOST` Default: "". - Used for i.e. set cors to your domain name
--   `SECRET_REDIS_HOST` Default: 0.0.0.0 - Override this for your redis host adress
--   `SECRET_REDIS_PORT` Default: 6379 - The redis port number
--   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls
--   `SECRET_REDIS_USER` Default: "" - You redis user name
--   `SECRET_REDIS_PASSWORD` Default: "" - Your redis password
--   `SECRET_MAX_TEXT_SIZE` Default: "256" - The max text size for the secret. Is set in kb. i.e. 256 for 256kb.
--   `SECRET_JWT_SECRET` Default: good_luck_have_fun - Override this for the secret signin JWT tokens for log in
--   `SECRET_FILE_SIZE` Default: 4 - Set the total allowed upload file size in mb.
--   `SECRET_ENABLE_FILE_UPLOAD` Default: true - Enable or disable file upload
--   `SECRET_DO_SPACES_ENDPOINT` Default: "" - The Spaces/s3 endpoint
--   `SECRET_DO_SPACES_KEY` Default: "" - The Spaces/s3 key
--   `SECRET_DO_SPACES_SECRET` Default: "" - The Spaces/s3 secret
--   `SECRET_DO_SPACES_BUCKET` Default: "" - The Spaces/s3 bucket name
--   `SECRET_DO_SPACES_FOLDER` Default: "" - The Spaces/s3 folder for uploading
--   `SECRET_USER_DISABLE` Default: false - Disable user registration
+| ENV vars                      | Description                                                           | Default            |
+| ------------------------------|:---------------------------------------------------------------------:| ------------------:|
+| `SECRET_LOCAL_HOSTNAME`       | The local hostname for the fastify instance                           | 0.0.0.0            |
+| `SECRET_PORT`                 | The port number for the fastify instance                              | 3000               |
+| `SECRET_HOST`                 | Used for i.e. set cors to your domain name                            | ""                 |
+| `SECRET_REDIS_HOST`           | Override this for your redis host address                             | ""                 |
+| `SECRET_REDIS_PORT`           | The redis port number                                                 | 6379               |
+| `SECRET_REDIS_TLS`            | If the redis instance is using tls                                    | false              |
+| `SECRET_REDIS_USER`           | Your redis user name                                                  | ""                 |
+| `SECRET_REDIS_PASSWORD`       | Your redis password                                                   | ""                 |
+| `SECRET_MAX_TEXT_SIZE`        | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                |
+| `SECRET_JWT_SECRET`           | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun |
+| `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                  |
+| `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true               |
+| `SECRET_USER_DISABLE`         | Disable user registration                                             | false              |
+| `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                 |
+| `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                 |
+| `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                 |
+| `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                 |
+| `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                 |
+
 
 ## Run locally
 
@@ -86,12 +93,9 @@ Have a look at the Dockerfile for a full example of how to run this application.
 $ npm install
 
 # Start the frontend
-$ npm run client-dev
-# http://0.0.0.0:8080
-
-# Start the backend
-$ npm run server-dev
+$ npm run dev
 # http://0.0.0.0:3000
+
 ```
 
 ## Contribution

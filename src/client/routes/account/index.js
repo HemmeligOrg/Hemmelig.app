@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     TextInput,
@@ -226,16 +225,7 @@ const Account = () => {
                                 <Button
                                     leftIcon={<IconEdit size={14} />}
                                     onClick={onProfileUpdate}
-                                    styles={() => ({
-                                        root: {
-                                            backgroundColor: 'var(--color-contrast)',
-
-                                            '&:hover': {
-                                                backgroundColor: 'var(--color-contrast)',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig"
                                 >
                                     Update details
                                 </Button>

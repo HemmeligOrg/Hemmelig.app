@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
 import { IconLockOff, IconLogin } from '@tabler/icons';
@@ -47,16 +46,7 @@ const Header = () => {
                     <Grid.Col span={8}>
                         <Group position="right">
                             <Button
-                                styles={() => ({
-                                    root: {
-                                        backgroundColor: 'var(--color-contrast)',
-
-                                        '&:hover': {
-                                            backgroundColor: 'var(--color-contrast)',
-                                            filter: 'brightness(115%)',
-                                        },
-                                    },
-                                })}
+                                color="hemmelig"
                                 leftIcon={<IconLockOff size={14} />}
                                 onClick={onSignOut}
                             >
@@ -72,16 +62,7 @@ const Header = () => {
                             <Group position="right">
                                 <Button
                                     variant="subtle"
-                                    styles={() => ({
-                                        root: {
-                                            color: 'var(--color-contrast)',
-
-                                            '&:hover': {
-                                                color: 'var(--color-contrast)',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig"
                                     component={Link}
                                     to="/signin"
                                 >
@@ -93,16 +74,7 @@ const Header = () => {
                         <Grid.Col span={4}>
                             <Group position="right">
                                 <Button
-                                    styles={() => ({
-                                        root: {
-                                            backgroundColor: 'var(--color-contrast)',
-
-                                            '&:hover': {
-                                                backgroundColor: 'var(--color-contrast)',
-                                                filter: 'brightness(115%)',
-                                            },
-                                        },
-                                    })}
+                                    color="hemmelig"
                                     leftIcon={<IconLogin size={14} />}
                                     component={Link}
                                     to="/signup"

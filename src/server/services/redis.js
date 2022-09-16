@@ -58,10 +58,10 @@ export async function createSecret(data, ttl) {
     createStatistics('secrets_created');
 
     if (isValidTTL(Number(ttl)) && Number(ttl) === 0) {
-        return await client.multi().hmset(prepare).exec();
+        return client.multi().hmset(prepare).exec();
     }
 
-    return await client
+    return client
         .multi()
         .hmset(prepare)
         .expire(key, isValidTTL(Number(ttl)) ? ttl : DEFAULT_EXPIRE)
@@ -69,9 +69,7 @@ export async function createSecret(data, ttl) {
 }
 
 export async function getSecret(id) {
-    const data = await client.hgetall(`secret:${id}`);
-
-    return data;
+    return client.hgetall(`secret:${id}`);
 }
 
 export async function getSecretKey(id, key) {
@@ -101,19 +99,15 @@ export async function deleteSecret(id) {
 }
 
 export async function keyExists(key) {
-    return await client.exists(key);
+    return client.exists(key);
 }
 
 export async function isAlive() {
-    if ((await client.ping()) === 'PONG') {
-        return true;
-    }
-
-    return false;
+    return (await client.ping()) === 'PONG';
 }
 
 export async function createUser(username, email, password) {
-    return await client.hmset(
+    return client.hmset(
         `user:${username}`,
         'username',
         username,
@@ -127,15 +121,15 @@ export async function createUser(username, email, password) {
 export async function updateUser(username, data = {}) {
     const update = Object.entries(data).flat();
 
-    return await client.hmset(`user:${username}`, ...update);
+    return client.hmset(`user:${username}`, ...update);
 }
 
 export async function getUser(username) {
-    return await client.hgetall(`user:${username}`);
+    return client.hgetall(`user:${username}`);
 }
 
 export async function deleteUser(username) {
-    return await client.del(`user:${username}`);
+    return client.del(`user:${username}`);
 }
 
 export async function createRateLimit(ip) {
@@ -157,11 +151,7 @@ export async function createRateLimit(ip) {
             });
     });
 
-    if (increments > DEFAULT_RATE_LIMIT_QTY) {
-        return true;
-    }
-
-    return false;
+    return increments > DEFAULT_RATE_LIMIT_QTY;
 }
 
 export async function createStatistics(type = '') {
@@ -174,10 +164,10 @@ export async function createStatistics(type = '') {
     const hasDate = await client.hget(current, dayjs().format('YYYY-MM-DD'));
 
     if (!hasDate) {
-        return await client.hmset(current, dayjs().format('YYYY-MM-DD'), 1);
+        return client.hmset(current, dayjs().format('YYYY-MM-DD'), 1);
     }
 
-    return await client.hincrby(current, dayjs().format('YYYY-MM-DD'), 1);
+    return client.hincrby(current, dayjs().format('YYYY-MM-DD'), 1);
 }
 
 export async function getStatistics(type = '') {
@@ -187,5 +177,5 @@ export async function getStatistics(type = '') {
 
     const current = `statistics:${type}`;
 
-    return await client.hgetall(current);
+    return client.hgetall(current);
 }

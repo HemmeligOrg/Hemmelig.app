@@ -21,7 +21,7 @@ async function getSecretId() {
     }
 
     if (retries === 0) {
-        throw 'Too many attempts. Please try again.';
+        throw new Error('Too many attempts. Please try again.');
     }
 
     return secretId;

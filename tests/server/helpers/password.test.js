@@ -1,6 +1,6 @@
-const assert = require('assert');
+import assert from 'assert';
 
-const { hash, compare } = require('../../../src/server/helpers/password');
+import { hash, compare } from '../../../src/server/helpers/password.js';
 
 const PASSWORD = 'suP3rL0ng!PssWrd';
 

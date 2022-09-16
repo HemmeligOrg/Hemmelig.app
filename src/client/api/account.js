@@ -16,7 +16,7 @@ export const getUser = async (token) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };
 
 export const deleteUser = async (token) => {
@@ -38,7 +38,7 @@ export const deleteUser = async (token) => {
         };
     }
 
-    return await data.json();
+    return data.json();
 };
 
 export const updateUser = async (data, token) => {
@@ -58,5 +58,5 @@ export const updateUser = async (data, token) => {
         };
     }
 
-    return await response.json();
+    return response.json();
 };

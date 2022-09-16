@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from '@mantine/core';
 import { IconLock, IconUser, IconLogin, IconAt } from '@tabler/icons';
@@ -96,16 +95,7 @@ const Secret = () => {
                 />
 
                 <Button
-                    styles={() => ({
-                        root: {
-                            backgroundColor: 'var(--color-contrast)',
-
-                            '&:hover': {
-                                backgroundColor: 'var(--color-contrast)',
-                                filter: 'brightness(115%)',
-                            },
-                        },
-                    })}
+                    color="hemmelig"
                     leftIcon={<IconLogin size={14} />}
                     onClick={onSignUp}
                     disabled={userDisabled}
