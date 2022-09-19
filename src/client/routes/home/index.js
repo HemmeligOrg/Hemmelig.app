@@ -225,7 +225,7 @@ const Home = () => {
 
     const handleFocus = (event) => event.target.select();
 
-    const getSecretURL = () => `${window.location.href}secret/${encryptionKey}/${secretId}`;
+    const getSecretURL = () => `${window.location.origin}/secret/${encryptionKey}/${secretId}`;
 
     const inputReadOnly = !!secretId;
 
