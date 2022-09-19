@@ -36,14 +36,14 @@ const Header = () => {
     return (
         <Container>
             <Grid columns={24} align="center">
-                <Grid.Col span={18}>
+                <Grid.Col span={16}>
                     <Anchor component={Link} to="/">
                         <Logo className={style.logo} />
                     </Anchor>
                 </Grid.Col>
 
                 {isLoggedIn && !config.get('settings.disableUsers') && (
-                    <Grid.Col span={6}>
+                    <Grid.Col span={8}>
                         <Group position="right">
                             <Button
                                 color="hemmelig"
@@ -58,7 +58,7 @@ const Header = () => {
 
                 {!isLoggedIn && !config.get('settings.disableUsers') && (
                     <>
-                        <Grid.Col span={3}>
+                        <Grid.Col span={4}>
                             <Group position="right">
                                 <Button
                                     variant="subtle"
@@ -71,7 +71,7 @@ const Header = () => {
                             </Group>
                         </Grid.Col>
 
-                        <Grid.Col span={3}>
+                        <Grid.Col span={4}>
                             <Group position="right">
                                 <Button
                                     color="hemmelig"

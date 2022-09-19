@@ -1,0 +1,41 @@
+{
+    "sign_in": "Anmelden",
+    "sign_out": "Abmelden",
+    "sign_up": "Registrieren",
+    "account": "Konto",
+    "settings": "Einstellungen",
+    "copied": "Kopiert!",
+    "copy": "Kopieren",
+    "home": {
+        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",
+        "welcome": "Halte deine privaten Informationen fern von Chats E-Mails mithilfe von stark verschlüsselten Geheimnissen.",
+        "maintxtarea": "Notiere hier deine geheimen Informationen...",
+        "title": "Titel",
+        "lifetime": "Lebensdauer",
+        "max_views": "Maximale Ansichten",
+        "enable_password": "Passwort nutzen",
+        "optional_password": "Dein optionales Passwort",
+        "burn_aftertime": "Vernichte das Geheimnis erst nach Ablauf der Lebensdauer",
+        "restrict_from_ip": "Schränke den Zugriff auf dein Geheimnis per IP oder CIDR-Bereich ein. Beispiel für CIDR: 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Zugriff mit IP oder CIDR eingrenzen",
+        "login_to_upload": "Anmelden, um Dateien hochzuladen",
+        "upload_files": "Dateien hochladen",
+        "your_secret_url": "Deine geheime URL",
+        "share": "Teilen",
+        "create_secret_link": "Erstelle einen geheimen Link",
+        "create_new": "Weiteres erstellen",
+        "delete": "Löschen",
+        "link_only_works_once": "Der geheime Link funktioniert nur einmal und wird dann vernichtet.",
+        "app_name_meaning": "[he`m:(ə)li], heißt 'Geheimnis' in Norwegisch.",
+        "please_add_secret": "Bitte notiere hier ein Geheimnnis."
+    },
+    "secret": {
+        "view_your_secret": "Dein Geheimnis anzeigen",
+        "will_show_once": "Dein Geheimnis wird nur einmal anzusehen sein.",
+        "password_required": "Du brauchst ein Passwort, um dieses Geheimnis anzuzeigen",
+        "view_secret": "Geheimnis anzeigen",
+        "create_secret": "Neues Geheimnis erstellen",
+        "download_files": "Dateien runterladen",
+        "convert_b64": "Base64 in lesbaren Text umwandeln"
+    }
+}

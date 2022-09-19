@@ -11,6 +11,7 @@ const {
     SECRET_JWT_SECRET = 'good_luck_have_fun',
     SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_FILE_SIZE = 4, // 4 mb
+    SECRET_FORCED_LANGUAGE = 'en',
     SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
     SECRET_DO_SPACES_KEY = '',
     SECRET_DO_SPACES_SECRET = '',
@@ -27,6 +28,7 @@ const config = {
     host: SECRET_HOST,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
+
     // choose digital ocean/s3 or disk
     file: {
         size: SECRET_FILE_SIZE,
@@ -71,6 +73,7 @@ const config = {
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
             disableUsers: JSON.parse(SECRET_USER_DISABLE),
+            forcedLanguage: SECRET_FORCED_LANGUAGE,
         },
     },
 };
