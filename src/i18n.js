@@ -4,8 +4,9 @@ import HttpApi from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
 import config from './client/config';
-var forcedLanguage = config.get('settings.forcedLanguage');
-var detectionMethod = [];
+
+let forcedLanguage = config.get('settings.forcedLanguage');
+let detectionMethod = [];
 
 forcedLanguage ? (detectionMethod = ['path']) : (detectionMethod = ['path', 'navigator']);
 if (!forcedLanguage) {
