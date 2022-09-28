@@ -7,10 +7,10 @@
     "copied": "Kopiert!",
     "copy": "Kopieren",
     "home": {
-        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",
         "welcome": "Halte deine privaten Informationen fern von Chats E-Mails mithilfe von stark verschlüsselten Geheimnissen.",
-        "maintxtarea": "Notiere hier deine geheimen Informationen...",
         "title": "Titel",
+        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",
+        "maintxtarea": "Notiere hier deine geheimen Informationen...",
         "lifetime": "Lebensdauer",
         "max_views": "Maximale Ansichten",
         "enable_password": "Passwort nutzen",
@@ -27,7 +27,19 @@
         "delete": "Löschen",
         "link_only_works_once": "Der geheime Link funktioniert nur einmal und wird dann vernichtet.",
         "app_name_meaning": "[he`m:(ə)li], heißt 'Geheimnis' in Norwegisch.",
-        "please_add_secret": "Bitte notiere hier ein Geheimnnis."
+        "please_add_secret": "Bitte notiere hier ein Geheimnnis.",
+        "14_days": "14 Tage",
+        "28_days": "28 Tage",
+        "7_days": "7 Tage",
+        "3_days": "3 Tage",
+        "1_day": "1 Tag",
+        "12_hours": "12 Stunden",
+        "4_hours": "4 Stunden",
+        "1_hour": "1 Stunde",
+        "30_minutes": "30 Minuten",
+        "5_minutes": "5 Minuten",
+        "successful_share": "Erfolgreich geteilt!",
+        "get_your_secret": "Erhalte dein Geheimnis auf hemmelig.app."
     },
     "secret": {
         "view_your_secret": "Dein Geheimnis anzeigen",
