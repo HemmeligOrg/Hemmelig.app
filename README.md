@@ -80,12 +80,16 @@ Have a look at the Dockerfile for a full example of how to run this application.
 | `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                  |
 | `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true               |
 | `SECRET_USER_DISABLE`         | Disable user registration                                             | false              |
+| `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                 |
 | `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                 |
 | `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                 |
 | `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                 |
 | `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                 |
 | `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                 |
 
+## Supported languages
+
+Have a look at the `public/locales/` folder.
 
 ## Run locally
 

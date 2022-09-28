@@ -3,7 +3,8 @@ export default {
         host: '/api',
     },
     settings: {
-        enableFileUpload: false,
-        disableUsers: true,
+        enableFileUpload: true,
+        disableUsers: false,
+        forcedLanguage: '',
     },
 };
