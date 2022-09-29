@@ -303,7 +303,7 @@ const Home = () => {
                     <NumberInput
                         onChange={onMaxViewsChange}
                         defaultValue={1}
-                        min={0}
+                        min={1}
                         max={999}
                         placeholder="1"
                         label={t('home.max_views')}
