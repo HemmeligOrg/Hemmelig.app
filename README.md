@@ -102,6 +102,9 @@ $ npm run dev
 
 ```
 
+## Discord
+[Discord](https://discord.gg/NUkvtKdjs7)
+
 ## Contribution
 
 Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for guidelines.
