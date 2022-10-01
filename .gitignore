@@ -109,3 +109,4 @@ hemmelig.yaml
 size-plugin.json
 
 .env.local
+hemmelig.db*

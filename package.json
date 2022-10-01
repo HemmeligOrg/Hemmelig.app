@@ -18,7 +18,7 @@
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-unknown src/"
   },
-  "proxy": "http://localhost:3000",
+  "proxy": "http://0.0.0.0:3000",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HemmeligOrg/Hemmelig.app.git"
@@ -30,6 +30,7 @@
   },
   "homepage": "/",
   "dependencies": {
+    "@emotion/cache": "^11.10.3",
     "@fastify/cors": "^8.1.0",
     "@fastify/helmet": "^9.1.0",
     "@fastify/multipart": "^7.1.1",
@@ -38,6 +39,7 @@
     "@mantine/form": "^5.2.0",
     "@mantine/hooks": "^5.1.7",
     "@mantine/modals": "^5.2.0",
+    "@prisma/client": "4.3.1",
     "@tabler/icons": "^1.83.1",
     "async-redis": "^2.0.0",
     "aws-sdk": "^2.935.0",
@@ -62,6 +64,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.10.4",
     "classcat": "^5.0.3",
     "concurrently": "^7.4.0",
     "deepmerge": "^4.2.2",
@@ -69,13 +72,14 @@
     "generate-password": "^1.6.1",
     "husky": "^6.0.0",
     "i18next": "^21.9.1",
-    "i18next-http-backend": "^1.4.1",
     "i18next-browser-languagedetector": "^6.1.5",
+    "i18next-http-backend": "^1.4.1",
     "jszip": "^3.10.1",
     "lint-staged": "^11.0.0",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.1",
+    "prisma": "^4.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.18.5",

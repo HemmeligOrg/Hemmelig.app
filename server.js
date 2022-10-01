@@ -19,7 +19,22 @@ import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
+async function dbCleaner() {
+    const records = await prisma.secret.deleteMany({
+        where: {
+            expiresAt: {
+                lte: new Date(),
+            },
+        },
+    });
+    console.log(records);
+}
+
+setInterval(dbCleaner, 30000);
+dbCleaner();
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
 
 const fastify = importFastify({

@@ -2,6 +2,8 @@ import sanitize from 'sanitize-filename';
 import fileAdapter from '../services/file-adapter.js';
 import * as redis from '../services/redis.js';
 import { validIdRegExp } from '../decorators/key-generation.js';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {
@@ -15,10 +17,10 @@ async function downloadFiles(fastify) {
 
         const file = await fileAdapter.download(fileKey);
 
-        const secret = await redis.getSecret(secretId);
+        const secret = await prisma.secret.findFirst({ where: { id: secretId } });
 
         if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
-            await client.del(`secret:${secretId}`);
+            await prisma.secret.delete({ where: { id: secretId } });
 
             if (secret?.file) {
                 const { key } = JSON.parse(secret?.file);

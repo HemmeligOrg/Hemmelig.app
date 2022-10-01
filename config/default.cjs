@@ -20,6 +20,7 @@ const {
     SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
     NODE_ENV = 'development',
+    SECRET_USER_DISABLE = false,
 } = process.env;
 
 const config = {
@@ -62,7 +63,7 @@ const config = {
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
     user: {
-        disabled: JSON.parse(SECRET_USER_DISABLE),
+        disabled: SECRET_USER_DISABLE,
     },
     logger: true,
     cors: '*',
