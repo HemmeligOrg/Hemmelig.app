@@ -9,13 +9,21 @@
 
 <div align="center">
   This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
+  <br /><br />
+
+  <a href="https://github.com/HemmeligOrg/Hemmelig.app/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=HemmeligOrg/Hemmelig.app" />
+  </a>
 </div>
+
+
 
 ## SaaS
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
 ![Desktop](desktop.png)
+
 
 ## How it works
 
@@ -35,6 +43,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Encrypted key is part of the URL, and not saved to the database for an extra layer of security
 - It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
 - Self-hosted version. Keywords: Regulatory compliance
+
 
 ## Docker image
 
