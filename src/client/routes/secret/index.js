@@ -27,6 +27,7 @@ const Secret = () => {
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
     const [preventBurn, setPreventBurn] = useState(false);
+    const [maxViews, setMaxViews] = useState(0);
     const [isSecretOpen, setIsSecretOpen] = useState(false);
     const [password, setPassword] = useState('');
     const [isPasswordRequired, setIsPasswordRequired] = useState(false);
@@ -101,6 +102,8 @@ const Secret = () => {
 
             if (response.error) {
                 setError(response.error);
+            } else {
+                setMaxViews(response.maxViews);
             }
         })();
         // eslint-disable-next-line
@@ -141,6 +144,12 @@ const Secret = () => {
                 <Title order={1}>{t('secret.view_your_secret')}</Title>
 
                 <Text>{t('secret.will_show_once')}</Text>
+
+                {maxViews > 1 && (
+                    <Text>
+                        {t('secret.views_left')} <strong>{maxViews}</strong>
+                    </Text>
+                )}
 
                 {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 

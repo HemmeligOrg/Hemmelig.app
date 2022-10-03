@@ -62,7 +62,7 @@ const config = {
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
     user: {
-        disabled: JSON.parse(SECRET_USER_DISABLE),
+        disabled: JSON.parse(SECRET_DISABLE_USERS),
     },
     logger: true,
     cors: '*',
