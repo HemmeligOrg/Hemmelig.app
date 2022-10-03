@@ -1,6 +1,6 @@
 import validator from 'validator';
 import emailValidator from 'email-validator';
-import { hash } from '../helpers/password.js';
+import { hash, compare } from '../helpers/password.js';
 import * as redis from '../services/redis.js';
 
 const PASSWORD_LENGTH = 5;
@@ -29,9 +29,21 @@ async function account(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request, reply) => {
-            const { password = '', email = '' } = request.body;
+            const { currentPassword = '', password = '', email = '' } = request.body;
 
             const data = {};
+
+            const user = await redis.getUser(validator.escape(request.user.username));
+
+            if (
+                !currentPassword ||
+                !user ||
+                !(await compare(validator.escape(currentPassword), user.password))
+            ) {
+                return reply
+                    .code(401)
+                    .send({ type: 'currentPassword', error: 'Incorrect password' });
+            }
 
             if (password) {
                 if (password.length < PASSWORD_LENGTH) {
@@ -62,12 +74,12 @@ async function account(fastify) {
                 });
             }
 
-            const user = await redis.updateUser(validator.escape(request.user.username), data);
+            const userData = await redis.updateUser(validator.escape(request.user.username), data);
 
             return {
                 user: {
-                    username: user.username,
-                    email: user.email,
+                    username: userData.username,
+                    email: userData.email,
                     action: 'updated',
                 },
             };
