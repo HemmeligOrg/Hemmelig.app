@@ -43,7 +43,8 @@
     },
     "secret": {
         "view_your_secret": "View your secret",
-        "will_show_once": "We will only show the secret once.",
+        "will_show_once": "By default we will only show the secret once.",
+        "views_left": "Views left:",
         "password_required": "A password is required to open this secret",
         "view_secret": "View the secret",
         "create_secret": "Create a new secret",

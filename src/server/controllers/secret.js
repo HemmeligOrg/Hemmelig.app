@@ -173,7 +173,7 @@ async function secret(fastify) {
             return reply.code(401).send({ error: 'Password required' });
         }
 
-        return { id };
+        return { id, maxViews: data.maxViews };
     });
 }
 
