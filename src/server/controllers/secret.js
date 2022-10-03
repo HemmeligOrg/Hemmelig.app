@@ -127,7 +127,7 @@ async function secret(fastify) {
                 Object.assign(data, { files });
             }
 
-            if (preventBurn === 'true') {
+            if (preventBurn) {
                 Object.assign(data, { preventBurn: true });
             }
 
