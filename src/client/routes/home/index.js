@@ -123,7 +123,6 @@ const Home = () => {
         setCreatingSecret(true);
 
         // event.preventDefault();
-        console.log('bodu', form);
 
         const body = {
             text: encrypt(form.values.text, userEncryptionKey),
