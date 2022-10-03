@@ -37,6 +37,7 @@ const Account = () => {
 
     const form = useForm({
         initialValues: {
+            currentPassword: '',
             password: '',
             email: '',
         },
@@ -118,13 +119,13 @@ const Account = () => {
 
             const response = await updateUser(values, token);
 
+            setLoading(false);
+
             if (response.statusCode === 401 || response.statusCode === 500) {
-                setError('Could not update your user profile');
+                setError(response.error ? response.error : 'Could not update your user profile');
 
                 return;
             }
-
-            setLoading(false);
 
             const { user, error, type } = response;
 
@@ -212,6 +213,13 @@ const Account = () => {
                                 icon={<IconAt size={14} />}
                                 placeholder="Email"
                                 {...form.getInputProps('email')}
+                            />
+
+                            <PasswordInput
+                                label="Current password"
+                                icon={<IconLock size={14} />}
+                                placeholder="Your current password"
+                                {...form.getInputProps('currentPassword')}
                             />
 
                             <PasswordInput

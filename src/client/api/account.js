@@ -52,11 +52,13 @@ export const updateUser = async (data, token) => {
         body: JSON.stringify(data),
     });
 
-    if (response.status === 401) {
+    const json = await response.json();
+
+    if (response.status === 401 && !json.type) {
         return {
-            statusCode: 401,
+            statusCode: response.status,
         };
     }
 
-    return response.json();
+    return json;
 };
