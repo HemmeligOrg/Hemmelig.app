@@ -29,7 +29,12 @@ async function account(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request, reply) => {
-            const { currentPassword = '', password = '', email = '' } = request.body;
+            const {
+                currentPassword = '',
+                password = '',
+                email = '',
+                confirmNewPassword = '',
+            } = request.body;
 
             const data = {};
 
@@ -71,6 +76,13 @@ async function account(fastify) {
                 return reply.code(412).send({
                     type: 'no-data',
                     error: `Could not update your profile. Please set the fields you want to update.`,
+                });
+            }
+
+            if (password !== confirmNewPassword) {
+                return reply.code(400).send({
+                    type: 'confirmNewPassword',
+                    error: `The password and confirmation password do not match.`,
                 });
             }
 
