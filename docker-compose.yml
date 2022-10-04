@@ -1,0 +1,34 @@
+services:
+  hemmelig:
+    image: hemmeligapp/hemmelig:latest
+    hostname: hemmelig
+    init: true
+    volumes:
+      - ./data/hemmelig/:/var/tmp/hemmelig/upload/files
+    environment:
+      - SECRET_REDIS_HOST=hemmelig-redis
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    restart: always
+    stop_grace_period: 1m
+    healthcheck:
+      test: "wget -O /dev/null localhost:3000 || exit 1"
+      timeout: 5s
+      retries: 1
+
+  redis:
+    image: redis
+    hostname: hemmelig-redis
+    init: true
+    # Enable to make redis data persistent
+    # volumes:
+    #   - ./data/redis/:/data
+    # command: redis-server --appendonly yes
+    restart: always
+    stop_grace_period: 1m
+    healthcheck:
+      test: "redis-cli ping | grep PONG || exit 1"
+      timeout: 5s
+      retries: 1
