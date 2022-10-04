@@ -40,6 +40,7 @@ const Account = () => {
             currentPassword: '',
             password: '',
             email: '',
+            confirmNewPassword: '',
         },
     });
 
@@ -227,6 +228,13 @@ const Account = () => {
                                 icon={<IconLock size={14} />}
                                 placeholder="Update your password"
                                 {...form.getInputProps('password')}
+                            />
+
+                            <PasswordInput
+                                label="Confirm Password"
+                                icon={<IconLock size={14} />}
+                                placeholder="Confirm your new password"
+                                {...form.getInputProps('confirmNewPassword')}
                             />
 
                             <Group position="right">
