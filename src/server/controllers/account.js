@@ -29,7 +29,6 @@ async function account(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request, reply) => {
-            console.log(JSON.stringify(request.body, undefined, 3));
             const {
                 currentPassword = '',
                 password = '',
