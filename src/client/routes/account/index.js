@@ -38,9 +38,13 @@ const Account = () => {
     const form = useForm({
         initialValues: {
             currentPassword: '',
-            password: '',
+            newPassword: '',
             email: '',
             confirmNewPassword: '',
+        },
+        validate: {
+            confirmNewPassword: (value, values) =>
+                value !== values.newPassword ? 'Passwords did not match' : null,
         },
     });
 
@@ -224,10 +228,10 @@ const Account = () => {
                             />
 
                             <PasswordInput
-                                label="Password"
+                                label="New password"
                                 icon={<IconLock size={14} />}
                                 placeholder="Update your password"
-                                {...form.getInputProps('password')}
+                                {...form.getInputProps('newPassword')}
                             />
 
                             <PasswordInput

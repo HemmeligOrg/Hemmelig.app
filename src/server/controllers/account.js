@@ -31,7 +31,7 @@ async function account(fastify) {
         async (request, reply) => {
             const {
                 currentPassword = '',
-                password = '',
+                newPassword = '',
                 email = '',
                 confirmNewPassword = '',
             } = request.body;
@@ -50,15 +50,15 @@ async function account(fastify) {
                     .send({ type: 'currentPassword', error: 'Incorrect password' });
             }
 
-            if (password) {
-                if (password.length < PASSWORD_LENGTH) {
+            if (newPassword) {
+                if (newPassword.length < PASSWORD_LENGTH) {
                     return reply.code(403).send({
-                        type: 'password',
+                        type: 'newPassword',
                         error: `Password has to be longer than ${PASSWORD_LENGTH} characters`,
                     });
                 }
 
-                data.password = await hash(validator.escape(password));
+                data.password = await hash(validator.escape(newPassword));
             }
 
             if (email) {
@@ -72,14 +72,14 @@ async function account(fastify) {
                 data.email = email;
             }
 
-            if (!email && !password) {
+            if (!email && !newPassword) {
                 return reply.code(412).send({
                     type: 'no-data',
                     error: `Could not update your profile. Please set the fields you want to update.`,
                 });
             }
 
-            if (password !== confirmNewPassword) {
+            if (newPassword !== confirmNewPassword) {
                 return reply.code(400).send({
                     type: 'confirmNewPassword',
                     error: `The password and confirmation password do not match.`,
