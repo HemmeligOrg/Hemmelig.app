@@ -30,8 +30,6 @@ const Secret = () => {
     }, [token]);
 
     const onSignUp = async (values) => {
-        // event.preventDefault();
-
         const data = await signUp(values.email, values.username, values.password);
 
         if (data.error) {

@@ -29,8 +29,6 @@ const Secret = () => {
     }, [token]);
 
     const onSignIn = async (values) => {
-        // event.preventDefault();
-
         const data = await signIn(values.username, values.password);
 
         if (data.statusCode === 401) {

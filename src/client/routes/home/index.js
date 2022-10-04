@@ -54,7 +54,7 @@ const Home = () => {
             password: '',
             ttl: 14400,
             allowedIp: '',
-            preventBurn: '',
+            preventBurn: false,
         },
     });
 
@@ -121,8 +121,6 @@ const Home = () => {
         const userEncryptionKey = generateKey();
 
         setCreatingSecret(true);
-
-        // event.preventDefault();
 
         const body = {
             text: encrypt(form.values.text, userEncryptionKey),
@@ -472,7 +470,6 @@ const Home = () => {
                     </Group>
                 </Stack>
             </form>
-            {/* {error && <Error>{error}</Error>} */}
 
             <Divider my="sm" variant="dashed" />
 
