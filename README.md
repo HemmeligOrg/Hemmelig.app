@@ -65,6 +65,19 @@ docker run -p 3000:3000 -d --name=hemmelig \
     hemmeligapp/hemmelig:latest
 ```
 
+Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
+
+```bash
+# get docker-compose.yml
+wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-compose.yml
+
+# start hemmelig & redis
+docker-compose up -d
+
+# stop container
+docker-compose down
+```
+
 Have a look at the Dockerfile for a full example of how to run this application.
 
 ## Environment variables
