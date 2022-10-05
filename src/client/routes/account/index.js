@@ -34,7 +34,6 @@ const Account = () => {
     const [activeTab, setActiveTab] = useState('account');
 
     const dispatch = useDispatch();
-    console.log(useSelector((state) => console.log(state)));
 
     const form = useForm({
         initialValues: {

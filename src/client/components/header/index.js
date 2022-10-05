@@ -2,7 +2,7 @@ import { Link, Redirect } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
-import { IconDeviceDesktopAnalytics, IconLockOff, IconLogin } from '@tabler/icons';
+import { IconLockOff, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.js';
