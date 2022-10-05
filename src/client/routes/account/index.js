@@ -13,7 +13,7 @@ import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconUser, IconAt, IconLock, IconTrash, IconSettings, IconEdit } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getToken, hasToken, removeToken } from '../../helpers/token';
 import { userLoginChanged } from '../../actions';
 
