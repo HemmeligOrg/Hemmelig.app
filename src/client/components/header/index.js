@@ -2,9 +2,9 @@ import { Link, Redirect } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
-import { IconLockOff, IconLogin } from '@tabler/icons';
+import { IconDeviceDesktopAnalytics, IconLockOff, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
-import { userLoginChanged } from '../../actions/';
+import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.js';
 import { hasToken, removeToken } from '../../helpers/token';
 import config from '../../config';
@@ -27,7 +27,7 @@ const Header = () => {
         event.preventDefault();
 
         removeToken();
-
+        dispatch(userLogin(null));
         dispatch(userLoginChanged(false));
 
         setOnSignOutRedirect(true);
