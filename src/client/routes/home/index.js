@@ -37,6 +37,7 @@ import { useSelector } from 'react-redux';
 import config from '../../config';
 
 import Error from '../../components/info/error';
+import QRLink from '../../components/qrlink';
 
 import { getToken } from '../../helpers/token';
 import { zipFiles } from '../../helpers/zip';
@@ -380,38 +381,41 @@ const Home = () => {
                     )}
 
                     {secretId && (
-                        <Group grow>
-                            <TextInput
-                                label={t('home.your_secret_url')}
-                                icon={<IconLink size={14} />}
-                                value={getSecretURL()}
-                                onFocus={handleFocus}
-                                ref={secretRef}
-                                readOnly
-                                rightSection={
-                                    <CopyButton value={getSecretURL()} timeout={2000}>
-                                        {({ copied, copy }) => (
-                                            <Tooltip
-                                                label={copied ? t('copied') : t('copy')}
-                                                withArrow
-                                                position="right"
-                                            >
-                                                <ActionIcon
-                                                    color={copied ? 'teal' : 'gray'}
-                                                    onClick={copy}
+                        <>
+                            <Group grow>
+                                <TextInput
+                                    label={t('home.your_secret_url')}
+                                    icon={<IconLink size={14} />}
+                                    value={getSecretURL()}
+                                    onFocus={handleFocus}
+                                    ref={secretRef}
+                                    readOnly
+                                    rightSection={
+                                        <CopyButton value={getSecretURL()} timeout={2000}>
+                                            {({ copied, copy }) => (
+                                                <Tooltip
+                                                    label={copied ? t('copied') : t('copy')}
+                                                    withArrow
+                                                    position="right"
                                                 >
-                                                    {copied ? (
-                                                        <IconCheck size={16} />
-                                                    ) : (
-                                                        <IconCopy size={16} />
-                                                    )}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        )}
-                                    </CopyButton>
-                                }
-                            />
-                        </Group>
+                                                    <ActionIcon
+                                                        color={copied ? 'teal' : 'gray'}
+                                                        onClick={copy}
+                                                    >
+                                                        {copied ? (
+                                                            <IconCheck size={16} />
+                                                        ) : (
+                                                            <IconCopy size={16} />
+                                                        )}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            )}
+                                        </CopyButton>
+                                    }
+                                />
+                            </Group>
+                            <QRLink value={getSecretURL()} />
+                        </>
                     )}
 
                     {isMobile && secretId && navigator.share && (
