@@ -128,6 +128,16 @@ export async function getUser(username) {
     return client.hgetall(`user:${username}`);
 }
 
+export async function getAllUsers() {
+    const usernames = await getAllUserNames();
+    return Promise.all(usernames.map(async (username) => await client.hgetall(`user:${username}`)));
+}
+
+export async function getAllUserNames() {
+    const keys = await client.keys('user:*');
+    return keys.map((key) => key.split(':')[1]);
+}
+
 export async function deleteUser(username) {
     return client.del(`user:${username}`);
 }

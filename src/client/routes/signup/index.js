@@ -9,6 +9,7 @@ import Success from '../../components/info/success';
 import { signUp } from '../../api/authentication';
 import { setToken } from '../../helpers/token';
 import config from '../../config';
+import { userLogin } from '../../actions';
 
 const Secret = () => {
     const [success, setSuccess] = useState(false);

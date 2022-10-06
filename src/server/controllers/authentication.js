@@ -45,6 +45,13 @@ async function authentication(fastify) {
                     .send({ type: 'username', error: `This username has already been taken.` });
             }
 
+            const users = await redis.getAllUsers();
+            if (users.filter((user) => user && user.email === email).length > 0) {
+                return reply
+                    .code(403)
+                    .send({ type: 'email', error: `This email has already been registered.` });
+            }
+
             const userPassword = await hash(validator.escape(password));
 
             const user = await redis.createUser(username, email, userPassword);
