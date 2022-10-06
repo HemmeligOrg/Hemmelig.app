@@ -134,7 +134,7 @@ export async function getAllUsers() {
 }
 
 export async function getAllUserNames() {
-    const keys = await client.keys('*');
+    const keys = await client.keys('user:*');
     return keys.map((key) => key.split(':')[1]);
 }
 
