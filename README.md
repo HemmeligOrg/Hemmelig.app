@@ -32,7 +32,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Encrypted file upload for signed in users
 - Secret lifetime
 - Set max views per secret
-- Optional encryptet title
+- Optional encrypted title
 - Optional password protection
 - Optional IP address restriction
 - QR Code of the secret link
