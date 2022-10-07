@@ -8,7 +8,7 @@ import { LoadingOverlay } from '@mantine/core';
 import App from './client/app';
 import configureStore from './client/helpers/configureStore';
 import './client/index.css';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+// import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const store = configureStore();
 
@@ -30,4 +30,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-serviceWorkerRegistration.register();
+// serviceWorkerRegistration.register();
