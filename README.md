@@ -35,6 +35,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Optional encryptet title
 - Optional password protection
 - Optional IP address restriction
+- QR Code of the secret link
 - Encrypted key is part of the URL, and not saved to the database for an extra layer of security
 - It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
 - Self-hosted version. Keywords: Regulatory compliance
