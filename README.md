@@ -112,10 +112,14 @@ Have a look at the `public/locales/` folder.
 ## Run locally
 
 ```bash
-$ npm install
+# First you have to run redis
+# Example by using docker
+docker run -itd -p 6379:6379 redis
 
-# Start the frontend
-$ npm run dev
+npm install
+
+# Start the frontend/backend
+npm run dev
 # http://0.0.0.0:3000
 
 ```
