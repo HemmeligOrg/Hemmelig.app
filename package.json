@@ -45,7 +45,7 @@
     "config": "^3.3.6",
     "dayjs": "^1.10.7",
     "email-validator": "^2.0.4",
-    "fastify": "^4.5.3",
+    "fastify": "^4.8.1",
     "fastify-jwt": "^3.0.0",
     "fastify-plugin": "^3.0.0",
     "file-type": "^18.0.0",
