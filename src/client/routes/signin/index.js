@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from '@mantine/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '@mantine/form';
 import { IconLock, IconUser, IconLogin } from '@tabler/icons';
 
@@ -11,10 +11,11 @@ import { setToken } from '../../helpers/token';
 import { userLogin } from '../../actions';
 import config from '../../config';
 
-const Secret = () => {
+const SignIn = () => {
     const [success, setSuccess] = useState(false);
 
     const dispatch = useDispatch();
+    const token = useSelector((state) => state.token);
 
     const form = useForm({
         initialValues: {
@@ -97,4 +98,4 @@ const Secret = () => {
     );
 };
 
-export default Secret;
+export default SignIn;

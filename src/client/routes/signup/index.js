@@ -11,7 +11,7 @@ import { setToken } from '../../helpers/token';
 import config from '../../config';
 import { userLogin } from '../../actions';
 
-const Secret = () => {
+const SignUp = () => {
     const [success, setSuccess] = useState(false);
 
     const dispatch = useDispatch();
@@ -109,4 +109,4 @@ const Secret = () => {
     );
 };
 
-export default Secret;
+export default SignUp;
