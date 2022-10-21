@@ -56,6 +56,7 @@
     "is-base64": "^1.1.0",
     "meow": "^11.0.0",
     "nanoid": "^3.1.31",
+    "node-fetch": "^2.6.7",
     "pretty-bytes": "^4.0.2",
     "react-qr-code": "^2.0.8",
     "redis": "^3.1.2",
