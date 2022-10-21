@@ -39,6 +39,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Encrypted key is part of the URL, and not saved to the database for an extra layer of security
 - It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
 - Self-hosted version. Keywords: Regulatory compliance
+- CLI Support
 
 
 ## Docker image
@@ -80,6 +81,18 @@ docker-compose down
 ```
 
 Have a look at the Dockerfile for a full example of how to run this application.
+
+## CLI
+
+Hemmelig can be used as a CLI to create secrets on the fly
+
+```bash
+# Pipe data to hemmelig
+cat mysecretfile | npx hemmelig
+
+# For the documentaiton
+npx hemmelig --help
+```
 
 ## Environment variables
 
