@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import meow from 'meow';
 import fetch from 'node-fetch';
 import { generateKey, encrypt } from './src/shared/helpers/crypto.js';

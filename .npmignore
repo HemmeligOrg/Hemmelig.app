@@ -1,0 +1,8 @@
+src/client
+src/server
+src/*.js
+server.js
+config/
+public/
+.github/
+tests/
