@@ -19,6 +19,9 @@
     "prettier": "prettier --write --ignore-unknown src/"
   },
   "proxy": "http://localhost:3000",
+  "bin": {
+    "hemmelig": "./cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HemmeligOrg/Hemmelig.app.git"
@@ -51,6 +54,7 @@
     "file-type": "^18.0.0",
     "ip-range-check": "^0.2.0",
     "is-base64": "^1.1.0",
+    "meow": "^11.0.0",
     "nanoid": "^3.1.31",
     "pretty-bytes": "^4.0.2",
     "react-qr-code": "^2.0.8",
