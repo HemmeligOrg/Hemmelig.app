@@ -102,6 +102,12 @@ dist
 # TernJS port file
 .tern-port
 
+# OS generated files
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 build/
 
 hemmelig.yaml
