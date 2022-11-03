@@ -90,11 +90,30 @@ Have a look at the Dockerfile for a full example of how to run this application.
 Hemmelig can be used as a CLI to create secrets on the fly
 
 ```bash
-# Pipe data to hemmelig
-cat mysecretfile | npx hemmelig
+    Usage
+      $ hemmelig <secret>
 
-# For the documentaiton
-npx hemmelig --help
+    Options
+      --title,            -t   The secret title
+      --password,         -p   The password to protect the secret
+      --passwordPrompt,   -pp  Use a prompt for the password (password will not be shown in the terminal)
+      --lifetime,         -l   The lifetime of the secret
+      --maxViews,         -m   The max views of the secret
+      --cidr,             -c   Provide the IP or CIDR range
+      --expire,           -e   Burn the secret only after the expire time
+      --url,              -u   If you have your own instance of the Hemmelig.app
+
+    Examples
+      $ hemmelig "my super secret" --password=1337
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
+
+      # Pipe data to the hemmelig cli
+      $ cat mysecret.txt | hemmelig
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey2/thesecretid2
+
+      $ npx hemmelig "my super secret" -x
+      password: ****
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
 ```
 
 ## Environment variables

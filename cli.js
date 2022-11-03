@@ -29,6 +29,10 @@ const cli = meow(
       # Pipe data to the hemmelig cli
       $ cat mysecret.txt | hemmelig
       [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey2/thesecretid2
+
+	  $ npx hemmelig "my super secret" -x
+      password: ****
+	  [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
 `,
     {
         importMeta: import.meta,
