@@ -59,6 +59,7 @@
     "nanoid": "^3.1.31",
     "node-fetch": "^2.6.7",
     "pretty-bytes": "^4.0.2",
+    "prompt-sync": "^4.2.0",
     "react-qr-code": "^2.0.8",
     "redis": "^3.1.2",
     "replace-in-file": "^6.2.0",

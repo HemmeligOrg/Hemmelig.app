@@ -3,6 +3,9 @@
 import meow from 'meow';
 import fetch from 'node-fetch';
 import { generateKey, encrypt } from './src/shared/helpers/crypto.js';
+import PromptSync from 'prompt-sync';
+
+const prompt = new PromptSync();
 
 const cli = meow(
     `
@@ -10,13 +13,14 @@ const cli = meow(
 	  $ hemmelig <secret>
 
 	Options
-      --title,     -t  The secret title
-      --password,  -p  The password to protect the secret
-      --lifetime,  -l  The lifetime of the secret
-      --maxViews,  -m  The max views of the secret
-      --cidr,      -c  Provide the IP or CIDR range
-      --expire,    -e  Burn the secret only after the expire time
-      --url,       -u  If you have your own instance of the Hemmelig.app
+      --title,            -t   The secret title
+      --password,         -p   The password to protect the secret
+      --passwordPrompt,   -pp  Use a prompt for the password (password will not be shown in the terminal)
+      --lifetime,         -l   The lifetime of the secret
+      --maxViews,         -m   The max views of the secret
+      --cidr,             -c   Provide the IP or CIDR range
+      --expire,           -e   Burn the secret only after the expire time
+      --url,              -u   If you have your own instance of the Hemmelig.app
 
 	Examples
 	  $ hemmelig "my super secret" --password=1337
@@ -38,6 +42,11 @@ const cli = meow(
                 type: 'string',
                 alias: 'p',
                 default: '',
+            },
+            passwordPrompt: {
+                type: 'boolean',
+                alias: 'x',
+                default: false,
             },
             lifetime: {
                 type: 'number',
@@ -101,11 +110,17 @@ const submit = async (secret, values) => {
 
     const userEncryptionKey = generateKey();
 
+    let password = values.password;
+
+    if (values.passwordPrompt) {
+        password = prompt('password: ', { echo: '*' });
+    }
+
     const body = {
         text: encrypt(secret, userEncryptionKey),
         files: [],
         title: encrypt(values.title, userEncryptionKey),
-        password: values.password,
+        password: password,
         ttl: values.lifetime,
         allowedIp: values.cidr,
         preventBurn: values.expire,
