@@ -7,11 +7,17 @@ const getFilePath = (key) => `${config.get('disk.folder')}${key}.json`;
 export async function upload(fileUpload) {
     const filename = nanoid(32);
 
-    try {
-        await fs.mkdir(config.get('disk.folder'), { recursive: true });
+    const createFile = async () =>
         await fs.writeFile(getFilePath(filename), JSON.stringify({ encryptedFile: fileUpload }));
+
+    try {
+        await createFile();
     } catch (e) {
         console.error(e);
+
+        await fs.mkdir(config.get('disk.folder'), { recursive: true });
+
+        await createFile();
     }
 
     return {
