@@ -10,7 +10,7 @@
 #   hemmeligapp/hemmelig:latest
 
 
-FROM node:lts-alpine
+FROM node:18-alpine
 
 WORKDIR /usr/src/app
 
@@ -26,23 +26,18 @@ RUN npm run build
 
 
 # Get ready for step two of the docker image build
-FROM node:lts-alpine
+FROM node:18-alpine
 
-RUN addgroup --gid 10001 --system nonroot \
-    && adduser --uid 10000 --system --ingroup nonroot --home /home/nonroot nonroot
-
-WORKDIR /home/nonroot/hemmelig
+WORKDIR /home/node/hemmelig
 
 RUN mkdir build
 COPY --from=0 /usr/src/app/build build/
 
-RUN chown -R nonroot ./
-
-USER nonroot
-
 COPY package*.json ./
 
 RUN npm ci --production --ignore-scripts
+
+RUN chown -R node.node ./
 
 COPY . .
 
@@ -50,4 +45,6 @@ EXPOSE 3000
 
 ENV NODE_ENV=production
 
-CMD ["node", "server.js"]
+USER node
+
+CMD ["npm", "run", "start"]
