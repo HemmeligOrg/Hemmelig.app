@@ -13,13 +13,13 @@
     "server-dev": "NODE_ENV=development nodemon server.js",
     "client-dev": "NODE_ENV=development react-scripts start",
     "docker-build": "docker build -t hemmelig .",
-    "docker-run": "docker run -it --rm -e SECRET_HOST=localhost:3000 -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
+    "docker-run": "docker run -it --rm -e SECRET_HOST=127.0.0.1:3000 -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
     "production-test": "npm run docker-build && npm run docker-run",
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-unknown src/",
     "publish-cli": "npx microbundle build --target node -i cli.js -o dist/ && npm publish"
   },
-  "proxy": "http://localhost:3000",
+  "proxy": "http://127.0.0.1:3000",
   "bin": {
     "hemmelig": "./dist/hemmelig.esm.js"
   },
