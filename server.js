@@ -28,7 +28,15 @@ const fastify = importFastify({
 });
 
 // https://github.com/fastify/fastify-helmet
-fastify.register(helmet, { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false });
+fastify.register(helmet, {
+    contentSecurityPolicy: {
+        directives: {
+            'font-src': ["'self'", 'https://rsms.me/'],
+            'script-src': ["'self'", "'unsafe-inline'"],
+        },
+    },
+    crossOriginEmbedderPolicy: false,
+});
 
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
