@@ -2,6 +2,7 @@
 
 import meow from 'meow';
 import fetch from 'node-fetch';
+import YAML from 'yaml';
 import { generateKey, encrypt } from './src/shared/helpers/crypto.js';
 
 const cli = meow(
@@ -17,7 +18,7 @@ const cli = meow(
       --cidr,      -c  Provide the IP or CIDR range
       --expire,    -e  Burn the secret only after the expire time
       --url,       -u  If you have your own instance of the Hemmelig.app
-      --output,    -o  How to present the result
+      --output,    -o  Present the result as json|yaml. Example: --output=json
 
 	Examples
 	  $ hemmelig "my super secret" --password=1337
@@ -26,6 +27,10 @@ const cli = meow(
       # Pipe data to the hemmelig cli
       $ cat mysecret.txt | hemmelig
       [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey2/thesecretid2
+
+      # Different output
+      $ hemmelig "I am secret" -o=json
+      {"encryptionKey":"9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9","secretId":"manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9","url":"https://hemmelig.app/secret/9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9/manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9"}
 `,
     {
         importMeta: import.meta,
@@ -100,20 +105,29 @@ const getSecretURL = (encryptionKey, secretId) =>
     `${cli.flags.url}/secret/${encryptionKey}/${secretId}`;
 
 const createOutput = (encryptionKey, secretId) => {
+    const url = getSecretURL(encryptionKey, secretId);
+
     if (cli.flags.output === 'json') {
         return JSON.stringify({
             encryptionKey,
             secretId,
-            url: getSecretURL(encryptionKey, secretId),
+            url,
+        });
+    } else if (cli.flags.output === 'yaml') {
+        return YAML.stringify({
+            encryptionKey,
+            secretId,
+            url,
         });
     }
 
-    return `[*] Hemmelig.app URL: ${getSecretURL(encryptionKey, secretId)}`;
+    return `[*] Hemmelig.app URL: ${url}`;
 };
 
 const submit = async (secret, values) => {
     if (!secret) {
         console.error('No secret set');
+
         return;
     }
 

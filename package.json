@@ -1,6 +1,6 @@
 {
   "name": "hemmelig",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Paste a password, secret message or private information",
   "main": "index.js",
   "type": "module",
@@ -17,7 +17,7 @@
     "production-test": "npm run docker-build && npm run docker-run",
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-unknown src/",
-    "publish-cli": "npx microbundle build --target node -i cli.js -o dist/ && npm publish"
+    "publish-cli": "rm -rf dist/ && npx microbundle build --target node -i cli.js -o dist/ && npm publish"
   },
   "proxy": "http://127.0.0.1:3000",
   "bin": {
