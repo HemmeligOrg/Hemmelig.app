@@ -17,6 +17,7 @@ const cli = meow(
       --cidr,      -c  Provide the IP or CIDR range
       --expire,    -e  Burn the secret only after the expire time
       --url,       -u  If you have your own instance of the Hemmelig.app
+      --output,    -o  How to present the result
 
 	Examples
 	  $ hemmelig "my super secret" --password=1337
@@ -64,6 +65,11 @@ const cli = meow(
                 alias: 'u',
                 default: 'https://hemmelig.app',
             },
+            output: {
+                type: 'string',
+                alias: 'o',
+                default: 'text',
+            },
         },
     }
 );
@@ -93,6 +99,18 @@ const createSecret = async (data = {}) => {
 const getSecretURL = (encryptionKey, secretId) =>
     `${cli.flags.url}/secret/${encryptionKey}/${secretId}`;
 
+const createOutput = (encryptionKey, secretId) => {
+    if (cli.flags.output === 'json') {
+        return JSON.stringify({
+            encryptionKey,
+            secretId,
+            url: getSecretURL(encryptionKey, secretId),
+        });
+    }
+
+    return `[*] Hemmelig.app URL: ${getSecretURL(encryptionKey, secretId)}`;
+};
+
 const submit = async (secret, values) => {
     if (!secret) {
         console.error('No secret set');
@@ -114,7 +132,7 @@ const submit = async (secret, values) => {
 
     const json = await createSecret(body);
 
-    console.log(`[*] Hemmelig.app URL: ${getSecretURL(userEncryptionKey, json.id)}`);
+    console.log(createOutput(userEncryptionKey, json.id));
 };
 
 async function getSecretText() {
