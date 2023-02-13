@@ -21,8 +21,8 @@ const cli = meow(
       --output,    -o  Present the result as json|yaml. Example: --output=json
 
 	Examples
-	  $ hemmelig "my super secret" --password=1337
-	  [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
+      $ hemmelig "my super secret" --password=1337
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
 
       # Pipe data to the hemmelig cli
       $ cat mysecret.txt | hemmelig
