@@ -1,5 +1,6 @@
 import emailValidator from 'email-validator';
 import validator from 'validator';
+import config from 'config';
 
 import * as redis from '../services/redis.js';
 import { hash, compare } from '../helpers/password.js';
@@ -8,6 +9,8 @@ const validUsername = new RegExp('^[A-Za-z0-9_-]*$');
 
 const PASSWORD_LENGTH = 5;
 const USERNAME_LENGTH = 4;
+
+const COOKIE_KEY = config.get('jwt.cookie');
 
 async function authentication(fastify) {
     fastify.post(
@@ -62,7 +65,7 @@ async function authentication(fastify) {
                 });
             }
 
-            const token = await fastify.jwt.sign(
+            const token = await reply.jwtSign(
                 {
                     username,
                     email,
@@ -70,7 +73,18 @@ async function authentication(fastify) {
                 { expiresIn: '7d' } // expires in seven days
             );
 
-            return { token };
+            reply
+                .setCookie(COOKIE_KEY, token, {
+                    domain: config.get('host'),
+                    path: '/',
+                    secure: 'auto',
+                    sameSite: 'Strict',
+                    httpOnly: true,
+                })
+                .code(200)
+                .send({
+                    username,
+                });
         }
     );
 
@@ -83,14 +97,33 @@ async function authentication(fastify) {
             return reply.code(401).send({ error: 'Incorrect username or password.' });
         }
 
-        const token = fastify.jwt.sign(
+        const token = await reply.jwtSign(
             {
                 username,
             },
             { expiresIn: '7d' }
         );
 
-        return { token };
+        reply
+            .setCookie(COOKIE_KEY, token, {
+                domain: config.get('host'),
+                path: '/',
+                secure: 'auto',
+                sameSite: 'Strict',
+                httpOnly: true,
+            })
+            .code(200)
+            .send({
+                username,
+            });
+    });
+
+    fastify.post('/signout', async (request, reply) => {
+        reply.clearCookie(COOKIE_KEY, { path: '/' });
+
+        return {
+            signout: 'ok',
+        };
     });
 
     fastify.get(
@@ -100,10 +133,9 @@ async function authentication(fastify) {
         },
         async (request) => {
             const user = await redis.getUser(validator.escape(request.user.username));
+
             return {
-                user: {
-                    username: user.username,
-                },
+                username: user.username,
             };
         }
     );

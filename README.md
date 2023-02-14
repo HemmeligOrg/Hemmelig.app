@@ -11,14 +11,11 @@
   This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
 </div>
 
-
-
 ## SaaS
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
 ![Desktop](desktop.png)
-
 
 ## How it works
 
@@ -76,13 +73,13 @@ docker run -p 3000:3000 -d --name=hemmelig \
 Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
 
 ```bash
-# get docker-compose.yml
+# fetch docker-compose.yml
 wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-compose.yml
 
 # start hemmelig & redis
 docker-compose up -d
 
-# stop container
+# stop containers
 docker-compose down
 ```
 
@@ -90,7 +87,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 
 ## CLI
 
-Hemmelig can be used as a CLI to create secrets on the fly
+Hemmelig can be used as a CLI to create secrets on the fly!
 
 ```bash
 # Pipe data to hemmelig
@@ -106,7 +103,7 @@ npx hemmelig --help
 | ------------------------------|:---------------------------------------------------------------------:| ------------------:|
 | `SECRET_LOCAL_HOSTNAME`       | The local hostname for the fastify instance                           | 0.0.0.0            |
 | `SECRET_PORT`                 | The port number for the fastify instance                              | 3000               |
-| `SECRET_HOST`                 | Used for i.e. set cors to your domain name                            | ""                 |
+| `SECRET_HOST`                 | Used for i.e. set cors/cookies to your domain name                    | ""                 |
 | `SECRET_REDIS_HOST`           | Override this for your redis host address                             | ""                 |
 | `SECRET_REDIS_PORT`           | The redis port number                                                 | 6379               |
 | `SECRET_REDIS_TLS`            | If the redis instance is using tls                                    | false              |

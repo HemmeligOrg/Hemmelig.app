@@ -6,7 +6,8 @@ import { IconLockOff, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.js';
-import { hasToken, removeToken } from '../../helpers/token';
+import { removeCookie } from '../../helpers/cookie';
+import { signOut, verify } from '../../api/authentication';
 import config from '../../config';
 
 import style from './style.module.css';
@@ -15,19 +16,37 @@ const Header = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const username = useSelector((state) => state.username);
+
     const [onSignOutRedirect, setOnSignOutRedirect] = useState(false);
 
     useEffect(() => {
-        if (hasToken()) {
+        if (!isLoggedIn && username) {
             dispatch(userLoginChanged(true));
         }
-    }, [dispatch]);
+
+        (async () => {
+            if (!isLoggedIn && !username) {
+                const json = await verify();
+
+                if (json?.statusCode === 401) {
+                    return;
+                }
+
+                dispatch(userLogin(json));
+                dispatch(userLoginChanged(true));
+            }
+        })();
+    }, [isLoggedIn, username, dispatch]);
 
     const onSignOut = (event) => {
         event.preventDefault();
 
-        removeToken();
-        dispatch(userLogin(null));
+        removeCookie();
+
+        signOut();
+
+        dispatch(userLogin({ username: '' }));
         dispatch(userLoginChanged(false));
 
         setOnSignOutRedirect(true);

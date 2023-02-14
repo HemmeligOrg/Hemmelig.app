@@ -9,7 +9,7 @@ export default function rootReducer(state = initialState, action) {
         case USER_LOGIN_CHANGED:
             return { ...state, isLoggedIn: action.payload };
         case USER_LOGIN:
-            return { ...state, token: action.payload };
+            return { ...state, ...action.payload };
         default:
             return state;
     }

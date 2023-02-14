@@ -35,8 +35,10 @@
   },
   "homepage": "/",
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.1.0",
     "@fastify/helmet": "^9.1.0",
+    "@fastify/jwt": "^6.7.0",
     "@fastify/multipart": "^7.1.1",
     "@fastify/static": "^6.5.0",
     "@mantine/core": "^5.1.7",
@@ -51,7 +53,6 @@
     "dayjs": "^1.10.7",
     "email-validator": "^2.0.4",
     "fastify": "^4.9.1",
-    "fastify-jwt": "^4.2.0",
     "fastify-plugin": "^3.0.0",
     "file-type": "^18.0.0",
     "ip-range-check": "^0.2.0",
