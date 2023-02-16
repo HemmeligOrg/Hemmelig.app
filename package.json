@@ -17,7 +17,8 @@
     "production-test": "npm run docker-build && npm run docker-run",
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-unknown src/",
-    "publish-cli": "rm -rf dist/ && npx microbundle build --target node -i cli.js -o dist/ && npm publish"
+    "publish-cli": "rm -rf dist/ && npx microbundle build --target node -i cli.js -o dist/ && npm publish",
+    "pkg": "rm -rf dist/ bin/ && npx esbuild cli.js --bundle --platform=node --outfile=dist/cli.cjs --define:import.meta.url=__dirname && npx pkg dist/cli.cjs --targets=node18-linux-arm64 --output=bin/hemmelig"
   },
   "proxy": "http://127.0.0.1:3000",
   "bin": {

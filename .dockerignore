@@ -1,3 +1,4 @@
 node_modules
 .github
 example_request_do.log
+bin/

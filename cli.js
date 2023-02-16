@@ -5,6 +5,13 @@ import fetch from 'node-fetch';
 import YAML from 'yaml';
 import { generateKey, encrypt } from './src/shared/helpers/crypto.js';
 
+// Adding this hack to make it work for pkg
+// https://github.com/vercel/pkg/issues/1291#issuecomment-1360586986
+let url = import.meta.url;
+// Allow rewriting `import.meta.url` to `__dirname` when bundling with esbuild
+if (!url.startsWith('file://')) url = new URL(`file://${import.meta.url}`).toString();
+// end hack
+
 const cli = meow(
     `
 	Usage
@@ -33,7 +40,7 @@ const cli = meow(
       {"encryptionKey":"9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9","secretId":"manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9","url":"https://hemmelig.app/secret/9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9/manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9"}
 `,
     {
-        importMeta: import.meta,
+        importMeta: { url },
         flags: {
             title: {
                 type: 'string',
