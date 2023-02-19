@@ -47,11 +47,14 @@ Hemmelig.app is running on Linode, and is not being sponsored by anyone. If you 
 
 ## Docker image
 
-- hemmeligapp/hemmelig:bleeding-edge (pushed on every commit to main)
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
+- hemmeligapp/hemmelig:arm-weekly
 - hemmeligapp/hemmelig:daily
+- hemmeligapp/hemmelig:arm-daily
 - hemmeligapp/hemmelig:v3.4.0 (see the github tags)
-- hemmeligapp/hemmelig:latest (pushed on releases)
+- hemmeligapp/hemmelig:arm-vX.X.X (will be from > 4.2.0)
+- hemmeligapp/hemmelig:latest (Is created  on each version release)
+- hemmeligapp/hemmelig:arm-latest (will be from > 4.2.0)
 
 ## Self-hosting
 
