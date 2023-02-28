@@ -1,3 +1,4 @@
 /node_modules/**
 package*.json
 README.md
+helm-chart/
