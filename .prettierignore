@@ -2,3 +2,4 @@
 package*.json
 README.md
 helm-chart/
+docker-compose.yml
