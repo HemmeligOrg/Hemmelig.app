@@ -3,7 +3,7 @@ name: hemmelig
 description: A helm chart for Hemmelig.app
 type: application
 version: 0.1.0
-appVersion: "4.3.0"
+appVersion: "v4.3.0"
 icon: https://i.imgur.com/nANr8Td.png
 selectorLabels:
   app: hemmelig

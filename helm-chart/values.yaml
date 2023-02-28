@@ -4,13 +4,11 @@
 
 replicaCount: 1
 
-namespace: ""
-
 image:
   repository: hemmeligapp/hemmelig
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "4.3.0"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
