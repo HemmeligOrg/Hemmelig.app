@@ -4,7 +4,7 @@ import config from '../config';
 
 const { decodeBase64 } = tweetnaclUtil;
 
-export const downloadFile = async (fileData, token) => {
+export const downloadFile = async (fileData) => {
     const { file, secretId, encryptionKey } = fileData;
 
     const { key, ext, type } = file;
@@ -14,7 +14,6 @@ export const downloadFile = async (fileData, token) => {
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ key, secretId }),
     });

@@ -39,7 +39,6 @@ import config from '../../config';
 import Error from '../../components/info/error';
 import QRLink from '../../components/qrlink';
 
-import { getToken } from '../../helpers/token';
 import { zipFiles } from '../../helpers/zip';
 import { createSecret, burnSecret } from '../../api/secret';
 import { generateKey, encrypt } from '../../../shared/helpers/crypto';
@@ -144,7 +143,7 @@ const Home = () => {
             });
         }
 
-        const json = await createSecret(body, getToken());
+        const json = await createSecret(body);
 
         if (json.statusCode !== 201) {
             if (json.message === 'request file too large, please check multipart config') {

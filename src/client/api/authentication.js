@@ -32,13 +32,21 @@ export const signUp = async (email, username, password) => {
     return data.json();
 };
 
-export const verify = async (token) => {
+export const signOut = async () => {
+    const data = await fetch(`${config.get('api.host')}/authentication/signout`, {
+        method: 'POST',
+        cache: 'no-cache',
+    });
+
+    return data.json();
+};
+
+export const verify = async () => {
     const data = await fetch(`${config.get('api.host')}/authentication/verify`, {
         method: 'GET',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
     });
 

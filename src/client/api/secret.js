@@ -1,6 +1,6 @@
 import config from '../config';
 
-export const createSecret = async (formData = {}, token = '') => {
+export const createSecret = async (formData = {}) => {
     const options = {
         method: 'POST',
         cache: 'no-cache',
@@ -9,10 +9,6 @@ export const createSecret = async (formData = {}, token = '') => {
             'Content-Type': 'application/json',
         },
     };
-
-    if (token) {
-        options.headers.authorization = `Bearer ${token}`;
-    }
 
     try {
         const data = await fetch(`${config.get('api.host')}/secret`, options);

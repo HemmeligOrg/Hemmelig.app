@@ -6,7 +6,9 @@ import importFastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
-import jwt from './src/server/decorators/jwt.js';
+import cookie from '@fastify/cookie';
+import jwt from '@fastify/jwt';
+import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import rateLimit from './src/server/decorators/rate-limit.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
@@ -41,8 +43,18 @@ fastify.register(helmet, {
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
 
+// https://github.com/fastify/fastify-jwt#cookie
+fastify.register(jwt, {
+    secret: config.get('jwt.secret'),
+    cookie: {
+        cookieName: config.get('jwt.cookie'),
+        signed: false,
+    },
+});
+fastify.register(cookie);
+
 // Define decorators
-fastify.register(jwt);
+fastify.register(jwtDecorator);
 fastify.register(userFeatures);
 fastify.register(rateLimit);
 fastify.register(allowedIp);

@@ -14,7 +14,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { IconUser, IconAt, IconLock, IconTrash, IconSettings, IconEdit } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getToken, hasToken, removeToken } from '../../helpers/token';
+
 import { userLoginChanged } from '../../actions';
 
 import Spinner from '../../components/spinner';
@@ -27,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 const Account = () => {
     const { t } = useTranslation();
 
-    const [token, setToken] = useState(hasToken() ? getToken() : '');
+    const username = useSelector((state) => state.username);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
@@ -49,14 +49,14 @@ const Account = () => {
     });
 
     useEffect(() => {
-        if (!token) {
+        if (!username) {
             return;
         }
 
         (async () => {
             try {
                 setLoading(true);
-                const response = await getUser(token);
+                const response = await getUser();
 
                 if (response.statusCode === 401 || response.statusCode === 500) {
                     setError('Not logged in');
@@ -80,13 +80,13 @@ const Account = () => {
         })();
 
         // eslint-disable-next-line
-    }, [token, dispatch]);
+    }, [username, dispatch]);
 
     if (error) {
         return <Error>{error.error}</Error>;
     }
 
-    if (!token) {
+    if (!username) {
         return <Redirect to="/signin" />;
     }
 
@@ -96,7 +96,7 @@ const Account = () => {
 
     const onDeleteUser = async () => {
         try {
-            const response = await deleteUser(token);
+            const response = await deleteUser();
 
             if (response.statusCode === 401 || response.statusCode === 500) {
                 setError('Could not delete the user');
@@ -106,10 +106,6 @@ const Account = () => {
         } catch (e) {
             setError(e);
         }
-
-        removeToken();
-
-        setToken('');
     };
 
     const onProfileUpdate = async (e) => {
@@ -122,7 +118,7 @@ const Account = () => {
         try {
             setLoading(true);
 
-            const response = await updateUser(values, token);
+            const response = await updateUser(values);
 
             setLoading(false);
 

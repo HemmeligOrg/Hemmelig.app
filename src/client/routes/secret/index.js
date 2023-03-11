@@ -15,7 +15,6 @@ import Error from '../../components/info/error';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
-import { getToken } from '../../helpers/token';
 import { decrypt } from '../../../shared/helpers/crypto';
 
 import { useTranslation } from 'react-i18next';
@@ -114,14 +113,11 @@ const Secret = () => {
     };
 
     const onFileDownload = (file) => {
-        downloadFile(
-            {
-                file,
-                secretId,
-                encryptionKey,
-            },
-            getToken()
-        );
+        downloadFile({
+            file,
+            secretId,
+            encryptionKey,
+        });
 
         if (!preventBurn) {
             setIsDownloaded([...isDownloaded, file.key]);

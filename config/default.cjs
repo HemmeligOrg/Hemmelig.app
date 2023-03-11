@@ -1,7 +1,7 @@
 const {
     SECRET_LOCAL_HOSTNAME = '0.0.0.0',
     SECRET_PORT = '3000',
-    SECRET_HOST = '',
+    SECRET_HOST = 'localhost',
     SECRET_MASTER_KEY = '11111222223333344444555556666677', // has to be 32 in length
     SECRET_REDIS_HOST = '0.0.0.0',
     SECRET_REDIS_PORT = 6379,
@@ -43,6 +43,7 @@ const config = {
     },
     jwt: {
         secret: SECRET_JWT_SECRET,
+        cookie: '__HEMMELIG_TOKEN',
     },
     api: {
         maxTextSize: SECRET_MAX_TEXT_SIZE * 1000, //  256 000 bytes

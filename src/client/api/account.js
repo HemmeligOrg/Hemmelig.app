@@ -1,12 +1,11 @@
 import config from '../config';
 
-export const getUser = async (token) => {
+export const getUser = async () => {
     const data = await fetch(`${config.get('api.host')}/account/`, {
         method: 'GET',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
     });
 
@@ -19,13 +18,12 @@ export const getUser = async (token) => {
     return data.json();
 };
 
-export const deleteUser = async (token) => {
+export const deleteUser = async () => {
     const data = await fetch(`${config.get('api.host')}/account/delete`, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
             action: 'delete me',
@@ -41,13 +39,12 @@ export const deleteUser = async (token) => {
     return data.json();
 };
 
-export const updateUser = async (data, token) => {
+export const updateUser = async (data) => {
     const response = await fetch(`${config.get('api.host')}/account/update`, {
         method: 'PUT',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
     });
