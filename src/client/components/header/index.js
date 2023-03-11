@@ -26,6 +26,9 @@ const Header = () => {
         }
 
         (async () => {
+            // TODO: Change the behaviour later on to save the redux state
+            // in the local storage for a certain amount of time
+            // instead of do an API verify to get the user data
             if (!isLoggedIn && !username) {
                 const json = await verify();
 
