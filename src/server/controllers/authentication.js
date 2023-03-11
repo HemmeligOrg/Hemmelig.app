@@ -11,6 +11,13 @@ const PASSWORD_LENGTH = 5;
 const USERNAME_LENGTH = 4;
 
 const COOKIE_KEY = config.get('jwt.cookie');
+const COOKIE_SETTINGS = {
+    domain: config.get('host'),
+    path: '/',
+    secure: 'auto',
+    sameSite: 'Strict',
+    httpOnly: true,
+};
 
 async function authentication(fastify) {
     fastify.post(
@@ -73,18 +80,9 @@ async function authentication(fastify) {
                 { expiresIn: '7d' } // expires in seven days
             );
 
-            reply
-                .setCookie(COOKIE_KEY, token, {
-                    domain: config.get('host'),
-                    path: '/',
-                    secure: 'auto',
-                    sameSite: 'Strict',
-                    httpOnly: true,
-                })
-                .code(200)
-                .send({
-                    username,
-                });
+            reply.setCookie(COOKIE_KEY, token, COOKIE_SETTINGS).code(200).send({
+                username,
+            });
         }
     );
 
@@ -104,18 +102,9 @@ async function authentication(fastify) {
             { expiresIn: '7d' }
         );
 
-        reply
-            .setCookie(COOKIE_KEY, token, {
-                domain: config.get('host'),
-                path: '/',
-                secure: 'auto',
-                sameSite: 'Strict',
-                httpOnly: true,
-            })
-            .code(200)
-            .send({
-                username,
-            });
+        reply.setCookie(COOKIE_KEY, token, COOKIE_SETTINGS).code(200).send({
+            username,
+        });
     });
 
     fastify.post('/signout', async (request, reply) => {
