@@ -5,24 +5,30 @@ import { initReactI18next } from 'react-i18next';
 
 import config from './client/config';
 
-let forcedLanguage = config.get('settings.forcedLanguage');
-let detectionMethod = [];
+function getLanguage() {
+    const language = config.get('settings.forcedLanguage');
+    const detectionMethod = ['path'];
 
-forcedLanguage ? (detectionMethod = ['path']) : (detectionMethod = ['path', 'navigator']);
-if (!forcedLanguage) {
-    forcedLanguage = 'en';
+    if (!language) {
+        detectionMethod.push('navigator');
+
+        return { language: 'en', detectionMethod };
+    }
+
+    return { language, detectionMethod };
 }
+
+const { language, detectionMethod } = getLanguage();
 
 i18next
     .use(initReactI18next)
     .use(HttpApi)
     .use(LanguageDetector)
     .init({
-        fallbackLng: forcedLanguage,
+        fallbackLng: language,
         detection: {
             order: detectionMethod,
         },
-
         interpolation: {
             escapeValue: false,
         },
