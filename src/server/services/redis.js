@@ -10,7 +10,7 @@ const options = {
     tls: config.get('redis.tls'),
 };
 
-if (config.get('redis.user', null) && config.get('redis.password', null)) {
+if (config.get('redis.password', null)) {
     Object.assign(options, {
         user: config.get('redis.user', null),
         password: config.get('redis.password', null),
