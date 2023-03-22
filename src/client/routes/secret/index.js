@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 
 import { Button, Group, Container, Textarea, TextInput, Stack, Title, Text } from '@mantine/core';
 import {
@@ -19,10 +19,24 @@ import { decrypt } from '../../../shared/helpers/crypto';
 
 import { useTranslation } from 'react-i18next';
 
+const getEncryptionKeyHash = (hash) => {
+    const id = '#encryption_key=';
+
+    if (!hash || !hash.includes(id)) {
+        return '';
+    }
+
+    const [_, encryptionKey] = hash.split('#encryption_key=');
+
+    return encryptionKey;
+};
+
 const Secret = () => {
     const { t } = useTranslation();
 
-    const { secretId, encryptionKey = null } = useParams();
+    const { hash = '' } = useLocation();
+
+    const { secretId, encryptionKey = getEncryptionKeyHash(hash) } = useParams();
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
     const [preventBurn, setPreventBurn] = useState(false);

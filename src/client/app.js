@@ -159,6 +159,9 @@ const App = () => {
                             <Route path="/secret/:encryptionKey/:secretId" exact>
                                 <Secret />
                             </Route>
+                            <Route path="/secret/:secretId" exact>
+                                <Secret />
+                            </Route>
                             <Route path="/signin" exact>
                                 <SignIn />
                             </Route>
