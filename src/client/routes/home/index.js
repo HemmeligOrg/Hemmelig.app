@@ -198,7 +198,8 @@ const Home = () => {
 
     const handleFocus = (event) => event.target.select();
 
-    const getSecretURL = () => `${window.location.origin}/secret/${encryptionKey}/${secretId}`;
+    const getSecretURL = () =>
+        `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
 
     const inputReadOnly = !!secretId;
 

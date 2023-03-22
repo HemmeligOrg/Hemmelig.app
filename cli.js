@@ -29,15 +29,15 @@ const cli = meow(
 
 	Examples
       $ hemmelig "my super secret" --password=1337
-      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey/thesecretid
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/thesecretid#encryption_key=myencryptionkey
 
       # Pipe data to the hemmelig cli
       $ cat mysecret.txt | hemmelig
-      [*] Hemmelig.app URL: https://hemmelig.app/secret/myencryptionkey2/thesecretid2
+      [*] Hemmelig.app URL: https://hemmelig.app/secret/thesecretid2#encryption_key=myencryptionkey2
 
       # Different output
       $ hemmelig "I am secret" -o=json
-      {"encryptionKey":"9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9","secretId":"manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9","url":"https://hemmelig.app/secret/9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9/manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9"}
+      {"encryptionKey":"9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9","secretId":"manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9","url":"https://hemmelig.app/secret/manageable_CEsgWtxEaNNbwld6PjwyF1bQaiy4jQl9#encryption_key=9LiWq3iMAF0IkQs1tecOxbYKFesEnTN9"}
 `,
     {
         importMeta: { url },
@@ -109,7 +109,7 @@ const createSecret = async (data = {}) => {
 };
 
 const getSecretURL = (encryptionKey, secretId) =>
-    `${cli.flags.url}/secret/${encryptionKey}/${secretId}`;
+    `${cli.flags.url}/secret/${secretId}#encryption_key=${encryptionKey}`;
 
 const createOutput = (encryptionKey, secretId) => {
     const url = getSecretURL(encryptionKey, secretId);
