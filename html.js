@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+// This is where the modification of the html has to be done
+export default `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -52,10 +53,11 @@
         <link rel="apple-touch-icon" href="/icons/maskable-icon-192x192.png" />
         <script>
             try {
-                window.__SECRET_CONFIG = __SECRET_CONFIG__;
+                window.__SECRET_CONFIG = {{config}}
             } catch (e) {
                 window.__SECRET_CONFIG = '';
             }
+            
         </script>
     </head>
     <body>
@@ -65,3 +67,4 @@
         <script type="module" src="/src/index.jsx"></script>
     </body>
 </html>
+`;

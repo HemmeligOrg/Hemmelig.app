@@ -1,4 +1,3 @@
-import replace from 'replace-in-file';
 import config from 'config';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -83,13 +82,7 @@ fastify.register(healthzRoute, { prefix: '/healthz' });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const staticPath = path.join(__dirname, isDev ? '' : 'build');
-
-replace.sync({
-    files: staticPath + '/**/*.html',
-    from: [/{{NODE_ENV}}/g, /__SECRET_CONFIG__/g],
-    to: [process.env.NODE_ENV, `'${JSON.stringify(config.get('__client_config'))}';`],
-});
+const staticPath = path.join(__dirname, !isDev ? 'build' : '');
 
 // Static frontend for the production build
 if (!isDev) {

@@ -8,9 +8,9 @@
     "start": "node server.js",
     "test": "mocha tests/**/*.test.js --reporter nyan",
     "test-watch": "mocha --watch tests/**/*.test.js --reporter nyan",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider vite build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider node pre.js && vite build",
     "dev": "NODE_OPTIONS=--openssl-legacy-provider concurrently \"npm run server-dev\" \"npm run client-dev\"",
-    "server-dev": "NODE_ENV=development nodemon server.js",
+    "server-dev": "NODE_ENV=development node pre.js && nodemon server.js",
     "client-dev": "NODE_ENV=development vite",
     "docker-build": "docker build -t hemmelig .",
     "docker-run": "docker run -it --rm -e SECRET_HOST=127.0.0.1:3000 -e SECRET_REDIS_HOST=172.17.0.2 -p 3000:3000 --name=hemmelig-test hemmelig",
@@ -63,12 +63,12 @@
     "pretty-bytes": "^4.0.2",
     "react-qr-code": "^2.0.8",
     "redis": "^3.1.2",
-    "replace-in-file": "^6.2.0",
     "sanitize-filename": "^1.6.3",
     "tweetnacl": "^0.14.5",
     "tweetnacl-util": "^0.15.1",
     "unfetch": "^4.2.0",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "y8": "^1.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^3.1.0",
