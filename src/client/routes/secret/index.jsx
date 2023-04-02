@@ -11,7 +11,7 @@ import {
     IconHeading,
 } from '@tabler/icons';
 
-import Error from '../../components/info/error';
+import ErrorComponent from '../../components/info/error';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
@@ -234,7 +234,7 @@ const Secret = () => {
                 </Group>
             </Stack>
 
-            {error && <Error>{error}</Error>}
+            {error && <ErrorComponent>{error}</ErrorComponent>}
         </Container>
     );
 };

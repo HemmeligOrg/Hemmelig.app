@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userLoginChanged } from '../../actions';
 
 import Spinner from '../../components/spinner';
-import Error from '../../components/info/error';
+import ErrorComponent from '../../components/info/error';
 
 import { getUser, updateUser, deleteUser } from '../../api/account';
 
@@ -83,7 +83,7 @@ const Account = () => {
     }, [username, dispatch]);
 
     if (error) {
-        return <Error>{error.error}</Error>;
+        return <ErrorComponent>{error.error}</ErrorComponent>;
     }
 
     if (!username) {
