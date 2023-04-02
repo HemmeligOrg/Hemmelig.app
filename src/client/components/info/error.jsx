@@ -1,10 +1,10 @@
 import React from 'react';
 import style from './style.module.css';
 
-const Error = ({ children }) => (
+const ErrorComponent = ({ children }) => (
     <p className={style.error}>
         An error occured: <strong>{children}</strong>
     </p>
 );
 
-export default Error;
+export default ErrorComponent;
