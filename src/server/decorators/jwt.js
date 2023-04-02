@@ -6,8 +6,6 @@ export default fp(async (fastify) => {
         try {
             await request.jwtVerify();
         } catch (err) {
-            // console.error(err);
-
             reply.code(401).send({ error: 'Could not sign in' });
         }
     });
