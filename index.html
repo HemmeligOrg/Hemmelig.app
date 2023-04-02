@@ -4,10 +4,10 @@
         <meta charset="utf-8" />
         <title>Hemmelig.app - paste a password, secret message or private information.</title>
 
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
 
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <!-- Primary Meta Tags -->
         <meta name="title" content="Paste a password, secret message or private information." />
         <meta
@@ -28,7 +28,7 @@
             content="Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets."
         />
-        <meta property="og:image" content="%PUBLIC_URL%/icons/icon-512x512.png" />
+        <meta property="og:image" content="/icons/icon-512x512.png" />
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
@@ -42,17 +42,18 @@
             content="Keep your sensitive information out of chat logs, emails, and more with heavily
                     encrypted secrets."
         />
-        <meta property="twitter:image" content="%PUBLIC_URL%/icons/icon-512x512.png" />
+        <meta property="twitter:image" content="/icons/icon-512x512.png" />
 
         <meta name="theme-color" content="#231e23" />
 
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/maskable-icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/maskable-icon-192x192.png" />
         <script>
             try {
-                window.__SECRET_CONFIG = __SECRET_CONFIG__;
+                window.__SECRET_CONFIG =
+                    '{"api":{"host":"/api"},"settings":{"enableFileUpload":true,"disableUsers":false,"forcedLanguage":"en"}}';
             } catch (e) {
                 window.__SECRET_CONFIG = '';
             }
@@ -61,5 +62,7 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+
+        <script type="module" src="/src/index.jsx"></script>
     </body>
 </html>
