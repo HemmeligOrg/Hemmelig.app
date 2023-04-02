@@ -228,7 +228,7 @@ const Secret = () => {
                                 disabled={isDownloaded.some((key) => key === file.key)}
                                 leftIcon={<IconDownload size={14} />}
                             >
-                                {file.key + file.ext}
+                                {'hemmelig_files' + file.ext}
                             </Button>
                         ))}
                 </Group>

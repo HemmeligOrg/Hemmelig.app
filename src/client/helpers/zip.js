@@ -1,5 +1,4 @@
 import JSZip from 'jszip';
-import { nanoid } from 'nanoid';
 import tweetnaclUtil from 'tweetnacl-util';
 const { encodeBase64 } = tweetnaclUtil;
 
@@ -25,7 +24,7 @@ export async function zipFiles(files) {
     }
 
     const zip = new JSZip();
-    const folder = zip.folder(`hemmelig_${nanoid()}`);
+    const folder = zip.folder('hemmelig_files');
 
     for (const file of files) {
         const content = await getFileContent(file);
