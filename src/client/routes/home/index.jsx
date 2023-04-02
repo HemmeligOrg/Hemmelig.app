@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import passwordGenerator from 'generate-password';
+import passwordGenerator from 'generate-password-browser';
 import {
     Button,
     Checkbox,

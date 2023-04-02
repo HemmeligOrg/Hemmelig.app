@@ -14,7 +14,7 @@ FROM node:18-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json vite.config.js ./
 
 RUN npm install
 

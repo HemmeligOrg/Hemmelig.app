@@ -5,7 +5,7 @@ import { Anchor, Button, Container, Group, Grid } from '@mantine/core';
 import { IconLockOff, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { userLoginChanged, userLogin } from '../../actions/';
-import Logo from './logo.js';
+import Logo from './logo.jsx';
 import { removeCookie } from '../../helpers/cookie';
 import { signOut, verify } from '../../api/authentication';
 import config from '../../config';

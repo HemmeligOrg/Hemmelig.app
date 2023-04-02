@@ -22,6 +22,8 @@ import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
 
 const fastify = importFastify({
@@ -78,19 +80,19 @@ fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });
 fastify.register(healthzRoute, { prefix: '/healthz' });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const staticPath = path.join(__dirname, isDev ? '' : 'build');
+
+replace.sync({
+    files: staticPath + '/**/*.html',
+    from: [/{{NODE_ENV}}/g, /__SECRET_CONFIG__/g],
+    to: [process.env.NODE_ENV, `'${JSON.stringify(config.get('__client_config'))}';`],
+});
+
 // Static frontend for the production build
-if (process.env.NODE_ENV !== 'development') {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-
-    const staticPath = path.join(__dirname, 'build');
-
-    replace.sync({
-        files: staticPath + '/**/*.html',
-        from: [/{{NODE_ENV}}/g, /__SECRET_CONFIG__/g],
-        to: [process.env.NODE_ENV, `'${JSON.stringify(config.get('__client_config'))}';`],
-    });
-
+if (!isDev) {
     fastify.register(fstatic, {
         root: staticPath,
         route: '/*',
