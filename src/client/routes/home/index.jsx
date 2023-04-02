@@ -36,7 +36,6 @@ import { useSelector } from 'react-redux';
 
 import config from '../../config';
 
-import Error from '../../components/info/error';
 import QRLink from '../../components/qrlink';
 
 import { zipFiles } from '../../helpers/zip';
