@@ -109,7 +109,7 @@ if (!isDev) {
 }
 
 async function dbCleaner() {
-    const records = await prisma.secret.deleteMany({
+    await prisma.secret.deleteMany({
         where: {
             expiresAt: {
                 lte: new Date(),

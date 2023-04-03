@@ -1,5 +1,4 @@
 import emailValidator from 'email-validator';
-import validator from 'validator';
 import config from 'config';
 import { PrismaClient } from '@prisma/client';
 
