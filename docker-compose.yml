@@ -1,6 +1,6 @@
 services:
     hemmelig:
-        image: hemmeligapp/hemmelig:latest
+        image: hemmeligapp/hemmelig:v5.0.0 # Check the tags for what version to use
         hostname: hemmelig
         init: true
         volumes:

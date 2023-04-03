@@ -3,7 +3,7 @@
 # $ docker run -p 3000:3000 -d --name=hemmelig \
 #   -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \
 #   -v ./database/:/home/node/hemmelig/database/ \
-#   hemmeligapp/hemmelig:latest
+#   hemmeligapp/hemmelig:v5.0.0
 
 FROM node:18-alpine
 

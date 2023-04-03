@@ -45,13 +45,13 @@ Hemmelig.app is running on Linode, and is not being sponsored by anyone. If you 
 
 ## Docker image
 
-Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then.
+Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
 
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:arm-weekly
 - hemmeligapp/hemmelig:daily
 - hemmeligapp/hemmelig:arm-daily
-- hemmeligapp/hemmelig:v3.4.0 (see the github tags)
+- hemmeligapp/hemmelig:v5.0.0 (see the github tags)
 - hemmeligapp/hemmelig:arm-vX.X.X (will be from > 4.2.0)
 - hemmeligapp/hemmelig:latest (Is created  on each version release)
 - hemmeligapp/hemmelig:arm-latest (will be from > 4.2.0)
@@ -64,7 +64,7 @@ If you have to follow some sort of compliance, and have to self-host, [https://h
 docker run -p 3000:3000 -d --name=hemmelig \
    -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \ # For the file uploads
    -v ./database/:/home/node/hemmelig/database/ \       # For the sqlite database
-   hemmeligapp/hemmelig:latest
+   hemmeligapp/hemmelig:v5.0.0
 ```
 
 Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
