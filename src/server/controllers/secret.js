@@ -51,8 +51,23 @@ async function getSecretRoute(request, reply) {
         }
     }
 
-    await prisma.file.deleteMany({ where: { secretId: id } });
-    await prisma.secret.delete({ where: { id } });
+    if (data.maxViews > 1) {
+        await prisma.secret.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                maxViews: {
+                    decrement: 1,
+                },
+            },
+        });
+    }
+
+    if (!data.preventBurn && data.maxViews === 1) {
+        await prisma.file.deleteMany({ where: { secretId: id } });
+        await prisma.secret.delete({ where: { id } });
+    }
 
     return {
         title: data.title,
