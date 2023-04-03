@@ -58,16 +58,10 @@ Hemmelig.app is running on Linode, and is not being sponsored by anyone. If you 
 If you have to follow some sort of compliance, and have to self-host, [https://hemmelig.app](https://hemmelig.app) is available as a docker image. The following is the bare minimum to run the docker image.
 
 ```bash
-# To use this image you need a redis database enabled.
-# Example:
-#
-# $ docker run -p 6379:6379 --name some-redis -d redis
-#
-
 docker run -p 3000:3000 -d --name=hemmelig \
-    -e SECRET_REDIS_HOST=127.0.0.1 \
-    -v /var/tmp/hemmelig:/var/tmp/hemmelig/upload/files # this is how you mount a local directory if you choose to use disk upload, and not do/s3
-    hemmeligapp/hemmelig:latest
+   -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \
+   -v ./database/:/home/node/hemmelig/database/ \
+   hemmeligapp/hemmelig:latest
 ```
 
 Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
@@ -76,7 +70,7 @@ Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
 # fetch docker-compose.yml
 wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-compose.yml
 
-# start hemmelig & redis
+# start hemmelig 
 docker-compose up -d
 
 # stop containers
@@ -99,27 +93,22 @@ npx hemmelig --help
 
 ## Environment variables
 
-| ENV vars                      | Description                                                           | Default            |
-| ------------------------------|:---------------------------------------------------------------------:| ------------------:|
-| `SECRET_LOCAL_HOSTNAME`       | The local hostname for the fastify instance                           | 0.0.0.0            |
-| `SECRET_PORT`                 | The port number for the fastify instance                              | 3000               |
-| `SECRET_HOST`                 | Used for i.e. set cors/cookies to your domain name                    | ""                 |
-| `SECRET_REDIS_HOST`           | Override this for your redis host address                             | ""                 |
-| `SECRET_REDIS_PORT`           | The redis port number                                                 | 6379               |
-| `SECRET_REDIS_TLS`            | If the redis instance is using tls                                    | false              |
-| `SECRET_REDIS_USER`           | Your redis user name                                                  | ""                 |
-| `SECRET_REDIS_PASSWORD`       | Your redis password                                                   | ""                 |
-| `SECRET_MAX_TEXT_SIZE`        | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                |
-| `SECRET_JWT_SECRET`           | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun |
-| `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                  |
-| `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true               |
-| `SECRET_DISABLE_USERS`        | Disable user registration                                            | false              |
-| `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                 |
-| `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                 |
-| `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                 |
-| `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                 |
-| `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                 |
-| `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                 |
+| ENV vars                      | Description                                                           | Default              |
+| ------------------------------|:---------------------------------------------------------------------:| --------------------:|
+| `SECRET_LOCAL_HOSTNAME`       | The local hostname for the fastify instance                           | 0.0.0.0              |
+| `SECRET_PORT`                 | The port number for the fastify instance                              | 3000                 |
+| `SECRET_HOST`                 | Used for i.e. set cors/cookies to your domain name                    | ""                   |
+| `SECRET_MAX_TEXT_SIZE`        | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                  |
+| `SECRET_JWT_SECRET`           | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
+| `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                    |
+| `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true                 |
+| `SECRET_DISABLE_USERS`        | Disable user registration                                             | false                |
+| `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                   |
+| `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                   |
+| `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                   |
+| `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                   |
+| `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                   |
+| `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                   |
 
 ## Supported languages
 
@@ -128,17 +117,17 @@ Have a look at the `public/locales/` folder.
 ## Run locally
 
 ```bash
-# First you have to run redis
-# Example by using docker
-docker run -itd -p 6379:6379 redis
-
 npm install
 
 # Start the frontend/backend
 npm run dev
-# http://0.0.0.0:3000
+# http://0.0.0.0:3001
 
 ```
+
+## Database
+Hemmelig has changed from using Redis as an backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
+`/database/hemmelig.db`
 
 ## Discord
 [Discord](https://discord.gg/NUkvtKdjs7)
