@@ -1,7 +1,8 @@
-import validator from 'validator';
 import emailValidator from 'email-validator';
 import { hash, compare } from '../helpers/password.js';
-import * as redis from '../services/redis.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const PASSWORD_LENGTH = 5;
 
@@ -12,7 +13,9 @@ async function account(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request) => {
-            const user = await redis.getUser(validator.escape(request.user.username));
+            const user = await prisma.user.findFirst({
+                where: { username: request.user.username },
+            });
 
             return {
                 user: {
@@ -38,13 +41,11 @@ async function account(fastify) {
 
             const data = {};
 
-            const user = await redis.getUser(validator.escape(request.user.username));
+            const user = await prisma.user.findFirst({
+                where: { username: request.user.username },
+            });
 
-            if (
-                !currentPassword ||
-                !user ||
-                !(await compare(validator.escape(currentPassword), user.password))
-            ) {
+            if (!currentPassword || !user || !(await compare(currentPassword, user.password))) {
                 return reply
                     .code(401)
                     .send({ type: 'currentPassword', error: 'Incorrect password' });
@@ -58,7 +59,7 @@ async function account(fastify) {
                     });
                 }
 
-                data.password = await hash(validator.escape(newPassword));
+                data.password = await hash(newPassword);
             }
 
             if (email) {
@@ -86,7 +87,10 @@ async function account(fastify) {
                 });
             }
 
-            const userData = await redis.updateUser(validator.escape(request.user.username), data);
+            const userData = await prisma.user.update({
+                where: { username: request.user.username },
+                data,
+            });
 
             return {
                 user: {
@@ -104,9 +108,7 @@ async function account(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request) => {
-            const user = await redis.getUser(validator.escape(request.user.username));
-
-            await redis.deleteUser(validator.escape(request.user.username));
+            const user = await prisma.user.delete({ where: { username: request.user.username } });
 
             return {
                 user: {

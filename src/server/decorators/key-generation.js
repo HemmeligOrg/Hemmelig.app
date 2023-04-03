@@ -1,7 +1,9 @@
 import fp from 'fastify-plugin';
 import { nanoid } from 'nanoid';
-import * as redis from '../services/redis.js';
+import { PrismaClient } from '@prisma/client';
 import getRandomAdjective from '../helpers/adjective.js';
+
+const prisma = new PrismaClient();
 
 export const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -15,7 +17,7 @@ async function getSecretId() {
 
     let retries = 5;
 
-    while ((await redis.keyExists(`secret:${secretId}`)) && retries !== 0) {
+    while ((await prisma.secret.findFirst({ where: { id: secretId } })) && retries !== 0) {
         secretId = createSecretId();
         retries--;
     }

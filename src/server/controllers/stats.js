@@ -1,8 +1,10 @@
-import * as redis from '../services/redis.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 async function statistics(fastify) {
     fastify.get('/secrets_created', async (_, reply) => {
-        const statistics = await redis.getStatistics('secrets_created');
+        const statistics = await prisma.statistic.findMany();
 
         return reply.code(200).send(statistics);
     });

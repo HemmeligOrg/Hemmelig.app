@@ -1,9 +1,11 @@
 import emailValidator from 'email-validator';
 import validator from 'validator';
 import config from 'config';
+import { PrismaClient } from '@prisma/client';
 
-import * as redis from '../services/redis.js';
 import { hash, compare } from '../helpers/password.js';
+
+const prisma = new PrismaClient();
 
 const validUsername = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -49,22 +51,29 @@ async function authentication(fastify) {
                 });
             }
 
-            if (await redis.getUser(username)) {
+            const userExist = await prisma.user.findFirst({ where: { username } });
+            if (userExist) {
                 return reply
                     .code(403)
                     .send({ type: 'username', error: `This username has already been taken.` });
             }
 
-            const users = await redis.getAllUsers();
-            if (users.filter((user) => user && user.email === email).length > 0) {
+            const emailExist = await prisma.user.findFirst({ where: { email } });
+            if (emailExist) {
                 return reply
                     .code(403)
                     .send({ type: 'email', error: `This email has already been registered.` });
             }
 
-            const userPassword = await hash(validator.escape(password));
+            const userPassword = await hash(password);
 
-            const user = await redis.createUser(username, email, userPassword);
+            const user = await prisma.user.create({
+                data: {
+                    username,
+                    email,
+                    password: userPassword,
+                },
+            });
 
             if (!user) {
                 return reply.code(403).send({
@@ -89,9 +98,9 @@ async function authentication(fastify) {
     fastify.post('/signin', async (request, reply) => {
         const { username = '', password = '' } = request.body;
 
-        const user = await redis.getUser(validator.escape(username));
+        const user = await prisma.user.findFirst({ where: { username } });
 
-        if (!user || !(await compare(validator.escape(password), user.password))) {
+        if (!user || !(await compare(password, user.password))) {
             return reply.code(401).send({ error: 'Incorrect username or password.' });
         }
 
@@ -121,7 +130,9 @@ async function authentication(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (request) => {
-            const user = await redis.getUser(validator.escape(request.user.username));
+            const user = await prisma.user.findFirst({
+                where: { username: request.user.username },
+            });
 
             return {
                 username: user.username,

@@ -7,6 +7,7 @@ import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
+import { PrismaClient } from '@prisma/client';
 import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import rateLimit from './src/server/decorators/rate-limit.js';
@@ -20,6 +21,8 @@ import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
+
+const prisma = new PrismaClient();
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -105,8 +108,21 @@ if (!isDev) {
     fastify.get('/terms', serveIndex);
 }
 
+async function dbCleaner() {
+    const records = await prisma.secret.deleteMany({
+        where: {
+            expiresAt: {
+                lte: new Date(),
+            },
+        },
+    });
+}
+
 const startServer = async () => {
     try {
+        setInterval(dbCleaner, 30000);
+        dbCleaner();
+
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);
