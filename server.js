@@ -7,10 +7,10 @@ import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
+import rateLimit from '@fastify/rate-limit';
 import { PrismaClient } from '@prisma/client';
 import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
-import rateLimit from './src/server/decorators/rate-limit.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
@@ -31,6 +31,12 @@ const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 *
 const fastify = importFastify({
     logger: config.get('logger'),
     bodyLimit: MAX_FILE_BYTES,
+});
+
+// https://github.com/fastify/fastify-rate-limit
+fastify.register(rateLimit, {
+    max: 100,
+    timeWindow: '1 minute',
 });
 
 // https://github.com/fastify/fastify-helmet
@@ -60,7 +66,6 @@ fastify.register(cookie);
 // Define decorators
 fastify.register(jwtDecorator);
 fastify.register(userFeatures);
-fastify.register(rateLimit);
 fastify.register(allowedIp);
 fastify.register(attachment);
 fastify.register(keyGeneration);

@@ -22,8 +22,6 @@ const client = asyncRedis.createClient(options);
 client.on('error', (error) => console.error(error));
 
 const DEFAULT_EXPIRE = 60 * 60 * 24; // One day
-const DEFAULT_RATE_LIMIT_EXPIRE = 60; // 1 minute
-const DEFAULT_RATE_LIMIT_QTY = 100;
 
 const STATISTIC_TYPES = ['secrets_created'];
 
@@ -140,28 +138,6 @@ export async function getAllUserNames() {
 
 export async function deleteUser(username) {
     return client.del(`user:${username}`);
-}
-
-export async function createRateLimit(ip) {
-    const key = `rate_limit:${ip}`;
-
-    const increments = await new Promise((resolve, reject) => {
-        client
-            .multi()
-            .incr(key)
-            .expire(key, DEFAULT_RATE_LIMIT_EXPIRE)
-            .exec((err, res) => {
-                if (err) {
-                    reject(err);
-                }
-
-                const [reply, _] = res;
-
-                resolve(reply);
-            });
-    });
-
-    return increments > DEFAULT_RATE_LIMIT_QTY;
 }
 
 export async function createStatistics(type = '') {
