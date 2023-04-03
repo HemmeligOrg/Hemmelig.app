@@ -1,12 +1,17 @@
-import * as redis from '../services/redis.js';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function healthz(fastify) {
     fastify.get('/', async (_, reply) => {
-        if (!(await redis.isAlive())) {
-            return reply.code(503).send({ error: 'Redis is not running' });
-        }
+        try {
+            const prismaMetrics = await prisma.$metrics.prometheus();
 
-        return { status: 'ok' };
+            return reply.code(200).send(prismaMetrics);
+        } catch (err) {
+            console.error(err);
+
+            return reply.code(503).send({ error: 'Check the logs for errors, plz.' });
+        }
     });
 }
 
