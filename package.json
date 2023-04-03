@@ -1,6 +1,6 @@
 {
   "name": "hemmelig",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "description": "Paste a password, secret message or private information",
   "main": "index.js",
   "type": "module",
@@ -8,8 +8,8 @@
     "start": "prisma migrate dev && node server.js",
     "test": "mocha tests/**/*.test.js --reporter nyan",
     "test-watch": "mocha --watch tests/**/*.test.js --reporter nyan",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider node pre.js && vite build",
-    "dev": "NODE_OPTIONS=--openssl-legacy-provider concurrently \"npm run server-dev\" \"npm run client-dev\"",
+    "build": "node pre.js && vite build",
+    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
     "server-dev": "prisma migrate dev && NODE_ENV=development node pre.js && NODE_ENV=development nodemon server.js",
     "client-dev": "NODE_ENV=development vite",
     "docker-build": "docker build -t hemmelig .",
