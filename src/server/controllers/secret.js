@@ -1,9 +1,14 @@
 import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
+import { PrismaClient } from '@prisma/client';
 import { hash, compare } from '../helpers/password.js';
-import * as redis from '../services/redis.js';
+
 import { validIdRegExp } from '../decorators/key-generation.js';
+
+const DEFAULT_EXPIRATION = 60 * 60 * 24 * 1000;
+
+const prisma = new PrismaClient();
 
 const ipCheck = (ip) => {
     if (ip === 'localhost') {
@@ -22,45 +27,54 @@ async function getSecretRoute(request, reply) {
 
     const { password = '' } = request.body ? request.body : {};
 
-    const result = {};
-
     // If it does not match the valid characters set for nanoid, return 403
     if (!validIdRegExp.test(id)) {
         return reply.code(403).send({ error: 'Not a valid secret ID' });
     }
 
-    const data = await redis.getSecret(id);
+    const data = await prisma.secret.findFirst({
+        where: {
+            id,
+            expiresAt: { gte: new Date() },
+        },
+        include: { files: true },
+    });
 
     if (!data) {
         return reply.code(404).send({ error: 'Secret not found' });
     }
 
     if (data.password) {
-        const isPasswordValid = await compare(validator.escape(password), data.password);
+        const isPasswordValid = await compare(password, data.password);
         if (!isPasswordValid) {
             return reply.code(401).send({ error: 'Wrong password!' });
         }
     }
 
-    if (data.files) {
-        Object.assign(result, { files: JSON.parse(data.files) });
+    if (data.maxViews > 1) {
+        await prisma.secret.update({
+            where: {
+                id: data.id,
+            },
+            data: {
+                maxViews: {
+                    decrement: 1,
+                },
+            },
+        });
     }
 
-    if (data.title) {
-        Object.assign(result, { title: validator.unescape(data.title) });
+    if (!data.preventBurn && data.maxViews === 1) {
+        await prisma.file.deleteMany({ where: { secretId: id } });
+        await prisma.secret.delete({ where: { id } });
     }
 
-    if (data.preventBurn) {
-        Object.assign(result, { preventBurn: JSON.parse(data.preventBurn) });
-    }
-
-    Object.assign(result, {
-        secret: validator.unescape(data.secret),
-    });
-
-    redis.deleteSecret(id);
-
-    return result;
+    return {
+        title: data.title,
+        preventBurn: data.preventBurn,
+        secret: data.data,
+        files: data.files,
+    };
 }
 
 async function secret(fastify) {
@@ -82,12 +96,7 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [
-                fastify.rateLimit,
-                fastify.userFeatures,
-                fastify.keyGeneration,
-                fastify.attachment,
-            ],
+            preValidation: [fastify.userFeatures, fastify.keyGeneration, fastify.attachment],
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
@@ -111,27 +120,35 @@ async function secret(fastify) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
-            const data = {
-                id: secretId,
-                title: title ? validator.escape(title) : '',
-                maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
-                secret: validator.escape(text),
-                allowedIp: allowedIp ? validator.escape(allowedIp) : '',
-            };
+            await prisma.secret.create({
+                data: {
+                    id: secretId,
+                    title,
+                    maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
+                    data: text,
+                    allowed_ip: allowedIp,
+                    password: password ? await hash(password) : undefined,
+                    preventBurn,
+                    files: {
+                        create: files,
+                    },
+                    expiresAt: new Date(
+                        Date.now() + (parseInt(ttl) ? parseInt(ttl) * 1000 : DEFAULT_EXPIRATION)
+                    ),
+                },
+            });
 
-            if (password) {
-                Object.assign(data, { password: await hash(validator.escape(password)) });
-            }
-
-            if (files) {
-                Object.assign(data, { files });
-            }
-
-            if (preventBurn) {
-                Object.assign(data, { preventBurn: true });
-            }
-
-            redis.createSecret(data, ttl);
+            await prisma.statistic.upsert({
+                where: {
+                    id: 'secrets_created',
+                },
+                update: {
+                    value: {
+                        increment: 1,
+                    },
+                },
+                create: { id: 'secrets_created' },
+            });
 
             return reply.code(201).send({
                 id: secretId,
@@ -147,7 +164,7 @@ async function secret(fastify) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 
-        const response = await redis.deleteSecret(id);
+        const response = await prisma.secret.delete({ where: { id } });
 
         if (!response) {
             return { error: 'Secret can not be burned before the expiration date' };
@@ -163,7 +180,9 @@ async function secret(fastify) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 
-        const data = await redis.getSecret(id);
+        const data = await prisma.secret.findFirst({
+            where: { id },
+        });
 
         if (!data) {
             return reply.code(404).send({ error: 'Secret not found' });

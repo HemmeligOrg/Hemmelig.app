@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["metrics"]
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("SECRET_DATABASE_URL")
+}
+
+model File {
+    id       String @id @default(uuid())
+    type     String
+    ext      String
+    key      String
+    secret   Secret @relation(fields: [secretId], references: [id])
+    secretId String
+}
+
+model Secret {
+    id          String   @id
+    data        String
+    title       String?
+    maxViews    Int      @default(1)
+    files       File[]
+    password    String?
+    allowed_ip  String?
+    preventBurn Boolean  @default(false)
+    expiresAt   DateTime
+}
+
+model User {
+    id       String @id @default(uuid())
+    username String @unique
+    email    String @unique
+    password String
+}
+
+model Statistic {
+    id    String @id
+    value Int    @default(1)
+}

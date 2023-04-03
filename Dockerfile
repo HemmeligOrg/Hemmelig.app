@@ -1,14 +1,9 @@
-# To use this image you need a redis database enabled.
-# Example:
-#
-# $ docker run -p 6379:6379 --name some-redis -d redis
-#
 # Bare minimum run
 # ------------------------------
 # $ docker run -p 3000:3000 -d --name=hemmelig \
-#   -e SECRET_REDIS_HOST=127.0.0.1 \
+#   -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \
+#   -v ./database/:/home/node/hemmelig/database/ \
 #   hemmeligapp/hemmelig:latest
-
 
 FROM node:18-alpine
 
@@ -40,6 +35,8 @@ RUN npm ci --production --ignore-scripts
 RUN chown -R node.node ./
 
 COPY . .
+
+RUN npx prisma generate
 
 EXPOSE 3000
 

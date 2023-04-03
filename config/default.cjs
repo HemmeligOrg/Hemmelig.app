@@ -3,11 +3,6 @@ const {
     SECRET_PORT = '3000',
     SECRET_HOST = 'localhost',
     SECRET_MASTER_KEY = '11111222223333344444555556666677', // has to be 32 in length
-    SECRET_REDIS_HOST = '0.0.0.0',
-    SECRET_REDIS_PORT = 6379,
-    SECRET_REDIS_USER = null,
-    SECRET_REDIS_PASSWORD = null,
-    SECRET_REDIS_TLS = 'false',
     SECRET_JWT_SECRET = 'good_luck_have_fun',
     SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_DISABLE_USERS = 'false',
@@ -33,13 +28,6 @@ const config = {
     file: {
         size: SECRET_FILE_SIZE,
         adapter: !!SECRET_DO_SPACES_SECRET ? 'do' : 'disk',
-    },
-    redis: {
-        host: SECRET_REDIS_HOST,
-        port: SECRET_REDIS_PORT,
-        user: SECRET_REDIS_USER,
-        password: SECRET_REDIS_PASSWORD,
-        tls: SECRET_REDIS_TLS === 'true',
     },
     jwt: {
         secret: SECRET_JWT_SECRET,

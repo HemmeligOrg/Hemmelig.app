@@ -7,9 +7,10 @@ import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
+import rateLimit from '@fastify/rate-limit';
+import { PrismaClient } from '@prisma/client';
 import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
-import rateLimit from './src/server/decorators/rate-limit.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
@@ -21,6 +22,8 @@ import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
+const prisma = new PrismaClient();
+
 const isDev = process.env.NODE_ENV === 'development';
 
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
@@ -28,6 +31,12 @@ const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 *
 const fastify = importFastify({
     logger: config.get('logger'),
     bodyLimit: MAX_FILE_BYTES,
+});
+
+// https://github.com/fastify/fastify-rate-limit
+fastify.register(rateLimit, {
+    max: 10000,
+    timeWindow: '1 minute',
 });
 
 // https://github.com/fastify/fastify-helmet
@@ -57,7 +66,6 @@ fastify.register(cookie);
 // Define decorators
 fastify.register(jwtDecorator);
 fastify.register(userFeatures);
-fastify.register(rateLimit);
 fastify.register(allowedIp);
 fastify.register(attachment);
 fastify.register(keyGeneration);
@@ -105,8 +113,21 @@ if (!isDev) {
     fastify.get('/terms', serveIndex);
 }
 
+async function dbCleaner() {
+    await prisma.secret.deleteMany({
+        where: {
+            expiresAt: {
+                lte: new Date(),
+            },
+        },
+    });
+}
+
 const startServer = async () => {
     try {
+        setInterval(dbCleaner, 30000);
+        dbCleaner();
+
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);
