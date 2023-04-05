@@ -37,6 +37,7 @@ model User {
     username  String  @unique
     email     String  @unique
     password  String
+    role      String  @default("user")
     generated Boolean @default(false)
 }
 

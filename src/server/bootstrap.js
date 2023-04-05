@@ -24,6 +24,7 @@ const password = config.get('account.root.password');
             email,
             password: await hash(password),
             generated: true,
+            role: 'admin',
         },
     });
 })();
