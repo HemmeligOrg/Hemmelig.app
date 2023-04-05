@@ -129,6 +129,7 @@ async function authentication(fastify) {
 
             return {
                 username: user.username,
+                generated: user.generated,
             };
         }
     );

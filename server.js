@@ -124,6 +124,9 @@ async function dbCleaner() {
 }
 
 const startServer = async () => {
+    // Boot scripts
+    import('./src/server/bootstrap.js');
+
     try {
         setInterval(dbCleaner, 30000);
         dbCleaner();
