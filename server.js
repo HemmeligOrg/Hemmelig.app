@@ -8,7 +8,6 @@ import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
-import { PrismaClient } from '@prisma/client';
 
 import adminDecorator from './src/server/decorators/admin.js';
 import jwtDecorator from './src/server/decorators/jwt.js';
@@ -24,8 +23,6 @@ import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
-
-const prisma = new PrismaClient();
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -121,24 +118,11 @@ if (!isDev) {
     fastify.get('/terms', serveIndex);
 }
 
-async function dbCleaner() {
-    await prisma.secret.deleteMany({
-        where: {
-            expiresAt: {
-                lte: new Date(),
-            },
-        },
-    });
-}
-
 const startServer = async () => {
     // Boot scripts
     import('./src/server/bootstrap.js');
 
     try {
-        setInterval(dbCleaner, 30000);
-        dbCleaner();
-
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);

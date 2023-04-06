@@ -8,8 +8,19 @@ const username = config.get('account.root.user');
 const email = config.get('account.root.email');
 const password = config.get('account.root.password');
 
+// Remove expired secrets
+async function dbCleaner() {
+    await prisma.secret.deleteMany({
+        where: {
+            expiresAt: {
+                lte: new Date(),
+            },
+        },
+    });
+}
+
 // Create a root user the first time the server is running
-(async function createRootUser() {
+async function createRootUser() {
     const rootUser = await prisma.user.findFirst({
         where: { username },
     });
@@ -27,4 +38,11 @@ const password = config.get('account.root.password');
             role: 'admin',
         },
     });
+}
+
+(async function main() {
+    setInterval(dbCleaner, 30000);
+    dbCleaner();
+
+    createRootUser();
 })();
