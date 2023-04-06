@@ -1,5 +1,6 @@
 import config from 'config';
 import { PrismaClient } from '@prisma/client';
+import adminSettings from './adminSettings.js';
 import { hash } from './helpers/password.js';
 
 const prisma = new PrismaClient();
@@ -7,6 +8,15 @@ const prisma = new PrismaClient();
 const username = config.get('account.root.user');
 const email = config.get('account.root.email');
 const password = config.get('account.root.password');
+
+// Create admin settings we can use by the server
+async function createAdminSettings() {
+    const [settings] = await prisma.settings.findMany({ where: { id: 'admin_settings' } });
+
+    Object.keys(settings).forEach((key) => {
+        adminSettings.set(key, settings[key]);
+    });
+}
 
 // Remove expired secrets
 async function dbCleaner() {
@@ -41,8 +51,12 @@ async function createRootUser() {
 }
 
 (async function main() {
-    setInterval(dbCleaner, 30000);
-    dbCleaner();
+    setInterval(() => {
+        dbCleaner();
+
+        // Update the admin settings
+        createAdminSettings();
+    }, 20 * 1000);
 
     createRootUser();
 })();
