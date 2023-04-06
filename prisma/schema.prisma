@@ -49,4 +49,5 @@ model Statistic {
 model Settings {
     id            String  @id
     disable_users Boolean @default(false)
+    read_only     Boolean @default(false)
 }
