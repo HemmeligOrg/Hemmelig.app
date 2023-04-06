@@ -45,3 +45,8 @@ model Statistic {
     id    String @id
     value Int    @default(1)
 }
+
+model Settings {
+    id            String  @id
+    disable_users Boolean @default(false)
+}

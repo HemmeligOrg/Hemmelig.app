@@ -9,12 +9,15 @@ import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
 import { PrismaClient } from '@prisma/client';
+
+import adminDecorator from './src/server/decorators/admin.js';
 import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
 
+import adminSettingsRoute from './src/server/controllers/admin/settings.js';
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
 import downloadRoute from './src/server/controllers/download.js';
@@ -64,6 +67,7 @@ fastify.register(jwt, {
 fastify.register(cookie);
 
 // Define decorators
+fastify.register(adminDecorator);
 fastify.register(jwtDecorator);
 fastify.register(userFeatures);
 fastify.register(allowedIp);
@@ -78,6 +82,10 @@ if (!config.get('user.disabled')) {
 
     fastify.register(accountRoute, {
         prefix: '/api/account',
+    });
+
+    fastify.register(adminSettingsRoute, {
+        prefix: '/api/admin/settings',
     });
 }
 
