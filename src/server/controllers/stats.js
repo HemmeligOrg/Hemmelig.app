@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../services/prisma.js';
 
 async function statistics(fastify) {
     fastify.get('/secrets_created', async (_, reply) => {

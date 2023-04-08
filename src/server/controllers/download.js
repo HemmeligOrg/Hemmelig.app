@@ -1,10 +1,8 @@
 import sanitize from 'sanitize-filename';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../services/prisma.js';
 import fileAdapter from '../services/file-adapter.js';
 
 import { validIdRegExp } from '../decorators/key-generation.js';
-
-const prisma = new PrismaClient();
 
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {

@@ -1,9 +1,7 @@
 import fp from 'fastify-plugin';
 import { nanoid } from 'nanoid';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../services/prisma.js';
 import getRandomAdjective from '../helpers/adjective.js';
-
-const prisma = new PrismaClient();
 
 export const validIdRegExp = new RegExp('^[A-Za-z0-9_-]*$');
 
