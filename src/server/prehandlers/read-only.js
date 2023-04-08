@@ -4,24 +4,32 @@ import adminSettings from '../adminSettings.js';
 // The auth routes
 const regex = /^\/api\/authentication\/.*$/i;
 
-export default async function readOnlyHandler(request, reply) {
-    const { url } = request;
+export default function readOnlyHandler(fastify) {
+    return async (request, reply) => {
+        const { url } = request;
 
-    if (regex.test(url)) {
-        return;
-    }
+        if (regex.test(url)) {
+            return;
+        }
 
-    const username = request?.user?.username;
+        const token = request.cookies['__HEMMELIG_TOKEN'] || null;
 
-    if (!username && adminSettings.get('read_only')) {
-        return reply.code(403).send({ error: 'Access denied' });
-    }
+        if (!token && adminSettings.get('read_only')) {
+            return reply.code(403).send({ error: 'Access denied' });
+        }
 
-    const user = await prisma.user.findFirst({
-        where: { username: request.user.username },
-    });
+        if (token) {
+            const decoded = fastify.jwt.verify(token);
 
-    if (user.role !== 'admin' && adminSettings.get('read_only')) {
-        return reply.code(403).send({ error: 'Access denied' });
-    }
+            const username = decoded?.username || null;
+
+            const user = await prisma.user.findFirst({
+                where: { username },
+            });
+
+            if (user.role !== 'admin' && adminSettings.get('read_only')) {
+                return reply.code(403).send({ error: 'Access denied' });
+            }
+        }
+    };
 }
