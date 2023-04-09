@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { userLoginChanged } from '../../actions';
 
+import Settings from './settings';
+
 import Spinner from '../../components/spinner';
 import ErrorComponent from '../../components/info/error';
 
@@ -217,19 +219,7 @@ const Account = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="instance-settings" pt="xs">
-                    <Container size="xs">
-                        <Stack>
-                            <Group position="right">
-                                <Button
-                                    leftIcon={<IconEdit size={14} />}
-                                    onClick={() => {}}
-                                    color="hemmelig"
-                                >
-                                    Update details
-                                </Button>
-                            </Group>
-                        </Stack>
-                    </Container>
+                    <Settings />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="account-settings" pt="xs">

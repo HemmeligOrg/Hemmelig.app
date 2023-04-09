@@ -22,16 +22,16 @@ async function settings(fastify) {
         {
             preValidation: [fastify.authenticate, fastify.admin],
         },
-        async (request, reply) => {
-            const { disableUsers = false, readOnly = false } = request.body;
+        async (request) => {
+            const { disable_users = false, read_only = false } = request.body;
 
             const settings = await prisma.settings.upsert({
                 where: {
                     id: 'admin_settings',
                 },
                 update: {
-                    disable_users: disableUsers, // Disable user registration
-                    read_only: readOnly, // Allow visiting users to read secrets, and not create any except if you are an admin
+                    disable_users, // Disable user registration
+                    read_only, // Allow visiting users to read secrets, and not create any except if you are an admin
                 },
                 create: { id: 'admin_settings' },
             });
