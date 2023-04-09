@@ -1,9 +1,7 @@
 import fp from 'fastify-plugin';
 import ipRangeCheck from 'ip-range-check';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../services/prisma.js';
 import getClientIp from '../helpers/client-ip.js';
-
-const prisma = new PrismaClient();
 
 export default fp(async (fastify) => {
     fastify.decorate('allowedIp', async (request, reply) => {

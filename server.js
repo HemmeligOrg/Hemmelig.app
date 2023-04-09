@@ -1,3 +1,6 @@
+// Boot scripts
+import('./src/server/bootstrap.js');
+
 import config from 'config';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,13 +11,18 @@ import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
-import { PrismaClient } from '@prisma/client';
+
+import adminDecorator from './src/server/decorators/admin.js';
 import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
 
+import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
+import readOnlyHandler from './src/server/prehandlers/read-only.js';
+
+import adminSettingsRoute from './src/server/controllers/admin/settings.js';
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
 import downloadRoute from './src/server/controllers/download.js';
@@ -22,7 +30,7 @@ import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
-const prisma = new PrismaClient();
+import disableUserHandler from './src/server/prehandlers/disable-users.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -64,22 +72,31 @@ fastify.register(jwt, {
 fastify.register(cookie);
 
 // Define decorators
+fastify.register(adminDecorator);
 fastify.register(jwtDecorator);
 fastify.register(userFeatures);
 fastify.register(allowedIp);
 fastify.register(attachment);
 fastify.register(keyGeneration);
 
-// Register our routes before the static content
-if (!config.get('user.disabled')) {
-    fastify.register(authenticationRoute, {
-        prefix: '/api/authentication',
-    });
+// Define pre handlers
+fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
+fastify.addHook('preHandler', disableUserHandler);
+fastify.addHook('preHandler', readOnlyHandler);
 
-    fastify.register(accountRoute, {
-        prefix: '/api/account',
-    });
-}
+// Register our routes before the static content
+
+fastify.register(authenticationRoute, {
+    prefix: '/api/authentication',
+});
+
+fastify.register(accountRoute, {
+    prefix: '/api/account',
+});
+
+fastify.register(adminSettingsRoute, {
+    prefix: '/api/admin/settings',
+});
 
 fastify.register(downloadRoute, { prefix: '/api/download' });
 fastify.register(secretRoute, { prefix: '/api/secret' });
@@ -113,21 +130,8 @@ if (!isDev) {
     fastify.get('/terms', serveIndex);
 }
 
-async function dbCleaner() {
-    await prisma.secret.deleteMany({
-        where: {
-            expiresAt: {
-                lte: new Date(),
-            },
-        },
-    });
-}
-
 const startServer = async () => {
     try {
-        setInterval(dbCleaner, 30000);
-        dbCleaner();
-
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);

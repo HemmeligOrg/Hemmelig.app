@@ -33,13 +33,21 @@ model Secret {
 }
 
 model User {
-    id       String @id @default(uuid())
-    username String @unique
-    email    String @unique
-    password String
+    id        String  @id @default(uuid())
+    username  String  @unique
+    email     String  @unique
+    password  String
+    role      String  @default("user")
+    generated Boolean @default(false)
 }
 
 model Statistic {
     id    String @id
     value Int    @default(1)
+}
+
+model Settings {
+    id            String  @id
+    disable_users Boolean @default(false)
+    read_only     Boolean @default(false)
 }

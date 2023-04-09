@@ -38,6 +38,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
+- Admin settings such as disable users and read only for non administrators
 
 ## Linode Referral
 
@@ -103,9 +104,11 @@ npx hemmelig --help
 | `SECRET_HOST`                 | Used for i.e. set cors/cookies to your domain name                    | ""                   |
 | `SECRET_MAX_TEXT_SIZE`        | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                  |
 | `SECRET_JWT_SECRET`           | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
+| `SECRET_ROOT_USER`            | Override this for the root account username                           | groot                |
+| `SECRET_ROOT_PASSWORD`        | This is the root password, override it with your own password         | iamgroot             |
+| `SECRET_ROOT_EMAIL`           | This is the root email, override it with your own email               | groot@hemmelig.app   |
 | `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                    |
 | `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true                 |
-| `SECRET_DISABLE_USERS`        | Disable user registration                                             | false                |
 | `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                   |
 | `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                   |
 | `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                   |

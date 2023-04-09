@@ -3,12 +3,14 @@
     "sign_out": "Sign out",
     "sign_up": "Sign up",
     "account": "Account",
-    "settings": "Settings",
+    "account_settings": "Account settings",
+    "instance_settings": "Instance settings",
     "copied": "Copied",
     "copy": "Copy",
     "home": {
         "app_subtitle": "Paste a password, secret message, or private information.",
         "welcome": "Keep your sensitive information out of chat logs, emails, and more with heavily encrypted secrets.",
+        "bummer": "Bummer!",
         "maintxtarea": "Write your sensitive information..",
         "title": "Title",
         "lifetime": "Lifetime",
@@ -50,5 +52,11 @@
         "create_secret": "Create a new secret",
         "convert_b64": "Convert text to base64",
         "convert_utf8": "Convert base64 to plain text"
+    },
+    "settings": {
+        "success": "Success",
+        "description": "Update the Hemmelig instance state",
+        "updated": "Settings updated",
+        "update": "Update settings"
     }
 }

@@ -1,14 +1,12 @@
 import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import config from 'config';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../services/prisma.js';
 import { hash, compare } from '../helpers/password.js';
 
 import { validIdRegExp } from '../decorators/key-generation.js';
 
 const DEFAULT_EXPIRATION = 60 * 60 * 24 * 1000;
-
-const prisma = new PrismaClient();
 
 const ipCheck = (ip) => {
     if (ip === 'localhost') {

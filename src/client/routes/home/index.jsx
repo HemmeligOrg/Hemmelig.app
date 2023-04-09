@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import passwordGenerator from 'generate-password-browser';
 import {
+    Alert,
     Button,
     Checkbox,
     Container,
@@ -31,6 +32,7 @@ import {
     IconCheck,
     IconHeading,
     IconShare,
+    IconAlertCircle,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 
@@ -63,6 +65,7 @@ const Home = () => {
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
     const [creatingSecret, setCreatingSecret] = useState(false);
+    const [error, setError] = useState('');
 
     const secretRef = useRef(null);
 
@@ -71,6 +74,7 @@ const Home = () => {
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
     const { t } = useTranslation();
+
     useEffect(() => {
         if (secretId) {
             secretRef.current.focus();
@@ -109,6 +113,7 @@ const Home = () => {
         setEncryptionKey('');
         setOnEnablePassword(false);
         setCreatingSecret(false);
+        setError('');
     };
 
     const onSubmit = async (values) => {
@@ -145,6 +150,10 @@ const Home = () => {
         const json = await createSecret(body);
 
         if (json.statusCode !== 201) {
+            if (json.statusCode === 403) {
+                setError(json.error);
+            }
+
             if (json.message === 'request file too large, please check multipart config') {
                 form.setErrors({ files: 'The file size is too large' });
             } else {
@@ -244,6 +253,18 @@ const Home = () => {
                     <Text size="sm" align="center">
                         {t('home.welcome')}
                     </Text>
+
+                    {error && (
+                        <Alert
+                            icon={<IconAlertCircle size="1rem" />}
+                            title={t('home.bummer')}
+                            color="red"
+                            variant="outline"
+                        >
+                            {error}
+                        </Alert>
+                    )}
+
                     <Textarea
                         minRows={10}
                         maxRows={secretId ? 4 : 1000}

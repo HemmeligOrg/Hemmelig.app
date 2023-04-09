@@ -1,10 +1,8 @@
 import emailValidator from 'email-validator';
 import config from 'config';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../services/prisma.js';
 
 import { hash, compare } from '../helpers/password.js';
-
-const prisma = new PrismaClient();
 
 const validUsername = new RegExp('^[A-Za-z0-9_-]*$');
 
@@ -129,6 +127,7 @@ async function authentication(fastify) {
 
             return {
                 username: user.username,
+                generated: user.generated,
             };
         }
     );

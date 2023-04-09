@@ -12,7 +12,6 @@ import {
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
-import config from './config';
 
 const HeaderContent = lazy(() => import('./components/header'));
 
@@ -79,30 +78,28 @@ const App = () => {
                         footer={
                             <Footer height={45} p="xs">
                                 <Group position="center" spacing="xs">
-                                    {!config.get('settings.disableUsers') && (
-                                        <>
-                                            <Anchor
-                                                component={Link}
-                                                to="/signin"
-                                                color="dimmed"
-                                                size="xs"
-                                                transform="uppercase"
-                                            >
-                                                {t('sign_in')}
-                                            </Anchor>
-                                            |
-                                            <Anchor
-                                                component={Link}
-                                                to="/account"
-                                                color="dimmed"
-                                                size="xs"
-                                                transform="uppercase"
-                                            >
-                                                {t('account')}
-                                            </Anchor>
-                                            |
-                                        </>
-                                    )}
+                                    <>
+                                        <Anchor
+                                            component={Link}
+                                            to="/signin"
+                                            color="dimmed"
+                                            size="xs"
+                                            transform="uppercase"
+                                        >
+                                            {t('sign_in')}
+                                        </Anchor>
+                                        |
+                                        <Anchor
+                                            component={Link}
+                                            to="/account"
+                                            color="dimmed"
+                                            size="xs"
+                                            transform="uppercase"
+                                        >
+                                            {t('account')}
+                                        </Anchor>
+                                        |
+                                    </>
                                     <Anchor
                                         component={Link}
                                         to="/privacy"

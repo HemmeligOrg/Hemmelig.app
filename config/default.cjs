@@ -4,6 +4,9 @@ const {
     SECRET_HOST = 'localhost',
     SECRET_MASTER_KEY = '11111222223333344444555556666677', // has to be 32 in length
     SECRET_JWT_SECRET = 'good_luck_have_fun',
+    SECRET_ROOT_USER = 'groot',
+    SECRET_ROOT_PASSWORD = 'iamgroot',
+    SECRET_ROOT_EMAIL = 'groot@hemmelig.app',
     SECRET_ENABLE_FILE_UPLOAD = 'true',
     SECRET_DISABLE_USERS = 'false',
     SECRET_FILE_SIZE = 4, // 4 mb
@@ -24,6 +27,14 @@ const config = {
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
 
+    // root account management
+    account: {
+        root: {
+            user: SECRET_ROOT_USER,
+            password: SECRET_ROOT_PASSWORD,
+            email: SECRET_ROOT_EMAIL,
+        },
+    },
     // choose digital ocean/s3 or disk
     file: {
         size: SECRET_FILE_SIZE,
@@ -50,9 +61,6 @@ const config = {
         // /var/tmp files can live up to 30 days
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
-    user: {
-        disabled: JSON.parse(SECRET_DISABLE_USERS),
-    },
     logger: true,
     cors: '*',
     __client_config: {
@@ -61,7 +69,6 @@ const config = {
         },
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
-            disableUsers: JSON.parse(SECRET_DISABLE_USERS),
             forcedLanguage: SECRET_FORCED_LANGUAGE,
         },
     },

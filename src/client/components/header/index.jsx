@@ -8,7 +8,6 @@ import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.jsx';
 import { removeCookie } from '../../helpers/cookie';
 import { signOut, verify } from '../../api/authentication';
-import config from '../../config';
 
 import style from './style.module.css';
 
@@ -64,7 +63,7 @@ const Header = () => {
                     </Anchor>
                 </Grid.Col>
 
-                {isLoggedIn && !config.get('settings.disableUsers') && (
+                {isLoggedIn && (
                     <Grid.Col span={8}>
                         <Group position="right">
                             <Button
@@ -78,7 +77,7 @@ const Header = () => {
                     </Grid.Col>
                 )}
 
-                {!isLoggedIn && !config.get('settings.disableUsers') && (
+                {!isLoggedIn && (
                     <>
                         <Grid.Col span={4}>
                             <Group position="right">

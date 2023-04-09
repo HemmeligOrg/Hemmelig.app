@@ -11,11 +11,14 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconAt, IconLock, IconTrash, IconSettings, IconEdit } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { userLoginChanged } from '../../actions';
+
+import Settings from './settings';
 
 import Spinner from '../../components/spinner';
 import ErrorComponent from '../../components/info/error';
@@ -32,6 +35,8 @@ const Account = () => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState({});
     const [activeTab, setActiveTab] = useState('account');
+
+    const isMobile = useMediaQuery('(max-width: 915px)');
 
     const dispatch = useDispatch();
 
@@ -158,18 +163,25 @@ const Account = () => {
 
     return (
         <Container>
-            <Tabs color="orange" defaultValue={activeTab}>
+            <Tabs
+                color="orange"
+                orientation={isMobile ? 'horisontal' : 'vertical'}
+                defaultValue={activeTab}
+            >
                 <Tabs.List>
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
                         {t('account')}
                     </Tabs.Tab>
-                    <Tabs.Tab value="settings" icon={<IconSettings size={14} />}>
-                        {t('settings')}
+                    <Tabs.Tab value="instance-settings" icon={<IconSettings size={14} />}>
+                        {t('instance_settings')}
+                    </Tabs.Tab>
+                    <Tabs.Tab value="account-settings" icon={<IconUser size={14} />}>
+                        {t('account_settings')}
                     </Tabs.Tab>
                 </Tabs.List>
 
                 <Tabs.Panel value="account" pt="xs">
-                    <Stack>
+                    <Container>
                         <Text size="sm">
                             Hi, <strong>{user.username}</strong>
                         </Text>
@@ -203,10 +215,14 @@ const Account = () => {
                                 Delete profile
                             </Button>
                         </Group>
-                    </Stack>
+                    </Container>
                 </Tabs.Panel>
 
-                <Tabs.Panel value="settings" pt="xs">
+                <Tabs.Panel value="instance-settings" pt="xs">
+                    <Settings />
+                </Tabs.Panel>
+
+                <Tabs.Panel value="account-settings" pt="xs">
                     <Container size="xs">
                         <Stack>
                             <TextInput
