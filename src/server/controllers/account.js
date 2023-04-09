@@ -88,7 +88,7 @@ async function account(fastify) {
                     error: `The password and confirmation password do not match.`,
                 });
             }
-            console.log(data);
+
             const userData = await prisma.user.update({
                 where: { username: request.user.username },
                 data,
