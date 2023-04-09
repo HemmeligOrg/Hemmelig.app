@@ -180,6 +180,18 @@ const Account = () => {
 
     return (
         <Container>
+            {user?.generated && (
+                <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title="Update your admin password"
+                    color="red"
+                    variant="outline"
+                >
+                    If this is the first time you sign in on the admin user account, you should go
+                    to Account settings and update your password.
+                </Alert>
+            )}
+
             <Tabs
                 color="orange"
                 orientation={isMobile ? 'horisontal' : 'vertical'}

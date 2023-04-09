@@ -46,7 +46,7 @@ export const updateUser = async (data) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, generated: false }),
     });
 
     const json = await response.json();

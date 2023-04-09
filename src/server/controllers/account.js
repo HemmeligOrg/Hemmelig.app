@@ -19,6 +19,7 @@ async function account(fastify) {
                 user: {
                     username: user.username,
                     email: user.email,
+                    generated: user.generated,
                 },
             };
         }
@@ -35,9 +36,12 @@ async function account(fastify) {
                 newPassword = '',
                 email = '',
                 confirmNewPassword = '',
+                generated = false,
             } = request.body;
 
-            const data = {};
+            const data = {
+                generated,
+            };
 
             const user = await prisma.user.findFirst({
                 where: { username: request.user.username },
@@ -94,6 +98,7 @@ async function account(fastify) {
                 user: {
                     username: userData.username,
                     email: userData.email,
+                    generated: userData.generated,
                     action: 'updated',
                 },
             };
