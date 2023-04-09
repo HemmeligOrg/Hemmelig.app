@@ -7,13 +7,17 @@ const username = config.get('account.root.user');
 const email = config.get('account.root.email');
 const password = config.get('account.root.password');
 
+export function updateAdminSettings(settings = {}) {
+    Object.keys(settings).forEach((key) => {
+        adminSettings.set(key, settings[key]);
+    });
+}
+
 // Create admin settings we can use by the server
 async function createAdminSettings() {
     const [settings] = await prisma.settings.findMany({ where: { id: 'admin_settings' } });
 
-    Object.keys(settings).forEach((key) => {
-        adminSettings.set(key, settings[key]);
-    });
+    updateAdminSettings(settings);
 }
 
 // Remove expired secrets
@@ -51,9 +55,6 @@ async function createRootUser() {
 (async function main() {
     setInterval(() => {
         dbCleaner();
-
-        // Update the admin settings
-        createAdminSettings();
     }, 20 * 1000);
 
     // initialize this as fast as possible so we do not have to wait the interval above

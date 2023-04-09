@@ -1,4 +1,5 @@
 import prisma from '../../services/prisma.js';
+import { updateAdminSettings } from '../../bootstrap.js';
 
 async function settings(fastify) {
     fastify.get(
@@ -35,6 +36,8 @@ async function settings(fastify) {
                 },
                 create: { id: 'admin_settings' },
             });
+
+            updateAdminSettings(settings);
 
             return settings;
         }
