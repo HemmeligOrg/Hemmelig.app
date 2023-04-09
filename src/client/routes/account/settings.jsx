@@ -62,7 +62,7 @@ const Settings = () => {
                     <Notification
                         icon={<IconCheck size="1.1rem" />}
                         color="teal"
-                        title="Teal notification"
+                        title="Success"
                         withCloseButton={false}
                     >
                         Settings updated
