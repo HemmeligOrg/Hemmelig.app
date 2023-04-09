@@ -81,16 +81,6 @@ const App = () => {
                                     <>
                                         <Anchor
                                             component={Link}
-                                            to="/signin"
-                                            color="dimmed"
-                                            size="xs"
-                                            transform="uppercase"
-                                        >
-                                            {t('sign_in')}
-                                        </Anchor>
-                                        |
-                                        <Anchor
-                                            component={Link}
                                             to="/account"
                                             color="dimmed"
                                             size="xs"
