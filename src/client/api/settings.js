@@ -30,9 +30,10 @@ export const updateSettings = async (data) => {
 
     const json = await response.json();
 
-    if (response.status === 401 && !json.type) {
+    if ([401, 403].includes(response.status) && !json.type) {
         return {
             statusCode: response.status,
+            error: json.error,
         };
     }
 

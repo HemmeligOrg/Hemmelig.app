@@ -10,7 +10,7 @@ import {
     Notification,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconEdit, IconCheck } from '@tabler/icons';
+import { IconEdit, IconCheck, IconAlertCircle } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSettings, updateSettings } from '../../api/settings';
@@ -35,48 +35,39 @@ const Settings = () => {
         })();
     }, []);
 
-    if (error) {
-        return (
-            <Alert
-                icon={<IconAlertCircle size="1rem" />}
-                title={t('home.bummer')}
-                color="red"
-                variant="outline"
-            >
-                {error.error}
-            </Alert>
-        );
-    }
-
     const onUpdateSettings = async (e) => {
         e.preventDefault();
 
-        try {
-            const data = await updateSettings(form.values);
+        const data = await updateSettings(form.values);
 
-            if ([401, 403, 500].includes(data.statusCode)) {
-                setError(data.error);
+        if ([401, 403, 500].includes(data.statusCode)) {
+            setError(data.error);
 
-                return;
-            }
-
-            form.setValues(data);
-
-            setSuccess(true);
-
-            setTimeout(() => {
-                setSuccess(false);
-            }, 3500);
-        } catch (err) {
-            console.error(err);
-
-            setError(err);
+            return;
         }
+
+        form.setValues(data);
+
+        setSuccess(true);
+
+        setTimeout(() => {
+            setSuccess(false);
+        }, 3500);
     };
 
     return (
         <Container size="xs ">
             <Stack>
+                {error && (
+                    <Alert
+                        icon={<IconAlertCircle size="1rem" />}
+                        title={t('home.bummer')}
+                        color="red"
+                        variant="outline"
+                    >
+                        {error}
+                    </Alert>
+                )}
                 {success && (
                     <Notification
                         icon={<IconCheck size="1.1rem" />}
