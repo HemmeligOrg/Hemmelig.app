@@ -38,6 +38,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
+- Admin settings such as disable users and read only for non administrators
 
 ## Linode Referral
 
