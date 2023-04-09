@@ -118,6 +118,6 @@ size-plugin.json
 
 index.html
 hemmelig.db*
-prisma.js
+prisma_test.js
 database/
 data/
