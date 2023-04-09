@@ -13,7 +13,6 @@ services:
             - SECRET_ROOT_USER=groot # User as the root admin user
             - SECRET_ROOT_PASSWORD=iamroot # The admin user password (change this after signed in)
             - SECRET_ROOT_EMAIL=groot@hemmelig.app # The email for the admin user
-            - SECRET_ENABLE_FILE_UPLOAD=true # Enable or disable file upload
             - SECRET_FILE_SIZE=4 # Set the total allowed upload file size in mb
             - SECRET_FORCED_LANGUAGE=en # Set the default language for the application
             - SECRET_JWT_SECRET=!changeme! # Override this for the secret signin JWT tokens for log in

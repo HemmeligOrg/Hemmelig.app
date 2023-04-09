@@ -3,7 +3,6 @@ export default {
         host: '/api',
     },
     settings: {
-        enableFileUpload: true,
         forcedLanguage: '',
     },
 };

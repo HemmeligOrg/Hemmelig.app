@@ -36,8 +36,6 @@ import {
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 
-import config from '../../config';
-
 import QRLink from '../../components/qrlink';
 
 import { zipFiles } from '../../helpers/zip';
@@ -59,7 +57,6 @@ const Home = () => {
         },
     });
 
-    const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
     const [ttl, setTTL] = useState(14400);
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [secretId, setSecretId] = useState('');
@@ -364,26 +361,24 @@ const Home = () => {
                     </Group>
 
                     <Group grow={isMobile}>
-                        {enableFileUpload && (
-                            <FileButton
-                                disabled={!isLoggedIn}
-                                styles={groupMobileStyle}
-                                multiple
-                                {...form.getInputProps('files')}
-                            >
-                                {(props) => (
-                                    <Button
-                                        {...props}
-                                        label={!isLoggedIn ? t('home.login_to_upload') : ''}
-                                        color="hemmelig-orange"
-                                    >
-                                        {t('home.upload_files')}
-                                    </Button>
-                                )}
-                            </FileButton>
-                        )}
+                        <FileButton
+                            disabled={!isLoggedIn}
+                            styles={groupMobileStyle}
+                            multiple
+                            {...form.getInputProps('files')}
+                        >
+                            {(props) => (
+                                <Button
+                                    {...props}
+                                    label={!isLoggedIn ? t('home.login_to_upload') : ''}
+                                    color={isLoggedIn ? 'hemmelig-orange' : 'gray'}
+                                >
+                                    {t('home.upload_files')}
+                                </Button>
+                            )}
+                        </FileButton>
 
-                        {enableFileUpload && !isLoggedIn && (
+                        {!isLoggedIn && (
                             <Text size="sm" align="center" mt="sm">
                                 {t('home.login_to_upload')}
                             </Text>

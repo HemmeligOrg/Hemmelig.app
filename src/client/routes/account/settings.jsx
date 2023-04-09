@@ -25,6 +25,7 @@ const Settings = () => {
         initialValues: {
             read_only: false,
             disable_users: false,
+            disable_file_upload: false,
         },
     });
 
@@ -97,6 +98,16 @@ const Settings = () => {
                         checked={form.getInputProps('disable_users').value}
                         onChange={(event) =>
                             form.setValues({ disable_users: event.currentTarget.checked })
+                        }
+                    />
+                </Group>
+                <Group position="left">
+                    <Checkbox
+                        label="Disable file upload"
+                        description="Disable file upload for your instance."
+                        checked={form.getInputProps('disable_file_upload').value}
+                        onChange={(event) =>
+                            form.setValues({ disable_file_upload: event.currentTarget.checked })
                         }
                     />
                 </Group>
