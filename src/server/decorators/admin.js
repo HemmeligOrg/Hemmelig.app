@@ -5,7 +5,7 @@ import prisma from '../services/prisma.js';
 // if the user has admin rights or not
 export default fp(async (fastify) => {
     fastify.decorate('admin', async (request, reply) => {
-        const username = request?.user?.username;
+        const username = request?.user?.username ?? null;
 
         if (username) {
             const user = await prisma.user.findFirst({
