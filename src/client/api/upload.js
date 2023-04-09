@@ -32,7 +32,7 @@ export const downloadFile = async (fileData) => {
     const blob = new Blob([fileContent], { type });
     const url = window.URL.createObjectURL(blob);
     a.href = url;
-    a.download = key + ext;
+    a.download = 'hemmelig_files' + ext;
     a.click();
     window.URL.revokeObjectURL(url);
 };
