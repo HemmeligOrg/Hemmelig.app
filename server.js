@@ -19,6 +19,7 @@ import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
 
+import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
 import readOnlyHandler from './src/server/prehandlers/read-only.js';
 
 import adminSettingsRoute from './src/server/controllers/admin/settings.js';
@@ -28,6 +29,8 @@ import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
+
+import adminSettings from './src/server/adminSettings.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -77,10 +80,11 @@ fastify.register(attachment);
 fastify.register(keyGeneration);
 
 // Define pre handlers
+fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
 fastify.addHook('preHandler', readOnlyHandler);
 
 // Register our routes before the static content
-if (!config.get('user.disabled')) {
+if (!adminSettings.get('disable_users')) {
     fastify.register(authenticationRoute, {
         prefix: '/api/authentication',
     });
