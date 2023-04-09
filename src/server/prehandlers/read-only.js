@@ -5,6 +5,8 @@ import adminSettings from '../adminSettings.js';
 const authRegex = /^\/api\/authentication\/.*$/i;
 const accountRegex = /^\/api\/account\/.*$/i;
 
+const errorMessage = 'Access denied. You are not allowed to create secrets. 🥲';
+
 export default async function readOnlyHandler(request, reply) {
     const { url } = request;
 
@@ -15,7 +17,7 @@ export default async function readOnlyHandler(request, reply) {
     const username = request?.user?.username ?? null;
 
     if (!username && adminSettings.get('read_only')) {
-        return reply.code(403).send({ error: 'Access denied' });
+        return reply.code(403).send({ error: errorMessage });
     }
 
     if (username) {
@@ -24,7 +26,7 @@ export default async function readOnlyHandler(request, reply) {
         });
 
         if (user.role !== 'admin' && adminSettings.get('read_only')) {
-            return reply.code(403).send({ error: 'Access denied' });
+            return reply.code(403).send({ error: errorMessage });
         }
     }
 }
