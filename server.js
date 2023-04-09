@@ -30,7 +30,6 @@ import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
-import adminSettings from './src/server/adminSettings.js';
 import disableUserHandler from './src/server/prehandlers/disable-users.js';
 
 const isDev = process.env.NODE_ENV === 'development';

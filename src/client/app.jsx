@@ -12,7 +12,6 @@ import {
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
-import config from './config';
 
 const HeaderContent = lazy(() => import('./components/header'));
 
