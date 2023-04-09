@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "prisma migrate dev && node server.js",
+    "start": "prisma migrate deploy && node server.js",
     "test": "mocha tests/**/*.test.js --reporter nyan",
     "test-watch": "mocha --watch tests/**/*.test.js --reporter nyan",
     "build": "node pre.js && vite build",
