@@ -6,8 +6,8 @@ import { IconLockOff, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.jsx';
-import { removeCookie } from '../../helpers/cookie';
-import { signOut, verify } from '../../api/authentication';
+import { getCookie, removeCookie } from '../../helpers/cookie';
+import { signOut } from '../../api/authentication';
 
 import style from './style.module.css';
 
@@ -24,22 +24,13 @@ const Header = () => {
             dispatch(userLoginChanged(true));
         }
 
-        (async () => {
-            // TODO: Change the behaviour later on to save the redux state
-            // in the local storage for a certain amount of time
-            // instead of do an API verify to get the user data
-            if (!isLoggedIn && !username) {
-                const json = await verify();
+        const cookie = getCookie();
 
-                if (json?.statusCode === 401) {
-                    return;
-                }
-
-                dispatch(userLogin(json));
-                dispatch(userLoginChanged(true));
-            }
-        })();
-    }, [isLoggedIn, username, dispatch]);
+        if (!isLoggedIn && !username && cookie) {
+            dispatch(userLogin(cookie));
+            dispatch(userLoginChanged(true));
+        }
+    }, []);
 
     const onSignOut = (event) => {
         event.preventDefault();
