@@ -1,3 +1,6 @@
+// Boot scripts
+import('./src/server/bootstrap.js');
+
 import config from 'config';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,6 +18,8 @@ import userFeatures from './src/server/decorators/user-features.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
 import keyGeneration from './src/server/decorators/key-generation.js';
+
+import readOnlyHandler from './src/server/prehandlers/read-only.js';
 
 import adminSettingsRoute from './src/server/controllers/admin/settings.js';
 import authenticationRoute from './src/server/controllers/authentication.js';
@@ -71,6 +76,9 @@ fastify.register(allowedIp);
 fastify.register(attachment);
 fastify.register(keyGeneration);
 
+// Define pre handlers
+fastify.addHook('preHandler', readOnlyHandler);
+
 // Register our routes before the static content
 if (!config.get('user.disabled')) {
     fastify.register(authenticationRoute, {
@@ -119,9 +127,6 @@ if (!isDev) {
 }
 
 const startServer = async () => {
-    // Boot scripts
-    import('./src/server/bootstrap.js');
-
     try {
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
