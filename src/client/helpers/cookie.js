@@ -3,7 +3,7 @@ import { Buffer } from 'buffer/';
 const STORAGE_KEY = '__HEMMELIG_TOKEN_PUBLIC';
 
 export const getCookie = () => {
-    var parts = document.cookie.split(STORAGE_KEY + '=');
+    const parts = document.cookie.split(STORAGE_KEY + '=');
 
     if (parts.length === 2) {
         return JSON.parse(
