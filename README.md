@@ -108,7 +108,6 @@ npx hemmelig --help
 | `SECRET_ROOT_EMAIL`           | This is the root email, override it with your own email               | groot@hemmelig.app   |
 | `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                    |
 | `SECRET_ENABLE_FILE_UPLOAD`   | Enable or disable file upload                                         | true                 |
-| `SECRET_DISABLE_USERS`        | Disable user registration                                             | false                |
 | `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                   |
 | `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                   |
 | `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                   |
