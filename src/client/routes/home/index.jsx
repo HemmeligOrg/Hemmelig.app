@@ -36,8 +36,6 @@ import {
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 
-import config from '../../config';
-
 import QRLink from '../../components/qrlink';
 
 import { zipFiles } from '../../helpers/zip';
