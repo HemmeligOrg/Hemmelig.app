@@ -16,7 +16,16 @@ export const signIn = async (username, password) => {
         };
     }
 
-    return data.json();
+    const json = await data.json();
+
+    if (data.status === 403) {
+        return {
+            statusCode: 403,
+            error: json.error,
+        };
+    }
+
+    return json;
 };
 
 export const signUp = async (email, username, password) => {
@@ -29,7 +38,16 @@ export const signUp = async (email, username, password) => {
         body: JSON.stringify({ email, username, password }),
     });
 
-    return data.json();
+    const json = await data.json();
+
+    if (data.status === 403) {
+        return {
+            statusCode: 403,
+            error: json.error,
+        };
+    }
+
+    return json;
 };
 
 export const signOut = async () => {

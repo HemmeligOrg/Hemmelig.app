@@ -79,30 +79,28 @@ const App = () => {
                         footer={
                             <Footer height={45} p="xs">
                                 <Group position="center" spacing="xs">
-                                    {!config.get('settings.disableUsers') && (
-                                        <>
-                                            <Anchor
-                                                component={Link}
-                                                to="/signin"
-                                                color="dimmed"
-                                                size="xs"
-                                                transform="uppercase"
-                                            >
-                                                {t('sign_in')}
-                                            </Anchor>
-                                            |
-                                            <Anchor
-                                                component={Link}
-                                                to="/account"
-                                                color="dimmed"
-                                                size="xs"
-                                                transform="uppercase"
-                                            >
-                                                {t('account')}
-                                            </Anchor>
-                                            |
-                                        </>
-                                    )}
+                                    <>
+                                        <Anchor
+                                            component={Link}
+                                            to="/signin"
+                                            color="dimmed"
+                                            size="xs"
+                                            transform="uppercase"
+                                        >
+                                            {t('sign_in')}
+                                        </Anchor>
+                                        |
+                                        <Anchor
+                                            component={Link}
+                                            to="/account"
+                                            color="dimmed"
+                                            size="xs"
+                                            transform="uppercase"
+                                        >
+                                            {t('account')}
+                                        </Anchor>
+                                        |
+                                    </>
                                     <Anchor
                                         component={Link}
                                         to="/privacy"

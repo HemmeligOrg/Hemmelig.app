@@ -61,9 +61,6 @@ const config = {
         // /var/tmp files can live up to 30 days
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
-    user: {
-        disabled: JSON.parse(SECRET_DISABLE_USERS),
-    },
     logger: true,
     cors: '*',
     __client_config: {
@@ -72,7 +69,6 @@ const config = {
         },
         settings: {
             enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
-            disableUsers: JSON.parse(SECRET_DISABLE_USERS),
             forcedLanguage: SECRET_FORCED_LANGUAGE,
         },
     },

@@ -31,6 +31,7 @@ import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
 
 import adminSettings from './src/server/adminSettings.js';
+import disableUserHandler from './src/server/prehandlers/disable-users.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -81,22 +82,22 @@ fastify.register(keyGeneration);
 
 // Define pre handlers
 fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
+fastify.addHook('preHandler', disableUserHandler);
 fastify.addHook('preHandler', readOnlyHandler);
 
 // Register our routes before the static content
-if (!adminSettings.get('disable_users')) {
-    fastify.register(authenticationRoute, {
-        prefix: '/api/authentication',
-    });
 
-    fastify.register(accountRoute, {
-        prefix: '/api/account',
-    });
+fastify.register(authenticationRoute, {
+    prefix: '/api/authentication',
+});
 
-    fastify.register(adminSettingsRoute, {
-        prefix: '/api/admin/settings',
-    });
-}
+fastify.register(accountRoute, {
+    prefix: '/api/account',
+});
+
+fastify.register(adminSettingsRoute, {
+    prefix: '/api/admin/settings',
+});
 
 fastify.register(downloadRoute, { prefix: '/api/download' });
 fastify.register(secretRoute, { prefix: '/api/secret' });

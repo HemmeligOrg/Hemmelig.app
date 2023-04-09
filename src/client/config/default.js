@@ -4,7 +4,6 @@ export default {
     },
     settings: {
         enableFileUpload: true,
-        disableUsers: false,
         forcedLanguage: '',
     },
 };
