@@ -38,7 +38,10 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
-- Admin settings such as disable users and read only for non administrators
+- Admin settings
+- - Disable user registration / sign in
+- - Set Hemmelig to be in read only mode by non admin users
+- - Disable file upload
 
 ## Linode Referral
 

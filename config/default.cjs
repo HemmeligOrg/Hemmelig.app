@@ -7,8 +7,6 @@ const {
     SECRET_ROOT_USER = 'groot',
     SECRET_ROOT_PASSWORD = 'iamgroot',
     SECRET_ROOT_EMAIL = 'groot@hemmelig.app',
-    SECRET_ENABLE_FILE_UPLOAD = 'true',
-    SECRET_DISABLE_USERS = 'false',
     SECRET_FILE_SIZE = 4, // 4 mb
     SECRET_FORCED_LANGUAGE = 'en',
     SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
@@ -68,7 +66,6 @@ const config = {
             host: '/api',
         },
         settings: {
-            enableFileUpload: JSON.parse(SECRET_ENABLE_FILE_UPLOAD),
             forcedLanguage: SECRET_FORCED_LANGUAGE,
         },
     },
