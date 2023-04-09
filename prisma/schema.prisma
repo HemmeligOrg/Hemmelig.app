@@ -16,7 +16,7 @@ model File {
     type     String
     ext      String
     key      String
-    secret   Secret @relation(fields: [secretId], references: [id])
+    secret   Secret @relation(fields: [secretId], references: [id], onDelete: Cascade)
     secretId String
 }
 
