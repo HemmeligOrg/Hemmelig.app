@@ -10,12 +10,20 @@ const PASSWORD_LENGTH = 5;
 const USERNAME_LENGTH = 4;
 
 const COOKIE_KEY = config.get('jwt.cookie');
-const COOKIE_SETTINGS = {
+const COOKIE_KEY_PUBLIC = COOKIE_KEY + '_PUBLIC';
+const SACRED_COOKIE_SETTINGS = {
     domain: config.get('host'),
     path: '/',
     secure: 'auto',
     sameSite: 'Strict',
     httpOnly: true,
+};
+const PUBLIC_COOKIE_SETTINGS = {
+    domain: config.get('host'),
+    path: '/',
+    secure: 'auto',
+    sameSite: 'Strict',
+    httpOnly: false,
 };
 
 async function authentication(fastify) {
@@ -73,17 +81,27 @@ async function authentication(fastify) {
             });
         }
 
-        const token = await reply.jwtSign(
+        const sacredToken = await reply.jwtSign(
             {
-                username,
-                email,
+                username: user.username,
+                email: user.email,
             },
             { expiresIn: '7d' } // expires in seven days
         );
 
-        reply.setCookie(COOKIE_KEY, token, COOKIE_SETTINGS).code(200).send({
-            username,
-        });
+        const publicToken = Buffer.from(
+            JSON.stringify({
+                username: user.username,
+            })
+        ).toString('base64');
+
+        reply
+            .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+            .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+            .code(200)
+            .send({
+                username: user.username,
+            });
     });
 
     fastify.post('/signin', async (request, reply) => {
@@ -95,20 +113,31 @@ async function authentication(fastify) {
             return reply.code(401).send({ error: 'Incorrect username or password.' });
         }
 
-        const token = await reply.jwtSign(
+        const sacredToken = await reply.jwtSign(
             {
-                username,
+                username: user.username,
+                email: user.email,
             },
             { expiresIn: '7d' }
         );
 
-        reply.setCookie(COOKIE_KEY, token, COOKIE_SETTINGS).code(200).send({
-            username,
-        });
+        const publicToken = Buffer.from(
+            JSON.stringify({
+                username: user.username,
+            })
+        ).toString('base64');
+
+        reply
+            .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+            .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+            .code(200)
+            .send({
+                username,
+            });
     });
 
     fastify.post('/signout', async (request, reply) => {
-        reply.clearCookie(COOKIE_KEY, { path: '/' });
+        reply.clearCookie(COOKIE_KEY_PUBLIC, { path: '/' }).clearCookie(COOKIE_KEY, { path: '/' });
 
         return {
             signout: 'ok',
