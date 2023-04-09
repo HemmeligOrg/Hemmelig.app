@@ -81,14 +81,14 @@ const Settings = () => {
                     <Notification
                         icon={<IconCheck size="1.1rem" />}
                         color="teal"
-                        title="Success"
+                        title={t('settings.success')}
                         withCloseButton={false}
                     >
                         {t('settings.updated')}
                     </Notification>
                 )}
 
-                <Text size="sm">Update the Hemmelig instance state</Text>
+                <Text size="sm">{t('settings.description')}</Text>
                 <Group position="left">
                     <Checkbox
                         label="Read only mode"

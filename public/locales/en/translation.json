@@ -54,6 +54,8 @@
         "convert_utf8": "Convert base64 to plain text"
     },
     "settings": {
+        "success": "Success",
+        "description": "Update the Hemmelig instance state",
         "updated": "Settings updated",
         "update": "Update settings"
     }
