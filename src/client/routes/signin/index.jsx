@@ -9,13 +9,13 @@ import {
     Title,
     Text,
     PasswordInput,
+    Notification,
 } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@mantine/form';
-import { IconLock, IconUser, IconLogin, IconAlertCircle } from '@tabler/icons';
+import { IconLock, IconUser, IconLogin, IconAlertCircle, IconCheck } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
-import Success from '../../components/info/success';
 import { signIn } from '../../api/authentication';
 import { userLogin } from '../../actions';
 
@@ -105,9 +105,14 @@ const SignIn = () => {
             </form>
 
             {success && (
-                <Success>
+                <Notification
+                    icon={<IconCheck size="1.1rem" />}
+                    color="teal"
+                    title={t('settings.success')}
+                    withCloseButton={false}
+                >
                     Redirecting to your account page. <Redirect to="/account" />
-                </Success>
+                </Notification>
             )}
         </Container>
     );
