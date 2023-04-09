@@ -32,10 +32,3 @@ jobs:
                   platforms: linux/amd64
                   push: true
                   tags: hemmeligapp/hemmelig:daily
-
-            - name: Push to Docker Hub [ARM]
-              uses: docker/build-push-action@v4
-              with:
-                  platforms: linux/arm64,linux/arm/v7
-                  push: true
-                  tags: hemmeligapp/hemmelig:arm-daily

@@ -36,17 +36,3 @@ jobs:
               with:
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
-
-            - name: Push to Docker Hub [ARM]
-              uses: docker/build-push-action@v4
-              with:
-                  platforms: linux/arm64,linux/arm/v7
-                  push: true
-                  tags: hemmeligapp/hemmelig:arm-latest
-
-            - name: Push to Docker Hub [ARM]
-              uses: docker/build-push-action@v4
-              with:
-                  platforms: linux/arm64,linux/arm/v7
-                  push: true
-                  tags: hemmeligapp/hemmelig:arm-${{ steps.latest_tag.outputs.tag }}
