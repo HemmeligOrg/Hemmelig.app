@@ -52,5 +52,9 @@
         "create_secret": "Create a new secret",
         "convert_b64": "Convert text to base64",
         "convert_utf8": "Convert base64 to plain text"
+    },
+    "settings": {
+        "updated": "Settings updated",
+        "update": "Update settings"
     }
 }

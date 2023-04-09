@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Stack, Button, Checkbox, Group, Text, Notification } from '@mantine/core';
+import {
+    Alert,
+    Container,
+    Stack,
+    Button,
+    Checkbox,
+    Group,
+    Text,
+    Notification,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconEdit, IconCheck } from '@tabler/icons';
-
-import ErrorComponent from '../../components/info/error';
+import { useTranslation } from 'react-i18next';
 
 import { getSettings, updateSettings } from '../../api/settings';
 
 const Settings = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
+
+    const { t } = useTranslation();
 
     const form = useForm({
         initialValues: {
@@ -26,7 +36,16 @@ const Settings = () => {
     }, []);
 
     if (error) {
-        return <ErrorComponent>{error.error}</ErrorComponent>;
+        return (
+            <Alert
+                icon={<IconAlertCircle size="1rem" />}
+                title={t('home.bummer')}
+                color="red"
+                variant="outline"
+            >
+                {error.error}
+            </Alert>
+        );
     }
 
     const onUpdateSettings = async (e) => {
@@ -65,7 +84,7 @@ const Settings = () => {
                         title="Success"
                         withCloseButton={false}
                     >
-                        Settings updated
+                        {t('settings.updated')}
                     </Notification>
                 )}
 
@@ -95,8 +114,9 @@ const Settings = () => {
                         leftIcon={<IconEdit size={14} />}
                         onClick={onUpdateSettings}
                         color="hemmelig"
+                        disabled={success}
                     >
-                        Update settings
+                        {t('settings.update')}
                     </Button>
                 </Group>
             </Stack>

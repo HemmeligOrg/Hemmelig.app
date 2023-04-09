@@ -74,6 +74,7 @@ const Home = () => {
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
     const { t } = useTranslation();
+
     useEffect(() => {
         if (secretId) {
             secretRef.current.focus();
