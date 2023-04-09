@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+    Alert,
     Container,
     TextInput,
     PasswordInput,
@@ -12,7 +13,15 @@ import {
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUser, IconAt, IconLock, IconTrash, IconSettings, IconEdit } from '@tabler/icons';
+import {
+    IconUser,
+    IconAt,
+    IconLock,
+    IconTrash,
+    IconSettings,
+    IconEdit,
+    IconAlertCircle,
+} from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -21,7 +30,6 @@ import { userLoginChanged } from '../../actions';
 import Settings from './settings';
 
 import Spinner from '../../components/spinner';
-import ErrorComponent from '../../components/info/error';
 
 import { getUser, updateUser, deleteUser } from '../../api/account';
 
@@ -88,7 +96,16 @@ const Account = () => {
     }, [username, dispatch]);
 
     if (error) {
-        return <ErrorComponent>{error.error}</ErrorComponent>;
+        return (
+            <Alert
+                icon={<IconAlertCircle size="1rem" />}
+                title={t('home.bummer')}
+                color="red"
+                variant="outline"
+            >
+                {error}
+            </Alert>
+        );
     }
 
     if (!username) {
