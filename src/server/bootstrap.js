@@ -56,5 +56,8 @@ async function createRootUser() {
         createAdminSettings();
     }, 20 * 1000);
 
+    // initialize this as fast as possible so we do not have to wait the interval above
+    createAdminSettings();
+
     createRootUser();
 })();
