@@ -22,13 +22,17 @@ async function createAdminSettings() {
 
 // Remove expired secrets
 async function dbCleaner() {
-    await prisma.secret.deleteMany({
-        where: {
-            expiresAt: {
-                lte: new Date(),
+    try {
+        await prisma.secret.deleteMany({
+            where: {
+                expiresAt: {
+                    lte: new Date(),
+                },
             },
-        },
-    });
+        });
+    } catch (err) {
+        console.error(err, 'Nothing to delete from the database');
+    }
 }
 
 // Create a root user the first time the server is running

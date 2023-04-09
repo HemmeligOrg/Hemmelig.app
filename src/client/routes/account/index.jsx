@@ -1,74 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Container,
-    TextInput,
-    PasswordInput,
-    Stack,
-    Text,
-    Button,
-    Group,
-    Tabs,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Alert, Container, Loader, Text, Button, Group, Tabs } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
 import { useMediaQuery } from '@mantine/hooks';
-import {
-    IconUser,
-    IconAt,
-    IconLock,
-    IconTrash,
-    IconSettings,
-    IconEdit,
-    IconAlertCircle,
-} from '@tabler/icons';
+import { IconUser, IconTrash, IconSettings, IconAlertCircle } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { userLoginChanged } from '../../actions';
+import { getUser, deleteUser } from '../../api/account';
 
 import Settings from './settings';
-
-import Spinner from '../../components/spinner';
-
-import { getUser, updateUser, deleteUser } from '../../api/account';
+import Account from './account';
 
 import { useTranslation } from 'react-i18next';
 
-const Account = () => {
+const HomeAccount = () => {
     const { t } = useTranslation();
 
-    const username = useSelector((state) => state.username);
-    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
-    const [user, setUser] = useState({});
-    const [activeTab, setActiveTab] = useState('account');
 
+    const username = useSelector((state) => state.username);
     const isMobile = useMediaQuery('(max-width: 915px)');
 
-    const dispatch = useDispatch();
-
-    const form = useForm({
-        initialValues: {
-            currentPassword: '',
-            newPassword: '',
-            email: '',
-            confirmNewPassword: '',
-        },
-        validate: {
-            confirmNewPassword: (value, values) =>
-                value !== values.newPassword ? 'Passwords did not match' : null,
-        },
-    });
-
     useEffect(() => {
-        if (!username) {
-            return;
-        }
-
         (async () => {
             try {
-                setLoading(true);
                 const response = await getUser();
 
                 if (response.statusCode === 401 || response.statusCode === 500) {
@@ -77,43 +33,25 @@ const Account = () => {
                     return;
                 }
 
-                dispatch(userLoginChanged(true));
-                setLoading(false);
-
-                const { user } = response;
-
-                setUser(user);
-
-                form.setValues({ email: user.email });
+                setUser(response.user);
 
                 setError(null);
-            } catch (e) {
-                setError(e);
+            } catch (err) {
+                setError(err);
             }
         })();
-
-        // eslint-disable-next-line
-    }, [username, dispatch]);
-
-    if (error) {
-        return (
-            <Alert
-                icon={<IconAlertCircle size="1rem" />}
-                title={t('home.bummer')}
-                color="red"
-                variant="outline"
-            >
-                {error}
-            </Alert>
-        );
-    }
+    }, []);
 
     if (!username) {
         return <Redirect to="/signin" />;
     }
 
-    if (loading) {
-        return <Spinner />;
+    if (!user?.username) {
+        return (
+            <Container>
+                <Loader color="teal" variant="bars" />
+            </Container>
+        );
     }
 
     const onDeleteUser = async () => {
@@ -125,46 +63,8 @@ const Account = () => {
 
                 return;
             }
-        } catch (e) {
-            setError(e);
-        }
-    };
-
-    const onProfileUpdate = async (e) => {
-        e.preventDefault();
-
-        setActiveTab('settings');
-
-        const values = form.values;
-
-        try {
-            setLoading(true);
-
-            const response = await updateUser(values);
-
-            setLoading(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                setError(response.error ? response.error : 'Could not update your user profile');
-
-                return;
-            }
-
-            const { user, error, type } = response;
-
-            if (error) {
-                if (type === 'no-data') {
-                    form.setErrors({ email: error });
-                } else {
-                    form.setErrors({ [type]: error });
-                }
-            } else {
-                setUser(user);
-
-                form.setValues({ email: user.email });
-            }
-        } catch (e) {
-            setError(e);
+        } catch (err) {
+            setError(err);
         }
     };
 
@@ -195,7 +95,7 @@ const Account = () => {
             <Tabs
                 color="orange"
                 orientation={isMobile ? 'horisontal' : 'vertical'}
-                defaultValue={activeTab}
+                defaultValue="account"
             >
                 <Tabs.List>
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
@@ -252,51 +152,11 @@ const Account = () => {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="account-settings" pt="xs">
-                    <Container size="xs">
-                        <Stack>
-                            <TextInput
-                                label="Email"
-                                icon={<IconAt size={14} />}
-                                placeholder="Email"
-                                {...form.getInputProps('email')}
-                            />
-
-                            <PasswordInput
-                                label="Current password"
-                                icon={<IconLock size={14} />}
-                                placeholder="Your current password"
-                                {...form.getInputProps('currentPassword')}
-                            />
-
-                            <PasswordInput
-                                label="New password"
-                                icon={<IconLock size={14} />}
-                                placeholder="Update your password"
-                                {...form.getInputProps('newPassword')}
-                            />
-
-                            <PasswordInput
-                                label="Confirm Password"
-                                icon={<IconLock size={14} />}
-                                placeholder="Confirm your new password"
-                                {...form.getInputProps('confirmNewPassword')}
-                            />
-
-                            <Group position="right">
-                                <Button
-                                    leftIcon={<IconEdit size={14} />}
-                                    onClick={onProfileUpdate}
-                                    color="hemmelig"
-                                >
-                                    Update details
-                                </Button>
-                            </Group>
-                        </Stack>
-                    </Container>
+                    <Account />
                 </Tabs.Panel>
             </Tabs>
         </Container>
     );
 };
 
-export default Account;
+export default HomeAccount;
