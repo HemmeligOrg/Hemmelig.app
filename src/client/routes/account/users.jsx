@@ -202,6 +202,7 @@ const Users = () => {
                             label="Username"
                             icon={<IconUser size={14} />}
                             placeholder="Username"
+                            disabled={modalState === 'update'}
                             {...form.getInputProps('username')}
                         />
                         <TextInput
