@@ -10,6 +10,7 @@ import { getUser, deleteUser } from '../../api/account';
 
 import Settings from './settings';
 import Account from './account';
+import Users from './users';
 
 import { useTranslation } from 'react-i18next';
 
@@ -107,6 +108,9 @@ const HomeAccount = () => {
                     <Tabs.Tab value="account-settings" icon={<IconUser size={14} />}>
                         {t('account_settings')}
                     </Tabs.Tab>
+                    <Tabs.Tab value="users" icon={<IconUser size={14} />}>
+                        {t('users.users')}
+                    </Tabs.Tab>
                 </Tabs.List>
 
                 <Tabs.Panel value="account" pt="xs">
@@ -153,6 +157,10 @@ const HomeAccount = () => {
 
                 <Tabs.Panel value="account-settings" pt="xs">
                     <Account />
+                </Tabs.Panel>
+
+                <Tabs.Panel value="users" pt="xs">
+                    <Users />
                 </Tabs.Panel>
             </Tabs>
         </Container>
