@@ -18,9 +18,9 @@ export const getUsers = async () => {
     return data.json();
 };
 
-export const updateUser = async (data) => {
+const userFetchTemplate = async (data, method = 'GET') => {
     const response = await fetch(`${config.get('api.host')}/admin/users`, {
-        method: 'PUT',
+        method,
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/json',
@@ -39,50 +39,16 @@ export const updateUser = async (data) => {
     }
 
     return json;
+};
+
+export const updateUser = async (data) => {
+    return userFetchTemplate(data, 'PUT');
 };
 
 export const addUser = async (data) => {
-    const response = await fetch(`${config.get('api.host')}/admin/users`, {
-        method: 'POST',
-        cache: 'no-cache',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-
-    const json = await response.json();
-
-    if ([401, 403, 409, 500].includes(response.status)) {
-        return {
-            statusCode: response.status,
-            error: json.error,
-            type: json?.type,
-        };
-    }
-
-    return json;
+    return userFetchTemplate(data, 'POST');
 };
 
 export const deleteUser = async (data) => {
-    const response = await fetch(`${config.get('api.host')}/admin/users`, {
-        method: 'DELETE',
-        cache: 'no-cache',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-
-    const json = await response.json();
-
-    if ([401, 403, 409, 500].includes(response.status)) {
-        return {
-            statusCode: response.status,
-            error: json.error,
-            type: json?.type,
-        };
-    }
-
-    return json;
+    return userFetchTemplate(data, 'DELETE');
 };
