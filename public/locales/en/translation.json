@@ -65,6 +65,7 @@
         "update": "Update user",
         "add": "Add user",
         "saved": "Saved",
-        "save": "Save"
+        "save": "Save",
+        "more": "Load more"
     }
 }

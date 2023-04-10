@@ -19,8 +19,23 @@ async function users(fastify) {
         {
             preValidation: [fastify.authenticate, fastify.admin],
         },
-        async () => {
-            const users = await prisma.user.findMany({});
+        async (request, reply) => {
+            const { skip = 0, take = 10 } = request.query;
+
+            if (take > 100) {
+                return reply.code(403).send({
+                    type: 'take',
+                    error: 'Not allowed to fetch more users than 100.',
+                });
+            }
+
+            const users = await prisma.user.findMany({
+                skip: Number(skip),
+                take: Number(take),
+                orderBy: {
+                    role: 'asc',
+                },
+            });
 
             return getRedactedUsers(users);
         }

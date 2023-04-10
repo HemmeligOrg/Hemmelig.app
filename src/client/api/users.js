@@ -1,7 +1,7 @@
 import config from '../config';
 
-export const getUsers = async () => {
-    const data = await fetch(`${config.get('api.host')}/admin/users`, {
+export const getUsers = async (skip = 0) => {
+    const data = await fetch(`${config.get('api.host')}/admin/users?skip=${skip}`, {
         method: 'GET',
         cache: 'no-cache',
         headers: {

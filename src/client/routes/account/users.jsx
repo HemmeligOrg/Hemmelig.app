@@ -3,6 +3,7 @@ import {
     Alert,
     ActionIcon,
     Container,
+    Center,
     Text,
     Stack,
     Select,
@@ -58,6 +59,7 @@ const addUserList = (users, data) => {
 const Users = () => {
     const [modalState, setModalState] = useState('add');
     const [users, setUsers] = useState([]);
+    const [skip, setSkip] = useState(10);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
@@ -131,6 +133,16 @@ const Users = () => {
         await deleteUser(user);
 
         setUsers(updateUserList(users, { values: user }, 'delete'));
+    };
+
+    const onLoadUsers = async (event) => {
+        event.preventDefault();
+
+        const moreUsers = await getUsers(skip);
+
+        setSkip(skip + 20);
+
+        setUsers([...users, ...moreUsers]);
     };
 
     const openDeleteModal = (user) =>
@@ -259,6 +271,12 @@ const Users = () => {
                         <tbody>{rows}</tbody>
                     </Table>
                 </Group>
+
+                <Center>
+                    <Button color="hemmelig-orange" onClick={onLoadUsers}>
+                        {t('users.more')}
+                    </Button>
+                </Center>
 
                 <Group position="right">
                     <Button
