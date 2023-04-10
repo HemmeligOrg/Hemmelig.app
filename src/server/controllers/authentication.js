@@ -72,6 +72,7 @@ async function authentication(fastify) {
                 username,
                 email,
                 password: userPassword,
+                role: 'user',
             },
         });
 

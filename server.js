@@ -22,6 +22,7 @@ import keyGeneration from './src/server/decorators/key-generation.js';
 import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
 import readOnlyHandler from './src/server/prehandlers/read-only.js';
 
+import usersRoute from './src/server/controllers/admin/users.js';
 import adminSettingsRoute from './src/server/controllers/admin/settings.js';
 import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
@@ -92,6 +93,10 @@ fastify.register(authenticationRoute, {
 
 fastify.register(accountRoute, {
     prefix: '/api/account',
+});
+
+fastify.register(usersRoute, {
+    prefix: '/api/admin/users',
 });
 
 fastify.register(adminSettingsRoute, {

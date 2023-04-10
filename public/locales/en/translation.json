@@ -58,5 +58,13 @@
         "description": "Update the Hemmelig instance state",
         "updated": "Settings updated",
         "update": "Update settings"
+    },
+    "users": {
+        "users": "Users",
+        "edit": "Edit",
+        "update": "Update user",
+        "add": "Add user",
+        "saved": "Saved",
+        "save": "Save"
     }
 }
