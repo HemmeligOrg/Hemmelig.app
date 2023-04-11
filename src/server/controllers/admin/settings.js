@@ -26,6 +26,7 @@ async function settings(fastify) {
         async (request) => {
             const {
                 disable_users = false,
+                disable_user_account_creation = false,
                 read_only = false,
                 disable_file_upload = false,
             } = request.body;
@@ -36,6 +37,7 @@ async function settings(fastify) {
                 },
                 update: {
                     disable_users, // Disable user registration
+                    disable_user_account_creation, // Disable user account creation
                     read_only, // Allow visiting users to read secrets, and not create any except if you are an admin
                     disable_file_upload, // Disable file uploads
                 },

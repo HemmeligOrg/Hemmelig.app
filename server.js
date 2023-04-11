@@ -21,6 +21,8 @@ import keyGeneration from './src/server/decorators/key-generation.js';
 
 import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
 import readOnlyHandler from './src/server/prehandlers/read-only.js';
+import disableUserHandler from './src/server/prehandlers/disable-users.js';
+import disableUserAccountCreationHandler from './src/server/prehandlers/disable-user-account-creation.js';
 
 import usersRoute from './src/server/controllers/admin/users.js';
 import adminSettingsRoute from './src/server/controllers/admin/settings.js';
@@ -30,8 +32,6 @@ import downloadRoute from './src/server/controllers/download.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
 import healthzRoute from './src/server/controllers/healthz.js';
-
-import disableUserHandler from './src/server/prehandlers/disable-users.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -83,6 +83,7 @@ fastify.register(keyGeneration);
 // Define pre handlers
 fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
 fastify.addHook('preHandler', disableUserHandler);
+fastify.addHook('preHandler', disableUserAccountCreationHandler);
 fastify.addHook('preHandler', readOnlyHandler);
 
 // Register our routes before the static content

@@ -25,6 +25,7 @@ const Settings = () => {
         initialValues: {
             read_only: false,
             disable_users: false,
+            disable_user_account_creation: false,
             disable_file_upload: false,
         },
     });
@@ -98,6 +99,18 @@ const Settings = () => {
                         checked={form.getInputProps('disable_users').value}
                         onChange={(event) =>
                             form.setValues({ disable_users: event.currentTarget.checked })
+                        }
+                    />
+                </Group>
+                <Group position="left">
+                    <Checkbox
+                        label="Disable user account creation"
+                        description="Do not allow users to create acoounts. However, you as an admin is allowed to add users which can sign in."
+                        checked={form.getInputProps('disable_user_account_creation').value}
+                        onChange={(event) =>
+                            form.setValues({
+                                disable_user_account_creation: event.currentTarget.checked,
+                            })
                         }
                     />
                 </Group>
