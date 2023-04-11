@@ -147,7 +147,7 @@ const Users = () => {
             return;
         }
 
-        setSkip(skip + 20);
+        setSkip(skip + 10);
 
         setUsers([...users, ...moreUsers]);
     };
