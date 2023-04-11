@@ -60,6 +60,7 @@ const Users = () => {
     const [modalState, setModalState] = useState('add');
     const [users, setUsers] = useState([]);
     const [skip, setSkip] = useState(10);
+    const [showMore, setShowMore] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
@@ -139,6 +140,12 @@ const Users = () => {
         event.preventDefault();
 
         const moreUsers = await getUsers(skip);
+
+        if (!moreUsers?.length) {
+            setShowMore(false);
+
+            return;
+        }
 
         setSkip(skip + 20);
 
@@ -272,11 +279,13 @@ const Users = () => {
                     </Table>
                 </Group>
 
-                <Center>
-                    <Button color="hemmelig-orange" onClick={onLoadUsers}>
-                        {t('users.more')}
-                    </Button>
-                </Center>
+                {showMore && (
+                    <Center>
+                        <Button color="hemmelig-orange" onClick={onLoadUsers}>
+                            {t('users.more')}
+                        </Button>
+                    </Center>
+                )}
 
                 <Group position="right">
                     <Button
