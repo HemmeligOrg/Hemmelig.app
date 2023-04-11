@@ -36,7 +36,7 @@ const Header = () => {
             dispatch(userLogin(cookie));
             dispatch(userLoginChanged(true));
         }
-    }, []);
+    }, [isLoggedIn, username]);
 
     const onSignOut = () => {
         toggle();
@@ -77,6 +77,14 @@ const Header = () => {
                     </>
                 )}
 
+                {isLoggedIn && (
+                    <NavLink
+                        label={t('sign_out')}
+                        icon={<IconLockOff size="1rem" stroke={1.5} />}
+                        onClick={onSignOut}
+                    />
+                )}
+
                 <NavLink
                     label={t('account')}
                     icon={<IconUser size="1rem" stroke={1.5} />}
@@ -96,14 +104,6 @@ const Header = () => {
                             to="/terms"
                         />
                     </>
-                )}
-
-                {isLoggedIn && (
-                    <NavLink
-                        label={t('sign_out')}
-                        icon={<IconLockOff size="1rem" stroke={1.5} />}
-                        onClick={onSignOut}
-                    />
                 )}
             </Group>
         );
