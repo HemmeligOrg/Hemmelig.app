@@ -44,7 +44,7 @@ const HomeAccount = () => {
     }, []);
 
     if (!username) {
-        return <Redirect to="/signin" />;
+        return <Redirect push to="/signin" />;
     }
 
     if (!user?.username) {

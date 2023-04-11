@@ -121,7 +121,7 @@ const SignUp = () => {
                     withCloseButton={false}
                 >
                     Redirecting to your account page.
-                    <Redirect to="/account" />
+                    <Redirect push to="/account" />
                 </Notification>
             )}
         </Container>

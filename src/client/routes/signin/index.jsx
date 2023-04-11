@@ -111,7 +111,7 @@ const SignIn = () => {
                     title={t('settings.success')}
                     withCloseButton={false}
                 >
-                    Redirecting to your account page. <Redirect to="/account" />
+                    Redirecting to your account page. <Redirect push to="/account" />
                 </Notification>
             )}
         </Container>

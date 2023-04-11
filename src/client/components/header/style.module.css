@@ -6,3 +6,18 @@
     width: 50px;
     max-height: 50px;
 }
+
+.nav {
+    width: 40%;
+    background-color: #17181a; /*#17181a;*/
+    margin-left: auto;
+    order: 2;
+    margin-right: 14px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+@media only screen and (max-width: 768px) {
+    .nav {
+        width: 100%;
+    }
+}

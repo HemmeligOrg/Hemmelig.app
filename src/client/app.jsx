@@ -11,6 +11,7 @@ import {
     Group,
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 
 const HeaderContent = lazy(() => import('./components/header'));
@@ -25,6 +26,7 @@ const Terms = lazy(() => import('./routes/terms'));
 
 const App = () => {
     const { t } = useTranslation();
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const theme = useMantineTheme();
     return (
@@ -78,48 +80,50 @@ const App = () => {
                         footer={
                             <Footer height={45} p="xs">
                                 <Group position="center" spacing="xs">
-                                    <>
-                                        <Anchor
-                                            component={Link}
-                                            to="/account"
-                                            color="dimmed"
-                                            size="xs"
-                                            transform="uppercase"
-                                        >
-                                            {t('account')}
-                                        </Anchor>
-                                        |
-                                    </>
-                                    <Anchor
-                                        component={Link}
-                                        to="/privacy"
-                                        color="dimmed"
-                                        size="xs"
-                                        transform="uppercase"
-                                    >
-                                        Privacy
-                                    </Anchor>
-                                    |
-                                    <Anchor
-                                        component={Link}
-                                        to="/terms"
-                                        color="dimmed"
-                                        size="xs"
-                                        transform="uppercase"
-                                    >
-                                        Terms & Condition
-                                    </Anchor>
-                                    |
-                                    <Anchor
-                                        component={Link}
-                                        to="/"
-                                        color="dimmed"
-                                        size="xs"
-                                        transform="uppercase"
-                                    >
-                                        About
-                                    </Anchor>
-                                    |
+                                    {!isMobile && (
+                                        <>
+                                            <Anchor
+                                                component={Link}
+                                                to="/account"
+                                                color="dimmed"
+                                                size="xs"
+                                                transform="uppercase"
+                                            >
+                                                {t('account')}
+                                            </Anchor>
+                                            |
+                                            <Anchor
+                                                component={Link}
+                                                to="/privacy"
+                                                color="dimmed"
+                                                size="xs"
+                                                transform="uppercase"
+                                            >
+                                                Privacy
+                                            </Anchor>
+                                            |
+                                            <Anchor
+                                                component={Link}
+                                                to="/terms"
+                                                color="dimmed"
+                                                size="xs"
+                                                transform="uppercase"
+                                            >
+                                                Terms & Condition
+                                            </Anchor>
+                                            |
+                                            <Anchor
+                                                component={Link}
+                                                to="/"
+                                                color="dimmed"
+                                                size="xs"
+                                                transform="uppercase"
+                                            >
+                                                About
+                                            </Anchor>
+                                            |
+                                        </>
+                                    )}
                                     <Anchor
                                         href="https://github.com/HemmeligOrg/Hemmelig.app"
                                         color="dimmed"
