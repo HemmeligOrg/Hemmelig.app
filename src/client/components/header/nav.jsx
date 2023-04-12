@@ -1,0 +1,108 @@
+import { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { NavLink, Group } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { IconUser, IconLockOff, IconLogin, IconFingerprint, IconList } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import { userLoginChanged, userLogin } from '../../actions/';
+import { removeCookie } from '../../helpers/cookie';
+import { signOut } from '../../api/authentication';
+
+import style from './style.module.css';
+
+const Nav = ({ opened, toggle, isLoggedIn }) => {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const [onSignOutRedirect, setOnSignOutRedirect] = useState('');
+    const isMobile = useMediaQuery('(max-width: 768px)');
+
+    const onSignOut = () => {
+        toggle();
+
+        removeCookie();
+
+        signOut();
+
+        dispatch(userLogin({ username: '' }));
+        dispatch(userLoginChanged(false));
+
+        setOnSignOutRedirect('/signin');
+    };
+
+    const navItems = [];
+
+    if (!isLoggedIn) {
+        navItems.push({
+            label: t('sign_up'),
+            icon: <IconUser size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/signup',
+        });
+        navItems.push({
+            label: t('sign_in'),
+            icon: <IconLogin size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/signin',
+        });
+    }
+
+    if (isLoggedIn) {
+        navItems.push({
+            label: t('sign_out'),
+            icon: <IconLockOff size="1rem" stroke={1.5} />,
+            onClick: onSignOut,
+        });
+    }
+
+    navItems.push({
+        label: t('account'),
+        icon: <IconUser size="1rem" stroke={1.5} />,
+        component: Link,
+        onClick: toggle,
+        to: '/account',
+    });
+
+    if (isMobile) {
+        navItems.push({
+            label: 'Privacy',
+            icon: <IconFingerprint size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/privacy',
+        });
+        navItems.push({
+            label: 'Terms & Condition',
+            icon: <IconList size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/terms',
+        });
+    }
+
+    if (!opened) {
+        return <></>;
+    }
+
+    return (
+        <Group spacing="xs" className={style.nav}>
+            {navItems.map((item) => (
+                <NavLink
+                    key={item.label}
+                    label={item.label}
+                    icon={item.icon}
+                    component={item.component ? item.component : null}
+                    onClick={item.onClick}
+                    to={item.to ? item.to : null}
+                />
+            ))}
+
+            {onSignOutRedirect && <Redirect push to={onSignOutRedirect} />}
+        </Group>
+    );
+};
+
+export default Nav;
