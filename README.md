@@ -42,6 +42,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - - Disable user registration / sign in
 - - Set Hemmelig to be in read only mode by non admin users
 - - Disable file upload
+- - Disable user account creation
 
 ## Linode Referral
 
@@ -135,7 +136,20 @@ npm run dev
 
 ## Database
 Hemmelig has changed from using Redis as an backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
-`/database/hemmelig.db`
+`/database/hemmelig.db`. Have a look at the docker-compose file for how to handle the database.
+
+## Admin, roles and settings
+Admins have access to adjust certain settings in Hemmelig. If you go to the account -> instance settings, you can see all the settings.
+
+We also have different roles.
+- Admin
+- Creator
+- User
+
+The difference here is that if you i.e. set Hemmelig to be in read only mode, only `admin` and `creator` is allowed to create secrets, but non signed in users, and users with the role `user` can only view them.
+
+Admins are also allowed to create new users in the settings. This is great if you want to limit who your users are by the `disable user account creation` setting.
+
 
 ## Discord
 [Discord](https://discord.gg/NUkvtKdjs7)
