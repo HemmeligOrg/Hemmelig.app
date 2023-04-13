@@ -52,13 +52,13 @@ Hemmelig.app is running on Linode, and is not being sponsored by anyone. If you 
 
 Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
 
-- hemmeligapp/hemmelig:v5.1.1 <- RECOMMENDED, see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
+- hemmeligapp/hemmelig:latest (Is created on each version release)
+- hemmeligapp/hemmelig:v5.4.4 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:arm-weekly
 - hemmeligapp/hemmelig:daily
 - hemmeligapp/hemmelig:arm-daily
 - hemmeligapp/hemmelig:arm-vX.X.X (will be from > 4.2.0)
-- hemmeligapp/hemmelig:latest (Is created  on each version release)
 - hemmeligapp/hemmelig:arm-latest (will be from > 4.2.0)
 
 ## Self-hosting
