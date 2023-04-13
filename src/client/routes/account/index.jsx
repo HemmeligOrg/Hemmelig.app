@@ -81,6 +81,17 @@ const HomeAccount = () => {
 
     return (
         <Container>
+            {error && (
+                <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title={t('home.bummer')}
+                    color="red"
+                    variant="outline"
+                >
+                    {error}
+                </Alert>
+            )}
+
             {user?.generated && (
                 <Alert
                     icon={<IconAlertCircle size="1rem" />}
