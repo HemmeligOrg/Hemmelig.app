@@ -162,3 +162,21 @@ Admins are also allowed to create new users in the settings. This is great if yo
 ## Contribution
 
 Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for guidelines.
+
+
+## Common errors
+If this errors occur on the first run of your hemmelig instance, this means there are some issues with the ownership of the files/directory for the database.
+
+```bash
+Datasource "db": SQLite database "hemmelig.db" at "file:../database/hemmelig.db"
+
+Error: Migration engine error:
+SQLite database error
+unable to open database file: ../database/hemmelig.db
+```
+
+Here is an example of how you would solve that:
+```bash
+sudo chown -R username.group /home/username/data/
+sudo chown -R username.group /home/username/database/
+```
