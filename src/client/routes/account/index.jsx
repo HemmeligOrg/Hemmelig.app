@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Container, Loader, Text, Button, Group, Tabs } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUser, IconTrash, IconSettings, IconAlertCircle } from '@tabler/icons';
+import { IconUser, IconTrash, IconSettings, IconAlertCircle, IconLock } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -11,6 +11,7 @@ import { getUser, deleteUser } from '../../api/account';
 import Settings from './settings';
 import Account from './account';
 import Users from './users';
+import Secrets from './secrets';
 
 import { useTranslation } from 'react-i18next';
 
@@ -113,6 +114,9 @@ const HomeAccount = () => {
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
                         {t('account')}
                     </Tabs.Tab>
+                    <Tabs.Tab value="secrets" icon={<IconLock size={14} />}>
+                        {t('secrets.secrets')}
+                    </Tabs.Tab>
                     <Tabs.Tab value="instance-settings" icon={<IconSettings size={14} />}>
                         {t('instance_settings')}
                     </Tabs.Tab>
@@ -135,7 +139,8 @@ const HomeAccount = () => {
                             get:
                             <ul>
                                 <li>Upload files</li>
-                                <li>Expire time of 14 and 28 days for secrets</li>
+                                <li>Expiration time of 14 and 28 days for secrets</li>
+                                <li>List and delete your secrets</li>
                             </ul>
                             More features are coming! Thanks for joining Hemmelig.app!
                             <span role="img" aria-label="celebration icon">
@@ -162,14 +167,15 @@ const HomeAccount = () => {
                     </Container>
                 </Tabs.Panel>
 
+                <Tabs.Panel value="secrets" pt="xs">
+                    <Secrets />
+                </Tabs.Panel>
                 <Tabs.Panel value="instance-settings" pt="xs">
                     <Settings />
                 </Tabs.Panel>
-
                 <Tabs.Panel value="account-settings" pt="xs">
                     <Account />
                 </Tabs.Panel>
-
                 <Tabs.Panel value="users" pt="xs">
                     <Users />
                 </Tabs.Panel>

@@ -104,7 +104,9 @@ async function secret(fastify) {
                 include: { files: true },
             });
 
-            return reply.code(200).send(secrets);
+            return reply
+                .code(200)
+                .send(secrets.map((secret) => ({ id: secret.id, expiresAt: secret.expiresAt })));
         }
     );
 
