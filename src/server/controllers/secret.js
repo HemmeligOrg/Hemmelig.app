@@ -130,6 +130,7 @@ async function secret(fastify) {
                     files: {
                         create: files,
                     },
+                    user_id: req?.user?.user_id ?? null,
                     expiresAt: new Date(
                         Date.now() + (parseInt(ttl) ? parseInt(ttl) * 1000 : DEFAULT_EXPIRATION)
                     ),

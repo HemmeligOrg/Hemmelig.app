@@ -86,6 +86,7 @@ async function authentication(fastify) {
             {
                 username: user.username,
                 email: user.email,
+                user_id: user.id,
             },
             { expiresIn: '7d' } // expires in seven days
         );
@@ -118,6 +119,7 @@ async function authentication(fastify) {
             {
                 username: user.username,
                 email: user.email,
+                user_id: user.id,
             },
             { expiresIn: '7d' }
         );
