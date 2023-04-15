@@ -91,6 +91,23 @@ async function secret(fastify) {
         getSecretRoute
     );
 
+    fastify.get(
+        '/',
+        {
+            preValidation: [fastify.authenticate],
+        },
+        async (req, reply) => {
+            const secrets = await prisma.secret.findMany({
+                where: {
+                    user_id: req.user.user_id,
+                },
+                include: { files: true },
+            });
+
+            return reply.code(200).send(secrets);
+        }
+    );
+
     fastify.post(
         '/',
         {
