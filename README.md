@@ -38,6 +38,10 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
+- User account
+- - Expiration time upgraded to 14 and 28 days
+- - File upload
+- - List and delete secrets
 - Admin settings
 - - Disable user registration / sign in
 - - Set Hemmelig to be in read only mode by non admin users
