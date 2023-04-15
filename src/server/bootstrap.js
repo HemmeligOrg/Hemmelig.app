@@ -38,7 +38,7 @@ async function dbCleaner() {
 // Create a root user the first time the server is running
 async function createRootUser() {
     const rootUser = await prisma.user.findFirst({
-        where: { username },
+        where: { username, email },
     });
 
     if (rootUser) {
