@@ -192,6 +192,21 @@ const Users = () => {
         </tr>
     ));
 
+    if (!users.length) {
+        return (
+            <Container size="xs ">
+                <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title={t('home.bummer')}
+                    color="red"
+                    variant="outline"
+                >
+                    You have to be an admin to view the users
+                </Alert>
+            </Container>
+        );
+    }
+
     return (
         <Container size="xs ">
             <Stack>
