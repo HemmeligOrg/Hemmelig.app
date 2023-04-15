@@ -1,6 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// TODO: We should migrate all camel cases to underscore
+
 generator client {
     provider        = "prisma-client-js"
     previewFeatures = ["metrics"]
@@ -30,15 +32,18 @@ model Secret {
     allowed_ip  String?
     preventBurn Boolean  @default(false)
     expiresAt   DateTime
+    user        User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    user_id     String?
 }
 
 model User {
-    id        String  @id @default(uuid())
-    username  String  @unique
-    email     String  @unique
+    id        String   @id @default(uuid())
+    username  String   @unique
+    email     String   @unique
     password  String
-    role      String  @default("user")
-    generated Boolean @default(false)
+    role      String   @default("user")
+    generated Boolean  @default(false)
+    secrets   Secret[]
 }
 
 model Statistic {

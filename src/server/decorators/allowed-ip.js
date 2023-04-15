@@ -19,7 +19,7 @@ export default fp(async (fastify) => {
         // For local testing, use this:  const ip = headers.host;
         const ip = getClientIp(headers);
 
-        const allowedIp = data['allowed_ip'];
+        const allowedIp = data?.allowed_ip ?? null;
 
         if (ip && allowedIp && ip !== allowedIp && !ipRangeCheck(ip, allowedIp)) {
             reply.code(403).send({ error: 'Invalid IP address' });
