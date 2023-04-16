@@ -86,13 +86,13 @@ const HomeAccount = () => {
             <Tabs
                 color="orange"
                 orientation={isMobile ? 'horisontal' : 'vertical'}
-                defaultValue="account"
+                defaultValue="details"
                 keepMounted={false}
                 onTabChange={(value) => navigate(`/account/${value}`)}
                 value={tabValue}
             >
                 <Tabs.List grow>
-                    <Tabs.Tab value="account" icon={<IconUser size={14} />}>
+                    <Tabs.Tab value="details" icon={<IconUser size={14} />}>
                         {t('account')}
                     </Tabs.Tab>
                     <Tabs.Tab value="secrets" icon={<IconLock size={14} />}>
@@ -109,7 +109,7 @@ const HomeAccount = () => {
                     </Tabs.Tab>
                 </Tabs.List>
 
-                <Tabs.Panel value="account" pt="xs">
+                <Tabs.Panel value="details" pt="xs">
                     <Container>
                         <Details user={user} />
                     </Container>
