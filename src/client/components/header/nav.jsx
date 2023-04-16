@@ -1,35 +1,17 @@
 import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { NavLink, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconLockOff, IconLogin, IconFingerprint, IconList } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
-import { userLoginChanged, userLogin } from '../../actions/';
-import { removeCookie } from '../../helpers/cookie';
-import { signOut } from '../../api/authentication';
 
 import style from './style.module.css';
 
 const Nav = ({ opened, toggle, isLoggedIn }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
 
     const [onSignOutRedirect, setOnSignOutRedirect] = useState('');
     const isMobile = useMediaQuery('(max-width: 768px)');
-
-    const onSignOut = () => {
-        toggle();
-
-        removeCookie();
-
-        signOut();
-
-        dispatch(userLogin({ username: '' }));
-        dispatch(userLoginChanged(false));
-
-        setOnSignOutRedirect('/signin');
-    };
 
     const navItems = [];
 
@@ -54,7 +36,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         navItems.push({
             label: t('sign_out'),
             icon: <IconLockOff size="1rem" stroke={1.5} />,
-            onClick: onSignOut,
+            onClick: () => setOnSignOutRedirect('/signout'),
         });
     }
 

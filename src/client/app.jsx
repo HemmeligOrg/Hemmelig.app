@@ -21,6 +21,7 @@ const Secret = lazy(() => import('./routes/secret'));
 const Privacy = lazy(() => import('./routes/privacy'));
 const SignIn = lazy(() => import('./routes/signin'));
 const SignUp = lazy(() => import('./routes/signup'));
+const SignOut = lazy(() => import('./routes/signout.jsx'));
 const Account = lazy(() => import('./routes/account'));
 const Terms = lazy(() => import('./routes/terms'));
 
@@ -158,6 +159,9 @@ const App = () => {
                             </Route>
                             <Route path="/signup" exact>
                                 <SignUp />
+                            </Route>
+                            <Route path="/signout" exact>
+                                <SignOut />
                             </Route>
                             <Route path="/privacy" exact>
                                 <Privacy />
