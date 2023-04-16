@@ -132,6 +132,7 @@ if (!isDev) {
     fastify.get('/api-docs', serveIndex);
     fastify.get('/signin', serveIndex);
     fastify.get('/signup', serveIndex);
+    fastify.get('/signout', serveIndex);
     fastify.get('/account*', serveIndex);
     fastify.get('/terms', serveIndex);
 }
