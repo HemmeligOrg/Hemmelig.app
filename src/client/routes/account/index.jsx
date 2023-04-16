@@ -91,7 +91,7 @@ const HomeAccount = () => {
                 onTabChange={(value) => navigate(`/account/${value}`)}
                 value={tabValue}
             >
-                <Tabs.List grow>
+                <Tabs.List grow={isMobile}>
                     <Tabs.Tab value="details" icon={<IconUser size={14} />}>
                         {t('account')}
                     </Tabs.Tab>
