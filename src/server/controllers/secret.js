@@ -97,9 +97,11 @@ async function secret(fastify) {
             preValidation: [fastify.authenticate],
         },
         async (req, reply) => {
+            const { user_id } = req.user;
+
             const secrets = await prisma.secret.findMany({
                 where: {
-                    user_id: req.user.user_id,
+                    user_id: validator.isUUID(user_id) ? user_id : '',
                 },
                 include: { files: true },
             });
