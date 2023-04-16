@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy } from 'react';
 import { Alert, Container, Loader, Text, Button, Group, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUser, IconTrash, IconSettings, IconAlertCircle, IconLock } from '@tabler/icons';
+import { IconUser, IconSettings, IconAlertCircle, IconLock } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
