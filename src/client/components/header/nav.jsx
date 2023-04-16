@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { NavLink, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconLockOff, IconLogin, IconFingerprint, IconList } from '@tabler/icons';
@@ -82,7 +82,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
                 />
             ))}
 
-            {onSignOutRedirect && <Redirect push to={onSignOutRedirect} />}
+            {onSignOutRedirect && <Navigate replace to={onSignOutRedirect} />}
         </Group>
     );
 };

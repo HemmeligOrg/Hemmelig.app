@@ -1,5 +1,5 @@
-import React, { lazy } from 'react';
-import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { lazy } from 'react';
+import { Link, BrowserRouter, Route, Routes } from 'react-router-dom';
 import {
     MantineProvider,
     AppShell,
@@ -28,10 +28,10 @@ const Terms = lazy(() => import('./routes/terms'));
 const App = () => {
     const { t } = useTranslation();
     const isMobile = useMediaQuery('(max-width: 768px)');
-
     const theme = useMantineTheme();
+
     return (
-        <Router>
+        <BrowserRouter>
             <MantineProvider
                 withGlobalStyles
                 withNormalizeCSS
@@ -147,39 +147,30 @@ const App = () => {
                             </Header>
                         }
                     >
-                        <Switch>
-                            <Route path="/secret/:encryptionKey/:secretId" exact>
-                                <Secret />
-                            </Route>
-                            <Route path="/secret/:secretId" exact>
-                                <Secret />
-                            </Route>
-                            <Route path="/signin" exact>
-                                <SignIn />
-                            </Route>
-                            <Route path="/signup" exact>
-                                <SignUp />
-                            </Route>
-                            <Route path="/signout" exact>
-                                <SignOut />
-                            </Route>
-                            <Route path="/privacy" exact>
-                                <Privacy />
-                            </Route>
-                            <Route path="/account" exact>
-                                <Account />
-                            </Route>
-                            <Route path="/terms" exact>
-                                <Terms />
-                            </Route>
-                            <Route path="/">
-                                <Home />
-                            </Route>
-                        </Switch>
+                        <Routes>
+                            <Route path="/secret/:encryptionKey/:secretId" element={<Secret />} />
+                            <Route path="/secret/:secretId" element={<Secret />} />
+
+                            <Route path="/signin" element={<SignIn />} />
+
+                            <Route path="/signup" element={<SignUp />} />
+
+                            <Route path="/signout" element={<SignOut />} />
+
+                            <Route path="/privacy" element={<Privacy />} />
+
+                            <Route path="/account" element={<Account />} />
+
+                            <Route path="/account/:tabValue" element={<Account />} />
+
+                            <Route path="/terms" element={<Terms />} />
+
+                            <Route path="/" element={<Home />} />
+                        </Routes>
                     </AppShell>
                 </ModalsProvider>
             </MantineProvider>
-        </Router>
+        </BrowserRouter>
     );
 };
 

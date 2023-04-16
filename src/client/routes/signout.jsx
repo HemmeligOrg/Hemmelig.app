@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { userLoginChanged, userLogin } from '../actions/';
 import { removeCookie } from '../helpers/cookie';
@@ -17,7 +17,7 @@ const SignOut = () => {
         dispatch(userLoginChanged(false));
     }, []);
 
-    return <Redirect push to="/signin" />;
+    return <Navigate replace to="/signin" />;
 };
 
 export default SignOut;

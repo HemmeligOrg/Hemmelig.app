@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import {
     Alert,
     Button,
@@ -121,7 +121,7 @@ const SignUp = () => {
                     withCloseButton={false}
                 >
                     Redirecting to your account page.
-                    <Redirect push to="/account" />
+                    <Navigate replace to="/account" />
                 </Notification>
             )}
         </Container>

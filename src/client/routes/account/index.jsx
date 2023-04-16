@@ -1,12 +1,13 @@
 import { useEffect, useState, lazy } from 'react';
-import { Alert, Container, Loader, Text, Button, Group, Tabs } from '@mantine/core';
+import { Alert, Container, Loader, Text, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconSettings, IconAlertCircle, IconLock } from '@tabler/icons';
-import { Redirect } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { getUser } from '../../api/account';
 
+const Details = lazy(() => import('./details'));
 const Settings = lazy(() => import('./settings'));
 const Account = lazy(() => import('./account'));
 const Users = lazy(() => import('./users'));
@@ -16,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 
 const HomeAccount = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { tabValue } = useParams();
 
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
@@ -44,7 +47,7 @@ const HomeAccount = () => {
     }, []);
 
     if (!username) {
-        return <Redirect push to="/signin" />;
+        return <Navigate replace to="/signin" />;
     }
 
     if (!user?.username) {
@@ -85,6 +88,8 @@ const HomeAccount = () => {
                 orientation={isMobile ? 'horisontal' : 'vertical'}
                 defaultValue="account"
                 keepMounted={false}
+                onTabChange={(value) => navigate(`/account/${value}`)}
+                value={tabValue}
             >
                 <Tabs.List grow>
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
@@ -106,23 +111,7 @@ const HomeAccount = () => {
 
                 <Tabs.Panel value="account" pt="xs">
                     <Container>
-                        <Text size="sm">
-                            Hi, <strong>{user.username}</strong>
-                        </Text>
-
-                        <Text size="sm">
-                            We are glad you logged in. Here is the list of features signed in users
-                            get:
-                            <ul>
-                                <li>Upload files</li>
-                                <li>Expiration time of 14 and 28 days for secrets</li>
-                                <li>List and delete your secrets</li>
-                            </ul>
-                            More features are coming! Thanks for joining Hemmelig.app!
-                            <span role="img" aria-label="celebration icon">
-                                🎉 🎉 🎉 🎉
-                            </span>
-                        </Text>
+                        <Details user={user} />
                     </Container>
                 </Tabs.Panel>
 
