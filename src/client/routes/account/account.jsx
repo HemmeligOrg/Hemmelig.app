@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Alert,
     Container,
@@ -7,13 +7,15 @@ import {
     Group,
     Notification,
     TextInput,
+    Text,
     PasswordInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconAt, IconLock, IconEdit, IconAlertCircle, IconCheck } from '@tabler/icons';
+import { openConfirmModal } from '@mantine/modals';
+import { IconAt, IconLock, IconEdit, IconAlertCircle, IconCheck, IconTrash } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
-import { getUser, updateUser } from '../../api/account';
+import { getUser, updateUser, deleteUser } from '../../api/account';
 
 const Account = () => {
     const [success, setSuccess] = useState(false);
@@ -90,6 +92,30 @@ const Account = () => {
         }
     };
 
+    const onDeleteUser = async () => {
+        try {
+            const response = await deleteUser();
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                setError('Could not delete the user');
+
+                return;
+            }
+        } catch (err) {
+            setError(err);
+        }
+    };
+
+    const openDeleteModal = () =>
+        openConfirmModal({
+            title: 'Delete your profile',
+            centered: true,
+            children: <Text size="sm">Are you sure you want to delete your profile?</Text>,
+            labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+            confirmProps: { color: 'red' },
+            onConfirm: () => onDeleteUser(),
+        });
+
     return (
         <Container size="xs">
             <Stack>
@@ -142,7 +168,16 @@ const Account = () => {
                     {...form.getInputProps('confirmNewPassword')}
                 />
 
-                <Group position="right">
+                <Group position="right" grow>
+                    <Button
+                        variant="gradient"
+                        gradient={{ from: 'orange', to: 'red' }}
+                        onClick={openDeleteModal}
+                        leftIcon={<IconTrash size={14} />}
+                    >
+                        Delete profile
+                    </Button>
+
                     <Button
                         leftIcon={<IconEdit size={14} />}
                         onClick={onProfileUpdate}

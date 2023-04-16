@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { Alert, Container, Loader, Text, Button, Group, Tabs } from '@mantine/core';
-import { openConfirmModal } from '@mantine/modals';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconTrash, IconSettings, IconAlertCircle, IconLock } from '@tabler/icons';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { getUser, deleteUser } from '../../api/account';
+import { getUser } from '../../api/account';
 
-import Settings from './settings';
-import Account from './account';
-import Users from './users';
-import Secrets from './secrets';
+const Settings = lazy(() => import('./settings'));
+const Account = lazy(() => import('./account'));
+const Users = lazy(() => import('./users'));
+const Secrets = lazy(() => import('./secrets'));
 
 import { useTranslation } from 'react-i18next';
 
@@ -55,30 +54,6 @@ const HomeAccount = () => {
             </Container>
         );
     }
-
-    const onDeleteUser = async () => {
-        try {
-            const response = await deleteUser();
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                setError('Could not delete the user');
-
-                return;
-            }
-        } catch (err) {
-            setError(err);
-        }
-    };
-
-    const openDeleteModal = () =>
-        openConfirmModal({
-            title: 'Delete your profile',
-            centered: true,
-            children: <Text size="sm">Are you sure you want to delete your profile?</Text>,
-            labels: { confirm: 'Delete account', cancel: "No don't delete it" },
-            confirmProps: { color: 'red' },
-            onConfirm: () => onDeleteUser(),
-        });
 
     return (
         <Container>
@@ -147,23 +122,6 @@ const HomeAccount = () => {
                                 🎉 🎉 🎉 🎉
                             </span>
                         </Text>
-
-                        <Text size="sm">
-                            If you do not feel to be part of the Hemmelig.app journey anymore. Feel
-                            free to delete your profile. Hemmelig will remove all the information
-                            connected to your account!
-                        </Text>
-
-                        <Group position="right">
-                            <Button
-                                variant="gradient"
-                                gradient={{ from: 'orange', to: 'red' }}
-                                onClick={openDeleteModal}
-                                leftIcon={<IconTrash size={14} />}
-                            >
-                                Delete profile
-                            </Button>
-                        </Group>
                     </Container>
                 </Tabs.Panel>
 
