@@ -84,8 +84,9 @@ const HomeAccount = () => {
                 color="orange"
                 orientation={isMobile ? 'horisontal' : 'vertical'}
                 defaultValue="account"
+                keepMounted={false}
             >
-                <Tabs.List>
+                <Tabs.List grow>
                     <Tabs.Tab value="account" icon={<IconUser size={14} />}>
                         {t('account')}
                     </Tabs.Tab>
