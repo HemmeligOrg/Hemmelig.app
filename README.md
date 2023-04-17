@@ -47,7 +47,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - - Set Hemmelig to be in read only mode by non admin users
 - - Disable file upload
 - - Disable user account creation
-- - Allow organization email domain for user registration
+- - Allow organization email domain only for user registration
 
 ## Linode Referral
 
