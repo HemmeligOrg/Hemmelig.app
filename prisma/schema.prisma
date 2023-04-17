@@ -57,4 +57,5 @@ model Settings {
     disable_user_account_creation Boolean @default(false)
     read_only                     Boolean @default(false)
     disable_file_upload           Boolean @default(false)
+    whitelist_organization_email  String  @default("")
 }

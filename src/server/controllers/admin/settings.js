@@ -1,3 +1,4 @@
+import extractDomain from 'extract-domain';
 import prisma from '../../services/prisma.js';
 import { updateAdminSettings } from '../../bootstrap.js';
 
@@ -29,6 +30,7 @@ async function settings(fastify) {
                 disable_user_account_creation = false,
                 read_only = false,
                 disable_file_upload = false,
+                whitelist_organization_email = '',
             } = request.body;
 
             const settings = await prisma.settings.upsert({
@@ -40,6 +42,7 @@ async function settings(fastify) {
                     disable_user_account_creation, // Disable user account creation
                     read_only, // Allow visiting users to read secrets, and not create any except if you are an admin
                     disable_file_upload, // Disable file uploads
+                    whitelist_organization_email: extractDomain(whitelist_organization_email), // Whitelist organization email for user creation
                 },
                 create: { id: 'admin_settings' },
             });

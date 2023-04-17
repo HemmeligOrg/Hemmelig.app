@@ -6,11 +6,12 @@ import {
     Button,
     Checkbox,
     Group,
+    Input,
     Text,
     Notification,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconEdit, IconCheck, IconAlertCircle } from '@tabler/icons';
+import { IconEdit, IconCheck, IconAlertCircle, IconAt } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSettings, updateSettings } from '../../api/settings';
@@ -27,6 +28,7 @@ const Settings = () => {
             disable_users: false,
             disable_user_account_creation: false,
             disable_file_upload: false,
+            whitelist_organization_email: '',
         },
     });
 
@@ -123,6 +125,23 @@ const Settings = () => {
                             form.setValues({ disable_file_upload: event.currentTarget.checked })
                         }
                     />
+                </Group>
+                <Group position="left">
+                    <Input.Wrapper
+                        label="Whitelist email domain"
+                        description="This will whitelist a certain domain for user registration. Great to use by organizations to limit who is allowed to create an user on your instance."
+                    >
+                        <Input
+                            icon={<IconAt size={14} />}
+                            placeholder="example.com"
+                            value={form.getInputProps('whitelist_organization_email').value}
+                            onChange={(event) =>
+                                form.setValues({
+                                    whitelist_organization_email: event.currentTarget.value,
+                                })
+                            }
+                        />
+                    </Input.Wrapper>
                 </Group>
                 <Group position="right">
                     <Button

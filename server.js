@@ -23,6 +23,7 @@ import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-rout
 import readOnlyHandler from './src/server/prehandlers/read-only.js';
 import disableUserHandler from './src/server/prehandlers/disable-users.js';
 import disableUserAccountCreationHandler from './src/server/prehandlers/disable-user-account-creation.js';
+import whitelistOrganizationEmailHandler from './src/server/prehandlers/whitelist-organization-email.js';
 
 import usersRoute from './src/server/controllers/admin/users.js';
 import adminSettingsRoute from './src/server/controllers/admin/settings.js';
@@ -85,6 +86,7 @@ fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
 fastify.addHook('preHandler', disableUserHandler);
 fastify.addHook('preHandler', disableUserAccountCreationHandler);
 fastify.addHook('preHandler', readOnlyHandler);
+fastify.addHook('preHandler', whitelistOrganizationEmailHandler);
 
 // Register our routes before the static content
 
