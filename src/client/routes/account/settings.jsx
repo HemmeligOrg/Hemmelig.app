@@ -129,7 +129,7 @@ const Settings = () => {
                 <Group position="left">
                     <Input.Wrapper
                         label="Restrict email domain"
-                        description="This will restrict a certain domain for user registration. Great to use by organizations to limit who is allowed to create an user on your instance."
+                        description="This will limit user registration for a certain email domain."
                     >
                         <Input
                             icon={<IconAt size={14} />}
