@@ -28,7 +28,7 @@ const Settings = () => {
             disable_users: false,
             disable_user_account_creation: false,
             disable_file_upload: false,
-            whitelist_organization_email: '',
+            Restrict_organization_email: '',
         },
     });
 
@@ -128,16 +128,16 @@ const Settings = () => {
                 </Group>
                 <Group position="left">
                     <Input.Wrapper
-                        label="Whitelist email domain"
-                        description="This will whitelist a certain domain for user registration. Great to use by organizations to limit who is allowed to create an user on your instance."
+                        label="Restrict email domain"
+                        description="This will restrict a certain domain for user registration. Great to use by organizations to limit who is allowed to create an user on your instance."
                     >
                         <Input
                             icon={<IconAt size={14} />}
                             placeholder="example.com"
-                            value={form.getInputProps('whitelist_organization_email').value}
+                            value={form.getInputProps('restrict_organization_email').value}
                             onChange={(event) =>
                                 form.setValues({
-                                    whitelist_organization_email: event.currentTarget.value,
+                                    restrict_organization_email: event.currentTarget.value,
                                 })
                             }
                         />
