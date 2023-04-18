@@ -42,9 +42,7 @@ async function settings(fastify) {
                     disable_user_account_creation, // Disable user account creation
                     read_only, // Allow visiting users to read secrets, and not create any except if you are an admin
                     disable_file_upload, // Disable file uploads
-                    restrict_organization_email: extractDomain(restrict_organization_email, {
-                        tld: true,
-                    }), // Whitelist organization email for user creation
+                    restrict_organization_email: extractDomain(restrict_organization_email), // Whitelist organization email for user creation
                 },
                 create: { id: 'admin_settings' },
             });

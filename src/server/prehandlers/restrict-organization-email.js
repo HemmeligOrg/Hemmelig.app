@@ -11,7 +11,7 @@ export default async function restrictOrganizationEmailHandler(request, reply) {
 
     if (
         restrict &&
-        extractDomain(restrict, { tld: true }) !== extractDomain(email, { tld: true }) &&
+        extractDomain(restrict) !== extractDomain(email) &&
         authenticationRegex.test(url)
     ) {
         return reply.code(403).send({ error: errorMessage });
