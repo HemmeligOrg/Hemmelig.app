@@ -60,7 +60,7 @@ Hemmelig strongly advice you to ue the tagged docker images as the main branch w
 Supported docker platforms: `amd/64`, `arm/64`. 
 
 - hemmeligapp/hemmelig:latest (Is created on each version release)
-- hemmeligapp/hemmelig:v5.4.4 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
+- hemmeligapp/hemmelig:v5.7.2 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:daily
 
