@@ -60,11 +60,7 @@ Hemmelig strongly advice you to ue the tagged docker images as the main branch w
 - hemmeligapp/hemmelig:latest (Is created on each version release)
 - hemmeligapp/hemmelig:v5.4.4 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
-- hemmeligapp/hemmelig:arm-weekly
 - hemmeligapp/hemmelig:daily
-- hemmeligapp/hemmelig:arm-daily
-- hemmeligapp/hemmelig:arm-vX.X.X (will be from > 4.2.0)
-- hemmeligapp/hemmelig:arm-latest (will be from > 4.2.0)
 
 ## Self-hosting
 

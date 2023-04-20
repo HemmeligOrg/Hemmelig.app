@@ -28,11 +28,13 @@ jobs:
             - name: Push to Docker Hub
               uses: docker/build-push-action@v4
               with:
+                  platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:latest
 
             - name: Push to Docker Hub
               uses: docker/build-push-action@v4
               with:
+                  platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
