@@ -121,3 +121,4 @@ hemmelig.db*
 prisma_test.js
 database/
 data/
+.vscode

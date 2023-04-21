@@ -115,11 +115,11 @@ async function secret(fastify) {
     fastify.post(
         '/',
         {
-            preValidation: [fastify.userFeatures, fastify.keyGeneration, fastify.attachment],
+            preValidation: [fastify.userFeatures, fastify.attachment],
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
-            const { secretId, files } = req.secret;
+            const { files } = req.secret;
 
             if (Buffer.byteLength(text) > config.get('api.maxTextSize')) {
                 return reply.code(413).send({
@@ -139,9 +139,8 @@ async function secret(fastify) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
-            await prisma.secret.create({
+            const secret = await prisma.secret.create({
                 data: {
-                    id: secretId,
                     title,
                     maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
                     data: text,
@@ -171,7 +170,7 @@ async function secret(fastify) {
             });
 
             return reply.code(201).send({
-                id: secretId,
+                id: secret.id,
             });
         }
     );

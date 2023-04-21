@@ -14,7 +14,7 @@ datasource db {
 }
 
 model File {
-    id       String @id @default(uuid())
+    id       String @id @unique @default(uuid())
     type     String
     ext      String
     key      String
@@ -23,7 +23,7 @@ model File {
 }
 
 model Secret {
-    id          String   @id
+    id          String   @id @unique @default(uuid())
     data        String
     title       String?
     maxViews    Int      @default(1)
@@ -37,7 +37,7 @@ model Secret {
 }
 
 model User {
-    id        String   @id @default(uuid())
+    id        String   @id @unique @default(uuid())
     username  String   @unique
     email     String   @unique
     password  String
