@@ -4,7 +4,7 @@ import config from 'config';
 import prisma from '../services/prisma.js';
 import { hash, compare } from '../helpers/password.js';
 
-import { validIdRegExp } from '../decorators/key-generation.js';
+import { isValidSecretId } from '../helpers/regexp.js';
 
 const DEFAULT_EXPIRATION = 60 * 60 * 24 * 1000;
 
@@ -26,7 +26,7 @@ async function getSecretRoute(request, reply) {
     const { password = '' } = request.body ? request.body : {};
 
     // If it does not match the valid characters set for nanoid, return 403
-    if (!validIdRegExp.test(id)) {
+    if (!isValidSecretId.test(id)) {
         return reply.code(403).send({ error: 'Not a valid secret ID' });
     }
 
@@ -179,7 +179,7 @@ async function secret(fastify) {
     fastify.post('/:id/burn', async (request) => {
         const { id } = request.params;
 
-        if (!validIdRegExp.test(id)) {
+        if (!isValidSecretId.test(id)) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 
@@ -195,7 +195,7 @@ async function secret(fastify) {
     fastify.get('/:id/exist', async (request, reply) => {
         const { id } = request.params;
 
-        if (!validIdRegExp.test(id)) {
+        if (!isValidSecretId.test(id)) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 

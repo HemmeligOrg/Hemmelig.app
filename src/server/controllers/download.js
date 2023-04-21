@@ -2,13 +2,13 @@ import sanitize from 'sanitize-filename';
 import prisma from '../services/prisma.js';
 import fileAdapter from '../services/file-adapter.js';
 
-import { validIdRegExp } from '../decorators/key-generation.js';
+import { isValidSecretId } from '../helpers/regexp.js';
 
 async function downloadFiles(fastify) {
     fastify.post('/', async (request, reply) => {
         const { key, secretId } = request.body;
 
-        if (!validIdRegExp.test(secretId)) {
+        if (!isValidSecretId.test(secretId)) {
             return reply.code(403).send({ error: 'Not a valid secret id' });
         }
 

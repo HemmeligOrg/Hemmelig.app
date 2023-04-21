@@ -17,7 +17,6 @@ import jwtDecorator from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
-import keyGeneration from './src/server/decorators/key-generation.js';
 
 import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
 import readOnlyHandler from './src/server/prehandlers/read-only.js';
@@ -79,7 +78,6 @@ fastify.register(jwtDecorator);
 fastify.register(userFeatures);
 fastify.register(allowedIp);
 fastify.register(attachment);
-fastify.register(keyGeneration);
 
 // Define pre handlers
 fastify.addHook('preHandler', readCookieAllRoutesHandler(fastify));
