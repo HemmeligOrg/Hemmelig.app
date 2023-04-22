@@ -178,6 +178,8 @@ SQLite database error
 unable to open database file: ../database/hemmelig.db
 ```
 
+If you have any issues with uploading files for your instance, you will need the following as well:
+
 Here is an example of how you would solve that:
 ```bash
 sudo chown -R username.group /home/username/data/
