@@ -20,6 +20,7 @@ import {
     IconPerspective,
     IconHeading,
     IconAlertCircle,
+    IconShieldLock,
 } from '@tabler/icons';
 
 import { getSecret, secretExists } from '../../api/secret';
@@ -46,6 +47,7 @@ const Secret = () => {
     const { hash = '' } = useLocation();
 
     const { secretId, encryptionKey = getEncryptionKeyHash(hash) } = useParams();
+    const [decryptionKey, setDecryptionKey] = useState(encryptionKey);
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
     const [preventBurn, setPreventBurn] = useState(false);
@@ -61,7 +63,7 @@ const Secret = () => {
     const fetchSecret = async (event) => {
         event.preventDefault();
 
-        if (isPasswordRequired && !password) {
+        if (isPasswordRequired && (!password || !decryptionKey)) {
             return;
         }
 
@@ -85,7 +87,7 @@ const Secret = () => {
             setError(json.error);
         } else {
             try {
-                const text = decrypt(json.secret, encryptionKey);
+                const text = decrypt(json.secret, decryptionKey);
 
                 setSecret(text);
             } catch (error) {
@@ -95,7 +97,7 @@ const Secret = () => {
             }
 
             if (json.title) {
-                setTitle(decrypt(json.title, encryptionKey));
+                setTitle(decrypt(json.title, decryptionKey));
             }
 
             if (json.files) {
@@ -139,7 +141,7 @@ const Secret = () => {
         downloadFile({
             file,
             secretId,
-            encryptionKey,
+            decryptionKey,
         });
 
         if (!preventBurn) {
@@ -199,6 +201,20 @@ const Secret = () => {
                             onChange={onPasswordChange}
                             required
                             style={{ WebkitTextSecurity: 'disc' }}
+                        />
+                    </>
+                )}
+
+                {!encryptionKey && !isSecretOpen && (
+                    <>
+                        <Text>{t('secret.decryption_key', 'Decryption key required')}</Text>
+
+                        <TextInput
+                            icon={<IconShieldLock size={14} />}
+                            placeholder="Decryption key"
+                            value={decryptionKey}
+                            onChange={(event) => setDecryptionKey(event.target.value)}
+                            required
                         />
                     </>
                 )}

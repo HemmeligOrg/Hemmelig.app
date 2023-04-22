@@ -19,6 +19,7 @@ import {
     FileButton,
     NumberInput,
     Badge,
+    Box,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
@@ -33,6 +34,7 @@ import {
     IconHeading,
     IconShare,
     IconAlertCircle,
+    IconShieldLock,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 
@@ -203,8 +205,13 @@ const Home = () => {
 
     const handleFocus = (event) => event.target.select();
 
-    const getSecretURL = () =>
-        `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
+    const getSecretURL = (withEncryptionKey = true) => {
+        if (!withEncryptionKey) {
+            return `${window.location.origin}/secret/${secretId}`;
+        }
+
+        return `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
+    };
 
     const inputReadOnly = !!secretId;
 
@@ -429,7 +436,86 @@ const Home = () => {
                                     }
                                 />
                             </Group>
+
                             <QRLink value={getSecretURL()} />
+
+                            <Divider
+                                my="xs"
+                                variant="dashed"
+                                labelPosition="center"
+                                label={
+                                    <Box ml={5}>
+                                        {t('home.or', 'Separate the link and decryption key')}
+                                    </Box>
+                                }
+                            />
+
+                            <Group grow>
+                                <TextInput
+                                    label={t(
+                                        'home.secret_url',
+                                        'Secret URL without decryption key'
+                                    )}
+                                    icon={<IconLink size={14} />}
+                                    value={getSecretURL(false)}
+                                    onFocus={handleFocus}
+                                    styles={groupMobileStyle}
+                                    readOnly
+                                    rightSection={
+                                        <CopyButton value={getSecretURL(false)} timeout={2000}>
+                                            {({ copied, copy }) => (
+                                                <Tooltip
+                                                    label={copied ? t('copied') : t('copy')}
+                                                    withArrow
+                                                    position="right"
+                                                >
+                                                    <ActionIcon
+                                                        color={copied ? 'teal' : 'gray'}
+                                                        onClick={copy}
+                                                    >
+                                                        {copied ? (
+                                                            <IconCheck size={16} />
+                                                        ) : (
+                                                            <IconCopy size={16} />
+                                                        )}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            )}
+                                        </CopyButton>
+                                    }
+                                />
+
+                                <TextInput
+                                    label={t('home.encryption_key', 'Decryption key')}
+                                    icon={<IconShieldLock size={14} />}
+                                    value={encryptionKey}
+                                    onFocus={handleFocus}
+                                    styles={groupMobileStyle}
+                                    readOnly
+                                    rightSection={
+                                        <CopyButton value={encryptionKey} timeout={2000}>
+                                            {({ copied, copy }) => (
+                                                <Tooltip
+                                                    label={copied ? t('copied') : t('copy')}
+                                                    withArrow
+                                                    position="right"
+                                                >
+                                                    <ActionIcon
+                                                        color={copied ? 'teal' : 'gray'}
+                                                        onClick={copy}
+                                                    >
+                                                        {copied ? (
+                                                            <IconCheck size={16} />
+                                                        ) : (
+                                                            <IconCopy size={16} />
+                                                        )}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            )}
+                                        </CopyButton>
+                                    }
+                                />
+                            </Group>
                         </>
                     )}
 
