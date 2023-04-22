@@ -21,7 +21,7 @@ const SignOut = () => {
 
         setTimeout(() => {
             setRedirect(true);
-        }, 1500000);
+        }, 1500);
     }, []);
 
     if (!redirect) {
