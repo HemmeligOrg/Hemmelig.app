@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { NavLink, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUser, IconLockOff, IconLogin, IconFingerprint, IconList } from '@tabler/icons';
@@ -10,7 +9,6 @@ import style from './style.module.css';
 const Nav = ({ opened, toggle, isLoggedIn }) => {
     const { t } = useTranslation();
 
-    const [onSignOutRedirect, setOnSignOutRedirect] = useState('');
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     const navItems = [];
@@ -36,7 +34,9 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         navItems.push({
             label: t('sign_out'),
             icon: <IconLockOff size="1rem" stroke={1.5} />,
-            onClick: () => setOnSignOutRedirect('/signout'),
+            component: Link,
+            onClick: toggle,
+            to: '/signout',
         });
     }
 
@@ -81,8 +81,6 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
                     to={item.to ? item.to : null}
                 />
             ))}
-
-            {onSignOutRedirect && <Navigate replace to={onSignOutRedirect} />}
         </Group>
     );
 };
