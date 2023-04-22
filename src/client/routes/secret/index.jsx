@@ -67,6 +67,11 @@ const Secret = () => {
             return;
         }
 
+        if (!decryptionKey) {
+            setError('Decryption key is required!');
+
+            return;
+        }
         if (secret) {
             setIsSecretOpen(true);
 
