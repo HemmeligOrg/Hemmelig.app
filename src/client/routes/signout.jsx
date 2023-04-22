@@ -26,11 +26,9 @@ const SignOut = () => {
     if (!redirect) {
         return (
             <>
-                {!redirect && (
-                    <Group>
-                        <Title>Signing out...</Title>
-                    </Group>
-                )}
+                <Group>
+                    <Title>Signing out...</Title>
+                </Group>
             </>
         );
     }
