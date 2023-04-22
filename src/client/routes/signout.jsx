@@ -25,11 +25,11 @@ const SignOut = () => {
 
     if (!redirect) {
         return (
-            <>
+            <Container>
                 <Group>
                     <Title>Signing out...</Title>
                 </Group>
-            </>
+            </Container>
         );
     }
 
