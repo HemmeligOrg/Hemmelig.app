@@ -45,7 +45,7 @@ const fastify = importFastify({
 // https://github.com/fastify/fastify-rate-limit
 fastify.register(rateLimit, {
     prefix: '/api/',
-    max: 150,
+    max: 10000,
     timeWindow: '1 minute',
 });
 
