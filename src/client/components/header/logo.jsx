@@ -1,9 +1,8 @@
-import React from 'react';
+import { rem } from '@mantine/core';
 const Logo = ({ ...rest }) => (
     <svg
         version="1.0"
-        width="2919.000000pt"
-        height="2793.000000pt"
+        width={rem(100)}
         viewBox="0 0 2919.000000 2793.000000"
         preserveAspectRatio="xMidYMid meet"
         id="svg71"

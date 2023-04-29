@@ -79,7 +79,7 @@ const Secrets = () => {
     ));
 
     return (
-        <Container size="xs ">
+        <Container size="xs">
             <Stack>
                 <Group position="left">
                     <Table horizontalSpacing="sm" highlightOnHover>

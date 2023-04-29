@@ -12,6 +12,11 @@ const SignOut = lazy(() => import('./routes/signout'));
 const Account = lazy(() => import('./routes/account'));
 const Terms = lazy(() => import('./routes/terms'));
 
+const Secrets = lazy(() => import('./routes/account/secrets'));
+const Settings = lazy(() => import('./routes/account/settings'));
+const Users = lazy(() => import('./routes/account/users'));
+const UserAccount = lazy(() => import('./routes/account/account'));
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -27,7 +32,11 @@ const AppRoutes = () => {
 
             <Route path="/account" element={<AdminShell />}>
                 <Route index element={<Account />} />
-                <Route path=":tabValue" element={<Account />} />
+                <Route path="account" element={<Account />} />
+                <Route path="secrets" element={<Secrets />} />
+                <Route path="instance-settings" element={<Settings />} />
+                <Route path="account-settings" element={<UserAccount />} />
+                <Route path="users" element={<Users />} />
             </Route>
         </Routes>
     );
