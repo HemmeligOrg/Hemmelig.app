@@ -1,15 +1,8 @@
 import { Outlet } from 'react-router-dom';
-import {
-    AppShell,
-    Navbar,
-    Header,
-    Group,
-    ActionIcon,
-    useMantineColorScheme,
-    useMantineTheme,
-} from '@mantine/core';
+import { AppShell, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
 
 import MainLinks from './components/settings/main-links';
+import SecondaryLinks from './components/settings/secondary-links';
 import Nav from './components/header/nav';
 import Logo from './components/header/logo';
 import logoStyles from './components/header/style.module.css';
@@ -25,6 +18,9 @@ const AdminShell = () => {
                 <Navbar width={{ base: 300 }} height={500} p="xs">
                     <Navbar.Section grow mt="xs">
                         <MainLinks />
+                    </Navbar.Section>
+                    <Navbar.Section grow mt="xs">
+                        <SecondaryLinks />
                     </Navbar.Section>
                 </Navbar>
             }
