@@ -128,7 +128,7 @@ const Settings = () => {
                 </Group>
                 <Group position="left">
                     <Input.Wrapper
-                        label="Restrict email domain"
+                        label="Restrict to email domain"
                         description="This will limit user registration for a certain email domain."
                     >
                         <Input
