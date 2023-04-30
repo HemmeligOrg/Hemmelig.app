@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Anchor, Burger, Container, Group, Grid } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';

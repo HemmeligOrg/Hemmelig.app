@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom';
-import { AppShell, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
+import { Outlet, Link } from 'react-router-dom';
+import { AppShell, Anchor, Container, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
 
 import MainLinks from './components/settings/main-links';
 import SecondaryLinks from './components/settings/secondary-links';
@@ -25,9 +25,12 @@ const AdminShell = () => {
                 </Navbar>
             }
             header={
-                <Header height={60}>
-                    <Group sx={{ height: '100%' }} px={20} position="apart">
-                        <Logo className={logoStyles.logo} />
+                <Header height={75}>
+                    <Group sx={{ height: '100%', paddingTop: '5px' }} px={20} position="apart">
+                        <Anchor component={Link} to="/">
+                            <Logo className={logoStyles.logo} />
+                        </Anchor>
+
                         <Nav />
                     </Group>
                 </Header>
