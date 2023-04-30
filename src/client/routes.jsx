@@ -23,6 +23,7 @@ const AppRoutes = () => {
             <Route path="/" element={<ApplicationShell />}>
                 <Route index element={<Home />} />
                 <Route path="secret/:encryptionKey/:secretId" element={<Secret />} />
+                <Route path="secret/:secretId" element={<Secret />} />
                 <Route path="signin" element={<SignIn />} />
                 <Route path="signup" element={<SignUp />} />
                 <Route path="signout" element={<SignOut />} />
