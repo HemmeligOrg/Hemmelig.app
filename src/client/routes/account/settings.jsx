@@ -60,7 +60,7 @@ const Settings = () => {
     };
 
     return (
-        <Container size="xs ">
+        <>
             <Stack>
                 {error && (
                     <Alert
@@ -154,7 +154,7 @@ const Settings = () => {
                     </Button>
                 </Group>
             </Stack>
-        </Container>
+        </>
     );
 };
 

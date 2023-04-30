@@ -79,22 +79,20 @@ const Secrets = () => {
     ));
 
     return (
-        <Container size="xs">
-            <Stack>
-                <Group position="left">
-                    <Table horizontalSpacing="sm" highlightOnHover>
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Expires</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
-                </Group>
-            </Stack>
-        </Container>
+        <Stack>
+            <Group position="left">
+                <Table horizontalSpacing="sm" highlightOnHover>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Expires</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                </Table>
+            </Group>
+        </Stack>
     );
 };
 

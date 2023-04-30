@@ -48,7 +48,7 @@ const HomeAccount = () => {
     }
 
     return (
-        <Container>
+        <>
             <Stack>
                 {error && (
                     <Alert
@@ -92,7 +92,7 @@ const HomeAccount = () => {
                     </span>
                 </Text>
             </Stack>
-        </Container>
+        </>
     );
 };
 

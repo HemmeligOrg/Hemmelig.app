@@ -208,115 +208,113 @@ const Users = () => {
     }
 
     return (
-        <Container size="xs ">
-            <Stack>
-                <Modal opened={opened} onClose={onModalClose} title={t('users.edit')}>
-                    {success && (
-                        <Notification
-                            icon={<IconCheck size="1.1rem" />}
-                            color="teal"
-                            title={t('settings.success')}
-                            withCloseButton={false}
-                        >
-                            {t('users.saved')}
-                        </Notification>
-                    )}
-                    {error && (
-                        <Alert
-                            icon={<IconAlertCircle size="1rem" />}
-                            title={t('home.bummer')}
-                            color="red"
-                            variant="outline"
-                        >
-                            {error}
-                        </Alert>
-                    )}
-                    <Stack>
-                        <TextInput
-                            label="Username"
-                            icon={<IconUser size={14} />}
-                            placeholder="Username"
-                            disabled={modalState === 'update'}
-                            {...form.getInputProps('username')}
-                        />
-                        <TextInput
-                            label="Email"
-                            icon={<IconAt size={14} />}
-                            placeholder="Email"
-                            {...form.getInputProps('email')}
-                        />
-                        {modalState === 'add' && (
-                            <PasswordInput
-                                label="Password"
-                                icon={<IconAt size={14} />}
-                                placeholder="Password"
-                                {...form.getInputProps('password')}
-                            />
-                        )}
-                        <Select
-                            label="Role"
-                            placeholder="Role"
-                            icon={<IconChefHat size={14} />}
-                            value={form.getInputProps('role').value}
-                            onChange={(value) => form.setFieldValue('role', value)}
-                            data={[
-                                { value: 'admin', label: 'Admin' },
-                                { value: 'creator', label: 'Creator' },
-                                { value: 'user', label: 'User' },
-                            ]}
-                        />
-                    </Stack>
-
-                    <Group position="right" mt="xl">
-                        <Button
-                            leftIcon={<IconEdit size={14} />}
-                            onClick={modalState === 'add' ? onAddUser : onUpdateUser}
-                            color="hemmelig"
-                            disabled={success}
-                        >
-                            {t('users.save')}
-                        </Button>
-                    </Group>
-                </Modal>
-
-                <Group position="left">
-                    <Table horizontalSpacing="sm" highlightOnHover>
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
-                </Group>
-
-                {showMore && (
-                    <Center>
-                        <Button color="hemmelig-orange" onClick={onLoadUsers}>
-                            {t('users.more')}
-                        </Button>
-                    </Center>
-                )}
-
-                <Group position="right">
-                    <Button
-                        leftIcon={<IconPlus size={14} />}
-                        onClick={() => {
-                            form.setValues(defaultValues);
-                            setModalState('add');
-                            open(event);
-                        }}
-                        color="hemmelig"
+        <Stack>
+            <Modal opened={opened} onClose={onModalClose} title={t('users.edit')}>
+                {success && (
+                    <Notification
+                        icon={<IconCheck size="1.1rem" />}
+                        color="teal"
+                        title={t('settings.success')}
+                        withCloseButton={false}
                     >
-                        {t('users.add')}
+                        {t('users.saved')}
+                    </Notification>
+                )}
+                {error && (
+                    <Alert
+                        icon={<IconAlertCircle size="1rem" />}
+                        title={t('home.bummer')}
+                        color="red"
+                        variant="outline"
+                    >
+                        {error}
+                    </Alert>
+                )}
+                <Stack>
+                    <TextInput
+                        label="Username"
+                        icon={<IconUser size={14} />}
+                        placeholder="Username"
+                        disabled={modalState === 'update'}
+                        {...form.getInputProps('username')}
+                    />
+                    <TextInput
+                        label="Email"
+                        icon={<IconAt size={14} />}
+                        placeholder="Email"
+                        {...form.getInputProps('email')}
+                    />
+                    {modalState === 'add' && (
+                        <PasswordInput
+                            label="Password"
+                            icon={<IconAt size={14} />}
+                            placeholder="Password"
+                            {...form.getInputProps('password')}
+                        />
+                    )}
+                    <Select
+                        label="Role"
+                        placeholder="Role"
+                        icon={<IconChefHat size={14} />}
+                        value={form.getInputProps('role').value}
+                        onChange={(value) => form.setFieldValue('role', value)}
+                        data={[
+                            { value: 'admin', label: 'Admin' },
+                            { value: 'creator', label: 'Creator' },
+                            { value: 'user', label: 'User' },
+                        ]}
+                    />
+                </Stack>
+
+                <Group position="right" mt="xl">
+                    <Button
+                        leftIcon={<IconEdit size={14} />}
+                        onClick={modalState === 'add' ? onAddUser : onUpdateUser}
+                        color="hemmelig"
+                        disabled={success}
+                    >
+                        {t('users.save')}
                     </Button>
                 </Group>
-            </Stack>
-        </Container>
+            </Modal>
+
+            <Group position="left">
+                <Table horizontalSpacing="sm" highlightOnHover>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                </Table>
+            </Group>
+
+            {showMore && (
+                <Center>
+                    <Button color="hemmelig-orange" onClick={onLoadUsers}>
+                        {t('users.more')}
+                    </Button>
+                </Center>
+            )}
+
+            <Group position="right">
+                <Button
+                    leftIcon={<IconPlus size={14} />}
+                    onClick={() => {
+                        form.setValues(defaultValues);
+                        setModalState('add');
+                        open(event);
+                    }}
+                    color="hemmelig"
+                >
+                    {t('users.add')}
+                </Button>
+            </Group>
+        </Stack>
     );
 };
 
