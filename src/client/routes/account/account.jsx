@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
     Alert,
-    Container,
     Stack,
     Button,
     Group,
@@ -14,6 +13,8 @@ import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconAt, IconLock, IconEdit, IconAlertCircle, IconCheck, IconTrash } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+
+import style from './account.module.css';
 
 import { getUser, updateUser, deleteUser } from '../../api/account';
 
@@ -117,77 +118,81 @@ const Account = () => {
         });
 
     return (
-        <Container size="xs">
-            <Stack>
-                {error && (
-                    <Alert
-                        icon={<IconAlertCircle size="1rem" />}
-                        title={t('home.bummer')}
-                        color="red"
-                        variant="outline"
-                    >
-                        {error}
-                    </Alert>
-                )}
-                {success && (
-                    <Notification
-                        icon={<IconCheck size="1.1rem" />}
-                        color="teal"
-                        title={t('settings.success')}
-                        withCloseButton={false}
-                    >
-                        {t('settings.updated')}
-                    </Notification>
-                )}
+        <Stack align="flex-start">
+            {error && (
+                <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title={t('home.bummer')}
+                    color="red"
+                    variant="outline"
+                    className={style.width}
+                >
+                    {error}
+                </Alert>
+            )}
+            {success && (
+                <Notification
+                    icon={<IconCheck size="1.1rem" />}
+                    color="teal"
+                    title={t('settings.success')}
+                    withCloseButton={false}
+                    className={style.width}
+                >
+                    {t('settings.updated')}
+                </Notification>
+            )}
 
-                <TextInput
-                    label="Email"
-                    icon={<IconAt size={14} />}
-                    placeholder="Email"
-                    {...form.getInputProps('email')}
-                />
+            <Group position="right" grow>
+                <Stack className={style.width}>
+                    <TextInput
+                        label="Email"
+                        icon={<IconAt size={14} />}
+                        placeholder="Email"
+                        {...form.getInputProps('email')}
+                    />
 
-                <PasswordInput
-                    label="Current password"
-                    icon={<IconLock size={14} />}
-                    placeholder="Your current password"
-                    {...form.getInputProps('currentPassword')}
-                />
+                    <PasswordInput
+                        label="Current password"
+                        icon={<IconLock size={14} />}
+                        placeholder="Your current password"
+                        {...form.getInputProps('currentPassword')}
+                    />
 
-                <PasswordInput
-                    label="New password"
-                    icon={<IconLock size={14} />}
-                    placeholder="Update your password"
-                    {...form.getInputProps('newPassword')}
-                />
+                    <PasswordInput
+                        label="New password"
+                        icon={<IconLock size={14} />}
+                        placeholder="Update your password"
+                        {...form.getInputProps('newPassword')}
+                    />
 
-                <PasswordInput
-                    label="Confirm Password"
-                    icon={<IconLock size={14} />}
-                    placeholder="Confirm your new password"
-                    {...form.getInputProps('confirmNewPassword')}
-                />
+                    <PasswordInput
+                        label="Confirm Password"
+                        icon={<IconLock size={14} />}
+                        placeholder="Confirm your new password"
+                        {...form.getInputProps('confirmNewPassword')}
+                    />
+                </Stack>
+            </Group>
 
-                <Group position="right" grow>
-                    <Button
-                        variant="gradient"
-                        gradient={{ from: 'orange', to: 'red' }}
-                        onClick={openDeleteModal}
-                        leftIcon={<IconTrash size={14} />}
-                    >
-                        Delete profile
-                    </Button>
+            <Group position="right" grow>
+                <Button
+                    variant="gradient"
+                    gradient={{ from: 'orange', to: 'red' }}
+                    onClick={openDeleteModal}
+                    leftIcon={<IconTrash size={14} />}
+                >
+                    Delete profile
+                </Button>
 
-                    <Button
-                        leftIcon={<IconEdit size={14} />}
-                        onClick={onProfileUpdate}
-                        color="hemmelig"
-                    >
-                        Update details
-                    </Button>
-                </Group>
-            </Stack>
-        </Container>
+                <Button
+                    leftIcon={<IconEdit size={14} />}
+                    onClick={onProfileUpdate}
+                    color="hemmelig"
+                >
+                    Update details
+                </Button>
+            </Group>
+        </Stack>
     );
 };
 

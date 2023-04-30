@@ -1,15 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Container,
-    Stack,
-    Button,
-    Checkbox,
-    Group,
-    Input,
-    Text,
-    Notification,
-} from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Alert, Stack, Button, Checkbox, Group, Input, Text, Notification } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconEdit, IconCheck, IconAlertCircle, IconAt } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
@@ -60,7 +50,7 @@ const Settings = () => {
     };
 
     return (
-        <Container size="xs ">
+        <>
             <Stack>
                 {error && (
                     <Alert
@@ -128,7 +118,7 @@ const Settings = () => {
                 </Group>
                 <Group position="left">
                     <Input.Wrapper
-                        label="Restrict email domain"
+                        label="Restrict to email domain"
                         description="This will limit user registration for a certain email domain."
                     >
                         <Input
@@ -154,7 +144,7 @@ const Settings = () => {
                     </Button>
                 </Group>
             </Stack>
-        </Container>
+        </>
     );
 };
 

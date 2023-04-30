@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import './i18n';
 import { LoadingOverlay } from '@mantine/core';
 
-import App from './client/app';
+import HemmeligApplication from './client/app';
 import configureStore from './client/helpers/configureStore';
 import './client/index.css';
 
@@ -23,7 +23,7 @@ ReactDOM.render(
                 />
             }
         >
-            <App />
+            <HemmeligApplication />
         </Suspense>
     </Provider>,
     document.getElementById('root')

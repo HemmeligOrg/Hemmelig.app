@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActionIcon, Container, Text, Stack, Group, Table } from '@mantine/core';
+import { ActionIcon, Text, Stack, Group, Table } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons';
@@ -79,22 +79,20 @@ const Secrets = () => {
     ));
 
     return (
-        <Container size="xs ">
-            <Stack>
-                <Group position="left">
-                    <Table horizontalSpacing="sm" highlightOnHover>
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Expires</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
-                </Group>
-            </Stack>
-        </Container>
+        <Stack>
+            <Group position="left">
+                <Table horizontalSpacing="sm" highlightOnHover>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Expires</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                </Table>
+            </Group>
+        </Stack>
     );
 };
 
