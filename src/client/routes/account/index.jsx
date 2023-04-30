@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Alert, Container, Loader, Text, Stack, Group } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import { getUser } from '../../api/account';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +11,7 @@ const HomeAccount = () => {
 
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
-
-    const username = useSelector((state) => state.username);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         (async () => {
@@ -28,6 +26,7 @@ const HomeAccount = () => {
 
                 setUser(response.user);
 
+                setIsLoading(false);
                 setError(null);
             } catch (err) {
                 setError(err);
@@ -35,7 +34,7 @@ const HomeAccount = () => {
         })();
     }, []);
 
-    if (!username) {
+    if (!user?.username && !isLoading) {
         return <Navigate replace to="/signin" />;
     }
 
