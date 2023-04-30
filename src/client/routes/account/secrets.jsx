@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActionIcon, Container, Text, Stack, Group, Table } from '@mantine/core';
+import { ActionIcon, Text, Stack, Group, Table } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons';

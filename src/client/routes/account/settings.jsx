@@ -1,15 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Alert,
-    Container,
-    Stack,
-    Button,
-    Checkbox,
-    Group,
-    Input,
-    Text,
-    Notification,
-} from '@mantine/core';
+import { Alert, Stack, Button, Checkbox, Group, Input, Text, Notification } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconEdit, IconCheck, IconAlertCircle, IconAt } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';

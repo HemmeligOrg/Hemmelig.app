@@ -1,5 +1,5 @@
 import { Outlet, Link } from 'react-router-dom';
-import { AppShell, Anchor, Container, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
+import { AppShell, Anchor, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
 
 import MainLinks from './components/settings/main-links';
 import SecondaryLinks from './components/settings/secondary-links';

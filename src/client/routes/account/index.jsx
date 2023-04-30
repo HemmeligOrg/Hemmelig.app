@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Container, Loader, Text, Stack, Group } from '@mantine/core';
+import { Alert, Container, Loader, Text, Stack } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons';
 import { Navigate } from 'react-router-dom';
 
