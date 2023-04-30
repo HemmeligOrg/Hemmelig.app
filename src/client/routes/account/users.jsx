@@ -32,6 +32,8 @@ import { useTranslation } from 'react-i18next';
 
 import { getUsers, updateUser, addUser, deleteUser } from '../../api/users';
 
+const SKIP = 10;
+
 const updateUserList = (users, form, action = 'update') => {
     return users.reduce((acc, current) => {
         if (action === 'update' && current.username === form.values.username) {
@@ -59,7 +61,7 @@ const addUserList = (users, data) => {
 const Users = () => {
     const [modalState, setModalState] = useState('add');
     const [users, setUsers] = useState([]);
-    const [skip, setSkip] = useState(10);
+    const [skip, setSkip] = useState(SKIP);
     const [showMore, setShowMore] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
@@ -81,6 +83,10 @@ const Users = () => {
     useEffect(() => {
         (async () => {
             const users = await getUsers();
+
+            if (users?.length < SKIP) {
+                setShowMore(false);
+            }
 
             if (!users?.error) {
                 setUsers(users);
@@ -141,13 +147,13 @@ const Users = () => {
 
         const moreUsers = await getUsers(skip);
 
-        if (!moreUsers?.length) {
+        if (!moreUsers?.length || moreUsers?.length < SKIP) {
             setShowMore(false);
 
             return;
         }
 
-        setSkip(skip + 10);
+        setSkip(skip + SKIP);
 
         setUsers([...users, ...moreUsers]);
     };
@@ -307,7 +313,7 @@ const Users = () => {
                     onClick={() => {
                         form.setValues(defaultValues);
                         setModalState('add');
-                        open(event);
+                        open();
                     }}
                     color="hemmelig"
                 >
