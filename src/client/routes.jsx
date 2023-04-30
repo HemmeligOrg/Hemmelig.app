@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Routes, Route, useRoutes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import ApplicationShell from './app-shell.jsx';
 import AdminShell from './admin-shell.jsx';
 
