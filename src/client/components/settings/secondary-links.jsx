@@ -19,7 +19,7 @@ function SecondaryLink({ icon, color, label, route }) {
                     backgroundColor: theme.colors.dark[6],
                 },
             })}
-            onClick={() => navigate(`/${route}`)}
+            onClick={() => navigate(route)}
         >
             <Group>
                 <ThemeIcon color={color} variant="light">
@@ -40,18 +40,18 @@ export default function SecondaryLinks() {
         {
             label: 'Privacy',
             icon: <IconFingerprint size="1rem" stroke={1.5} />,
-            route: 'privacy',
+            route: '/account/privacy',
         },
         {
             label: 'Terms & Condition',
             icon: <IconList size="1rem" stroke={1.5} />,
-            route: 'terms',
+            route: '/account/terms',
         },
         {
             icon: <IconLockOff size="1rem" stroke={1.5} />,
             color: 'red',
             label: t('sign_out'),
-            route: 'signout',
+            route: '/signout',
         },
     ];
 

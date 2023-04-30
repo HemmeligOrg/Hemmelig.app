@@ -38,6 +38,8 @@ const AppRoutes = () => {
                 <Route path="instance-settings" element={<Settings />} />
                 <Route path="account-settings" element={<UserAccount />} />
                 <Route path="users" element={<Users />} />
+                <Route path="privacy" element={<Privacy />} />
+                <Route path="terms" element={<Terms />} />
             </Route>
         </Routes>
     );
