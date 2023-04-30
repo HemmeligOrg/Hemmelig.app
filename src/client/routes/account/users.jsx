@@ -147,10 +147,8 @@ const Users = () => {
 
         const moreUsers = await getUsers(skip);
 
-        if (!moreUsers?.length) {
+        if (moreUsers?.length < SKIP) {
             setShowMore(false);
-
-            return;
         }
 
         setSkip(skip + SKIP);
