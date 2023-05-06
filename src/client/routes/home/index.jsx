@@ -37,6 +37,8 @@ import {
     IconShieldLock,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 
 import QRLink from '../../components/qrlink';
 
@@ -59,6 +61,7 @@ const Home = () => {
         },
     });
 
+    const [text, setText] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [secretId, setSecretId] = useState('');
@@ -95,6 +98,12 @@ const Home = () => {
             form.setFieldValue('password', '');
         }
     }, [enablePassword]);
+
+    const onTextChange = (value) => {
+        setText(value);
+
+        form.setFieldValue('text', value);
+    };
 
     const onSelectChange = (value) => {
         form.setFieldValue('ttl', value);
@@ -269,13 +278,21 @@ const Home = () => {
                         </Alert>
                     )}
 
-                    <Textarea
-                        minRows={10}
-                        maxRows={secretId ? 4 : 1000}
-                        autosize
-                        placeholder={t('home.maintxtarea')}
+                    <ReactQuill
+                        theme="bubble"
+                        defaultValue={t('home.maintxtarea')}
+                        value={text}
+                        onChange={onTextChange}
                         readOnly={inputReadOnly}
-                        {...form.getInputProps('text')}
+                        style={{
+                            color: '#C1C2C5',
+                            backgroundColor: '#25262b',
+                            border: '0.0625rem solid #373A40',
+                            borderRadius: '0.25rem',
+                            fontSize: '0.875rem',
+                            zIndex: 1000,
+                            minHeight: secretId ? '5rem' : '15rem',
+                        }}
                     />
 
                     <Group grow>
