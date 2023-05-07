@@ -13,8 +13,7 @@ export default `<!DOCTYPE html>
         <meta name="title" content="Paste a password, secret message or private information." />
         <meta
             name="description"
-            content="Keep your sensitive information out of chat logs, emails, and more with heavily
-                    encrypted secrets."
+            content="Keep your sensitive information out of chat logs, emails, and more with encrypted secrets."
         />
 
         <!-- Open Graph / Facebook -->
