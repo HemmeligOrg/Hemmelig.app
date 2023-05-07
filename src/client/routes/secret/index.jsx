@@ -182,7 +182,7 @@ const Secret = () => {
 
                 {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 
-                {isSecretOpen && <Quill value={secret} secretId={secretId} />}
+                {isSecretOpen && <Quill value={secret} secretId={secretId} readOnly />}
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>
