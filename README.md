@@ -25,6 +25,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 ## Features
 
 - Client side encryption
+- Text formatting and inline image upload (mark the text for the popup)
 - Encrypted sensitive information sharing
 - Encrypted file upload for signed in users
 - Secret lifetime
