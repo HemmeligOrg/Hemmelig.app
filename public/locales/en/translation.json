@@ -9,7 +9,7 @@
     "copy": "Copy",
     "home": {
         "app_subtitle": "Paste a password, secret message, or private information.",
-        "welcome": "Keep your sensitive information out of chat logs, emails, and more with heavily encrypted secrets.",
+        "welcome": "Keep your sensitive information out of chat logs, emails, and more with encrypted secrets.",
         "bummer": "Bummer!",
         "maintxtarea": "Write your sensitive information..",
         "title": "Title",
