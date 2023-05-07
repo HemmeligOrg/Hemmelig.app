@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 
-import {
-    Alert,
-    Button,
-    Group,
-    Container,
-    Textarea,
-    TextInput,
-    Stack,
-    Title,
-    Text,
-} from '@mantine/core';
+import { Alert, Button, Group, Container, TextInput, Stack, Title, Text } from '@mantine/core';
 import {
     IconSquarePlus,
     IconDownload,
@@ -22,6 +12,8 @@ import {
     IconAlertCircle,
     IconShieldLock,
 } from '@tabler/icons';
+
+import Quill from '../../components/quill';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
@@ -190,9 +182,7 @@ const Secret = () => {
 
                 {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 
-                {isSecretOpen && (
-                    <Textarea minRows={10} maxRows={30} value={secret} autosize readOnly />
-                )}
+                {isSecretOpen && <Quill value={secret} secretId={secretId} readOnly />}
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>

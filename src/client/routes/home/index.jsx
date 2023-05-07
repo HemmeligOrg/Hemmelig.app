@@ -5,7 +5,6 @@ import {
     Button,
     Checkbox,
     Container,
-    Textarea,
     TextInput,
     Select,
     CopyButton,
@@ -37,7 +36,7 @@ import {
     IconShieldLock,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
-
+import Quill from '../../components/quill';
 import QRLink from '../../components/qrlink';
 
 import { zipFiles } from '../../helpers/zip';
@@ -59,6 +58,7 @@ const Home = () => {
         },
     });
 
+    const [text, setText] = useState('');
     const [ttl, setTTL] = useState(14400);
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [secretId, setSecretId] = useState('');
@@ -95,6 +95,12 @@ const Home = () => {
             form.setFieldValue('password', '');
         }
     }, [enablePassword]);
+
+    const onTextChange = (value) => {
+        setText(value);
+
+        form.setFieldValue('text', value);
+    };
 
     const onSelectChange = (value) => {
         form.setFieldValue('ttl', value);
@@ -269,13 +275,12 @@ const Home = () => {
                         </Alert>
                     )}
 
-                    <Textarea
-                        minRows={10}
-                        maxRows={secretId ? 4 : 1000}
-                        autosize
-                        placeholder={t('home.maintxtarea')}
+                    <Quill
+                        defaultValue={t('home.maintxtarea')}
+                        value={text}
+                        onChange={onTextChange}
                         readOnly={inputReadOnly}
-                        {...form.getInputProps('text')}
+                        secretId={secretId}
                     />
 
                     <Group grow>
