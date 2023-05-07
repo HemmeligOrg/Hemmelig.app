@@ -5,7 +5,6 @@ import {
     Button,
     Checkbox,
     Container,
-    Textarea,
     TextInput,
     Select,
     CopyButton,

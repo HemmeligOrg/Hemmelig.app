@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 
-import {
-    Alert,
-    Button,
-    Group,
-    Container,
-    Textarea,
-    TextInput,
-    Stack,
-    Title,
-    Text,
-} from '@mantine/core';
+import { Alert, Button, Group, Container, TextInput, Stack, Title, Text } from '@mantine/core';
 import {
     IconSquarePlus,
     IconDownload,
