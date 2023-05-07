@@ -25,7 +25,7 @@ const AdminShell = () => {
                 </Navbar>
             }
             header={
-                <Header height={75}>
+                <Header height={75} style={{ zIndex: 1100 }}>
                     <Group sx={{ height: '100%', paddingTop: '5px' }} px={20} position="apart">
                         <Anchor component={Link} to="/">
                             <Logo className={logoStyles.logo} />

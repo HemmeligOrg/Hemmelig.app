@@ -24,3 +24,7 @@ html {
     --border-radius: 10px;
     --margin-basic: 10px;
 }
+
+.ql-editor {
+    min-height: 200px;
+}

@@ -77,6 +77,29 @@ const Home = () => {
 
     const { t } = useTranslation();
 
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+            ['link', 'image'],
+        ],
+    };
+
+    const formats = [
+        'header',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'blockquote',
+        'list',
+        'bullet',
+        'indent',
+        'link',
+        'image',
+    ];
+
     useEffect(() => {
         if (secretId) {
             secretRef.current.focus();
@@ -284,6 +307,9 @@ const Home = () => {
                         value={text}
                         onChange={onTextChange}
                         readOnly={inputReadOnly}
+                        modules={modules}
+                        formats={formats}
+                        preserveWhitespace
                         style={{
                             color: '#C1C2C5',
                             backgroundColor: '#25262b',
@@ -291,7 +317,7 @@ const Home = () => {
                             borderRadius: '0.25rem',
                             fontSize: '0.875rem',
                             zIndex: 1000,
-                            minHeight: secretId ? '5rem' : '15rem',
+                            minHeight: secretId ? '5rem' : '13rem',
                         }}
                     />
 

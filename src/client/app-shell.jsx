@@ -83,7 +83,7 @@ const ApplicationShell = () => {
                 </Footer>
             }
             header={
-                <Header height={75} p="xs">
+                <Header height={75} style={{ zIndex: 1100 }} p="xs">
                     <HeaderContent />
                 </Header>
             }
