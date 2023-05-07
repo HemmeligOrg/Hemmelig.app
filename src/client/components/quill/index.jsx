@@ -5,8 +5,8 @@ const modules = {
     toolbar: [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-        ['link', 'image'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'image', 'code-block'],
     ],
 };
 
@@ -19,9 +19,9 @@ const formats = [
     'blockquote',
     'list',
     'bullet',
-    'indent',
     'link',
     'image',
+    'code-block',
 ];
 
 export default function Quill(props) {
