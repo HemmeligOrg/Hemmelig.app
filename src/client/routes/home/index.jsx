@@ -118,6 +118,8 @@ const Home = () => {
         setEncryptionKey('');
         setOnEnablePassword(false);
         setCreatingSecret(false);
+        setText('');
+        setTTL(14400);
         setError('');
     };
 
