@@ -12,8 +12,8 @@ import {
     IconAlertCircle,
     IconShieldLock,
 } from '@tabler/icons';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
+
+import Quill from '../../components/quill';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
@@ -51,29 +51,6 @@ const Secret = () => {
     const [isDownloaded, setIsDownloaded] = useState([]);
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
-
-    const modules = {
-        toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-            ['link', 'image'],
-        ],
-    };
-
-    const formats = [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'blockquote',
-        'list',
-        'bullet',
-        'indent',
-        'link',
-        'image',
-    ];
 
     const fetchSecret = async (event) => {
         event.preventDefault();
@@ -205,25 +182,7 @@ const Secret = () => {
 
                 {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
 
-                {isSecretOpen && (
-                    <ReactQuill
-                        theme="bubble"
-                        value={secret}
-                        modules={modules}
-                        formats={formats}
-                        readOnly
-                        preserveWhitespace
-                        style={{
-                            color: '#C1C2C5',
-                            backgroundColor: '#25262b',
-                            border: '0.0625rem solid #373A40',
-                            borderRadius: '0.25rem',
-                            fontSize: '0.875rem',
-                            zIndex: 1000,
-                            minHeight: secretId ? '5rem' : '13rem',
-                        }}
-                    />
-                )}
+                {isSecretOpen && <Quill value={secret} secretId={secretId} />}
 
                 {isPasswordRequired && !isSecretOpen && (
                     <>
