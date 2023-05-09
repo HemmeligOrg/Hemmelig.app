@@ -15,7 +15,7 @@
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
-![Desktop](desktop.png)
+![Desktop](desktop.gif)
 
 ## How it works
 
