@@ -11,7 +11,7 @@
   This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
 </div>
 
-## SaaS
+## SaaS 
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
