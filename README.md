@@ -166,7 +166,6 @@ Admins are also allowed to create new users in the settings. This is great if yo
 
 Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for guidelines.
 
-
 ## Common errors
 If this errors occur on the first run of your hemmelig instance, this means there are some issues with the ownership of the files/directory for the database.
 
