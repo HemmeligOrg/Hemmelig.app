@@ -67,6 +67,7 @@ const ApplicationShell = () => {
                             </>
                         )}
                         <Anchor
+                            rel="noreferrer"
                             href="https://github.com/HemmeligOrg/Hemmelig.app"
                             color="dimmed"
                             size="xs"
