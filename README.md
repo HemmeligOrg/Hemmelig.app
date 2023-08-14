@@ -71,6 +71,9 @@ Supported docker platforms: `amd/64`, `arm/64`.
 If you have to follow some sort of compliance, and have to self-host, [https://hemmelig.app](https://hemmelig.app) is available as a docker image. The following is the bare minimum to run the docker image.
 
 ```bash
+mkdir -p data/hemmelig database
+chown 1000:1000 data/hemmelig database
+
 docker run -p 3000:3000 -d --name=hemmelig \
    -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \ # For the file uploads
    -v ./database/:/home/node/hemmelig/database/ \       # For the sqlite database
@@ -82,6 +85,12 @@ Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
 ```bash
 # fetch docker-compose.yml
 wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-compose.yml
+
+# create volumes directories
+mkdir -p data/hemmelig database
+
+# set permissions (Node user has UID 1000 within the container)
+chown 1000:1000 data/hemmelig database
 
 # start hemmelig 
 docker-compose up -d
