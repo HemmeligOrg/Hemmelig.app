@@ -58,6 +58,7 @@ fastify.register(helmet, {
         },
     },
     crossOriginEmbedderPolicy: false,
+    strictTransportSecurity: false,
 });
 
 // https://github.com/fastify/fastify-cors
