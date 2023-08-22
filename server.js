@@ -53,7 +53,7 @@ fastify.register(rateLimit, {
 fastify.register(helmet, {
     contentSecurityPolicy: {
         directives: {
-            'font-src': ["'self'", 'https://rsms.me/'],
+            'font-src': ["'self'"],
             'script-src': ["'self'", "'unsafe-inline'"],
         },
     },
