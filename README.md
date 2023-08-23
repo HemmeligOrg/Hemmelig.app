@@ -62,7 +62,7 @@ Hemmelig strongly advice you to ue the tagged docker images as the main branch w
 Supported docker platforms: `amd/64`, `arm/64`. 
 
 - hemmeligapp/hemmelig:latest (Is created on each version release)
-- hemmeligapp/hemmelig:v5.7.2 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
+- hemmeligapp/hemmelig:v5.11.3 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:daily
 
@@ -77,7 +77,7 @@ chown 1000:1000 data/hemmelig database
 docker run -p 3000:3000 -d --name=hemmelig \
    -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \ # For the file uploads
    -v ./database/:/home/node/hemmelig/database/ \       # For the sqlite database
-   hemmeligapp/hemmelig:v5.0.0
+   hemmeligapp/hemmelig:v5.11.3
 ```
 
 Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
