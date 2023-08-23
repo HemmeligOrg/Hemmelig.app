@@ -55,10 +55,10 @@ fastify.register(helmet, {
         directives: {
             'font-src': ["'self'", 'https://rsms.me/'],
             'script-src': ["'self'", "'unsafe-inline'"],
+            upgradeInsecureRequests: null,
         },
     },
     crossOriginEmbedderPolicy: false,
-    strictTransportSecurity: false,
 });
 
 // https://github.com/fastify/fastify-cors
