@@ -15,12 +15,18 @@ const ApplicationShell = () => {
         <AppShell
             styles={{
                 main: {
-                    background: theme.colors.dark[7],
+                    background: theme.colors.dark[8],
                 },
             }}
             navbarOffsetBreakpoint="sm"
             footer={
-                <Footer height={45} p="xs">
+                <Footer
+                    height={45}
+                    p="xs"
+                    sx={(theme) => ({
+                        backgroundColor: theme.colors.dark[8],
+                    })}
+                >
                     <Group position="center" spacing="xs">
                         {!isMobile && (
                             <>
@@ -84,7 +90,14 @@ const ApplicationShell = () => {
                 </Footer>
             }
             header={
-                <Header height={75} style={{ zIndex: 1100 }} p="xs">
+                <Header
+                    height={75}
+                    style={{ zIndex: 1100 }}
+                    p="xs"
+                    sx={(theme) => ({
+                        backgroundColor: theme.colors.dark[8],
+                    })}
+                >
                     <HeaderContent />
                 </Header>
             }

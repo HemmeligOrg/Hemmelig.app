@@ -15,7 +15,14 @@ const AdminShell = () => {
             padding="md"
             fixed={false}
             navbar={
-                <Navbar width={{ base: 300 }} height={500} p="xs">
+                <Navbar
+                    width={{ base: 300 }}
+                    height={500}
+                    p="xs"
+                    sx={(theme) => ({
+                        backgroundColor: theme.colors.dark[8],
+                    })}
+                >
                     <Navbar.Section grow mt="xs">
                         <MainLinks />
                     </Navbar.Section>
@@ -25,7 +32,13 @@ const AdminShell = () => {
                 </Navbar>
             }
             header={
-                <Header height={75} style={{ zIndex: 1100 }}>
+                <Header
+                    height={75}
+                    style={{ zIndex: 1100 }}
+                    sx={(theme) => ({
+                        backgroundColor: theme.colors.dark[8],
+                    })}
+                >
                     <Group sx={{ height: '100%', paddingTop: '5px' }} px={20} position="apart">
                         <Anchor component={Link} to="/">
                             <Logo className={logoStyles.logo} />
@@ -37,7 +50,7 @@ const AdminShell = () => {
             }
             styles={{
                 main: {
-                    background: theme.colors.dark[7],
+                    background: theme.colors.dark[8],
                 },
             }}
         >
