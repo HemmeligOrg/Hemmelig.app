@@ -63,6 +63,13 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
             onClick: toggle,
             to: '/terms',
         });
+        navItems.push({
+            label: 'Terms & Condition',
+            icon: <IconList size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/terms',
+        });
     }
 
     if (!opened) {

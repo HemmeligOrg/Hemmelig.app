@@ -60,18 +60,18 @@ const ApplicationShell = () => {
                                     Terms & Condition
                                 </Anchor>
                                 |
-                                <Anchor
-                                    component={Link}
-                                    to="/"
-                                    color="dimmed"
-                                    size="xs"
-                                    transform="uppercase"
-                                >
-                                    About
-                                </Anchor>
-                                |
                             </>
                         )}
+                        <Anchor
+                            rel="noreferrer"
+                            href="https://lite.hemmelig.app"
+                            color="dimmed"
+                            size="xs"
+                            transform="uppercase"
+                        >
+                            Lite version
+                        </Anchor>
+                        |
                         <Anchor
                             rel="noreferrer"
                             href="https://github.com/HemmeligOrg/Hemmelig.app"
