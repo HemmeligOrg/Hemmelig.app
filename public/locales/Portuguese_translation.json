@@ -55,7 +55,7 @@
     },
     "settings": {
         "success": "Sucesso",
-        "description" (descrição): "Atualizar o estado da instância Hemmelig",
+        "description": "Atualizar o estado da instância Hemmelig",
         "updated": "Definições actualizadas",
         "update": "Atualizar definições"
     },
