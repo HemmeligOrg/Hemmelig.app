@@ -129,14 +129,17 @@ const Home = () => {
             return;
         }
 
-        const userEncryptionKey = generateKey();
+        const password = form.values.password;
+
+        const publicEncryptionKey = generateKey(password);
+        const encryptionKey = publicEncryptionKey + password;
 
         setCreatingSecret(true);
 
         const body = {
-            text: encrypt(form.values.text, userEncryptionKey),
+            text: encrypt(form.values.text, encryptionKey),
             files: [],
-            title: encrypt(form.values.title, userEncryptionKey),
+            title: encrypt(form.values.title, encryptionKey),
             password: form.values.password,
             ttl: form.values.ttl,
             allowedIp: form.values.allowedIp,
@@ -150,7 +153,7 @@ const Home = () => {
             body.files.push({
                 type: 'application/zip',
                 ext: '.zip',
-                content: encrypt(zipFile, userEncryptionKey),
+                content: encrypt(zipFile, encryptionKey),
             });
         }
 
@@ -173,7 +176,7 @@ const Home = () => {
         }
 
         setSecretId(json.id);
-        setEncryptionKey(userEncryptionKey);
+        setEncryptionKey(publicEncryptionKey);
         form.clearErrors();
         setCreatingSecret(false);
     };
@@ -327,6 +330,8 @@ const Home = () => {
                             styles={groupMobileStyle}
                             icon={<IconLock size={14} />}
                             placeholder={t('home.optional_password')}
+                            minlength="8"
+                            maxLength="28"
                             {...form.getInputProps('password')}
                             readOnly={!enablePassword || inputReadOnly}
                             rightSection={
