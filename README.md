@@ -9,7 +9,7 @@
 <h1 align="center">Free encrypted secret sharing for everyone!</h1>
 
 <div align="center">
-  This application is to be used to share encrypted secrets cross organizations, or as private persons. Hemmelig truly cares about your privacy, and will do everything to stay that way. I hope you enjoy the product.
+  This application is designed for sharing encrypted information across organizations or among private individuals. Hemmelig places a high priority on safeguarding your privacy and will make every effort to maintain it. We trust you will find value in using our product.
 </div>
 
 ## SaaS

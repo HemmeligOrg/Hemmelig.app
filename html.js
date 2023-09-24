@@ -3,17 +3,17 @@ export default `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Hemmelig.app - paste a password, secret message or private information.</title>
+        <title>Hemmelig.app - Paste a password, confidential message, or private data.</title>
 
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
 
         <link rel="manifest" href="/manifest.json" />
         <!-- Primary Meta Tags -->
-        <meta name="title" content="Paste a password, secret message or private information." />
+        <meta name="title" content="Paste a password, confidential message, or private data." />
         <meta
             name="description"
-            content="Keep your sensitive information out of chat logs, emails, and more with encrypted secrets."
+            content="Ensure your sensitive data remains encrypted, secure, and confidential."
         />
 
         <!-- Open Graph / Facebook -->
@@ -21,12 +21,11 @@ export default `<!DOCTYPE html>
         <meta property="og:url" content="https://www.hemmelig.app/" />
         <meta
             property="og:title"
-            content="Paste a password, secret message or private information."
+            content="Paste a password, confidential message, or private data."
         />
         <meta
             property="og:description"
-            content="Keep your sensitive information out of chat logs, emails, and more with heavily
-                    encrypted secrets."
+            content="Ensure your sensitive data remains encrypted, secure, and confidential."
         />
         <meta property="og:image" content="/icons/icon-512x512.png" />
 
@@ -35,12 +34,11 @@ export default `<!DOCTYPE html>
         <meta property="twitter:url" content="https://www.hemmelig.app/" />
         <meta
             property="twitter:title"
-            content="Paste a password, secret message or private information."
+            content="Paste a password, confidential message, or private data."
         />
         <meta
             property="twitter:description"
-            content="Keep your sensitive information out of chat logs, emails, and more with heavily
-                    encrypted secrets."
+            content="Ensure your sensitive data remains encrypted, secure, and confidential."
         />
         <meta property="twitter:image" content="/icons/icon-512x512.png" />
 
