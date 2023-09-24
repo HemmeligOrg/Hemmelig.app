@@ -84,7 +84,7 @@ const Secret = () => {
             setError(json.error);
         } else {
             try {
-                const text = decrypt(json.secret, decryptionKey);
+                const text = decrypt(json.secret, decryptionKey + password);
 
                 setSecret(text);
             } catch (error) {
@@ -94,7 +94,7 @@ const Secret = () => {
             }
 
             if (json.title) {
-                setTitle(decrypt(json.title, decryptionKey));
+                setTitle(decrypt(json.title, decryptionKey + password));
             }
 
             if (json.files) {
@@ -138,7 +138,7 @@ const Secret = () => {
         downloadFile({
             file,
             secretId,
-            decryptionKey,
+            decryptionKey: decryptionKey + password,
         });
 
         if (!preventBurn) {
@@ -193,6 +193,7 @@ const Secret = () => {
                             icon={<IconLock size={14} />}
                             placeholder="Your password"
                             value={password}
+                            maxLength="28"
                             onChange={onPasswordChange}
                             required
                             style={{ WebkitTextSecurity: 'disc' }}

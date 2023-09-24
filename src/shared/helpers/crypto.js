@@ -6,7 +6,13 @@ import { Buffer } from 'buffer/';
 const { secretbox, randomBytes } = tweetnacl;
 const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = tweetnaclUtil;
 
-export const generateKey = () => nanoid(32);
+export const generateKey = (password = '') => {
+    if (password) {
+        return nanoid(32 - password.length);
+    }
+
+    return nanoid(32);
+};
 
 const newNonce = () => randomBytes(secretbox.nonceLength);
 
