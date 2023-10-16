@@ -44,6 +44,8 @@ import { createSecret, burnSecret } from '../../api/secret';
 import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
 
+const DEFAULT_TTL = 259200; // 3 days - 72 hours
+
 const Home = () => {
     const form = useForm({
         initialValues: {
@@ -52,14 +54,14 @@ const Home = () => {
             maxViews: 1,
             files: [],
             password: '',
-            ttl: 14400,
+            ttl: DEFAULT_TTL,
             allowedIp: '',
             preventBurn: false,
         },
     });
 
     const [text, setText] = useState('');
-    const [ttl, setTTL] = useState(14400);
+    const [ttl, setTTL] = useState(DEFAULT_TTL);
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [secretId, setSecretId] = useState('');
     const [encryptionKey, setEncryptionKey] = useState('');
