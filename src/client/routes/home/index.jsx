@@ -121,7 +121,7 @@ const Home = () => {
         setOnEnablePassword(false);
         setCreatingSecret(false);
         setText('');
-        setTTL(14400);
+        setTTL(DEFAULT_TTL);
         setError('');
     };
 
