@@ -302,6 +302,7 @@ const Home = () => {
 
                     <Group grow>
                         <Select
+                            zIndex={9999}
                             value={ttl}
                             onChange={onSelectChange}
                             data={ttlValues}
