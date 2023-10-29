@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
     ActionIcon,
     Container,
     Center,
@@ -11,7 +10,6 @@ import {
     Group,
     TextInput,
     PasswordInput,
-    Notification,
     Table,
     Modal,
     Loader,
@@ -19,19 +17,12 @@ import {
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
-import {
-    IconEdit,
-    IconCheck,
-    IconAlertCircle,
-    IconAt,
-    IconUser,
-    IconChefHat,
-    IconPlus,
-    IconTrash,
-} from '@tabler/icons';
+import { IconEdit, IconAt, IconUser, IconChefHat, IconPlus, IconTrash } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
 import { getUsers, updateUser, addUser, deleteUser } from '../../api/users';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 const SKIP = 10;
 
@@ -269,14 +260,7 @@ const Users = () => {
     if (userError) {
         return (
             <Stack>
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {userError}
-                </Alert>
+                <ErrorBox message={userError} />
             </Stack>
         );
     }
@@ -284,14 +268,7 @@ const Users = () => {
     if (!users.length) {
         return (
             <Container size="xs ">
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    You have to be an admin to view the users
-                </Alert>
+                <ErrorBox message={'You have to be an admin to view the users'} />
             </Container>
         );
     }
@@ -299,26 +276,8 @@ const Users = () => {
     return (
         <Stack>
             <Modal opened={opened} onClose={onModalClose} title={t('users.edit')}>
-                {success && (
-                    <Notification
-                        icon={<IconCheck size="1.1rem" />}
-                        color="teal"
-                        title={t('settings.success')}
-                        withCloseButton={false}
-                    >
-                        {t('users.saved')}
-                    </Notification>
-                )}
-                {error && (
-                    <Alert
-                        icon={<IconAlertCircle size="1rem" />}
-                        title={t('home.bummer')}
-                        color="red"
-                        variant="outline"
-                    >
-                        {error}
-                    </Alert>
-                )}
+                {error && <ErrorBox message={error} />}
+                {success && <SuccessBox message={'users.saved'} />}
                 <Stack>
                     <TextInput
                         label="Username"
@@ -367,27 +326,8 @@ const Users = () => {
                 </Group>
             </Modal>
 
-            {success && !opened && (
-                <Notification
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title={t('settings.success')}
-                    withCloseButton={false}
-                >
-                    {t('users.deleted')}
-                </Notification>
-            )}
-
-            {error && (
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {error}
-                </Alert>
-            )}
+            {error && <ErrorBox message={error} />}
+            {success && !opened && <SuccessBox message={'users.deleted'} />}
 
             <Group position="left">
                 <Table horizontalSpacing="sm" highlightOnHover>

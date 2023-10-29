@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import {
-    Alert,
-    Button,
-    Container,
-    TextInput,
-    Stack,
-    Title,
-    Text,
-    PasswordInput,
-    Notification,
-} from '@mantine/core';
+import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from '@mantine/core';
 import { useDispatch } from 'react-redux';
 import { useForm } from '@mantine/form';
-import { IconLock, IconUser, IconLogin, IconAlertCircle, IconCheck } from '@tabler/icons';
+import { IconLock, IconUser, IconLogin } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 import { signIn } from '../../api/authentication';
 import { userLogin } from '../../actions';
@@ -73,16 +65,7 @@ const SignIn = () => {
                         Everything you need to access, and manage the Hemmelig secrets.
                     </Text>
 
-                    {error && (
-                        <Alert
-                            icon={<IconAlertCircle size="1rem" />}
-                            title={t('home.bummer')}
-                            color="red"
-                            variant="outline"
-                        >
-                            {error}
-                        </Alert>
-                    )}
+                    {error && <ErrorBox message={error} />}
 
                     <TextInput
                         icon={<IconUser size={14} />}
@@ -105,14 +88,10 @@ const SignIn = () => {
             </form>
 
             {success && (
-                <Notification
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title={t('settings.success')}
-                    withCloseButton={false}
-                >
-                    Redirecting to your account page. <Navigate replace to="/account" />
-                </Notification>
+                <>
+                    <SuccessBox message={'Redirecting to your account page.'} />
+                    <Navigate replace to="/account" />
+                </>
             )}
         </Container>
     );

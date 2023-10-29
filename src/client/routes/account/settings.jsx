@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react';
-import {
-    Alert,
-    Stack,
-    Button,
-    Checkbox,
-    Group,
-    Input,
-    Text,
-    Notification,
-    Container,
-    Loader,
-} from '@mantine/core';
+import { Stack, Button, Checkbox, Group, Input, Text, Container, Loader } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconEdit, IconCheck, IconAlertCircle, IconAt } from '@tabler/icons';
+import { IconEdit, IconAt } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 import { getSettings, updateSettings } from '../../api/settings';
 
@@ -99,40 +90,15 @@ const Settings = () => {
     if (userError) {
         return (
             <Stack>
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {userError}
-                </Alert>
+                <ErrorBox message={userError} />
             </Stack>
         );
     }
 
     return (
         <Stack>
-            {error && (
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {error}
-                </Alert>
-            )}
-            {success && (
-                <Notification
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title={t('settings.success')}
-                    withCloseButton={false}
-                >
-                    {t('settings.updated')}
-                </Notification>
-            )}
+            {error && <ErrorBox message={error} />}
+            {success && <SuccessBox message={'settings.updated'} />}
 
             <Text size="sm">{t('settings.description')}</Text>
             <Group position="left">

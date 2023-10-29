@@ -1,21 +1,13 @@
 import { useEffect, useState } from 'react';
-import {
-    ActionIcon,
-    Text,
-    Stack,
-    Group,
-    Table,
-    Container,
-    Loader,
-    Alert,
-    Notification,
-} from '@mantine/core';
+import { ActionIcon, Text, Stack, Group, Table, Container, Loader } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
-import { IconTrash, IconAlertCircle, IconCheck } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 import { getSecrets, burnSecret } from '../../api/secret';
 
@@ -136,40 +128,15 @@ const Secrets = () => {
     if (userError) {
         return (
             <Stack>
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {userError}
-                </Alert>
+                <ErrorBox message={userError} />
             </Stack>
         );
     }
 
     return (
         <Stack>
-            {error && (
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {error}
-                </Alert>
-            )}
-            {success && (
-                <Notification
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title={t('settings.success')}
-                    withCloseButton={false}
-                >
-                    {t('secrets.deleted')}
-                </Notification>
-            )}
+            {error && <ErrorBox message={error} />}
+            {success && <SuccessBox message={'secrets.deleted'} />}
             <Group position="left">
                 <Table horizontalSpacing="sm" highlightOnHover>
                     <thead>

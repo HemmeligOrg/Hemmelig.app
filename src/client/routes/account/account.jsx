@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
-    Alert,
     Stack,
     Button,
     Group,
-    Notification,
     TextInput,
     Text,
     PasswordInput,
@@ -14,8 +12,10 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
-import { IconAt, IconLock, IconEdit, IconAlertCircle, IconCheck, IconTrash } from '@tabler/icons';
+import { IconAt, IconLock, IconEdit, IconTrash } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 import style from './account.module.css';
 
@@ -157,42 +157,15 @@ const Account = () => {
     if (userError) {
         return (
             <Stack>
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {userError}
-                </Alert>
+                <ErrorBox message={userError} />
             </Stack>
         );
     }
 
     return (
         <Stack align="flex-start">
-            {error && (
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                    className={style.width}
-                >
-                    {error}
-                </Alert>
-            )}
-            {success && (
-                <Notification
-                    icon={<IconCheck size="1.1rem" />}
-                    color="teal"
-                    title={t('settings.success')}
-                    withCloseButton={false}
-                    className={style.width}
-                >
-                    {t(successMessage)}
-                </Notification>
-            )}
+            {error && <ErrorBox message={error} className={style.width} />}
+            {success && <SuccessBox message={successMessage} className={style.width} />}
 
             <Group position="right" grow>
                 <Stack className={style.width}>

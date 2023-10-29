@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import passwordGenerator from 'generate-password-browser';
 import {
-    Alert,
     Button,
     Checkbox,
     Container,
@@ -32,12 +31,12 @@ import {
     IconCheck,
     IconHeading,
     IconShare,
-    IconAlertCircle,
     IconShieldLock,
 } from '@tabler/icons';
 import { useSelector } from 'react-redux';
 import Quill from '../../components/quill';
 import QRLink from '../../components/qrlink';
+import ErrorBox from '../../components/error-box';
 
 import { zipFiles } from '../../helpers/zip';
 import { createSecret, burnSecret } from '../../api/secret';
@@ -271,16 +270,7 @@ const Home = () => {
                         {t('home.welcome')}
                     </Text>
 
-                    {error && (
-                        <Alert
-                            icon={<IconAlertCircle size="1rem" />}
-                            title={t('home.bummer')}
-                            color="red"
-                            variant="outline"
-                        >
-                            {error}
-                        </Alert>
-                    )}
+                    {error && <ErrorBox message={error} />}
 
                     <Quill
                         defaultValue={t('home.maintxtarea')}

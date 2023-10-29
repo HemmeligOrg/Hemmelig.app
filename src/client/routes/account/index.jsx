@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Alert, Container, Loader, Text, Stack } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons';
+import { Container, Loader, Text, Stack } from '@mantine/core';
 import { Navigate } from 'react-router-dom';
+import ErrorBox from '../../components/error-box';
 
 import { getUser } from '../../api/account';
 import { useTranslation } from 'react-i18next';
@@ -49,30 +49,17 @@ const HomeAccount = () => {
     if (error) {
         return (
             <Stack>
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    {error}
-                </Alert>
+                <ErrorBox message={error} />
             </Stack>
         );
     }
 
+    const firstTimeMessage =
+        'If this is the first time you sign in on this user account, you should go to Account settings and update your password.';
     return (
         <Stack>
             {user?.generated && (
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title="Update your password"
-                    color="red"
-                    variant="outline"
-                >
-                    If this is the first time you sign in on this user account, you should go to
-                    Account settings and update your password.
-                </Alert>
+                <ErrorBox message={firstTimeMessage} title={'Update your password'} />
             )}
 
             <Text size="sm">
