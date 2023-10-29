@@ -11,10 +11,10 @@ const SignOut = () => {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
 
-    useEffect(() => {
+    useEffect(async () => {
         removeCookie();
 
-        signOut();
+        await signOut();
 
         dispatch(userLogin({ username: '' }));
         dispatch(userLoginChanged(false));

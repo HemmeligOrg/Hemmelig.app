@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import {
     Alert,
     Stack,
@@ -8,6 +9,8 @@ import {
     TextInput,
     Text,
     PasswordInput,
+    Container,
+    Loader,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
@@ -21,6 +24,10 @@ import { getUser, updateUser, deleteUser } from '../../api/account';
 const Account = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userError, setUserError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [deleted, setDeleted] = useState(false);
 
     const { t } = useTranslation();
 
@@ -40,19 +47,20 @@ const Account = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await getUser();
+                const userInfo = await getUser();
 
-                if (response.statusCode === 401 || response.statusCode === 500) {
-                    setError('Not logged in');
+                if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
+                    setUserError(userInfo.error ? userInfo.error : 'Not logged in');
 
                     return;
                 }
 
-                form.setValues(response.user);
+                form.setValues(userInfo.user);
 
-                setError(null);
-            } catch (e) {
-                setError(e);
+                setIsLoading(false);
+                setUserError(null);
+            } catch (err) {
+                setUserError(err);
             }
         })();
     }, []);
@@ -63,15 +71,19 @@ const Account = () => {
         const values = form.values;
 
         try {
-            const response = await updateUser(values);
+            const updatedUserInfo = await updateUser(values);
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                setError(response.error ? response.error : 'Could not update your user profile');
+            if (updatedUserInfo.error || [401, 500].includes(updatedUserInfo.statusCode)) {
+                setError(
+                    updatedUserInfo.error
+                        ? updatedUserInfo.error
+                        : 'Could not update your user profile'
+                );
 
                 return;
             }
 
-            const { user, error, type } = response;
+            const { user, error, type } = updatedUserInfo;
 
             if (error) {
                 if (type === 'no-data') {
@@ -83,25 +95,38 @@ const Account = () => {
                 form.setValues({ email: user.email });
             }
 
+            setError(null);
+            setSuccessMessage('settings.updated');
             setSuccess(true);
 
             setTimeout(() => {
                 setSuccess(false);
-            }, 3500);
-        } catch (e) {
-            setError(e);
+                setSuccessMessage(null);
+            }, 2500);
+        } catch (err) {
+            setError(err);
         }
     };
 
-    const onDeleteUser = async () => {
+    const onDeleteUser = async (e) => {
         try {
-            const response = await deleteUser();
+            const deletedUserInfo = await deleteUser();
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                setError('Could not delete the user');
+            if (deletedUserInfo.error || [401, 500].includes(deletedUserInfo.statusCode)) {
+                setError(
+                    deletedUserInfo.error ? deletedUserInfo.error : 'Could not delete the user'
+                );
 
                 return;
             }
+
+            setError(null);
+            setSuccessMessage('settings.deleted');
+            setSuccess(true);
+
+            setTimeout(() => {
+                setDeleted(true);
+            }, 1000);
         } catch (err) {
             setError(err);
         }
@@ -116,6 +141,33 @@ const Account = () => {
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteUser(),
         });
+
+    if (deleted) {
+        return <Navigate to="/signout" />;
+    }
+
+    if (isLoading && !userError) {
+        return (
+            <Container>
+                <Loader color="teal" variant="bars" />
+            </Container>
+        );
+    }
+
+    if (userError) {
+        return (
+            <Stack>
+                <Alert
+                    icon={<IconAlertCircle size="1rem" />}
+                    title={t('home.bummer')}
+                    color="red"
+                    variant="outline"
+                >
+                    {userError}
+                </Alert>
+            </Stack>
+        );
+    }
 
     return (
         <Stack align="flex-start">
@@ -138,7 +190,7 @@ const Account = () => {
                     withCloseButton={false}
                     className={style.width}
                 >
-                    {t('settings.updated')}
+                    {t(successMessage)}
                 </Notification>
             )}
 
