@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
-import { ActionIcon, Text, Stack, Group, Table } from '@mantine/core';
+import { ActionIcon, Text, Stack, Group, Table, Container, Loader } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 import { getSecrets, burnSecret } from '../../api/secret';
 
 dayjs.extend(relativeTime);
 
-const updateSecretList = (users, form, action = 'update') => {
-    return users.reduce((acc, current) => {
+const updateSecretList = (secrets, form, action = 'update') => {
+    return secrets.reduce((acc, current) => {
         if (action === 'update' && current.id === form.values.id) {
             acc.push(form.values);
         } else if (action === 'delete' && current.id === form.values.id) {
@@ -26,6 +29,12 @@ const updateSecretList = (users, form, action = 'update') => {
 
 const Secrets = () => {
     const [secrets, setSecrets] = useState([]);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userError, setUserError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    const { t } = useTranslation();
 
     const defaultValues = {
         id: '',
@@ -38,21 +47,50 @@ const Secrets = () => {
 
     useEffect(() => {
         (async () => {
-            const secrets = await getSecrets();
+            try {
+                const secrets = await getSecrets();
 
-            if (!secrets?.error) {
+                if (secrets.error || [401, 500].includes(secrets.statusCode)) {
+                    setUserError(secrets.error ? secrets.error : 'Not logged in');
+
+                    return;
+                }
+
                 setSecrets(secrets);
+
+                setIsLoading(false);
+                setUserError(null);
+            } catch (err) {
+                setUserError(err);
             }
         })();
     }, []);
 
     const onDeleteSecret = async (secret) => {
-        await burnSecret(secret.id);
+        try {
+            const burnedSecret = await burnSecret(secret.id);
 
-        setSecrets(updateSecretList(secrets, { values: secret }, 'delete'));
+            if (burnedSecret.error) {
+                setError(burnedSecret.error ? burnedSecret.error : 'Something went wrong!');
+
+                return;
+            }
+
+            setSecrets(updateSecretList(secrets, { values: secret }, 'delete'));
+
+            setError(null);
+            setSuccess(true);
+
+            setTimeout(() => {
+                setSuccess(false);
+            }, 2500);
+        } catch (err) {
+            setError(err);
+        }
     };
 
-    const openDeleteModal = (secret) =>
+    const openDeleteModal = (secret) => {
+        setSuccess(false);
         openConfirmModal({
             title: 'Delete ' + secret.id,
             centered: true,
@@ -61,6 +99,7 @@ const Secrets = () => {
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteSecret(secret),
         });
+    };
 
     const getTime = (expiresAt) => {
         return dayjs().to(dayjs(expiresAt));
@@ -78,8 +117,26 @@ const Secrets = () => {
         </tr>
     ));
 
+    if (isLoading && !userError) {
+        return (
+            <Container>
+                <Loader color="teal" variant="bars" />
+            </Container>
+        );
+    }
+
+    if (userError) {
+        return (
+            <Stack>
+                <ErrorBox message={userError} />
+            </Stack>
+        );
+    }
+
     return (
         <Stack>
+            {error && <ErrorBox message={error} />}
+            {success && <SuccessBox message={'secrets.deleted'} />}
             <Group position="left">
                 <Table horizontalSpacing="sm" highlightOnHover>
                     <thead>

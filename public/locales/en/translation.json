@@ -57,7 +57,8 @@
         "success": "Success",
         "description": "Update the Hemmelig instance state",
         "updated": "Settings updated",
-        "update": "Update settings"
+        "update": "Update settings",
+        "deleted": "Account deleted"
     },
     "users": {
         "users": "Users",
@@ -66,10 +67,12 @@
         "add": "Add user",
         "saved": "Saved",
         "save": "Save",
-        "more": "Load more"
+        "more": "Load more",
+        "deleted": "User deleted"
     },
     "secrets": {
         "secrets": "Secrets",
-        "secret": "Secret"
+        "secret": "Secret",
+        "deleted": "Secret deleted"
     }
 }

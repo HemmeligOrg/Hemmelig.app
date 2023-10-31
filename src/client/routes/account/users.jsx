@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
     ActionIcon,
     Container,
     Center,
@@ -11,26 +10,19 @@ import {
     Group,
     TextInput,
     PasswordInput,
-    Notification,
     Table,
     Modal,
+    Loader,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
-import {
-    IconEdit,
-    IconCheck,
-    IconAlertCircle,
-    IconAt,
-    IconUser,
-    IconChefHat,
-    IconPlus,
-    IconTrash,
-} from '@tabler/icons';
+import { IconEdit, IconAt, IconUser, IconChefHat, IconPlus, IconTrash } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 
 import { getUsers, updateUser, addUser, deleteUser } from '../../api/users';
+import ErrorBox from '../../components/error-box';
+import SuccessBox from '../../components/success-box';
 
 const SKIP = 10;
 
@@ -66,6 +58,8 @@ const Users = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userError, setUserError] = useState(null);
 
     const { t } = useTranslation();
 
@@ -82,14 +76,27 @@ const Users = () => {
 
     useEffect(() => {
         (async () => {
-            const users = await getUsers();
+            try {
+                const users = await getUsers();
 
-            if (users?.length < SKIP) {
-                setShowMore(false);
-            }
+                if (users.error || [401, 403, 500].includes(users.statusCode)) {
+                    setUserError(users.error ? users.error : 'Not logged in');
 
-            if (!users?.error) {
-                setUsers(users);
+                    return;
+                }
+
+                if (users?.length < SKIP) {
+                    setShowMore(false);
+                }
+
+                if (!users?.error) {
+                    setUsers(users);
+                }
+
+                setIsLoading(false);
+                setUserError(null);
+            } catch (err) {
+                setUserError(err);
             }
         })();
     }, []);
@@ -97,66 +104,110 @@ const Users = () => {
     const onUpdateUser = async (event) => {
         event.preventDefault();
 
-        const data = await updateUser(form.values);
+        try {
+            const updatedUserInfo = await updateUser(form.values);
 
-        if ([401, 403, 409, 500].includes(data.statusCode)) {
-            setError(data.error);
+            if (
+                updatedUserInfo.error ||
+                [401, 403, 409, 500].includes(updatedUserInfo.statusCode)
+            ) {
+                setError(updatedUserInfo.error ? updatedUserInfo.error : 'Sonething went wrong!');
 
-            return;
+                return;
+            }
+
+            setError(null);
+            setSuccess(true);
+
+            setUsers(updateUserList(users, form, 'update'));
+
+            setTimeout(() => {
+                setSuccess(false);
+            }, 2500);
+        } catch (err) {
+            setError(err);
         }
-
-        setSuccess(true);
-        setError(null);
-
-        setUsers(updateUserList(users, form, 'update'));
-
-        setTimeout(() => {
-            setSuccess(false);
-        }, 2500);
     };
 
     const onAddUser = async (event) => {
         event.preventDefault();
 
-        const data = await addUser(form.values);
+        try {
+            const addedUserInfo = await addUser(form.values);
 
-        if ([401, 403, 409, 500].includes(data.statusCode)) {
-            setError(data.error);
+            if (addedUserInfo.error || [401, 403, 409, 500].includes(addedUserInfo.statusCode)) {
+                setError(addedUserInfo.error ? addedUserInfo.error : 'Something went wrong!');
 
-            return;
+                return;
+            }
+
+            setError(null);
+            setSuccess(true);
+
+            setUsers(addUserList(users, addedUserInfo));
+
+            setTimeout(() => {
+                setSuccess(false);
+            }, 2500);
+        } catch (err) {
+            setError(err);
         }
-
-        setSuccess(true);
-        setError(null);
-
-        setUsers(addUserList(users, data));
-
-        setTimeout(() => {
-            setSuccess(false);
-        }, 2500);
     };
 
     const onDeleteUser = async (user) => {
-        await deleteUser(user);
+        try {
+            const deletedUserInfo = await deleteUser(user);
 
-        setUsers(updateUserList(users, { values: user }, 'delete'));
+            if (
+                deletedUserInfo.error ||
+                [401, 403, 409, 500].includes(deletedUserInfo.statusCode)
+            ) {
+                setError(deletedUserInfo.error ? deletedUserInfo.error : 'Something went wrong!');
+
+                return;
+            }
+
+            setError(null);
+            setSuccess(true);
+
+            setUsers(updateUserList(users, { values: user }, 'delete'));
+
+            setTimeout(() => {
+                setSuccess(false);
+            }, 2500);
+        } catch (err) {
+            setError(err);
+        }
     };
 
     const onLoadUsers = async (event) => {
         event.preventDefault();
 
-        const moreUsers = await getUsers(skip);
+        try {
+            const moreUsers = await getUsers(skip);
 
-        if (moreUsers?.length < SKIP) {
-            setShowMore(false);
+            if (moreUsers.error || [401, 403, 409, 500].includes(moreUsers.statusCode)) {
+                setError(moreUsers.error ? moreUsers.error : 'Something went wrong!');
+
+                return;
+            }
+
+            setError(null);
+
+            if (moreUsers?.length < SKIP) {
+                setShowMore(false);
+            }
+
+            setSkip(skip + SKIP);
+
+            setUsers([...users, ...moreUsers]);
+        } catch (err) {
+            setError(err);
         }
-
-        setSkip(skip + SKIP);
-
-        setUsers([...users, ...moreUsers]);
     };
 
-    const openDeleteModal = (user) =>
+    const openDeleteModal = (user) => {
+        setSuccess(false);
         openConfirmModal({
             title: 'Delete ' + user.username,
             centered: true,
@@ -165,9 +216,11 @@ const Users = () => {
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteUser(user),
         });
+    };
 
     const onModalClose = (event) => {
         form.setValues(defaultValues);
+        setSuccess(false);
         close(event);
     };
 
@@ -196,17 +249,26 @@ const Users = () => {
         </tr>
     ));
 
+    if (isLoading && !userError) {
+        return (
+            <Container>
+                <Loader color="teal" variant="bars" />
+            </Container>
+        );
+    }
+
+    if (userError) {
+        return (
+            <Stack>
+                <ErrorBox message={userError} />
+            </Stack>
+        );
+    }
+
     if (!users.length) {
         return (
             <Container size="xs ">
-                <Alert
-                    icon={<IconAlertCircle size="1rem" />}
-                    title={t('home.bummer')}
-                    color="red"
-                    variant="outline"
-                >
-                    You have to be an admin to view the users
-                </Alert>
+                <ErrorBox message={'You have to be an admin to view the users'} />
             </Container>
         );
     }
@@ -214,26 +276,8 @@ const Users = () => {
     return (
         <Stack>
             <Modal opened={opened} onClose={onModalClose} title={t('users.edit')}>
-                {success && (
-                    <Notification
-                        icon={<IconCheck size="1.1rem" />}
-                        color="teal"
-                        title={t('settings.success')}
-                        withCloseButton={false}
-                    >
-                        {t('users.saved')}
-                    </Notification>
-                )}
-                {error && (
-                    <Alert
-                        icon={<IconAlertCircle size="1rem" />}
-                        title={t('home.bummer')}
-                        color="red"
-                        variant="outline"
-                    >
-                        {error}
-                    </Alert>
-                )}
+                {error && <ErrorBox message={error} />}
+                {success && <SuccessBox message={'users.saved'} />}
                 <Stack>
                     <TextInput
                         label="Username"
@@ -282,6 +326,9 @@ const Users = () => {
                 </Group>
             </Modal>
 
+            {error && <ErrorBox message={error} />}
+            {success && !opened && <SuccessBox message={'users.deleted'} />}
+
             <Group position="left">
                 <Table horizontalSpacing="sm" highlightOnHover>
                     <thead>
@@ -311,6 +358,7 @@ const Users = () => {
                     onClick={() => {
                         form.setValues(defaultValues);
                         setModalState('add');
+                        setSuccess(false);
                         open();
                     }}
                     color="hemmelig"

@@ -6,7 +6,7 @@ async function settings(fastify) {
     fastify.get(
         '/',
         {
-            preValidation: [fastify.authenticate],
+            preValidation: [fastify.authenticate, fastify.admin],
         },
         async () => {
             const settings = await prisma.settings.findMany({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 
-import { Alert, Button, Group, Container, TextInput, Stack, Title, Text } from '@mantine/core';
+import { Button, Group, Container, TextInput, Stack, Title, Text } from '@mantine/core';
 import {
     IconSquarePlus,
     IconDownload,
@@ -9,11 +9,11 @@ import {
     IconEye,
     IconPerspective,
     IconHeading,
-    IconAlertCircle,
     IconShieldLock,
 } from '@tabler/icons';
 
 import Quill from '../../components/quill';
+import ErrorBox from '../../components/error-box';
 
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
@@ -161,16 +161,7 @@ const Secret = () => {
             <Stack>
                 <Title order={1}>{t('secret.view_your_secret')}</Title>
 
-                {error && (
-                    <Alert
-                        icon={<IconAlertCircle size="1rem" />}
-                        title={t('home.bummer')}
-                        color="red"
-                        variant="outline"
-                    >
-                        {error}
-                    </Alert>
-                )}
+                {error && <ErrorBox message={error} />}
 
                 <Text>{t('secret.will_show_once')}</Text>
 
