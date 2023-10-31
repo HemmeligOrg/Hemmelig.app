@@ -176,27 +176,21 @@ async function secret(fastify) {
     );
 
     // This will burn the secret 🔥
-    fastify.post(
-        '/:id/burn',
-        {
-            preValidation: [fastify.authenticate],
-        },
-        async (request, reply) => {
-            const { id } = request.params;
+    fastify.post('/:id/burn', async (request, reply) => {
+        const { id } = request.params;
 
-            if (!isValidSecretId.test(id)) {
-                return reply.code(403).send({ error: 'Not a valid secret id' });
-            }
-
-            const response = await prisma.secret.delete({ where: { id } });
-
-            if (!response) {
-                return { error: 'Secret can not be burned before the expiration date' };
-            } else {
-                return { success: 'Secret is burned' };
-            }
+        if (!isValidSecretId.test(id)) {
+            return reply.code(403).send({ error: 'Not a valid secret id' });
         }
-    );
+
+        const response = await prisma.secret.delete({ where: { id } });
+
+        if (!response) {
+            return { error: 'Secret can not be burned before the expiration date' };
+        } else {
+            return { success: 'Secret is burned' };
+        }
+    });
 
     fastify.get('/:id/exist', async (request, reply) => {
         const { id } = request.params;
