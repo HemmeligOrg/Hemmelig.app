@@ -1,0 +1,17 @@
+.file-badge {
+    padding-left: 0;
+}
+
+.file-remove {
+    background: none;
+    color: red;
+    cursor: pointer;
+    padding: 0 5px;
+    margin-right: 5px;
+}
+
+.file-remove:hover {
+    /* background: #602e12; */
+    background: red;
+    color: white;
+}

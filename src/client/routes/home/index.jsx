@@ -43,6 +43,8 @@ import { createSecret, burnSecret } from '../../api/secret';
 import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
 
+import style from './style.module.css';
+
 const DEFAULT_TTL = 259200; // 3 days - 72 hours
 
 const Home = () => {
@@ -213,6 +215,12 @@ const Home = () => {
                 .then(() => console.log(t('home.successful_share')))
                 .catch(console.error);
         }
+    };
+
+    const removeFile = (index) => {
+        const updatedFiles = [...form.values.files];
+        updatedFiles.splice(index, 1);
+        form.setFieldValue('files', updatedFiles);
     };
 
     const handleFocus = (event) => event.target.select();
@@ -399,8 +407,18 @@ const Home = () => {
 
                     {form.values.files?.length > 0 && (
                         <Group>
-                            {form.values.files.map((file) => (
-                                <Badge color="orange" key={file.name}>
+                            {form.values.files.map((file, index) => (
+                                <Badge
+                                    className={style['file-badge']}
+                                    color="orange"
+                                    key={file.name}
+                                >
+                                    <Badge
+                                        className={style['file-remove']}
+                                        onClick={() => removeFile(index)}
+                                    >
+                                        &times;
+                                    </Badge>
                                     {file.name}
                                 </Badge>
                             ))}
