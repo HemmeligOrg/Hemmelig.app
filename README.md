@@ -132,6 +132,11 @@ npx hemmelig --help
 | `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                   |
 | `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                   |
 | `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                   |
+| `SECRET_AWS_S3_REGION`        | The Digital AWS s3 region                                             | ""                   |
+| `SECRET_AWS_S3_KEY`           | The Digital AWS s3 key                                                | ""                   |
+| `SECRET_AWS_S3_SECRET`        | The Digital AWS s3 secret                                             | ""                   |
+| `SECRET_AWS_S3_BUCKET`        | The Digital AWS s3 bucket name                                        | ""                   |
+| `SECRET_AWS_S3_FOLDER`        | The Digital AWS s3 folder for the uploaded files                      | ""                   |
 
 ## Supported languages
 

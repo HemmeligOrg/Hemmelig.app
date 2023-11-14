@@ -9,11 +9,16 @@ const {
     SECRET_ROOT_EMAIL = 'groot@hemmelig.app',
     SECRET_FILE_SIZE = 4, // 4 mb
     SECRET_FORCED_LANGUAGE = 'en',
-    SECRET_DO_SPACES_ENDPOINT = 'https://fra1.digitaloceanspaces.com',
+    SECRET_DO_SPACES_ENDPOINT = '',
     SECRET_DO_SPACES_KEY = '',
     SECRET_DO_SPACES_SECRET = '',
-    SECRET_DO_SPACES_BUCKET = 'hemmelig',
-    SECRET_DO_SPACES_FOLDER = 'localhost.hemmelig.app',
+    SECRET_DO_SPACES_BUCKET = '',
+    SECRET_DO_SPACES_FOLDER = '',
+    SECRET_AWS_S3_REGION = '',
+    SECRET_AWS_S3_KEY = '',
+    SECRET_AWS_S3_SECRET = '',
+    SECRET_AWS_S3_BUCKET = '',
+    SECRET_AWS_S3_FOLDER = '',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
     NODE_ENV = 'development',
 } = process.env;
@@ -53,6 +58,15 @@ const config = {
             secret: SECRET_DO_SPACES_SECRET,
             bucket: SECRET_DO_SPACES_BUCKET,
             folder: SECRET_DO_SPACES_FOLDER,
+        },
+    },
+    aws: {
+        s3: {
+            region: SECRET_AWS_S3_REGION,
+            key: SECRET_AWS_S3_KEY,
+            secret: SECRET_AWS_S3_SECRET,
+            bucket: SECRET_AWS_S3_BUCKET,
+            folder: SECRET_AWS_S3_FOLDER,
         },
     },
     disk: {
