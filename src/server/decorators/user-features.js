@@ -1,5 +1,6 @@
 import fp from 'fastify-plugin';
 import adminSettings from '../adminSettings.js';
+import config from 'config';
 
 export default fp(async (fastify) => {
     fastify.decorate('userFeatures', async (req, reply) => {
@@ -17,18 +18,20 @@ export default fp(async (fastify) => {
             }
         }
 
-        if (files?.length && adminSettings.get('disable_file_upload')) {
+        const hasFiles = files?.length > 0;
+
+        if (hasFiles && adminSettings.get('disable_file_upload')) {
             return reply
                 .code(403)
                 .send({ error: 'Access denied. You are not allowed to upload files. 🥲' });
         }
 
-        if (files?.length) {
+        if (hasFiles && config.get('upload_restriction')) {
             // TODO: do not write dublicates
             try {
                 await req.jwtVerify();
             } catch (err) {
-                return reply.send({
+                return reply.status(401).send({
                     error: 'You have to create an account to use the "File upload"',
                 });
             }

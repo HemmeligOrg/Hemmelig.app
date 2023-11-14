@@ -43,6 +43,8 @@ import { createSecret, burnSecret } from '../../api/secret';
 import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
 
+import config from '../../config';
+
 import style from './style.module.css';
 
 const DEFAULT_TTL = 259200; // 3 days - 72 hours
@@ -331,7 +333,7 @@ const Home = () => {
                             styles={groupMobileStyle}
                             icon={<IconLock size={14} />}
                             placeholder={t('home.optional_password')}
-                            minlength="8"
+                            minLength="8"
                             maxLength="28"
                             {...form.getInputProps('password')}
                             readOnly={!enablePassword || inputReadOnly}
@@ -382,7 +384,7 @@ const Home = () => {
 
                     <Group grow={isMobile}>
                         <FileButton
-                            disabled={!isLoggedIn}
+                            disabled={config.get('settings.upload_restriction') && !isLoggedIn}
                             styles={groupMobileStyle}
                             multiple
                             {...form.getInputProps('files')}
@@ -390,15 +392,23 @@ const Home = () => {
                             {(props) => (
                                 <Button
                                     {...props}
-                                    label={!isLoggedIn ? t('home.login_to_upload') : ''}
-                                    color={isLoggedIn ? 'hemmelig-orange' : 'gray'}
+                                    label={
+                                        config.get('settings.upload_restriction') && !isLoggedIn
+                                            ? t('home.upload_files')
+                                            : ''
+                                    }
+                                    color={
+                                        config.get('settings.upload_restriction') && !isLoggedIn
+                                            ? 'gray'
+                                            : 'hemmelig-orange'
+                                    }
                                 >
                                     {t('home.upload_files')}
                                 </Button>
                             )}
                         </FileButton>
 
-                        {!isLoggedIn && (
+                        {config.get('settings.upload_restriction') && !isLoggedIn && (
                             <Text size="sm" align="center" mt="sm">
                                 {t('home.login_to_upload')}
                             </Text>

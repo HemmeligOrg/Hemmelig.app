@@ -20,6 +20,7 @@ const {
     SECRET_AWS_S3_BUCKET = '',
     SECRET_AWS_S3_FOLDER = '',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
+    SECRET_UPLOAD_RESTRICTION = 'true', // true = only allow uploads from signed in users
     NODE_ENV = 'development',
 } = process.env;
 
@@ -29,7 +30,7 @@ const config = {
     host: SECRET_HOST,
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
-
+    upload_restriction: JSON.parse(SECRET_UPLOAD_RESTRICTION),
     // root account management
     account: {
         root: {
@@ -81,6 +82,7 @@ const config = {
         },
         settings: {
             forcedLanguage: SECRET_FORCED_LANGUAGE,
+            upload_restriction: JSON.parse(SECRET_UPLOAD_RESTRICTION),
         },
     },
 };
