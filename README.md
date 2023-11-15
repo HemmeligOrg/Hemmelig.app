@@ -181,7 +181,7 @@ Admins are also allowed to create new users in the settings. This is great if yo
 
 ## Contribution
 
-Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for guidelines.
+Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for the guidelines.
 
 
 ## Common errors
