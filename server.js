@@ -3,8 +3,11 @@ import('./src/server/bootstrap.js');
 
 import config from 'config';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { JSDOM } from 'jsdom';
 import importFastify from 'fastify';
+import template from 'y8';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
@@ -124,8 +127,26 @@ if (!isDev) {
         route: '/*',
     });
 
-    function serveIndex(_, reply) {
-        return reply.sendFile('index.html');
+    const script = template(
+        `
+        try {
+            window.__SECRET_CONFIG = {{config}}
+        } catch (e) {
+            window.__SECRET_CONFIG = '';
+        }
+    `,
+        { config: `'${JSON.stringify(config.get('__client_config'))}';` }
+    );
+
+    const index = staticPath + '/index.html';
+
+    const dom = new JSDOM(fs.readFileSync(index));
+    dom.window.document.querySelector('#__secret_config').textContent = script;
+
+    fs.writeFileSync(index, dom.serialize());
+
+    function serveIndex(_, res) {
+        return res.sendFile('index.html');
     }
 
     fastify.get('/secret/*', serveIndex);

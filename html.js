@@ -48,7 +48,7 @@ export default `<!DOCTYPE html>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/maskable-icon-192x192.png" />
-        <script>
+        <script id="__secret_config">
             try {
                 window.__SECRET_CONFIG = {{config}}
             } catch (e) {
