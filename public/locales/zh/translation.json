@@ -8,10 +8,10 @@
     "copied": "已复制",
     "copy": "复制",
     "home": {
-        "app_subtitle": "粘贴密码，机密消息，或私人数据。",
+        "app_subtitle": "粘贴密码、机密消息或私人数据。",
         "welcome": "确保您的敏感数据保持加密，安全和保密。",
         "bummer": "真遗憾！",
-        "maintxtarea": "写下您的敏感信息..",
+        "maintxtarea": "写下您的敏感信息",
         "title": "标题",
         "lifetime": "有效期",
         "max_views": "最大查看次数",
