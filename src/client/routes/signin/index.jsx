@@ -71,6 +71,7 @@ const SignIn = () => {
                         icon={<IconUser size={14} />}
                         placeholder="Username"
                         required
+                        autofocus
                         {...form.getInputProps('username')}
                     />
 
