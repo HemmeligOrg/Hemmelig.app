@@ -4,13 +4,15 @@
     "sign_up": "Registrieren",
     "account": "Konto",
     "account_settings": "Einstellungen",
-    "copied": "Kopiert!",
+    "instance_settings": "Instanzeinstellungen",
+    "copied": "Kopiert",
     "copy": "Kopieren",
     "home": {
+        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",  
         "welcome": "Halte deine privaten Informationen fern von Chats E-Mails mithilfe von stark verschlüsselten Geheimnissen.",
-        "title": "Titel",
-        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",
+        "bummer": "Hoppla!",
         "maintxtarea": "Notiere hier deine geheimen Informationen...",
+        "title": "Titel",      
         "lifetime": "Lebensdauer",
         "max_views": "Maximale Ansichten",
         "enable_password": "Passwort nutzen",
@@ -38,16 +40,39 @@
         "1_hour": "1 Stunde",
         "30_minutes": "30 Minuten",
         "5_minutes": "5 Minuten",
-        "successful_share": "Erfolgreich geteilt!",
+        "successful_share": "Erfolgreich geteilt",
         "get_your_secret": "Erhalte dein Geheimnis auf hemmelig.app."
     },
     "secret": {
         "view_your_secret": "Dein Geheimnis anzeigen",
         "will_show_once": "Dein Geheimnis wird nur einmal anzusehen sein.",
+        "views_left": "verbleibende Anzeigen:",
         "password_required": "Du brauchst ein Passwort, um dieses Geheimnis anzuzeigen",
         "view_secret": "Geheimnis anzeigen",
         "create_secret": "Neues Geheimnis erstellen",
         "download_files": "Dateien runterladen",
         "convert_b64": "Base64 in lesbaren Text umwandeln"
+    },
+    "settings": {
+        "success": "Erfolgreich",
+        "description": "Update the Hemmelig instance state",
+        "updated": "Einstellungen aktualisiert",
+        "update": "Einstellungen aktualisieren",
+        "deleted": "Konto gelösch"
+    },
+    "users": {
+        "users": "Benutzer",
+        "edit": "Editieren",
+        "update": "Benutzer aktualisiert",
+        "add": "Benutzer hinzufügen",
+        "saved": "Gespeichert",
+        "save": "Speichern",
+        "more": "Mehr laden",
+        "deleted": "Benutzer gelöscht"
+    },
+    "secrets": {
+        "secrets": "Geheimnisse",
+        "secret": "Geheimnis",
+        "deleted": "Geheimnis gelöscht"
     }
 }
