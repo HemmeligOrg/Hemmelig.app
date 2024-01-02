@@ -50,8 +50,8 @@
         "password_required": "Du brauchst ein Passwort, um dieses Geheimnis anzuzeigen",
         "view_secret": "Geheimnis anzeigen",
         "create_secret": "Neues Geheimnis erstellen",
-        "download_files": "Dateien runterladen",
-        "convert_b64": "Base64 in lesbaren Text umwandeln"
+        "convert_b64": "Text zu Base64 konvertieren",
+        "convert_utf8": "Base64 zu lesbarem Text konvertieren"
     },
     "settings": {
         "success": "Erfolgreich",
