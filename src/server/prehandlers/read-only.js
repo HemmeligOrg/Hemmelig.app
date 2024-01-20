@@ -25,7 +25,7 @@ export default async function readOnlyHandler(request, reply) {
             where: { username },
         });
 
-        if (!['admin', 'creator'].includes(user.role) && adminSettings.get('read_only')) {
+        if (!['admin', 'creator'].includes(user?.role) && adminSettings.get('read_only')) {
             return reply.code(403).send({ error: errorMessage });
         }
     }
