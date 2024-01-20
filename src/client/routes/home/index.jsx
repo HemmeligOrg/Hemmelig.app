@@ -271,7 +271,11 @@ const Home = () => {
 
     return (
         <Container>
-            <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
+            <form
+                onSubmit={form.onSubmit((values) => {
+                    onSubmit(values);
+                })}
+            >
                 <Stack>
                     <Title order={1} size="h2" align="center">
                         {t('home.app_subtitle')}

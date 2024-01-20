@@ -7,15 +7,18 @@ export default fp(async (fastify) => {
         const { ttl } = req.body;
         const files = req.body.files;
 
-        if ([2419200, 1209600].indexOf(Number(ttl?.value)) > -1) {
-            // TODO: do not write dublicates
+        const verify = async (errorMessage) => {
             try {
                 await req.jwtVerify();
             } catch (err) {
                 return reply.send({
-                    error: 'You have to create an account to use the "Never expire" lifetime',
+                    error: errorMessage,
                 });
             }
+        };
+
+        if ([2419200, 1209600].indexOf(Number(ttl?.value)) > -1) {
+            return await verify('You have to create an account to use the "Never expire" lifetime');
         }
 
         const hasFiles = files?.length > 0;
@@ -27,14 +30,7 @@ export default fp(async (fastify) => {
         }
 
         if (hasFiles && config.get('upload_restriction')) {
-            // TODO: do not write dublicates
-            try {
-                await req.jwtVerify();
-            } catch (err) {
-                return reply.status(401).send({
-                    error: 'You have to create an account to use the "File upload"',
-                });
-            }
+            return await verify('You have to create an account to use the "File upload"');
         }
     });
 });
