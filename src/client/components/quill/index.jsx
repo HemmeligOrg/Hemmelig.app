@@ -37,7 +37,7 @@ export default function Quill(props) {
                 border: '0.0625rem solid #373A40',
                 borderRadius: '0.25rem',
                 fontSize: '0.875rem',
-                zIndex: 1000,
+                zIndex: 90,
                 minHeight: props.secretId ? '5rem' : '13rem',
             }}
             {...props}

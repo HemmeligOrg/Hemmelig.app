@@ -92,7 +92,7 @@ const ApplicationShell = () => {
             header={
                 <Header
                     height={75}
-                    style={{ zIndex: 1100 }}
+                    style={{ zIndex: 100 }}
                     p="xs"
                     sx={(theme) => ({
                         backgroundColor: theme.colors.dark[8],

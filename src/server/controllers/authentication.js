@@ -91,9 +91,13 @@ async function authentication(fastify) {
             { expiresIn: '7d' } // expires in seven days
         );
 
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 6);
+
         const publicToken = Buffer.from(
             JSON.stringify({
                 username: user.username,
+                expirationDate: expirationDate,
             })
         ).toString('base64');
 
@@ -124,9 +128,13 @@ async function authentication(fastify) {
             { expiresIn: '7d' }
         );
 
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 6);
+
         const publicToken = Buffer.from(
             JSON.stringify({
                 username: user.username,
+                expirationDate: expirationDate,
             })
         ).toString('base64');
 
@@ -161,6 +169,45 @@ async function authentication(fastify) {
                 username: user.username,
                 generated: user.generated,
             };
+        }
+    );
+
+    fastify.get(
+        '/refresh',
+        {
+            preValidation: [fastify.authenticate],
+        },
+        async (request, reply) => {
+            const user = await prisma.user.findFirst({
+                where: { username: request.user.username },
+            });
+
+            const sacredToken = await reply.jwtSign(
+                {
+                    username: user.username,
+                    email: user.email,
+                    user_id: user.id,
+                },
+                { expiresIn: '7d' }
+            );
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 6);
+
+            const publicToken = Buffer.from(
+                JSON.stringify({
+                    username: user.username,
+                    expirationDate: expirationDate,
+                })
+            ).toString('base64');
+
+            reply
+                .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+                .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+                .code(200)
+                .send({
+                    username: user.username,
+                });
         }
     );
 }
