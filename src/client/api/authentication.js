@@ -76,3 +76,21 @@ export const verify = async () => {
 
     return data.json();
 };
+
+export const refresh = async () => {
+    const data = await fetch(`${config.get('api.host')}/authentication/refresh`, {
+        method: 'GET',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (data.status === 401) {
+        return {
+            statusCode: 401,
+        };
+    }
+
+    return data.json();
+};

@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Anchor, Burger, Container, Group, Grid } from '@mantine/core';
+import { Anchor, Burger, Container, Group, Grid, Modal, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
 import Nav from './nav';
 import { userLoginChanged, userLogin } from '../../actions/';
 import Logo from './logo.jsx';
-import { getCookie } from '../../helpers/cookie';
+import { getCookie, refreshCookie } from '../../helpers/cookie';
 
 import style from './style.module.css';
+import { refresh } from '../../api/authentication.js';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Header = () => {
     const username = useSelector((state) => state.username);
 
     const [opened, { toggle }] = useDisclosure(false);
+    const [openRefreshModal, { open, close }] = useDisclosure(false);
 
     useEffect(() => {
         if (!isLoggedIn && username) {
@@ -32,26 +34,72 @@ const Header = () => {
         }
     }, [isLoggedIn, username]);
 
+    // This use effect will check if the cookie is about to expire
+    useEffect(() => {
+        const cookie = getCookie();
+
+        if (!cookie) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            const shouldRefresh = refreshCookie();
+            if (shouldRefresh && !openRefreshModal) {
+                open();
+            }
+        }, 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [openRefreshModal]);
+
     const label = opened ? 'Close navigation' : 'Open navigation';
 
+    const handleRefreshCookie = async () => {
+        const cookie = getCookie();
+
+        if (!cookie) {
+            return;
+        }
+
+        const data = await refresh();
+
+        if (data.statusCode === 401) {
+            return;
+        }
+
+        dispatch(userLogin(cookie));
+        dispatch(userLoginChanged(true));
+
+        close();
+    };
+
     return (
-        <Container>
-            <Grid columns={24} align="center">
-                <Grid.Col span={20}>
-                    <Anchor component={Link} to="/">
-                        <Logo className={style.logo} />
-                    </Anchor>
-                </Grid.Col>
+        <>
+            <Modal opened={openRefreshModal} onClose={close} title="Authentication">
+                <p>Your session is about to expire. Do you want to extend it?</p>
+                <Button onClick={handleRefreshCookie} color="hemmelig">
+                    Update session
+                </Button>
+            </Modal>
 
-                <Grid.Col span={4}>
-                    <Group position="right">
-                        <Burger opened={opened} onClick={toggle} aria-label={label} />
-                    </Group>
-                </Grid.Col>
+            <Container>
+                <Grid columns={24} align="center">
+                    <Grid.Col span={20}>
+                        <Anchor component={Link} to="/">
+                            <Logo className={style.logo} />
+                        </Anchor>
+                    </Grid.Col>
 
-                <Nav isLoggedIn={isLoggedIn} opened={opened} toggle={toggle} />
-            </Grid>
-        </Container>
+                    <Grid.Col span={4}>
+                        <Group position="right">
+                            <Burger opened={opened} onClick={toggle} aria-label={label} />
+                        </Group>
+                    </Grid.Col>
+
+                    <Nav isLoggedIn={isLoggedIn} opened={opened} toggle={toggle} />
+                </Grid>
+            </Container>
+        </>
     );
 };
 
