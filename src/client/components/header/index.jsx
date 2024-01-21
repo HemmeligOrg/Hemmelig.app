@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { Anchor, Burger, Container, Group, Grid, Modal, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
@@ -20,6 +21,7 @@ const Header = () => {
 
     const [opened, { toggle }] = useDisclosure(false);
     const [openRefreshModal, { open, close }] = useDisclosure(false);
+    const [redirect, setRedirect] = useState(false);
 
     useEffect(() => {
         if (!isLoggedIn && username) {
@@ -64,7 +66,8 @@ const Header = () => {
         const data = await refresh();
 
         if (data.statusCode === 401) {
-            return;
+            setRedirect(true);
+            close();
         }
 
         dispatch(userLogin(cookie));
@@ -75,6 +78,8 @@ const Header = () => {
 
     return (
         <>
+            {redirect && <Navigate to="/signin" />}
+
             <Modal opened={openRefreshModal} onClose={close} title="Authentication">
                 <p>Your session is about to expire. Do you want to extend it?</p>
                 <Button onClick={handleRefreshCookie} color="hemmelig">
