@@ -44,12 +44,16 @@ const Header = () => {
             return;
         }
 
-        const interval = setInterval(() => {
+        const refreshInterval = () => {
             const shouldRefresh = refreshCookie();
             if (shouldRefresh && !openRefreshModal) {
                 open();
             }
-        }, 60 * 1000);
+        };
+
+        refreshInterval();
+
+        const interval = setInterval(refreshInterval, 60 * 1000);
 
         return () => clearInterval(interval);
     }, [openRefreshModal]);
