@@ -86,7 +86,7 @@ const Header = () => {
 
     return (
         <>
-            {redirect && <Navigate to="/signin" />}
+            {redirect && <Navigate to="/signout" />}
 
             <Modal
                 opened={openRefreshModal}
