@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { Anchor, Burger, Container, Group, Grid, Modal, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useTranslation } from 'react-i18next';
 
 import Nav from './nav';
 import { userLoginChanged, userLogin } from '../../actions/';
@@ -14,12 +15,13 @@ import style from './style.module.css';
 import { refresh } from '../../api/authentication.js';
 
 const Header = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const username = useSelector((state) => state.username);
 
-    const [opened, { toggle }] = useDisclosure(false);
+    const [isMenuOpened, { toggle }] = useDisclosure(false);
     const [openRefreshModal, { open, close }] = useDisclosure(false);
     const [redirect, setRedirect] = useState(false);
 
@@ -58,7 +60,9 @@ const Header = () => {
         return () => clearInterval(interval);
     }, [openRefreshModal]);
 
-    const label = opened ? 'Close navigation' : 'Open navigation';
+    const label = isMenuOpened
+        ? t('header.nav.close', 'Close navigation')
+        : t('header.nav.open', 'Open navigation');
 
     const handleRefreshCookie = async () => {
         const cookie = getCookie();
@@ -84,10 +88,19 @@ const Header = () => {
         <>
             {redirect && <Navigate to="/signin" />}
 
-            <Modal opened={openRefreshModal} onClose={close} title="Authentication">
-                <p>Your session is about to expire. Do you want to extend it?</p>
+            <Modal
+                opened={openRefreshModal}
+                onClose={close}
+                title={t('header.session.auth', 'Authentication')}
+            >
+                <p>
+                    {t(
+                        'header.session.expire',
+                        'Your session is about to expire. Do you want to extend it?'
+                    )}
+                </p>
                 <Button onClick={handleRefreshCookie} color="hemmelig">
-                    Update session
+                    {t('header.session.update', 'Update session')}
                 </Button>
             </Modal>
 
@@ -101,11 +114,11 @@ const Header = () => {
 
                     <Grid.Col span={4}>
                         <Group position="right">
-                            <Burger opened={opened} onClick={toggle} aria-label={label} />
+                            <Burger opened={isMenuOpened} onClick={toggle} aria-label={label} />
                         </Group>
                     </Grid.Col>
 
-                    <Nav isLoggedIn={isLoggedIn} opened={opened} toggle={toggle} />
+                    <Nav isLoggedIn={isLoggedIn} opened={isMenuOpened} toggle={toggle} />
                 </Grid>
             </Container>
         </>

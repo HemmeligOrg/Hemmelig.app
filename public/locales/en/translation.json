@@ -7,6 +7,17 @@
     "instance_settings": "Instance settings",
     "copied": "Copied",
     "copy": "Copy",
+    "header": {
+        "nav": {
+            "close": "Close navigation",
+            "open": "Open navigation"
+        },
+        "session": {
+            "auth": "Authentication",
+            "expire": "Your session is about to expire. Do you want to extend it?",
+            "update": "Update session"
+        }
+    },
     "home": {
         "app_subtitle": "Paste a password, confidential message, or private data.",
         "welcome": "Ensure your sensitive data remains encrypted, secure, and confidential.",
