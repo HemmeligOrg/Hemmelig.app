@@ -7,9 +7,20 @@
     "instance_settings": "Serverinstellingen",
     "copied": "Gekopieerd",
     "copy": "Kopiëren",
+    "header": {
+        "nav": {
+            "close": "Menu sluiten",
+            "open": "Menu openen"
+        },
+        "session": {
+            "auth": "Authenticatie",
+            "expire": "Je sessie is bijna verlopen. Nu verlengen?",
+            "update": "Sessie bijwerken"
+        }
+    },
     "home": {
-        "app_subtitle": "Plak hier de privégegevens, het wachtwoord of geheime bericht.",
-        "welcome": "Houd gevoelige informatie gescheiden van e-mails en chatlogs.",
+        "app_subtitle": "Deel een wachtwoord, privébericht of vertrouwelijke gegevens.",
+        "welcome": "Houd gevoelige informatie versleuteld en gescheiden van e-mails en chatlogs.",
         "bummer": "Helaas!",
         "maintxtarea": "Plaats hier de geheime informatie...",
         "title": "Titel",
@@ -27,7 +38,7 @@
         "create_secret_link": "Geheime link maken",
         "create_new": "Nieuw geheim",
         "delete": "Verwijderen",
-        "link_only_works_once": "Standaard werkt de geheime link maar één keer en wordt dan verwijderd.",
+        "link_only_works_once": "De geheime link werkt standaard maar één keer en wordt daarna verwijderd.",
         "app_name_meaning": "[he`m:(ə)li], betekent 'geheim' in het Noors.",
         "please_add_secret": "Voeg een geheim toe.",
         "14_days": "14 dagen",
@@ -57,7 +68,8 @@
         "success": "Geslaagd",
         "description": "Instellingen van deze Hemmelig-installatie",
         "updated": "Instellingen bijgewerkt",
-        "update": "Bijwerken"
+        "update": "Bijwerken",
+        "deleted": "Account verwijderd"
     },
     "users": {
         "users": "Gebruikers",
@@ -66,10 +78,12 @@
         "add": "Toevoegen",
         "saved": "Opgeslagen",
         "save": "Opslaan",
-        "more": "Meer laden"
+        "more": "Meer laden",
+        "deleted": "Gebruiker verwijderd"
     },
     "secrets": {
         "secrets": "Geheimen",
-        "secret": "Geheim"
+        "secret": "Geheim",
+        "deleted": "Geheim verwijderd"
     }
 }
