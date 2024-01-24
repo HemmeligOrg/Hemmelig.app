@@ -523,7 +523,7 @@ const Home = () => {
                                 />
 
                                 <TextInput
-                                    label={t('home.encryption_key', 'Decryption key')}
+                                    label={t('home.decryption_key', 'Decryption key')}
                                     icon={<IconShieldLock size={14} />}
                                     value={encryptionKey}
                                     onFocus={handleFocus}
