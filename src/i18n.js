@@ -7,7 +7,7 @@ import config from './client/config';
 
 function getLanguage() {
     const language = config.get('settings.forcedLanguage');
-    const detectionMethod = ['path', 'navigator'];
+    const detectionMethod = ['navigator'];
 
     if (!language) {
         return { language: 'en', detectionMethod };
