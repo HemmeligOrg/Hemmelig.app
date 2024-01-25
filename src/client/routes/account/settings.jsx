@@ -122,7 +122,7 @@ const Settings = () => {
             <Group position="left">
                 <Checkbox
                     label="Disable user account creation"
-                    description="Do not allow users to create acoounts. However, you as an admin is allowed to add users which can sign in."
+                    description="Do not allow users to create a new account. As an admin, you will still be able to create new user accounts."
                     checked={form.getInputProps('disable_user_account_creation').value}
                     onChange={(event) =>
                         form.setValues({
