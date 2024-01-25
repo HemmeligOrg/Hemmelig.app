@@ -9,10 +9,6 @@ function getLanguage() {
     const language = config.get('settings.forcedLanguage');
     const detectionMethod = ['navigator'];
 
-    if (!language) {
-        return { language: 'en', detectionMethod };
-    }
-
     return { language, detectionMethod };
 }
 
