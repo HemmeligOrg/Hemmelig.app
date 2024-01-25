@@ -18,7 +18,9 @@ export default fp(async (fastify) => {
         };
 
         if ([2419200, 1209600].indexOf(Number(ttl?.value)) > -1) {
-            return await verify('You have to create an account to use the "Never expire" lifetime');
+            return await verify(
+                'You have to create an account to use the extended expiration time.'
+            );
         }
 
         const hasFiles = files?.length > 0;
