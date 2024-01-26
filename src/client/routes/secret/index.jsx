@@ -246,7 +246,8 @@ const Secret = () => {
                         files.map((file) => (
                             <Button
                                 key={file.key}
-                                color="hemmelig-orange"
+                                variant="outline"
+                                color="gray"
                                 onClick={() => onFileDownload(file)}
                                 disabled={isDownloaded.some((key) => key === file.key)}
                                 leftIcon={<IconDownload size={14} />}
