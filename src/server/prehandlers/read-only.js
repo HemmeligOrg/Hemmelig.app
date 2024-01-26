@@ -1,22 +1,18 @@
 import prisma from '../services/prisma.js';
 import adminSettings from '../adminSettings.js';
 
-// The auth routes
-const authRegex = /^\/api\/authentication\/.*$/i;
-const accountRegex = /^\/api\/account\/.*$/i;
+const secretRegex = /^\/api\/secret$/i;
 
 const errorMessage = 'Access denied. You are not allowed to create secrets. 🥲';
 
 export default async function readOnlyHandler(request, reply) {
     const { url } = request;
 
-    if (authRegex.test(url) || accountRegex.test(url)) {
-        return;
-    }
+    const isSecretCreation = request.method === 'POST' && secretRegex.test(url);
 
     const username = request?.user?.username ?? null;
 
-    if (!username && adminSettings.get('read_only')) {
+    if (isSecretCreation && !username && adminSettings.get('read_only')) {
         return reply.code(403).send({ error: errorMessage });
     }
 
@@ -25,7 +21,11 @@ export default async function readOnlyHandler(request, reply) {
             where: { username },
         });
 
-        if (!['admin', 'creator'].includes(user?.role) && adminSettings.get('read_only')) {
+        if (
+            !['admin', 'creator'].includes(user?.role) &&
+            adminSettings.get('read_only') &&
+            isSecretCreation
+        ) {
             return reply.code(403).send({ error: errorMessage });
         }
     }
