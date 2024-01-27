@@ -3,6 +3,7 @@ import validator from 'validator';
 import config from 'config';
 import prisma from '../services/prisma.js';
 import { hash, compare } from '../helpers/password.js';
+import getClientIp from '../helpers/client-ip.js';
 
 import { isValidSecretId } from '../helpers/regexp.js';
 
@@ -72,6 +73,7 @@ async function getSecretRoute(request, reply) {
         preventBurn: data.preventBurn,
         secret: data.data,
         files: data.files,
+        isPublic: data.isPublic,
     };
 }
 
@@ -118,7 +120,8 @@ async function secret(fastify) {
             preValidation: [fastify.userFeatures, fastify.attachment],
         },
         async (req, reply) => {
-            const { text, title, ttl, password, allowedIp, preventBurn, maxViews } = req.body;
+            const { text, title, ttl, password, allowedIp, preventBurn, maxViews, isPublic } =
+                req.body;
             const { files } = req.secret;
 
             if (Buffer.byteLength(text) > config.get('api.maxTextSize')) {
@@ -139,6 +142,13 @@ async function secret(fastify) {
                 return reply.code(409).send({ error: 'The IP address is not valid' });
             }
 
+            if (
+                !validator.isBoolean(String(isPublic)) ||
+                !validator.isBoolean(String(preventBurn))
+            ) {
+                return reply.code(409).send({ error: 'The value is not a valid boolean' });
+            }
+
             const secret = await prisma.secret.create({
                 data: {
                     title,
@@ -146,7 +156,8 @@ async function secret(fastify) {
                     data: text,
                     allowed_ip: allowedIp,
                     password: password ? await hash(password) : undefined,
-                    preventBurn,
+                    preventBurn: preventBurn,
+                    isPublic: isPublic,
                     files: {
                         create: files,
                     },
@@ -154,6 +165,7 @@ async function secret(fastify) {
                     expiresAt: new Date(
                         Date.now() + (parseInt(ttl) ? parseInt(ttl) * 1000 : DEFAULT_EXPIRATION)
                     ),
+                    ipAddress: isPublic ? getClientIp(req.headers) : '',
                 },
             });
 
@@ -212,6 +224,27 @@ async function secret(fastify) {
         }
 
         return { id, maxViews: data.maxViews };
+    });
+
+    fastify.get('/public', async (request, reply) => {
+        const data = await prisma.secret.findMany({
+            where: { isPublic: true },
+            orderBy: {
+                expiresAt: 'desc',
+            },
+            take: 100,
+        });
+
+        if (!data?.length) {
+            return reply.code(404).send({ error: 'Public secrets not found' });
+        }
+
+        return data.map((secret) => ({
+            id: secret.id,
+            expiresAt: secret.expiresAt,
+            title: secret.title,
+            data: secret.data,
+        }));
     });
 }
 

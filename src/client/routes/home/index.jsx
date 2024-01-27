@@ -60,6 +60,7 @@ const Home = () => {
             ttl: DEFAULT_TTL,
             allowedIp: '',
             preventBurn: false,
+            isPublic: false,
         },
     });
 
@@ -70,6 +71,7 @@ const Home = () => {
     const [encryptionKey, setEncryptionKey] = useState('');
     const [creatingSecret, setCreatingSecret] = useState(false);
     const [error, setError] = useState('');
+    const [isPublic, setIsPublic] = useState(false);
 
     const secretRef = useRef(null);
 
@@ -116,6 +118,10 @@ const Home = () => {
         setOnEnablePassword(!enablePassword);
     };
 
+    const onSetPublic = () => {
+        setIsPublic(!isPublic);
+    };
+
     const reset = () => {
         form.reset();
         setSecretId('');
@@ -125,6 +131,7 @@ const Home = () => {
         setCreatingSecret(false);
         setText('');
         setTTL(DEFAULT_TTL);
+        setIsPublic(false);
         setError('');
     };
 
@@ -142,14 +149,15 @@ const Home = () => {
         setCreatingSecret(true);
 
         const body = {
-            text: encrypt(form.values.text, encryptionKey),
+            text: isPublic ? form.values.text : encrypt(form.values.text, encryptionKey),
             files: [],
-            title: encrypt(form.values.title, encryptionKey),
+            title: isPublic ? form.values.title : encrypt(form.values.title, encryptionKey),
             password: form.values.password,
             ttl: form.values.ttl,
             allowedIp: form.values.allowedIp,
             preventBurn: form.values.preventBurn,
             maxViews: form.values.maxViews,
+            isPublic: isPublic,
         };
 
         const zipFile = await zipFiles(form.values.files);
@@ -236,6 +244,9 @@ const Home = () => {
     };
 
     const inputReadOnly = !!secretId;
+
+    const disableFileUpload =
+        (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
 
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
@@ -386,9 +397,18 @@ const Home = () => {
                         </Tooltip>
                     </Group>
 
-                    <Group grow={isMobile}>
+                    <Group grow>
+                        <Checkbox
+                            styles={groupMobileStyle}
+                            checked={isPublic}
+                            onChange={onSetPublic}
+                            readOnly={inputReadOnly}
+                            color="hemmelig"
+                            label={t('home.set_public')}
+                        />
+
                         <FileButton
-                            disabled={config.get('settings.upload_restriction') && !isLoggedIn}
+                            disabled={disableFileUpload}
                             styles={groupMobileStyle}
                             multiple
                             {...form.getInputProps('files')}
@@ -396,25 +416,17 @@ const Home = () => {
                             {(props) => (
                                 <Button
                                     {...props}
-                                    label={
-                                        config.get('settings.upload_restriction') && !isLoggedIn
-                                            ? t('home.upload_files')
-                                            : ''
-                                    }
-                                    color={
-                                        config.get('settings.upload_restriction') && !isLoggedIn
-                                            ? 'gray'
-                                            : 'hemmelig-orange'
-                                    }
+                                    label={disableFileUpload ? t('home.upload_files') : ''}
+                                    color={disableFileUpload ? 'gray' : 'hemmelig-orange'}
                                 >
                                     {t('home.upload_files')}
                                 </Button>
                             )}
                         </FileButton>
 
-                        {config.get('settings.upload_restriction') && !isLoggedIn && (
+                        {disableFileUpload && (
                             <Text size="sm" align="center" mt="sm">
-                                {t('home.login_to_upload')}
+                                {isPublic ? t('home.public_no_upload') : t('home.login_to_upload')}
                             </Text>
                         )}
                     </Group>

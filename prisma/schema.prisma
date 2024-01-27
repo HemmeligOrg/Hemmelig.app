@@ -34,6 +34,8 @@ model Secret {
     expiresAt   DateTime
     user        User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
     user_id     String?
+    isPublic    Boolean  @default(false)
+    ipAddress   String   @default("")
 }
 
 model User {

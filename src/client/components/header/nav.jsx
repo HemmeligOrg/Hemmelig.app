@@ -40,13 +40,22 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         });
     }
 
-    navItems.push({
-        label: t('account'),
-        icon: <IconUser size="1rem" stroke={1.5} />,
-        component: Link,
-        onClick: toggle,
-        to: '/account',
-    });
+    navItems.push(
+        {
+            label: t('account'),
+            icon: <IconUser size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/account',
+        },
+        {
+            label: t('public_list'),
+            icon: <IconList size="1rem" stroke={1.5} />,
+            component: Link,
+            onClick: toggle,
+            to: '/public',
+        }
+    );
 
     if (isMobile) {
         navItems.push({

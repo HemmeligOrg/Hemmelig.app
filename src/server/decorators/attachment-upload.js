@@ -7,9 +7,9 @@ export default fp(async (fastify) => {
             files: [],
         };
 
-        const { files } = await req.body;
+        const { files, isPublic } = await req.body;
 
-        if (files?.length) {
+        if (!isPublic && files?.length) {
             for (const file of files) {
                 try {
                     const imageData = await fileAdapter.upload(file.content);
