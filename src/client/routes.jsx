@@ -5,6 +5,7 @@ import AdminShell from './admin-shell.jsx';
 
 const Home = lazy(() => import('./routes/home'));
 const Secret = lazy(() => import('./routes/secret'));
+const PublicSecrets = lazy(() => import('./routes/public'));
 const Privacy = lazy(() => import('./routes/privacy'));
 const SignIn = lazy(() => import('./routes/signin'));
 const SignUp = lazy(() => import('./routes/signup'));
@@ -24,6 +25,7 @@ const AppRoutes = () => {
                 <Route index element={<Home />} />
                 <Route path="secret/:encryptionKey/:secretId" element={<Secret />} />
                 <Route path="secret/:secretId" element={<Secret />} />
+                <Route path="public" element={<PublicSecrets />} />
                 <Route path="signin" element={<SignIn />} />
                 <Route path="signup" element={<SignUp />} />
                 <Route path="signout" element={<SignOut />} />

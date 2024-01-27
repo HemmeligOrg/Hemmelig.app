@@ -51,6 +51,7 @@ const Secret = () => {
     const [isDownloaded, setIsDownloaded] = useState([]);
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
+    const [isPublic, setIsPublic] = useState(false);
 
     const fetchSecret = async (event) => {
         event.preventDefault();
@@ -84,7 +85,9 @@ const Secret = () => {
             setError(json.error);
         } else {
             try {
-                const text = decrypt(json.secret, decryptionKey + password);
+                const text = json.isPublic
+                    ? json.secret
+                    : decrypt(json.secret, decryptionKey + password);
 
                 setSecret(text);
             } catch (error) {
@@ -94,7 +97,9 @@ const Secret = () => {
             }
 
             if (json.title) {
-                setTitle(decrypt(json.title, decryptionKey + password));
+                setTitle(
+                    json.isPublic ? json.title : decrypt(json.title, decryptionKey + password)
+                );
             }
 
             if (json.files) {
