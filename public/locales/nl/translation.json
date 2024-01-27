@@ -32,6 +32,7 @@
         "restrict_from_ip": "Alleen toegankelijk maken voor een specifiek IP-adres of CIDR-bereik. Voorbeeld CIDR: 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Inzage beperken op IP-adres of CIDR",
         "login_to_upload": "Log in om bestanden te uploaden",
+        "public_no_upload": "Bestanden uploaden is uitgeschakeld voor publieke uitwisselingen",
         "upload_files": "Bestanden uploaden",
         "your_secret_url": "Geheime link",
         "share": "Delen",
@@ -89,5 +90,10 @@
         "secrets": "Geheimen",
         "secret": "Geheim",
         "deleted": "Geheim verwijderd"
+    },
+    "public": {
+        "heading": "Publieke uitwisselingen",
+        "title": "Titel",
+        "expires": "Verloopt"
     }
 }
