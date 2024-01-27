@@ -31,6 +31,7 @@ model Secret {
     password    String?
     allowed_ip  String?
     preventBurn Boolean  @default(false)
+    createdAt   DateTime @default(now())
     expiresAt   DateTime
     user        User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
     user_id     String?
@@ -45,6 +46,7 @@ model User {
     password  String
     role      String   @default("user")
     generated Boolean  @default(false)
+    createdAt DateTime @default(now())
     secrets   Secret[]
 }
 

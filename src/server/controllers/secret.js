@@ -226,17 +226,17 @@ async function secret(fastify) {
         return { id, maxViews: data.maxViews };
     });
 
-    fastify.get('/public', async (request, reply) => {
+    fastify.get('/public', async (_, reply) => {
         const data = await prisma.secret.findMany({
             where: { isPublic: true },
             orderBy: {
-                expiresAt: 'desc',
+                createdAt: 'desc',
             },
             take: 100,
         });
 
         if (!data?.length) {
-            return reply.code(404).send({ error: 'Public secrets not found' });
+            return reply.code(404).send({ error: 'Public pastes not found' });
         }
 
         return data.map((secret) => ({
@@ -244,6 +244,7 @@ async function secret(fastify) {
             expiresAt: secret.expiresAt,
             title: secret.title,
             data: secret.data,
+            createdAt: secret.createdAt,
         }));
     });
 }
