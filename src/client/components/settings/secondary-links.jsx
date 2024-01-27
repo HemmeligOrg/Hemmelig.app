@@ -1,5 +1,5 @@
+import { Box, Group, Text, ThemeIcon, UnstyledButton, rem, useMantineTheme } from '@mantine/core';
 import { IconFingerprint, IconList, IconLockOff } from '@tabler/icons';
-import { ThemeIcon, UnstyledButton, Group, Text, Box, useMantineTheme, rem } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 

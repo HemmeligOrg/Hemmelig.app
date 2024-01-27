@@ -1,7 +1,6 @@
-import React from 'react';
-import style from './style.module.css';
-import QRCode from 'react-qr-code';
 import { Center } from '@mantine/core';
+import QRCode from 'react-qr-code';
+import style from './style.module.css';
 
 const QRLink = ({ value }) => (
     <Center>

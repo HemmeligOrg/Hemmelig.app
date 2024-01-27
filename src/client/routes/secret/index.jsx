@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
-import { Button, Group, Container, TextInput, Stack, Title, Text } from '@mantine/core';
+import { Button, Container, Group, Stack, Text, TextInput, Title } from '@mantine/core';
 import {
-    IconSquarePlus,
     IconDownload,
-    IconLock,
     IconEye,
-    IconPerspective,
     IconHeading,
+    IconLock,
+    IconPerspective,
     IconShieldLock,
+    IconSquarePlus,
 } from '@tabler/icons';
 
-import Quill from '../../components/quill';
 import ErrorBox from '../../components/error-box';
+import Quill from '../../components/quill';
 
+import { decrypt } from '../../../shared/helpers/crypto';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
-import { decrypt } from '../../../shared/helpers/crypto';
 
 import { useTranslation } from 'react-i18next';
 

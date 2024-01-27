@@ -1,10 +1,10 @@
+import { Center, Container, Image, Stack, Text, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Container, Title, Center, Text, Image, Stack } from '@mantine/core';
-import { userLoginChanged, userLogin } from '../../actions';
-import { removeCookie } from '../../helpers/cookie';
+import { Navigate } from 'react-router-dom';
+import { userLogin, userLoginChanged } from '../../actions';
 import { signOut } from '../../api/authentication';
+import { removeCookie } from '../../helpers/cookie';
 import styles from './style.module.css';
 
 const SignOut = () => {

@@ -1,7 +1,7 @@
 import config from 'config';
-import prisma from './services/prisma.js';
 import adminSettings from './adminSettings.js';
 import { hash } from './helpers/password.js';
+import prisma from './services/prisma.js';
 
 const username = config.get('account.root.user');
 const email = config.get('account.root.email');

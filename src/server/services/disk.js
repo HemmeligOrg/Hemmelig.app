@@ -1,6 +1,6 @@
+import config from 'config';
 import fs from 'fs/promises';
 import { nanoid } from 'nanoid';
-import config from 'config';
 
 const getFilePath = (key) => `${config.get('disk.folder')}${key}.json`;
 

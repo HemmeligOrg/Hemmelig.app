@@ -1,4 +1,4 @@
-import { USER_LOGIN_CHANGED, USER_LOGIN } from '../util/constants';
+import { USER_LOGIN, USER_LOGIN_CHANGED } from '../util/constants';
 
 export const userLoginChanged = (payload) => {
     return {

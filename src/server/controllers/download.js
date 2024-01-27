@@ -1,6 +1,6 @@
 import sanitize from 'sanitize-filename';
-import prisma from '../services/prisma.js';
 import fileAdapter from '../services/file-adapter.js';
+import prisma from '../services/prisma.js';
 
 import { isValidSecretId } from '../helpers/regexp.js';
 

@@ -1,5 +1,5 @@
-import { IconUser, IconLock, IconSettings } from '@tabler/icons';
-import { ThemeIcon, UnstyledButton, Group, Text } from '@mantine/core';
+import { Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { IconLock, IconSettings, IconUser } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 

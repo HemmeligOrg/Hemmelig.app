@@ -1,18 +1,17 @@
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-import { Anchor, Burger, Container, Group, Grid, Modal, Button } from '@mantine/core';
+import { Anchor, Burger, Button, Container, Grid, Group, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
 
-import Nav from './nav';
-import { userLoginChanged, userLogin } from '../../actions/';
-import Logo from './logo.jsx';
+import { userLogin, userLoginChanged } from '../../actions/';
 import { getCookie, refreshCookie } from '../../helpers/cookie';
+import Logo from './logo.jsx';
+import Nav from './nav';
 
-import style from './style.module.css';
 import { refresh } from '../../api/authentication.js';
+import style from './style.module.css';
 
 const Header = () => {
     const { t } = useTranslation();

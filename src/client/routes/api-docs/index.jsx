@@ -1,6 +1,5 @@
-import React from 'react';
+import { Anchor, Code, Container, Stack, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { Code, Container, Stack, Title, Text, Anchor } from '@mantine/core';
 
 const ApiDocs = () => {
     return (

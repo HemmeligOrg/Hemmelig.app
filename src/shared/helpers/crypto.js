@@ -1,7 +1,7 @@
+import { Buffer } from 'buffer/';
 import { nanoid } from 'nanoid';
 import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
-import { Buffer } from 'buffer/';
 
 const { secretbox, randomBytes } = tweetnacl;
 const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = tweetnaclUtil;

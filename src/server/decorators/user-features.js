@@ -1,6 +1,6 @@
+import config from 'config';
 import fp from 'fastify-plugin';
 import adminSettings from '../adminSettings.js';
-import config from 'config';
 
 export default fp(async (fastify) => {
     fastify.decorate('userFeatures', async (req, reply) => {

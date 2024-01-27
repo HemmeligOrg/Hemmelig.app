@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import {
     ActionIcon,
-    Container,
-    Center,
-    Text,
-    Stack,
-    Select,
     Button,
+    Center,
+    Container,
     Group,
-    TextInput,
-    PasswordInput,
-    Table,
-    Modal,
     Loader,
+    Modal,
+    PasswordInput,
+    Select,
+    Stack,
+    Table,
+    Text,
+    TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
-import { IconEdit, IconAt, IconUser, IconChefHat, IconPlus, IconTrash } from '@tabler/icons';
+import { IconAt, IconChefHat, IconEdit, IconPlus, IconTrash, IconUser } from '@tabler/icons';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getUsers, updateUser, addUser, deleteUser } from '../../api/users';
+import { addUser, deleteUser, getUsers, updateUser } from '../../api/users';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 

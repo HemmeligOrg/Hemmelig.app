@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { ActionIcon, Text, Stack, Group, Table, Container, Loader } from '@mantine/core';
+import { ActionIcon, Container, Group, Loader, Stack, Table, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
-import { getSecrets, burnSecret } from '../../api/secret';
+import { burnSecret, getSecrets } from '../../api/secret';
 
 dayjs.extend(relativeTime);
 

@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import './i18n';
 import { LoadingOverlay } from '@mantine/core';
+import './i18n';
 
 import HemmeligApplication from './client/app';
 import configureStore from './client/helpers/configureStore';

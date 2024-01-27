@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
-import { NavLink, Group } from '@mantine/core';
+import { Group, NavLink } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUser, IconLockOff, IconLogin, IconFingerprint, IconList } from '@tabler/icons';
+import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import style from './style.module.css';
 

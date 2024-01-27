@@ -1,5 +1,4 @@
-import React from 'react';
-import { Container, Stack, Title, Text } from '@mantine/core';
+import { Container, Stack, Text, Title } from '@mantine/core';
 
 const TermsAndCondition = () => {
     return (

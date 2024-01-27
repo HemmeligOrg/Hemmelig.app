@@ -1,7 +1,7 @@
-import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
-import { nanoid } from 'nanoid';
+import { Upload } from '@aws-sdk/lib-storage';
 import config from 'config';
+import { nanoid } from 'nanoid';
 
 function createConfig() {
     if (config.get('aws.s3.region')) {

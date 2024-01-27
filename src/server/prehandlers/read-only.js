@@ -1,5 +1,5 @@
-import prisma from '../services/prisma.js';
 import adminSettings from '../adminSettings.js';
+import prisma from '../services/prisma.js';
 
 const secretRegex = /^\/api\/secret$/i;
 

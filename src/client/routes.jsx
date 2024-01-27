@@ -1,7 +1,7 @@
 import { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import ApplicationShell from './app-shell.jsx';
+import { Route, Routes } from 'react-router-dom';
 import AdminShell from './admin-shell.jsx';
+import ApplicationShell from './app-shell.jsx';
 
 const Home = lazy(() => import('./routes/home'));
 const Secret = lazy(() => import('./routes/secret'));

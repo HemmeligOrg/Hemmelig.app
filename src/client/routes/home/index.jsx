@@ -1,47 +1,47 @@
-import React, { useEffect, useState, useRef } from 'react';
-import passwordGenerator from 'generate-password-browser';
 import {
+    ActionIcon,
+    Badge,
+    Box,
     Button,
     Checkbox,
     Container,
-    TextInput,
-    Select,
     CopyButton,
-    ActionIcon,
-    Tooltip,
-    Group,
-    Stack,
-    Title,
-    Text,
     Divider,
     FileButton,
+    Group,
     NumberInput,
-    Badge,
-    Box,
+    Select,
+    Stack,
+    Text,
+    TextInput,
+    Title,
+    Tooltip,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import {
-    IconSquarePlus,
-    IconTrash,
+    IconCheck,
+    IconCopy,
+    IconHeading,
+    IconLink,
     IconLock,
     IconLockAccess,
-    IconLink,
-    IconCopy,
-    IconCheck,
-    IconHeading,
     IconShare,
     IconShieldLock,
+    IconSquarePlus,
+    IconTrash,
 } from '@tabler/icons';
+import passwordGenerator from 'generate-password-browser';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Quill from '../../components/quill';
-import QRLink from '../../components/qrlink';
 import ErrorBox from '../../components/error-box';
+import QRLink from '../../components/qrlink';
+import Quill from '../../components/quill';
 
-import { zipFiles } from '../../helpers/zip';
-import { createSecret, burnSecret } from '../../api/secret';
-import { generateKey, encrypt } from '../../../shared/helpers/crypto';
 import { useTranslation } from 'react-i18next';
+import { encrypt, generateKey } from '../../../shared/helpers/crypto';
+import { burnSecret, createSecret } from '../../api/secret';
+import { zipFiles } from '../../helpers/zip';
 
 import config from '../../config';
 

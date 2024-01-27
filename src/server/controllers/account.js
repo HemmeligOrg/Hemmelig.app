@@ -1,5 +1,5 @@
 import emailValidator from 'email-validator';
-import { hash, compare } from '../helpers/password.js';
+import { compare, hash } from '../helpers/password.js';
 import prisma from '../services/prisma.js';
 
 const PASSWORD_LENGTH = 5;

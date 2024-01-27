@@ -1,6 +1,6 @@
-import { BrowserRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes.jsx';
 
 const HemmeligApplication = () => {

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Stack, Button, Checkbox, Group, Input, Text, Container, Loader } from '@mantine/core';
+import { Button, Checkbox, Container, Group, Input, Loader, Stack, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconEdit, IconAt } from '@tabler/icons';
+import { IconAt, IconEdit } from '@tabler/icons';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';

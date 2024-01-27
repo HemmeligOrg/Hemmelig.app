@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Button, Container, TextInput, Stack, Title, Text, PasswordInput } from '@mantine/core';
-import { useDispatch } from 'react-redux';
+import { Button, Container, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconLock, IconUser, IconLogin, IconAt } from '@tabler/icons';
+import { IconAt, IconLock, IconLogin, IconUser } from '@tabler/icons';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
-import { signUp } from '../../api/authentication';
 import { userLogin } from '../../actions';
+import { signUp } from '../../api/authentication';
 
 const SignUp = () => {
     const [success, setSuccess] = useState(false);

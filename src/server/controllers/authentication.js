@@ -1,8 +1,8 @@
-import emailValidator from 'email-validator';
 import config from 'config';
+import emailValidator from 'email-validator';
 import prisma from '../services/prisma.js';
 
-import { hash, compare } from '../helpers/password.js';
+import { compare, hash } from '../helpers/password.js';
 
 const validUsername = /^[A-Za-z0-9_-]*$/is;
 

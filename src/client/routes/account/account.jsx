@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
 import {
-    Stack,
     Button,
-    Group,
-    TextInput,
-    Text,
-    PasswordInput,
     Container,
+    Group,
     Loader,
+    PasswordInput,
+    Stack,
+    Text,
+    TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
-import { IconAt, IconLock, IconEdit, IconTrash } from '@tabler/icons';
+import { IconAt, IconEdit, IconLock, IconTrash } from '@tabler/icons';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
 import style from './account.module.css';
 
-import { getUser, updateUser, deleteUser } from '../../api/account';
+import { deleteUser, getUser, updateUser } from '../../api/account';
 
 const Account = () => {
     const [success, setSuccess] = useState(false);

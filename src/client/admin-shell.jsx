@@ -1,11 +1,11 @@
-import { Outlet, Link } from 'react-router-dom';
-import { AppShell, Anchor, Navbar, Header, Group, useMantineTheme } from '@mantine/core';
+import { Anchor, AppShell, Group, Header, Navbar, useMantineTheme } from '@mantine/core';
+import { Link, Outlet } from 'react-router-dom';
 
+import Logo from './components/header/logo';
+import Nav from './components/header/nav';
+import logoStyles from './components/header/style.module.css';
 import MainLinks from './components/settings/main-links';
 import SecondaryLinks from './components/settings/secondary-links';
-import Nav from './components/header/nav';
-import Logo from './components/header/logo';
-import logoStyles from './components/header/style.module.css';
 
 const AdminShell = () => {
     const theme = useMantineTheme();

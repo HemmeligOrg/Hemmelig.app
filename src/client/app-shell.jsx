@@ -1,5 +1,5 @@
+import { Anchor, AppShell, Footer, Group, Header, Text, useMantineTheme } from '@mantine/core';
 import { Link, Outlet } from 'react-router-dom';
-import { AppShell, Anchor, Header, Footer, Text, useMantineTheme, Group } from '@mantine/core';
 
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';

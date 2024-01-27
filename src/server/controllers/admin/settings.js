@@ -1,6 +1,6 @@
 import extractDomain from 'extract-domain';
-import prisma from '../../services/prisma.js';
 import { updateAdminSettings } from '../../bootstrap.js';
+import prisma from '../../services/prisma.js';
 
 async function settings(fastify) {
     fastify.get(

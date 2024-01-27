@@ -1,10 +1,10 @@
+import { Container, Loader, Stack, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { Container, Loader, Text, Stack } from '@mantine/core';
 import { Navigate } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 
-import { getUser } from '../../api/account';
 import { useTranslation } from 'react-i18next';
+import { getUser } from '../../api/account';
 
 const HomeAccount = () => {
     const { t } = useTranslation();
