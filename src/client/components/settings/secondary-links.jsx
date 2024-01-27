@@ -38,6 +38,11 @@ export default function SecondaryLinks() {
 
     const data = [
         {
+            label: t('public_list'),
+            icon: <IconList size="1rem" stroke={1.5} />,
+            route: '/public',
+        },
+        {
             label: 'Privacy',
             icon: <IconFingerprint size="1rem" stroke={1.5} />,
             route: '/account/privacy',
