@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Anchor, Stack, Group, Table, Container, Loader } from '@mantine/core';
+import { Anchor, Stack, Group, Title, Table, Container, Loader } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
@@ -9,6 +10,8 @@ import { getPublicSecrets } from '../../api/secret';
 dayjs.extend(relativeTime);
 
 const PublicSecrets = () => {
+    const { t } = useTranslation();
+
     const [secrets, setPublicSecrets] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -54,12 +57,16 @@ const PublicSecrets = () => {
     return (
         <Container>
             <Stack>
+                <Title order={1} size="h2" align="center">
+                    {t('public.heading')}
+                </Title>
+
                 <Group position="left">
                     <Table horizontalSpacing="sm" highlightOnHover>
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Expires</th>
+                                <th>{t('public.title')}</th>
+                                <th>{t('public.expires')}</th>
                             </tr>
                         </thead>
                         <tbody>{rows}</tbody>

@@ -3,7 +3,7 @@
     "sign_out": "Sign out",
     "sign_up": "Sign up",
     "account": "Account",
-    "public_list": "Public secrets",
+    "public_list": "Public pastes",
     "account_settings": "Account settings",
     "instance_settings": "Instance settings",
     "copied": "Copied",
@@ -33,7 +33,7 @@
         "restrict_from_ip": "Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Restrict by IP or CIDR",
         "login_to_upload": "Sign in to upload files",
-        "public_no_upload": "Public secrets do not allow file uploads",
+        "public_no_upload": "Public pastes do not allow file uploads",
         "upload_files": "Upload files",
         "your_secret_url": "Your secret URL",
         "share": "Share",
@@ -58,7 +58,7 @@
         "5_minutes": "5 minutes",
         "successful_share": "Successful share",
         "get_your_secret": "Get your secret at hemmelig.app.",
-        "set_public": "Set as a public secret"
+        "set_public": "Set as a public paste"
     },
     "secret": {
         "view_your_secret": "View your secret",
@@ -91,5 +91,10 @@
         "secrets": "Secrets",
         "secret": "Secret",
         "deleted": "Secret deleted"
+    },
+    "public": {
+        "heading": "Public pastes",
+        "title": "Title",
+        "expires": "Expires"
     }
 }

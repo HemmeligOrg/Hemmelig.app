@@ -40,7 +40,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
-- Public "secrets"
+- Public pastes
 - - These will not be encrypted
 - - Not allowed with file uploads
 - - The IP address will be recorded
