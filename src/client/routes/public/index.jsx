@@ -52,19 +52,21 @@ const PublicSecrets = () => {
     }
 
     return (
-        <Stack>
-            <Group position="left">
-                <Table horizontalSpacing="sm" highlightOnHover>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Expires</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </Table>
-            </Group>
-        </Stack>
+        <Container>
+            <Stack>
+                <Group position="left">
+                    <Table horizontalSpacing="sm" highlightOnHover>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Expires</th>
+                            </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </Table>
+                </Group>
+            </Stack>
+        </Container>
     );
 };
 
