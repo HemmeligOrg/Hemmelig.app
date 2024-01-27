@@ -51,7 +51,6 @@ const Secret = () => {
     const [isDownloaded, setIsDownloaded] = useState([]);
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
-    const [isPublic, setIsPublic] = useState(false);
 
     const fetchSecret = async (event) => {
         event.preventDefault();
