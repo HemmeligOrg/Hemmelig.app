@@ -55,7 +55,8 @@
         "30_minutes": "30 minuten",
         "5_minutes": "5 minuten",
         "successful_share": "Geheim is gedeeld",
-        "get_your_secret": "Vind de geheime informatie op hemmelig.app."
+        "get_your_secret": "Vind de geheime informatie op hemmelig.app.",
+        "set_public": "Als publiek geheim markeren"
     },
     "secret": {
         "view_your_secret": "Bekijk het geheim",
