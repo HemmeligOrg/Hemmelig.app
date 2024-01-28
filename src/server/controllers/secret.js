@@ -243,7 +243,6 @@ async function secret(fastify) {
             id: secret.id,
             expiresAt: secret.expiresAt,
             title: secret.title,
-            data: secret.data,
             createdAt: secret.createdAt,
         }));
     });
