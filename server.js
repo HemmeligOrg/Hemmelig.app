@@ -1,40 +1,41 @@
 // Boot scripts
 import('./src/server/bootstrap.js');
 
-import config from 'config';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { JSDOM } from 'jsdom';
-import importFastify from 'fastify';
-import template from 'y8';
-import helmet from '@fastify/helmet';
-import cors from '@fastify/cors';
-import fstatic from '@fastify/static';
 import cookie from '@fastify/cookie';
+import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
 import jwt from '@fastify/jwt';
-import rateLimit from '@fastify/rate-limit';
+import fstatic from '@fastify/static';
+import config from 'config';
+import importFastify from 'fastify';
+import fs from 'fs';
+import { JSDOM } from 'jsdom';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import template from 'y8';
+
+import rateLimit from './src/server/plugins/rate-limit.js';
 
 import adminDecorator from './src/server/decorators/admin.js';
-import jwtDecorator from './src/server/decorators/jwt.js';
-import userFeatures from './src/server/decorators/user-features.js';
 import allowedIp from './src/server/decorators/allowed-ip.js';
 import attachment from './src/server/decorators/attachment-upload.js';
+import jwtDecorator from './src/server/decorators/jwt.js';
+import userFeatures from './src/server/decorators/user-features.js';
 
 import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
-import readOnlyHandler from './src/server/prehandlers/read-only.js';
-import disableUserHandler from './src/server/prehandlers/disable-users.js';
 import disableUserAccountCreationHandler from './src/server/prehandlers/disable-user-account-creation.js';
+import disableUserHandler from './src/server/prehandlers/disable-users.js';
+import readOnlyHandler from './src/server/prehandlers/read-only.js';
 import restrictOrganizationEmailHandler from './src/server/prehandlers/restrict-organization-email.js';
 
-import usersRoute from './src/server/controllers/admin/users.js';
-import adminSettingsRoute from './src/server/controllers/admin/settings.js';
-import authenticationRoute from './src/server/controllers/authentication.js';
 import accountRoute from './src/server/controllers/account.js';
+import adminSettingsRoute from './src/server/controllers/admin/settings.js';
+import usersRoute from './src/server/controllers/admin/users.js';
+import authenticationRoute from './src/server/controllers/authentication.js';
 import downloadRoute from './src/server/controllers/download.js';
+import healthzRoute from './src/server/controllers/healthz.js';
 import secretRoute from './src/server/controllers/secret.js';
 import statsRoute from './src/server/controllers/stats.js';
-import healthzRoute from './src/server/controllers/healthz.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -45,12 +46,18 @@ const fastify = importFastify({
     bodyLimit: MAX_FILE_BYTES,
 });
 
-// https://github.com/fastify/fastify-rate-limit
 fastify.register(rateLimit, {
+    prefix: '/api/',
+    max: 100,
+    timeWindow: 60 * 1000, // 1 minute
+});
+
+// https://github.com/fastify/fastify-rate-limit
+/*fastify.register(rateLimit, {
     prefix: '/api/',
     max: 10000,
     timeWindow: '1 minute',
-});
+});*/
 
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, {
