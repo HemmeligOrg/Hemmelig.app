@@ -21,6 +21,8 @@ const {
     SECRET_AWS_S3_FOLDER = '',
     SECRET_MAX_TEXT_SIZE = 256, // 256 kb
     SECRET_UPLOAD_RESTRICTION = 'true', // true = only allow uploads from signed in users
+    SECRET_RATE_LIMIT_MAX = 1000,
+    SECRET_RATE_LIMIT_TIME_WINDOW = 60,
     NODE_ENV = 'development',
 } = process.env;
 
@@ -31,6 +33,10 @@ const config = {
     port: SECRET_PORT,
     secret_key: SECRET_MASTER_KEY,
     upload_restriction: JSON.parse(SECRET_UPLOAD_RESTRICTION),
+    rateLimit: {
+        max: Number(SECRET_RATE_LIMIT_MAX),
+        timeWindow: Number(SECRET_RATE_LIMIT_TIME_WINDOW) * 1000,
+    },
     // root account management
     account: {
         root: {

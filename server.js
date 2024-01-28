@@ -48,8 +48,8 @@ const fastify = importFastify({
 
 fastify.register(rateLimit, {
     prefix: '/api/',
-    max: 1000, // x requests
-    timeWindow: 60 * 1000, // 1 minute
+    max: config.get('rateLimit.max'),
+    timeWindow: config.get('rateLimit.timeWindow'),
 });
 
 // https://github.com/fastify/fastify-helmet
