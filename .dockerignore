@@ -3,3 +3,4 @@ node_modules
 example_request_do.log
 bin/
 .git
+hemmelig.backup.db

@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import AdminShell from './admin-shell.jsx';
 import ApplicationShell from './app-shell.jsx';
 
@@ -18,21 +18,29 @@ const Settings = lazy(() => import('./routes/account/settings'));
 const Users = lazy(() => import('./routes/account/users'));
 const UserAccount = lazy(() => import('./routes/account/account'));
 
-const AppRoutes = () => {
-    return (
-        <Routes>
+// loader: https://reactrouter.com/en/main/route/loader
+const appRouter = createBrowserRouter(
+    createRoutesFromElements(
+        <>
             <Route path="/" element={<ApplicationShell />}>
                 <Route index element={<Home />} />
                 <Route path="secret/:encryptionKey/:secretId" element={<Secret />} />
                 <Route path="secret/:secretId" element={<Secret />} />
-                <Route path="public" element={<PublicSecrets />} />
+                <Route
+                    element={<PublicSecrets />}
+                    path="public"
+                    loader={async () => {
+                        const { getPublicSecrets } = await import('./api/secret');
+
+                        return await getPublicSecrets();
+                    }}
+                />
                 <Route path="signin" element={<SignIn />} />
                 <Route path="signup" element={<SignUp />} />
                 <Route path="signout" element={<SignOut />} />
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="terms" element={<Terms />} />
             </Route>
-
             <Route path="/account" element={<AdminShell />}>
                 <Route index element={<Account />} />
                 <Route path="account" element={<Account />} />
@@ -43,8 +51,8 @@ const AppRoutes = () => {
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="terms" element={<Terms />} />
             </Route>
-        </Routes>
-    );
-};
+        </>
+    )
+);
 
-export default AppRoutes;
+export default appRouter;

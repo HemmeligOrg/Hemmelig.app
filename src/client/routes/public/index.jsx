@@ -1,29 +1,15 @@
-import { Anchor, Container, Group, Loader, Stack, Table, Title } from '@mantine/core';
+import { Anchor, Container, Group, Stack, Table, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-
-import { getPublicSecrets } from '../../api/secret';
+import { Link, useLoaderData } from 'react-router-dom';
 
 dayjs.extend(relativeTime);
 
 const PublicSecrets = () => {
     const { t } = useTranslation();
 
-    const [secrets, setPublicSecrets] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        (async () => {
-            const secrets = await getPublicSecrets();
-
-            setPublicSecrets(secrets);
-
-            setIsLoading(false);
-        })();
-    }, []);
+    const secrets = useLoaderData();
 
     const getTime = (expiresAt) => {
         return dayjs().to(dayjs(expiresAt));
@@ -45,14 +31,6 @@ const PublicSecrets = () => {
             <td>{getTime(secret.expiresAt)}</td>
         </tr>
     ));
-
-    if (isLoading) {
-        return (
-            <Container>
-                <Loader color="teal" variant="bars" />
-            </Container>
-        );
-    }
 
     return (
         <Container>

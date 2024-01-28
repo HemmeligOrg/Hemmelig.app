@@ -6,3 +6,4 @@ config/
 public/
 .github/
 tests/
+hemmelig.backup.db

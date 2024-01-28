@@ -236,7 +236,7 @@ async function secret(fastify) {
         });
 
         if (!data?.length) {
-            return reply.code(404).send({ error: 'Public pastes not found' });
+            return reply.code(204).send([]);
         }
 
         return data.map((secret) => ({

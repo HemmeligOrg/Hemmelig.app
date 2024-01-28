@@ -122,3 +122,4 @@ prisma_test.js
 database/
 data/
 .vscode
+hemmelig.backup.db
