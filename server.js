@@ -52,13 +52,6 @@ fastify.register(rateLimit, {
     timeWindow: 60 * 1000, // 1 minute
 });
 
-// https://github.com/fastify/fastify-rate-limit
-/*fastify.register(rateLimit, {
-    prefix: '/api/',
-    max: 10000,
-    timeWindow: '1 minute',
-});*/
-
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, {
     contentSecurityPolicy: {
