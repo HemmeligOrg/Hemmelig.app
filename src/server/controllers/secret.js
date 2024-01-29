@@ -238,7 +238,7 @@ async function secret(fastify) {
         const where = { isPublic: true };
 
         if (username && !validUsername.test(username)) {
-            return reply.code(403).send({ error: 'Not a valid username' });
+            return reply.code(403).send([]);
         } else {
             where.user = { username };
         }
