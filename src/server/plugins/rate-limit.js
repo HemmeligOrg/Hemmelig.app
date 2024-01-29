@@ -14,7 +14,7 @@ const defaultOptions = {
 // Refactor the code into a class
 // and make a redis adapter for it
 export default fp((fastify, options = {}, done) => {
-    const settings = Object.assign({}, defaultOptions, options);
+    const settings = { ...defaultOptions, ...options };
 
     fastify.decorate('rateLimit', async (req, res) => {
         if (!req.url.startsWith(settings.prefix)) {
