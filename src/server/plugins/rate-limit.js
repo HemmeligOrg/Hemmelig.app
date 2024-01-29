@@ -13,9 +13,11 @@ const defaultOptions = {
 // and publish it on NPM
 // Refactor the code into a class
 // and make a redis adapter for it
-export default fp(function (fastify, opts = defaultOptions, done) {
+export default fp(function (fastify, options = {}, done) {
+    const settings = Object.assign({}, defaultOptions, options);
+
     fastify.decorate('rateLimit', async (req, res) => {
-        if (!req.url.startsWith(opts.prefix)) {
+        if (!req.url.startsWith(settings.prefix)) {
             done();
         }
 
@@ -27,7 +29,7 @@ export default fp(function (fastify, opts = defaultOptions, done) {
         if (!store.has(key) || currentTime > store.get(key)?.reset) {
             store.set(key, {
                 count: 0,
-                reset: currentTime + opts.timeWindow,
+                reset: currentTime + settings.timeWindow,
             });
         }
 
@@ -36,14 +38,14 @@ export default fp(function (fastify, opts = defaultOptions, done) {
 
         const resetTime = Math.floor((current.reset - currentTime) / 1000);
 
-        if (current.count > opts.max && currentTime <= current.reset) {
+        if (current.count > settings.max && currentTime <= current.reset) {
             res.header('X-RateLimit-Reset', resetTime);
 
             return res.code(429).send({ message: 'Too many requests, please try again later.' });
         }
 
-        res.header('X-RateLimit-Limit', opts.max);
-        res.header('X-RateLimit-Remaining', opts.max - current.count);
+        res.header('X-RateLimit-Limit', settings.max);
+        res.header('X-RateLimit-Remaining', settings.max - current.count);
         res.header('X-RateLimit-Reset', resetTime);
     });
 
