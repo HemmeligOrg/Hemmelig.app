@@ -119,29 +119,31 @@ npx hemmelig --help
 
 ## Environment variables
 
-| ENV vars                      | Description                                                           | Default              |
-| ------------------------------|:---------------------------------------------------------------------:| --------------------:|
-| `SECRET_LOCAL_HOSTNAME`       | The local hostname for the fastify instance                           | 0.0.0.0              |
-| `SECRET_PORT`                 | The port number for the fastify instance                              | 3000                 |
-| `SECRET_HOST`                 | Used for i.e. set cors/cookies to your domain name                    | ""                   |
-| `SECRET_MAX_TEXT_SIZE`        | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                  |
-| `SECRET_JWT_SECRET`           | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
-| `SECRET_ROOT_USER`            | Override this for the root account username                           | groot                |
-| `SECRET_ROOT_PASSWORD`        | This is the root password, override it with your own password         | iamgroot             |
-| `SECRET_ROOT_EMAIL`           | This is the root email, override it with your own email               | groot@hemmelig.app   |
-| `SECRET_FILE_SIZE`            | Set the total allowed upload file size in mb.                         | 4                    |
-| `SECRET_FORCED_LANGUAGE`      | Set the default language for the application.                         | en                   |
-| `SECRET_UPLOAD_RESTRICTION`   | Set the restriction for uploads to signed in users                    | "true"               |
-| `SECRET_DO_SPACES_ENDPOINT`   | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                   |
-| `SECRET_DO_SPACES_KEY`        | The Digital Ocean Spaces/AWS s3 key                                   | ""                   |
-| `SECRET_DO_SPACES_SECRET`     | The Digital Ocean Spaces/AWS s3 secret                                | ""                   |
-| `SECRET_DO_SPACES_BUCKET`     | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                   |
-| `SECRET_DO_SPACES_FOLDER`     | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                   |
-| `SECRET_AWS_S3_REGION`        | The Digital AWS s3 region                                             | ""                   |
-| `SECRET_AWS_S3_KEY`           | The Digital AWS s3 key                                                | ""                   |
-| `SECRET_AWS_S3_SECRET`        | The Digital AWS s3 secret                                             | ""                   |
-| `SECRET_AWS_S3_BUCKET`        | The Digital AWS s3 bucket name                                        | ""                   |
-| `SECRET_AWS_S3_FOLDER`        | The Digital AWS s3 folder for the uploaded files                      | ""                   |
+| ENV vars                        | Description                                                           | Default              |
+| --------------------------------|:---------------------------------------------------------------------:| --------------------:|
+| `SECRET_LOCAL_HOSTNAME`         | The local hostname for the fastify instance                           | 0.0.0.0              |
+| `SECRET_PORT`                   | The port number for the fastify instance                              | 3000                 |
+| `SECRET_HOST`                   | Used for i.e. set cors/cookies to your domain name                    | ""                   |
+| `SECRET_MAX_TEXT_SIZE`          | The max text size for the secret. Is set in kb. i.e. 256 for 256kb.   | 256                  |
+| `SECRET_JWT_SECRET`             | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
+| `SECRET_ROOT_USER`              | Override this for the root account username                           | groot                |
+| `SECRET_ROOT_PASSWORD`          | This is the root password, override it with your own password         | iamgroot             |
+| `SECRET_ROOT_EMAIL`             | This is the root email, override it with your own email               | groot@hemmelig.app   |
+| `SECRET_FILE_SIZE`              | Set the total allowed upload file size in mb.                         | 4                    |
+| `SECRET_FORCED_LANGUAGE`        | Set the default language for the application.                         | en                   |
+| `SECRET_UPLOAD_RESTRICTION`     | Set the restriction for uploads to signed in users                    | "true"               |
+| `SECRET_RATE_LIMIT_MAX`         | The maximum allowed requests each time frame                          | 1000                 |
+| `SECRET_RATE_LIMIT_TIME_WINDOW` | The time window for the requests before being rate limited in seconds | 60                   |
+| `SECRET_DO_SPACES_ENDPOINT`     | The Digital Ocean Spaces/AWS s3 endpoint                              | ""                   |
+| `SECRET_DO_SPACES_KEY`          | The Digital Ocean Spaces/AWS s3 key                                   | ""                   |
+| `SECRET_DO_SPACES_SECRET`       | The Digital Ocean Spaces/AWS s3 secret                                | ""                   |
+| `SECRET_DO_SPACES_BUCKET`       | The Digital Ocean Spaces/AWS s3 bucket name                           | ""                   |
+| `SECRET_DO_SPACES_FOLDER`       | The Digital Ocean Spaces/AWS s3 folder for the uploaded files         | ""                   |
+| `SECRET_AWS_S3_REGION`          | The Digital AWS s3 region                                             | ""                   |
+| `SECRET_AWS_S3_KEY`             | The Digital AWS s3 key                                                | ""                   |
+| `SECRET_AWS_S3_SECRET`          | The Digital AWS s3 secret                                             | ""                   |
+| `SECRET_AWS_S3_BUCKET`          | The Digital AWS s3 bucket name                                        | ""                   |
+| `SECRET_AWS_S3_FOLDER`          | The Digital AWS s3 folder for the uploaded files                      | ""                   |
 
 ## Supported languages
 
