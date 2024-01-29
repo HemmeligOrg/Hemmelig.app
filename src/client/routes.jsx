@@ -35,6 +35,15 @@ const appRouter = createBrowserRouter(
                         return await getPublicSecrets();
                     }}
                 />
+                <Route
+                    element={<PublicSecrets />}
+                    path="public/:username"
+                    loader={async ({ params }) => {
+                        const { getPublicSecrets } = await import('./api/secret');
+
+                        return await getPublicSecrets(params?.username);
+                    }}
+                />
                 <Route path="signin" element={<SignIn />} />
                 <Route path="signup" element={<SignUp />} />
                 <Route path="signout" element={<SignOut />} />

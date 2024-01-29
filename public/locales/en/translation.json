@@ -95,6 +95,8 @@
     "public": {
         "heading": "Public pastes",
         "title": "Title",
-        "expires": "Expires"
+        "expires": "Expires",
+        "username": "Username",
+        "of": "of"
     }
 }

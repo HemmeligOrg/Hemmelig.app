@@ -4,7 +4,7 @@ import prisma from '../services/prisma.js';
 
 import { compare, hash } from '../helpers/password.js';
 
-const validUsername = /^[A-Za-z0-9_-]*$/is;
+export const validUsername = /^(?=.*[a-z])[a-z0-9]+$/is;
 
 const PASSWORD_LENGTH = 5;
 const USERNAME_LENGTH = 4;

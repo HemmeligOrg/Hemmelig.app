@@ -2,7 +2,7 @@ import { Anchor, Container, Group, Stack, Table, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useTranslation } from 'react-i18next';
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData, useParams } from 'react-router-dom';
 
 dayjs.extend(relativeTime);
 
@@ -10,7 +10,8 @@ const PublicSecrets = () => {
     const { t } = useTranslation();
 
     const secrets = useLoaderData();
-
+    const { username = '' } = useParams();
+    console.log('username', username);
     const getTime = (expiresAt) => {
         return dayjs().to(dayjs(expiresAt));
     };
@@ -28,6 +29,15 @@ const PublicSecrets = () => {
                         : secret.title) || secret.id}
                 </Anchor>
             </td>
+            <td>
+                <Anchor
+                    color="gray"
+                    component={Link}
+                    to={`/public/${secret.user?.username ?? 1337}`}
+                >
+                    {secret.user?.username ?? 'Anonymous'}
+                </Anchor>
+            </td>
             <td>{getTime(secret.expiresAt)}</td>
         </tr>
     ));
@@ -36,7 +46,7 @@ const PublicSecrets = () => {
         <Container>
             <Stack>
                 <Title order={1} size="h2" align="center">
-                    {t('public.heading')}
+                    {t('public.heading')} {username && `${t('public.of')} ${username}`}
                 </Title>
 
                 <Group position="left">
@@ -45,6 +55,7 @@ const PublicSecrets = () => {
                             <tr>
                                 <th>{t('public.title')}</th>
                                 <th>{t('public.expires')}</th>
+                                <th>{t('public.username')}</th>
                             </tr>
                         </thead>
                         <tbody>{rows}</tbody>

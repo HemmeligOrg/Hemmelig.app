@@ -4,6 +4,7 @@ import validator from 'validator';
 import getClientIp from '../helpers/client-ip.js';
 import { compare, hash } from '../helpers/password.js';
 import prisma from '../services/prisma.js';
+import { validUsername } from './authentication.js';
 
 import { isValidSecretId } from '../helpers/regexp.js';
 
@@ -108,9 +109,14 @@ async function secret(fastify) {
                 include: { files: true },
             });
 
-            return reply
-                .code(200)
-                .send(secrets.map((secret) => ({ id: secret.id, expiresAt: secret.expiresAt })));
+            return reply.code(200).send(
+                secrets.map((secret) => ({
+                    id: secret.id,
+                    expiresAt: secret.expiresAt,
+                    isPublic: secret.isPublic,
+                    title: secret.title,
+                }))
+            );
         }
     );
 
@@ -226,26 +232,45 @@ async function secret(fastify) {
         return { id, maxViews: data.maxViews };
     });
 
-    fastify.get('/public', async (_, reply) => {
+    async function getPublicRoute(request, reply) {
+        const { username } = request.params;
+
+        const where = { isPublic: true };
+
+        if (username && !validUsername.test(username)) {
+            return reply.code(403).send({ error: 'Not a valid username' });
+        } else {
+            where.user = { username };
+        }
+
         const data = await prisma.secret.findMany({
-            where: { isPublic: true },
+            where,
             orderBy: {
                 createdAt: 'desc',
             },
             take: 100,
+            select: {
+                id: true,
+                expiresAt: true,
+                title: true,
+                createdAt: true,
+                user: {
+                    select: {
+                        username: true,
+                    },
+                },
+            },
         });
 
         if (!data?.length) {
             return reply.code(204).send([]);
         }
 
-        return data.map((secret) => ({
-            id: secret.id,
-            expiresAt: secret.expiresAt,
-            title: secret.title,
-            createdAt: secret.createdAt,
-        }));
-    });
+        return data;
+    }
+
+    fastify.get('/public/', getPublicRoute);
+    fastify.get('/public/:username', getPublicRoute);
 }
 
 export default secret;
