@@ -59,8 +59,8 @@ export const getSecrets = async () => {
     return data.json();
 };
 
-export const getPublicSecrets = async () => {
-    const data = await fetch(`${config.get('api.host')}/secret/public`, {
+export const getPublicSecrets = async (username = '') => {
+    const data = await fetch(`${config.get('api.host')}/secret/public/${username}`, {
         method: 'GET',
         cache: 'no-cache',
         headers: {

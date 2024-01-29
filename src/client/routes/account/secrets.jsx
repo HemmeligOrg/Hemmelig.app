@@ -107,8 +107,9 @@ const Secrets = () => {
 
     const rows = secrets.map((secret) => (
         <tr key={secret.id}>
-            <td>{secret.id}</td>
+            <td>{secret.isPublic ? secret.title : secret.id}</td>
             <td>{getTime(secret.expiresAt)}</td>
+            <td>{secret.isPublic ? 'Yes' : 'No'}</td>
             <td>
                 <ActionIcon variant="filled" onClick={() => openDeleteModal(secret)}>
                     <IconTrash size="1rem" />
@@ -143,6 +144,7 @@ const Secrets = () => {
                         <tr>
                             <th>Id</th>
                             <th>Expires</th>
+                            <th>Public</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
