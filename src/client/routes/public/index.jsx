@@ -11,7 +11,7 @@ const PublicSecrets = () => {
 
     const secrets = useLoaderData();
     const { username = '' } = useParams();
-    console.log('username', username);
+
     const getTime = (expiresAt) => {
         return dayjs().to(dayjs(expiresAt));
     };
