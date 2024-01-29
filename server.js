@@ -158,7 +158,7 @@ if (!isDev) {
     fastify.get('/signout', serveIndex);
     fastify.get('/account*', serveIndex);
     fastify.get('/terms', serveIndex);
-    fastify.get('/public', serveIndex);
+    fastify.get('/public*', serveIndex);
 }
 
 const startServer = async () => {
