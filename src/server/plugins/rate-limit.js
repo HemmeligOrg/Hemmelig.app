@@ -18,7 +18,7 @@ export default fp((fastify, options = {}, done) => {
 
     fastify.decorate('rateLimit', async (req, res) => {
         if (!req.url.startsWith(settings.prefix)) {
-            done();
+            return;
         }
 
         const ip = getClientIp(req.headers);
