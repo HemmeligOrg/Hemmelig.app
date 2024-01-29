@@ -13,7 +13,7 @@ const defaultOptions = {
 // and publish it on NPM
 // Refactor the code into a class
 // and make a redis adapter for it
-export default fp(function (fastify, options = {}, done) {
+export default fp((fastify, options = {}, done) => {
     const settings = Object.assign({}, defaultOptions, options);
 
     fastify.decorate('rateLimit', async (req, res) => {
