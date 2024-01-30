@@ -6,7 +6,7 @@
   <img src="banner.png" alt="hemmelig" />
 </div>
 
-<h1 align="center">Free encrypted secret sharing for everyone!</h1>
+<h1 align="center">Encrypted secret sharing for everyone!</h1>
 
 <div align="center">
   This application is designed for sharing encrypted information across organizations or among private individuals. Hemmelig places a high priority on safeguarding your privacy and will make every effort to maintain it. We trust you will find value in using our product.
@@ -21,7 +21,7 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 ## How it works
 
 You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique encryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA, YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
+When a secret link is created, it gets its unique decryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA, YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
 
 ## Features
 
@@ -35,8 +35,10 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - Optional password protection
 - Optional IP address restriction
 - QR Code of the secret link
-- Encrypted key is part of the URL, and not saved to the database for an extra layer of security
-- It will detect if the secret is base64 encoded, and add a button to convert it to plain text on read
+- Decrypted key is part of the URL, and not saved to the database for an extra layer of security
+- Possible to send the secret with the decryption key separately
+- Convert the secret to base64 on read
+- Rate limited API
 - Self-hosted version. Keywords: Regulatory compliance
 - CLI Support
 - Using Prisma with SQLite
@@ -44,6 +46,7 @@ When a secret link is created, it gets its unique encryption key that is not sav
 - - These will not be encrypted
 - - Not allowed with file uploads
 - - The IP address will be recorded
+- - List public pastes based on username
 - User account
 - - Expiration time upgraded to 14 and 28 days
 - - File upload
@@ -66,7 +69,7 @@ Hemmelig strongly advice you to ue the tagged docker images as the main branch w
 Supported docker platforms: `amd/64`, `arm/64`. 
 
 - hemmeligapp/hemmelig:latest (Is created on each version release)
-- hemmeligapp/hemmelig:v5.11.3 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
+- hemmeligapp/hemmelig:v5.19.4 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:daily
 
@@ -81,7 +84,7 @@ chown 1000:1000 data/hemmelig database
 docker run -p 3000:3000 -d --name=hemmelig \
    -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \ # For the file uploads
    -v ./database/:/home/node/hemmelig/database/ \       # For the sqlite database
-   hemmeligapp/hemmelig:v5.11.3
+   hemmeligapp/hemmelig:v5.19.4
 ```
 
 Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
