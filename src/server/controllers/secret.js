@@ -239,8 +239,12 @@ async function secret(fastify) {
 
         if (username && !validUsername.test(username)) {
             return reply.code(403).send([]);
-        } else {
-            where.user = { username };
+        }
+
+        if (username) {
+            where.user = {
+                username,
+            };
         }
 
         const data = await prisma.secret.findMany({
@@ -261,10 +265,6 @@ async function secret(fastify) {
                 },
             },
         });
-
-        if (!data?.length) {
-            return reply.code(204).send([]);
-        }
 
         return data;
     }

@@ -54,8 +54,8 @@ const PublicSecrets = () => {
                         <thead>
                             <tr>
                                 <th>{t('public.title')}</th>
-                                <th>{t('public.expires')}</th>
                                 <th>{t('public.username')}</th>
+                                <th>{t('public.expires')}</th>
                             </tr>
                         </thead>
                         <tbody>{rows}</tbody>
