@@ -35,8 +35,8 @@ When a secret link is created, it gets its unique decryption key that is not sav
 - Optional password protection
 - Optional IP address restriction
 - QR Code of the secret link
-- Decrypted key is part of the URL, and not saved to the database for an extra layer of security
-- Possible to send the secret with the decryption key separately
+- Decryption key is part of the URL, and not saved to the database for an extra layer of security
+- Possible to send the secret link and the decryption key separately
 - Convert the secret to base64 on read
 - Rate limited API
 - Self-hosted version. Keywords: Regulatory compliance
