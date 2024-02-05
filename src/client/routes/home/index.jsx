@@ -26,6 +26,7 @@ import {
     IconLink,
     IconLock,
     IconLockAccess,
+    IconQuestionMark,
     IconShare,
     IconShieldLock,
     IconSquarePlus,
@@ -72,6 +73,7 @@ const Home = () => {
     const [creatingSecret, setCreatingSecret] = useState(false);
     const [error, setError] = useState('');
     const [isPublic, setIsPublic] = useState(false);
+    const [togglePublicTooltip, setTogglePublicTooltip] = useState(false);
 
     const secretRef = useRef(null);
 
@@ -398,14 +400,33 @@ const Home = () => {
                     </Group>
 
                     <Group grow>
-                        <Checkbox
-                            styles={groupMobileStyle}
-                            checked={isPublic}
-                            onChange={onSetPublic}
-                            readOnly={inputReadOnly}
-                            color="hemmelig"
-                            label={t('home.set_public')}
-                        />
+                        <Group>
+                            <Checkbox
+                                styles={groupMobileStyle}
+                                checked={isPublic}
+                                onChange={onSetPublic}
+                                readOnly={inputReadOnly}
+                                color="hemmelig"
+                                label={t('home.set_public')}
+                            />
+                            <Tooltip
+                                multiline
+                                withArrow
+                                w={220}
+                                transitionProps={{ duration: 200 }}
+                                label={t('home.what_is_public')}
+                                opened={togglePublicTooltip}
+                            >
+                                <ActionIcon
+                                    variant="outline"
+                                    color="gray"
+                                    size="sm"
+                                    onClick={() => setTogglePublicTooltip((open) => !open)}
+                                >
+                                    <IconQuestionMark />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group>
 
                         <FileButton
                             disabled={disableFileUpload}
