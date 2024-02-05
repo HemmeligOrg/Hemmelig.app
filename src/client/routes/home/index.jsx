@@ -325,10 +325,10 @@ const Home = () => {
                         />
 
                         <NumberInput
-                            defaultValue={1}
-                            min={1}
+                            defaultValue={2}
+                            min={2}
                             max={999}
-                            placeholder="1"
+                            placeholder="2"
                             label={t('home.max_views')}
                             {...form.getInputProps('maxViews')}
                         />
