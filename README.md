@@ -180,9 +180,6 @@ The difference here is that if you i.e. set Hemmelig to be in read only mode, on
 Admins are also allowed to create new users in the settings. This is great if you want to limit who your users are by the `disable user account creation` setting.
 
 
-## Discord
-[Discord](https://discord.gg/NUkvtKdjs7)
-
 ## My lovely contributors
 <a href="https://github.com/HemmeligOrg/Hemmelig.app/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=HemmeligOrg/Hemmelig.app" />
