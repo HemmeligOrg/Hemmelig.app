@@ -1,0 +1,102 @@
+{
+    "sign_in": "Accedi",
+    "sign_out": "Esci",
+    "sign_up": "Registrati",
+    "account": "Profilo",
+    "public_list": "Note pubbliche",
+    "account_settings": "Impostazioni profilo",
+    "instance_settings": "Impostazioni istanza",
+    "copied": "Copiato",
+    "copy": "Copia",
+    "header": {
+        "nav": {
+            "close": "Chiudi navigazione",
+            "open": "Apri navigazione"
+        },
+        "session": {
+            "auth": "Autenticazione",
+            "expire": "La tua sessione sta scadendo. Vuoi estenderla?",
+            "update": "Aggiorna sessione"
+        }
+    },
+    "home": {
+        "app_subtitle": "Incolla una password, un messaggio confidenziale o dati privati.",
+        "welcome": "Assicurati che i tuoi dati sensibili rimangano cifrati, sicuri e confidenziali.",
+        "bummer": "Bum!",
+        "maintxtarea": "Scrivi le informazioni sensibili...",
+        "title": "Titolo",
+        "lifetime": "Durata",
+        "max_views": "Visualizzazioni massime",
+        "enable_password": "Abilita password",
+        "optional_password": "La tua password (facoltativa)",
+        "burn_aftertime": "Distruggi l'informazione solo dopo la durata impostata",
+        "restrict_from_ip": "Limita l'apertura dell'informazione in base all'IP o un intervallo CIDR. Esempio di CIDR: 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Limita per IP o CIDR",
+        "login_to_upload": "Accedi per caricare file",
+        "public_no_upload": "Non puoi caricare file",
+        "upload_files": "Carica file",
+        "your_secret_url": "Indirizzo segreto delle tue informazioni",
+        "share": "Condividi",
+        "create_secret_link": "Genera un indirizzo segreto",
+        "or": "Separa l'indirizzo e la chiave di decifratura",
+        "secret_url": "URL segreto senza chiave di decifratura",
+        "decryption_key": "Chiave di decifratura",
+        "create_new": "Crea nuovo",
+        "delete": "Elimina",
+        "link_only_works_once": "L'indirizzo segreto, per impostazione predefinita, è utilizzabile una sola volta, poi si auto-distruggerà.",
+        "app_name_meaning": "[he`m:(ə)li], significa segreto in Norvegese.",
+        "please_add_secret": "Aggiungi un segreto.",
+        "14_days": "14 giorni",
+        "28_days": "28 giorni",
+        "7_days": "7 giorni",
+        "3_days": "3 giorni",
+        "1_day": "1 giorno",
+        "12_hours": "12 ore",
+        "4_hours": "4 ore",
+        "1_hour": "1 ora",
+        "30_minutes": "30 minuti",
+        "5_minutes": "5 minuti",
+        "successful_share": "Condivisione riuscita",
+        "get_your_secret": "Ottieni il tuo segreto a hemmelig.app.",
+        "set_public": "Imposta come nota pubblica"
+    },
+    "secret": {
+        "view_your_secret": "Visualizza i tuoi dati segreti",
+        "will_show_once": "Per impostazione predefinita visualizzeremo il segreto solo una volta.",
+        "views_left": "Visualizzazioni rimaste:",
+        "password_required": "E' richiesta una password per aprire questo segreto",
+        "view_secret": "Visualizza dati segreti",
+        "create_secret": "Crea un nuovo segreto",
+        "convert_b64": "Converti testo in base64",
+        "convert_utf8": "Converti base64 in testo"
+    },
+    "settings": {
+        "success": "Salvataggio completato",
+        "description": "Aggiorna lo stato dell'istanza Hemmelig",
+        "updated": "Impostazioni aggiornate",
+        "update": "Aggiorna impostazioni",
+        "deleted": "Profilo eliminato"
+    },
+    "users": {
+        "users": "Utenti",
+        "edit": "Modifica",
+        "update": "Aggiorna utente",
+        "add": "Aggiungi utente",
+        "saved": "Salvato",
+        "save": "Salva",
+        "more": "Carica altro",
+        "deleted": "Utente eliminato"
+    },
+    "secrets": {
+        "secrets": "Segreti",
+        "secret": "Segreti",
+        "deleted": "Segreto eliminato"
+    },
+    "public": {
+        "heading": "Note pubbliche",
+        "title": "Titolo",
+        "expires": "Scadenza",
+        "username": "Nome utente",
+        "of": "di"
+    }
+}
