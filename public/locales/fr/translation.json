@@ -1,0 +1,102 @@
+{
+    "sign_in": "Se connecter",
+    "sign_out": "Se déconnecter",
+    "sign_up": "S'enregistrer",
+    "account": "Compte",
+    "public_list": "Partages publics",
+    "account_settings": "Paramètres du compte",
+    "instance_settings": "Paramètres de l'instance",
+    "copied": "Copié",
+    "copy": "Copier",
+    "header": {
+        "nav": {
+            "close": "Fermer la navigation",
+            "open": "Ouvrir la navigation"
+        },
+        "session": {
+            "auth": "Authentification",
+            "expire": "Votre session va expirer, voulez-vous la renouveler ?",
+            "update": "Renouveler la session"
+        }
+    },
+    "home": {
+        "app_subtitle": "Collez un mot de passe, un message confidentiel ou des données privées.",
+        "welcome": "Garantir que vos données sensibles restent cryptées, sécurisées et confidentielles.",
+        "bummer": "C'est dommage !",
+        "maintxtarea": "Inscrivez vos informations sensibles..",
+        "title": "Titre",
+        "lifetime": "Temps de vie",
+        "max_views": "Visionnages max",
+        "enable_password": "Activer le mot de passe",
+        "optional_password": "Votre mot de passe (optionnel)",
+        "burn_aftertime": "Détruire le secret seulement après l'expiration du délai",
+        "restrict_from_ip": "Restreindre l'ouverture du secret sur la base d'une IP ou d'une plage CIDR. Exemple CIDR : 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Restreindre par IP ou CIDR",
+        "login_to_upload": "S'identifier pour télécharger des fichiers",
+        "public_no_upload": "Les secrets publics ne permettent pas le téléchargement de fichiers",
+        "upload_files": "Charger des fichiers",
+        "your_secret_url": "Votre URL secrète",
+        "share": "Partager",
+        "create_secret_link": "Créer un lien secret",
+        "or": "Séparer le lien et la clé de déchiffrement",
+        "secret_url": "URL secrète sans clé de déchiffrement",
+        "decryption_key": "Clé de déchiffrement",
+        "create_new": "Créer un nouveau",
+        "delete": "Supprimer",
+        "link_only_works_once": "Le lien secret, par défaut, ne peut être utilisé qu'une seule fois, après quoi il disparaîtra.",
+        "app_name_meaning": "[he`m :(ə)li], signifie secret en norvégien.",
+        "please_add_secret": "Veuillez ajouter un secret.",
+        "14_days": "14 jours",
+        "28_days": "28 jours",
+        "7_days": "7 jours",
+        "3_days": "3 jours",
+        "1_day": "1 jour",
+        "12_hours": "12 heures",
+        "4_hours": "4 heures",
+        "1_hour": "1 heure",
+        "30_minutes": "30 minutes",
+        "5_minutes": "5 minutes",
+        "successful_share": "Action réussie",
+        "get_your_secret": "Obtenez votre secret à hemmelig.app.",
+        "set_public": "Définir comme publique"
+    },
+    "secret": {
+        "view_your_secret": "Afficher votre secret",
+        "will_show_once": "Par défaut, le secret n'est affiché qu'une seule fois.",
+        "views_left": "Affichages restants:",
+        "password_required": "Un mot de passe est nécessaire pour ouvrir ce secret",
+        "view_secret": "Voir le secret",
+        "create_secret": "Créer un nouveau secret",
+        "convert_b64": "Convertir le texte en base64",
+        "convert_utf8": "Convertir base64 en texte"
+    },
+    "settings": {
+        "success": "Succès",
+        "description": "Mise à jour de l'état de l'instance Hemmelig",
+        "updated": "Mise à jour des paramètres",
+        "update": "Mise à jour des paramètres",
+        "deleted": "Compte supprimé"
+    },
+    "users": {
+        "users": "Utilisateurs",
+        "edit": "Modifier",
+        "update": "Actualiser l'utilisateur",
+        "add": "Ajouter un utilisateur",
+        "saved": "Sauvegardé",
+        "save": "Sauvegarder",
+        "more": "Charger plus",
+        "deleted": "Utilisateur supprimé"
+    },
+    "secrets": {
+        "secrets": "Secrets",
+        "secret": "Secret",
+        "deleted": "Secret supprimé"
+    },
+    "public": {
+        "heading": "Secrets publics",
+        "title": "Titre",
+        "expires": "Expire",
+        "username": "Nom d'utilisateur",
+        "of": "de"
+    }
+}
