@@ -58,7 +58,8 @@
         "5_minutes": "5 minutes",
         "successful_share": "Successful share",
         "get_your_secret": "Get your secret at hemmelig.app.",
-        "set_public": "Set as a public paste"
+        "set_public": "Set as a public paste",
+        "what_is_public": "A public paste is a paste that is visible to everyone. You can find all the public pastes at hemmelig.app/public, or in the menu."
     },
     "secret": {
         "view_your_secret": "View your secret",
