@@ -40,7 +40,7 @@ const Account = () => {
         },
         validate: {
             confirmNewPassword: (value, values) =>
-                value !== values.newPassword ? 'Passwords did not match' : null,
+                value !== values.newPassword ? t('account.account.passwords_does_not_match') : null,
         },
     });
 
@@ -50,7 +50,7 @@ const Account = () => {
                 const userInfo = await getUser();
 
                 if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-                    setUserError(userInfo.error ? userInfo.error : 'Not logged in');
+                    setUserError(userInfo.error ? userInfo.error : t('not_logged_in'));
 
                     return;
                 }
@@ -77,7 +77,7 @@ const Account = () => {
                 setError(
                     updatedUserInfo.error
                         ? updatedUserInfo.error
-                        : 'Could not update your user profile'
+                        : t('account.account.can_not_update_profile')
                 );
 
                 return;
@@ -114,7 +114,9 @@ const Account = () => {
 
             if (deletedUserInfo.error || [401, 500].includes(deletedUserInfo.statusCode)) {
                 setError(
-                    deletedUserInfo.error ? deletedUserInfo.error : 'Could not delete the user'
+                    deletedUserInfo.error
+                        ? deletedUserInfo.error
+                        : t('account.account.can_not_delete')
                 );
 
                 return;
@@ -134,10 +136,13 @@ const Account = () => {
 
     const openDeleteModal = () =>
         openConfirmModal({
-            title: 'Delete your profile',
+            title: t('account.accounts.delete_account'),
             centered: true,
-            children: <Text size="sm">Are you sure you want to delete your profile?</Text>,
-            labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+            children: <Text size="sm">{t('account.account.do_you_want_delete')}</Text>,
+            labels: {
+                confirm: t('account.account.delete_account'),
+                cancel: t('account.account.dont_delete_account'),
+            },
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteUser(),
         });
@@ -170,30 +175,30 @@ const Account = () => {
             <Group position="right" grow>
                 <Stack className={style.width}>
                     <TextInput
-                        label="Email"
+                        label={t('account.account.email')}
                         icon={<IconAt size={14} />}
-                        placeholder="Email"
+                        placeholder={t('account.account.email')}
                         {...form.getInputProps('email')}
                     />
 
                     <PasswordInput
-                        label="Current password"
+                        label={t('account.account.your_password')}
                         icon={<IconLock size={14} />}
-                        placeholder="Your current password"
+                        placeholder={t('account.account.current_password')}
                         {...form.getInputProps('currentPassword')}
                     />
 
                     <PasswordInput
-                        label="New password"
+                        label={t('account.account.new_password')}
                         icon={<IconLock size={14} />}
-                        placeholder="Update your password"
+                        placeholder={t('account.account.update_your_password')}
                         {...form.getInputProps('newPassword')}
                     />
 
                     <PasswordInput
-                        label="Confirm Password"
+                        label={t('account.account.confirm_password')}
                         icon={<IconLock size={14} />}
-                        placeholder="Confirm your new password"
+                        placeholder={t('account.account.confirm_new_password')}
                         {...form.getInputProps('confirmNewPassword')}
                     />
                 </Stack>
@@ -206,7 +211,7 @@ const Account = () => {
                     onClick={openDeleteModal}
                     leftIcon={<IconTrash size={14} />}
                 >
-                    Delete profile
+                    {t('account.account.delete_account')}
                 </Button>
 
                 <Button
@@ -214,7 +219,7 @@ const Account = () => {
                     onClick={onProfileUpdate}
                     color="hemmelig"
                 >
-                    Update details
+                    {t('account.account.update_details')}
                 </Button>
             </Group>
         </Stack>

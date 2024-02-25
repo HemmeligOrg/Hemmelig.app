@@ -51,7 +51,7 @@ const Secrets = () => {
                 const secrets = await getSecrets();
 
                 if (secrets.error || [401, 500].includes(secrets.statusCode)) {
-                    setUserError(secrets.error ? secrets.error : 'Not logged in');
+                    setUserError(secrets.error ? secrets.error : t('not_logged_in'));
 
                     return;
                 }
@@ -71,7 +71,7 @@ const Secrets = () => {
             const burnedSecret = await burnSecret(secret.id);
 
             if (burnedSecret.error) {
-                setError(burnedSecret.error ? burnedSecret.error : 'Something went wrong!');
+                setError(burnedSecret.error ? burnedSecret.error : t('something_went_wrong'));
 
                 return;
             }
@@ -92,10 +92,13 @@ const Secrets = () => {
     const openDeleteModal = (secret) => {
         setSuccess(false);
         openConfirmModal({
-            title: 'Delete ' + secret.id,
+            title: t('account.secrets.delete') + ' ' + secret.id,
             centered: true,
-            children: <Text size="sm">Are you sure you want to delete this secret?</Text>,
-            labels: { confirm: 'Delete secret', cancel: "No don't delete it" },
+            children: <Text size="sm">{t('account.secrets.do_you_want_delete')}</Text>,
+            labels: {
+                confirm: t('account.secrets.delete_secret'),
+                cancel: t('account.secrets.dont_delete_secret'),
+            },
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteSecret(secret),
         });
@@ -109,7 +112,7 @@ const Secrets = () => {
         <tr key={secret.id}>
             <td>{secret.isPublic ? secret.title : secret.id}</td>
             <td>{getTime(secret.expiresAt)}</td>
-            <td>{secret.isPublic ? 'Yes' : 'No'}</td>
+            <td>{secret.isPublic ? t('account.secrets.yes') : t('account.secrets.no')}</td>
             <td>
                 <ActionIcon variant="filled" onClick={() => openDeleteModal(secret)}>
                     <IconTrash size="1rem" />
@@ -142,10 +145,10 @@ const Secrets = () => {
                 <Table horizontalSpacing="sm" highlightOnHover>
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Expires</th>
-                            <th>Public</th>
-                            <th>Delete</th>
+                            <th>{t('account.secrets.id')}</th>
+                            <th>{t('account.secrets.expires')}</th>
+                            <th>{t('account.secrets.public')}</th>
+                            <th>{t('account.secrets.delete')}</th>
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>

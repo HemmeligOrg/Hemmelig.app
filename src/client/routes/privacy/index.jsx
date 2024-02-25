@@ -1,10 +1,13 @@
 import { Container, Stack, Text, Title } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const Privacy = () => {
+    const { t } = useTranslation();
+
     return (
         <Container>
             <Stack>
-                <Title order={1}>Privacy</Title>
+                <Title order={1}>{t('privacy.title')}</Title>
 
                 <Title order={2}>Is my data secure?</Title>
                 <Text>

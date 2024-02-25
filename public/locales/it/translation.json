@@ -2,7 +2,62 @@
     "sign_in": "Accedi",
     "sign_out": "Esci",
     "sign_up": "Registrati",
-    "account": "Profilo",
+    "not_logged_in": "Non autenticatǝ",
+    "something_went_wrong": "Qualcosa è andato storto!",
+    "loading": "Caricamento",
+    "account": {
+        "home": {
+            "title": "Profilo",
+            "update_password": "Aggiorna la tua password",
+            "first_time_message": "Se questa è la prima volta che accedi a questo profilo, dovresti entrare su Impostazioni profilo e aggiornare la tua password",
+            "hi": "Ciao",
+            "intro": "Siamo lietɜ che tu sia entratǝ. Ecco una lista di funzionalità che hanno lɜ utentɜ autenticatɜ",
+            "upload_files": "Caricare file",
+            "expiration": "Estensione giorni di scadenza per i segreti fino a 14 e 28 giorni",
+            "secrets": "Visualizzare ed eliminare i tuoi segreti",
+            "more": "Altre funzionalità sono in arrivo! Grazie per aver scelto Hemmelig.app!"
+        },
+        "account": {
+            "passwords_does_not_match": "Le password non coincidono",
+            "can_not_update_profile": "Impossibile aggiornare il tuo profilo",
+            "can_not_delete": "Impossibile eliminare l'utente",
+            "delete_account": "Elimina profilo",
+            "do_you_want_delete": "Sei sicurǝ di eliminare il tuo profilo?",
+            "dont_delete_account": "No, non eliminarlo",
+
+            "email": "Email",
+            "your_password": "Password attuale",
+            "current_password": "La tua password attuale",
+            "update_your_password": "Aggiorna la tua password",
+            "new_password": "Nuova password",
+            "confirm_password": "Conferma Password",
+            "confirm_new_password": "Conferma la tua nuova password",
+            "update_details": "Aggiorna dati"
+        },
+        "secrets": {
+            "id": "Id",
+            "expires": "Scadenza",
+            "public": "Pubblico",
+            "delete": "Elimina",
+            "yes": "Sì",
+            "no": "No",
+            "delete_secret": "Elimina segreto",
+            "dont_delete_secret": "No, non eliminarlo",
+            "do_you_want_delete": "Sei sicurǝ di eliminare questo segreto?"
+        },
+        "settings": {
+            "read_only_mode": "Modalità sola lettura",
+            "readonly_only_for_non_admin": "L'stanza Hemmelig può essere utilizzabile solo da utenti non amministratori?",
+            "disable_users": "Disabilita utenti",
+            "disable_signin": "L'accesso utente dovrebbe essere disabilitato?",
+            "disable_user_account_creation": "Disabilita la creazione di profili utente",
+            "disable_user_account_creation_description": "Non permettere allǝ utentǝ di creare un nuovo profilo. Come amministratore, sarai sempre in grando di creare nuovi profili utente",
+            "disable_file_upload": "Disabilita caricamento file",
+            "disable_file_upload_description": "Disabilita il caricamento di file per la tua istanza",
+            "restrict_organization_email": "Limita al dominio dell'email",
+            "restrict_organization_email_description": "Questo limiterà la registrazione utente per un certo dominio"
+        }
+    },
     "public_list": "Note pubbliche",
     "account_settings": "Impostazioni profilo",
     "instance_settings": "Impostazioni istanza",
@@ -98,5 +153,30 @@
         "expires": "Scadenza",
         "username": "Nome utente",
         "of": "di"
+    },
+    "signout": {
+        "title": "Uscita in corso",
+        "waiting": "Attendere"
+    },
+    "signin": {
+        "title": "Accedi",
+        "heading": "Tutto il necessario per accedere e gestire i segreti di Hemmelig.",
+        "username": "Nome utente",
+        "password": "La tua password",
+        "signin": "Accedi"
+    },
+    "signup": {
+        "title": "Registrati",
+        "heading": "Tutto il necessario per accedere e gestire i segreti di Hemmelig.",
+        "email": "Email",
+        "username": "Nome utente",
+        "password": "Scegli una password",
+        "signup": "Registrati"
+    },
+    "privacy": {
+        "title": "Privacy"
+    },
+    "terms": {
+        "title": "Termini e condizioni"
     }
 }
