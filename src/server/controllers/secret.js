@@ -157,8 +157,8 @@ async function secret(fastify) {
                     data: text,
                     allowed_ip: allowedIp,
                     password: password ? await hash(password) : undefined,
-                    preventBurn: preventBurn,
-                    isPublic: isPublic,
+                    preventBurn,
+                    isPublic,
                     files: {
                         create: files,
                     },
