@@ -39,7 +39,7 @@
             "expires": "Expires",
             "public": "Public",
             "delete": "Delete",
-            "yes": "Sì",
+            "yes": "Yes",
             "no": "No",
             "delete_secret": "Delete secret",
             "dont_delete_secret": "No don't delete it",
