@@ -13,26 +13,25 @@
             "hi": "Welkom",
             "intro": "Voor ingelogde gebruikers zijn er de volgende extra mogelijkheden",
             "upload_files": "Bestanden uploaden",
-            "expiration": "Een verlooptijd van 14 of 28 dagen voor geheimen",
+            "expiration": "Een verlooptijd voor geheimen van 14 of 28 dagen",
             "secrets": "Het bekijken en verwijderen van je geheimen",
-            "more": "Meer functies zullen latet worden toegevoegd! Bedankt voor je deelname aan Hemmelig.app!"
+            "more": "Meer functies zullen later worden toegevoegd! Fijn dat je Hemmelig.app gebruikt!"
         },
         "account": {
             "passwords_does_not_match": "Wachtwoorden komen niet overeen",
             "can_not_update_profile": "Je account kon niet worden bijgewerkt",
             "can_not_delete": "De account kon niet worden verwijderd",
-            "delete_account": "Account verwijderen",
+            "delete_account": "Verwijderen",
             "do_you_want_delete": "Weet je zeker dat je deze account wilt verwijderen?",
             "dont_delete_account": "Annuleren",
-
             "email": "E-mail",
             "your_password": "Huidig wachtwoord",
             "current_password": "Je huidige wachtwoord",
-            "update_your_password": "Wachtwoord bijwerken",
+            "update_your_password": "Wachtwoord veranderen",
             "new_password": "Nieuw wachtwoord",
             "confirm_password": "Wachtwoord bevestigen",
             "confirm_new_password": "Bevestig je nieuwe wachtwoord",
-            "update_details": "Bijwerken"
+            "update_details": "Opslaan"
         },
         "secrets": {
             "id": "Id",
@@ -43,7 +42,7 @@
             "no": "Nee",
             "delete_secret": "Geheim verwijderen",
             "dont_delete_secret": "Annuleren",
-            "do_you_want_delete": "Dit geheim verwijderen?"
+            "do_you_want_delete": "Weet je zeker dat je dit geheim wilt verwijderen?"
         },
         "settings": {
             "read_only_mode": "Alleen-lezenmodus",
@@ -53,9 +52,24 @@
             "disable_user_account_creation": "Accounts aanmaken niet toestaan",
             "disable_user_account_creation_description": "Schakel het aanmaken van nieuwe accounts uit. Als beheerder kun je nog steeds nieuwe accounts aanmaken.",
             "disable_file_upload": "Uploaden niet toestaan",
-            "disable_file_upload_description": "Schakel het uploaden van bestanden uit",
+            "disable_file_upload_description": "Schakel het uploaden van bestanden uit.",
             "restrict_organization_email": "E-mailadressen tot een domein beperken",
             "restrict_organization_email_description": "Beperk de registratie van accounts tot een enkel domein"
+        },
+        "users": {
+            "username": "Gebruikersnaam",
+            "email": "E-mail",
+            "password": "Wachtwoord",
+            "role": "Rol",
+            "admin": "Beheerder",
+            "creator": "Maker",
+            "user": "Gebruiker",
+            "delete": "Verwijderen",
+            "do_you_want_delete": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
+            "delete_user": "Verwijderen",
+            "dont_delete_user": "Annuleren",
+            "deleted": "Gebruiker verwijderd",
+            "have_to_be_admin": "Je moet een beheerder zijn om de lijst met gebruikers te kunnen inzien"
         }
     },
     "public_list": "Publieke uitwisselingen",
@@ -128,13 +142,13 @@
     "settings": {
         "success": "Geslaagd",
         "description": "Instellingen van deze Hemmelig-installatie",
-        "updated": "Instellingen bijgewerkt",
-        "update": "Bijwerken",
+        "updated": "Instellingen opgeslagen",
+        "update": "Opslaan",
         "deleted": "Account verwijderd"
     },
     "users": {
         "users": "Gebruikers",
-        "edit": "Wijzigen",
+        "edit": "Bewerken",
         "update": "Bijwerken",
         "add": "Toevoegen",
         "saved": "Opgeslagen",
@@ -163,7 +177,8 @@
         "heading": "Alles om je geheimen te benaderen en te beheren.",
         "username": "Gebruikersnaam",
         "password": "Wachtwoord",
-        "signup": "Aanmelden"
+        "signin": "Inloggen",
+        "wrong_credentials": "Gebruikersnaam of wachtwoord onjuist. Probeer het opnieuw."
     },
     "signup": {
         "title": "Registreren",
