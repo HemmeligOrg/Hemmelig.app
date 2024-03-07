@@ -42,7 +42,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
 
     navItems.push(
         {
-            label: t('account'),
+            label: t('account.home.title'),
             icon: <IconUser size="1rem" stroke={1.5} />,
             component: Link,
             onClick: toggle,
@@ -59,14 +59,14 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
 
     if (isMobile) {
         navItems.push({
-            label: 'Privacy',
+            label: t('privacy.title'),
             icon: <IconFingerprint size="1rem" stroke={1.5} />,
             component: Link,
             onClick: toggle,
             to: '/privacy',
         });
         navItems.push({
-            label: 'Terms & Condition',
+            label: t('terms.title'),
             icon: <IconList size="1rem" stroke={1.5} />,
             component: Link,
             onClick: toggle,

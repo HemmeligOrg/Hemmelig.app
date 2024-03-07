@@ -36,7 +36,12 @@ export default function MainLinks() {
     const { t } = useTranslation();
 
     const data = [
-        { icon: <IconUser size="1rem" />, color: 'blue', label: t('account'), route: 'account' },
+        {
+            icon: <IconUser size="1rem" />,
+            color: 'blue',
+            label: t('account.home.title'),
+            route: 'account',
+        },
         {
             icon: <IconLock size="1rem" />,
             color: 'teal',

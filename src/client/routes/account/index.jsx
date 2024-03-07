@@ -19,7 +19,7 @@ const HomeAccount = () => {
                 const userInfo = await getUser();
 
                 if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-                    setError(userInfo.error ? userInfo.error : 'Not logged in');
+                    setError(userInfo.error ? userInfo.error : t('not_logged_in'));
 
                     return;
                 }
@@ -54,26 +54,27 @@ const HomeAccount = () => {
         );
     }
 
-    const firstTimeMessage =
-        'If this is the first time you sign in on this user account, you should go to Account settings and update your password.';
     return (
         <Stack>
             {user?.generated && (
-                <ErrorBox message={firstTimeMessage} title={'Update your password'} />
+                <ErrorBox
+                    message={t('account.home.first_time_message')}
+                    title={t('account.home.update_password')}
+                />
             )}
 
             <Text size="sm">
-                Hi, <strong>{user.username}</strong>
+                {t('account.home.hi')}, <strong>{user.username}</strong>
             </Text>
 
             <Text size="sm">
-                We are glad you logged in. Here is the list of features signed in users get:
+                {t('account.home.intro')}:
                 <ul>
-                    <li>Upload files</li>
-                    <li>Expiration time of 14 and 28 days for secrets</li>
-                    <li>List and delete your secrets</li>
+                    <li>{t('account.home.upload_files')}</li>
+                    <li>{t('account.home.expiration')}</li>
+                    <li>{t('account.home.secrets')}</li>
                 </ul>
-                More features are coming! Thanks for joining Hemmelig.app!
+                {t('account.home.more')}
                 <span role="img" aria-label="celebration icon">
                     🎉 🎉 🎉 🎉
                 </span>
