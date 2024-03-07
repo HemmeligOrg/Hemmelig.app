@@ -160,14 +160,14 @@
     },
     "signin": {
         "title": "Sign in",
-        "heading": "Everything you need to access, and manage the Hemmelig secrets.",
+        "heading": "Everything you need to access and manage the Hemmelig secrets.",
         "username": "Username",
         "password": "Your password",
         "signup": "Sign in"
     },
     "signup": {
         "title": "Sign up",
-        "heading": "Everything you need to access, and manage the Hemmelig secrets.",
+        "heading": "Everything you need to access and manage the Hemmelig secrets.",
         "email": "Email",
         "username": "Username",
         "password": "Your password",
