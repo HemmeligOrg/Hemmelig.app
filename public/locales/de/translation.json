@@ -3,16 +3,28 @@
     "sign_out": "Abmelden",
     "sign_up": "Registrieren",
     "account": "Konto",
+    "public_list": "Öffentliche Geheimnisse",
     "account_settings": "Einstellungen",
     "instance_settings": "Instanzeinstellungen",
     "copied": "Kopiert",
     "copy": "Kopieren",
+    "header": {
+        "nav": {
+            "close": "Navigation schließen",
+            "open": "Navigation öffnen"
+        },
+        "session": {
+            "auth": "Authentifizierung",
+            "expire": "Deine Sitzung läuft demnächst ab, möchte du sie verlängern?",
+            "update": "Sitzung aktualisieren"
+        }
+    },
     "home": {
-        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",  
+        "app_subtitle": "Füge ein Passwort, eine geheime Botschaft, oder private Informationen ein.",
         "welcome": "Halte deine privaten Informationen fern von Chats E-Mails mithilfe von stark verschlüsselten Geheimnissen.",
         "bummer": "Hoppla!",
         "maintxtarea": "Notiere hier deine geheimen Informationen...",
-        "title": "Titel",      
+        "title": "Titel",
         "lifetime": "Lebensdauer",
         "max_views": "Maximale Ansichten",
         "enable_password": "Passwort nutzen",
@@ -21,10 +33,14 @@
         "restrict_from_ip": "Schränke den Zugriff auf dein Geheimnis per IP oder CIDR-Bereich ein. Beispiel für CIDR: 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Zugriff mit IP oder CIDR eingrenzen",
         "login_to_upload": "Anmelden, um Dateien hochzuladen",
+        "public_no_upload": "Öffentliche Geheimnisse erlauben keine Datei-Uploads",
         "upload_files": "Dateien hochladen",
         "your_secret_url": "Deine geheime URL",
         "share": "Teilen",
         "create_secret_link": "Erstelle einen geheimen Link",
+        "or": "Link und Entschlüsselungsschlüssel separieren",
+        "secret_url": "Geheimnis URL ohne Entschlüsselungsschlüssel",
+        "decryption_key": "Entschlüsselungsschlüssel",
         "create_new": "Weiteres erstellen",
         "delete": "Löschen",
         "link_only_works_once": "Der geheime Link funktioniert nur einmal und wird dann vernichtet.",
@@ -41,7 +57,8 @@
         "30_minutes": "30 Minuten",
         "5_minutes": "5 Minuten",
         "successful_share": "Erfolgreich geteilt",
-        "get_your_secret": "Erhalte dein Geheimnis auf hemmelig.app."
+        "get_your_secret": "Erhalte dein Geheimnis auf hemmelig.app.",
+        "set_public": "Als öffentliches Geheimnis markieren"
     },
     "secret": {
         "view_your_secret": "Dein Geheimnis anzeigen",
@@ -74,5 +91,12 @@
         "secrets": "Geheimnisse",
         "secret": "Geheimnis",
         "deleted": "Geheimnis gelöscht"
+    },
+    "public": {
+        "heading": "Öffentliche Geheimnisse",
+        "title": "Titel",
+        "expires": "Läuft ab",
+        "username": "Benutzername",
+        "of": "von"
     }
 }
