@@ -1,10 +1,13 @@
 import { Container, Stack, Text, Title } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const TermsAndCondition = () => {
+    const { t } = useTranslation();
+
     return (
         <Container>
             <Stack>
-                <Title order={1}>Terms & Condition</Title>
+                <Title order={1}>{t('terms.title')}</Title>
 
                 <Title order={2}>AGREEMENT TO TERMS</Title>
                 <Text>
