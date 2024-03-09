@@ -30,19 +30,19 @@ const SignUp = () => {
     const onSignUp = async (values) => {
         const data = await signUp(values.email, values.username, values.password);
 
-        if (data.statusCode === 403) {
-            setError(data.error);
+        if ([400, 403].indexOf(data.statusCode) > -1) {
+            setError(data.message);
 
             setSuccess(false);
 
             return;
         }
 
-        if (data.error) {
+        if (data.type && data.message) {
             form.setErrors({
-                username: data.type == 'username' ? data.error : '',
-                password: data.type == 'password' ? data.error : '',
-                email: data.type == 'email' ? data.error : '',
+                username: data.type == 'username' ? data.message : '',
+                password: data.type == 'password' ? data.message : '',
+                email: data.type == 'email' ? data.message : '',
             });
 
             setSuccess(false);

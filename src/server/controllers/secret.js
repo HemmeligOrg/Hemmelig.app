@@ -1,8 +1,7 @@
-import config from 'config';
-import prettyBytes from 'pretty-bytes';
 import validator from 'validator';
 import getClientIp from '../helpers/client-ip.js';
 import { compare, hash } from '../helpers/password.js';
+import VALID_TTL from '../helpers/validate-ttl.js';
 import prisma from '../services/prisma.js';
 import { validUsername } from './authentication.js';
 
@@ -124,46 +123,42 @@ async function secret(fastify) {
         '/',
         {
             preValidation: [fastify.userFeatures, fastify.attachment],
+            schema: {
+                // Add a schema to define expected input
+                body: {
+                    type: 'object',
+                    required: ['text', 'ttl'],
+                    properties: {
+                        text: { type: 'string' },
+                        title: { type: 'string', maxLength: 255 },
+                        ttl: { type: 'integer', minimum: 1, enum: VALID_TTL },
+                        password: { type: 'string' },
+                        allowedIp: { type: 'string' },
+                        preventBurn: { type: 'boolean' },
+                        maxViews: { type: 'integer', minimum: 1, maximum: 999 },
+                        isPublic: { type: 'boolean' },
+                    },
+                },
+            },
         },
         async (req, reply) => {
             const { text, title, ttl, password, allowedIp, preventBurn, maxViews, isPublic } =
                 req.body;
             const { files } = req.secret;
 
-            if (Buffer.byteLength(text) > config.get('api.maxTextSize')) {
-                return reply.code(413).send({
-                    error: `The secret size (${prettyBytes(
-                        Buffer.byteLength(text)
-                    )}) exceeded our limit of ${config.get('api.maxTextSize')}.`,
-                });
-            }
-
-            if (title?.length > 255) {
-                return reply.code(413).send({
-                    error: `The title is longer than 255 characters which is not allowed.`,
-                });
-            }
-
             if (allowedIp && !ipCheck(allowedIp)) {
-                return reply.code(409).send({ error: 'The IP address is not valid' });
-            }
-
-            if (
-                !validator.isBoolean(String(isPublic)) ||
-                !validator.isBoolean(String(preventBurn))
-            ) {
-                return reply.code(409).send({ error: 'The value is not a valid boolean' });
+                return reply.code(400).send({ message: 'The IP address is not valid' });
             }
 
             const secret = await prisma.secret.create({
                 data: {
                     title,
-                    maxViews: Number(maxViews) <= 999 ? Number(maxViews) : 1,
+                    maxViews,
                     data: text,
                     allowed_ip: allowedIp,
                     password: password ? await hash(password) : undefined,
-                    preventBurn: preventBurn,
-                    isPublic: isPublic,
+                    preventBurn,
+                    isPublic,
                     files: {
                         create: files,
                     },

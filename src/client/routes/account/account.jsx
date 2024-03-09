@@ -73,11 +73,12 @@ const Account = () => {
         try {
             const updatedUserInfo = await updateUser(values);
 
-            if (updatedUserInfo.error || [401, 500].includes(updatedUserInfo.statusCode)) {
+            if (updatedUserInfo.error || [400, 401, 500].includes(updatedUserInfo.statusCode)) {
                 setError(
-                    updatedUserInfo.error
-                        ? updatedUserInfo.error
+                    updatedUserInfo.message
+                        ? updatedUserInfo.message
                         : t('account.account.can_not_update_profile')
+
                 );
 
                 return;

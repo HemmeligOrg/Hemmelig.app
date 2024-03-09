@@ -173,14 +173,14 @@ const Home = () => {
         const json = await createSecret(body);
 
         if (json.statusCode !== 201) {
-            if (json.statusCode === 403) {
-                setError(json.error);
+            if (json.statusCode === 400) {
+                setError(json.message);
             }
 
             if (json.message === 'request file too large, please check multipart config') {
                 form.setErrors({ files: 'The file size is too large' });
             } else {
-                form.setErrors({ files: json.error });
+                form.setErrors({ files: json.message });
             }
 
             setCreatingSecret(false);

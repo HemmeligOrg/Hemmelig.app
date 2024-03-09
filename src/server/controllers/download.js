@@ -5,33 +5,44 @@ import prisma from '../services/prisma.js';
 import { isValidSecretId } from '../helpers/regexp.js';
 
 async function downloadFiles(fastify) {
-    fastify.post('/', async (request, reply) => {
-        const { key, secretId } = request.body;
+    fastify.post(
+        '/',
+        {
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['key', 'secretId'],
+                    properties: {
+                        key: { type: 'string' },
+                        secretId: { type: 'string' },
+                    },
+                },
+            },
+        },
+        async (request, reply) => {
+            const { key, secretId } = request.body;
 
-        if (!isValidSecretId.test(secretId)) {
-            return reply.code(403).send({ error: 'Not a valid secret id' });
-        }
-
-        const fileKey = sanitize(key);
-
-        const file = await fileAdapter.download(fileKey);
-
-        const secret = await prisma.secret.findFirst({ where: { id: secretId } });
-
-        if (secret?.preventBurn !== 'true' && Number(secret?.maxViews) === 1) {
-            await prisma.secret.delete({ where: { id: secretId } });
-
-            if (secret?.file) {
-                const { key } = JSON.parse(secret?.file);
-
-                await fileAdapter.remove(key);
+            if (!isValidSecretId.test(secretId)) {
+                return reply.code(400).send({ error: 'Not a valid secret id' });
             }
-        }
 
-        return reply.code(201).send({
-            content: file,
-        });
-    });
+            const fileKey = sanitize(key);
+
+            const file = await fileAdapter.download(fileKey);
+
+            const secret = await prisma.secret.findFirst({ where: { id: secretId } });
+
+            // When the secret is null, we delete the file.
+            // The deletion will happen in the secrets controller
+            if (!secret) {
+                await fileAdapter.remove(fileKey);
+            }
+
+            return reply.code(201).send({
+                content: file,
+            });
+        }
+    );
 }
 
 export default downloadFiles;
