@@ -27,88 +27,98 @@ const PUBLIC_COOKIE_SETTINGS = {
 };
 
 async function authentication(fastify) {
-    fastify.post('/signup', async (request, reply) => {
-        const { email = '', username = '', password = '' } = request.body;
-
-        if (!emailValidator.validate(email)) {
-            return reply.code(403).send({
-                type: 'email',
-                error: `Your email: "${email}" is not valid.`,
-            });
-        }
-
-        if (!validUsername.test(username) || username.length < USERNAME_LENGTH) {
-            return reply.code(403).send({
-                type: 'username',
-                error: `Username has to be longer than ${USERNAME_LENGTH}, and can only contain these characters. [A-Za-z0-9_-]`,
-            });
-        }
-
-        if (password.length < PASSWORD_LENGTH) {
-            return reply.code(403).send({
-                type: 'password',
-                error: `Password has to be longer than ${PASSWORD_LENGTH} characters`,
-            });
-        }
-
-        const userExist = await prisma.user.findFirst({ where: { username } });
-        if (userExist) {
-            return reply
-                .code(403)
-                .send({ type: 'username', error: `This username has already been taken.` });
-        }
-
-        const emailExist = await prisma.user.findFirst({ where: { email } });
-        if (emailExist) {
-            return reply
-                .code(403)
-                .send({ type: 'email', error: `This email has already been registered.` });
-        }
-
-        const userPassword = await hash(password);
-
-        const user = await prisma.user.create({
-            data: {
-                username,
-                email,
-                password: userPassword,
-                role: 'user',
+    fastify.post(
+        '/signup',
+        {
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['email', 'username', 'password'],
+                    properties: {
+                        email: { type: 'string' },
+                        username: { type: 'string', minLength: 4, maxLength: 20 },
+                        password: { type: 'string', minLength: 5, maxLength: 50 },
+                    },
+                },
             },
-        });
+        },
+        async (request, reply) => {
+            const { email, username, password } = request.body;
 
-        if (!user) {
-            return reply.code(403).send({
-                error: 'Something happened while creating a new user. Please try again later.',
+            if (!emailValidator.validate(email)) {
+                return reply.code(400).send({
+                    type: 'email',
+                    message: `Your email: "${email}" is not valid.`,
+                });
+            }
+
+            if (!validUsername.test(username)) {
+                return reply.code(400).send({
+                    type: 'username',
+                    message: `Username can only contain these characters. [A-Za-z0-9_-]`,
+                });
+            }
+
+            const userExist = await prisma.user.findFirst({ where: { username } });
+            if (userExist) {
+                return reply
+                    .code(403)
+                    .send({ type: 'username', message: `This username has already been taken.` });
+            }
+
+            const emailExist = await prisma.user.findFirst({ where: { email } });
+            if (emailExist) {
+                return reply
+                    .code(403)
+                    .send({ type: 'email', message: `This email has already been registered.` });
+            }
+
+            const userPassword = await hash(password);
+
+            const user = await prisma.user.create({
+                data: {
+                    username,
+                    email,
+                    password: userPassword,
+                    role: 'user',
+                },
             });
+
+            if (!user) {
+                return reply.code(400).send({
+                    message:
+                        'Something happened while creating a new user. Please try again later.',
+                });
+            }
+
+            const sacredToken = await reply.jwtSign(
+                {
+                    username: user.username,
+                    email: user.email,
+                    user_id: user.id,
+                },
+                { expiresIn: '7d' } // expires in seven days
+            );
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 6);
+
+            const publicToken = Buffer.from(
+                JSON.stringify({
+                    username: user.username,
+                    expirationDate: expirationDate,
+                })
+            ).toString('base64');
+
+            reply
+                .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+                .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+                .code(200)
+                .send({
+                    username: user.username,
+                });
         }
-
-        const sacredToken = await reply.jwtSign(
-            {
-                username: user.username,
-                email: user.email,
-                user_id: user.id,
-            },
-            { expiresIn: '7d' } // expires in seven days
-        );
-
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 6);
-
-        const publicToken = Buffer.from(
-            JSON.stringify({
-                username: user.username,
-                expirationDate: expirationDate,
-            })
-        ).toString('base64');
-
-        reply
-            .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
-            .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
-            .code(200)
-            .send({
-                username: user.username,
-            });
-    });
+    );
 
     fastify.post('/signin', async (request, reply) => {
         const { username = '', password = '' } = request.body;

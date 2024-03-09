@@ -2,8 +2,6 @@ import emailValidator from 'email-validator';
 import { compare, hash } from '../helpers/password.js';
 import prisma from '../services/prisma.js';
 
-const PASSWORD_LENGTH = 5;
-
 async function account(fastify) {
     fastify.get(
         '/',
