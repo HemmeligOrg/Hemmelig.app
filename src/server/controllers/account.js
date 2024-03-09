@@ -29,15 +29,23 @@ async function account(fastify) {
         '/update',
         {
             preValidation: [fastify.authenticate],
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['currentPassword', 'newPassword', 'confirmNewPassword', 'email'],
+                    properties: {
+                        currentPassword: { type: 'string', default: '' },
+                        newPassword: { type: 'string', maxLength: 50, minLength: 5, default: '' },
+                        confirmNewPassword: { type: 'string', default: '' },
+                        email: { type: 'string', default: '' },
+                        generated: { type: 'boolean', default: false },
+                    },
+                },
+            },
         },
         async (request, reply) => {
-            const {
-                currentPassword = '',
-                newPassword = '',
-                email = '',
-                confirmNewPassword = '',
-                generated = false,
-            } = request.body;
+            const { currentPassword, newPassword, email, confirmNewPassword, generated } =
+                request.body;
 
             const data = {
                 generated,
@@ -54,13 +62,6 @@ async function account(fastify) {
             }
 
             if (newPassword) {
-                if (newPassword.length < PASSWORD_LENGTH) {
-                    return reply.code(403).send({
-                        type: 'newPassword',
-                        error: `Password has to be longer than ${PASSWORD_LENGTH} characters`,
-                    });
-                }
-
                 data.password = await hash(newPassword);
             }
 
@@ -73,13 +74,6 @@ async function account(fastify) {
                 }
 
                 data.email = email;
-            }
-
-            if (!email && !newPassword) {
-                return reply.code(412).send({
-                    type: 'no-data',
-                    error: `Could not update your profile. Please set the fields you want to update.`,
-                });
             }
 
             if (newPassword !== confirmNewPassword) {
