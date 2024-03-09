@@ -37,7 +37,7 @@ const ApplicationShell = () => {
                                     size="xs"
                                     transform="uppercase"
                                 >
-                                    {t('account')}
+                                    {t('account.home.title')}
                                 </Anchor>
                                 |
                                 <Anchor
@@ -47,7 +47,7 @@ const ApplicationShell = () => {
                                     size="xs"
                                     transform="uppercase"
                                 >
-                                    Privacy
+                                    {t('privacy.title')}
                                 </Anchor>
                                 |
                                 <Anchor
@@ -57,7 +57,7 @@ const ApplicationShell = () => {
                                     size="xs"
                                     transform="uppercase"
                                 >
-                                    Terms & Condition
+                                    {t('terms.title')}
                                 </Anchor>
                                 |
                             </>

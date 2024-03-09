@@ -2,7 +2,63 @@
     "sign_in": "Inloggen",
     "sign_out": "Uitloggen",
     "sign_up": "Registreren",
-    "account": "Account",
+    "not_logged_in": "Niet ingelogd",
+    "something_went_wrong": "Er is iets foutgegaan!",
+    "loading": "Laden",
+    "account": {
+        "home": {
+            "title": "Account",
+            "update_password": "Wachtwoord aanpassen",
+            "first_time_message": "Als dit de eerste keer is dat je inlogt met dit account, ga dan naar de Accountinstellingen om je wachtwoord aan te passen",
+            "hi": "Welkom",
+            "intro": "Voor ingelogde gebruikers zijn er de volgende extra mogelijkheden",
+            "upload_files": "Bestanden uploaden",
+            "expiration": "Een verlooptijd van 14 of 28 dagen voor geheimen",
+            "secrets": "Het bekijken en verwijderen van je geheimen",
+            "more": "Meer functies zullen latet worden toegevoegd! Bedankt voor je deelname aan Hemmelig.app!"
+        },
+        "account": {
+            "passwords_does_not_match": "Wachtwoorden komen niet overeen",
+            "can_not_update_profile": "Je account kon niet worden bijgewerkt",
+            "can_not_delete": "De account kon niet worden verwijderd",
+            "delete_account": "Account verwijderen",
+            "do_you_want_delete": "Weet je zeker dat je deze account wilt verwijderen?",
+            "dont_delete_account": "Annuleren",
+
+            "email": "E-mail",
+            "your_password": "Huidig wachtwoord",
+            "current_password": "Je huidige wachtwoord",
+            "update_your_password": "Wachtwoord bijwerken",
+            "new_password": "Nieuw wachtwoord",
+            "confirm_password": "Wachtwoord bevestigen",
+            "confirm_new_password": "Bevestig je nieuwe wachtwoord",
+            "update_details": "Bijwerken"
+        },
+        "secrets": {
+            "id": "Id",
+            "expires": "Verloopt",
+            "public": "Publiek",
+            "delete": "Verwijderen",
+            "yes": "Ja",
+            "no": "Nee",
+            "delete_secret": "Geheim verwijderen",
+            "dont_delete_secret": "Annuleren",
+            "do_you_want_delete": "Dit geheim verwijderen?"
+        },
+        "settings": {
+            "read_only_mode": "Alleen-lezenmodus",
+            "readonly_only_for_non_admin": "Mogen op deze server alleen beheerders een geheim aanmaken?",
+            "disable_users": "Gebruikersaccounts uitschakelen",
+            "disable_signin": "Moet het inloggen door gebruikers op deze server uitgeschakeld worden?",
+            "disable_user_account_creation": "Accounts aanmaken niet toestaan",
+            "disable_user_account_creation_description": "Schakel het aanmaken van nieuwe accounts uit. Als beheerder kun je nog steeds nieuwe accounts aanmaken.",
+            "disable_file_upload": "Uploaden niet toestaan",
+            "disable_file_upload_description": "Schakel het uploaden van bestanden uit",
+            "restrict_organization_email": "E-mailadressen tot een domein beperken",
+            "restrict_organization_email_description": "Beperk de registratie van accounts tot een enkel domein"
+        }
+    },
+    "public_list": "Publieke uitwisselingen",
     "account_settings": "Accountinstellingen",
     "instance_settings": "Serverinstellingen",
     "copied": "Gekopieerd",
@@ -94,8 +150,33 @@
     "public": {
         "heading": "Publieke uitwisselingen",
         "title": "Titel",
-        "expires": "Verloopt"
+        "expires": "Verloopt",
         "username": "Gebruikersnaam",
         "of": "van"
+    },
+    "signout": {
+        "title": "Uitloggen",
+        "waiting": "Even geduld"
+    },
+    "signin": {
+        "title": "Inloggen",
+        "heading": "Alles om je geheimen te benaderen en te beheren.",
+        "username": "Gebruikersnaam",
+        "password": "Wachtwoord",
+        "signup": "Aanmelden"
+    },
+    "signup": {
+        "title": "Registreren",
+        "heading": "Alles om je geheimen te benaderen en te beheren.",
+        "email": "E-mail",
+        "username": "Gebruikersnaam",
+        "password": "Wachtwoord",
+        "signup": "Registreren"
+    },
+    "privacy": {
+        "title": "Privacy"
+    },
+    "terms": {
+        "title": "Algemene voorwaarden"
     }
 }

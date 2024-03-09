@@ -43,12 +43,12 @@ export default function SecondaryLinks() {
             route: '/public',
         },
         {
-            label: 'Privacy',
+            label: t('privacy.title'),
             icon: <IconFingerprint size="1rem" stroke={1.5} />,
             route: '/account/privacy',
         },
         {
-            label: 'Terms & Condition',
+            label: t('terms.title'),
             icon: <IconList size="1rem" stroke={1.5} />,
             route: '/account/terms',
         },

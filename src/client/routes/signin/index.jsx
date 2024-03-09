@@ -58,18 +58,18 @@ const SignIn = () => {
             <form onSubmit={form.onSubmit((values) => onSignIn(values))}>
                 <Stack>
                     <Title order={1} align="center">
-                        Sign in
+                        {t('signin.title')}
                     </Title>
 
                     <Text size="sm" align="center">
-                        Everything you need to access, and manage the Hemmelig secrets.
+                        {t('signin.heading')}
                     </Text>
 
                     {error && <ErrorBox message={error} />}
 
                     <TextInput
                         icon={<IconUser size={14} />}
-                        placeholder="Username"
+                        placeholder={t('signin.username')}
                         required
                         autoFocus
                         {...form.getInputProps('username')}
@@ -77,13 +77,13 @@ const SignIn = () => {
 
                     <PasswordInput
                         icon={<IconLock size={14} />}
-                        placeholder="Your password"
+                        placeholder={t('signin.password')}
                         required
                         {...form.getInputProps('password')}
                     />
 
                     <Button color="hemmelig" leftIcon={<IconLogin size={14} />} type="submit">
-                        Sign in
+                        {t('signin.signin')}
                     </Button>
                 </Stack>
             </form>

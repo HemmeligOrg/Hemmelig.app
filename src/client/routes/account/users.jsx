@@ -80,7 +80,7 @@ const Users = () => {
                 const users = await getUsers();
 
                 if (users.error || [401, 403, 500].includes(users.statusCode)) {
-                    setUserError(users.error ? users.error : 'Not logged in');
+                    setUserError(users.error ? users.error : t('not_logged_in'));
 
                     return;
                 }
@@ -111,7 +111,7 @@ const Users = () => {
                 updatedUserInfo.error ||
                 [401, 403, 409, 500].includes(updatedUserInfo.statusCode)
             ) {
-                setError(updatedUserInfo.error ? updatedUserInfo.error : 'Sonething went wrong!');
+                setError(updatedUserInfo.error ? updatedUserInfo.error : t('something_went_wrong'));
 
                 return;
             }
@@ -136,7 +136,7 @@ const Users = () => {
             const addedUserInfo = await addUser(form.values);
 
             if (addedUserInfo.error || [401, 403, 409, 500].includes(addedUserInfo.statusCode)) {
-                setError(addedUserInfo.error ? addedUserInfo.error : 'Something went wrong!');
+                setError(addedUserInfo.error ? addedUserInfo.error : t('something_went_wrong'));
 
                 return;
             }
@@ -162,7 +162,7 @@ const Users = () => {
                 deletedUserInfo.error ||
                 [401, 403, 409, 500].includes(deletedUserInfo.statusCode)
             ) {
-                setError(deletedUserInfo.error ? deletedUserInfo.error : 'Something went wrong!');
+                setError(deletedUserInfo.error ? deletedUserInfo.error : t('something_went_wrong'));
 
                 return;
             }
@@ -187,7 +187,7 @@ const Users = () => {
             const moreUsers = await getUsers(skip);
 
             if (moreUsers.error || [401, 403, 409, 500].includes(moreUsers.statusCode)) {
-                setError(moreUsers.error ? moreUsers.error : 'Something went wrong!');
+                setError(moreUsers.error ? moreUsers.error : t('something_went_wrong'));
 
                 return;
             }

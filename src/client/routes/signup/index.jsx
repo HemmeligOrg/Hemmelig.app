@@ -60,38 +60,38 @@ const SignUp = () => {
             <form onSubmit={form.onSubmit((values) => onSignUp(values))}>
                 <Stack>
                     <Title order={1} align="center">
-                        Sign up
+                        {t('signup.title')}
                     </Title>
 
                     <Text size="sm" align="center">
-                        Everything you need to access, and manage the Hemmelig secrets.
+                        {t('signup.heading')}
                     </Text>
 
                     {error && <ErrorBox message={error} />}
 
                     <TextInput
                         icon={<IconAt size={14} />}
-                        placeholder="Email"
+                        placeholder={t('signup.email')}
                         required
                         {...form.getInputProps('email')}
                     />
 
                     <TextInput
                         icon={<IconUser size={14} />}
-                        placeholder="Username"
+                        placeholder={t('signup.username')}
                         required
                         {...form.getInputProps('username')}
                     />
 
                     <PasswordInput
                         icon={<IconLock size={14} />}
-                        placeholder="Your password"
+                        placeholder={t('signup.password')}
                         required
                         {...form.getInputProps('password')}
                     />
 
                     <Button color="hemmelig" leftIcon={<IconLogin size={14} />} type="submit">
-                        Sign up
+                        {t('signup.signup')}
                     </Button>
                 </Stack>
             </form>

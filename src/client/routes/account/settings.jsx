@@ -32,7 +32,7 @@ const Settings = () => {
                 const adminSettings = await getSettings();
 
                 if (adminSettings.error || [401, 403, 500].includes(adminSettings.statusCode)) {
-                    setUserError(adminSettings.error ? adminSettings.error : 'Not logged in');
+                    setUserError(adminSettings.error ? adminSettings.error : t('not_logged_in'));
 
                     return;
                 }
@@ -60,7 +60,7 @@ const Settings = () => {
                 setError(
                     updatedAdminSettings.error
                         ? updatedAdminSettings.error
-                        : 'Something went wrong!'
+                        : t('something_went_wrong')
                 );
 
                 return;
@@ -103,16 +103,16 @@ const Settings = () => {
             <Text size="sm">{t('settings.description')}</Text>
             <Group position="left">
                 <Checkbox
-                    label="Read only mode"
-                    description="Should the Hemmelig instance be read only for non admin users?"
+                    label={t('account.settings.read_only_mode')}
+                    description={t('account.settings.readonly_only_for_non_admin')}
                     checked={form.getInputProps('read_only').value}
                     onChange={(event) => form.setValues({ read_only: event.currentTarget.checked })}
                 />
             </Group>
             <Group position="left">
                 <Checkbox
-                    label="Disable users"
-                    description="Should user sign in be disabled?"
+                    label={t('account.settings.disable_users')}
+                    description={t('account.settings.disable_signin')}
                     checked={form.getInputProps('disable_users').value}
                     onChange={(event) =>
                         form.setValues({ disable_users: event.currentTarget.checked })
@@ -121,8 +121,8 @@ const Settings = () => {
             </Group>
             <Group position="left">
                 <Checkbox
-                    label="Disable user account creation"
-                    description="Do not allow users to create a new account. As an admin, you will still be able to create new user accounts."
+                    label={t('account.settings.disable_user_account_creation')}
+                    description={t('account.settings.disable_user_account_creation_description')}
                     checked={form.getInputProps('disable_user_account_creation').value}
                     onChange={(event) =>
                         form.setValues({
@@ -133,8 +133,8 @@ const Settings = () => {
             </Group>
             <Group position="left">
                 <Checkbox
-                    label="Disable file upload"
-                    description="Disable file upload for your instance."
+                    label={t('account.settings.disable_file_upload')}
+                    description={t('account.settings.disable_file_upload_description')}
                     checked={form.getInputProps('disable_file_upload').value}
                     onChange={(event) =>
                         form.setValues({ disable_file_upload: event.currentTarget.checked })
@@ -143,8 +143,8 @@ const Settings = () => {
             </Group>
             <Group position="left">
                 <Input.Wrapper
-                    label="Restrict to email domain"
-                    description="This will limit user registration for a certain email domain."
+                    label={t('account.settings.restrict_organization_email')}
+                    description={t('account.settings.restrict_organization_email_description')}
                 >
                     <Input
                         icon={<IconAt size={14} />}
