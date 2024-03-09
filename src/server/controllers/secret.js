@@ -147,7 +147,7 @@ async function secret(fastify) {
             const { files } = req.secret;
 
             if (allowedIp && !ipCheck(allowedIp)) {
-                return reply.code(409).send({ error: 'The IP address is not valid' });
+                return reply.code(400).send({ message: 'The IP address is not valid' });
             }
 
             const secret = await prisma.secret.create({
