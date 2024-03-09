@@ -163,7 +163,7 @@
         "heading": "Everything you need to access and manage the Hemmelig secrets.",
         "username": "Username",
         "password": "Your password",
-        "signup": "Sign in"
+        "signin": "Sign in"
     },
     "signup": {
         "title": "Sign up",
