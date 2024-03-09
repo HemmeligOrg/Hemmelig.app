@@ -6,9 +6,6 @@ import { compare, hash } from '../helpers/password.js';
 
 export const validUsername = /^(?=.*[a-z])[a-z0-9]+$/is;
 
-const PASSWORD_LENGTH = 5;
-const USERNAME_LENGTH = 4;
-
 const COOKIE_KEY = config.get('jwt.cookie');
 const COOKIE_KEY_PUBLIC = COOKIE_KEY + '_PUBLIC';
 const SACRED_COOKIE_SETTINGS = {
@@ -120,44 +117,57 @@ async function authentication(fastify) {
         }
     );
 
-    fastify.post('/signin', async (request, reply) => {
-        const { username = '', password = '' } = request.body;
-
-        const user = await prisma.user.findFirst({ where: { username } });
-
-        if (!user || !(await compare(password, user.password))) {
-            return reply.code(401).send({ error: 'Incorrect username or password.' });
-        }
-
-        const sacredToken = await reply.jwtSign(
-            {
-                username: user.username,
-                email: user.email,
-                user_id: user.id,
+    fastify.post(
+        '/signin',
+        {
+            schema: {
+                type: 'object',
+                required: ['username', 'password'],
+                properties: {
+                    username: { type: 'string' },
+                    password: { type: 'string' },
+                },
             },
-            { expiresIn: '7d' }
-        );
+        },
+        async (request, reply) => {
+            const { username = '', password = '' } = request.body;
 
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 6);
+            const user = await prisma.user.findFirst({ where: { username } });
 
-        const publicToken = Buffer.from(
-            JSON.stringify({
-                username: user.username,
-                expirationDate: expirationDate,
-            })
-        ).toString('base64');
+            if (!user || !(await compare(password, user.password))) {
+                return reply.code(401).send({ error: 'Incorrect username or password.' });
+            }
 
-        reply
-            .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
-            .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
-            .code(200)
-            .send({
-                username,
-            });
-    });
+            const sacredToken = await reply.jwtSign(
+                {
+                    username: user.username,
+                    email: user.email,
+                    user_id: user.id,
+                },
+                { expiresIn: '7d' }
+            );
 
-    fastify.post('/signout', async (request, reply) => {
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 6);
+
+            const publicToken = Buffer.from(
+                JSON.stringify({
+                    username: user.username,
+                    expirationDate: expirationDate,
+                })
+            ).toString('base64');
+
+            reply
+                .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+                .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+                .code(200)
+                .send({
+                    username,
+                });
+        }
+    );
+
+    fastify.post('/signout', async (_, reply) => {
         reply.clearCookie(COOKIE_KEY_PUBLIC, { path: '/' }).clearCookie(COOKIE_KEY, { path: '/' });
 
         return {
