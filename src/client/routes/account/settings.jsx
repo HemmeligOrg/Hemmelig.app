@@ -22,7 +22,7 @@ const Settings = () => {
             disable_users: false,
             disable_user_account_creation: false,
             disable_file_upload: false,
-            Restrict_organization_email: '',
+            restrict_organization_email: '',
         },
     });
 
