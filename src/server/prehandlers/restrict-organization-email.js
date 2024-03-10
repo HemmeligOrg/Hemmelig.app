@@ -1,4 +1,4 @@
-import extractDomain from 'extract-domain';
+import getEmailDomain from '../../shared/helpers/get-email-domain.js';
 import adminSettings from '../adminSettings.js';
 
 const authenticationRegex = /^\/api\/authentication\/signup.*$/i;
@@ -11,9 +11,9 @@ export default async function restrictOrganizationEmailHandler(request, reply) {
 
     if (
         restrict &&
-        extractDomain(restrict) !== extractDomain(email) &&
+        getEmailDomain(restrict) !== getEmailDomain(email) &&
         authenticationRegex.test(url)
     ) {
-        return reply.code(403).send({ error: errorMessage });
+        return reply.code(403).send({ message: errorMessage });
     }
 }

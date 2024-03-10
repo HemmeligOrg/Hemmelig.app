@@ -21,7 +21,7 @@ export const signIn = async (username, password) => {
     if (data.status === 403) {
         return {
             statusCode: 403,
-            error: json.error,
+            message: json.message,
         };
     }
 
@@ -43,7 +43,7 @@ export const signUp = async (email, username, password) => {
     if (data.status === 403) {
         return {
             statusCode: 403,
-            error: json.error,
+            message: json.message,
         };
     }
 
