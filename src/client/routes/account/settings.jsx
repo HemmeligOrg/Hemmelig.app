@@ -1,12 +1,13 @@
-import { Button, Checkbox, Container, Group, Input, Loader, Stack, Text } from '@mantine/core';
+import { Button, Checkbox, Group, Input, Stack, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconAt, IconEdit } from '@tabler/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
-import { getSettings, updateSettings } from '../../api/settings';
+import { updateSettings } from '../../api/settings';
 
 const Settings = () => {
     const [success, setSuccess] = useState(false);
@@ -16,36 +17,11 @@ const Settings = () => {
 
     const { t } = useTranslation();
 
+    const adminSettings = useLoaderData();
+
     const form = useForm({
-        initialValues: {
-            read_only: false,
-            disable_users: false,
-            disable_user_account_creation: false,
-            disable_file_upload: false,
-            restrict_organization_email: '',
-        },
+        initialValues: adminSettings,
     });
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const adminSettings = await getSettings();
-
-                if (adminSettings.error || [401, 403, 500].includes(adminSettings.statusCode)) {
-                    setUserError(adminSettings.error ? adminSettings.error : t('not_logged_in'));
-
-                    return;
-                }
-
-                form.setValues(adminSettings[0]);
-
-                setIsLoading(false);
-                setUserError(null);
-            } catch (err) {
-                setUserError(err);
-            }
-        })();
-    }, []);
 
     const onUpdateSettings = async (e) => {
         e.preventDefault();
@@ -79,18 +55,12 @@ const Settings = () => {
         }
     };
 
-    if (isLoading && !userError) {
-        return (
-            <Container>
-                <Loader color="teal" variant="bars" />
-            </Container>
-        );
-    }
+    if (adminSettings.error || [401, 403, 500].includes(adminSettings.statusCode)) {
+        const error = adminSettings.error ? adminSettings.error : t('not_logged_in');
 
-    if (userError) {
         return (
             <Stack>
-                <ErrorBox message={userError} />
+                <ErrorBox message={error} />
             </Stack>
         );
     }
