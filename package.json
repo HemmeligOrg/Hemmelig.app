@@ -51,7 +51,6 @@
     "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
     "email-validator": "^2.0.4",
-    "extract-domain": "^2.4.8",
     "fastify": "^4.9.1",
     "fastify-plugin": "^3.0.1",
     "file-type": "^18.0.0",
