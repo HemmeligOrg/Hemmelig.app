@@ -1,40 +1,26 @@
 import { Container, Loader, Stack, Text } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Navigate, useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 
 import { useTranslation } from 'react-i18next';
-import { getUser } from '../../api/account';
 
 const HomeAccount = () => {
     const { t } = useTranslation();
 
-    const [user, setUser] = useState(null);
+    const userInfo = useLoaderData();
+
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const userInfo = await getUser();
+    if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
+        setError(userInfo.error ? userInfo.error : t('not_logged_in'));
 
-                if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-                    setError(userInfo.error ? userInfo.error : t('not_logged_in'));
+        return;
+    }
 
-                    return;
-                }
+    const { user = {} } = userInfo;
 
-                setUser(userInfo.user);
-
-                setIsLoading(false);
-                setError(null);
-            } catch (err) {
-                setError(err);
-            }
-        })();
-    }, []);
-
-    if (!user?.username && !isLoading) {
+    if (!user?.username) {
         return <Navigate replace to="/signin" />;
     }
 

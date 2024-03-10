@@ -78,7 +78,6 @@ const Account = () => {
                     updatedUserInfo.message
                         ? updatedUserInfo.message
                         : t('account.account.can_not_update_profile')
-
                 );
 
                 return;
