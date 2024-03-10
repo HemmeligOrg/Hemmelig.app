@@ -87,7 +87,15 @@ const appRouter = createBrowserRouter(
                         return await getSettings();
                     }}
                 />
-                <Route path="account-settings" element={<UserAccount />} />
+                <Route
+                    path="account-settings"
+                    element={<UserAccount />}
+                    loader={async () => {
+                        const { getUser } = await import('./api/account');
+
+                        return await getUser();
+                    }}
+                />
                 <Route
                     path="users"
                     element={<Users />}
