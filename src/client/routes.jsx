@@ -88,7 +88,15 @@ const appRouter = createBrowserRouter(
                     }}
                 />
                 <Route path="account-settings" element={<UserAccount />} />
-                <Route path="users" element={<Users />} />
+                <Route
+                    path="users"
+                    element={<Users />}
+                    loader={async () => {
+                        const { getUsers } = await import('./api/users');
+
+                        return await getUsers();
+                    }}
+                />
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="terms" element={<Terms />} />
             </Route>
