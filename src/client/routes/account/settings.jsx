@@ -12,8 +12,6 @@ import { updateSettings } from '../../api/settings';
 const Settings = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userError, setUserError] = useState(null);
 
     const { t } = useTranslation();
 
