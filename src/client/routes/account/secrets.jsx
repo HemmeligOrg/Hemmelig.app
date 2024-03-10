@@ -1,15 +1,16 @@
-import { ActionIcon, Container, Group, Loader, Stack, Table, Text } from '@mantine/core';
+import { ActionIcon, Group, Stack, Table, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
-import { burnSecret, getSecrets } from '../../api/secret';
+import { burnSecret } from '../../api/secret';
 
 dayjs.extend(relativeTime);
 
@@ -28,10 +29,7 @@ const updateSecretList = (secrets, form, action = 'update') => {
 };
 
 const Secrets = () => {
-    const [secrets, setSecrets] = useState([]);
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userError, setUserError] = useState(null);
+    const [secrets, setSecrets] = useState(useLoaderData());
     const [success, setSuccess] = useState(false);
 
     const { t } = useTranslation();
@@ -45,26 +43,17 @@ const Secrets = () => {
         initialValues: defaultValues,
     });
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const secrets = await getSecrets();
+    if (secrets.error || [401, 500].includes(secrets.statusCode)) {
+        const error = secrets.error ? secrets.error : t('not_logged_in');
 
-                if (secrets.error || [401, 500].includes(secrets.statusCode)) {
-                    setUserError(secrets.error ? secrets.error : t('not_logged_in'));
+        return (
+            <Stack>
+                <ErrorBox message={error} />
+            </Stack>
+        );
 
-                    return;
-                }
-
-                setSecrets(secrets);
-
-                setIsLoading(false);
-                setUserError(null);
-            } catch (err) {
-                setUserError(err);
-            }
-        })();
-    }, []);
+        return;
+    }
 
     const onDeleteSecret = async (secret) => {
         try {
@@ -121,25 +110,8 @@ const Secrets = () => {
         </tr>
     ));
 
-    if (isLoading && !userError) {
-        return (
-            <Container>
-                <Loader color="teal" variant="bars" />
-            </Container>
-        );
-    }
-
-    if (userError) {
-        return (
-            <Stack>
-                <ErrorBox message={userError} />
-            </Stack>
-        );
-    }
-
     return (
         <Stack>
-            {error && <ErrorBox message={error} />}
             {success && <SuccessBox message={'secrets.deleted'} />}
             <Group position="left">
                 <Table horizontalSpacing="sm" highlightOnHover>

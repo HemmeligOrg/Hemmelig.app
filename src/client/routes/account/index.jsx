@@ -1,5 +1,4 @@
 import { Container, Loader, Stack, Text } from '@mantine/core';
-import { useState } from 'react';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 
@@ -10,12 +9,12 @@ const HomeAccount = () => {
 
     const userInfo = useLoaderData();
 
-    const [error, setError] = useState(null);
-
-    if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-        setError(userInfo.error ? userInfo.error : t('not_logged_in'));
-
-        return;
+    if (userInfo?.error || [401, 500].includes(userInfo.statusCode)) {
+        return (
+            <Stack>
+                <ErrorBox message={userInfo.error ? userInfo.error : t('not_logged_in')} />
+            </Stack>
+        );
     }
 
     const { user = {} } = userInfo;
@@ -29,14 +28,6 @@ const HomeAccount = () => {
             <Container>
                 <Loader color="teal" variant="bars" />
             </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Stack>
-                <ErrorBox message={error} />
-            </Stack>
         );
     }
 

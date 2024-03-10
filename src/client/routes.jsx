@@ -69,7 +69,15 @@ const appRouter = createBrowserRouter(
                         return await getUser();
                     }}
                 />
-                <Route path="secrets" element={<Secrets />} />
+                <Route
+                    path="secrets"
+                    element={<Secrets />}
+                    loader={async () => {
+                        const { getSecrets } = await import('./api/secret');
+
+                        return await getSecrets();
+                    }}
+                />
                 <Route path="instance-settings" element={<Settings />} />
                 <Route path="account-settings" element={<UserAccount />} />
                 <Route path="users" element={<Users />} />
