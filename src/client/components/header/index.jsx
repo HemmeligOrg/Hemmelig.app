@@ -73,8 +73,8 @@ const Header = () => {
         const data = await refresh();
 
         if (data.statusCode === 401) {
-            setRedirect(true);
             close();
+            setRedirect(true);
         }
 
         dispatch(userLogin(cookie));
