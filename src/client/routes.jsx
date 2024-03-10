@@ -51,12 +51,60 @@ const appRouter = createBrowserRouter(
                 <Route path="terms" element={<Terms />} />
             </Route>
             <Route path="/account" element={<AdminShell />}>
-                <Route index element={<Account />} />
-                <Route path="account" element={<Account />} />
-                <Route path="secrets" element={<Secrets />} />
-                <Route path="instance-settings" element={<Settings />} />
-                <Route path="account-settings" element={<UserAccount />} />
-                <Route path="users" element={<Users />} />
+                <Route
+                    index
+                    element={<Account />}
+                    loader={async () => {
+                        const { getUser } = await import('./api/account');
+
+                        return await getUser();
+                    }}
+                />
+                <Route
+                    path="account"
+                    element={<Account />}
+                    loader={async () => {
+                        const { getUser } = await import('./api/account');
+
+                        return await getUser();
+                    }}
+                />
+                <Route
+                    path="secrets"
+                    element={<Secrets />}
+                    loader={async () => {
+                        const { getSecrets } = await import('./api/secret');
+
+                        return await getSecrets();
+                    }}
+                />
+                <Route
+                    path="instance-settings"
+                    element={<Settings />}
+                    loader={async () => {
+                        const { getSettings } = await import('./api/settings');
+
+                        return await getSettings();
+                    }}
+                />
+                <Route
+                    path="account-settings"
+                    element={<UserAccount />}
+                    loader={async () => {
+                        const { getUser } = await import('./api/account');
+
+                        return await getUser();
+                    }}
+                />
+                <Route
+                    path="users"
+                    element={<Users />}
+                    loader={async () => {
+                        const { getUsers } = await import('./api/users');
+
+                        return await getUsers();
+                    }}
+                />
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="terms" element={<Terms />} />
             </Route>

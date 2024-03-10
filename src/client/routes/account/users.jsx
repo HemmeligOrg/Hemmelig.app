@@ -4,7 +4,6 @@ import {
     Center,
     Container,
     Group,
-    Loader,
     Modal,
     PasswordInput,
     Select,
@@ -17,8 +16,9 @@ import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
 import { IconAt, IconChefHat, IconEdit, IconPlus, IconTrash, IconUser } from '@tabler/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 
 import { addUser, deleteUser, getUsers, updateUser } from '../../api/users';
 import ErrorBox from '../../components/error-box';
@@ -50,56 +50,58 @@ const addUserList = (users, data) => {
     return updated;
 };
 
+const UserRows = ({ users, open, form, setModalState, openDeleteModal }) => {
+    return users.map((user) => (
+        <tr key={user.username}>
+            <td>{user.username}</td>
+            <td>{user.email}</td>
+            <td>{user.role}</td>
+            <td>
+                <ActionIcon
+                    variant="filled"
+                    onClick={(event) => {
+                        open(event);
+                        form.setValues(user);
+                        setModalState('update');
+                    }}
+                >
+                    <IconEdit size="1rem" />
+                </ActionIcon>
+            </td>
+            <td>
+                <ActionIcon variant="filled" onClick={() => openDeleteModal(user)}>
+                    <IconTrash size="1rem" />
+                </ActionIcon>
+            </td>
+        </tr>
+    ));
+};
+
 const Users = () => {
     const [modalState, setModalState] = useState('add');
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState(useLoaderData());
     const [skip, setSkip] = useState(SKIP);
     const [showMore, setShowMore] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userError, setUserError] = useState(null);
 
     const { t } = useTranslation();
 
     const defaultValues = {
         username: '',
         email: '',
-        role: '',
+        role: 'user',
         password: '',
     };
 
     const form = useForm({
-        initialValues: defaultValues,
+        initialValues: users,
     });
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const users = await getUsers();
-
-                if (users.error || [401, 403, 500].includes(users.statusCode)) {
-                    setUserError(users.error ? users.error : t('not_logged_in'));
-
-                    return;
-                }
-
-                if (users?.length < SKIP) {
-                    setShowMore(false);
-                }
-
-                if (!users?.error) {
-                    setUsers(users);
-                }
-
-                setIsLoading(false);
-                setUserError(null);
-            } catch (err) {
-                setUserError(err);
-            }
-        })();
-    }, []);
+    if (users?.length < SKIP) {
+        setShowMore(false);
+    }
 
     const onUpdateUser = async (event) => {
         event.preventDefault();
@@ -224,40 +226,9 @@ const Users = () => {
         close(event);
     };
 
-    const rows = users.map((user) => (
-        <tr key={user.username}>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
-            <td>{user.role}</td>
-            <td>
-                <ActionIcon
-                    variant="filled"
-                    onClick={(event) => {
-                        open(event);
-                        form.setValues(user);
-                        setModalState('update');
-                    }}
-                >
-                    <IconEdit size="1rem" />
-                </ActionIcon>
-            </td>
-            <td>
-                <ActionIcon variant="filled" onClick={() => openDeleteModal(user)}>
-                    <IconTrash size="1rem" />
-                </ActionIcon>
-            </td>
-        </tr>
-    ));
+    if (users.error || [401, 403, 500].includes(users?.statusCode)) {
+        const userError = users.error ? users.error : t('not_logged_in');
 
-    if (isLoading && !userError) {
-        return (
-            <Container>
-                <Loader color="teal" variant="bars" />
-            </Container>
-        );
-    }
-
-    if (userError) {
         return (
             <Stack>
                 <ErrorBox message={userError} />
@@ -340,7 +311,15 @@ const Users = () => {
                             <th>Delete</th>
                         </tr>
                     </thead>
-                    <tbody>{rows}</tbody>
+                    <tbody>
+                        <UserRows
+                            users={users}
+                            open={open}
+                            form={form}
+                            setModalState={setModalState}
+                            openDeleteModal={openDeleteModal}
+                        />
+                    </tbody>
                 </Table>
             </Group>
 

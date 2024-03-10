@@ -9,7 +9,7 @@ async function settings(fastify) {
             preValidation: [fastify.authenticate, fastify.admin],
         },
         async () => {
-            const settings = await prisma.settings.findMany({
+            const settings = await prisma.settings.findFirst({
                 where: {
                     id: 'admin_settings',
                 },

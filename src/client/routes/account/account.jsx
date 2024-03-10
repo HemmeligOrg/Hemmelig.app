@@ -1,69 +1,34 @@
-import {
-    Button,
-    Container,
-    Group,
-    Loader,
-    PasswordInput,
-    Stack,
-    Text,
-    TextInput,
-} from '@mantine/core';
+import { Button, Group, PasswordInput, Stack, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { openConfirmModal } from '@mantine/modals';
 import { IconAt, IconEdit, IconLock, IconTrash } from '@tabler/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
 import style from './account.module.css';
 
-import { deleteUser, getUser, updateUser } from '../../api/account';
+import { deleteUser, updateUser } from '../../api/account';
 
 const Account = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userError, setUserError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [deleted, setDeleted] = useState(false);
 
     const { t } = useTranslation();
 
+    const userInfo = useLoaderData();
+
     const form = useForm({
-        initialValues: {
-            currentPassword: '',
-            newPassword: '',
-            email: '',
-            confirmNewPassword: '',
-        },
+        initialValues: userInfo?.user,
         validate: {
             confirmNewPassword: (value, values) =>
                 value !== values.newPassword ? t('account.account.passwords_does_not_match') : null,
         },
     });
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const userInfo = await getUser();
-
-                if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-                    setUserError(userInfo.error ? userInfo.error : t('not_logged_in'));
-
-                    return;
-                }
-
-                form.setValues(userInfo.user);
-
-                setIsLoading(false);
-                setUserError(null);
-            } catch (err) {
-                setUserError(err);
-            }
-        })();
-    }, []);
 
     const onProfileUpdate = async (e) => {
         e.preventDefault();
@@ -78,7 +43,6 @@ const Account = () => {
                     updatedUserInfo.message
                         ? updatedUserInfo.message
                         : t('account.account.can_not_update_profile')
-
                 );
 
                 return;
@@ -152,15 +116,9 @@ const Account = () => {
         return <Navigate to="/signout" />;
     }
 
-    if (isLoading && !userError) {
-        return (
-            <Container>
-                <Loader color="teal" variant="bars" />
-            </Container>
-        );
-    }
+    if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
+        const userError = userInfo.error ? userInfo.error : t('not_logged_in');
 
-    if (userError) {
         return (
             <Stack>
                 <ErrorBox message={userError} />
