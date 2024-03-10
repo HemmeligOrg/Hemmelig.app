@@ -85,8 +85,6 @@ const Users = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userError, setUserError] = useState(null);
 
     const { t } = useTranslation();
 

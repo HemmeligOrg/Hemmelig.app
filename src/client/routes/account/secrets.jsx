@@ -51,8 +51,6 @@ const Secrets = () => {
                 <ErrorBox message={error} />
             </Stack>
         );
-
-        return;
     }
 
     const onDeleteSecret = async (secret) => {
