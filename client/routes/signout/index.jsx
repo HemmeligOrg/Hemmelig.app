@@ -40,7 +40,7 @@ const SignOut = () => {
                         <Image
                             maw={240}
                             radius="md"
-                            src="./secret_cat.png"
+                            src="./static/secret_cat.png"
                             alt="Secret Cat"
                             className={styles.image}
                         />

@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import { hash, compare } from '../../../src/server/helpers/password.js';
+import { compare, hash } from '../../../server/helpers/password.js';
 
 const PASSWORD = 'suP3rL0ng!PssWrd';
 

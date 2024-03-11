@@ -123,3 +123,4 @@ database/
 data/
 .vscode
 hemmelig.backup.db
+client/build/
