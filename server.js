@@ -62,6 +62,7 @@ fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'public'),
     prefix: '/static/',
 });
+
 fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'public', 'locales'),
     prefix: '/locales/',
