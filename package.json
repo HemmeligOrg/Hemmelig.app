@@ -48,6 +48,7 @@
     "@mantine/modals": "^6.0.6",
     "@prisma/client": "^4.12.0",
     "@tabler/icons": "^1.83.1",
+    "@vitejs/plugin-react": "^4.2.1",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
     "email-validator": "^2.0.4",
@@ -72,7 +73,6 @@
     "y8": "^1.0.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^3.1.0",
     "buffer": "^6.0.3",
     "classcat": "^5.0.3",
     "dayjs": "^1.11.7",

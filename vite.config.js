@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react';
+import reactVite from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 import { dirname, resolve } from 'node:path';
@@ -14,6 +14,6 @@ export default defineConfig(() => {
             outDir: 'build',
         },
         publicDir: 'public',
-        plugins: [react({ jsxRuntime: 'classic' })],
+        plugins: [reactVite({ jsxRuntime: 'automatic' })],
     };
 });
