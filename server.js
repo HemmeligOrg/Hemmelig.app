@@ -1,50 +1,92 @@
 // Boot scripts
-import('./src/server/bootstrap.js');
+import('./server/bootstrap.js');
 
 import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import jwt from '@fastify/jwt';
-import fstatic from '@fastify/static';
+import fastifyStatic from '@fastify/static';
+import FastifyVite from '@fastify/vite';
 import config from 'config';
 import importFastify from 'fastify';
-import fs from 'fs';
 import { JSDOM } from 'jsdom';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import template from 'y8';
 
-import rateLimit from './src/server/plugins/rate-limit.js';
+import rateLimit from './server/plugins/rate-limit.js';
 
-import adminDecorator from './src/server/decorators/admin.js';
-import allowedIp from './src/server/decorators/allowed-ip.js';
-import attachment from './src/server/decorators/attachment-upload.js';
-import jwtDecorator from './src/server/decorators/jwt.js';
-import userFeatures from './src/server/decorators/user-features.js';
+import adminDecorator from './server/decorators/admin.js';
+import allowedIp from './server/decorators/allowed-ip.js';
+import attachment from './server/decorators/attachment-upload.js';
+import jwtDecorator from './server/decorators/jwt.js';
+import userFeatures from './server/decorators/user-features.js';
 
-import readCookieAllRoutesHandler from './src/server/prehandlers/cookie-all-routes.js';
-import disableUserAccountCreationHandler from './src/server/prehandlers/disable-user-account-creation.js';
-import disableUserHandler from './src/server/prehandlers/disable-users.js';
-import readOnlyHandler from './src/server/prehandlers/read-only.js';
-import restrictOrganizationEmailHandler from './src/server/prehandlers/restrict-organization-email.js';
+import readCookieAllRoutesHandler from './server/prehandlers/cookie-all-routes.js';
+import disableUserAccountCreationHandler from './server/prehandlers/disable-user-account-creation.js';
+import disableUserHandler from './server/prehandlers/disable-users.js';
+import readOnlyHandler from './server/prehandlers/read-only.js';
+import restrictOrganizationEmailHandler from './server/prehandlers/restrict-organization-email.js';
 
-import accountRoute from './src/server/controllers/account.js';
-import adminSettingsRoute from './src/server/controllers/admin/settings.js';
-import usersRoute from './src/server/controllers/admin/users.js';
-import authenticationRoute from './src/server/controllers/authentication.js';
-import downloadRoute from './src/server/controllers/download.js';
-import healthzRoute from './src/server/controllers/healthz.js';
-import secretRoute from './src/server/controllers/secret.js';
-import statsRoute from './src/server/controllers/stats.js';
+import accountRoute from './server/controllers/account.js';
+import adminSettingsRoute from './server/controllers/admin/settings.js';
+import usersRoute from './server/controllers/admin/users.js';
+import authenticationRoute from './server/controllers/authentication.js';
+import downloadRoute from './server/controllers/download.js';
+import healthzRoute from './server/controllers/healthz.js';
+import secretRoute from './server/controllers/secret.js';
+import statsRoute from './server/controllers/stats.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const isDev = process.env.NODE_ENV === 'development';
 
 const MAX_FILE_BYTES = 1024 * config.get('file.size') * 1000; // Example: 1024 * 2 * 1000 = 2 024 000 bytes
 
+const staticPath = path.join(__dirname, !isDev ? 'client/build' : 'client');
+
 const fastify = importFastify({
     logger: config.get('logger'),
     bodyLimit: MAX_FILE_BYTES,
 });
+
+await fastify.register(FastifyVite, {
+    root: import.meta.url,
+    dev: process.argv.includes('--dev'),
+    spa: true,
+});
+
+fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'public'),
+    prefix: '/static/',
+});
+fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'public', 'locales'),
+    prefix: '/locales/',
+    decorateReply: false,
+});
+
+if (!isDev) {
+    const script = template(
+        `
+        try {
+            window.__SECRET_CONFIG = {{config}}
+        } catch (e) {
+            window.__SECRET_CONFIG = '';
+        }
+    `,
+        { config: `'${JSON.stringify(config.get('__client_config'))}';` }
+    );
+
+    const index = staticPath + '/index.html';
+
+    const dom = new JSDOM(fs.readFileSync(index));
+    dom.window.document.querySelector('#__secret_config').textContent = script;
+
+    fs.writeFileSync(index, dom.serialize());
+}
 
 fastify.register(rateLimit, {
     prefix: '/api/',
@@ -91,7 +133,21 @@ fastify.addHook('preHandler', disableUserAccountCreationHandler);
 fastify.addHook('preHandler', readOnlyHandler);
 fastify.addHook('preHandler', restrictOrganizationEmailHandler);
 
-// Register our routes before the static content
+function serveIndex(_, reply) {
+    return reply.html();
+}
+
+fastify.get('/', serveIndex);
+fastify.get('/secret/*', serveIndex);
+fastify.get('/about', serveIndex);
+fastify.get('/privacy', serveIndex);
+fastify.get('/api-docs', serveIndex);
+fastify.get('/signin', serveIndex);
+fastify.get('/signup', serveIndex);
+fastify.get('/signout', serveIndex);
+fastify.get('/account*', serveIndex);
+fastify.get('/terms', serveIndex);
+fastify.get('/public*', serveIndex);
 
 fastify.register(authenticationRoute, {
     prefix: '/api/authentication',
@@ -115,54 +171,9 @@ fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });
 fastify.register(healthzRoute, { prefix: '/healthz' });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const staticPath = path.join(__dirname, !isDev ? 'build' : '');
-
-// Static frontend for the production build
-if (!isDev) {
-    fastify.register(fstatic, {
-        root: staticPath,
-        route: '/*',
-    });
-
-    const script = template(
-        `
-        try {
-            window.__SECRET_CONFIG = {{config}}
-        } catch (e) {
-            window.__SECRET_CONFIG = '';
-        }
-    `,
-        { config: `'${JSON.stringify(config.get('__client_config'))}';` }
-    );
-
-    const index = staticPath + '/index.html';
-
-    const dom = new JSDOM(fs.readFileSync(index));
-    dom.window.document.querySelector('#__secret_config').textContent = script;
-
-    fs.writeFileSync(index, dom.serialize());
-
-    function serveIndex(_, res) {
-        return res.sendFile('index.html');
-    }
-
-    fastify.get('/secret/*', serveIndex);
-    fastify.get('/about', serveIndex);
-    fastify.get('/privacy', serveIndex);
-    fastify.get('/api-docs', serveIndex);
-    fastify.get('/signin', serveIndex);
-    fastify.get('/signup', serveIndex);
-    fastify.get('/signout', serveIndex);
-    fastify.get('/account*', serveIndex);
-    fastify.get('/terms', serveIndex);
-    fastify.get('/public*', serveIndex);
-}
-
 const startServer = async () => {
     try {
+        await fastify.vite.ready();
         await fastify.listen({ port: config.get('port'), host: config.get('localHostname') });
     } catch (err) {
         fastify.log.error(err);

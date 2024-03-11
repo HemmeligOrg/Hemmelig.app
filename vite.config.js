@@ -1,17 +1,19 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const path = fileURLToPath(import.meta.url);
+const root = resolve(dirname(path), 'client');
 
 export default defineConfig(() => {
     return {
+        root,
         build: {
             outDir: 'build',
         },
-        plugins: [react()],
-        server: {
-            port: 3001,
-            proxy: {
-                '/api': 'http://0.0.0.0:3000',
-            },
-        },
+        publicDir: 'public',
+        plugins: [react({ jsxRuntime: 'classic' })],
     };
 });

@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import isValidTTL from '../../../src/server/helpers/validate-ttl.js';
+import isValidTTL from '../../../server/helpers/validate-ttl.js';
 
 describe('Validate TTL', () => {
     describe('#isValidTTL(ttl)', () => {

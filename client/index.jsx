@@ -5,9 +5,9 @@ import { Provider } from 'react-redux';
 import { LoadingOverlay } from '@mantine/core';
 import './i18n';
 
-import HemmeligApplication from './client/app';
-import configureStore from './client/helpers/configureStore';
-import './client/index.css';
+import HemmeligApplication from './app';
+import configureStore from './helpers/configureStore';
+import './index.css';
 
 const store = configureStore();
 

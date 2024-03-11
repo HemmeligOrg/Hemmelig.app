@@ -3,7 +3,7 @@
 import meow from 'meow';
 import fetch from 'node-fetch';
 import YAML from 'yaml';
-import { generateKey, encrypt } from './src/shared/helpers/crypto.js';
+import { encrypt, generateKey } from './shared/helpers/crypto.js';
 
 // Adding this hack to make it work for pkg
 // https://github.com/vercel/pkg/issues/1291#issuecomment-1360586986
