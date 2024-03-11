@@ -25,8 +25,7 @@ FROM node:20-alpine
 
 WORKDIR /home/node/hemmelig
 
-RUN mkdir build
-COPY --from=0 /usr/src/app/build build/
+COPY --from=0 /usr/src/app/client/build client/build
 
 COPY package*.json ./
 
