@@ -15,7 +15,7 @@ async function settings(fastify) {
                 },
             });
 
-            return settings;
+            return settings || {};
         }
     );
 
