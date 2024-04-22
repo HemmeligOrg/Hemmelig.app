@@ -99,7 +99,7 @@ const Users = () => {
         initialValues: users,
     });
 
-    if (users?.length < SKIP) {
+    if (showMore && users?.length < SKIP) {
         setShowMore(false);
     }
 
