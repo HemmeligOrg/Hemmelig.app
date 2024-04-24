@@ -1,0 +1,181 @@
+{
+    "sign_in": "Prijava",
+    "sign_out": "Odjava",
+    "sign_up": "Registracija",
+    "not_logged_in": "Nisi prijavljen",
+    "something_went_wrong": "Nekaj je šlo narobe!",
+    "loading": "Nalagam",
+    "account": {
+        "home": {
+            "title": "Račun",
+            "update_password": "Posodobi svoje geslo",
+            "first_time_message": "Če se prvič vpisuješ v ta uporabniški račun, pojdi v Nastavitve računa in posodobi geslo",
+            "hi": "Pozdravljen",
+            "intro": "Veseli nas, da si se prijavil. Tu je seznam funkcij, ki jih prejmejo prijavljeni uporabniki",
+            "upload_files": "Nalaganje datotek",
+            "expiration": "Rok uporabnosti 14 in 28 dni za skrivnosti",
+            "secrets": "Navedi in izbriši svoje skrivnosti",
+            "more": "Prihaja še več funkcij! Hvala, ker ste se pridružili Hemmelig.app!"
+        },
+        "account": {
+			"passwords_does_not_match": "Gesli se ne ujemata",
+            "can_not_update_profile": "Ni bilo mogoče posodobiti tvojega uporabniškega profila",
+            "can_not_delete": "Uporabnika ni bilo mogoče izbrisati",
+            "delete_account": "Izbriši svoj profil",
+            "do_you_want_delete": "Ali si prepričan, da želiš izbrisati svoj profil?",
+            "dont_delete_account": "Ne, ne izbriši ga",
+
+			"email": "E-pošta",
+            "your_password": "Trenutno geslo",
+            "current_password": "Tvoje trenutno geslo",
+            "update_your_password": "Posodobi svoje geslo",
+            "new_password": "Novo geslo",
+            "confirm_password": "Potrdi geslo",
+            "confirm_new_password": "Potrdi novo geslo",
+            "update_details": "Posodobi podrobnosti"
+        },
+        "secrets": {
+            "id": "Id",
+			"expires": "Poteče",
+            "public": "Javno",
+            "delete": "Izbriši",
+            "yes": "Da",
+            "no": "ne",
+            "delete_secret": "Izbriši skrivnost",
+            "dont_delete_secret": "Ne, ne izbriši",
+            "do_you_want_delete": "Ali si prepričan, da želiš izbrisati to skrivnost?"
+        },
+        "settings": {
+			"read_only_mode": "Način samo za branje",
+            "readonly_only_for_non_admin": "Ali naj bo namestitev Hemmelig v uporabi samo za uporabnike, ki niso skrbniki?",
+            "disable_users": "Onemogoči uporabnike",
+            "disable_signin": "Ali naj bo prijava uporabnika onemogočena?",
+            "disable_user_account_creation": "Onemogoči ustvarjanje uporabniškega računa",
+            "disable_user_account_creation_description": "Uporabnikom ne dovoli ustvarjanja novega računa. Kot skrbnik boš še vedno lahko ustvarjal nove uporabniške račune",
+            "disable_file_upload": "Onemogoči nalaganje datoteke",
+            "disable_file_upload_description": "Onemogoči nalaganje datotek za tvojo namestitev",
+            "restrict_organization_email": "Omeji na e-poštno domeno",
+            "restrict_organization_email_description": "To bo omejilo registracijo uporabnikov za določeno e-poštno domeno"        }
+    },
+	"public_list": "Javna lepljena",
+    "account_settings": "Nastavitve računa",
+    "instance_settings": "Nastavitve namestitve",
+    "copied": "Kopirano",
+    "copy": "Kopiraj",
+    "header": {
+        "nav": {
+            "close": "Zapri navigacijo",
+            "open": "Odpri navigacijo"
+        },
+        "seja": {
+            "auth": "Preverjanje",
+            "expire": "Tvoja seja bo kmalu potekla. Ali jo želiš podaljšati?",
+            "update": "Posodobi sejo"
+        }
+    },
+    "home": {
+		"app_subtitle": "Prilepi geslo, zaupno sporočilo ali zasebne podatke.",
+        "dobrodošli": "Zagotovi, da tvoji občutljivi podatki ostanejo šifrirani, varni in zaupni.",
+        "bummer": "Sranje!",
+        "maintxtarea": "Napiši svoje občutljive podatke..",
+        "title": "Naslov",
+        "lifetime": "Življenjska doba",
+        "max_views": "Največ ogledov",
+        "enable_password": "Omogoči geslo",
+        "optional_password": "Tvoje izbirno geslo",
+        "burn_aftertime": "Zapiši skrivnost šele po izteku časa",
+        "restrict_from_ip": "Omeji odpiranje skrivnosti glede na IP ali obseg CIDR. Primer CIDR: 192.168.1.0/24.",
+        "restrict_from_ip_placeholder": "Omeji z IP ali CIDR",
+        "login_to_upload": "Prijavi se za nalaganje datotek",
+        "public_no_upload": "Javna lepljenja ne dovoljujejo nalaganja datotek",
+        "upload_files": "Naloži datoteke",
+        "your_secret_url": "Tvoj skrivni URL",
+        "share": "Deli",
+        "create_secret_link": "Ustvari skrivno povezavo",
+        "ali": "Loči povezavo in ključ za dešifriranje",
+        "secret_url": "Skrivni URL brez ključa za dešifriranje",
+        "decryption_key": "Ključ za dešifriranje",
+        "create_new": "Ustvari novo",
+        "delete": "Izbriši",
+        "link_only_works_once": "Skrivna povezava je privzeto samo za enkratno uporabo, potem pa izgine.",
+        "app_name_meaning": "[he`m:(ə)li], pomeni skrivnost v norveščini.",
+        "please_add_secret": "Dodaj skrivnost.",
+        "14_days": "14 dni",
+        "28_days": "28 dni",
+        "7_days": "7 dni",
+        "3_days": "3 dni",
+        "1_day": "1 dan",
+        "12_hours": "12 ur",
+        "4_hours": "4 ure",
+        "1_hour": "1 ura",
+        "30_minutes": "30 minut",
+        "5_minutes": "5 minut",
+        "successful_share": "Uspešno deljeno",
+        "get_your_secret": "Pridobite svojo skrivnost na hemmelig.app.",
+        "set_public": "Nastavi kot javno lepljenje"
+    },
+    "secret": {
+        "view_your_secret": "Oglej si svojo skrivnost",
+        "will_show_once": "Privzeto bomo skrivnost prikazali samo enkrat.",
+        "views_left": "Ogledov še na voljo:",
+        "password_required": "Za odpiranje te skrivnosti je potrebno geslo",
+        "view_secret": "Oglejte si skrivnost",
+        "create_secret": "Ustvari novo skrivnost",
+        "convert_b64": "Pretvori besedilo v base64",
+        "convert_utf8": "Pretvori base64 v golo besedilo"
+    },
+    "settings": {
+        "success": "Uspeh",
+        "description": "Posodobi stanje Hemmelig nastavitev",
+        "updated": "Nastavitve posodobljene",
+        "update": "Posodobi nastavitve",
+        "deleted": "Račun je izbrisan"
+    },
+    "users": {
+        "users": "Uporabniki",
+        "edit": "Uredi",
+        "update": "Uredi uporabnika",
+        "add": "Dodaj uporabnika",
+        "saved": "Shranjeno",
+        "save": "Shrani",
+        "more": "Naloži več",
+        "deleted": "Uporabnik je izbrisan"
+    },
+    "secrets": {
+        "secrets": "Skrivnosti",
+        "secret": "Skrivnost",
+        "deleted": "Skrivnost izbrisana"
+    },
+    "public": {
+        "heading": "Javni lepljenki",
+        "title": "Naziv",
+        "expires": "Poteče",
+        "username": "Uporabniško ime",
+        "of": "of"
+    },
+    "signout": {
+        "title": "Odjavljanje",
+        "waiting": "Prosim počakaj"
+    },
+    "signin": {
+        "title": "Priava",
+        "heading": "Vse, kar potrebujete za dostop in upravljanje Hemmeligovih skrivnosti.",
+        "username": "Uporabniško ime",
+        "password": "Tvoje geslo",
+        "signin": "Prijava"
+    },
+    "signup": {
+        "title": "Registracija",
+        "heading": "Vse, kar potrebujete za dostop in upravljanje Hemmeligovih skrivnosti.",
+        "email": "E-pošta",
+        "username": "Uporabniško ime",
+        "password": "Tvoje geslo",
+        "signup": "Registracija"
+    },
+    "privacy": {
+        "title": "Zasebnost"
+    },
+    "terms": {
+        "title": "Pogoji uporabe"
+    }
+}
