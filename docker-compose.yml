@@ -1,6 +1,6 @@
 services:
     hemmelig:
-        image: hemmeligapp/hemmelig:v5.19.16 # https://github.com/HemmeligOrg/Hemmelig.app/tags
+        image: hemmeligapp/hemmelig:v5.19.17 # https://github.com/HemmeligOrg/Hemmelig.app/tags
         hostname: hemmelig
         init: true
         volumes:
