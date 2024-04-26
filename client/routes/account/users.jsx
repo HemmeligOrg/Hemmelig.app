@@ -211,10 +211,10 @@ const Users = () => {
     const openDeleteModal = (user) => {
         setSuccess(false);
         openConfirmModal({
-            title: 'Delete ' + user.username,
+            title: "{t('account.users.delete')}" + " " + user.username,
             centered: true,
-            children: <Text size="sm">Are you sure you want to delete this user?</Text>,
-            labels: { confirm: 'Delete user', cancel: "No don't delete it" },
+            children: <Text size="sm">{t('account.users.do_you_want_delete')}</Text>,
+            labels: { confirm: "{t('account.users.delete_user')}", cancel: "{t('account.users.dont_delete_user')}" },
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteUser(user),
         });
@@ -239,7 +239,7 @@ const Users = () => {
     if (!users.length) {
         return (
             <Container size="xs ">
-                <ErrorBox message={'You have to be an admin to view the users'} />
+                <ErrorBox message="{t('account.users.have_to_be_admin')}" />
             </Container>
         );
     }
@@ -251,36 +251,36 @@ const Users = () => {
                 {success && <SuccessBox message={'users.saved'} />}
                 <Stack>
                     <TextInput
-                        label="Username"
+                        label="{t('account.users.username')}"
                         icon={<IconUser size={14} />}
-                        placeholder="Username"
+                        placeholder="{t('account.users.username')}"
                         disabled={modalState === 'update'}
                         {...form.getInputProps('username')}
                     />
                     <TextInput
-                        label="Email"
+                        label="{t('account.users.email')}"
                         icon={<IconAt size={14} />}
-                        placeholder="Email"
+                        placeholder="{t('account.users.email')}"
                         {...form.getInputProps('email')}
                     />
                     {modalState === 'add' && (
                         <PasswordInput
-                            label="Password"
+                            label="{t('account.users.password')}"
                             icon={<IconAt size={14} />}
-                            placeholder="Password"
+                            placeholder="{t('account.users.password')}"
                             {...form.getInputProps('password')}
                         />
                     )}
                     <Select
-                        label="Role"
-                        placeholder="Role"
+                        label="{t('account.users.role')}"
+                        placeholder="{t('account.users.role')}"
                         icon={<IconChefHat size={14} />}
                         value={form.getInputProps('role').value}
                         onChange={(value) => form.setFieldValue('role', value)}
                         data={[
-                            { value: 'admin', label: 'Admin' },
-                            { value: 'creator', label: 'Creator' },
-                            { value: 'user', label: 'User' },
+                            { value: "admin", label: "{t('account.users.admin')}" },
+                            { value: "creator", label: "{t('account.users.creator')}" },
+                            { value: "user", label: "{t('account.users.user')}" },
                         ]}
                     />
                 </Stack>
@@ -304,11 +304,11 @@ const Users = () => {
                 <Table horizontalSpacing="sm" highlightOnHover>
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th>{t('account.users.username')}</th>
+                            <th>{t('account.users.email')}</th>
+                            <th>{t('account.users.role')}</th>
+                            <th>{t('users.edit')}</th>
+                            <th>{t('account.users.delete')}</th>
                         </tr>
                     </thead>
                     <tbody>
