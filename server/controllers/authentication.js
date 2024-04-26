@@ -170,10 +170,9 @@ async function authentication(fastify) {
     );
 
     fastify.post('/signout', async (_, reply) => {
-        reply.clearCookie(COOKIE_KEY_PUBLIC, { path: '/' });
-
-        // clear the http only cookie by setting an expired date
-        reply.setCookie(COOKIE_KEY, '', { path: '/', expires: new Date(0) });
+        reply
+            .clearCookie(COOKIE_KEY_PUBLIC, { path: '/' })
+            .clearCookie(COOKIE_KEY, '', SACRED_COOKIE_SETTINGS);
 
         return {
             signout: 'ok',
