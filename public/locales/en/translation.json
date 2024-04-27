@@ -24,7 +24,6 @@
             "delete_account": "Delete your profile",
             "do_you_want_delete": "Are you sure you want to delete your profile?",
             "dont_delete_account": "No, don't delete it",
-
             "email": "Email",
             "your_password": "Current password",
             "current_password": "Your current password",
@@ -42,7 +41,7 @@
             "yes": "Yes",
             "no": "No",
             "delete_secret": "Delete secret",
-            "dont_delete_secret": "No don't delete it",
+            "dont_delete_secret": "No, don't delete it",
             "do_you_want_delete": "Are you sure you want to delete this secret?"
         },
         "settings": {
@@ -56,6 +55,20 @@
             "disable_file_upload_description": "Disable file upload for your instance",
             "restrict_organization_email": "Restrict to email domain",
             "restrict_organization_email_description": "This will limit user registration for a certain email domain"
+        },
+        "users": {
+            "username": "Username",
+            "email": "Email",
+            "password": "Password",
+            "role": "Role",
+            "admin": "Admin",
+            "creator": "Creator",
+            "user": "User",
+            "delete": "Delete",
+            "do_you_want_delete": "Are you sure you want to delete this user?",
+            "delete_user": "Delete user",
+            "dont_delete_user": "No, don't delete it",
+            "have_to_be_admin": "You have to be an admin to view the users"
         }
     },
     "public_list": "Public pastes",
@@ -163,7 +176,8 @@
         "heading": "Everything you need to access and manage the Hemmelig secrets.",
         "username": "Username",
         "password": "Your password",
-        "signin": "Sign in"
+        "signin": "Sign in",
+        "wrong_credentials": "Wrong username or password. Please try again."
     },
     "signup": {
         "title": "Sign up",
