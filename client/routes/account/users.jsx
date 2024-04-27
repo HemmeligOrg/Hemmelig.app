@@ -211,10 +211,13 @@ const Users = () => {
     const openDeleteModal = (user) => {
         setSuccess(false);
         openConfirmModal({
-            title: "{t('account.users.delete')}" + " " + user.username,
+            title: `${t('account.users.delete')} ${user.username}`,
             centered: true,
             children: <Text size="sm">{t('account.users.do_you_want_delete')}</Text>,
-            labels: { confirm: "{t('account.users.delete_user')}", cancel: "{t('account.users.dont_delete_user')}" },
+            labels: {
+                confirm: t('account.users.delete_user'),
+                cancel: t('account.users.dont_delete_user'),
+            },
             confirmProps: { color: 'red' },
             onConfirm: () => onDeleteUser(user),
         });
@@ -239,7 +242,7 @@ const Users = () => {
     if (!users.length) {
         return (
             <Container size="xs ">
-                <ErrorBox message="{t('account.users.have_to_be_admin')}" />
+                <ErrorBox message={t('account.users.have_to_be_admin')} />
             </Container>
         );
     }
@@ -251,36 +254,36 @@ const Users = () => {
                 {success && <SuccessBox message={'users.saved'} />}
                 <Stack>
                     <TextInput
-                        label="{t('account.users.username')}"
+                        label={t('account.users.username')}
                         icon={<IconUser size={14} />}
-                        placeholder="{t('account.users.username')}"
+                        placeholder={t('account.users.username')}
                         disabled={modalState === 'update'}
                         {...form.getInputProps('username')}
                     />
                     <TextInput
-                        label="{t('account.users.email')}"
+                        label={t('account.users.email')}
                         icon={<IconAt size={14} />}
-                        placeholder="{t('account.users.email')}"
+                        placeholder={t('account.users.email')}
                         {...form.getInputProps('email')}
                     />
                     {modalState === 'add' && (
                         <PasswordInput
-                            label="{t('account.users.password')}"
+                            label={t('account.users.password')}
                             icon={<IconAt size={14} />}
-                            placeholder="{t('account.users.password')}"
+                            placeholder={t('account.users.password')}
                             {...form.getInputProps('password')}
                         />
                     )}
                     <Select
-                        label="{t('account.users.role')}"
-                        placeholder="{t('account.users.role')}"
+                        label={t('account.users.role')}
+                        placeholder={t('account.users.role')}
                         icon={<IconChefHat size={14} />}
                         value={form.getInputProps('role').value}
                         onChange={(value) => form.setFieldValue('role', value)}
                         data={[
-                            { value: "admin", label: "{t('account.users.admin')}" },
-                            { value: "creator", label: "{t('account.users.creator')}" },
-                            { value: "user", label: "{t('account.users.user')}" },
+                            { value: 'admin', label: t('account.users.admin') },
+                            { value: 'creator', label: t('account.users.creator') },
+                            { value: 'user', label: t('account.users.user') },
                         ]}
                     />
                 </Stack>
