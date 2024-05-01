@@ -172,7 +172,7 @@ async function authentication(fastify) {
     fastify.post('/signout', async (_, reply) => {
         reply
             .clearCookie(COOKIE_KEY_PUBLIC, { path: '/' })
-            .clearCookie(COOKIE_KEY, '', SACRED_COOKIE_SETTINGS);
+            .clearCookie(COOKIE_KEY, SACRED_COOKIE_SETTINGS);
 
         return {
             signout: 'ok',
