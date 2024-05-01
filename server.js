@@ -37,6 +37,7 @@ import downloadRoute from './server/controllers/download.js';
 import healthzRoute from './server/controllers/healthz.js';
 import secretRoute from './server/controllers/secret.js';
 import statsRoute from './server/controllers/stats.js';
+import customHeaders from './server/plugins/custom-headers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,6 +89,8 @@ if (!isDev) {
 
     fs.writeFileSync(index, dom.serialize());
 }
+
+fastify.register(customHeaders);
 
 fastify.register(rateLimit, {
     prefix: '/api/',
