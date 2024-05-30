@@ -1,6 +1,6 @@
-import { Group, NavLink } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
+import { IconFingerprint, IconList } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -13,49 +13,49 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
 
     const navItems = [];
 
-    if (!isLoggedIn) {
-        navItems.push({
-            label: t('sign_up'),
-            icon: <IconUser size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/signup',
-        });
-        navItems.push({
-            label: t('sign_in'),
-            icon: <IconLogin size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/signin',
-        });
-    }
+    // if (!isLoggedIn) {
+    //     navItems.push({
+    //         label: t('sign_up'),
+    //         icon: <IconUser size="1rem" stroke={1.5} />,
+    //         component: Link,
+    //         onClick: toggle,
+    //         to: '/signup',
+    //     });
+    //     navItems.push({
+    //         label: t('sign_in'),
+    //         icon: <IconLogin size="1rem" stroke={1.5} />,
+    //         component: Link,
+    //         onClick: toggle,
+    //         to: '/signin',
+    //     });
+    // }
 
-    if (isLoggedIn) {
-        navItems.push({
-            label: t('sign_out'),
-            icon: <IconLockOff size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/signout',
-        });
-    }
+    // if (isLoggedIn) {
+    //     navItems.push({
+    //         label: t('sign_out'),
+    //         icon: <IconLockOff size="1rem" stroke={1.5} />,
+    //         component: Link,
+    //         onClick: toggle,
+    //         to: '/signout',
+    //     });
+    // }
 
-    navItems.push(
-        {
-            label: t('account.home.title'),
-            icon: <IconUser size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/account',
-        },
-        {
-            label: t('public_list'),
-            icon: <IconList size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/public',
-        }
-    );
+    // navItems.push(
+    //     {
+    //         label: t('account.home.title'),
+    //         icon: <IconUser size="1rem" stroke={1.5} />,
+    //         component: Link,
+    //         onClick: toggle,
+    //         to: '/account',
+    //     },
+    //     {
+    //         label: t('public_list'),
+    //         icon: <IconList size="1rem" stroke={1.5} />,
+    //         component: Link,
+    //         onClick: toggle,
+    //         to: '/public',
+    //     }
+    // );
 
     if (isMobile) {
         navItems.push({
@@ -80,7 +80,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
 
     return (
         <Group spacing="xs" className={style.nav}>
-            {navItems.map((item) => (
+            {/* {navItems.map((item) => (
                 <NavLink
                     key={item.label}
                     label={item.label}
@@ -89,7 +89,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
                     onClick={item.onClick}
                     to={item.to ? item.to : null}
                 />
-            ))}
+            ))} */}
         </Group>
     );
 };

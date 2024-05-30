@@ -234,6 +234,47 @@ async function authentication(fastify) {
                 });
         }
     );
+    fastify.post(
+        '/submit/recaptcha',
+        {
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['recaptchaToken'],
+                    properties: {
+                        recaptchaToken: { type: 'string' },
+                    },
+                },
+            },
+        },
+        async (request, reply) => {
+            const { recaptchaToken } = request.body;
+            const RECAPTCHA_SECRET_KEY = '6LfGcuspAAAAALhwY63OSJlR3CoA93u2ozPZInB-';
+            try {
+                const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+                });
+
+                const data = await response.json();
+                console.log('datadatadata', data);
+                if (data.success) {
+                    // Proceed with form submission logic
+                    return { success: true, message: 'Form submitted successfully!', data: data };
+                } else {
+                    reply.code(400);
+                    return { success: false, message: 'reCAPTCHA validation failed.' };
+                }
+            } catch (error) {
+                console.error('Error validating reCAPTCHA:', error);
+                reply.code(500);
+                return { success: false, message: 'Internal server error.' };
+            }
+        }
+    );
 }
 
 export default authentication;

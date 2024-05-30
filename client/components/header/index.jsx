@@ -1,4 +1,4 @@
-import { Anchor, Burger, Button, Container, Grid, Group, Modal } from '@mantine/core';
+import { Anchor, Button, Container, Grid, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -111,11 +111,11 @@ const Header = () => {
                         </Anchor>
                     </Grid.Col>
 
-                    <Grid.Col span={4}>
+                    {/* <Grid.Col span={4}>
                         <Group position="right">
                             <Burger opened={isMenuOpened} onClick={toggle} aria-label={label} />
                         </Group>
-                    </Grid.Col>
+                    </Grid.Col> */}
 
                     <Nav isLoggedIn={isLoggedIn} opened={isMenuOpened} toggle={toggle} />
                 </Grid>
