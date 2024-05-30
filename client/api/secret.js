@@ -22,6 +22,32 @@ export const createSecret = async (formData = {}) => {
     }
 };
 
+export const verifyCaptacha = async (value) => {
+    const options = {
+        method: 'POST',
+        cache: 'no-cache',
+        body: JSON.stringify({ recaptchaToken: value }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    try {
+        const data = await fetch(
+            `${config.get('api.host')}/authentication/submit/recaptcha`,
+            options
+        );
+        console.log('datadatadatadata', data);
+        const json = await data.json();
+
+        return { ...json, statusCode: data.status };
+    } catch (error) {
+        console.error(error);
+
+        return { error: 'Failed to create your secret' };
+    }
+};
+
 export const getSecret = async (secretId, password) => {
     const data = await fetch(`${config.get('api.host')}/secret/${secretId}`, {
         method: 'POST',

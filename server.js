@@ -99,16 +99,41 @@ fastify.register(rateLimit, {
 });
 
 // https://github.com/fastify/fastify-helmet
+// fastify.register(helmet, {
+//     contentSecurityPolicy: {
+//         directives: {
+//             'font-src': ["'self'"],
+//             'script-src': ["'self'", "'unsafe-inline'"],
+//             upgradeInsecureRequests: null,
+//         },
+//     },
+//     crossOriginEmbedderPolicy: false,
+// });
+
+//new
+
 fastify.register(helmet, {
     contentSecurityPolicy: {
         directives: {
+            'default-src': ["'self'"],
             'font-src': ["'self'"],
-            'script-src': ["'self'", "'unsafe-inline'"],
+            'script-src': [
+                "'self'",
+                "'unsafe-inline'",
+                'https://www.google.com',
+                'https://www.gstatic.com',
+            ],
+            'connect-src': ["'self'", 'https://www.google.com'],
+            'style-src': ["'self'", "'unsafe-inline'"],
+            'img-src': ["'self'", 'data:'],
+            'frame-src': ["'self'", 'https://www.google.com'],
             upgradeInsecureRequests: null,
         },
     },
     crossOriginEmbedderPolicy: false,
 });
+
+//
 
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
@@ -174,6 +199,32 @@ fastify.register(secretRoute, { prefix: '/api/secret' });
 fastify.register(statsRoute, { prefix: '/api/stats' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });
 fastify.register(healthzRoute, { prefix: '/healthz' });
+
+fastify.post('/api/submit/recaptcha', async (req, res) => {
+    const { recaptchaToken } = req.body;
+    const RECAPTCHA_SECRET_KEY = '6LfGcuspAAAAALhwY63OSJlR3CoA93u2ozPZInB-';
+    try {
+        const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Proceed with form submission logic
+            res.json({ success: true, message: 'Form submitted successfully!' });
+        } else {
+            res.status(400).json({ success: false, message: 'reCAPTCHA validation failed.' });
+        }
+    } catch (error) {
+        console.error('Error validating reCAPTCHA:', error);
+        res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+});
 
 const startServer = async () => {
     try {

@@ -40,10 +40,12 @@ import Quill from '../../components/quill';
 
 import { useTranslation } from 'react-i18next';
 import { encrypt, generateKey } from '../../../shared/helpers/crypto';
-import { burnSecret, createSecret } from '../../api/secret';
+import { burnSecret, createSecret, verifyCaptacha } from '../../api/secret';
 import { zipFiles } from '../../helpers/zip';
 
 import config from '../../config';
+
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import style from './style.module.css';
 
@@ -72,7 +74,8 @@ const Home = () => {
     const [creatingSecret, setCreatingSecret] = useState(false);
     const [error, setError] = useState('');
     const [isPublic, setIsPublic] = useState(false);
-
+    const [recaptchaToken, setRecaptchaToken] = useState(null);
+    const [isDisableButton, setIsDisableButton] = useState(true);
     const secretRef = useRef(null);
 
     const isMobile = useMediaQuery('(max-width: 915px)');
@@ -241,6 +244,19 @@ const Home = () => {
         }
 
         return `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
+    };
+
+    //qasim
+    // RECAPTCHA_SITE_KEY = '6LfGcuspAAAAALARJm51vBxHgYr3qjgb5xlO6Rtk';
+    const handleCaptchaChange = async (value) => {
+        setRecaptchaToken(value);
+        const json = await verifyCaptacha(value);
+        console.log('jsonjsonjsonjson', json);
+        if (json.success == true) {
+            setIsDisableButton(false);
+        } else {
+            setIsDisableButton(true);
+        }
     };
 
     const inputReadOnly = !!secretId;
@@ -595,6 +611,7 @@ const Home = () => {
                                 leftIcon={<IconSquarePlus size={14} />}
                                 loading={creatingSecret}
                                 type="submit"
+                                disabled={isDisableButton}
                             >
                                 {t('home.create_secret_link')}
                             </Button>
@@ -609,6 +626,18 @@ const Home = () => {
                                 {t('home.create_new')}
                             </Button>
                         )}
+                        <div style={{ margin: '20px' }}>
+                            {/* <Helmet>
+                                <meta
+                                    http-equiv="Content-Security-Policy"
+                                    content="script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com"
+                                />
+                            </Helmet> */}
+                            <ReCAPTCHA
+                                sitekey="6LfGcuspAAAAALARJm51vBxHgYr3qjgb5xlO6Rtk"
+                                onChange={handleCaptchaChange}
+                            />
+                        </div>
 
                         {secretId && (
                             <Button
