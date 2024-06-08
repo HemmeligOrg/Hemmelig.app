@@ -23,6 +23,8 @@ RUN npm run build
 # Get ready for step two of the docker image build
 FROM node:20-alpine
 
+RUN apk add curl
+
 WORKDIR /home/node/hemmelig
 
 COPY --from=0 /usr/src/app/client/build client/build
