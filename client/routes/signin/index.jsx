@@ -31,8 +31,8 @@ const SignIn = () => {
 
         if (data.statusCode === 401) {
             form.setErrors({
-                username: "{t('signin.wrong_credentials')}",
-                password: "{t('signin.wrong_credentials')}",
+                username: t('signin.wrong_credentials'),
+                password: t('signin.wrong_credentials'),
             });
 
             setSuccess(false);
