@@ -1,0 +1,53 @@
+# Name of your application. Used to uniquely configure containers.
+service: hemmelig_app
+
+# Name of the container image.
+image: hemmeligapp/hemmelig
+
+registry:
+    username:
+        - DOCKER_USERNAME
+    password:
+        - DOCKER_PASSWORD
+
+# Deploy to these servers.
+servers:
+    - <replace_me>
+
+volumes:
+    - '/root/hemmelig/userdata/:/var/tmp/hemmelig/upload/files'
+    - '/root/hemmelig/database/:/home/node/hemmelig/database/'
+
+# Inject ENV variables into containers (secrets come from .env).
+# Remember to run `kamal env push` after making changes!
+env:
+    clear:
+        SECRET_ROOT_USER: 'bjarneo'
+        SECRET_ROOT_PASSWORD: 'lolyouthinkthisisit'
+        SECRET_ROOT_EMAIL: 'hemmeligapp@gmail.com'
+        SECRET_MAX_TEXT_SIZE: '20048'
+        SECRET_HOST: 'hemmelig.app'
+    secret:
+        - SECRET_MASTER_KEY
+        - SECRET_JWT_SECRET
+
+# TODO: Implement non root user
+# Use a different ssh user than root
+# ssh:
+#   user: app
+
+# Configure custom arguments for Traefik. Be sure to reboot traefik when you modify it.
+traefik:
+    args:
+        accesslog: true
+        accesslog.format: json
+
+# Configure a health check
+healthcheck:
+    path: /api/healthz
+    port: 3000
+    interval: 10s
+
+sshkit:
+    max_concurrent_starts: 10
+    pool_idle_timeout: 200
