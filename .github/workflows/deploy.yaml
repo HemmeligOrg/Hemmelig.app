@@ -1,0 +1,49 @@
+name: Deploy instance
+on:
+    push:
+        branches:
+            - main
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        env:
+            SECRET_MASTER_KEY: ${{ secrets.SECRET_MASTER_KEY }}
+            SECRET_JWT_SECRET: ${{ secrets.SECRET_JWT_SECRET }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup deploy file
+              run: echo ${{ secrets.KAMAL_DEPLOY_YAML }} | base64 -d > config/deploy.yml
+
+            - name: Setup Ruby
+              uses: ruby/setup-ruby@v1
+              with:
+                  ruby-version: 3.3.0
+                  bundler-cache: true
+
+            - name: Install Kamal
+              run: gem install kamal
+
+            - name: Start SSH Agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Release the kamal lock
+              run: kamal lock release
+
+            - name: Deploy
+              run: kamal redeploy
