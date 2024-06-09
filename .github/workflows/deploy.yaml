@@ -1,16 +1,14 @@
 name: Deploy instance
 on:
-    workflow_dispatch:
+    push:
+        branches:
+            - main
 
 jobs:
     deploy:
         runs-on: ubuntu-latest
         timeout-minutes: 15
-        env:
-            SECRET_MASTER_KEY: ${{ secrets.SECRET_MASTER_KEY }}
-            SECRET_JWT_SECRET: ${{ secrets.SECRET_JWT_SECRET }}
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        environment: production
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
