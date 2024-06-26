@@ -2,7 +2,75 @@
     "sign_in": "Se connecter",
     "sign_out": "Se déconnecter",
     "sign_up": "S'enregistrer",
-    "account": "Compte",
+    "not_logged_in": "Non connecté !",
+    "something_went_wrong": "Quelque chose s'est mal passé !",
+    "loading": "Chargement",
+    "account": {
+        "home": {
+            "title": "Compte",
+            "update_password": "Mettre à jour votre mot de passe",
+            "first_time_message": "Si c'est la première fois que vous vous connectez sur ce compte utilisateur, vous devez accéder aux paramètres du compte et mettre à jour votre mot de passe",
+            "hi": "Bonjour",
+            "intro": "Nous sommes heureux que vous soyez connecté. Voici la liste des fonctionnalités auxquelles les utilisateurs connectés ont accès ",
+            "upload_files": "Téléversement de fichiers",
+            "expiration": "Délai d'expiration de secret de 14 ou 28 jour",
+            "secrets": "Lister et supprimer vos secrets",
+            "more": "Plus de fonctionnalités arrivent ! Merci d'avoir rejoint Hemmelig.app !"
+        },
+        "account": {
+            "passwords_does_not_match": "Les mots de passe ne correspondent pas",
+            "can_not_update_profile": "Impossible de mettre à jour votre compte utilisateur",
+            "can_not_delete": "Impossible de supprimer l'utilisateur",
+            "delete_account": "Supprimer votre compte",
+            "do_you_want_delete": "Êtes-vous vraiment sûr devouloir supprimer votre compte ?",
+            "dont_delete_account": "Non, ne le supprime pas",
+            "email": "Email",
+            "your_password": "Mot de passe actuel",
+            "current_password": "Votre mot de passe actuel",
+            "update_your_password": "Mettez à jour votre mot de passe",
+            "new_password": "Nouveau mot de passe",
+            "confirm_password": "Confirmez le nouveau mot de passe",
+            "confirm_new_password": "Confirmez votre mot de passe",
+            "update_details": "Mettre à jour"
+        },
+        "secrets": {
+            "id": "Identifiant",
+            "expires": "Expire",
+            "public": "Public",
+            "delete": "Suppression",
+            "yes": "Oui",
+            "no": "Non",
+            "delete_secret": "Supprimer ce secret",
+            "dont_delete_secret": "Non, ne le supprime pas",
+            "do_you_want_delete": "Êtes-vous vraiment sûr de vouloir supprimer ce secret ?"
+        },
+        "settings": {
+            "read_only_mode": "Mode lecture seule",
+            "readonly_only_for_non_admin": "L'instance Hemmelig doit-elle être en lecture seule pour les utilisateurs non administrateurs ou créateur ?",
+            "disable_users": "Désactiver les utilisateurs",
+            "disable_signin": "Désactiver la connexion des utilisateurs ?",
+            "disable_user_account_creation": "Désactiver la création de nouveaux comptes",
+            "disable_user_account_creation_description": "Empêcher la création de nouveaux comptes par tout le monde. Un administrateur pourra toujours créer de nouvaux comptes utilisateurs",
+            "disable_file_upload": "Désactiver le téléversement de fichiers",
+            "disable_file_upload_description": "Désactiver le téléversement de fichiers pour votre instance ?",
+            "restrict_organization_email": "Restreindre au domaine email",
+            "restrict_organization_email_description": "Cela limitera l'inscription des utilisateurs à un certain domaine de email"
+        },
+        "users": {
+            "username": "Nom d'utilisateur",
+            "email": "Email",
+            "password": "Mot de passe",
+            "role": "Rôle",
+            "admin": "Admin",
+            "creator": "Créateur",
+            "user": "Utilisateur",
+            "delete": "Supression",
+            "do_you_want_delete": "Êtes-vous vraiment sûr de vouloir supprimer cet utilisateur ?",
+            "delete_user": "Supprimer cet utilisateur",
+            "dont_delete_user": "Non, ne le supprime pas",
+            "have_to_be_admin": "Vous devez être un administrateur pour voir les utilisateurs"
+        }
+    },
     "public_list": "Partages publics",
     "account_settings": "Paramètres du compte",
     "instance_settings": "Paramètres de l'instance",
@@ -26,10 +94,10 @@
         "maintxtarea": "Inscrivez vos informations sensibles..",
         "title": "Titre",
         "lifetime": "Temps de vie",
-        "max_views": "Visionnages max",
+        "max_views": "Visionnages maximum",
         "enable_password": "Activer le mot de passe",
         "optional_password": "Votre mot de passe (optionnel)",
-        "burn_aftertime": "Détruire le secret seulement après l'expiration du délai",
+        "burn_aftertime": "Détruire le secret uniquement après l'expiration du délai",
         "restrict_from_ip": "Restreindre l'ouverture du secret sur la base d'une IP ou d'une plage CIDR. Exemple CIDR : 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Restreindre par IP ou CIDR",
         "login_to_upload": "S'identifier pour télécharger des fichiers",
@@ -58,7 +126,7 @@
         "5_minutes": "5 minutes",
         "successful_share": "Action réussie",
         "get_your_secret": "Obtenez votre secret à hemmelig.app.",
-        "set_public": "Définir comme publique"
+        "set_public": "Définir comme public"
     },
     "secret": {
         "view_your_secret": "Afficher votre secret",
@@ -98,5 +166,31 @@
         "expires": "Expire",
         "username": "Nom d'utilisateur",
         "of": "de"
+    },
+    "signout": {
+        "title": "Déconnexion",
+        "waiting": "Patience"
+    },
+    "signin": {
+        "title": "Connexion",
+        "heading": "Tout ce dont vous avez besoin pour accéder et gérer les secrets Hemmelig.",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "signin": "Se connecter",
+        "wrong_credentials": "Nom d'utilisateur ou mot de passe invalide. Essayez à nouveau."
+    },
+    "signup": {
+        "title": "Inscription",
+        "heading": "Tout ce dont vous avez besoin pour accéder et gérer les secrets Hemmelig.",
+        "email": "Email",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "signup": "S'inscrire"
+    },
+    "privacy": {
+        "title": "Confidentialité"
+    },
+    "terms": {
+        "title": "Termes et conditions"
     }
 }
