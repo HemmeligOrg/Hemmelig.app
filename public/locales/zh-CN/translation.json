@@ -2,14 +2,94 @@
     "sign_in": "登录",
     "sign_out": "登出",
     "sign_up": "注册",
-    "account": "账户",
+    "not_logged_in": "未登录",
+    "something_went_wrong": "出了些问题！",
+    "loading": "加载中",
+    "account": {
+        "home": {
+            "title": "账户",
+            "update_password": "更新您的密码",
+            "first_time_message": "如果这是您首次登录此用户账户，您应前往账户设置并更新您的密码",
+            "hi": "您好",
+            "intro": "欢迎登录。以下是登录用户可享受的功能列表",
+            "upload_files": "上传文件",
+            "expiration": "14天和28天的秘密有效期",
+            "secrets": "列出并删除您的秘密",
+            "more": "更多功能即将推出！感谢您加入 Hemmelig.app！"
+        },
+        "account": {
+            "passwords_does_not_match": "密码不匹配",
+            "can_not_update_profile": "无法更新您的用户资料",
+            "can_not_delete": "无法删除用户",
+            "delete_account": "删除账户",
+            "do_you_want_delete": "您确定要删除您的账户吗？",
+            "dont_delete_account": "不，不要删除",
+            "email": "电子邮件",
+            "your_password": "当前密码",
+            "current_password": "您的当前密码",
+            "update_your_password": "更新您的密码",
+            "new_password": "新密码",
+            "confirm_password": "确认密码",
+            "confirm_new_password": "确认您的新密码",
+            "update_details": "更新详细信息"
+        },
+        "secrets": {
+            "id": "编号",
+            "expires": "过期时间",
+            "public": "公开",
+            "delete": "删除",
+            "yes": "是",
+            "no": "否",
+            "delete_secret": "删除秘密",
+            "dont_delete_secret": "不，不要删除",
+            "do_you_want_delete": "您确定要删除这个秘密吗？"
+        },
+        "settings": {
+            "read_only_mode": "只读模式",
+            "readonly_only_for_non_admin": "是否对非管理员用户启用只读模式？",
+            "disable_users": "禁用用户",
+            "disable_signin": "是否禁用用户登录？",
+            "disable_user_account_creation": "禁用用户账户创建",
+            "disable_user_account_creation_description": "不允许用户创建新账户。作为管理员，您仍然可以创建新用户账户",
+            "disable_file_upload": "禁用文件上传",
+            "disable_file_upload_description": "为您的实例禁用文件上传",
+            "restrict_organization_email": "限制电子邮件域",
+            "restrict_organization_email_description": "这将限制用户注册时使用特定的电子邮件域"
+        },
+        "users": {
+            "username": "用户名",
+            "email": "电子邮件",
+            "password": "密码",
+            "role": "角色",
+            "admin": "管理员",
+            "creator": "创建者",
+            "user": "用户",
+            "delete": "删除",
+            "do_you_want_delete": "您确定要删除这个用户吗？",
+            "delete_user": "删除用户",
+            "dont_delete_user": "不，不要删除",
+            "have_to_be_admin": "您必须是管理员才能查看用户"
+        }
+    },
+    "public_list": "公开粘贴",
     "account_settings": "账户设置",
     "instance_settings": "实例设置",
     "copied": "已复制",
     "copy": "复制",
+    "header": {
+        "nav": {
+            "close": "关闭导航",
+            "open": "打开导航"
+        },
+        "session": {
+            "auth": "认证",
+            "expire": "您的会话即将过期。您要延长会话时间吗？",
+            "update": "更新会话"
+        }
+    },
     "home": {
-        "app_subtitle": "粘贴密码、机密消息或私人数据。",
-        "welcome": "确保您的敏感数据保持加密，安全和保密。",
+        "app_subtitle": "粘贴密码、机密信息或私人数据。",
+        "welcome": "确保您的敏感数据保持加密、安全和保密。",
         "bummer": "真遗憾！",
         "maintxtarea": "写下您的敏感信息",
         "title": "标题",
@@ -21,10 +101,14 @@
         "restrict_from_ip": "基于IP或CIDR范围限制秘密的打开。例如CIDR: 192.168.1.0/24。",
         "restrict_from_ip_placeholder": "通过IP或CIDR进行限制",
         "login_to_upload": "登录以上传文件",
+        "public_no_upload": "公开粘贴不允许上传文件",
         "upload_files": "上传文件",
         "your_secret_url": "您的秘密URL",
         "share": "分享",
-        "create_secret_link": "创建秘密链接",
+        "create_secret_link": "创建私密链接",
+        "or": "分开链接和解密密钥",
+        "secret_url": "不含解密密钥的秘密网址",
+        "decryption_key": "解密密钥",
         "create_new": "创建新的",
         "delete": "删除",
         "link_only_works_once": "默认情况下，秘密链接只能使用一次，之后将消失。",
@@ -41,11 +125,12 @@
         "30_minutes": "30分钟",
         "5_minutes": "5分钟",
         "successful_share": "分享成功",
-        "get_your_secret": "在hemmelig.app获取您的秘密。"
+        "get_your_secret": "在 hemmelig.app 获取您的秘密。",
+        "set_public": "设置为公开粘贴"
     },
     "secret": {
         "view_your_secret": "查看您的秘密",
-        "will_show_once": "默认情况下，我们只展示秘密一次。",
+        "will_show_once": "默认情况下，我们只显示一次秘密。",
         "views_left": "剩余查看次数：",
         "password_required": "需要密码才能打开此秘密",
         "view_secret": "查看秘密",
@@ -74,5 +159,38 @@
         "secrets": "秘密",
         "secret": "秘密",
         "deleted": "秘密已删除"
+    },
+    "public": {
+        "heading": "公开粘贴",
+        "title": "标题",
+        "expires": "过期时间",
+        "username": "用户名",
+        "of": "的"
+    },
+    "signout": {
+        "title": "正在退出",
+        "waiting": "请稍候"
+    },
+    "signin": {
+        "title": "登录",
+        "heading": "访问和管理 Hemmelig 秘密所需的一切。",
+        "username": "用户名",
+        "password": "您的密码",
+        "signin": "登录",
+        "wrong_credentials": "错误的用户名或密码。请再试一次。"
+    },
+    "signup": {
+        "title": "注册",
+        "heading": "访问和管理 Hemmelig 秘密所需的一切。",
+        "email": "电子邮件",
+        "username": "用户名",
+        "password": "您的密码",
+        "signup": "注册"
+    },
+    "privacy": {
+        "title": "隐私"
+    },
+    "terms": {
+        "title": "条款和条件"
     }
 }
