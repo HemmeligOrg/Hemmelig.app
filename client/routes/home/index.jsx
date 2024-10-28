@@ -1,4 +1,5 @@
 import {
+    IconAlertCircle,
     IconCheck,
     IconCopy,
     IconHeading,
@@ -9,6 +10,7 @@ import {
     IconShieldLock,
     IconSquarePlus,
     IconTrash,
+    IconX,
 } from '@tabler/icons';
 import passwordGenerator from 'generate-password-browser';
 import { useEffect, useRef, useState } from 'react';
@@ -16,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { encrypt, generateKey } from '../../../shared/helpers/crypto';
 import { burnSecret, createSecret } from '../../api/secret';
-import ErrorBox from '../../components/error-box';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import config from '../../config';
@@ -47,8 +48,11 @@ const Home = () => {
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
     const [creatingSecret, setCreatingSecret] = useState(false);
-    const [error, setError] = useState('');
-    const [formErrors, setFormErrors] = useState({});
+    const [errors, setErrors] = useState({
+        general: '',
+        fields: {},
+        dismissible: true,
+    });
 
     // Result state
     const [secretId, setSecretId] = useState('');
@@ -174,14 +178,21 @@ const Home = () => {
         setText('');
         setTTL(DEFAULT_TTL);
         setIsPublic(false);
-        setError('');
+        setErrors({ general: '', fields: {}, dismissible: true });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Clear previous errors
+        setErrors({ general: '', fields: {}, dismissible: true });
+
+        // Validate required text
         if (!formData.text) {
-            setFormErrors({ text: t('home.please_add_secret') });
+            setErrors({
+                ...errors,
+                fields: { text: t('home.please_add_secret') },
+            });
             return;
         }
 
@@ -217,22 +228,40 @@ const Home = () => {
 
             if (json.statusCode !== 201) {
                 if (json.statusCode === 400) {
-                    setError(json.message);
+                    setErrors({
+                        general: t('home.error_bad_request'),
+                        fields: {},
+                        dismissible: true,
+                    });
                 }
 
                 if (json.message === 'request file too large, please check multipart config') {
-                    setFormErrors({ files: t('home.file_too_large') });
+                    setErrors({
+                        general: '',
+                        fields: { files: t('home.file_too_large') },
+                        dismissible: true,
+                    });
                 } else {
-                    setFormErrors({ files: json.message });
+                    setErrors({
+                        general: t('home.error_generic', { message: json.message }),
+                        fields: {},
+                        dismissible: true,
+                    });
                 }
                 return;
             }
 
+            // Clear errors on success
+            setErrors({ general: '', fields: {}, dismissible: true });
             setSecretId(json.id);
             setEncryptionKey(publicEncryptionKey);
-            setFormErrors({});
         } catch (err) {
-            setError(t('home.error_creating_secret'));
+            console.error('Error creating secret:', err);
+            setErrors({
+                general: t('home.error_creating_secret'),
+                fields: {},
+                dismissible: false,
+            });
         } finally {
             setCreatingSecret(false);
         }
@@ -241,6 +270,34 @@ const Home = () => {
     const inputReadOnly = !!secretId;
     const disableFileUpload =
         (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
+
+    // Add this new component for better error display
+    const ErrorMessage = ({ message, onDismiss }) => (
+        <div
+            className="relative flex items-center gap-3 bg-red-500/10 border border-red-500/20 
+                        text-red-500 rounded-lg p-4 animate-fadeIn"
+        >
+            <IconAlertCircle className="flex-shrink-0" size={20} />
+            <p className="text-sm font-medium pr-8">{message}</p>
+            {onDismiss && (
+                <button
+                    onClick={onDismiss}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-red-500/20 
+                             rounded-full transition-colors"
+                >
+                    <IconX size={16} />
+                </button>
+            )}
+        </div>
+    );
+
+    // Add this new component for form field errors
+    const FieldError = ({ message }) => (
+        <div className="flex items-center gap-2 mt-1.5 text-red-500">
+            <IconAlertCircle size={14} />
+            <span className="text-xs font-medium">{message}</span>
+        </div>
+    );
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8 font-sans">
@@ -251,19 +308,31 @@ const Home = () => {
                     <p className="text-base text-gray-400">{t('home.welcome')}</p>
                 </div>
 
-                {error && <ErrorBox message={error} />}
+                {/* General Error Display */}
+                {errors.general && (
+                    <ErrorMessage
+                        message={errors.general}
+                        onDismiss={
+                            errors.dismissible
+                                ? () => setErrors({ ...errors, general: '' })
+                                : undefined
+                        }
+                    />
+                )}
 
                 {/* Main Content Section */}
                 <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg">
-                    {/* Editor */}
-                    <div className="w-full">
+                    {/* Editor with inline error */}
+                    <div className="space-y-2">
                         <Quill
                             defaultValue={t('home.maintxtarea')}
                             value={text}
                             onChange={onTextChange}
                             readOnly={inputReadOnly}
                             secretId={secretId}
+                            className={errors.fields.text ? 'border-red-500' : ''}
                         />
+                        {errors.fields.text && <FieldError message={errors.fields.text} />}
                     </div>
 
                     {/* Title */}
@@ -283,208 +352,214 @@ const Home = () => {
                                      text-base text-gray-100 placeholder-gray-500"
                         />
                     </div>
-                </div>
 
-                {/* Settings Section */}
-                <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg">
-                    <h2 className="text-lg font-semibold text-white">{t('home.settings')}</h2>
+                    {/* Settings Section */}
+                    <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg">
+                        <h2 className="text-lg font-semibold text-white">{t('settings')}</h2>
 
-                    {/* TTL and Max Views */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-300">
-                                {t('home.time_to_live')}
-                            </label>
-                            <select
-                                value={ttl}
-                                onChange={(e) => onSelectChange(e.target.value)}
-                                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 
-                                         focus:ring-2 focus:ring-hemmelig focus:border-transparent
-                                         text-gray-100"
-                            >
-                                {ttlValues.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {/* TTL and Max Views */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-300">
+                                    {t('ttl')} {/* Changed from home.time_to_live */}
+                                </label>
+                                <select
+                                    value={ttl}
+                                    onChange={(e) => onSelectChange(e.target.value)}
+                                    className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 
+                                             focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                             text-gray-100"
+                                >
+                                    {ttlValues.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-300">
-                                {t('home.max_views')}
-                            </label>
-                            <input
-                                type="number"
-                                name="maxViews"
-                                value={formData.maxViews}
-                                onChange={handleInputChange}
-                                min="1"
-                                max="999"
-                                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 
-                                         focus:ring-2 focus:ring-hemmelig focus:border-transparent
-                                         text-gray-100"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Security Options */}
-                    <div className="space-y-4">
-                        {/* Public/Private Toggle */}
-                        <button
-                            type="button"
-                            onClick={onSetPublic}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors
-                                ${
-                                    isPublic
-                                        ? 'bg-hemmelig text-white'
-                                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                }`}
-                        >
-                            <IconLock size={14} />
-                            {isPublic ? t('home.public') : t('home.private')}
-                        </button>
-
-                        {/* Password Protection */}
-                        <button
-                            type="button"
-                            onClick={onEnablePassword}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors
-                                ${
-                                    enablePassword
-                                        ? 'bg-hemmelig text-white'
-                                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                }`}
-                        >
-                            <IconLock size={14} />
-                            {t('home.password_protection')}
-                        </button>
-
-                        {enablePassword && (
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                                    <IconShieldLock size={14} />
-                                </span>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-300">
+                                    {t('home.max_views')}
+                                </label>
                                 <input
-                                    type="text"
-                                    name="password"
-                                    value={formData.password}
+                                    type="number"
+                                    name="maxViews"
+                                    value={formData.maxViews}
                                     onChange={handleInputChange}
-                                    readOnly
-                                    className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                    min="1"
+                                    max="999"
+                                    className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 
                                              focus:ring-2 focus:ring-hemmelig focus:border-transparent
                                              text-gray-100"
                                 />
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            navigator.clipboard.writeText(formData.password)
-                                        }
-                                        className="p-1 hover:bg-gray-700 rounded-md group"
-                                        title={t('home.copy_to_clipboard')}
-                                    >
-                                        <IconCopy
-                                            size={14}
-                                            className="text-gray-400 group-hover:hidden"
-                                        />
-                                        <IconCheck
-                                            size={14}
-                                            className="text-green-500 hidden group-hover:block"
-                                        />
-                                    </button>
+                            </div>
+                        </div>
+
+                        {/* Security Options */}
+                        <div className="space-y-4">
+                            {/* Public/Private Toggle */}
+                            <button
+                                type="button"
+                                onClick={onSetPublic}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors
+                                    ${
+                                        isPublic
+                                            ? 'bg-hemmelig text-white'
+                                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                    }`}
+                            >
+                                <IconLock size={14} />
+                                {isPublic ? t('public') : t('private')}{' '}
+                                {/* Changed from home.private */}
+                            </button>
+
+                            {/* Password Protection */}
+                            <button
+                                type="button"
+                                onClick={onEnablePassword}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors
+                                    ${
+                                        enablePassword
+                                            ? 'bg-hemmelig text-white'
+                                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                    }`}
+                            >
+                                <IconLock size={14} />
+                                {t('password')} {/* Changed from home.password_protection */}
+                            </button>
+
+                            {enablePassword && (
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                        <IconShieldLock size={14} />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                        readOnly
+                                        className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                                 focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                                 text-gray-100"
+                                    />
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                navigator.clipboard.writeText(formData.password)
+                                            }
+                                            className="p-1 hover:bg-gray-700 rounded-md group"
+                                            title={t('home.copy_to_clipboard')}
+                                        >
+                                            <IconCopy
+                                                size={14}
+                                                className="text-gray-400 group-hover:hidden"
+                                            />
+                                            <IconCheck
+                                                size={14}
+                                                className="text-green-500 hidden group-hover:block"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
+                            )}
+                        </div>
+
+                        {/* Advanced Options */}
+                        <div className="space-y-4">
+                            {/* IP Restriction */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-300">
+                                    {t('ip')} {/* Changed from home.ip_restriction */}
+                                </label>
+                                <input
+                                    type="text"
+                                    name="allowedIp"
+                                    value={formData.allowedIp}
+                                    onChange={handleInputChange}
+                                    placeholder="127.0.0.1, 192.168.1.*"
+                                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                             focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                             text-gray-100 placeholder-gray-500"
+                                />
+                            </div>
+
+                            {/* Prevent Burn Option */}
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="preventBurn"
+                                    name="preventBurn"
+                                    checked={formData.preventBurn}
+                                    onChange={handleInputChange}
+                                    className="w-4 h-4 text-hemmelig bg-gray-800 border-gray-700 rounded 
+                                             focus:ring-hemmelig focus:ring-2"
+                                />
+                                <label htmlFor="preventBurn" className="text-sm text-gray-300">
+                                    {t('prevent_burn')} {/* Changed from home.prevent_burn */}
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* File Upload */}
+                        {!disableFileUpload && (
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="file"
+                                        id="fileUpload"
+                                        onChange={(e) => {
+                                            const files = Array.from(e.target.files || []);
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                files: [...prev.files, ...files],
+                                            }));
+                                        }}
+                                        multiple
+                                        className="hidden"
+                                    />
+                                    <label
+                                        htmlFor="fileUpload"
+                                        className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                                 hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
+                                    >
+                                        <IconSquarePlus size={14} />
+                                        {t('upload')} {/* Changed from home.upload_file */}
+                                    </label>
+                                </div>
+
+                                {formData.files.length > 0 && (
+                                    <div className="space-y-2">
+                                        {formData.files.map((file, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center justify-between bg-gray-800 
+                                                                      rounded-md px-3 py-2"
+                                            >
+                                                <span className="text-sm text-gray-300">
+                                                    {file.name}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFile(index)}
+                                                    className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
+                                                    title={t('home.remove_file')}
+                                                >
+                                                    <IconTrash size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
 
-                    {/* Advanced Options */}
-                    <div className="space-y-4">
-                        {/* IP Restriction */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-300">
-                                {t('home.ip_restriction')}
-                            </label>
-                            <input
-                                type="text"
-                                name="allowedIp"
-                                value={formData.allowedIp}
-                                onChange={handleInputChange}
-                                placeholder="127.0.0.1, 192.168.1.*"
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
-                                         focus:ring-2 focus:ring-hemmelig focus:border-transparent
-                                         text-gray-100 placeholder-gray-500"
-                            />
-                        </div>
-
-                        {/* Prevent Burn Option */}
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="preventBurn"
-                                name="preventBurn"
-                                checked={formData.preventBurn}
-                                onChange={handleInputChange}
-                                className="w-4 h-4 text-hemmelig bg-gray-800 border-gray-700 rounded 
-                                         focus:ring-hemmelig focus:ring-2"
-                            />
-                            <label htmlFor="preventBurn" className="text-sm text-gray-300">
-                                {t('home.prevent_burn')}
-                            </label>
-                        </div>
-                    </div>
-
-                    {/* File Upload */}
-                    {!disableFileUpload && (
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="file"
-                                    id="fileUpload"
-                                    onChange={(e) => {
-                                        const files = Array.from(e.target.files || []);
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            files: [...prev.files, ...files],
-                                        }));
-                                    }}
-                                    multiple
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="fileUpload"
-                                    className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                             hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
-                                >
-                                    <IconSquarePlus size={14} />
-                                    {t('home.upload_file')}
-                                </label>
-                            </div>
-
-                            {formData.files.length > 0 && (
-                                <div className="space-y-2">
-                                    {formData.files.map((file, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center justify-between bg-gray-800 
-                                                                  rounded-md px-3 py-2"
-                                        >
-                                            <span className="text-sm text-gray-300">
-                                                {file.name}
-                                            </span>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeFile(index)}
-                                                className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
-                                                title={t('home.remove_file')}
-                                            >
-                                                <IconTrash size={14} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                    {/* Display file-specific errors */}
+                    {errors.fields.files && (
+                        <div className="text-red-500 text-sm mt-2">{errors.fields.files}</div>
                     )}
                 </div>
 
@@ -497,15 +572,8 @@ const Home = () => {
                                  bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
                                  disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                        {creatingSecret ? (
-                            <div
-                                className="w-4 h-4 border-2 border-white border-t-transparent 
-                                          rounded-full animate-spin"
-                            />
-                        ) : (
-                            <IconLockAccess size={14} />
-                        )}
-                        {t('home.create_secret')}
+                        <IconLockAccess size={14} />
+                        {t('create')} {/* Changed from home.create_secret */}
                     </button>
 
                     {secretId && (
