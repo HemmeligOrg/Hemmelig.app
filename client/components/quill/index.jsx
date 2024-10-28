@@ -1,7 +1,9 @@
+import { useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const Quill = ({ value, onChange, readOnly, defaultValue }) => {
+    const quillRef = useRef(null);
     // Define modules based on readOnly state
     const modules = readOnly
         ? {
@@ -20,6 +22,7 @@ const Quill = ({ value, onChange, readOnly, defaultValue }) => {
     return (
         <div className="bg-gray-800 border border-gray-700 rounded-md overflow-hidden">
             <ReactQuill
+                ref={quillRef}
                 value={value || ''}
                 onChange={onChange}
                 readOnly={readOnly}
