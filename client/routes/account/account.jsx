@@ -1,63 +1,52 @@
-import { Button, Group, PasswordInput, Stack, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { openConfirmModal } from '@mantine/modals';
-import { IconAt, IconEdit, IconLock, IconTrash } from '@tabler/icons';
+import { IconAt, IconEdit, IconEye, IconEyeOff, IconLock, IconTrash } from '@tabler/icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLoaderData } from 'react-router-dom';
+
+import { deleteUser, updateUser } from '../../api/account';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 
-import style from './account.module.css';
-
-import { deleteUser, updateUser } from '../../api/account';
-
 const Account = () => {
+    const { t } = useTranslation();
+    const userInfo = useLoaderData();
+
+    // Form state
+    const [formData, setFormData] = useState({
+        email: userInfo?.user?.email || '',
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: '',
+    });
+
+    // UI state
+    const [showPasswords, setShowPasswords] = useState({
+        current: false,
+        new: false,
+        confirm: false,
+    });
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [deleted, setDeleted] = useState(false);
 
-    const { t } = useTranslation();
-
-    const userInfo = useLoaderData();
-
-    const form = useForm({
-        initialValues: userInfo?.user,
-        validate: {
-            confirmNewPassword: (value, values) =>
-                value !== values.newPassword ? t('account.account.passwords_does_not_match') : null,
-        },
-    });
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
     const onProfileUpdate = async (e) => {
         e.preventDefault();
 
-        const values = form.values;
-
         try {
-            const updatedUserInfo = await updateUser(values);
+            const updatedUserInfo = await updateUser(formData);
 
             if (updatedUserInfo.error || [400, 401, 500].includes(updatedUserInfo.statusCode)) {
-                setError(
-                    updatedUserInfo.message
-                        ? updatedUserInfo.message
-                        : t('account.account.can_not_update_profile')
-                );
-
+                setError(updatedUserInfo.message || t('account.account.can_not_update_profile'));
                 return;
-            }
-
-            const { user, error, type } = updatedUserInfo;
-
-            if (error) {
-                if (type === 'no-data') {
-                    form.setErrors({ email: error });
-                } else {
-                    form.setErrors({ [type]: error });
-                }
-            } else {
-                form.setValues({ email: user.email });
             }
 
             setError(null);
@@ -73,17 +62,12 @@ const Account = () => {
         }
     };
 
-    const onDeleteUser = async (e) => {
+    const onDeleteUser = async () => {
         try {
             const deletedUserInfo = await deleteUser();
 
             if (deletedUserInfo.error || [401, 500].includes(deletedUserInfo.statusCode)) {
-                setError(
-                    deletedUserInfo.error
-                        ? deletedUserInfo.error
-                        : t('account.account.can_not_delete')
-                );
-
+                setError(deletedUserInfo.error || t('account.account.can_not_delete'));
                 return;
             }
 
@@ -99,89 +83,198 @@ const Account = () => {
         }
     };
 
-    const openDeleteModal = () =>
-        openConfirmModal({
-            title: t('account.accounts.delete_account'),
-            centered: true,
-            children: <Text size="sm">{t('account.account.do_you_want_delete')}</Text>,
-            labels: {
-                confirm: t('account.account.delete_account'),
-                cancel: t('account.account.dont_delete_account'),
-            },
-            confirmProps: { color: 'red' },
-            onConfirm: () => onDeleteUser(),
-        });
+    const openDeleteModal = () => {
+        if (window.confirm(t('account.account.do_you_want_delete'))) {
+            onDeleteUser();
+        }
+    };
 
     if (deleted) {
         return <Navigate to="/signout" />;
     }
 
     if (userInfo.error || [401, 500].includes(userInfo.statusCode)) {
-        const userError = userInfo.error ? userInfo.error : t('not_logged_in');
-
         return (
-            <Stack>
-                <ErrorBox message={userError} />
-            </Stack>
+            <div className="space-y-4">
+                <ErrorBox message={userInfo.error || t('not_logged_in')} />
+            </div>
         );
     }
 
     return (
-        <Stack align="flex-start">
-            {error && <ErrorBox message={error} className={style.width} />}
-            {success && <SuccessBox message={successMessage} className={style.width} />}
+        <div className="max-w-2xl mx-auto space-y-6 animate-fadeIn">
+            {/* Messages */}
+            {error && <ErrorBox message={error} className="w-full" />}
+            {success && <SuccessBox message={successMessage} className="w-full" />}
 
-            <Group position="right" grow>
-                <Stack className={style.width}>
-                    <TextInput
-                        label={t('account.account.email')}
-                        icon={<IconAt size={14} />}
-                        placeholder={t('account.account.email')}
-                        {...form.getInputProps('email')}
-                    />
+            {/* Form */}
+            <form onSubmit={onProfileUpdate} className="space-y-6">
+                <div className="bg-gray-800/50 p-6 rounded-lg space-y-4">
+                    {/* Email Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                            {t('account.account.email')}
+                        </label>
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <IconAt size={18} />
+                            </span>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                placeholder={t('account.account.email')}
+                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 
+                                         rounded-md text-gray-100 placeholder-gray-500 
+                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                            />
+                        </div>
+                    </div>
 
-                    <PasswordInput
-                        label={t('account.account.your_password')}
-                        icon={<IconLock size={14} />}
-                        placeholder={t('account.account.current_password')}
-                        {...form.getInputProps('currentPassword')}
-                    />
+                    {/* Current Password Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                            {t('account.account.your_password')}
+                        </label>
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <IconLock size={18} />
+                            </span>
+                            <input
+                                type={showPasswords.current ? 'text' : 'password'}
+                                name="currentPassword"
+                                value={formData.currentPassword}
+                                onChange={handleInputChange}
+                                placeholder={t('account.account.current_password')}
+                                className="w-full pl-10 pr-10 py-2 bg-gray-800 border border-gray-700 
+                                         rounded-md text-gray-100 placeholder-gray-500 
+                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPasswords((prev) => ({
+                                        ...prev,
+                                        current: !prev.current,
+                                    }))
+                                }
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 
+                                         hover:text-gray-300"
+                            >
+                                {showPasswords.current ? (
+                                    <IconEyeOff size={18} />
+                                ) : (
+                                    <IconEye size={18} />
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
-                    <PasswordInput
-                        label={t('account.account.new_password')}
-                        icon={<IconLock size={14} />}
-                        placeholder={t('account.account.update_your_password')}
-                        {...form.getInputProps('newPassword')}
-                    />
+                    {/* New Password Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                            {t('account.account.new_password')}
+                        </label>
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <IconLock size={18} />
+                            </span>
+                            <input
+                                type={showPasswords.new ? 'text' : 'password'}
+                                name="newPassword"
+                                value={formData.newPassword}
+                                onChange={handleInputChange}
+                                placeholder={t('account.account.update_your_password')}
+                                className="w-full pl-10 pr-10 py-2 bg-gray-800 border border-gray-700 
+                                         rounded-md text-gray-100 placeholder-gray-500 
+                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPasswords((prev) => ({
+                                        ...prev,
+                                        new: !prev.new,
+                                    }))
+                                }
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 
+                                         hover:text-gray-300"
+                            >
+                                {showPasswords.new ? (
+                                    <IconEyeOff size={18} />
+                                ) : (
+                                    <IconEye size={18} />
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
-                    <PasswordInput
-                        label={t('account.account.confirm_password')}
-                        icon={<IconLock size={14} />}
-                        placeholder={t('account.account.confirm_new_password')}
-                        {...form.getInputProps('confirmNewPassword')}
-                    />
-                </Stack>
-            </Group>
+                    {/* Confirm New Password Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                            {t('account.account.confirm_password')}
+                        </label>
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <IconLock size={18} />
+                            </span>
+                            <input
+                                type={showPasswords.confirm ? 'text' : 'password'}
+                                name="confirmNewPassword"
+                                value={formData.confirmNewPassword}
+                                onChange={handleInputChange}
+                                placeholder={t('account.account.confirm_new_password')}
+                                className="w-full pl-10 pr-10 py-2 bg-gray-800 border border-gray-700 
+                                         rounded-md text-gray-100 placeholder-gray-500 
+                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPasswords((prev) => ({
+                                        ...prev,
+                                        confirm: !prev.confirm,
+                                    }))
+                                }
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 
+                                         hover:text-gray-300"
+                            >
+                                {showPasswords.confirm ? (
+                                    <IconEyeOff size={18} />
+                                ) : (
+                                    <IconEye size={18} />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-            <Group position="right" grow>
-                <Button
-                    variant="gradient"
-                    gradient={{ from: 'orange', to: 'red' }}
-                    onClick={openDeleteModal}
-                    leftIcon={<IconTrash size={14} />}
-                >
-                    {t('account.account.delete_account')}
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                        type="button"
+                        onClick={openDeleteModal}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                 bg-red-500/20 text-red-500 rounded-md hover:bg-red-500/30 
+                                 transition-colors"
+                    >
+                        <IconTrash size={18} />
+                        {t('account.account.delete_account')}
+                    </button>
 
-                <Button
-                    leftIcon={<IconEdit size={14} />}
-                    onClick={onProfileUpdate}
-                    color="hemmelig"
-                >
-                    {t('account.account.update_details')}
-                </Button>
-            </Group>
-        </Stack>
+                    <button
+                        type="submit"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                 bg-gray-600 text-white rounded-md hover:bg-gray-500 
+                                 transition-colors"
+                    >
+                        <IconEdit size={18} />
+                        {t('account.account.update_details')}
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 };
 
