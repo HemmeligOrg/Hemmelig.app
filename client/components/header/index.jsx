@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
+import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
 import { userLogin, userLoginChanged } from '../../actions/';
 import { refresh } from '../../api/authentication.js';
 import { getCookie, refreshCookie } from '../../helpers/cookie';
@@ -116,7 +117,7 @@ const Header = () => {
             )}
 
             {/* Header */}
-            <header className="bg-gray-900 border-b border-gray-800">
+            <header className="fixed w-full top-0 z-50 bg-gray-900 border-b border-gray-800">
                 <div className="max-w-7xl mx-auto px-4 h-16">
                     <div className="flex items-center justify-between h-full">
                         {/* Logo */}
@@ -131,12 +132,8 @@ const Header = () => {
                             onClick={() => setIsMenuOpened(!isMenuOpened)}
                             className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 
                                      hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 
-                                     focus:ring-inset focus:ring-white"
-                            aria-label={
-                                isMenuOpened
-                                    ? t('header.nav.close', 'Close navigation')
-                                    : t('header.nav.open', 'Open navigation')
-                            }
+                                     focus:ring-inset focus:ring-white transition-colors duration-200"
+                            aria-label={isMenuOpened ? t('header.nav.close') : t('header.nav.open')}
                         >
                             <svg
                                 className="h-6 w-6"
@@ -157,24 +154,53 @@ const Header = () => {
                             </svg>
                         </button>
                     </div>
+                </div>
 
-                    {/* Navigation Menu (Dropdown) */}
-                    {isMenuOpened && (
-                        <div className="absolute top-16 left-0 right-0 bg-gray-900 border-b border-gray-800 shadow-lg">
-                            <div className="max-w-7xl mx-auto px-4 py-2">
-                                <Nav
-                                    isLoggedIn={isLoggedIn}
-                                    isMobile={true}
-                                    opened={isMenuOpened}
-                                    toggle={() => setIsMenuOpened(false)}
-                                />
-                            </div>
-                        </div>
-                    )}
+                {/* Dropdown Menu */}
+                <div
+                    className={`absolute top-16 right-0 w-64 bg-gray-900 border-b border-l border-gray-800 
+                               transform transition-all duration-200 ease-in-out shadow-lg rounded-bl-lg
+                               ${isMenuOpened ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none hidden'}`}
+                >
+                    <div className="py-2">
+                        <Nav
+                            isLoggedIn={isLoggedIn}
+                            opened={isMenuOpened}
+                            toggle={() => setIsMenuOpened(false)}
+                        />
+                    </div>
                 </div>
             </header>
         </>
     );
+};
+
+const NavLinks = ({ mobile, onClick }) => {
+    const { t } = useTranslation();
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
+
+    const links = [
+        !isLoggedIn && { label: t('sign_up'), icon: IconUser, to: '/signup' },
+        !isLoggedIn && { label: t('sign_in'), icon: IconLogin, to: '/signin' },
+        isLoggedIn && { label: t('sign_out'), icon: IconLockOff, to: '/signout' },
+        { label: t('account.home.title'), icon: IconUser, to: '/account' },
+        { label: t('public_list'), icon: IconList, to: '/public' },
+        { label: t('privacy.title'), icon: IconFingerprint, to: '/privacy' },
+    ].filter(Boolean);
+
+    return links.map((link) => (
+        <Link
+            key={link.to}
+            to={link.to}
+            onClick={onClick}
+            className={`flex items-center gap-2 px-4 py-2 text-gray-300 rounded-md
+                     hover:text-white hover:bg-gray-800 transition-colors duration-200
+                     ${mobile ? 'w-full' : ''}`}
+        >
+            <link.icon size={16} className="text-gray-400" />
+            <span className="text-sm font-medium">{link.label}</span>
+        </Link>
+    ));
 };
 
 export default Header;
