@@ -420,7 +420,7 @@ const Home = () => {
                         </div>
 
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                            <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
                                 <IconHeading size={18} />
                             </div>
                             <input
@@ -490,18 +490,37 @@ const Home = () => {
                                         value={formData.password}
                                         onChange={handleInputChange}
                                         readOnly={inputReadOnly}
-                                        className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 
+                                        className="w-full pl-10 pr-10 bg-gray-800 border border-gray-700 
                                                  rounded-lg text-gray-100 placeholder-gray-500
                                                  focus:border-primary focus:ring-1 focus:ring-primary"
                                         placeholder={t('common.password')}
                                     />
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                navigator.clipboard.writeText(formData.password)
+                                            }
+                                            className="p-1 hover:bg-gray-700 rounded-md group"
+                                            title={t('common.copy')}
+                                        >
+                                            <IconCopy
+                                                size={14}
+                                                className="text-gray-400 group-hover:hidden"
+                                            />
+                                            <IconCheck
+                                                size={14}
+                                                className="text-green-500 hidden group-hover:block"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
 
                         <div className="space-y-4">
                             <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
                                     <IconClock size={18} />
                                 </div>
                                 <select
@@ -523,7 +542,7 @@ const Home = () => {
                             </div>
 
                             <div className="relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
                                     <IconEye size={18} />
                                 </div>
                                 <input
