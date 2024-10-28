@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import './i18n';
@@ -10,7 +10,10 @@ import './index.css';
 
 const store = configureStore();
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
     <Provider store={store}>
         <Suspense
             fallback={
@@ -30,6 +33,5 @@ ReactDOM.render(
         >
             <HemmeligApplication />
         </Suspense>
-    </Provider>,
-    document.getElementById('root')
+    </Provider>
 );
