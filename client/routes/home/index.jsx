@@ -12,6 +12,7 @@ import {
     IconLink,
     IconLock,
     IconLockAccess,
+    IconLockOpen,
     IconShare,
     IconShieldLock,
     IconTrash,
@@ -450,21 +451,36 @@ const Home = () => {
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
-                            <button
-                                type="button"
-                                onClick={onSetPublic}
-                                className={`
-                                    w-full flex items-center gap-3 px-4 py-3
-                                    bg-black/20 rounded-lg border border-white/[0.08]
-                                    hover:border-white/[0.12] transition-colors duration-200
-                                    ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300'}
-                                `}
-                            >
-                                <IconLock size={18} />
-                                <span className="text-sm font-medium">
-                                    {t(isPublic ? 'common.public' : 'common.private')}
-                                </span>
-                            </button>
+                            <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    onClick={onSetPublic}
+                                    className={`
+                                        w-full flex items-center gap-3 px-4 py-3
+                                        bg-black/20 rounded-lg border border-white/[0.08]
+                                        hover:border-white/[0.12] transition-colors duration-200
+                                        ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300'}
+                                    `}
+                                >
+                                    {isPublic ? <IconLockOpen size={18} /> : <IconLock size={18} />}
+                                    <span className="text-sm font-medium">
+                                        {t(isPublic ? 'common.public' : 'common.private')}
+                                    </span>
+                                </button>
+                                <div className="px-4">
+                                    <p className="text-xs text-gray-400">
+                                        {isPublic
+                                            ? t(
+                                                  'home.public_description',
+                                                  'Public secrets are not encrypted and can be viewed by anyone with the link'
+                                              )
+                                            : t(
+                                                  'home.private_description',
+                                                  'Private secrets are encrypted and can only be viewed with the decryption key'
+                                              )}
+                                    </p>
+                                </div>
+                            </div>
 
                             <button
                                 type="button"
@@ -710,25 +726,21 @@ const Home = () => {
                     )}
                 </div>
 
-                {/* Secret URL Display */}
+                {/* Full Secret URL Display */}
                 {secretId && (
-                    <FormSection
-                        title={t('common.secret_url')}
-                        subtitle={t('common.secret_description')}
-                    >
-                        <div className="space-y-6">
-                            {/* URL Field */}
+                    <>
+                        <FormSection
+                            title={t('common.complete_url')}
+                            subtitle={t('common.complete_url_description')}
+                        >
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">
-                                    {t('common.secret_url')}
-                                </label>
                                 <div className="relative">
                                     <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                         <IconLink size={14} />
                                     </span>
                                     <input
                                         type="text"
-                                        value={getSecretURL(false)} // URL without encryption key
+                                        value={getSecretURL(true)} // Full URL with encryption key
                                         readOnly
                                         onClick={handleFocus}
                                         className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
@@ -738,7 +750,7 @@ const Home = () => {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                navigator.clipboard.writeText(getSecretURL(false))
+                                                navigator.clipboard.writeText(getSecretURL(true))
                                             }
                                             className="p-1 hover:bg-gray-700 rounded-md group"
                                             title={t('common.copy')}
@@ -755,94 +767,145 @@ const Home = () => {
                                     </div>
                                 </div>
                             </div>
+                        </FormSection>
 
-                            {/* Decryption Key Field */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">
-                                    {t('common.decryption_key')}
-                                </label>
-                                <div className="relative">
-                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                                        <IconKey size={14} />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        value={encryptionKey}
-                                        readOnly
-                                        onClick={handleFocus}
-                                        className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
-                                                 rounded-md text-gray-100"
-                                    />
-                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                navigator.clipboard.writeText(encryptionKey)
-                                            }
-                                            className="p-1 hover:bg-gray-700 rounded-md group"
-                                            title={t('common.copy')}
-                                        >
-                                            <IconCopy
-                                                size={14}
-                                                className="text-gray-400 group-hover:hidden"
-                                            />
-                                            <IconCheck
-                                                size={14}
-                                                className="text-green-500 hidden group-hover:block"
-                                            />
-                                        </button>
+                        {/* Separate URL and Decryption Key Fields */}
+                        <FormSection
+                            title={t('common.secret_url')}
+                            subtitle={t('common.secret_description')}
+                        >
+                            <div className="space-y-6">
+                                {/* URL Field */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">
+                                        {t('common.secret_url')}
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                            <IconLink size={14} />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={getSecretURL(false)} // URL without encryption key
+                                            readOnly
+                                            onClick={handleFocus}
+                                            className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
+                                                     rounded-md text-gray-100"
+                                        />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    navigator.clipboard.writeText(
+                                                        getSecretURL(false)
+                                                    )
+                                                }
+                                                className="p-1 hover:bg-gray-700 rounded-md group"
+                                                title={t('common.copy')}
+                                            >
+                                                <IconCopy
+                                                    size={14}
+                                                    className="text-gray-400 group-hover:hidden"
+                                                />
+                                                <IconCheck
+                                                    size={14}
+                                                    className="text-green-500 hidden group-hover:block"
+                                                />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Info Banner */}
-                            <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
-                                <div className="flex items-start gap-3">
-                                    <div className="p-1 bg-primary/10 rounded">
-                                        <IconInfoCircle className="text-primary" size={16} />
-                                    </div>
-                                    <div className="space-y-1 text-sm">
-                                        <p className="text-gray-300">{t('common.one_time_use')}</p>
+                                {/* Decryption Key Field */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">
+                                        {t('common.decryption_key')}
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                            <IconKey size={14} />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={encryptionKey}
+                                            readOnly
+                                            onClick={handleFocus}
+                                            className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
+                                                     rounded-md text-gray-100"
+                                        />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    navigator.clipboard.writeText(encryptionKey)
+                                                }
+                                                className="p-1 hover:bg-gray-700 rounded-md group"
+                                                title={t('common.copy')}
+                                            >
+                                                <IconCopy
+                                                    size={14}
+                                                    className="text-gray-400 group-hover:hidden"
+                                                />
+                                                <IconCheck
+                                                    size={14}
+                                                    className="text-green-500 hidden group-hover:block"
+                                                />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
+                                {/* Info Banner */}
+                                <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="p-1 bg-primary/10 rounded">
+                                            <IconInfoCircle className="text-primary" size={16} />
+                                        </div>
+                                        <div className="space-y-1 text-sm">
+                                            <p className="text-gray-300">
+                                                {t('common.one_time_use')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* QR Code */}
+                                <div className="pt-4">
+                                    <QRLink value={getSecretURL()} />
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={onShare}
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                                 bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
+                                                 transition-colors"
+                                    >
+                                        <IconShare size={14} />
+                                        {t('common.share')}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={onBurn}
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                                 bg-red-500/20 text-red-500 rounded-md hover:bg-red-500/30 
+                                                 transition-colors"
+                                    >
+                                        <IconTrash size={14} />
+                                        {t('common.burn')}
+                                    </button>
+                                </div>
+
+                                {/* Hemmelig meaning */}
+                                <p className="text-gray-400 text-xs text-center pt-4">
+                                    Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
+                                </p>
                             </div>
-
-                            {/* QR Code */}
-                            <div className="pt-4">
-                                <QRLink value={getSecretURL()} />
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={onShare}
-                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                             bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
-                                             transition-colors"
-                                >
-                                    <IconShare size={14} />
-                                    {t('common.share')}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={onBurn}
-                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                             bg-red-500/20 text-red-500 rounded-md hover:bg-red-500/30 
-                                             transition-colors"
-                                >
-                                    <IconTrash size={14} />
-                                    {t('common.burn')}
-                                </button>
-                            </div>
-
-                            {/* Hemmelig meaning */}
-                            <p className="text-gray-400 text-xs text-center pt-4">
-                                Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
-                            </p>
-                        </div>
-                    </FormSection>
+                        </FormSection>
+                    </>
                 )}
             </form>
         </div>

@@ -25,7 +25,9 @@
         "burn": "Burn Secret",
         "copy": "Copy to clipboard",
         "copied": "Copied!",
-        "sign_in": "Sign In"
+        "sign_in": "Sign In",
+        "complete_url": "Complete Secret URL",
+        "complete_url_description": "This is the complete URL including the decryption key. Share this URL to give direct access to the secret."
     },
     "account": {
         "home": {
@@ -118,6 +120,8 @@
         "title": "Title",
         "lifetime": "Lifetime",
         "max_views": "Max views",
+        "public_description": "Public secrets are listed in /public and can be viewed by anyone with the link as long as a password is not set.",
+        "private_description": "Private secrets are encrypted and can only be viewed with the decryption key, and/or password.",
         "enable_password": "Enable password",
         "optional_password": "Enter your custom password",
         "burn_aftertime": "Burn the secret only after the time expires",
