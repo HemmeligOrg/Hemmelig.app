@@ -192,5 +192,11 @@
     },
     "terms": {
         "title": "Terms & conditions"
+    },
+    "not_found": {
+        "title": "Page Not Found",
+        "description": "Oops! It seems this secret has vanished into thin air. Don't worry though, you can create a new one or check out our documentation.",
+        "go_home": "Create New Secret",
+        "view_docs": "View API Docs"
     }
 }
