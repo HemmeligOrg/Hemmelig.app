@@ -1,7 +1,12 @@
 import {
     IconAlertCircle,
     IconCheck,
+    IconClock,
     IconCopy,
+    IconEye,
+    IconFileUpload,
+    IconFlame,
+    IconHeading,
     IconInfoCircle,
     IconKey,
     IconLink,
@@ -9,7 +14,6 @@ import {
     IconLockAccess,
     IconShare,
     IconShieldLock,
-    IconSquarePlus,
     IconTrash,
     IconX,
 } from '@tabler/icons';
@@ -21,6 +25,7 @@ import { encrypt, generateKey } from '../../../shared/helpers/crypto';
 import { burnSecret, createSecret } from '../../api/secret';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
+import { Switch } from '../../components/switch';
 import config from '../../config';
 import { zipFiles } from '../../helpers/zip';
 
@@ -36,11 +41,14 @@ const Home = () => {
         title: '',
         maxViews: 1,
         files: [],
-        password: '',
+        password: false,
+        passwordValue: '',
         ttl: DEFAULT_TTL,
         allowedIp: '',
         preventBurn: false,
         isPublic: false,
+        burnAfterReading: true, // default to true
+        burnAfterTime: false,
     });
 
     // UI state
@@ -168,11 +176,14 @@ const Home = () => {
             title: '',
             maxViews: 1,
             files: [],
-            password: '',
+            password: false,
+            passwordValue: '',
             ttl: DEFAULT_TTL,
             allowedIp: '',
             preventBurn: false,
             isPublic: false,
+            burnAfterReading: true, // default to true
+            burnAfterTime: false,
         });
         setSecretId('');
         setEncryptionKey('');
@@ -408,7 +419,10 @@ const Home = () => {
                             {errors.fields.text && <FieldError message={errors.fields.text} />}
                         </div>
 
-                        <div>
+                        <div className="relative">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <IconHeading size={18} />
+                            </div>
                             <input
                                 type="text"
                                 name="title"
@@ -416,10 +430,13 @@ const Home = () => {
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 readOnly={inputReadOnly}
-                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
                                          focus:ring-2 focus:ring-hemmelig focus:border-transparent
                                          text-base text-gray-100 placeholder-gray-500"
                             />
+                            <p className="mt-2 text-sm text-gray-400">
+                                {t('home.title_description')}
+                            </p>
                         </div>
                     </div>
                 </FormSection>
@@ -483,29 +500,104 @@ const Home = () => {
                         </div>
 
                         <div className="space-y-4">
-                            <select
-                                value={ttl}
-                                onChange={(e) => onSelectChange(e.target.value)}
-                                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 
-                                         text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
-                            >
-                                {ttlValues.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                    <IconClock size={18} />
+                                </div>
+                                <select
+                                    value={ttl}
+                                    onChange={(e) => onSelectChange(e.target.value)}
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
+                                             text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary
+                                             appearance-none"
+                                >
+                                    {ttlValues.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className="mt-2 text-sm text-gray-400">
+                                    {t('home.ttl_description')}
+                                </p>
+                            </div>
 
-                            <input
-                                type="number"
-                                name="maxViews"
-                                value={formData.maxViews}
-                                onChange={handleInputChange}
-                                min="1"
-                                max="999"
-                                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 
-                                         text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
-                            />
+                            <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                    <IconEye size={18} />
+                                </div>
+                                <input
+                                    type="number"
+                                    name="maxViews"
+                                    value={formData.maxViews}
+                                    onChange={handleInputChange}
+                                    min="1"
+                                    max="999"
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
+                                             text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
+                                />
+                                <p className="mt-2 text-sm text-gray-400">
+                                    {t('home.max_views_description')}
+                                </p>
+                            </div>
+
+                            {/* Burn after reading toggle */}
+                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                <div className="flex items-center space-x-3">
+                                    <div className="p-2 bg-orange-500/10 rounded-lg">
+                                        <IconFlame className="text-orange-400" size={18} />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-white/90">
+                                            {t('home.burn_after_reading')}
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                            {t('home.burn_description')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <Switch
+                                    checked={formData.burnAfterReading}
+                                    onChange={(checked) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            burnAfterReading: checked,
+                                        }))
+                                    }
+                                >
+                                    {t('home.burn_after_reading')}
+                                </Switch>
+                            </div>
+
+                            {/* Optional: Burn after time toggle */}
+                            {!formData.burnAfterReading && (
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-orange-500/10 rounded-lg">
+                                            <IconFlame className="text-orange-400" size={18} />
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.burn_after_time')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {t('home.burn_aftertime')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={formData.burnAfterTime}
+                                        onChange={(checked) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                burnAfterTime: checked,
+                                            }))
+                                        }
+                                    >
+                                        {t('home.burn_after_time')}
+                                    </Switch>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </FormSection>
@@ -533,8 +625,8 @@ const Home = () => {
                                     className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
                                              hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
                                 >
-                                    <IconSquarePlus size={14} />
-                                    {t('upload')} {/* Changed from home.upload_file */}
+                                    <IconFileUpload size={16} />
+                                    <span>{t('upload')}</span>
                                 </label>
                             </div>
 

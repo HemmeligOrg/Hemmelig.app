@@ -6,14 +6,23 @@
     "something_went_wrong": "Something went wrong!",
     "loading": "Loading",
     "common": {
+        "title": "Hemmelig.app",
+        "description": "Share secrets securely with encrypted messages that automatically self-destruct after being read.",
+        "content": "Content",
+        "content_description": "Enter the secret message you want to share securely",
+        "security": "Security",
+        "security_description": "Configure security settings for your secret",
+        "private": "Private",
+        "public": "Public",
+        "password": "Password Protection",
         "secret_url": "Secret URL",
-        "secret_description": "Share these details securely with your recipient",
+        "secret_description": "Share this URL with the person who needs to access the secret",
         "decryption_key": "Decryption Key",
+        "one_time_use": "This secret can only be viewed once and will self-destruct after being read.",
+        "norwegian_meaning": "means 'secret' in Norwegian",
         "copy": "Copy to clipboard",
-        "share": "Share",
-        "burn": "Burn",
-        "one_time_use": "The secret link is a one-time use only, after which it will vanish.",
-        "norwegian_meaning": "means secret in Norwegian"
+        "share": "Share Secret",
+        "burn": "Burn Secret"
     },
     "account": {
         "home": {
@@ -106,7 +115,7 @@
         "lifetime": "Lifetime",
         "max_views": "Max views",
         "enable_password": "Enable password",
-        "optional_password": "Your optional password",
+        "optional_password": "Enter your custom password",
         "burn_aftertime": "Burn the secret only after the time expires",
         "restrict_from_ip": "Restrict the secret from being opened based on an IP or a CIDR range. Example CIDR: 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Restrict by IP or CIDR",
@@ -136,7 +145,15 @@
         "5_minutes": "5 minutes",
         "successful_share": "Successful share",
         "get_your_secret": "Get your secret at hemmelig.app.",
-        "set_public": "Set as a public paste"
+        "set_public": "Set as a public paste",
+        "title_description": "Give your secret a memorable title (optional)",
+        "ttl_description": "Set how long the secret should be available",
+        "max_views_description": "Number of times the secret can be viewed",
+        "burn": "Burn after reading",
+        "burn_description": "The secret will be permanently deleted after being read",
+        "burn_aftertime": "Burn the secret only after the time expires",
+        "burn_after_reading": "Burn after reading",
+        "burn_after_time": "Burn after time expires"
     },
     "secret": {
         "view_your_secret": "View your secret",
