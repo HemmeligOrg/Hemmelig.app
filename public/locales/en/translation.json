@@ -22,7 +22,9 @@
         "norwegian_meaning": "means 'secret' in Norwegian",
         "copy": "Copy to clipboard",
         "share": "Share Secret",
-        "burn": "Burn Secret"
+        "burn": "Burn Secret",
+        "copy": "Copy to clipboard",
+        "copied": "Copied!"
     },
     "account": {
         "home": {

@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { encrypt, generateKey } from '../../../shared/helpers/crypto';
 import { burnSecret, createSecret } from '../../api/secret';
+import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
@@ -496,23 +497,7 @@ const Home = () => {
                                         placeholder={t('common.password')}
                                     />
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                navigator.clipboard.writeText(formData.password)
-                                            }
-                                            className="p-1 hover:bg-gray-700 rounded-md group"
-                                            title={t('common.copy')}
-                                        >
-                                            <IconCopy
-                                                size={14}
-                                                className="text-gray-400 group-hover:hidden"
-                                            />
-                                            <IconCheck
-                                                size={14}
-                                                className="text-green-500 hidden group-hover:block"
-                                            />
-                                        </button>
+                                        <CopyButton textToCopy={formData.password} />
                                     </div>
                                 </div>
                             )}
