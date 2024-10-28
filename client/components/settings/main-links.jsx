@@ -1,4 +1,3 @@
-import { Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { IconLock, IconSettings, IconUser } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -6,29 +5,24 @@ import { useNavigate } from 'react-router-dom';
 function MainLink({ icon, color, label, route }) {
     const navigate = useNavigate();
 
+    const colorClasses = {
+        blue: 'bg-blue-500/20 text-blue-400',
+        teal: 'bg-teal-500/20 text-teal-400',
+        violet: 'bg-violet-500/20 text-violet-400',
+        grape: 'bg-purple-500/20 text-purple-400',
+    };
+
     return (
-        <UnstyledButton
-            sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                color: theme.colors.dark[0],
-
-                '&:hover': {
-                    backgroundColor: theme.colors.dark[6],
-                },
-            })}
+        <button
             onClick={() => navigate(`/account/${route}`)}
+            className="w-full px-3 py-2 rounded-md text-left transition-colors
+                     hover:bg-gray-700/50 text-gray-200 group"
         >
-            <Group>
-                <ThemeIcon color={color} variant="light">
-                    {icon}
-                </ThemeIcon>
-
-                <Text size="sm">{label}</Text>
-            </Group>
-        </UnstyledButton>
+            <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-md ${colorClasses[color]}`}>{icon}</div>
+                <span className="text-sm">{label}</span>
+            </div>
+        </button>
     );
 }
 
@@ -68,7 +62,11 @@ export default function MainLinks() {
         },
     ];
 
-    const links = data.map((link) => <MainLink {...link} key={link.label} />);
-
-    return <div>{links}</div>;
+    return (
+        <div className="space-y-1">
+            {data.map((link) => (
+                <MainLink {...link} key={link.label} />
+            ))}
+        </div>
+    );
 }
