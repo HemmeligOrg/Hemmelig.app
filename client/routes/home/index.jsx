@@ -19,60 +19,49 @@ import {
     IconX,
 } from '@tabler/icons';
 import passwordGenerator from 'generate-password-browser';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { encrypt, generateKey } from '../../../shared/helpers/crypto';
-import { burnSecret, createSecret } from '../../api/secret';
+import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
-import { zipFiles } from '../../helpers/zip';
+import { useSecretStore } from '../../stores/secretStore';
 
 const DEFAULT_TTL = 259200; // 3 days
 
 const Home = () => {
     const { t } = useTranslation();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
-
-    // Main form state
-    const [formData, setFormData] = useState({
-        text: '',
-        title: '',
-        maxViews: 1,
-        files: [],
-        password: false,
-        passwordValue: '',
-        ttl: DEFAULT_TTL,
-        allowedIp: '',
-        preventBurn: false,
-        isPublic: false,
-        burnAfterReading: true, // default to true
-        burnAfterTime: false,
-    });
-
-    // UI state
-    const [ttl, setTTL] = useState(DEFAULT_TTL);
-    const [enablePassword, setOnEnablePassword] = useState(false);
-    const [isPublic, setIsPublic] = useState(false);
-    const [creatingSecret, setCreatingSecret] = useState(false);
-    const [errors, setErrors] = useState({
-        banner: {
-            title: '',
-            message: '',
-            dismissible: true,
-        },
-        fields: {},
-        sections: {},
-    });
-
-    // Result state
-    const [secretId, setSecretId] = useState('');
-    const [encryptionKey, setEncryptionKey] = useState('');
     const secretRef = useRef(null);
+
+    const {
+        formData,
+        setFormData,
+        ttl,
+        setTTL,
+        enablePassword,
+        setEnablePassword,
+        isPublic,
+        setIsPublic,
+        creatingSecret,
+        setCreatingSecret,
+        errors,
+        setErrors,
+        secretId,
+        setSecretId,
+        encryptionKey,
+        setEncryptionKey,
+        reset,
+        removeFile,
+        handleSubmit,
+    } = useSecretStore();
+
+    // Use handleSubmit with translation function
+    const onSubmit = (event) => handleSubmit(event, t);
 
     // Available TTL options
     const ttlValues = [
@@ -117,31 +106,21 @@ const Home = () => {
     // Form handlers
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
+        setFormData({ [name]: type === 'checkbox' ? checked : value });
     };
 
     const onTextChange = useCallback((value) => {
-        setFormData((prev) => ({ ...prev, text: value }));
-    }, []); // Empty dependency array since setFormData is stable
+        setFormData({ text: value });
+    }, []);
 
     const onSelectChange = (value) => {
         setTTL(value);
-        setFormData((prev) => ({ ...prev, ttl: value }));
+        setFormData({ ttl: value });
     };
 
     // Feature toggles
-    const onEnablePassword = () => setOnEnablePassword(!enablePassword);
+    const onEnablePassword = () => setEnablePassword(!enablePassword);
     const onSetPublic = () => setIsPublic(!isPublic);
-
-    // File handling
-    const removeFile = (index) => {
-        const updatedFiles = [...formData.files];
-        updatedFiles.splice(index, 1);
-        setFormData((prev) => ({ ...prev, files: updatedFiles }));
-    };
 
     // URL and sharing
     const handleFocus = (event) => event.target.select();
@@ -171,140 +150,6 @@ const Home = () => {
         event.preventDefault();
         await burnSecret(secretId);
         reset();
-    };
-
-    const reset = () => {
-        setFormData({
-            text: '',
-            title: '',
-            maxViews: 1,
-            files: [],
-            password: false,
-            passwordValue: '',
-            ttl: DEFAULT_TTL,
-            allowedIp: '',
-            preventBurn: false,
-            isPublic: false,
-            burnAfterReading: true, // default to true
-            burnAfterTime: false,
-        });
-        setSecretId('');
-        setEncryptionKey('');
-        setOnEnablePassword(false);
-        setCreatingSecret(false);
-        setTTL(DEFAULT_TTL);
-        setIsPublic(false);
-        setErrors({
-            banner: {
-                title: '',
-                message: '',
-                dismissible: true,
-            },
-            fields: {},
-            sections: {},
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Clear previous errors
-        setErrors({
-            banner: {
-                title: '',
-                message: '',
-                dismissible: true,
-            },
-            fields: {},
-            sections: {},
-        });
-
-        // Validate required text
-        if (!formData.text) {
-            setErrors({
-                ...errors,
-                fields: { text: t('home.please_add_secret') },
-            });
-            return;
-        }
-
-        setCreatingSecret(true);
-
-        try {
-            const password = formData.password;
-            const publicEncryptionKey = generateKey(password);
-            const encryptionKey = publicEncryptionKey + password;
-
-            const body = {
-                text: isPublic ? formData.text : encrypt(formData.text, encryptionKey),
-                files: [],
-                title: isPublic ? formData.title : encrypt(formData.title, encryptionKey),
-                password: formData.password,
-                ttl: formData.ttl,
-                allowedIp: formData.allowedIp,
-                preventBurn: formData.preventBurn,
-                maxViews: formData.maxViews,
-                isPublic: isPublic,
-            };
-
-            const zipFile = await zipFiles(formData.files);
-            if (zipFile) {
-                body.files.push({
-                    type: 'application/zip',
-                    ext: '.zip',
-                    content: encrypt(zipFile, encryptionKey),
-                });
-            }
-
-            const json = await createSecret(body);
-
-            if (json.statusCode !== 201) {
-                if (json.statusCode === 400) {
-                    setErrors({
-                        general: t('home.error_bad_request'),
-                        fields: {},
-                        dismissible: true,
-                    });
-                }
-
-                if (json.message === 'request file too large, please check multipart config') {
-                    setErrors({
-                        general: '',
-                        fields: { files: t('home.file_too_large') },
-                        dismissible: true,
-                    });
-                } else {
-                    setErrors({
-                        general: t('home.error_generic', { message: json.message }),
-                        fields: {},
-                        dismissible: true,
-                    });
-                }
-                return;
-            }
-
-            // Clear errors on success
-            setErrors({
-                banner: {
-                    title: '',
-                    message: '',
-                    dismissible: true,
-                },
-                fields: {},
-                sections: {},
-            });
-            setSecretId(json.id);
-            setEncryptionKey(publicEncryptionKey);
-        } catch (err) {
-            console.error('Error creating secret:', err);
-            setErrors({
-                general: t('home.error_creating_secret'),
-                fields: {},
-                dismissible: false,
-            });
-        } finally {
-            setCreatingSecret(false);
-        }
     };
 
     const inputReadOnly = !!secretId;
@@ -379,7 +224,7 @@ const Home = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={onSubmit} className="space-y-8">
                 {/* Header */}
                 <div className="text-center space-y-4 mb-12">
                     <h1 className="text-3xl font-bold text-white">{t('common.title')}</h1>
