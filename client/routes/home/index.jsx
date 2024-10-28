@@ -18,7 +18,6 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import passwordGenerator from 'generate-password-browser';
 import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -30,8 +29,6 @@ import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
 import { useSecretStore } from '../../stores/secretStore';
-
-const DEFAULT_TTL = 259200; // 3 days
 
 const Home = () => {
     const { t } = useTranslation();
@@ -58,6 +55,7 @@ const Home = () => {
         reset,
         removeFile,
         handleSubmit,
+        onEnablePassword,
     } = useSecretStore();
 
     // Use handleSubmit with translation function
@@ -89,20 +87,6 @@ const Home = () => {
         }
     }, [secretId]);
 
-    useEffect(() => {
-        if (enablePassword) {
-            const newPassword = passwordGenerator.generate({
-                length: 16,
-                numbers: true,
-                strict: true,
-                symbols: true,
-            });
-            setFormData((prev) => ({ ...prev, password: newPassword }));
-        } else {
-            setFormData((prev) => ({ ...prev, password: '' }));
-        }
-    }, [enablePassword]);
-
     // Form handlers
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -119,7 +103,6 @@ const Home = () => {
     };
 
     // Feature toggles
-    const onEnablePassword = () => setEnablePassword(!enablePassword);
     const onSetPublic = () => setIsPublic(!isPublic);
 
     // URL and sharing

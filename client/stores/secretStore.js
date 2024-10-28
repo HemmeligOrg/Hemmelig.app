@@ -186,4 +186,24 @@ export const useSecretStore = create((set, get) => ({
             set({ creatingSecret: false });
         }
     },
+
+    onEnablePassword: () => {
+        // Get current state
+        const { enablePassword, setEnablePassword, setFormData } = get();
+        const newEnablePassword = !enablePassword;
+
+        setEnablePassword(newEnablePassword);
+
+        if (newEnablePassword) {
+            const newPassword = passwordGenerator.generate({
+                length: 16,
+                numbers: true,
+                strict: true,
+                symbols: true,
+            });
+            setFormData((prev) => ({ ...prev, password: newPassword }));
+        } else {
+            setFormData((prev) => ({ ...prev, password: '' }));
+        }
+    },
 }));
