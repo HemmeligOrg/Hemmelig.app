@@ -1,11 +1,9 @@
-import { rem } from '@mantine/core';
-const Logo = ({ ...rest }) => (
+const Logo = ({ className, ...rest }) => (
     <svg
         version="1.0"
-        width={rem(100)}
+        className={`w-[45px] h-auto ${className}`}
         viewBox="0 0 2919.000000 2793.000000"
         preserveAspectRatio="xMidYMid meet"
-        id="svg71"
         xmlns="http://www.w3.org/2000/svg"
         {...rest}
     >
