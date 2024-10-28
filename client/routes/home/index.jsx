@@ -28,7 +28,7 @@ import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
-import { useSecretStore } from '../../stores/secretStore';
+import useSecretStore from '../../stores/secretStore';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -58,10 +58,8 @@ const Home = () => {
         onEnablePassword,
     } = useSecretStore();
 
-    // Use handleSubmit with translation function
     const onSubmit = (event) => handleSubmit(event, t);
 
-    // Available TTL options
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
         { value: 259200, label: t('home.3_days') },
@@ -80,32 +78,34 @@ const Home = () => {
         );
     }
 
-    // Effects
     useEffect(() => {
         if (secretId) {
             secretRef.current?.focus();
         }
     }, [secretId]);
 
-    // Form handlers
-    const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({ [name]: type === 'checkbox' ? checked : value });
-    };
+    const handleInputChange = useCallback(
+        (e) => {
+            const { name, value, type, checked } = e.target;
+            setFormData({ [name]: type === 'checkbox' ? checked : value });
+        },
+        [setFormData]
+    );
 
-    const onTextChange = useCallback((value) => {
-        setFormData({ text: value });
-    }, []);
+    const onTextChange = useCallback(
+        (value) => {
+            setFormData({ text: value });
+        },
+        [setFormData]
+    );
 
     const onSelectChange = (value) => {
         setTTL(value);
         setFormData({ ttl: value });
     };
 
-    // Feature toggles
     const onSetPublic = () => setIsPublic(!isPublic);
 
-    // URL and sharing
     const handleFocus = (event) => event.target.select();
 
     const getSecretURL = (withEncryptionKey = true) => {
@@ -127,7 +127,6 @@ const Home = () => {
         }
     };
 
-    // Secret management
     const onBurn = async (event) => {
         if (!secretId) return;
         event.preventDefault();
@@ -139,7 +138,6 @@ const Home = () => {
     const disableFileUpload =
         (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
 
-    // Premium Error Components
     const ErrorBanner = ({ message, onDismiss }) => (
         <div
             className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
@@ -179,7 +177,6 @@ const Home = () => {
         </div>
     );
 
-    // Premium Form Section Component
     const FormSection = ({ title, subtitle, children, error }) => (
         <div className="relative space-y-4">
             {title && (
@@ -208,7 +205,6 @@ const Home = () => {
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
             <form onSubmit={onSubmit} className="space-y-8">
-                {/* Header */}
                 <div className="text-center space-y-4 mb-12">
                     <h1 className="text-3xl font-bold text-white">{t('common.title')}</h1>
                     <p className="text-lg text-gray-400 max-w-2xl mx-auto">
@@ -232,7 +228,6 @@ const Home = () => {
                     />
                 )}
 
-                {/* Secret Content Section */}
                 <FormSection>
                     <div className="space-y-6">
                         <div className="space-y-2">
@@ -272,7 +267,6 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                {/* Security Options */}
                 <FormSection
                     title={t('common.security')}
                     subtitle={t('common.security_description')}
@@ -324,7 +318,6 @@ const Home = () => {
                                 <span className="text-sm font-medium">{t('common.password')}</span>
                             </button>
 
-                            {/* Password Input Field */}
                             {enablePassword && (
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -390,7 +383,6 @@ const Home = () => {
                                 </p>
                             </div>
 
-                            {/* Burn after reading toggle */}
                             <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-orange-500/10 rounded-lg">
@@ -408,17 +400,13 @@ const Home = () => {
                                 <Switch
                                     checked={formData.burnAfterReading}
                                     onChange={(checked) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            burnAfterReading: checked,
-                                        }))
+                                        setFormData({ burnAfterReading: checked })
                                     }
                                 >
                                     {t('home.burn_after_reading')}
                                 </Switch>
                             </div>
 
-                            {/* Optional: Burn after time toggle */}
                             {!formData.burnAfterReading && (
                                 <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                     <div className="flex items-center space-x-3">
@@ -437,10 +425,7 @@ const Home = () => {
                                     <Switch
                                         checked={formData.burnAfterTime}
                                         onChange={(checked) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                burnAfterTime: checked,
-                                            }))
+                                            setFormData({ burnAfterTime: checked })
                                         }
                                     >
                                         {t('home.burn_after_time')}
@@ -451,7 +436,6 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                {/* File Upload Section */}
                 {!disableFileUpload ? (
                     <FormSection title={t('home.file_upload')} error={errors.sections.files}>
                         <div className="space-y-4">
@@ -527,7 +511,6 @@ const Home = () => {
                     </FormSection>
                 )}
 
-                {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                     <button
                         type="submit"
@@ -554,7 +537,6 @@ const Home = () => {
                     )}
                 </div>
 
-                {/* Full Secret URL Display */}
                 {secretId && (
                     <>
                         <FormSection
@@ -568,7 +550,7 @@ const Home = () => {
                                     </span>
                                     <input
                                         type="text"
-                                        value={getSecretURL(true)} // Full URL with encryption key
+                                        value={getSecretURL(true)}
                                         readOnly
                                         onClick={handleFocus}
                                         className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
@@ -597,13 +579,11 @@ const Home = () => {
                             </div>
                         </FormSection>
 
-                        {/* Separate URL and Decryption Key Fields */}
                         <FormSection
                             title={t('common.secret_url')}
                             subtitle={t('common.secret_description')}
                         >
                             <div className="space-y-6">
-                                {/* URL Field */}
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-300">
                                         {t('common.secret_url')}
@@ -614,7 +594,7 @@ const Home = () => {
                                         </span>
                                         <input
                                             type="text"
-                                            value={getSecretURL(false)} // URL without encryption key
+                                            value={getSecretURL(false)}
                                             readOnly
                                             onClick={handleFocus}
                                             className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
@@ -644,7 +624,6 @@ const Home = () => {
                                     </div>
                                 </div>
 
-                                {/* Decryption Key Field */}
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-300">
                                         {t('common.decryption_key')}
@@ -683,7 +662,6 @@ const Home = () => {
                                     </div>
                                 </div>
 
-                                {/* Info Banner */}
                                 <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
                                     <div className="flex items-start gap-3">
                                         <div className="p-1 bg-primary/10 rounded">
@@ -697,12 +675,10 @@ const Home = () => {
                                     </div>
                                 </div>
 
-                                {/* QR Code */}
                                 <div className="pt-4">
                                     <QRLink value={getSecretURL()} />
                                 </div>
 
-                                {/* Action Buttons */}
                                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                     <button
                                         type="button"
@@ -727,7 +703,6 @@ const Home = () => {
                                     </button>
                                 </div>
 
-                                {/* Hemmelig meaning */}
                                 <p className="text-gray-400 text-xs text-center pt-4">
                                     Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
                                 </p>

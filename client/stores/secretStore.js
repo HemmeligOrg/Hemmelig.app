@@ -1,122 +1,69 @@
-import passwordGenerator from 'generate-password-browser';
 import { create } from 'zustand';
-import { encrypt, generateKey } from '../../shared/helpers/crypto';
-import { createSecret } from '../api/secret';
-import { zipFiles } from '../helpers/zip';
 
-const DEFAULT_TTL = 259200; // 3 days
-
-const initialFormData = {
-    text: '',
-    title: '',
-    maxViews: 1,
-    files: [],
-    password: '',
-    ttl: DEFAULT_TTL,
-    allowedIp: '',
-    preventBurn: false,
-    isPublic: false,
-    burnAfterReading: true,
-    burnAfterTime: false,
-};
-
-const initialErrors = {
-    banner: {
+const useSecretStore = create((set) => ({
+    formData: {
+        text: '',
         title: '',
-        message: '',
-        dismissible: true,
+        password: '',
+        files: [],
+        maxViews: 1,
+        burnAfterReading: false,
+        burnAfterTime: false,
     },
-    fields: {},
-    sections: {},
-};
-
-export const useSecretStore = create((set, get) => ({
-    // Form Data
-    formData: initialFormData,
-    setFormData: (updates) =>
-        set((state) => ({
-            formData:
-                typeof updates === 'function'
-                    ? updates(state.formData)
-                    : { ...state.formData, ...updates },
-        })),
-
-    // UI State
-    ttl: DEFAULT_TTL,
-    setTTL: (value) => set({ ttl: value }),
-
+    ttl: 3600,
     enablePassword: false,
-    setEnablePassword: (value) =>
-        set((state) => {
-            // Generate or clear password when toggling
-            const newPassword = value
-                ? passwordGenerator.generate({
-                      length: 16,
-                      numbers: true,
-                      strict: true,
-                      symbols: true,
-                  })
-                : '';
-
-            return {
-                enablePassword: value,
-                formData: {
-                    ...state.formData,
-                    password: newPassword,
-                },
-            };
-        }),
-
     isPublic: false,
-    setIsPublic: (value) => set({ isPublic: value }),
-
     creatingSecret: false,
-    setCreatingSecret: (value) => set({ creatingSecret: value }),
-
-    // Errors
-    errors: initialErrors,
-    setErrors: (updates) =>
-        set((state) => ({
-            errors:
-                typeof updates === 'function'
-                    ? updates(state.errors)
-                    : { ...state.errors, ...updates },
-        })),
-
-    // Result State
-    secretId: '',
-    setSecretId: (value) => set({ secretId: value }),
-
+    errors: {
+        banner: { title: '', message: '', dismissible: true },
+        fields: { text: '', title: '' },
+        sections: { files: '' },
+    },
+    secretId: null,
     encryptionKey: '',
-    setEncryptionKey: (value) => set({ encryptionKey: value }),
-
-    // Actions
+    setFormData: (update) =>
+        set((state) => ({
+            formData: { ...state.formData, ...update },
+        })),
+    setTTL: (ttl) => set({ ttl }),
+    setEnablePassword: (enablePassword) => set({ enablePassword }),
+    setIsPublic: (isPublic) => set({ isPublic }),
+    setCreatingSecret: (creatingSecret) => set({ creatingSecret }),
+    setErrors: (errors) =>
+        set((state) => ({
+            errors: { ...state.errors, ...errors },
+        })),
+    setSecretId: (secretId) => set({ secretId }),
+    setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
     reset: () =>
         set({
-            formData: initialFormData,
-            secretId: '',
-            encryptionKey: '',
+            formData: {
+                text: '',
+                title: '',
+                password: '',
+                files: [],
+                maxViews: 1,
+                burnAfterReading: false,
+                burnAfterTime: false,
+            },
+            ttl: 3600,
             enablePassword: false,
-            creatingSecret: false,
-            ttl: DEFAULT_TTL,
             isPublic: false,
-            errors: initialErrors,
+            creatingSecret: false,
+            errors: {
+                banner: { title: '', message: '', dismissible: true },
+                fields: { text: '', title: '' },
+                sections: { files: '' },
+            },
+            secretId: null,
+            encryptionKey: '',
         }),
-
-    // File handling
     removeFile: (index) =>
         set((state) => {
-            const updatedFiles = [...state.formData.files];
-            updatedFiles.splice(index, 1);
-            return {
-                formData: {
-                    ...state.formData,
-                    files: updatedFiles,
-                },
-            };
+            const files = [...state.formData.files];
+            files.splice(index, 1);
+            return { formData: { ...state.formData, files } };
         }),
-
-    // Form submission
     handleSubmit: async (event, t) => {
         event.preventDefault();
 
@@ -186,24 +133,10 @@ export const useSecretStore = create((set, get) => ({
             set({ creatingSecret: false });
         }
     },
-
-    onEnablePassword: () => {
-        // Get current state
-        const { enablePassword, setEnablePassword, setFormData } = get();
-        const newEnablePassword = !enablePassword;
-
-        setEnablePassword(newEnablePassword);
-
-        if (newEnablePassword) {
-            const newPassword = passwordGenerator.generate({
-                length: 16,
-                numbers: true,
-                strict: true,
-                symbols: true,
-            });
-            setFormData((prev) => ({ ...prev, password: newPassword }));
-        } else {
-            setFormData((prev) => ({ ...prev, password: '' }));
-        }
-    },
+    onEnablePassword: () =>
+        set((state) => ({
+            enablePassword: !state.enablePassword,
+        })),
 }));
+
+export default useSecretStore;
