@@ -1,109 +1,81 @@
-import { Anchor, AppShell, Footer, Group, Header, Text, useMantineTheme } from '@mantine/core';
-import { Link, Outlet } from 'react-router-dom';
-
-import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-
+import { Link, Outlet } from 'react-router-dom';
 import HeaderContent from './components/header';
 
 const ApplicationShell = () => {
     const { t } = useTranslation();
-    const isMobile = useMediaQuery('(max-width: 768px)');
-    const theme = useMantineTheme();
 
     return (
-        <AppShell
-            styles={{
-                main: {
-                    background: theme.colors.dark[8],
-                },
-            }}
-            navbarOffsetBreakpoint="sm"
-            footer={
-                <Footer
-                    height={45}
-                    p="xs"
-                    sx={(theme) => ({
-                        backgroundColor: theme.colors.dark[8],
-                    })}
-                >
-                    <Group position="center" spacing="xs">
-                        {!isMobile && (
-                            <>
-                                <Anchor
-                                    component={Link}
-                                    to="/account"
-                                    color="dimmed"
-                                    size="xs"
-                                    transform="uppercase"
-                                >
-                                    {t('account.home.title')}
-                                </Anchor>
-                                |
-                                <Anchor
-                                    component={Link}
-                                    to="/privacy"
-                                    color="dimmed"
-                                    size="xs"
-                                    transform="uppercase"
-                                >
-                                    {t('privacy.title')}
-                                </Anchor>
-                                |
-                                <Anchor
-                                    component={Link}
-                                    to="/terms"
-                                    color="dimmed"
-                                    size="xs"
-                                    transform="uppercase"
-                                >
-                                    {t('terms.title')}
-                                </Anchor>
-                                |
-                            </>
-                        )}
-                        <Anchor
-                            rel="noreferrer"
-                            href="https://lite.hemmelig.app"
-                            color="dimmed"
-                            size="xs"
-                            transform="uppercase"
+        <div className="min-h-screen flex flex-col bg-gray-900">
+            {/* Header */}
+            <header className="h-[75px] z-50 bg-gray-900 border-b border-gray-800">
+                <HeaderContent />
+            </header>
+
+            {/* Main Content */}
+            <main className="flex-grow">
+                <Outlet />
+            </main>
+
+            {/* Footer */}
+            <footer className="h-[45px] bg-gray-900 border-t border-gray-800">
+                <div className="h-full flex items-center justify-center gap-2">
+                    {/* Desktop-only links */}
+                    <div className="hidden md:flex md:items-center md:gap-2">
+                        <Link
+                            to="/account"
+                            className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
                         >
-                            Lite version
-                        </Anchor>
-                        |
-                        <Anchor
-                            rel="noreferrer"
-                            href="https://github.com/HemmeligOrg/Hemmelig.app"
-                            color="dimmed"
-                            size="xs"
-                            transform="uppercase"
+                            {t('account.home.title')}
+                        </Link>
+
+                        <span className="text-gray-600">|</span>
+
+                        <Link
+                            to="/privacy"
+                            className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
                         >
-                            <Text size="xs">
-                                <span role="img" aria-label="a heart">
-                                    ❤️
-                                </span>{' '}
-                                By Hemmelig
-                            </Text>
-                        </Anchor>
-                    </Group>
-                </Footer>
-            }
-            header={
-                <Header
-                    height={75}
-                    style={{ zIndex: 100 }}
-                    p="xs"
-                    sx={(theme) => ({
-                        backgroundColor: theme.colors.dark[8],
-                    })}
-                >
-                    <HeaderContent />
-                </Header>
-            }
-        >
-            <Outlet />
-        </AppShell>
+                            {t('privacy.title')}
+                        </Link>
+
+                        <span className="text-gray-600">|</span>
+
+                        <Link
+                            to="/terms"
+                            className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
+                        >
+                            {t('terms.title')}
+                        </Link>
+
+                        <span className="text-gray-600">|</span>
+                    </div>
+
+                    {/* Always visible links */}
+                    <a
+                        href="https://lite.hemmelig.app"
+                        rel="noreferrer"
+                        className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
+                    >
+                        Lite version
+                    </a>
+
+                    <span className="text-gray-600">|</span>
+
+                    <a
+                        href="https://github.com/HemmeligOrg/Hemmelig.app"
+                        rel="noreferrer"
+                        className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
+                    >
+                        <span className="text-xs">
+                            <span role="img" aria-label="a heart">
+                                ❤️
+                            </span>{' '}
+                            By Hemmelig
+                        </span>
+                    </a>
+                </div>
+            </footer>
+        </div>
     );
 };
 
