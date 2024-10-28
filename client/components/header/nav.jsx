@@ -1,15 +1,9 @@
-import { Group, NavLink } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import style from './style.module.css';
-
 const Nav = ({ opened, toggle, isLoggedIn }) => {
     const { t } = useTranslation();
-
-    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const navItems = [];
 
@@ -17,15 +11,11 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         navItems.push({
             label: t('sign_up'),
             icon: <IconUser size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
             to: '/signup',
         });
         navItems.push({
             label: t('sign_in'),
             icon: <IconLogin size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
             to: '/signin',
         });
     }
@@ -34,8 +24,6 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         navItems.push({
             label: t('sign_out'),
             icon: <IconLockOff size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
             to: '/signout',
         });
     }
@@ -44,53 +32,47 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         {
             label: t('account.home.title'),
             icon: <IconUser size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
             to: '/account',
         },
         {
             label: t('public_list'),
             icon: <IconList size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
             to: '/public',
         }
     );
 
-    if (isMobile) {
-        navItems.push({
-            label: t('privacy.title'),
-            icon: <IconFingerprint size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/privacy',
-        });
-        navItems.push({
-            label: t('terms.title'),
-            icon: <IconList size="1rem" stroke={1.5} />,
-            component: Link,
-            onClick: toggle,
-            to: '/terms',
-        });
-    }
+    navItems.push({
+        label: t('privacy.title'),
+        icon: <IconFingerprint size="1rem" stroke={1.5} />,
+        to: '/privacy',
+    });
+    navItems.push({
+        label: t('terms.title'),
+        icon: <IconList size="1rem" stroke={1.5} />,
+        to: '/terms',
+    });
 
     if (!opened) {
-        return <></>;
+        return null;
     }
 
     return (
-        <Group spacing="xs" className={style.nav}>
-            {navItems.map((item) => (
-                <NavLink
-                    key={item.label}
-                    label={item.label}
-                    icon={item.icon}
-                    component={item.component ? item.component : null}
-                    onClick={item.onClick}
-                    to={item.to ? item.to : null}
-                />
-            ))}
-        </Group>
+        <nav className="w-full md:w-auto bg-gray-900 md:bg-transparent">
+            <div className="flex flex-col md:flex-row gap-1 p-2">
+                {navItems.map((item) => (
+                    <Link
+                        key={item.label}
+                        to={item.to}
+                        onClick={toggle}
+                        className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 
+                                 rounded-md transition-colors duration-200"
+                    >
+                        <span className="text-gray-400">{item.icon}</span>
+                        <span>{item.label}</span>
+                    </Link>
+                ))}
+            </div>
+        </nav>
     );
 };
 
