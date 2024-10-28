@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @font-face {
     font-family: 'Inter';
     font-style: normal;
@@ -185,18 +187,38 @@ html {
     .btn-danger {
         @apply btn bg-red-500 text-white hover:bg-red-600;
     }
-
-    .input {
-        @apply px-3 py-2 rounded-md border border-gray-700 bg-gray-800 text-gray-100 
-           focus:ring-2 focus:ring-hemmelig focus:border-transparent;
-    }
-
-    .nav-link {
-        @apply px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md;
-    }
 }
 
 /* Quill Editor Styles */
+.ql-toolbar {
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-size: 0.875rem !important;
+}
+
+.ql-container {
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+    font-family: 'Inter', system-ui, sans-serif !important;
+    font-size: 1rem !important;
+}
+
 .ql-editor {
-    @apply min-h-[200px] text-gray-100;
+    color: rgb(243, 244, 246) !important; /* text-gray-100 */
+    min-height: 150px;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+}
+
+.ql-editor.ql-blank::before {
+    color: rgb(107, 114, 128) !important; /* text-gray-500 */
+    font-style: normal !important;
+    font-size: 1rem !important;
+}
+
+/* Toolbar buttons */
+.ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
+    color: rgb(156, 163, 175) !important; /* text-gray-400 */
 }
