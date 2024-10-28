@@ -272,3 +272,16 @@ html {
 .ql-editor a {
     color: rgb(209, 213, 219) !important; /* text-gray-300 */
 }
+
+/* Quill Bubble Theme Styles for Read-Only Mode */
+.ql-bubble .ql-editor {
+    padding: 1rem !important;
+    min-height: 100px !important;
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+    color: rgb(243, 244, 246) !important; /* text-gray-100 */
+}
+
+/* Remove default bubble theme tooltips */
+.ql-bubble .ql-tooltip {
+    display: none !important;
+}
