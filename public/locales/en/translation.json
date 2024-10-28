@@ -5,6 +5,16 @@
     "not_logged_in": "Not logged in",
     "something_went_wrong": "Something went wrong!",
     "loading": "Loading",
+    "common": {
+        "secret_url": "Secret URL",
+        "secret_description": "Share these details securely with your recipient",
+        "decryption_key": "Decryption Key",
+        "copy": "Copy to clipboard",
+        "share": "Share",
+        "burn": "Burn",
+        "one_time_use": "The secret link is a one-time use only, after which it will vanish.",
+        "norwegian_meaning": "means secret in Norwegian"
+    },
     "account": {
         "home": {
             "title": "Account",
