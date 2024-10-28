@@ -686,33 +686,20 @@ const Home = () => {
                                  disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                         <IconLockAccess size={14} />
-                        {t('create')} {/* Changed from home.create_secret */}
+                        {t('create')}
                     </button>
 
                     {secretId && (
-                        <>
-                            <button
-                                type="button"
-                                onClick={onShare}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                         bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
-                                         transition-colors"
-                            >
-                                <IconShare size={14} />
-                                {t('home.share')}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={onBurn}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                         bg-red-500/20 text-red-500 rounded-md hover:bg-red-500/30 
-                                         transition-colors"
-                            >
-                                <IconTrash size={14} />
-                                {t('home.burn')}
-                            </button>
-                        </>
+                        <button
+                            type="button"
+                            onClick={onShare}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
+                                     transition-colors"
+                        >
+                            <IconShare size={14} />
+                            {t('home.share')}
+                        </button>
                     )}
                 </div>
 
@@ -809,9 +796,6 @@ const Home = () => {
                                     </div>
                                     <div className="space-y-1 text-sm">
                                         <p className="text-gray-300">{t('common.one_time_use')}</p>
-                                        <p className="text-gray-400 text-xs">
-                                            Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -845,6 +829,11 @@ const Home = () => {
                                     {t('common.burn')}
                                 </button>
                             </div>
+
+                            {/* Hemmelig meaning */}
+                            <p className="text-gray-400 text-xs text-center pt-4">
+                                Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
+                            </p>
                         </div>
                     </FormSection>
                 )}
