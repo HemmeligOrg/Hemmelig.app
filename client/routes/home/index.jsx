@@ -233,7 +233,7 @@ const Home = () => {
                 )}
 
                 {/* Secret Content Section */}
-                <FormSection title={t('common.content')} subtitle={t('common.content_description')}>
+                <FormSection>
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <Quill
@@ -537,7 +537,7 @@ const Home = () => {
                                  disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                         <IconLockAccess size={14} />
-                        {t('create')}
+                        {t('common.create')}
                     </button>
 
                     {secretId && (
