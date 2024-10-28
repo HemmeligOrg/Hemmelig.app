@@ -45,6 +45,24 @@ module.exports = {
                 xl: ['1.25rem', { lineHeight: '1.75rem' }],
                 '2xl': ['1.5rem', { lineHeight: '2rem' }],
             },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+                bounce: {
+                    '0%, 100%': {
+                        transform: 'translateY(0)',
+                    },
+                    '50%': {
+                        transform: 'translateY(-25%)',
+                    },
+                },
+            },
+            animation: {
+                fadeIn: 'fadeIn 0.5s ease-out',
+                bounce: 'bounce 1s infinite',
+            },
         },
     },
     plugins: [require('@tailwindcss/forms')],
