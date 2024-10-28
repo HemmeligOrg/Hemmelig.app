@@ -21,6 +21,7 @@ import passwordGenerator from 'generate-password-browser';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { encrypt, generateKey } from '../../../shared/helpers/crypto';
 import { burnSecret, createSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
@@ -607,7 +608,7 @@ const Home = () => {
                 </FormSection>
 
                 {/* File Upload Section */}
-                {!disableFileUpload && (
+                {!disableFileUpload ? (
                     <FormSection title={t('home.file_upload')} error={errors.sections.files}>
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
@@ -657,6 +658,27 @@ const Home = () => {
                                     ))}
                                 </div>
                             )}
+                        </div>
+                    </FormSection>
+                ) : (
+                    <FormSection title={t('home.file_upload')}>
+                        <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                            <div className="flex items-center space-x-3">
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                    <IconFileUpload className="text-primary" size={18} />
+                                </div>
+                                <div>
+                                    <div className="text-sm font-medium text-white/90">
+                                        {t('home.login_to_upload')}
+                                    </div>
+                                </div>
+                            </div>
+                            <Link
+                                to="/signin"
+                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+                            >
+                                {t('common.sign_in')}
+                            </Link>
                         </div>
                     </FormSection>
                 )}

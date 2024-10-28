@@ -24,7 +24,8 @@
         "share": "Share Secret",
         "burn": "Burn Secret",
         "copy": "Copy to clipboard",
-        "copied": "Copied!"
+        "copied": "Copied!",
+        "sign_in": "Sign In"
     },
     "account": {
         "home": {
@@ -113,6 +114,7 @@
         "welcome": "Ensure your sensitive data remains encrypted, secure, and confidential.",
         "bummer": "Bummer!",
         "maintxtarea": "Write your sensitive information..",
+        "file_upload": "Upload files",
         "title": "Title",
         "lifetime": "Lifetime",
         "max_views": "Max views",
@@ -130,7 +132,7 @@
         "or": "Separate the link and decryption key",
         "secret_url": "Secret URL without decryption key",
         "decryption_key": "Decryption key",
-        "create_new": "Create new",
+        "create_new": "Create New",
         "delete": "Delete",
         "link_only_works_once": "The secret link, by default, is a one-time use only, after which it will vanish.",
         "app_name_meaning": "[he`m:(ə)li], means secret in Norwegian.",
