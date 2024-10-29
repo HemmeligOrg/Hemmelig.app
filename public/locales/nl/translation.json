@@ -98,7 +98,7 @@
         "max_views": "Max. aantal weergaven",
         "enable_password": "Wachtwoord gebruiken",
         "optional_password": "Optioneel wachtwoord",
-        "burn_aftertime": "Het geheim alleen verbranden als de geldigheidsduur is verstreken",
+        "burn_aftertime": "Het geheim alleen vernietigen als de geldigheidsduur is verstreken",
         "restrict_from_ip": "Alleen toegankelijk maken voor een specifiek IP-adres of CIDR-bereik. Voorbeeld CIDR: 192.168.1.0/24.",
         "restrict_from_ip_placeholder": "Inzage beperken op IP-adres of CIDR",
         "login_to_upload": "Log in om bestanden te uploaden",
