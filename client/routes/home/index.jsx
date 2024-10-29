@@ -13,6 +13,7 @@ import {
     IconLock,
     IconLockAccess,
     IconLockOpen,
+    IconNetwork,
     IconShare,
     IconShieldLock,
     IconTrash,
@@ -242,6 +243,26 @@ const Home = () => {
                                     </div>
                                 </div>
                             )}
+
+                            <div className="relative">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                    <IconNetwork size={18} />
+                                </div>
+                                <input
+                                    type="text"
+                                    name="cidr"
+                                    placeholder="0.0.0.0/0"
+                                    value={formData.cidr}
+                                    onChange={(e) => setField('formData.cidr', e.target.value)}
+                                    readOnly={inputReadOnly}
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
+                                             focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                             text-base text-gray-100 placeholder-gray-500"
+                                />
+                                <p className="mt-2 text-xs text-gray-400">
+                                    {t('home.restrict_from_ip')}
+                                </p>
+                            </div>
                         </div>
 
                         <div className="space-y-4">
@@ -262,7 +283,7 @@ const Home = () => {
                                         </option>
                                     ))}
                                 </select>
-                                <p className="mt-2 text-sm text-gray-400">
+                                <p className="mt-2 text-xs text-gray-400">
                                     {t('home.ttl_description')}
                                 </p>
                             </div>
@@ -281,7 +302,7 @@ const Home = () => {
                                     className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
                                              text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
                                 />
-                                <p className="mt-2 text-sm text-gray-400">
+                                <p className="mt-2 text-xs text-gray-400">
                                     {t('home.max_views_description')}
                                 </p>
                             </div>
@@ -339,7 +360,7 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                {!disableFileUpload ? (
+                {!disableFileUpload && (
                     <FormSection title={t('home.file_upload')} error={errors.sections.files}>
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
@@ -388,7 +409,8 @@ const Home = () => {
                             )}
                         </div>
                     </FormSection>
-                ) : (
+                )}
+                {!isLoggedIn && (
                     <FormSection title={t('home.file_upload')}>
                         <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                             <div className="flex items-center space-x-3">
