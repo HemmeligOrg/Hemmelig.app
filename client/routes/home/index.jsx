@@ -249,10 +249,10 @@ const Home = () => {
                                 </div>
                                 <input
                                     type="text"
-                                    name="cidr"
+                                    name="allowedIp"
                                     placeholder="0.0.0.0/0"
-                                    value={formData.cidr}
-                                    onChange={(e) => setField('formData.cidr', e.target.value)}
+                                    value={formData.allowedIp}
+                                    onChange={(e) => setField('formData.allowedIp', e.target.value)}
                                     readOnly={inputReadOnly}
                                     className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
                                              focus:ring-2 focus:ring-hemmelig focus:border-transparent

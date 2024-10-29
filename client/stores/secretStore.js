@@ -12,6 +12,7 @@ const initialErrors = {
 
 const useSecretStore = create((set, get) => ({
     formData: {
+        allowedIp: '',
         text: '',
         title: '',
         password: '',
@@ -59,6 +60,7 @@ const useSecretStore = create((set, get) => ({
     reset: () =>
         set({
             formData: {
+                allowedIp: '',
                 text: '',
                 title: '',
                 password: '',
@@ -118,6 +120,7 @@ const useSecretStore = create((set, get) => ({
             }
 
             const payload = {
+                allowedIp: state.formData.allowedIp,
                 text: encryptedText,
                 title: state.formData.title,
                 ttl: parseInt(state.formData.ttl),
