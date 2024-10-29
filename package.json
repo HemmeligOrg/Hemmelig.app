@@ -1,6 +1,6 @@
 {
   "name": "hemmelig",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Paste a password, secret message or private information",
   "main": "index.js",
   "type": "module",
