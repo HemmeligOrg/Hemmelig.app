@@ -131,7 +131,22 @@ const useSecretStore = create((set, get) => ({
                 isPublic: state.isPublic,
             };
 
-            const { id } = await createSecret(payload);
+            const { id, message } = await createSecret(payload);
+
+            if (message && !id) {
+                set({
+                    errors: {
+                        banner: {
+                            title: t('error'),
+                            message: t(message) || message,
+                            dismissible: true,
+                        },
+                        fields: {},
+                        sections: {},
+                    },
+                });
+                return;
+            }
 
             set({
                 secretId: id,
