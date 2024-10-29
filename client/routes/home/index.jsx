@@ -616,15 +616,15 @@ const Home = () => {
                                         {t('common.burn')}
                                     </button>
                                 </div>
-
-                                <p className="text-gray-400 text-xs text-center pt-4">
-                                    Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
-                                </p>
                             </div>
                         </FormSection>
                     </>
                 )}
             </form>
+
+            <p className="text-gray-400 text-xs text-center pt-6">
+                Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
+            </p>
         </div>
     );
 };
