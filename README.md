@@ -43,38 +43,50 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 
 ## Features
 
-- Client side encryption
-- Text formatting and inline image upload (mark the text for the popup)
-- Encrypted sensitive information sharing
-- Encrypted file upload for signed in users
-- Secret lifetime
-- Set max views per secret
-- Optional encrypted title
-- Optional password protection
-- Optional IP address restriction
-- QR Code of the secret link
-- Decryption key is part of the URL, and not saved to the database for an extra layer of security
-- Possible to send the secret link and the decryption key separately
-- Convert the secret to base64 on read
-- Rate limited API
-- Self-hosted version. Keywords: Regulatory compliance
-- CLI Support
-- Using Prisma with SQLite
-- Public pastes
-- - These will not be encrypted
-- - Not allowed with file uploads
-- - The IP address will be recorded
-- - List public pastes based on username
-- User account
-- - Expiration time upgraded to 14 and 28 days
-- - File upload
-- - List and delete secrets
-- Admin settings
-- - Disable user registration / sign in
-- - Set Hemmelig to be in read only mode by non admin users
-- - Disable file upload
-- - Disable user account creation
-- - Allow organization email domain only for user registration
+### Core Security
+- Client-side encryption for all private content
+- Decryption key stored only in URL fragment, never in database
+- Optional password protection layer
+- IP address restriction capabilities
+- Rate-limited API for abuse prevention
+
+### Secret Management
+- Configurable secret lifetime
+- Maximum view count limits
+- Optional encrypted titles
+- Base64 conversion support
+- Rich text formatting with inline image support
+
+### File Handling
+- Encrypted file uploads for authenticated users
+- File size and type restrictions
+
+### Sharing Options
+- Separate sharing of secret link and decryption key
+- QR code generation for secret links
+- Public paste option:
+  - IP address logging for public pastes
+  - No file upload support
+  - Username-based public paste listing
+
+### User Features
+- Extended secret expiration (14 and 28 days)
+- Personal file upload management
+- Secret listing and deletion
+- Account management
+
+### Administrative Controls
+- User registration management
+- Read-only mode for non-admin users
+- File upload restrictions
+- User account creation controls
+- Organization email domain restrictions
+
+### Deployment Options
+- Self-hosted version available
+- SQLite database with Prisma ORM
+- CLI support for automation
+- Regulatory compliance support
 
 ## Docker image
 
