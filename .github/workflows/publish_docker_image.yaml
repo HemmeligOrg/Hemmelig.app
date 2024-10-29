@@ -31,21 +31,33 @@ jobs:
               run: |
                   echo "version=$(echo ${{ steps.latest_tag.outputs.tag }} | cut -d'.' -f1)" >> $GITHUB_OUTPUT
 
-            - name: Push to Docker Hub
+            - name: Get minor version
+              id: minor_version
+              run: |
+                  echo "version=$(echo ${{ steps.latest_tag.outputs.tag }} | cut -d'.' -f1,2)" >> $GITHUB_OUTPUT
+
+            - name: Push to Docker Hub (latest)
               uses: docker/build-push-action@v4
               with:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:latest
 
-            - name: Push to Docker Hub
+            - name: Push to Docker Hub (full version)
               uses: docker/build-push-action@v4
               with:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
 
-            - name: Push to Docker Hub
+            - name: Push to Docker Hub (minor version)
+              uses: docker/build-push-action@v4
+              with:
+                  platforms: linux/amd64, linux/arm64
+                  push: true
+                  tags: hemmeligapp/hemmelig:${{ steps.minor_version.outputs.version }}
+
+            - name: Push to Docker Hub (major version)
               uses: docker/build-push-action@v4
               with:
                   platforms: linux/amd64, linux/arm64

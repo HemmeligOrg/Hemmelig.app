@@ -66,6 +66,7 @@ Supported docker platforms: `amd/64`, `arm/64`.
 
 - hemmeligapp/hemmelig:latest (Is created on each version release)
 - hemmeligapp/hemmelig:v5 (Is created on each version release for the major version)
+- hemmeligapp/hemmelig:v5.19 (Is created on each version release for the major and minor version)
 - hemmeligapp/hemmelig:v5.19.28 see [tags](https://github.com/HemmeligOrg/Hemmelig.app/tags) for all version
 - hemmeligapp/hemmelig:weekly (pushed every week on Friday)
 - hemmeligapp/hemmelig:daily
