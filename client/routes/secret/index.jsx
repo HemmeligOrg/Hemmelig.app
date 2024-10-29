@@ -198,7 +198,7 @@ const Secret = () => {
                                 <input
                                     type="password"
                                     id="lemon-password"
-                                    placeholder={t('secret.your_password')}
+                                    placeholder="********"
                                     value={password}
                                     onChange={onPasswordChange}
                                     maxLength={28}

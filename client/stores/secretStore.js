@@ -82,18 +82,16 @@ const useSecretStore = create((set, get) => ({
         set({ creatingSecret: true });
 
         try {
-            let encryptedText = state.formData.text;
-            let key = '';
+            const password = state.enablePassword ? state.formData.password : '';
+            const key = generateKey(password);
 
-            if (!state.isPublic) {
-                key = generateKey();
-                encryptedText = await encrypt(state.formData.text, key);
-            }
+            const encryptedText = await encrypt(state.formData.text, key + password);
+            const encryptedTitle = await encrypt(state.formData.title, key + password);
 
             const encryptedFiles = [];
             if (state.formData.files.length > 0) {
                 const zippedFiles = await zipFiles(state.formData.files);
-                const encryptZip = await encrypt(zippedFiles, key);
+                const encryptZip = await encrypt(zippedFiles, key + password);
 
                 encryptedFiles.push({
                     content: encryptZip,
@@ -103,13 +101,13 @@ const useSecretStore = create((set, get) => ({
             }
 
             const payload = {
-                allowedIp: state.formData.allowedIp,
+                allowedIp: state.formData.allowedIp === '0.0.0.0/0' ? '' : state.formData.allowedIp,
                 text: encryptedText,
-                title: state.formData.title,
+                title: encryptedTitle,
                 ttl: parseInt(state.formData.ttl),
                 maxViews: parseInt(state.formData.maxViews),
                 files: encryptedFiles,
-                password: state.enablePassword ? state.formData.password : '',
+                password: password,
                 preventBurn: state.formData.preventBurn,
                 isPublic: state.isPublic,
             };

@@ -352,7 +352,7 @@ const Home = () => {
                                              hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
                                 >
                                     <IconFileUpload size={16} />
-                                    <span>{t('upload')}</span>
+                                    <span>{t('home.upload_files')}</span>
                                 </label>
                             </div>
 
