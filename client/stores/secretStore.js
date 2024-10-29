@@ -90,14 +90,16 @@ const useSecretStore = create((set, get) => ({
                 encryptedText = await encrypt(state.formData.text, key);
             }
 
-            let encryptedFiles = [];
+            const encryptedFiles = [];
             if (state.formData.files.length > 0) {
                 const zippedFiles = await zipFiles(state.formData.files);
-                if (!state.isPublic) {
-                    encryptedFiles = await encrypt(zippedFiles, key);
-                } else {
-                    encryptedFiles = zippedFiles;
-                }
+                const encryptZip = await encrypt(zippedFiles, key);
+
+                encryptedFiles.push({
+                    content: encryptZip,
+                    ext: 'zip',
+                    type: 'application/zip',
+                });
             }
 
             const payload = {
