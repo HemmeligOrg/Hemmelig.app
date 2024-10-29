@@ -10,7 +10,7 @@ const initialErrors = {
     sections: { files: '' },
 };
 
-const useSecretStore = create((set, get) => ({
+const defaultValues = {
     formData: {
         allowedIp: '',
         text: '',
@@ -31,7 +31,10 @@ const useSecretStore = create((set, get) => ({
     },
     secretId: null,
     encryptionKey: '',
-    title: '',
+};
+
+const useSecretStore = create((set, get) => ({
+    ...defaultValues,
     setField: (field, value) =>
         set((state) => {
             if (field.startsWith('formData.')) {
@@ -57,29 +60,7 @@ const useSecretStore = create((set, get) => ({
             }
             return { [field]: value };
         }),
-    reset: () =>
-        set({
-            formData: {
-                allowedIp: '',
-                text: '',
-                title: '',
-                password: '',
-                files: [],
-                maxViews: 1,
-                preventBurn: false,
-            },
-            ttl: 3600,
-            enablePassword: false,
-            isPublic: false,
-            creatingSecret: false,
-            errors: {
-                banner: { title: '', message: '', dismissible: true },
-                fields: { text: '', title: '' },
-                sections: { files: '' },
-            },
-            secretId: null,
-            encryptionKey: '',
-        }),
+    reset: () => set(defaultValues),
     removeFile: (index) =>
         set((state) => {
             const files = [...state.formData.files];

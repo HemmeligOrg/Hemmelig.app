@@ -48,7 +48,9 @@ const Home = () => {
         setField,
     } = useSecretStore();
 
-    const onSubmit = (event) => handleSubmit(event, t);
+    const onSubmit = (event) => {
+        handleSubmit(event, t);
+    };
 
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
@@ -114,9 +116,9 @@ const Home = () => {
         <div className="max-w-4xl mx-auto px-4 py-12">
             <form onSubmit={onSubmit} className="space-y-8">
                 <div className="text-center space-y-4 mb-12">
-                    <h1 className="text-3xl font-bold text-white">{t('common.title')}</h1>
+                    <h1 className="text-3xl font-bold text-white">{t('home.title')}</h1>
                     <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                        {t('common.description')}
+                        {t('home.description')}
                     </p>
                 </div>
 
@@ -153,7 +155,7 @@ const Home = () => {
                             <input
                                 type="text"
                                 name="title"
-                                placeholder={t('home.title')}
+                                placeholder={t('home.content_title')}
                                 value={formData.title}
                                 onChange={(e) => setField('formData.title', e.target.value)}
                                 readOnly={inputReadOnly}
@@ -168,10 +170,7 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                <FormSection
-                    title={t('common.security')}
-                    subtitle={t('common.security_description')}
-                >
+                <FormSection title={t('home.security')} subtitle={t('home.security_description')}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <div className="space-y-2">
@@ -187,7 +186,7 @@ const Home = () => {
                                 >
                                     {isPublic ? <IconLockOpen size={18} /> : <IconLock size={18} />}
                                     <span className="text-sm font-medium">
-                                        {t(isPublic ? 'common.public' : 'common.private')}
+                                        {t(isPublic ? 'home.public' : 'home.private')}
                                     </span>
                                 </button>
                                 <div className="px-4">
@@ -216,7 +215,7 @@ const Home = () => {
                                 `}
                             >
                                 <IconShieldLock size={18} />
-                                <span className="text-sm font-medium">{t('common.password')}</span>
+                                <span className="text-sm font-medium">{t('home.password')}</span>
                             </button>
 
                             {enablePassword && (
@@ -235,7 +234,7 @@ const Home = () => {
                                         className="w-full pl-10 pr-10 bg-gray-800 border border-gray-700 
                                                  rounded-lg text-gray-100 placeholder-gray-500
                                                  focus:border-primary focus:ring-1 focus:ring-primary"
-                                        placeholder={t('common.password')}
+                                        placeholder={t('home.password')}
                                     />
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                                         <CopyButton textToCopy={formData.password} />
@@ -400,29 +399,45 @@ const Home = () => {
                                 to="/signin"
                                 className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
                             >
-                                {t('common.sign_in')}
+                                {t('home.sign_in')}
                             </Link>
                         </div>
                     </FormSection>
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <button
-                        type="submit"
-                        disabled={creatingSecret}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                 bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
-                                 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        {creatingSecret ? (
-                            <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-b-transparent mr-2" />
-                        ) : (
-                            <>
-                                <IconLockAccess size={14} />
-                                {t('common.create')}
-                            </>
-                        )}
-                    </button>
+                    {secretId ? (
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                reset();
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
+                                     transition-colors"
+                        >
+                            <IconLockAccess size={14} />
+                            {t('home.create_new')}
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            disabled={creatingSecret}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
+                                     disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            {creatingSecret ? (
+                                <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-b-transparent mr-2" />
+                            ) : (
+                                <>
+                                    <IconLockAccess size={14} />
+                                    {t('home.create')}
+                                </>
+                            )}
+                        </button>
+                    )}
 
                     {secretId && (
                         <button
@@ -441,8 +456,8 @@ const Home = () => {
                 {secretId && (
                     <>
                         <FormSection
-                            title={t('common.complete_url')}
-                            subtitle={t('common.complete_url_description')}
+                            title={t('home.complete_url')}
+                            subtitle={t('home.complete_url_description')}
                         >
                             <div className="space-y-2">
                                 <div className="relative">
@@ -464,7 +479,7 @@ const Home = () => {
                                                 navigator.clipboard.writeText(getSecretURL(true))
                                             }
                                             className="p-1 hover:bg-gray-700 rounded-md group"
-                                            title={t('common.copy')}
+                                            title={t('home.copy')}
                                         >
                                             <IconCopy
                                                 size={14}
@@ -481,13 +496,13 @@ const Home = () => {
                         </FormSection>
 
                         <FormSection
-                            title={t('common.secret_url')}
-                            subtitle={t('common.secret_description')}
+                            title={t('home.secret_url')}
+                            subtitle={t('home.secret_description')}
                         >
                             <div className="space-y-6">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-300">
-                                        {t('common.secret_url')}
+                                        {t('home.secret_url')}
                                     </label>
                                     <div className="relative">
                                         <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
@@ -510,7 +525,7 @@ const Home = () => {
                                                     )
                                                 }
                                                 className="p-1 hover:bg-gray-700 rounded-md group"
-                                                title={t('common.copy')}
+                                                title={t('home.copy')}
                                             >
                                                 <IconCopy
                                                     size={14}
@@ -527,7 +542,7 @@ const Home = () => {
 
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-gray-300">
-                                        {t('common.decryption_key')}
+                                        {t('home.decryption_key')}
                                     </label>
                                     <div className="relative">
                                         <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
@@ -548,7 +563,7 @@ const Home = () => {
                                                     navigator.clipboard.writeText(encryptionKey)
                                                 }
                                                 className="p-1 hover:bg-gray-700 rounded-md group"
-                                                title={t('common.copy')}
+                                                title={t('home.copy')}
                                             >
                                                 <IconCopy
                                                     size={14}
@@ -576,7 +591,7 @@ const Home = () => {
                                                  transition-colors"
                                     >
                                         <IconShare size={14} />
-                                        {t('common.share')}
+                                        {t('home.share')}
                                     </button>
 
                                     <button
@@ -587,7 +602,7 @@ const Home = () => {
                                                  transition-colors"
                                     >
                                         <IconTrash size={14} />
-                                        {t('common.burn')}
+                                        {t('home.burn')}
                                     </button>
                                 </div>
                             </div>
@@ -597,7 +612,7 @@ const Home = () => {
             </form>
 
             <p className="text-gray-400 text-xs text-center pt-6">
-                Hemmelig, [he`m:(ə)li], {t('common.norwegian_meaning')}
+                Hemmelig, [he`m:(ə)li], {t('home.norwegian_meaning')}
             </p>
         </div>
     );
@@ -625,7 +640,7 @@ const ErrorBanner = ({ message, onDismiss }) => {
                             onClick={onDismiss}
                             className="flex-shrink-0 p-2 hover:bg-red-500/10 
                                      rounded-lg transition-colors duration-200"
-                            aria-label={t('common.dismiss')}
+                            aria-label={t('home.dismiss')}
                         >
                             <IconX className="text-red-400" size={16} />
                         </button>
