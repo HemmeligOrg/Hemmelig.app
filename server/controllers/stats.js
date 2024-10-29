@@ -18,7 +18,14 @@ async function statistics(fastify) {
             prisma.user.count(),
             prisma.file.count(),
             prisma.secret.count({ where: { NOT: { password: null } } }),
-            prisma.secret.count({ where: { NOT: { allowed_ip: null } } }),
+            prisma.secret.count({
+                where: {
+                    allowed_ip: {
+                        not: null,
+                        not: '',
+                    },
+                },
+            }),
             prisma.secret.aggregate({
                 _avg: {
                     maxViews: true,
