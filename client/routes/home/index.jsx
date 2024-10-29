@@ -504,6 +504,19 @@ const Home = () => {
                                         </button>
                                     </div>
                                 </div>
+
+                                <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="p-1 bg-primary/10 rounded">
+                                            <IconInfoCircle className="text-primary" size={16} />
+                                        </div>
+                                        <div className="space-y-1 text-sm">
+                                            <p className="text-gray-300">
+                                                {t('common.one_time_use')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </FormSection>
 
@@ -586,19 +599,6 @@ const Home = () => {
                                                     className="text-green-500 hidden group-hover:block"
                                                 />
                                             </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="p-1 bg-primary/10 rounded">
-                                            <IconInfoCircle className="text-primary" size={16} />
-                                        </div>
-                                        <div className="space-y-1 text-sm">
-                                            <p className="text-gray-300">
-                                                {t('common.one_time_use')}
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
