@@ -228,5 +228,20 @@
         "description": "Oops! It seems this secret has vanished into thin air. Don't worry though, you can create a new one or check out our documentation.",
         "go_home": "Create New Secret",
         "view_docs": "View API Docs"
+    },
+    "statistics": {
+        "heading": "Platform Statistics",
+        "overview": "Overview",
+        "security_features": "Security Features",
+        "total_secrets": "Total Secrets",
+        "active_secrets": "Active Secrets",
+        "public_secrets": "Public Secrets",
+        "total_users": "Total Users",
+        "total_files": "Total Files",
+        "password_protected": "Password Protected",
+        "ip_restricted": "IP Restricted",
+        "average_views": "Average Views",
+        "views_per_secret": "Views per secret",
+        "description": "A comprehensive overview of your platform's usage and security features"
     }
 }

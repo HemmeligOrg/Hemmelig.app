@@ -19,7 +19,7 @@ const Settings = lazy(() => import('./routes/account/settings'));
 const Users = lazy(() => import('./routes/account/users'));
 const UserAccount = lazy(() => import('./routes/account/account'));
 const NotFound = lazy(() => import('./routes/not-found'));
-
+const Statistics = lazy(() => import('./routes/statistics'));
 // loader: https://reactrouter.com/en/main/route/loader
 const appRouter = createBrowserRouter(
     createRoutesFromElements(
@@ -112,6 +112,7 @@ const appRouter = createBrowserRouter(
             </Route>
             <Route path="404" element={<NotFound />} />
             <Route path="/api-docs" element={<ApiDocs />} />
+            <Route path="/stats" element={<Statistics />} />
         </>
     )
 );
