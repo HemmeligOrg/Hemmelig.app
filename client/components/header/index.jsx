@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
-import { userLogin, userLoginChanged } from '../../actions/';
 import { refresh } from '../../api/authentication.js';
 import { getCookie, refreshCookie } from '../../helpers/cookie';
+import useAuthStore from '../../stores/authStore';
 import Logo from './logo.jsx';
 import Nav from './nav';
 
 const Header = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
-
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    const username = useSelector((state) => state.username);
+    const { isLoggedIn, username, setLogin, setLoginStatus } = useAuthStore();
 
     const [isMenuOpened, setIsMenuOpened] = useState(false);
     const [openRefreshModal, setOpenRefreshModal] = useState(false);
@@ -23,14 +19,13 @@ const Header = () => {
 
     useEffect(() => {
         if (!isLoggedIn && username) {
-            dispatch(userLoginChanged(true));
+            setLoginStatus(true);
         }
 
         const cookie = getCookie();
 
         if (!isLoggedIn && !username && cookie) {
-            dispatch(userLogin(cookie));
-            dispatch(userLoginChanged(true));
+            setLogin(cookie.username);
         }
     }, [isLoggedIn, username]);
 
@@ -69,8 +64,8 @@ const Header = () => {
             setRedirect(true);
         }
 
-        dispatch(userLogin(cookie));
-        dispatch(userLoginChanged(true));
+        setLogin(cookie.username);
+        setLoginStatus(true);
 
         setOpenRefreshModal(false);
     };
@@ -177,7 +172,7 @@ const Header = () => {
 
 const NavLinks = ({ mobile, onClick }) => {
     const { t } = useTranslation();
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const { isLoggedIn } = useAuthStore();
 
     const links = [
         !isLoggedIn && { label: t('sign_up'), icon: IconUser, to: '/signup' },

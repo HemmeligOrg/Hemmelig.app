@@ -19,7 +19,6 @@ import {
     IconX,
 } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
@@ -27,11 +26,12 @@ import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
+import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
 
 const Home = () => {
     const { t } = useTranslation();
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const { isLoggedIn } = useAuthStore();
 
     const {
         formData,

@@ -94,8 +94,6 @@
     "react-dom": "^18.0.0",
     "react-i18next": "^11.18.5",
     "react-quill": "^2.0.0",
-    "react-redux": "^9.1.2",
-    "redux": "^5.0.1",
     "tailwindcss": "^3.4.14",
     "vite": "^5.4.10",
     "zustand": "^5.0.0"

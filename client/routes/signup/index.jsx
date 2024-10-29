@@ -1,17 +1,16 @@
 import { IconAt, IconEye, IconEyeOff, IconLock, IconLogin, IconUser } from '@tabler/icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import { userLogin } from '../../actions';
 import { signUp } from '../../api/authentication';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
+import useAuthStore from '../../stores/authStore';
 
 const SignUp = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const { setLogin } = useAuthStore();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -62,7 +61,7 @@ const SignUp = () => {
             return;
         }
 
-        dispatch(userLogin(data));
+        setLogin(data.username);
         setFormErrors({});
         setSuccess(true);
     };

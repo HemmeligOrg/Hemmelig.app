@@ -1,38 +1,29 @@
 import { IconLogout } from '@tabler/icons';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-
-import { userLogin, userLoginChanged } from '../../actions';
 import { signOut } from '../../api/authentication';
 import { removeCookie } from '../../helpers/cookie';
+import useAuthStore from '../../stores/authStore';
 
 const SignOut = () => {
-    const dispatch = useDispatch();
+    const { setLogout } = useAuthStore();
     const [redirect, setRedirect] = useState(false);
     const { t } = useTranslation();
 
     useEffect(() => {
         const performSignOut = async () => {
-            // Remove cookie first
             removeCookie();
-
-            // Call sign out API
             await signOut();
+            setLogout();
 
-            // Update Redux state
-            dispatch(userLogin({ username: '' }));
-            dispatch(userLoginChanged(false));
-
-            // Set redirect after delay
             setTimeout(() => {
                 setRedirect(true);
             }, 1500);
         };
 
         performSignOut();
-    }, [dispatch]);
+    }, [setLogout]);
 
     if (!redirect) {
         return (
