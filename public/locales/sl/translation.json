@@ -18,14 +18,14 @@
             "more": "Prihaja še več funkcij! Hvala, ker ste se pridružili Hemmelig.app!"
         },
         "account": {
-			"passwords_does_not_match": "Gesli se ne ujemata",
+            "passwords_does_not_match": "Gesli se ne ujemata",
             "can_not_update_profile": "Ni bilo mogoče posodobiti tvojega uporabniškega profila",
             "can_not_delete": "Uporabnika ni bilo mogoče izbrisati",
             "delete_account": "Izbriši svoj profil",
             "do_you_want_delete": "Ali si prepričan, da želiš izbrisati svoj profil?",
             "dont_delete_account": "Ne, ne izbriši ga",
 
-			"email": "E-pošta",
+            "email": "E-pošta",
             "your_password": "Trenutno geslo",
             "current_password": "Tvoje trenutno geslo",
             "update_your_password": "Posodobi svoje geslo",
@@ -36,7 +36,7 @@
         },
         "secrets": {
             "id": "Id",
-			"expires": "Poteče",
+            "expires": "Poteče",
             "public": "Javno",
             "delete": "Izbriši",
             "yes": "Da",
@@ -46,7 +46,7 @@
             "do_you_want_delete": "Ali si prepričan, da želiš izbrisati to skrivnost?"
         },
         "settings": {
-			"read_only_mode": "Način samo za branje",
+            "read_only_mode": "Način samo za branje",
             "readonly_only_for_non_admin": "Ali naj bo namestitev Hemmelig v uporabi samo za uporabnike, ki niso skrbniki?",
             "disable_users": "Onemogoči uporabnike",
             "disable_signin": "Ali naj bo prijava uporabnika onemogočena?",
@@ -55,9 +55,10 @@
             "disable_file_upload": "Onemogoči nalaganje datoteke",
             "disable_file_upload_description": "Onemogoči nalaganje datotek za tvojo namestitev",
             "restrict_organization_email": "Omeji na e-poštno domeno",
-            "restrict_organization_email_description": "To bo omejilo registracijo uporabnikov za določeno e-poštno domeno"        }
+            "restrict_organization_email_description": "To bo omejilo registracijo uporabnikov za določeno e-poštno domeno"
+        }
     },
-	"public_list": "Javna lepljena",
+    "public_list": "Javna lepljena",
     "account_settings": "Nastavitve računa",
     "instance_settings": "Nastavitve namestitve",
     "copied": "Kopirano",
@@ -74,11 +75,10 @@
         }
     },
     "home": {
-		"app_subtitle": "Prilepi geslo, zaupno sporočilo ali zasebne podatke.",
+        "app_subtitle": "Prilepi geslo, zaupno sporočilo ali zasebne podatke.",
         "dobrodošli": "Zagotovi, da tvoji občutljivi podatki ostanejo šifrirani, varni in zaupni.",
         "bummer": "Ti šment!",
         "maintxtarea": "Napiši svoje občutljive podatke..",
-        "title": "Naslov",
         "lifetime": "Življenjska doba",
         "max_views": "Največ ogledov",
         "enable_password": "Omogoči geslo",
@@ -112,7 +112,36 @@
         "5_minutes": "5 minut",
         "successful_share": "Uspešno deljeno",
         "get_your_secret": "Pridobite svojo skrivnost na hemmelig.app.",
-        "set_public": "Nastavi kot javno lepljenje"
+        "set_public": "Nastavi kot javno lepljenje",
+        "file_upload": "Učitaj datoteke",
+        "content_title": "Naslov",
+        "public_description": "Javne tajne su izlistane u /public i može ih vidjeti svatko s poveznicom sve dok nije postavljena lozinka.",
+        "private_description": "Privatne tajne su šifrirane i mogu se vidjeti samo s ključem za dešifriranje i/ili lozinkom.",
+        "title_description": "Dajte svojoj tajni pamtljiv naslov (neobavezno)",
+        "ttl_description": "Postavite koliko dugo tajna treba biti dostupna",
+        "max_views_description": "Broj puta koliko se tajna može pogledati",
+        "burn": "Uništi",
+        "burn_description": "Tajna će biti trajno izbrisana nakon čitanja",
+        "burn_after_reading": "Uništi nakon čitanja",
+        "burn_after_time": "Uništi nakon isteka vremena",
+        "title": "Hemmelig.app",
+        "description": "Sigurno dijelite tajne pomoću šifriranih poruka koje se automatski samouništavaju nakon čitanja.",
+        "content": "Sadržaj",
+        "content_description": "Unesite tajnu poruku koju želite sigurno podijeliti",
+        "security": "Sigurnost",
+        "security_description": "Konfigurirajte sigurnosne postavke za vašu tajnu",
+        "private": "Privatno",
+        "public": "Javno",
+        "password": "Zaštita lozinkom",
+        "secret_description": "Podijelite ovaj URL s osobom koja treba pristupiti tajni",
+        "one_time_use": "Ova tajna može se vidjeti samo jednom i samouništit će se nakon čitanja.",
+        "norwegian_meaning": "znači 'tajna' na norveškom",
+        "copy": "Kopiraj u međuspremnik",
+        "copied": "Kopirano!",
+        "create": "Stvori",
+        "sign_in": "Prijava",
+        "complete_url": "Potpuni URL tajne",
+        "complete_url_description": "Ovo je potpuni URL koji uključuje ključ za dešifriranje. Podijelite ovaj URL za izravan pristup tajni."
     },
     "secret": {
         "view_your_secret": "Oglej si svojo skrivnost",
