@@ -9,7 +9,7 @@
 <h1 align="center">Encrypted secret sharing for everyone!</h1>
 
 <div align="center">
-  This application is designed for sharing encrypted information across organizations or among private individuals. Hemmelig places a high priority on safeguarding your privacy and will make every effort to maintain it. We trust you will find value in using our product.
+  Hemmelig is a encrypted sharing platform that enables secure transmission of sensitive information. All encryption occurs client-side using TweetNaCl, ensuring your data remains encrypted before it reaches our servers. The platform supports both personal and organizational use cases, with features like IP restrictions, expiration controls, and optional password protection. Whether you're sharing credentials, sensitive messages, or confidential files, Hemmelig strives to ensure your data remains private and secure.
 </div>
 
 ## SaaS
@@ -20,8 +20,26 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
 ## How it works
 
-You enter [https://hemmelig.app](https://hemmelig.app), write your sensitive information, expire time, optional password, and click create a secret link. You share the secret link. The receiver of the link opens it, writes the optional password, and retrieves the sensitive information.
-When a secret link is created, it gets its unique decryption key that is not saved to the database and only will be part of the URL. This is how the encryption works: `encrypt(DATA, YOUR_UNIQUE_ENCRYPTION_KEY)`. The encryption of the text and files is done in the client; this means the server will get the encrypted information, and nothing in clear text.
+1. Visit [https://hemmelig.app](https://hemmelig.app) and enter your sensitive information
+2. Configure your secret:
+   - Set expiration time
+   - Add optional password
+   - Set view limits or IP restrictions
+3. Click "Create secret link" to generate a secure URL
+4. Share the generated link with your recipient
+
+The security model works by:
+- Generating a unique encryption key for each secret
+- Performing all encryption in your browser before sending to the server
+- Including the decryption key only in the URL fragment (never stored on server)
+- Server only stores the encrypted data, never the plain text or keys
+
+Example encryption flow:
+```javascript
+encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
+// Only encryptedData is sent to server
+// uniqueEncryptionKey is only shared via URL
+```
 
 ## Features
 
