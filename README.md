@@ -58,10 +58,6 @@ When a secret link is created, it gets its unique decryption key that is not sav
 - - Disable user account creation
 - - Allow organization email domain only for user registration
 
-## Linode Referral
-
-Hemmelig.app is running on Linode, and is not being sponsored by anyone. If you want to support Hemmelig, and use Linode. Here is a referral link that we get free credit if you use. By using this link you will get $100 of credit as well: [https://www.linode.com/lp/refer/?r=a47390eeafc5a46b8e5407a5d2bf28368d474993](https://www.linode.com/lp/refer/?r=a47390eeafc5a46b8e5407a5d2bf28368d474993)
-
 ## Docker image
 
 Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
