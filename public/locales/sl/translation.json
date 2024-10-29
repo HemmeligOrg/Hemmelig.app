@@ -2,9 +2,9 @@
     "sign_in": "Prijava",
     "sign_out": "Odjava",
     "sign_up": "Registracija",
-    "not_logged_in": "Nisi prijavljen",
+    "not_logged_in": "Niste prijavljeni",
     "something_went_wrong": "Nekaj je šlo narobe!",
-    "loading": "Nalagam",
+    "loading": "Nalaganje",
     "account": {
         "home": {
             "title": "Račun",
@@ -15,7 +15,8 @@
             "upload_files": "Nalaganje datotek",
             "expiration": "Rok uporabnosti 14 in 28 dni za skrivnosti",
             "secrets": "Navedi in izbriši svoje skrivnosti",
-            "more": "Prihaja še več funkcij! Hvala, ker ste se pridružili Hemmelig.app!"
+            "more": "Prihaja še več funkcij! Hvala, ker ste se pridružili Hemmelig.app!",
+            "features": "Funkcije"
         },
         "account": {
             "passwords_does_not_match": "Gesli se ne ujemata",

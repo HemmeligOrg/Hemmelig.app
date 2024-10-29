@@ -3,7 +3,7 @@
     "sign_out": "登出",
     "sign_up": "注册",
     "not_logged_in": "未登录",
-    "something_went_wrong": "出了些问题！",
+    "something_went_wrong": "出错了！",
     "loading": "加载中",
     "account": {
         "home": {
@@ -15,7 +15,8 @@
             "upload_files": "上传文件",
             "expiration": "14天和28天的秘密有效期",
             "secrets": "列出并删除您的秘密",
-            "more": "更多功能即将推出！感谢您加入 Hemmelig.app！"
+            "more": "更多功能即将推出！感谢您加入 Hemmelig.app！",
+            "features": "功能"
         },
         "account": {
             "passwords_does_not_match": "密码不匹配",
@@ -98,7 +99,7 @@
         "optional_password": "您的可选密码",
         "burn_aftertime": "仅在时间过期后销毁该秘密",
         "restrict_from_ip": "基于IP或CIDR范围限制秘密的打开。例如CIDR: 192.168.1.0/24。",
-        "restrict_from_ip_placeholder": "通过IP或CIDR进行限制",
+        "restrict_from_ip_placeholder": "通过IP或CIDR进行限���",
         "login_to_upload": "登录以上传文件",
         "public_no_upload": "公开粘贴不允许上传文件",
         "upload_files": "上传文件",
@@ -153,8 +154,8 @@
         "copied": "已复制！",
         "create": "创建",
         "sign_in": "登录",
-        "complete_url": "完整密文URL",
-        "complete_url_description": "这是包含解密密钥的完整URL。分享此URL可直接访问内容。"
+        "complete_url": "完整密钥URL",
+        "complete_url_description": "这是包含解密密钥的完整URL。分享此URL可直接访问密钥。"
     },
     "secret": {
         "view_your_secret": "查看您的秘密",

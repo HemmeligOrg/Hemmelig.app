@@ -70,7 +70,27 @@
         "create": "建立",
         "sign_in": "登入",
         "complete_url": "完整密文網址",
-        "complete_url_description": "這是包含解密金鑰的完整網址。分享此網址可直接存取內容。"
+        "complete_url_description": "這是包含解密金鑰的完整網址。分享此網址可直接存取內容。",
+        "not_logged_in": "未登入",
+        "something_went_wrong": "發生錯誤！",
+        "loading": "載入中",
+        "common": {},
+        "account": {
+            "home": {
+                "features": "功能"
+            }
+        },
+        "header": {
+            "nav": {
+                "close": "關閉導覽",
+                "open": "開啟導覽"
+            },
+            "session": {
+                "auth": "認證",
+                "expire": "您的工作階段即將過期。是否要延長？",
+                "update": "更新工作階段"
+            }
+        }
     },
     "secret": {
         "view_your_secret": "查看您的機密",

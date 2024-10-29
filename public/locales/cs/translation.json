@@ -70,7 +70,8 @@
         "create": "Vytvořit",
         "sign_in": "Přihlásit se",
         "complete_url": "Kompletní tajný URL",
-        "complete_url_description": "Toto je kompletní URL včetně dešifrovacího klíče. Sdílejte tento URL pro přímý přístup k tajemství."
+        "complete_url_description": "Toto je kompletní URL včetně dešifrovacího klíče. Sdílejte tento URL pro přímý přístup k tajemství.",
+        "features": "Funkce"
     },
     "secret": {
         "view_your_secret": "Zobrazit tajemství",
@@ -100,5 +101,20 @@
     "secrets": {
         "secrets": "Tajemství",
         "secret": "Tajemství"
+    },
+    "not_logged_in": "Nejste přihlášeni",
+    "something_went_wrong": "Něco se pokazilo!",
+    "loading": "Načítání",
+    "common": {},
+    "header": {
+        "nav": {
+            "close": "Zavřít navigaci",
+            "open": "Otevřít navigaci"
+        },
+        "session": {
+            "auth": "Ověření",
+            "expire": "Vaše relace brzy vyprší. Chcete ji prodloužit?",
+            "update": "Aktualizovat relaci"
+        }
     }
 }

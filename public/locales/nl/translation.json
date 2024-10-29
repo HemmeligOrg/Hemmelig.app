@@ -3,7 +3,7 @@
     "sign_out": "Uitloggen",
     "sign_up": "Registreren",
     "not_logged_in": "Niet ingelogd",
-    "something_went_wrong": "Er is iets foutgegaan!",
+    "something_went_wrong": "Er is iets misgegaan!",
     "loading": "Laden",
     "account": {
         "home": {
@@ -15,7 +15,8 @@
             "upload_files": "Bestanden uploaden",
             "expiration": "Een verlooptijd voor geheimen van 14 of 28 dagen",
             "secrets": "Het bekijken en verwijderen van je geheimen",
-            "more": "Meer functies zullen later worden toegevoegd! Fijn dat je Hemmelig.app gebruikt!"
+            "more": "Meer functies zullen later worden toegevoegd! Fijn dat je Hemmelig.app gebruikt!",
+            "features": "Functies"
         },
         "account": {
             "passwords_does_not_match": "Wachtwoorden komen niet overeen",

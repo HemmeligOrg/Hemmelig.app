@@ -15,7 +15,8 @@
             "upload_files": "Téléversement de fichiers",
             "expiration": "Délai d'expiration de secret de 14 ou 28 jour",
             "secrets": "Lister et supprimer vos secrets",
-            "more": "Plus de fonctionnalités arrivent ! Merci d'avoir rejoint Hemmelig.app !"
+            "more": "Plus de fonctionnalités arrivent ! Merci d'avoir rejoint Hemmelig.app !",
+            "features": "Fonctionnalités"
         },
         "account": {
             "passwords_does_not_match": "Les mots de passe ne correspondent pas",

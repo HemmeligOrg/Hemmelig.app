@@ -15,7 +15,8 @@
             "upload_files": "Caricare file",
             "expiration": "Estensione giorni di scadenza per i segreti fino a 14 e 28 giorni",
             "secrets": "Visualizzare ed eliminare i tuoi segreti",
-            "more": "Altre funzionalità sono in arrivo! Grazie per aver scelto Hemmelig.app!"
+            "more": "Altre funzionalità sono in arrivo! Grazie per aver scelto Hemmelig.app!",
+            "features": "Funzionalità"
         },
         "account": {
             "passwords_does_not_match": "Le password non coincidono",

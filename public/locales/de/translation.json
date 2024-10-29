@@ -15,7 +15,8 @@
             "upload_files": "Dateien hochladen",
             "expiration": "Ablauffrist von 14 und 28 Tagen für Geheimnisse",
             "secrets": "Geheimnisse anzeigen und löschen",
-            "more": "Weitere Funktionen sind in Arbeit! Danke, dass du Hemmelig.app beigetreten bist!"
+            "more": "Weitere Funktionen sind in Arbeit! Danke, dass du Hemmelig.app beigetreten bist!",
+            "features": "Funktionen"
         },
         "account": {
             "passwords_does_not_match": "Die Passwörter stimmen nicht überein",
@@ -153,8 +154,8 @@
         "copied": "Kopiert!",
         "create": "Erstellen",
         "sign_in": "Anmelden",
-        "complete_url": "Vollständige Geheimnis-URL",
-        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teilen Sie diese URL, um direkten Zugriff auf das Geheimnis zu gewähren."
+        "complete_url": "Vollständige geheime URL",
+        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teilen Sie diese URL für direkten Zugriff auf das Geheimnis."
     },
     "secret": {
         "view_your_secret": "Dein Geheimnis anzeigen",

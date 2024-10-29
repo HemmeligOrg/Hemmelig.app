@@ -103,5 +103,21 @@
         "secrets": "Secretos",
         "secret": "Secreto",
         "deleted": "Secreto eliminado"
+    },
+    "not_logged_in": "No has iniciado sesión",
+    "something_went_wrong": "¡Algo salió mal!",
+    "loading": "Cargando",
+    "common": {},
+    "account": {
+        "home": {
+            "features": "Características"
+        }
+    },
+    "header": {
+        "session": {
+            "auth": "Autenticación",
+            "expire": "Tu sesión está a punto de expirar. ¿Quieres extenderla?",
+            "update": "Actualizar sesión"
+        }
     }
 }
