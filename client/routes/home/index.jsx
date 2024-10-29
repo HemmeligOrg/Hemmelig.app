@@ -18,7 +18,7 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -33,7 +33,6 @@ import useSecretStore from '../../stores/secretStore';
 const Home = () => {
     const { t } = useTranslation();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    const secretRef = useRef(null);
 
     const {
         formData,
@@ -56,7 +55,13 @@ const Home = () => {
         removeFile,
         handleSubmit,
         onEnablePassword,
+        setField,
     } = useSecretStore();
+
+    const secretStore = useSecretStore();
+
+    const title = useSecretStore((state) => state.title);
+    const setTitle = useSecretStore((state) => state.setTitle);
 
     const onSubmit = (event) => handleSubmit(event, t);
 
@@ -77,12 +82,6 @@ const Home = () => {
             { value: 1209600, label: t('home.14_days') }
         );
     }
-
-    useEffect(() => {
-        if (secretId) {
-            secretRef.current?.focus();
-        }
-    }, [secretId]);
 
     const handleInputChange = useCallback(
         (e) => {
@@ -138,70 +137,6 @@ const Home = () => {
     const disableFileUpload =
         (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
 
-    const ErrorBanner = ({ message, onDismiss }) => (
-        <div
-            className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
-                        backdrop-blur-sm rounded-xl border border-red-500/20 
-                        shadow-lg shadow-red-500/5"
-        >
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
-            <div className="relative px-6 py-4">
-                <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 min-w-0">
-                        <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
-                            <IconAlertCircle className="text-red-400" size={20} />
-                        </div>
-                        <p className="text-sm font-medium text-red-200 truncate">{message}</p>
-                    </div>
-                    {onDismiss && (
-                        <button
-                            onClick={onDismiss}
-                            className="flex-shrink-0 p-2 hover:bg-red-500/10 
-                                     rounded-lg transition-colors duration-200"
-                            aria-label={t('common.dismiss')}
-                        >
-                            <IconX className="text-red-400" size={16} />
-                        </button>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-
-    const FieldError = ({ message }) => (
-        <div className="flex items-center gap-2 mt-2">
-            <div className="p-1 bg-red-500/10 rounded">
-                <IconAlertCircle className="text-red-400" size={12} />
-            </div>
-            <span className="text-xs font-medium text-red-400">{message}</span>
-        </div>
-    );
-
-    const FormSection = ({ title, subtitle, children, error }) => (
-        <div className="relative space-y-4">
-            {title && (
-                <div className="space-y-1">
-                    <h2 className="text-lg font-semibold text-white/90">{title}</h2>
-                    {subtitle && <p className="text-sm text-gray-400">{subtitle}</p>}
-                </div>
-            )}
-            <div
-                className={`
-                relative overflow-hidden
-                bg-gradient-to-br from-gray-800/50 to-gray-900/50
-                backdrop-blur-sm
-                rounded-xl
-                border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
-                shadow-xl shadow-black/10
-            `}
-            >
-                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
-                <div className="relative p-6">{children}</div>
-            </div>
-            {error && <FieldError message={error} />}
-        </div>
-    );
-
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
             <form onSubmit={onSubmit} className="space-y-8">
@@ -232,6 +167,7 @@ const Home = () => {
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <Quill
+                                name="text"
                                 value={formData.text}
                                 onChange={onTextChange}
                                 readOnly={inputReadOnly}
@@ -250,11 +186,12 @@ const Home = () => {
                                 <IconHeading size={18} />
                             </div>
                             <input
+                                key="title"
                                 type="text"
                                 name="title"
                                 placeholder={t('home.title')}
-                                value={formData.title}
-                                onChange={handleInputChange}
+                                value={title}
+                                onChange={(e) => secretStore.setField('title', e.target.value)}
                                 readOnly={inputReadOnly}
                                 className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
                                          focus:ring-2 focus:ring-hemmelig focus:border-transparent
@@ -714,5 +651,69 @@ const Home = () => {
         </div>
     );
 };
+
+const ErrorBanner = ({ message, onDismiss }) => (
+    <div
+        className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
+                        backdrop-blur-sm rounded-xl border border-red-500/20 
+                        shadow-lg shadow-red-500/5"
+    >
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
+        <div className="relative px-6 py-4">
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
+                        <IconAlertCircle className="text-red-400" size={20} />
+                    </div>
+                    <p className="text-sm font-medium text-red-200 truncate">{message}</p>
+                </div>
+                {onDismiss && (
+                    <button
+                        onClick={onDismiss}
+                        className="flex-shrink-0 p-2 hover:bg-red-500/10 
+                                     rounded-lg transition-colors duration-200"
+                        aria-label={t('common.dismiss')}
+                    >
+                        <IconX className="text-red-400" size={16} />
+                    </button>
+                )}
+            </div>
+        </div>
+    </div>
+);
+
+const FieldError = ({ message }) => (
+    <div className="flex items-center gap-2 mt-2">
+        <div className="p-1 bg-red-500/10 rounded">
+            <IconAlertCircle className="text-red-400" size={12} />
+        </div>
+        <span className="text-xs font-medium text-red-400">{message}</span>
+    </div>
+);
+
+const FormSection = ({ title, subtitle, children, error }) => (
+    <div className="relative space-y-4">
+        {title && (
+            <div className="space-y-1">
+                <h2 className="text-lg font-semibold text-white/90">{title}</h2>
+                {subtitle && <p className="text-sm text-gray-400">{subtitle}</p>}
+            </div>
+        )}
+        <div
+            className={`
+                relative overflow-hidden
+                bg-gradient-to-br from-gray-800/50 to-gray-900/50
+                backdrop-blur-sm
+                rounded-xl
+                border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
+                shadow-xl shadow-black/10
+            `}
+        >
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
+            <div className="relative p-6">{children}</div>
+        </div>
+        {error && <FieldError message={error} />}
+    </div>
+);
 
 export default Home;

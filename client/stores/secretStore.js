@@ -1,3 +1,4 @@
+import { generate } from 'generate-password-browser';
 import { create } from 'zustand';
 
 const useSecretStore = create((set) => ({
@@ -21,11 +22,14 @@ const useSecretStore = create((set) => ({
     },
     secretId: null,
     encryptionKey: '',
+    title: '',
     setFormData: (update) =>
         set((state) => ({
             formData: { ...state.formData, ...update },
         })),
     setTTL: (ttl) => set({ ttl }),
+    setTitle: (title) => set({ title }),
+    setField: (field, value) => set((state) => ({ ...state, [field]: value })),
     setEnablePassword: (enablePassword) => set({ enablePassword }),
     setIsPublic: (isPublic) => set({ isPublic }),
     setCreatingSecret: (creatingSecret) => set({ creatingSecret }),
@@ -136,6 +140,18 @@ const useSecretStore = create((set) => ({
     onEnablePassword: () =>
         set((state) => ({
             enablePassword: !state.enablePassword,
+            formData: {
+                ...state.formData,
+                password: !state.enablePassword
+                    ? generate({
+                          length: 12,
+                          numbers: true,
+                          symbols: true,
+                          uppercase: true,
+                          lowercase: true,
+                      })
+                    : '',
+            },
         })),
 }));
 
