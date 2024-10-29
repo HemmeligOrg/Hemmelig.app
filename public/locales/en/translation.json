@@ -39,7 +39,8 @@
             "upload_files": "Upload files",
             "expiration": "Expiration time of 14 and 28 days for secrets",
             "secrets": "List and delete your secrets",
-            "more": "More features are coming! Thanks for joining Hemmelig.app!"
+            "more": "Thanks for joining Hemmelig.app!",
+            "features": "Features"
         },
         "account": {
             "passwords_does_not_match": "Passwords did not match",

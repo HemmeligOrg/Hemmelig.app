@@ -313,48 +313,22 @@ const Home = () => {
                                     </div>
                                     <div>
                                         <div className="text-sm font-medium text-white/90">
-                                            {t('home.burn_after_reading')}
+                                            {t('home.burn_after_time')}
                                         </div>
                                         <div className="text-xs text-gray-400">
-                                            {t('home.burn_description')}
+                                            {t('home.burn_aftertime')}
                                         </div>
                                     </div>
                                 </div>
                                 <Switch
-                                    checked={formData.burnAfterReading}
+                                    checked={formData.preventBurn}
                                     onChange={(checked) =>
-                                        setField('formData.burnAfterReading', checked)
+                                        setField('formData.preventBurn', checked)
                                     }
                                 >
-                                    {t('home.burn_after_reading')}
+                                    {t('home.burn_after_time')}
                                 </Switch>
                             </div>
-
-                            {!formData.burnAfterReading && (
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-orange-500/10 rounded-lg">
-                                            <IconFlame className="text-orange-400" size={18} />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.burn_after_time')}
-                                            </div>
-                                            <div className="text-xs text-gray-400">
-                                                {t('home.burn_aftertime')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Switch
-                                        checked={formData.burnAfterTime}
-                                        onChange={(checked) =>
-                                            setField('formData.burnAfterTime', checked)
-                                        }
-                                    >
-                                        {t('home.burn_after_time')}
-                                    </Switch>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </FormSection>
