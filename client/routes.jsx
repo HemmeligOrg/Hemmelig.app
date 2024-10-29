@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import AdminShell from './admin-shell.jsx';
 import ApplicationShell from './app-shell.jsx';
+import ApiDocs from './routes/api-docs/index.jsx';
 
 const Home = lazy(() => import('./routes/home'));
 const Secret = lazy(() => import('./routes/secret'));
@@ -17,7 +18,8 @@ const Secrets = lazy(() => import('./routes/account/secrets'));
 const Settings = lazy(() => import('./routes/account/settings'));
 const Users = lazy(() => import('./routes/account/users'));
 const UserAccount = lazy(() => import('./routes/account/account'));
-
+const NotFound = lazy(() => import('./routes/not-found'));
+const Statistics = lazy(() => import('./routes/statistics'));
 // loader: https://reactrouter.com/en/main/route/loader
 const appRouter = createBrowserRouter(
     createRoutesFromElements(
@@ -108,6 +110,9 @@ const appRouter = createBrowserRouter(
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="terms" element={<Terms />} />
             </Route>
+            <Route path="404" element={<NotFound />} />
+            <Route path="/api-docs" element={<ApiDocs />} />
+            <Route path="/stats" element={<Statistics />} />
         </>
     )
 );

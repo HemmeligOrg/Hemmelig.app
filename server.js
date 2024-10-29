@@ -152,7 +152,8 @@ fastify.get('/signout', serveIndex);
 fastify.get('/account*', serveIndex);
 fastify.get('/terms', serveIndex);
 fastify.get('/public*', serveIndex);
-
+fastify.get('/stats', serveIndex);
+fastify.get('/404', serveIndex);
 fastify.register(authenticationRoute, {
     prefix: '/api/authentication',
 });

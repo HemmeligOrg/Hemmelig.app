@@ -1,18 +1,17 @@
-import { Center } from '@mantine/core';
 import QRCode from 'react-qr-code';
-import style from './style.module.css';
 
 const QRLink = ({ value }) => (
-    <Center>
-        <div className={style.img}>
+    <div className="flex justify-center">
+        <div className="w-64 h-64 p-4 bg-white rounded-lg shadow-lg">
             <QRCode
-                size={256}
-                style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                 value={value}
-                viewBox={`0 0 256 256`}
+                size={256}
+                className="w-full h-auto"
+                viewBox="0 0 256 256"
+                style={{ maxWidth: '100%' }}
             />
         </div>
-    </Center>
+    </div>
 );
 
 export default QRLink;

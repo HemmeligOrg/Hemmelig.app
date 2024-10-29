@@ -1,252 +1,56 @@
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Button,
-    Checkbox,
-    Container,
-    CopyButton,
-    Divider,
-    FileButton,
-    Group,
-    NumberInput,
-    Select,
-    Stack,
-    Text,
-    TextInput,
-    Title,
-    Tooltip,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
-import {
+    IconAlertCircle,
     IconCheck,
+    IconClock,
     IconCopy,
+    IconEye,
+    IconFileUpload,
+    IconFlame,
     IconHeading,
+    IconKey,
     IconLink,
     IconLock,
     IconLockAccess,
+    IconLockOpen,
+    IconNetwork,
     IconShare,
     IconShieldLock,
-    IconSquarePlus,
     IconTrash,
+    IconX,
 } from '@tabler/icons';
-import passwordGenerator from 'generate-password-browser';
-import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import ErrorBox from '../../components/error-box';
+import { Link } from 'react-router-dom';
+import { burnSecret } from '../../api/secret';
+import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
-
-import { useTranslation } from 'react-i18next';
-import { encrypt, generateKey } from '../../../shared/helpers/crypto';
-import { burnSecret, createSecret } from '../../api/secret';
-import { zipFiles } from '../../helpers/zip';
-
+import { Switch } from '../../components/switch';
 import config from '../../config';
-
-import style from './style.module.css';
-
-const DEFAULT_TTL = 259200; // 3 days - 72 hours
+import useSecretStore from '../../stores/secretStore';
 
 const Home = () => {
-    const form = useForm({
-        initialValues: {
-            text: '',
-            title: '',
-            maxViews: 1,
-            files: [],
-            password: '',
-            ttl: DEFAULT_TTL,
-            allowedIp: '',
-            preventBurn: false,
-            isPublic: false,
-        },
-    });
-
-    const [text, setText] = useState('');
-    const [ttl, setTTL] = useState(DEFAULT_TTL);
-    const [enablePassword, setOnEnablePassword] = useState(false);
-    const [secretId, setSecretId] = useState('');
-    const [encryptionKey, setEncryptionKey] = useState('');
-    const [creatingSecret, setCreatingSecret] = useState(false);
-    const [error, setError] = useState('');
-    const [isPublic, setIsPublic] = useState(false);
-
-    const secretRef = useRef(null);
-
-    const isMobile = useMediaQuery('(max-width: 915px)');
-
+    const { t } = useTranslation();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
-    const { t } = useTranslation();
+    const {
+        formData,
+        enablePassword,
+        isPublic,
+        creatingSecret,
+        errors,
+        secretId,
+        encryptionKey,
+        reset,
+        removeFile,
+        handleSubmit,
+        onEnablePassword,
+        setField,
+    } = useSecretStore();
 
-    useEffect(() => {
-        if (secretId) {
-            secretRef.current.focus();
-        }
-    }, [secretId]);
-
-    useEffect(() => {
-        if (enablePassword) {
-            form.setFieldValue(
-                'password',
-                passwordGenerator.generate({
-                    length: 16,
-                    numbers: true,
-                    strict: true,
-                    symbols: true,
-                })
-            );
-        } else {
-            form.setFieldValue('password', '');
-        }
-    }, [enablePassword]);
-
-    const onTextChange = (value) => {
-        setText(value);
-
-        form.setFieldValue('text', value);
+    const onSubmit = (event) => {
+        handleSubmit(event, t);
     };
-
-    const onSelectChange = (value) => {
-        form.setFieldValue('ttl', value);
-        setTTL(value);
-    };
-
-    const onEnablePassword = () => {
-        setOnEnablePassword(!enablePassword);
-    };
-
-    const onSetPublic = () => {
-        setIsPublic(!isPublic);
-    };
-
-    const reset = () => {
-        form.reset();
-        setSecretId('');
-        form.clearErrors();
-        setEncryptionKey('');
-        setOnEnablePassword(false);
-        setCreatingSecret(false);
-        setText('');
-        setTTL(DEFAULT_TTL);
-        setIsPublic(false);
-        setError('');
-    };
-
-    const onSubmit = async (values) => {
-        if (!form.values.text) {
-            form.setErrors({ text: t('home.please_add_secret') });
-            return;
-        }
-
-        const password = form.values.password;
-
-        const publicEncryptionKey = generateKey(password);
-        const encryptionKey = publicEncryptionKey + password;
-
-        setCreatingSecret(true);
-
-        const body = {
-            text: isPublic ? form.values.text : encrypt(form.values.text, encryptionKey),
-            files: [],
-            title: isPublic ? form.values.title : encrypt(form.values.title, encryptionKey),
-            password: form.values.password,
-            ttl: form.values.ttl,
-            allowedIp: form.values.allowedIp,
-            preventBurn: form.values.preventBurn,
-            maxViews: form.values.maxViews,
-            isPublic: isPublic,
-        };
-
-        const zipFile = await zipFiles(form.values.files);
-
-        if (zipFile) {
-            body.files.push({
-                type: 'application/zip',
-                ext: '.zip',
-                content: encrypt(zipFile, encryptionKey),
-            });
-        }
-
-        const json = await createSecret(body);
-
-        if (json.statusCode !== 201) {
-            if (json.statusCode === 400) {
-                setError(json.message);
-            }
-
-            if (json.message === 'request file too large, please check multipart config') {
-                form.setErrors({ files: 'The file size is too large' });
-            } else {
-                form.setErrors({ files: json.message });
-            }
-
-            setCreatingSecret(false);
-
-            return;
-        }
-
-        setSecretId(json.id);
-        setEncryptionKey(publicEncryptionKey);
-        form.clearErrors();
-        setCreatingSecret(false);
-    };
-
-    const onNewSecret = async (event) => {
-        event.preventDefault();
-
-        reset();
-    };
-
-    const onBurn = async (event) => {
-        if (!secretId) {
-            return;
-        }
-
-        event.preventDefault();
-
-        burnSecret(secretId);
-
-        reset();
-    };
-
-    const onShare = (event) => {
-        event.preventDefault();
-
-        if (navigator.share) {
-            navigator
-                .share({
-                    title: 'hemmelig.app',
-                    text: t('home.get_your_secret'),
-                    url: getSecretURL(),
-                })
-                .then(() => console.log(t('home.successful_share')))
-                .catch(console.error);
-        }
-    };
-
-    const removeFile = (index) => {
-        const updatedFiles = [...form.values.files];
-        updatedFiles.splice(index, 1);
-        form.setFieldValue('files', updatedFiles);
-    };
-
-    const handleFocus = (event) => event.target.select();
-
-    const getSecretURL = (withEncryptionKey = true) => {
-        if (!withEncryptionKey) {
-            return `${window.location.origin}/secret/${secretId}`;
-        }
-
-        return `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
-    };
-
-    const inputReadOnly = !!secretId;
-
-    const disableFileUpload =
-        (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
 
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
@@ -259,8 +63,6 @@ const Home = () => {
         { value: 300, label: t('home.5_minutes') },
     ];
 
-    // Features allowed for signed in users only
-    // This is validated from the server as well
     if (isLoggedIn) {
         ttlValues.unshift(
             { value: 2419200, label: t('home.28_days') },
@@ -268,376 +70,619 @@ const Home = () => {
         );
     }
 
-    const groupMobileStyle = () => {
-        if (!isMobile) {
-            return {};
-        }
+    const onSetPublic = () => {
+        setField('isPublic', !isPublic);
+    };
 
-        return {
-            root: {
-                maxWidth: '100% !important',
-            },
-        };
+    const handleFocus = (event) => event.target.select();
+
+    const getSecretURL = (withEncryptionKey = true) => {
+        if (!withEncryptionKey) return `${window.location.origin}/secret/${secretId}`;
+        return `${window.location.origin}/secret/${secretId}#encryption_key=${encryptionKey}`;
+    };
+
+    const onShare = (event) => {
+        event.preventDefault();
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: 'hemmelig.app',
+                    text: t('home.get_your_secret'),
+                    url: getSecretURL(),
+                })
+                .then(() => console.log(t('home.successful_share')))
+                .catch(console.error);
+        }
+    };
+
+    const onBurn = async (event) => {
+        if (!secretId) return;
+        event.preventDefault();
+        await burnSecret(secretId);
+        reset();
+    };
+
+    const inputReadOnly = !!secretId;
+    const disableFileUpload =
+        (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
+
+    const dismissError = () => {
+        setField('errors.banner.title', '');
+        setField('errors.banner.message', '');
+        setField('errors.banner.dismissible', true);
     };
 
     return (
-        <Container>
-            <form
-                onSubmit={form.onSubmit((values) => {
-                    onSubmit(values);
-                })}
-            >
-                <Stack>
-                    <Title order={1} size="h2" align="center">
-                        {t('home.app_subtitle')}
-                    </Title>
-                    <Text size="sm" align="center">
-                        {t('home.welcome')}
-                    </Text>
+        <div className="max-w-4xl mx-auto px-4 py-12">
+            <form onSubmit={onSubmit} className="space-y-8">
+                <div className="text-center space-y-4 mb-12">
+                    <h1 className="text-3xl font-bold text-white">{t('home.title')}</h1>
+                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                        {t('home.description')}
+                    </p>
+                </div>
 
-                    {error && <ErrorBox message={error} />}
-
-                    <Quill
-                        defaultValue={t('home.maintxtarea')}
-                        value={text}
-                        onChange={onTextChange}
-                        readOnly={inputReadOnly}
-                        secretId={secretId}
+                {errors.banner.message && (
+                    <ErrorBanner
+                        title={errors.banner.title}
+                        message={errors.banner.message}
+                        onDismiss={errors.banner.dismissible ? dismissError : undefined}
                     />
+                )}
 
-                    <Group grow>
-                        <TextInput
-                            styles={groupMobileStyle}
-                            icon={<IconHeading size={14} />}
-                            placeholder={t('home.title')}
-                            readOnly={inputReadOnly}
-                            {...form.getInputProps('title')}
-                        />
-                    </Group>
-
-                    <Group grow>
-                        <Select
-                            zIndex={9999}
-                            value={ttl}
-                            onChange={onSelectChange}
-                            data={ttlValues}
-                            label={t('home.lifetime')}
-                        />
-
-                        <NumberInput
-                            defaultValue={1}
-                            min={1}
-                            max={999}
-                            placeholder="1"
-                            label={t('home.max_views')}
-                            {...form.getInputProps('maxViews')}
-                        />
-                    </Group>
-
-                    <Group grow>
-                        <Checkbox
-                            styles={groupMobileStyle}
-                            checked={enablePassword}
-                            onChange={onEnablePassword}
-                            readOnly={inputReadOnly}
-                            color="hemmelig"
-                            label={t('home.enable_password')}
-                        />
-
-                        <TextInput
-                            styles={groupMobileStyle}
-                            icon={<IconLock size={14} />}
-                            placeholder={t('home.optional_password')}
-                            minLength="8"
-                            maxLength="28"
-                            {...form.getInputProps('password')}
-                            readOnly={!enablePassword || inputReadOnly}
-                            rightSection={
-                                <CopyButton value={form.values.password} timeout={2000}>
-                                    {({ copied, copy }) => (
-                                        <Tooltip
-                                            label={copied ? t('copied') : t('copy')}
-                                            withArrow
-                                            position="right"
-                                        >
-                                            <ActionIcon
-                                                color={copied ? 'teal' : 'gray'}
-                                                onClick={copy}
-                                            >
-                                                {copied ? (
-                                                    <IconCheck size={16} />
-                                                ) : (
-                                                    <IconCopy size={16} />
-                                                )}
-                                            </ActionIcon>
-                                        </Tooltip>
-                                    )}
-                                </CopyButton>
-                            }
-                        />
-                    </Group>
-
-                    <Group grow>
-                        <Checkbox
-                            styles={groupMobileStyle}
-                            readOnly={inputReadOnly}
-                            color="hemmelig"
-                            label={t('home.burn_aftertime')}
-                            {...form.getInputProps('preventBurn')}
-                        />
-
-                        <Tooltip label={t('home.restrict_from_ip')}>
-                            <TextInput
-                                styles={groupMobileStyle}
-                                icon={<IconLockAccess size={14} />}
-                                placeholder={t('home.restrict_from_ip_placeholder')}
+                <FormSection>
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <Quill
+                                name="text"
+                                value={formData.text}
+                                onChange={(value) => setField('formData.text', value)}
                                 readOnly={inputReadOnly}
-                                {...form.getInputProps('allowedIp')}
+                                className={`
+                                    bg-black/20 border-white/[0.08]
+                                    hover:border-white/[0.12] focus:border-primary
+                                    transition-colors duration-200
+                                    ${errors.fields.text ? 'border-red-500/50' : ''}
+                                `}
                             />
-                        </Tooltip>
-                    </Group>
+                            {errors.fields.text && <FieldError message={errors.fields.text} />}
+                        </div>
 
-                    <Group grow>
-                        <Checkbox
-                            styles={groupMobileStyle}
-                            checked={isPublic}
-                            onChange={onSetPublic}
-                            readOnly={inputReadOnly}
-                            color="hemmelig"
-                            label={t('home.set_public')}
-                        />
+                        <div className="relative">
+                            <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                <IconHeading size={18} />
+                            </div>
+                            <input
+                                type="text"
+                                name="title"
+                                placeholder={t('home.content_title')}
+                                value={formData.title}
+                                onChange={(e) => setField('formData.title', e.target.value)}
+                                readOnly={inputReadOnly}
+                                className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
+                                         focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                         text-base text-gray-100 placeholder-gray-500"
+                            />
+                            <p className="mt-2 text-sm text-gray-400">
+                                {t('home.title_description')}
+                            </p>
+                        </div>
+                    </div>
+                </FormSection>
 
-                        <FileButton
-                            disabled={disableFileUpload}
-                            styles={groupMobileStyle}
-                            multiple
-                            {...form.getInputProps('files')}
-                        >
-                            {(props) => (
-                                <Button
-                                    {...props}
-                                    label={disableFileUpload ? t('home.upload_files') : ''}
-                                    color={disableFileUpload ? 'gray' : 'hemmelig-orange'}
+                <FormSection title={t('home.security')} subtitle={t('home.security_description')}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <button
+                                    type="button"
+                                    onClick={onSetPublic}
+                                    className={`
+                                        w-full flex items-center gap-3 px-4 py-3
+                                        bg-black/20 rounded-lg border border-white/[0.08]
+                                        hover:border-white/[0.12] transition-colors duration-200
+                                        ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300'}
+                                    `}
                                 >
-                                    {t('home.upload_files')}
-                                </Button>
+                                    {isPublic ? <IconLockOpen size={18} /> : <IconLock size={18} />}
+                                    <span className="text-sm font-medium">
+                                        {t(isPublic ? 'home.public' : 'home.private')}
+                                    </span>
+                                </button>
+                                <div className="px-4">
+                                    <p className="text-xs text-gray-400">
+                                        {isPublic
+                                            ? t(
+                                                  'home.public_description',
+                                                  'Public secrets are not encrypted and can be viewed by anyone with the link'
+                                              )
+                                            : t(
+                                                  'home.private_description',
+                                                  'Private secrets are encrypted and can only be viewed with the decryption key'
+                                              )}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={onEnablePassword}
+                                className={`
+                                    w-full flex items-center gap-3 px-4 py-3
+                                    bg-black/20 rounded-lg border border-white/[0.08]
+                                    hover:border-white/[0.12] transition-colors duration-200
+                                    ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300'}
+                                `}
+                            >
+                                <IconShieldLock size={18} />
+                                <span className="text-sm font-medium">{t('home.password')}</span>
+                            </button>
+
+                            {enablePassword && (
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <IconKey className="text-gray-400" size={14} />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={(e) =>
+                                            setField('formData.password', e.target.value)
+                                        }
+                                        readOnly={inputReadOnly}
+                                        className="w-full pl-10 pr-10 bg-gray-800 border border-gray-700 
+                                                 rounded-lg text-gray-100 placeholder-gray-500
+                                                 focus:border-primary focus:ring-1 focus:ring-primary"
+                                        placeholder={t('home.password')}
+                                    />
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <CopyButton textToCopy={formData.password} />
+                                    </div>
+                                </div>
                             )}
-                        </FileButton>
 
-                        {disableFileUpload && (
-                            <Text size="sm" align="center" mt="sm">
-                                {isPublic ? t('home.public_no_upload') : t('home.login_to_upload')}
-                            </Text>
-                        )}
-                    </Group>
+                            <div className="relative">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                    <IconNetwork size={18} />
+                                </div>
+                                <input
+                                    type="text"
+                                    name="allowedIp"
+                                    placeholder="0.0.0.0/0"
+                                    value={formData.allowedIp}
+                                    onChange={(e) => setField('formData.allowedIp', e.target.value)}
+                                    readOnly={inputReadOnly}
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
+                                             focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                             text-base text-gray-100 placeholder-gray-500"
+                                />
+                                <p className="mt-2 text-xs text-gray-400">
+                                    {t('home.restrict_from_ip')}
+                                </p>
+                            </div>
+                        </div>
 
-                    {form.values.files?.length > 0 && (
-                        <Group>
-                            {form.values.files.map((file, index) => (
-                                <Badge
-                                    className={style['file-badge']}
-                                    color="orange"
-                                    key={file.name}
+                        <div className="space-y-4">
+                            <div className="relative">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                    <IconClock size={18} />
+                                </div>
+                                <select
+                                    value={formData.ttl}
+                                    onChange={(e) => setField('formData.ttl', e.target.value)}
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
+                                             text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary
+                                             appearance-none"
                                 >
-                                    <Badge
-                                        className={style['file-remove']}
-                                        onClick={() => removeFile(index)}
-                                    >
-                                        &times;
-                                    </Badge>
-                                    {file.name}
-                                </Badge>
-                            ))}
-                        </Group>
+                                    {ttlValues.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className="mt-2 text-xs text-gray-400">
+                                    {t('home.ttl_description')}
+                                </p>
+                            </div>
+
+                            <div className="relative">
+                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                    <IconEye size={18} />
+                                </div>
+                                <input
+                                    type="number"
+                                    name="maxViews"
+                                    value={formData.maxViews}
+                                    onChange={(e) => setField('formData.maxViews', e.target.value)}
+                                    min="1"
+                                    max="999"
+                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
+                                             text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
+                                />
+                                <p className="mt-2 text-xs text-gray-400">
+                                    {t('home.max_views_description')}
+                                </p>
+                            </div>
+
+                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                <div className="flex items-center space-x-3">
+                                    <div className="p-2 bg-orange-500/10 rounded-lg">
+                                        <IconFlame className="text-orange-400" size={18} />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-white/90">
+                                            {t('home.burn_after_time')}
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                            {t('home.burn_aftertime')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <Switch
+                                    checked={formData.preventBurn}
+                                    onChange={(checked) =>
+                                        setField('formData.preventBurn', checked)
+                                    }
+                                >
+                                    {t('home.burn_after_time')}
+                                </Switch>
+                            </div>
+                        </div>
+                    </div>
+                </FormSection>
+
+                {!disableFileUpload && (
+                    <FormSection title={t('home.file_upload')} error={errors.sections.files}>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="file"
+                                    id="fileUpload"
+                                    onChange={(e) => {
+                                        const files = Array.from(e.target.files || []);
+                                        setField('formData.files', [...formData.files, ...files]);
+                                    }}
+                                    multiple
+                                    className="hidden"
+                                />
+                                <label
+                                    htmlFor="fileUpload"
+                                    className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                             hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
+                                >
+                                    <IconFileUpload size={16} />
+                                    <span>{t('home.upload_files')}</span>
+                                </label>
+                            </div>
+
+                            {formData.files.length > 0 && (
+                                <div className="space-y-2">
+                                    {formData.files.map((file, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center justify-between bg-gray-800 
+                                                                          rounded-md px-3 py-2"
+                                        >
+                                            <span className="text-sm text-gray-300">
+                                                {file.name}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removeFile(index)}
+                                                className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
+                                                title={t('home.remove_file')}
+                                            >
+                                                <IconTrash size={14} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </FormSection>
+                )}
+                {!isLoggedIn && (
+                    <FormSection title={t('home.file_upload')}>
+                        <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                            <div className="flex items-center space-x-3">
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                    <IconFileUpload className="text-primary" size={18} />
+                                </div>
+                                <div>
+                                    <div className="text-sm font-medium text-white/90">
+                                        {t('home.login_to_upload')}
+                                    </div>
+                                </div>
+                            </div>
+                            <Link
+                                to="/signin"
+                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+                            >
+                                {t('home.sign_in')}
+                            </Link>
+                        </div>
+                    </FormSection>
+                )}
+
+                <div className="flex flex-col sm:flex-row gap-4">
+                    {secretId ? (
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                reset();
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
+                                     transition-colors"
+                        >
+                            <IconLockAccess size={14} />
+                            {t('home.create_new')}
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            disabled={creatingSecret}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
+                                     disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            {creatingSecret ? (
+                                <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-b-transparent mr-2" />
+                            ) : (
+                                <>
+                                    <IconLockAccess size={14} />
+                                    {t('home.create')}
+                                </>
+                            )}
+                        </button>
                     )}
 
                     {secretId && (
-                        <>
-                            <Group grow>
-                                <TextInput
-                                    label={t('home.your_secret_url')}
-                                    icon={<IconLink size={14} />}
-                                    value={getSecretURL()}
-                                    onFocus={handleFocus}
-                                    ref={secretRef}
-                                    readOnly
-                                    rightSection={
-                                        <CopyButton value={getSecretURL()} timeout={2000}>
-                                            {({ copied, copy }) => (
-                                                <Tooltip
-                                                    label={copied ? t('copied') : t('copy')}
-                                                    withArrow
-                                                    position="right"
-                                                >
-                                                    <ActionIcon
-                                                        color={copied ? 'teal' : 'gray'}
-                                                        onClick={copy}
-                                                    >
-                                                        {copied ? (
-                                                            <IconCheck size={16} />
-                                                        ) : (
-                                                            <IconCopy size={16} />
-                                                        )}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            )}
-                                        </CopyButton>
-                                    }
-                                />
-                            </Group>
-
-                            <QRLink value={getSecretURL()} />
-
-                            <Divider
-                                my="xs"
-                                variant="dashed"
-                                labelPosition="center"
-                                label={
-                                    <Box ml={5}>
-                                        {t('home.or', 'Separate the link and decryption key')}
-                                    </Box>
-                                }
-                            />
-
-                            <Group grow>
-                                <TextInput
-                                    label={t(
-                                        'home.secret_url',
-                                        'Secret URL without decryption key'
-                                    )}
-                                    icon={<IconLink size={14} />}
-                                    value={getSecretURL(false)}
-                                    onFocus={handleFocus}
-                                    styles={groupMobileStyle}
-                                    readOnly
-                                    rightSection={
-                                        <CopyButton value={getSecretURL(false)} timeout={2000}>
-                                            {({ copied, copy }) => (
-                                                <Tooltip
-                                                    label={copied ? t('copied') : t('copy')}
-                                                    withArrow
-                                                    position="right"
-                                                >
-                                                    <ActionIcon
-                                                        color={copied ? 'teal' : 'gray'}
-                                                        onClick={copy}
-                                                    >
-                                                        {copied ? (
-                                                            <IconCheck size={16} />
-                                                        ) : (
-                                                            <IconCopy size={16} />
-                                                        )}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            )}
-                                        </CopyButton>
-                                    }
-                                />
-
-                                <TextInput
-                                    label={t('home.decryption_key', 'Decryption key')}
-                                    icon={<IconShieldLock size={14} />}
-                                    value={encryptionKey}
-                                    onFocus={handleFocus}
-                                    styles={groupMobileStyle}
-                                    readOnly
-                                    rightSection={
-                                        <CopyButton value={encryptionKey} timeout={2000}>
-                                            {({ copied, copy }) => (
-                                                <Tooltip
-                                                    label={copied ? t('copied') : t('copy')}
-                                                    withArrow
-                                                    position="right"
-                                                >
-                                                    <ActionIcon
-                                                        color={copied ? 'teal' : 'gray'}
-                                                        onClick={copy}
-                                                    >
-                                                        {copied ? (
-                                                            <IconCheck size={16} />
-                                                        ) : (
-                                                            <IconCopy size={16} />
-                                                        )}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            )}
-                                        </CopyButton>
-                                    }
-                                />
-                            </Group>
-                        </>
+                        <button
+                            type="button"
+                            onClick={onShare}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                     bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
+                                     transition-colors"
+                        >
+                            <IconShare size={14} />
+                            {t('home.share')}
+                        </button>
                     )}
+                </div>
 
-                    {isMobile && secretId && navigator.share && (
-                        <Group grow>
-                            <Button
-                                styles={() => ({
-                                    root: {
-                                        backgroundColor: 'var(--color-contrast-second)',
-                                        '&:hover': {
-                                            backgroundColor: 'var(--color-contrast-second)',
-                                            filter: 'brightness(115%)',
-                                        },
-                                    },
-                                })}
-                                onClick={onShare}
-                                leftIcon={<IconShare size={16} />}
-                            >
-                                {t('home.share')}
-                            </Button>
-                        </Group>
-                    )}
+                {secretId && (
+                    <>
+                        <FormSection
+                            title={t('home.complete_url')}
+                            subtitle={t('home.complete_url_description')}
+                        >
+                            <div className="space-y-2">
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                        <IconLink size={14} />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        value={getSecretURL(true)}
+                                        readOnly
+                                        onClick={handleFocus}
+                                        className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
+                                                 rounded-md text-gray-100"
+                                    />
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                navigator.clipboard.writeText(getSecretURL(true))
+                                            }
+                                            className="p-1 hover:bg-gray-700 rounded-md group"
+                                            title={t('home.copy')}
+                                        >
+                                            <IconCopy
+                                                size={14}
+                                                className="text-gray-400 group-hover:hidden"
+                                            />
+                                            <IconCheck
+                                                size={14}
+                                                className="text-green-500 hidden group-hover:block"
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </FormSection>
 
-                    <Group position="right" grow={isMobile}>
-                        {!secretId && (
-                            <Button
-                                color="hemmelig"
-                                leftIcon={<IconSquarePlus size={14} />}
-                                loading={creatingSecret}
-                                type="submit"
-                            >
-                                {t('home.create_secret_link')}
-                            </Button>
-                        )}
+                        <FormSection
+                            title={t('home.secret_url')}
+                            subtitle={t('home.secret_description')}
+                        >
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">
+                                        {t('home.secret_url')}
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                            <IconLink size={14} />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={getSecretURL(false)}
+                                            readOnly
+                                            onClick={handleFocus}
+                                            className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
+                                                     rounded-md text-gray-100"
+                                        />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    navigator.clipboard.writeText(
+                                                        getSecretURL(false)
+                                                    )
+                                                }
+                                                className="p-1 hover:bg-gray-700 rounded-md group"
+                                                title={t('home.copy')}
+                                            >
+                                                <IconCopy
+                                                    size={14}
+                                                    className="text-gray-400 group-hover:hidden"
+                                                />
+                                                <IconCheck
+                                                    size={14}
+                                                    className="text-green-500 hidden group-hover:block"
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        {secretId && (
-                            <Button
-                                color="hemmelig"
-                                leftIcon={<IconSquarePlus size={14} />}
-                                onClick={onNewSecret}
-                            >
-                                {t('home.create_new')}
-                            </Button>
-                        )}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300">
+                                        {t('home.decryption_key')}
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                            <IconKey size={14} />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={encryptionKey}
+                                            readOnly
+                                            onClick={handleFocus}
+                                            className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
+                                                     rounded-md text-gray-100"
+                                        />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    navigator.clipboard.writeText(encryptionKey)
+                                                }
+                                                className="p-1 hover:bg-gray-700 rounded-md group"
+                                                title={t('home.copy')}
+                                            >
+                                                <IconCopy
+                                                    size={14}
+                                                    className="text-gray-400 group-hover:hidden"
+                                                />
+                                                <IconCheck
+                                                    size={14}
+                                                    className="text-green-500 hidden group-hover:block"
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        {secretId && (
-                            <Button
-                                variant="gradient"
-                                gradient={{ from: 'orange', to: 'red' }}
-                                onClick={onBurn}
-                                disabled={!secretId}
-                                leftIcon={<IconTrash size={14} />}
-                            >
-                                {t('home.delete')}
-                            </Button>
-                        )}
-                    </Group>
-                </Stack>
+                                <div className="pt-4">
+                                    <QRLink value={getSecretURL()} />
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={onShare}
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                                 bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 
+                                                 transition-colors"
+                                    >
+                                        <IconShare size={14} />
+                                        {t('home.share')}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={onBurn}
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                                 bg-red-500/20 text-red-500 rounded-md hover:bg-red-500/30 
+                                                 transition-colors"
+                                    >
+                                        <IconTrash size={14} />
+                                        {t('home.burn')}
+                                    </button>
+                                </div>
+                            </div>
+                        </FormSection>
+                    </>
+                )}
             </form>
 
-            <Divider my="sm" variant="dashed" />
-
-            <Stack spacing="xs">
-                <Text size="sm" align="center">
-                    {t('home.link_only_works_once')}
-                </Text>
-
-                <Text size="sm" align="center">
-                    <strong>Hemmelig</strong>, {t('home.app_name_meaning')}
-                </Text>
-            </Stack>
-        </Container>
+            <p className="text-gray-400 text-xs text-center pt-6">
+                Hemmelig, [he`m:(ə)li], {t('home.norwegian_meaning')}
+            </p>
+        </div>
     );
 };
+
+const ErrorBanner = ({ message, onDismiss }) => {
+    const { t } = useTranslation();
+    return (
+        <div
+            className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
+                        backdrop-blur-sm rounded-xl border border-red-500/20 
+                        shadow-lg shadow-red-500/5"
+        >
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
+            <div className="relative px-6 py-4">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
+                            <IconAlertCircle className="text-red-400" size={20} />
+                        </div>
+                        <p className="text-sm font-medium text-red-200 truncate">{message}</p>
+                    </div>
+                    {onDismiss && (
+                        <button
+                            onClick={onDismiss}
+                            className="flex-shrink-0 p-2 hover:bg-red-500/10 
+                                     rounded-lg transition-colors duration-200"
+                            aria-label={t('home.dismiss')}
+                        >
+                            <IconX className="text-red-400" size={16} />
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const FieldError = ({ message }) => (
+    <div className="flex items-center gap-2 mt-2">
+        <div className="p-1 bg-red-500/10 rounded">
+            <IconAlertCircle className="text-red-400" size={12} />
+        </div>
+        <span className="text-xs font-medium text-red-400">{message}</span>
+    </div>
+);
+
+const FormSection = ({ title, subtitle, children, error }) => (
+    <div className="relative space-y-4">
+        {title && (
+            <div className="space-y-1">
+                <h2 className="text-lg font-semibold text-white/90">{title}</h2>
+                {subtitle && <p className="text-sm text-gray-400">{subtitle}</p>}
+            </div>
+        )}
+        <div
+            className={`
+                relative overflow-hidden
+                bg-gradient-to-br from-gray-800/50 to-gray-900/50
+                backdrop-blur-sm
+                rounded-xl
+                border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
+                shadow-xl shadow-black/10
+            `}
+        >
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
+            <div className="relative p-6">{children}</div>
+        </div>
+        {error && <FieldError message={error} />}
+    </div>
+);
 
 export default Home;

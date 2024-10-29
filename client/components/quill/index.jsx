@@ -1,46 +1,49 @@
+import { useRef } from 'react';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
+import 'react-quill/dist/quill.snow.css';
 
-const modules = {
-    toolbar: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image', 'code-block'],
-    ],
+const Quill = ({ value, onChange, readOnly, defaultValue }) => {
+    const quillRef = useRef(null);
+    // Define modules based on readOnly state
+    const modules = readOnly
+        ? {
+              toolbar: false, // Disable toolbar in read-only mode
+          }
+        : {
+              toolbar: [
+                  [{ header: [1, 2, 3, false] }],
+                  ['bold', 'italic', 'underline', 'strike'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  ['link', 'code-block'],
+                  ['clean'],
+              ],
+          };
+
+    return (
+        <div className="bg-gray-800 border border-gray-700 rounded-md overflow-hidden">
+            <ReactQuill
+                ref={quillRef}
+                value={value || ''}
+                onChange={onChange}
+                readOnly={readOnly}
+                placeholder={defaultValue}
+                theme={readOnly ? 'bubble' : 'snow'}
+                modules={modules}
+                className="bg-gray-800 text-gray-100 placeholder-gray-500 [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-base [&_.ql-editor]:font-sans [&_.ql-editor]:leading-relaxed
+                [&_.ql-toolbar]:border-gray-700 [&_.ql-toolbar]:bg-gray-900
+                [&_.ql-container]:border-gray-700
+                [&_.ql-editor_h1]:text-3xl [&_.ql-editor_h1]:font-bold [&_.ql-editor_h1]:mb-4
+                [&_.ql-editor_h2]:text-2xl [&_.ql-editor_h2]:font-bold [&_.ql-editor_h2]:mb-3
+                [&_.ql-editor_h3]:text-xl [&_.ql-editor_h3]:font-bold [&_.ql-editor_h3]:mb-2
+                [&_.ql-editor_p]:mb-4
+                [&_.ql-editor_ul]:list-disc [&_.ql-editor_ul]:ml-4
+                [&_.ql-editor_ol]:list-decimal [&_.ql-editor_ol]:ml-4
+                [&_.ql-snow_.ql-toolbar_button]:text-gray-300
+                [&_.ql-snow_.ql-toolbar_button:hover]:text-white
+                [&_.ql-snow_.ql-toolbar_button.ql-active]:text-blue-400"
+            />
+        </div>
+    );
 };
 
-const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'code-block',
-];
-
-export default function Quill(props) {
-    return (
-        <ReactQuill
-            theme="bubble"
-            modules={modules}
-            formats={formats}
-            preserveWhitespace
-            style={{
-                color: '#C1C2C5',
-                backgroundColor: '#25262b',
-                border: '0.0625rem solid #373A40',
-                borderRadius: '0.25rem',
-                fontSize: '0.875rem',
-                zIndex: 90,
-                minHeight: props.secretId ? '5rem' : '13rem',
-            }}
-            {...props}
-        />
-    );
-}
+export default Quill;

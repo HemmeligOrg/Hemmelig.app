@@ -1,6 +1,6 @@
 {
   "name": "hemmelig",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Paste a password, secret message or private information",
   "main": "index.js",
   "type": "module",
@@ -42,12 +42,9 @@
     "@fastify/multipart": "^7.1.1",
     "@fastify/static": "^6.12.0",
     "@fastify/vite": "^6.0.6",
-    "@mantine/core": "^6.0.6",
-    "@mantine/form": "^6.0.6",
-    "@mantine/hooks": "^6.0.6",
-    "@mantine/modals": "^6.0.6",
     "@prisma/client": "^4.12.0",
     "@tabler/icons": "^1.83.1",
+    "@tailwindcss/forms": "^0.5.9",
     "@vitejs/plugin-react": "^4.2.1",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
@@ -65,6 +62,7 @@
     "pretty-bytes": "^4.0.2",
     "react-qr-code": "^2.0.8",
     "react-router-dom": "^6.21.3",
+    "recharts": "^2.13.0",
     "sanitize-filename": "^1.6.3",
     "tweetnacl": "^0.14.5",
     "tweetnacl-util": "^0.15.1",
@@ -73,6 +71,7 @@
     "y8": "^1.0.5"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.20",
     "buffer": "^6.0.3",
     "classcat": "^5.0.3",
     "dayjs": "^1.11.7",
@@ -86,17 +85,20 @@
     "lint-staged": "^11.0.0",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.7",
+    "postcss": "^8.4.47",
     "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^3.2.4",
     "prettier-plugin-prisma": "^5.0.0",
     "prisma": "^4.12.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.0.0",
     "react-i18next": "^11.18.5",
     "react-quill": "^2.0.0",
-    "react-redux": "^7.2.5",
-    "redux": "^4.1.1",
-    "vite": "^4.2.1"
+    "react-redux": "^9.1.2",
+    "redux": "^5.0.1",
+    "tailwindcss": "^3.4.14",
+    "vite": "^4.2.1",
+    "zustand": "^5.0.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

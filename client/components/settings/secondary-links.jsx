@@ -1,4 +1,3 @@
-import { Box, Group, Text, ThemeIcon, UnstyledButton, rem, useMantineTheme } from '@mantine/core';
 import { IconFingerprint, IconList, IconLockOff } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -6,35 +5,27 @@ import { useNavigate } from 'react-router-dom';
 function SecondaryLink({ icon, color, label, route }) {
     const navigate = useNavigate();
 
+    const colorClasses = {
+        red: 'bg-red-500/20 text-red-400',
+        gray: 'bg-gray-500/20 text-gray-400',
+    };
+
     return (
-        <UnstyledButton
-            sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                color: theme.colors.dark[0],
-
-                '&:hover': {
-                    backgroundColor: theme.colors.dark[6],
-                },
-            })}
+        <button
             onClick={() => navigate(route)}
+            className="w-full px-3 py-2 rounded-md text-left transition-colors
+                     hover:bg-gray-700/50 text-gray-200 group"
         >
-            <Group>
-                <ThemeIcon color={color} variant="light">
-                    {icon}
-                </ThemeIcon>
-
-                <Text size="sm">{label}</Text>
-            </Group>
-        </UnstyledButton>
+            <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-md ${colorClasses[color || 'gray']}`}>{icon}</div>
+                <span className="text-sm">{label}</span>
+            </div>
+        </button>
     );
 }
 
 export default function SecondaryLinks() {
     const { t } = useTranslation();
-    const theme = useMantineTheme();
 
     const data = [
         {
@@ -60,16 +51,11 @@ export default function SecondaryLinks() {
         },
     ];
 
-    const links = data.map((link) => <SecondaryLink {...link} key={link.label} />);
-
     return (
-        <Box
-            sx={{
-                paddingTop: theme.spacing.sm,
-                borderTop: `${rem(1)} solid ${theme.colors.dark[4]}`,
-            }}
-        >
-            {links}
-        </Box>
+        <div className="pt-4 border-t border-gray-700 space-y-1">
+            {data.map((link) => (
+                <SecondaryLink {...link} key={link.label} />
+            ))}
+        </div>
     );
 }

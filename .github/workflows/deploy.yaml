@@ -16,12 +16,6 @@ jobs:
             - name: Setup deploy file
               run: echo ${{ secrets.KAMAL_DEPLOY_YAML }} | base64 -d > config/deploy.yml
 
-            - name: Setup Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  ruby-version: 3.3.0
-                  bundler-cache: true
-
             - name: Install Kamal
               run: gem install kamal
 

@@ -1,7 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
-
-import { Button, Container, Group, Stack, Text, TextInput, Title } from '@mantine/core';
 import {
     IconDownload,
     IconEye,
@@ -11,34 +7,29 @@ import {
     IconShieldLock,
     IconSquarePlus,
 } from '@tabler/icons';
-
-import ErrorBox from '../../components/error-box';
-import Quill from '../../components/quill';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { decrypt } from '../../../shared/helpers/crypto';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
-
-import { useTranslation } from 'react-i18next';
+import ErrorBox from '../../components/error-box';
+import Quill from '../../components/quill';
 
 const getEncryptionKeyHash = (hash) => {
     const id = '#encryption_key=';
-
-    if (!hash || !hash.includes(id)) {
-        return '';
-    }
-
+    if (!hash || !hash.includes(id)) return '';
     const [_, encryptionKey] = hash.split('#encryption_key=');
-
     return encryptionKey;
 };
 
 const Secret = () => {
     const { t } = useTranslation();
-
     const { hash = '' } = useLocation();
-
     const { secretId, encryptionKey = getEncryptionKeyHash(hash) } = useParams();
+
+    // State management
     const [decryptionKey, setDecryptionKey] = useState(encryptionKey);
     const [secret, setSecret] = useState(null);
     const [title, setTitle] = useState(null);
@@ -52,6 +43,22 @@ const Secret = () => {
     const [error, setError] = useState(null);
     const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
 
+    // Fetch secret existence on mount
+    useEffect(() => {
+        (async () => {
+            const response = await secretExists(secretId, password);
+            if (response.statusCode === 401) {
+                setIsPasswordRequired(true);
+                return;
+            }
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setMaxViews(response.maxViews);
+            }
+        })();
+    }, [secretId]);
+
     const fetchSecret = async (event) => {
         event.preventDefault();
 
@@ -61,12 +68,11 @@ const Secret = () => {
 
         if (!decryptionKey) {
             setError('Decryption key is required!');
-
             return;
         }
+
         if (secret) {
             setIsSecretOpen(true);
-
             return;
         }
 
@@ -74,9 +80,7 @@ const Secret = () => {
 
         if (json.statusCode === 401) {
             setIsPasswordRequired(true);
-
             setError('Incorrect password!');
-
             return;
         }
 
@@ -89,50 +93,28 @@ const Secret = () => {
                     : decrypt(json.secret, decryptionKey + password);
 
                 setSecret(text);
+
+                if (json.title) {
+                    setTitle(
+                        json.isPublic ? json.title : decrypt(json.title, decryptionKey + password)
+                    );
+                }
+
+                if (json.files) {
+                    setFiles(json.files);
+                }
+
+                if (json.preventBurn) {
+                    setPreventBurn(json.preventBurn);
+                }
+
+                setIsSecretOpen(true);
+                setError(null);
             } catch (error) {
                 setError(error.message);
-
-                return;
             }
-
-            if (json.title) {
-                setTitle(
-                    json.isPublic ? json.title : decrypt(json.title, decryptionKey + password)
-                );
-            }
-
-            if (json.files) {
-                setFiles(json.files);
-            }
-
-            if (json.preventBurn) {
-                setPreventBurn(json.preventBurn);
-            }
-
-            setIsSecretOpen(true);
-
-            setError(null);
         }
     };
-
-    useEffect(() => {
-        (async () => {
-            const response = await secretExists(secretId, password);
-
-            if (response.statusCode === 401) {
-                setIsPasswordRequired(true);
-
-                return () => {};
-            }
-
-            if (response.error) {
-                setError(response.error);
-            } else {
-                setMaxViews(response.maxViews);
-            }
-        })();
-        // eslint-disable-next-line
-    }, [secretId]);
 
     const onPasswordChange = (event) => {
         setPassword(event.target.value);
@@ -156,112 +138,160 @@ const Secret = () => {
         } else {
             setSecret(atob(secret));
         }
-
         setHasConvertedBase64ToPlain(!hasConvertedBase64ToPlain);
     };
 
     return (
-        <Container>
-            <Stack>
-                <Title order={1}>{t('secret.view_your_secret')}</Title>
+        <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="space-y-6">
+                {/* Header */}
+                <div className="text-center space-y-2">
+                    <h1 className="text-2xl font-semibold text-white">
+                        {t('secret.view_your_secret')}
+                    </h1>
+                    <p className="text-base text-gray-400">{t('secret.will_show_once')}</p>
+                    {maxViews > 1 && (
+                        <p className="text-base text-gray-400">
+                            {t('secret.views_left')}{' '}
+                            <strong className="text-white">{maxViews}</strong>
+                        </p>
+                    )}
+                </div>
 
                 {error && <ErrorBox message={error} />}
 
-                <Text>{t('secret.will_show_once')}</Text>
-
-                {maxViews > 1 && (
-                    <Text>
-                        {t('secret.views_left')} <strong>{maxViews}</strong>
-                    </Text>
-                )}
-
-                {title && <TextInput icon={<IconHeading size={14} />} value={title} readOnly />}
-
-                {isSecretOpen && <Quill value={secret} secretId={secretId} readOnly />}
-
-                {isPasswordRequired && !isSecretOpen && (
-                    <>
-                        <Text>{t('secret.password_required')}</Text>
-
-                        <TextInput
-                            id="lemon-password"
-                            icon={<IconLock size={14} />}
-                            placeholder="Your password"
-                            value={password}
-                            maxLength="28"
-                            onChange={onPasswordChange}
-                            required
-                            style={{ WebkitTextSecurity: 'disc' }}
-                        />
-                    </>
-                )}
-
-                {!encryptionKey && !isSecretOpen && (
-                    <>
-                        <Text>{t('secret.decryption_key', 'Decryption key required')}</Text>
-
-                        <TextInput
-                            icon={<IconShieldLock size={14} />}
-                            placeholder="Decryption key"
-                            value={decryptionKey}
-                            onChange={(event) => setDecryptionKey(event.target.value)}
-                            required
-                        />
-                    </>
-                )}
-
-                <Group>
-                    {!isSecretOpen && (
-                        <Button
-                            color="hemmelig"
-                            leftIcon={<IconEye size={14} />}
-                            onClick={fetchSecret}
-                        >
-                            {t('secret.view_secret')}
-                        </Button>
+                {/* Main Content */}
+                <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg">
+                    {/* Title if exists */}
+                    {title && (
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <IconHeading size={14} />
+                            </span>
+                            <input
+                                type="text"
+                                value={title}
+                                readOnly
+                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                         text-gray-100"
+                            />
+                        </div>
                     )}
-                </Group>
 
-                <Group position="right">
+                    {/* Secret Content */}
                     {isSecretOpen && (
-                        <Button
-                            color="hemmelig-orange"
-                            leftIcon={<IconPerspective size={14} />}
-                            onClick={convertBase64ToPlain}
+                        <div className="w-full">
+                            <Quill value={secret} secretId={secretId} readOnly />
+                        </div>
+                    )}
+
+                    {/* Password Input */}
+                    {isPasswordRequired && !isSecretOpen && (
+                        <div className="space-y-2">
+                            <p className="text-base text-gray-300">
+                                {t('secret.password_required')}
+                            </p>
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <IconLock size={14} />
+                                </span>
+                                <input
+                                    type="password"
+                                    id="lemon-password"
+                                    placeholder="********"
+                                    value={password}
+                                    onChange={onPasswordChange}
+                                    maxLength={28}
+                                    required
+                                    className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                             focus:ring-2 focus:ring-gray-600 focus:border-transparent
+                                             text-gray-100 placeholder-gray-500"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Decryption Key Input */}
+                    {!encryptionKey && !isSecretOpen && (
+                        <div className="space-y-2">
+                            <p className="text-base text-gray-300">{t('secret.decryption_key')}</p>
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <IconShieldLock size={14} />
+                                </span>
+                                <input
+                                    type="text"
+                                    placeholder={t('secret.decryption_key_placeholder')}
+                                    value={decryptionKey}
+                                    onChange={(event) => setDecryptionKey(event.target.value)}
+                                    required
+                                    className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                             focus:ring-2 focus:ring-gray-600 focus:border-transparent
+                                             text-gray-100 placeholder-gray-500"
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-4">
+                    {/* View Secret Button */}
+                    {!isSecretOpen && (
+                        <button
+                            onClick={fetchSecret}
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white 
+                                     rounded-md hover:bg-gray-500 transition-colors"
                         >
+                            <IconEye size={14} />
+                            {t('secret.view_secret')}
+                        </button>
+                    )}
+
+                    {/* Convert Base64 Button */}
+                    {isSecretOpen && (
+                        <button
+                            onClick={convertBase64ToPlain}
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                     hover:bg-gray-700 hover:text-white rounded-md transition-colors"
+                        >
+                            <IconPerspective size={14} />
                             {!hasConvertedBase64ToPlain
                                 ? t('secret.convert_b64')
                                 : t('secret.convert_utf8')}
-                        </Button>
+                        </button>
                     )}
 
+                    {/* Create New Secret Button */}
                     {isSecretOpen && (
-                        <Button
-                            color="hemmelig"
-                            leftIcon={<IconSquarePlus size={14} />}
-                            component={Link}
+                        <Link
                             to="/"
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                     hover:bg-gray-700 hover:text-white rounded-md transition-colors"
                         >
+                            <IconSquarePlus size={14} />
                             {t('secret.create_secret')}
-                        </Button>
+                        </Link>
                     )}
 
-                    {files?.length &&
+                    {/* File Download Buttons */}
+                    {files?.length > 0 &&
                         files.map((file) => (
-                            <Button
+                            <button
                                 key={file.key}
-                                variant="outline"
-                                color="gray"
                                 onClick={() => onFileDownload(file)}
                                 disabled={isDownloaded.some((key) => key === file.key)}
-                                leftIcon={<IconDownload size={14} />}
+                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                     hover:bg-gray-700 hover:text-white rounded-md transition-colors
+                                     disabled:opacity-50 disabled:cursor-not-allowed"
                             >
+                                <IconDownload size={14} />
                                 {'hemmelig_files' + file.ext}
-                            </Button>
+                            </button>
                         ))}
-                </Group>
-            </Stack>
-        </Container>
+                </div>
+            </div>
+        </div>
     );
 };
 

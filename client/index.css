@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @font-face {
     font-family: 'Inter';
     font-style: normal;
@@ -161,4 +163,125 @@ html {
 
 .ql-editor {
     min-height: 200px;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply font-sans bg-gray-900 text-gray-100;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+    }
+
+    .btn-primary {
+        @apply btn bg-hemmelig text-white hover:bg-hemmelig-700;
+    }
+
+    .btn-danger {
+        @apply btn bg-red-500 text-white hover:bg-red-600;
+    }
+}
+
+/* Quill Editor Styles */
+.ql-toolbar {
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+}
+
+.ql-container {
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+}
+
+.ql-editor {
+    color: rgb(243, 244, 246) !important; /* text-gray-100 */
+    min-height: 150px;
+}
+
+.ql-editor.ql-blank::before {
+    color: rgb(107, 114, 128) !important; /* text-gray-500 */
+}
+
+/* Toolbar buttons - Updated colors */
+.ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
+    color: rgb(209, 213, 219) !important; /* text-gray-300 */
+}
+
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover {
+    color: rgb(243, 244, 246) !important; /* text-gray-100 */
+}
+
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active {
+    color: rgb(255, 255, 255) !important; /* text-white */
+    background-color: rgb(75, 85, 99) !important; /* bg-gray-600 */
+}
+
+/* Toolbar icons - Updated colors */
+.ql-snow .ql-stroke {
+    stroke: rgb(209, 213, 219) !important; /* text-gray-300 */
+}
+
+.ql-snow.ql-toolbar button:hover .ql-stroke,
+.ql-snow .ql-toolbar button:hover .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke {
+    stroke: rgb(255, 255, 255) !important; /* text-white */
+}
+
+.ql-snow .ql-fill {
+    fill: rgb(209, 213, 219) !important; /* text-gray-300 */
+}
+
+.ql-snow.ql-toolbar button:hover .ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-fill {
+    fill: rgb(255, 255, 255) !important; /* text-white */
+}
+
+/* Dropdown menus */
+.ql-snow .ql-picker {
+    color: rgb(209, 213, 219) !important; /* text-gray-300 */
+}
+
+.ql-snow .ql-picker-options {
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-label,
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    border-color: rgb(55, 65, 81) !important; /* border-gray-700 */
+}
+
+.ql-snow .ql-picker-label:hover,
+.ql-snow .ql-picker-item:hover,
+.ql-snow .ql-picker-item.ql-selected {
+    color: rgb(255, 255, 255) !important; /* text-white */
+}
+
+/* Links in editor */
+.ql-editor a {
+    color: rgb(209, 213, 219) !important; /* text-gray-300 */
+}
+
+/* Quill Bubble Theme Styles for Read-Only Mode */
+.ql-bubble .ql-editor {
+    padding: 1rem !important;
+    min-height: 100px !important;
+    background-color: rgb(31, 41, 55) !important; /* bg-gray-800 */
+    color: rgb(243, 244, 246) !important; /* text-gray-100 */
+}
+
+/* Remove default bubble theme tooltips */
+.ql-bubble .ql-tooltip {
+    display: none !important;
 }
