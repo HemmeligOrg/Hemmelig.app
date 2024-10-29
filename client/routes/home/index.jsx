@@ -18,7 +18,6 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -36,32 +35,18 @@ const Home = () => {
 
     const {
         formData,
-        setFormData,
-        ttl,
-        setTTL,
         enablePassword,
-        setEnablePassword,
         isPublic,
-        setIsPublic,
         creatingSecret,
-        setCreatingSecret,
         errors,
-        setErrors,
         secretId,
-        setSecretId,
         encryptionKey,
-        setEncryptionKey,
         reset,
         removeFile,
         handleSubmit,
         onEnablePassword,
         setField,
     } = useSecretStore();
-
-    const secretStore = useSecretStore();
-
-    const title = useSecretStore((state) => state.title);
-    const setTitle = useSecretStore((state) => state.setTitle);
 
     const onSubmit = (event) => handleSubmit(event, t);
 
@@ -83,27 +68,9 @@ const Home = () => {
         );
     }
 
-    const handleInputChange = useCallback(
-        (e) => {
-            const { name, value, type, checked } = e.target;
-            setFormData({ [name]: type === 'checkbox' ? checked : value });
-        },
-        [setFormData]
-    );
-
-    const onTextChange = useCallback(
-        (value) => {
-            setFormData({ text: value });
-        },
-        [setFormData]
-    );
-
-    const onSelectChange = (value) => {
-        setTTL(value);
-        setFormData({ ttl: value });
+    const onSetPublic = () => {
+        setField('isPublic', !isPublic);
     };
-
-    const onSetPublic = () => setIsPublic(!isPublic);
 
     const handleFocus = (event) => event.target.select();
 
@@ -137,6 +104,12 @@ const Home = () => {
     const disableFileUpload =
         (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
 
+    const dismissError = () => {
+        setField('errors.banner.title', '');
+        setField('errors.banner.message', '');
+        setField('errors.banner.dismissible', true);
+    };
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
             <form onSubmit={onSubmit} className="space-y-8">
@@ -151,15 +124,7 @@ const Home = () => {
                     <ErrorBanner
                         title={errors.banner.title}
                         message={errors.banner.message}
-                        onDismiss={
-                            errors.banner.dismissible
-                                ? () =>
-                                      setErrors((prev) => ({
-                                          ...prev,
-                                          banner: { title: '', message: '', dismissible: true },
-                                      }))
-                                : undefined
-                        }
+                        onDismiss={errors.banner.dismissible ? dismissError : undefined}
                     />
                 )}
 
@@ -169,7 +134,7 @@ const Home = () => {
                             <Quill
                                 name="text"
                                 value={formData.text}
-                                onChange={onTextChange}
+                                onChange={(value) => setField('formData.text', value)}
                                 readOnly={inputReadOnly}
                                 className={`
                                     bg-black/20 border-white/[0.08]
@@ -186,12 +151,11 @@ const Home = () => {
                                 <IconHeading size={18} />
                             </div>
                             <input
-                                key="title"
                                 type="text"
                                 name="title"
                                 placeholder={t('home.title')}
-                                value={title}
-                                onChange={(e) => secretStore.setField('title', e.target.value)}
+                                value={formData.title}
+                                onChange={(e) => setField('formData.title', e.target.value)}
                                 readOnly={inputReadOnly}
                                 className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md 
                                          focus:ring-2 focus:ring-hemmelig focus:border-transparent
@@ -264,7 +228,9 @@ const Home = () => {
                                         type="text"
                                         name="password"
                                         value={formData.password}
-                                        onChange={handleInputChange}
+                                        onChange={(e) =>
+                                            setField('formData.password', e.target.value)
+                                        }
                                         readOnly={inputReadOnly}
                                         className="w-full pl-10 pr-10 bg-gray-800 border border-gray-700 
                                                  rounded-lg text-gray-100 placeholder-gray-500
@@ -284,8 +250,8 @@ const Home = () => {
                                     <IconClock size={18} />
                                 </div>
                                 <select
-                                    value={ttl}
-                                    onChange={(e) => onSelectChange(e.target.value)}
+                                    value={formData.ttl}
+                                    onChange={(e) => setField('formData.ttl', e.target.value)}
                                     className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
                                              text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary
                                              appearance-none"
@@ -309,7 +275,7 @@ const Home = () => {
                                     type="number"
                                     name="maxViews"
                                     value={formData.maxViews}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => setField('formData.maxViews', e.target.value)}
                                     min="1"
                                     max="999"
                                     className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
@@ -337,7 +303,7 @@ const Home = () => {
                                 <Switch
                                     checked={formData.burnAfterReading}
                                     onChange={(checked) =>
-                                        setFormData({ burnAfterReading: checked })
+                                        setField('formData.burnAfterReading', checked)
                                     }
                                 >
                                     {t('home.burn_after_reading')}
@@ -362,7 +328,7 @@ const Home = () => {
                                     <Switch
                                         checked={formData.burnAfterTime}
                                         onChange={(checked) =>
-                                            setFormData({ burnAfterTime: checked })
+                                            setField('formData.burnAfterTime', checked)
                                         }
                                     >
                                         {t('home.burn_after_time')}
@@ -382,10 +348,7 @@ const Home = () => {
                                     id="fileUpload"
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files || []);
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            files: [...prev.files, ...files],
-                                        }));
+                                        setField('formData.files', [...formData.files, ...files]);
                                     }}
                                     multiple
                                     className="hidden"
@@ -456,8 +419,14 @@ const Home = () => {
                                  bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
                                  disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                        <IconLockAccess size={14} />
-                        {t('common.create')}
+                        {creatingSecret ? (
+                            <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-b-transparent mr-2" />
+                        ) : (
+                            <>
+                                <IconLockAccess size={14} />
+                                {t('common.create')}
+                            </>
+                        )}
                     </button>
 
                     {secretId && (
@@ -652,35 +621,38 @@ const Home = () => {
     );
 };
 
-const ErrorBanner = ({ message, onDismiss }) => (
-    <div
-        className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
+const ErrorBanner = ({ message, onDismiss }) => {
+    const { t } = useTranslation();
+    return (
+        <div
+            className="relative bg-gradient-to-br from-red-950/40 to-red-900/30 
                         backdrop-blur-sm rounded-xl border border-red-500/20 
                         shadow-lg shadow-red-500/5"
-    >
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
-        <div className="relative px-6 py-4">
-            <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
-                        <IconAlertCircle className="text-red-400" size={20} />
+        >
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
+            <div className="relative px-6 py-4">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
+                            <IconAlertCircle className="text-red-400" size={20} />
+                        </div>
+                        <p className="text-sm font-medium text-red-200 truncate">{message}</p>
                     </div>
-                    <p className="text-sm font-medium text-red-200 truncate">{message}</p>
-                </div>
-                {onDismiss && (
-                    <button
-                        onClick={onDismiss}
-                        className="flex-shrink-0 p-2 hover:bg-red-500/10 
+                    {onDismiss && (
+                        <button
+                            onClick={onDismiss}
+                            className="flex-shrink-0 p-2 hover:bg-red-500/10 
                                      rounded-lg transition-colors duration-200"
-                        aria-label={t('common.dismiss')}
-                    >
-                        <IconX className="text-red-400" size={16} />
-                    </button>
-                )}
+                            aria-label={t('common.dismiss')}
+                        >
+                            <IconX className="text-red-400" size={16} />
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const FieldError = ({ message }) => (
     <div className="flex items-center gap-2 mt-2">

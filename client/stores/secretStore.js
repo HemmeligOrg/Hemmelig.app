@@ -1,7 +1,16 @@
 import { generate } from 'generate-password-browser';
 import { create } from 'zustand';
+import { encrypt, generateKey } from '../../shared/helpers/crypto';
+import { createSecret } from '../api/secret';
+import { zipFiles } from '../helpers/zip';
 
-const useSecretStore = create((set) => ({
+const initialErrors = {
+    banner: { title: '', message: '', dismissible: true },
+    fields: { text: '', title: '' },
+    sections: { files: '' },
+};
+
+const useSecretStore = create((set, get) => ({
     formData: {
         text: '',
         title: '',
@@ -10,8 +19,8 @@ const useSecretStore = create((set) => ({
         maxViews: 1,
         burnAfterReading: false,
         burnAfterTime: false,
+        ttl: 3600,
     },
-    ttl: 3600,
     enablePassword: false,
     isPublic: false,
     creatingSecret: false,
@@ -23,22 +32,31 @@ const useSecretStore = create((set) => ({
     secretId: null,
     encryptionKey: '',
     title: '',
-    setFormData: (update) =>
-        set((state) => ({
-            formData: { ...state.formData, ...update },
-        })),
-    setTTL: (ttl) => set({ ttl }),
-    setTitle: (title) => set({ title }),
-    setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-    setEnablePassword: (enablePassword) => set({ enablePassword }),
-    setIsPublic: (isPublic) => set({ isPublic }),
-    setCreatingSecret: (creatingSecret) => set({ creatingSecret }),
-    setErrors: (errors) =>
-        set((state) => ({
-            errors: { ...state.errors, ...errors },
-        })),
-    setSecretId: (secretId) => set({ secretId }),
-    setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
+    setField: (field, value) =>
+        set((state) => {
+            if (field.startsWith('formData.')) {
+                const formField = field.split('.')[1];
+                return {
+                    formData: {
+                        ...state.formData,
+                        [formField]: value,
+                    },
+                };
+            }
+            if (field.startsWith('errors.')) {
+                const [category, subfield] = field.split('.').slice(1);
+                return {
+                    errors: {
+                        ...state.errors,
+                        [category]: {
+                            ...state.errors[category],
+                            [subfield]: value,
+                        },
+                    },
+                };
+            }
+            return { [field]: value };
+        }),
     reset: () =>
         set({
             formData: {
@@ -66,7 +84,13 @@ const useSecretStore = create((set) => ({
         set((state) => {
             const files = [...state.formData.files];
             files.splice(index, 1);
-            return { formData: { ...state.formData, files } };
+            const newFiles = {
+                formData: {
+                    ...state.formData,
+                    files,
+                },
+            };
+            return newFiles;
         }),
     handleSubmit: async (event, t) => {
         event.preventDefault();
@@ -80,13 +104,11 @@ const useSecretStore = create((set) => ({
             let encryptedText = state.formData.text;
             let key = '';
 
-            // Only encrypt if not public
             if (!state.isPublic) {
                 key = generateKey();
                 encryptedText = await encrypt(state.formData.text, key);
             }
 
-            // Handle file uploads if present
             let encryptedFiles = [];
             if (state.formData.files.length > 0) {
                 const zippedFiles = await zipFiles(state.formData.files);
@@ -97,11 +119,10 @@ const useSecretStore = create((set) => ({
                 }
             }
 
-            // Prepare payload
             const payload = {
                 text: encryptedText,
                 title: state.formData.title,
-                ttl: parseInt(state.ttl),
+                ttl: parseInt(state.formData.ttl),
                 maxViews: parseInt(state.formData.maxViews),
                 files: encryptedFiles,
                 password: state.enablePassword ? state.formData.password : '',
@@ -110,10 +131,8 @@ const useSecretStore = create((set) => ({
                 isPublic: state.isPublic,
             };
 
-            // Create secret
             const { id } = await createSecret(payload);
 
-            // Update store with new secret info
             set({
                 secretId: id,
                 encryptionKey: key,
@@ -138,21 +157,26 @@ const useSecretStore = create((set) => ({
         }
     },
     onEnablePassword: () =>
-        set((state) => ({
-            enablePassword: !state.enablePassword,
-            formData: {
-                ...state.formData,
-                password: !state.enablePassword
-                    ? generate({
-                          length: 12,
-                          numbers: true,
-                          symbols: true,
-                          uppercase: true,
-                          lowercase: true,
-                      })
-                    : '',
-            },
-        })),
+        set((state) => {
+            const newEnablePassword = !state.enablePassword;
+            const newPassword = newEnablePassword
+                ? generate({
+                      length: 12,
+                      numbers: true,
+                      symbols: true,
+                      uppercase: true,
+                      lowercase: true,
+                  })
+                : '';
+
+            return {
+                enablePassword: newEnablePassword,
+                formData: {
+                    ...state.formData,
+                    password: newPassword,
+                },
+            };
+        }),
 }));
 
 export default useSecretStore;
