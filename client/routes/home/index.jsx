@@ -1,8 +1,6 @@
 import {
     IconAlertCircle,
-    IconCheck,
     IconClock,
-    IconCopy,
     IconEye,
     IconFileUpload,
     IconFlame,
@@ -473,23 +471,7 @@ const Home = () => {
                                                  rounded-md text-gray-100"
                                     />
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                navigator.clipboard.writeText(getSecretURL(true))
-                                            }
-                                            className="p-1 hover:bg-gray-700 rounded-md group"
-                                            title={t('home.copy')}
-                                        >
-                                            <IconCopy
-                                                size={14}
-                                                className="text-gray-400 group-hover:hidden"
-                                            />
-                                            <IconCheck
-                                                size={14}
-                                                className="text-green-500 hidden group-hover:block"
-                                            />
-                                        </button>
+                                        <CopyButton textToCopy={getSecretURL(true)} />
                                     </div>
                                 </div>
                             </div>
@@ -517,25 +499,7 @@ const Home = () => {
                                                      rounded-md text-gray-100"
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    navigator.clipboard.writeText(
-                                                        getSecretURL(false)
-                                                    )
-                                                }
-                                                className="p-1 hover:bg-gray-700 rounded-md group"
-                                                title={t('home.copy')}
-                                            >
-                                                <IconCopy
-                                                    size={14}
-                                                    className="text-gray-400 group-hover:hidden"
-                                                />
-                                                <IconCheck
-                                                    size={14}
-                                                    className="text-green-500 hidden group-hover:block"
-                                                />
-                                            </button>
+                                            <CopyButton textToCopy={getSecretURL(false)} />
                                         </div>
                                     </div>
                                 </div>
@@ -557,23 +521,7 @@ const Home = () => {
                                                      rounded-md text-gray-100"
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    navigator.clipboard.writeText(encryptionKey)
-                                                }
-                                                className="p-1 hover:bg-gray-700 rounded-md group"
-                                                title={t('home.copy')}
-                                            >
-                                                <IconCopy
-                                                    size={14}
-                                                    className="text-gray-400 group-hover:hidden"
-                                                />
-                                                <IconCheck
-                                                    size={14}
-                                                    className="text-green-500 hidden group-hover:block"
-                                                />
-                                            </button>
+                                            <CopyButton textToCopy={encryptionKey} />
                                         </div>
                                     </div>
                                 </div>
