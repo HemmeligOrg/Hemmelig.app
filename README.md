@@ -115,7 +115,7 @@ docker run -p 3000:3000 -d --name=hemmelig \
    hemmeligapp/hemmelig:v5.19.4
 ```
 
-Alternatively you can use [docker-compose](https://docs.docker.com/compose/):
+Alternatively you can use [docker compose](https://docs.docker.com/compose/):
 
 ```bash
 # fetch docker-compose.yml
@@ -128,10 +128,10 @@ mkdir -p data/hemmelig database
 chown 1000:1000 data/hemmelig database
 
 # start hemmelig 
-docker-compose up -d
+docker compose up -d
 
 # stop containers
-docker-compose down
+docker compose down
 ```
 
 Have a look at the Dockerfile for a full example of how to run this application.
@@ -193,7 +193,7 @@ npm run dev
 
 ## Database
 Hemmelig has changed from using Redis as an backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
-`/database/hemmelig.db`. Have a look at the docker-compose file for how to handle the database.
+`/database/hemmelig.db`. Have a look at the docker-compose.yml file for how to handle the database.
 
 ## Admin, roles and settings
 Admins have access to adjust certain settings in Hemmelig. If you go to the account -> instance settings, you can see all the settings.
