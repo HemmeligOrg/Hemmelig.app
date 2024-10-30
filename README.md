@@ -16,7 +16,8 @@
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
-![Video](hemmelig_social.mp4)
+https://github.com/user-attachments/assets/fb237fdb-d811-4809-9d01-e0bb6e2b50be
+
 
 ## How it works
 
