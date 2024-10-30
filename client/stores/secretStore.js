@@ -19,7 +19,7 @@ const defaultValues = {
         files: [],
         maxViews: 1,
         preventBurn: false,
-        ttl: 3600,
+        ttl: 259200,
     },
     enablePassword: false,
     isPublic: false,
