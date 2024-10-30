@@ -137,23 +137,13 @@ fastify.addHook('preHandler', disableUserAccountCreationHandler);
 fastify.addHook('preHandler', readOnlyHandler);
 fastify.addHook('preHandler', restrictOrganizationEmailHandler);
 
-function serveIndex(_, reply) {
+fastify.get('/*', (request, reply) => {
+    if (request.url.startsWith('/api/')) {
+        return reply.callNotFound();
+    }
     return reply.html();
-}
+});
 
-fastify.get('/', serveIndex);
-fastify.get('/secret/*', serveIndex);
-fastify.get('/about', serveIndex);
-fastify.get('/privacy', serveIndex);
-fastify.get('/api-docs', serveIndex);
-fastify.get('/signin', serveIndex);
-fastify.get('/signup', serveIndex);
-fastify.get('/signout', serveIndex);
-fastify.get('/account*', serveIndex);
-fastify.get('/terms', serveIndex);
-fastify.get('/public*', serveIndex);
-fastify.get('/stats', serveIndex);
-fastify.get('/404', serveIndex);
 fastify.register(authenticationRoute, {
     prefix: '/api/authentication',
 });
