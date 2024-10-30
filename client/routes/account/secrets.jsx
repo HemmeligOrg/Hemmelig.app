@@ -1,4 +1,4 @@
-import { IconCheck, IconTrash } from '@tabler/icons';
+import { IconCheck, IconFileOff, IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
@@ -130,11 +130,10 @@ const Secrets = () => {
                         ))}
                         {secrets.length === 0 && (
                             <tr>
-                                <td
-                                    colSpan={4}
-                                    className="px-6 py-8 text-center text-gray-400 italic"
-                                >
-                                    {t('account.secrets.no_secrets')}
+                                <td colSpan={4} className="px-6 py-8 text-center text-gray-400">
+                                    <div className="flex items-center justify-center gap-2">
+                                        <IconFileOff size={18} />
+                                    </div>
                                 </td>
                             </tr>
                         )}
