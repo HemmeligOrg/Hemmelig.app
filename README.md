@@ -16,7 +16,7 @@
 
 Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 
-![Desktop](desktop.gif)
+![Video](hemmelig_social.mp4)
 
 ## How it works
 
@@ -29,12 +29,14 @@ Hemmelig is available at [https://hemmelig.app](https://hemmelig.app)
 4. Share the generated link with your recipient
 
 The security model works by:
+
 - Generating a unique encryption key for each secret
 - Performing all encryption in your browser before sending to the server
 - Including the decryption key only in the URL fragment (never stored on server)
 - Server only stores the encrypted data, never the plain text or keys
 
 Example encryption flow:
+
 ```javascript
 encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 // Only encryptedData is sent to server
@@ -44,6 +46,7 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 ## Features
 
 ### Core Security
+
 - Client-side encryption for all private content
 - Decryption key stored only in URL fragment, never in database
 - Optional password protection layer
@@ -51,6 +54,7 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 - Rate-limited API for abuse prevention
 
 ### Secret Management
+
 - Configurable secret lifetime
 - Maximum view count limits
 - Optional encrypted titles
@@ -58,10 +62,12 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 - Rich text formatting with inline image support
 
 ### File Handling
+
 - Encrypted file uploads for authenticated users
 - File size and type restrictions
 
 ### Sharing Options
+
 - Separate sharing of secret link and decryption key
 - QR code generation for secret links
 - Public paste option:
@@ -70,12 +76,14 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
   - Username-based public paste listing
 
 ### User Features
+
 - Extended secret expiration (14 and 28 days)
 - Personal file upload management
 - Secret listing and deletion
 - Account management
 
 ### Administrative Controls
+
 - User registration management
 - Read-only mode for non-admin users
 - File upload restrictions
@@ -83,6 +91,7 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 - Organization email domain restrictions
 
 ### Deployment Options
+
 - Self-hosted version available
 - SQLite database with Prisma ORM
 - CLI support for automation
@@ -92,7 +101,7 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 
 Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
 
-Supported docker platforms: `amd/64`, `arm/64`. 
+Supported docker platforms: `amd/64`, `arm/64`.
 
 - hemmeligapp/hemmelig:latest (Is created on each version release)
 - hemmeligapp/hemmelig:v5 (Is created on each version release for the major version)
@@ -159,7 +168,7 @@ npx hemmelig --help
 | `SECRET_JWT_SECRET`             | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
 | `SECRET_ROOT_USER`              | Override this for the root account username                           | groot                |
 | `SECRET_ROOT_PASSWORD`          | This is the root password, override it with your own password         | iamgroot             |
-| `SECRET_ROOT_EMAIL`             | This is the root email, override it with your own email               | groot@hemmelig.app   |
+| `SECRET_ROOT_EMAIL`             | This is the root email, override it with your own email               | <groot@hemmelig.app>   |
 | `SECRET_FILE_SIZE`              | Set the total allowed upload file size in mb.                         | 4                    |
 | `SECRET_FORCED_LANGUAGE`        | Set the default language for the application.                         | en                   |
 | `SECRET_UPLOAD_RESTRICTION`     | Set the restriction for uploads to signed in users                    | "true"               |
@@ -192,13 +201,16 @@ npm run dev
 ```
 
 ## Database
+
 Hemmelig has changed from using Redis as an backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
 `/database/hemmelig.db`. Have a look at the docker-compose.yml file for how to handle the database.
 
 ## Admin, roles and settings
+
 Admins have access to adjust certain settings in Hemmelig. If you go to the account -> instance settings, you can see all the settings.
 
 We also have different roles.
+
 - Admin
 - Creator
 - User
@@ -207,8 +219,8 @@ The difference here is that if you i.e. set Hemmelig to be in read only mode, on
 
 Admins are also allowed to create new users in the settings. This is great if you want to limit who your users are by the `disable user account creation` setting.
 
-
 ## My lovely contributors
+
 <a href="https://github.com/HemmeligOrg/Hemmelig.app/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=HemmeligOrg/Hemmelig.app" />
 </a>
@@ -217,8 +229,8 @@ Admins are also allowed to create new users in the settings. This is great if yo
 
 Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for the guidelines.
 
-
 ## Common errors
+
 If this errors occur on the first run of your hemmelig instance, this means there are some issues with the ownership of the files/directory for the database.
 
 ```bash
@@ -232,6 +244,7 @@ unable to open database file: ../database/hemmelig.db
 If you have any issues with uploading files for your instance, you will need the following as well:
 
 Here is an example of how you would solve that:
+
 ```bash
 sudo chown -R username.group /home/username/data/
 sudo chown -R username.group /home/username/database/
