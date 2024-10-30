@@ -21,8 +21,9 @@ async function statistics(fastify) {
             prisma.secret.count({
                 where: {
                     allowed_ip: {
-                        not: null,
-                        not: '',
+                        not: {
+                            in: [null, ''],
+                        },
                     },
                 },
             }),
