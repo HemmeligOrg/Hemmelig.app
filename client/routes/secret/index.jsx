@@ -214,14 +214,14 @@ const Secret = () => {
                     {/* Decryption Key Input */}
                     {!encryptionKey && !isSecretOpen && (
                         <div className="space-y-2">
-                            <p className="text-base text-gray-300">{t('secret.decryption_key')}</p>
+                            <p className="text-base text-gray-300">{t('home.decryption_key')}</p>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                     <IconShieldLock size={14} />
                                 </span>
                                 <input
                                     type="text"
-                                    placeholder={t('secret.decryption_key_placeholder')}
+                                    placeholder={t('home.decryption_key')}
                                     value={decryptionKey}
                                     onChange={(event) => setDecryptionKey(event.target.value)}
                                     required
