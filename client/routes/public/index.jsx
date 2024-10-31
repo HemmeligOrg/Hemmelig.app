@@ -65,11 +65,23 @@ const PublicSecrets = () => {
                         ))}
                         {secrets.length === 0 && (
                             <tr>
-                                <td
-                                    colSpan={3}
-                                    className="px-6 py-8 text-center text-gray-400 italic"
-                                >
-                                    {t('public.no_secrets')}
+                                <td colSpan={3} className="px-6 py-8 text-center text-gray-400">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <svg
+                                            className="w-8 h-8"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={1.5}
+                                                d="M6 18L18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                    </div>
                                 </td>
                             </tr>
                         )}
