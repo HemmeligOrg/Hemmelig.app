@@ -85,8 +85,12 @@ const useSecretStore = create((set, get) => ({
             const password = state.enablePassword ? state.formData.password : '';
             const key = generateKey(password);
 
-            const encryptedText = await encrypt(state.formData.text, key + password);
-            const encryptedTitle = await encrypt(state.formData.title, key + password);
+            const encryptedText = state.isPublic
+                ? state.formData.text
+                : await encrypt(state.formData.text, key + password);
+            const encryptedTitle = state.isPublic
+                ? state.formData.title
+                : await encrypt(state.formData.title, key + password);
 
             const encryptedFiles = [];
             if (state.formData.files.length > 0) {

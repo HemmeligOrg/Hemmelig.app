@@ -88,12 +88,16 @@ const Secret = () => {
             setError(json.error);
         } else {
             try {
-                const text = decrypt(json.secret, decryptionKey + password);
+                const text = json.isPublic
+                    ? json.secret
+                    : decrypt(json.secret, decryptionKey + password);
 
                 setSecret(text);
 
                 if (json.title) {
-                    setTitle(decrypt(json.title, decryptionKey + password));
+                    setTitle(
+                        json.isPublic ? json.title : decrypt(json.title, decryptionKey + password)
+                    );
                 }
 
                 if (json.files) {
