@@ -127,6 +127,8 @@ docker run -p 3000:3000 -d --name=hemmelig \
 
 Alternatively you can use [docker compose](https://docs.docker.com/compose/):
 
+**NEW**: Sign in with Github and edit the docker-compose.yml here https://www.dockerfile.app/docker-compose/cm2qfl57s00061059n94ruje5
+
 ```bash
 # fetch docker-compose.yml
 wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-compose.yml
