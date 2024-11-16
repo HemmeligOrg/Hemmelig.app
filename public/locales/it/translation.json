@@ -48,7 +48,7 @@
         },
         "settings": {
             "read_only_mode": "Modalità sola lettura",
-            "readonly_only_for_non_admin": "L'stanza Hemmelig può essere utilizzabile solo da utenti non amministratori?",
+            "readonly_only_for_non_admin": "L'istanza Hemmelig può essere utilizzabile solo da utenti non amministratori?",
             "disable_users": "Disabilita utenti",
             "disable_signin": "L'accesso utente dovrebbe essere disabilitato?",
             "disable_user_account_creation": "Disabilita la creazione di profili utente",
@@ -113,7 +113,7 @@
         "5_minutes": "5 minuti",
         "successful_share": "Condivisione riuscita",
         "get_your_secret": "Ottieni il tuo segreto a hemmelig.app.",
-        "file_upload": "Caricamento Files",
+        "file_upload": "Caricamento File",
         "content_title": "Titolo",
         "public_description": "I segreti pubblici sono elencati in /public e possono essere visualizzati da chiunque abbia il collegamento, a condizione che non venga impostata una password.",
         "private_description": "I segreti privati sono crittografati e possono essere visualizzati solo con la chiave di decriptazione e/o con la password.",
