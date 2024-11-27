@@ -63,6 +63,14 @@ const createAppRouter = () => {
                         }}
                     />
                     <Route
+                        path="account"
+                        element={<Account />}
+                        loader={async () => {
+                            const { getUser } = await import('./api/account');
+                            return await getUser();
+                        }}
+                    />
+                    <Route
                         path="secrets"
                         element={<Secrets />}
                         loader={async () => {
