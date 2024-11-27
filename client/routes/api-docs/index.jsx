@@ -58,66 +58,136 @@ const ApiDocs = () => {
 
                     {/* Secret Endpoints */}
                     <div className="bg-gray-800/50 rounded-lg p-4">
-                        <h3 className="text-lg font-medium text-white mb-4">Create Secret</h3>
-                        <div className="space-y-3">
-                            <div>
-                                <span className="inline-block px-2 py-1 text-sm font-medium bg-green-500/20 text-green-400 rounded">
-                                    POST
-                                </span>
-                                <span className="ml-2 text-gray-300">/api/v1/secret</span>
+                        <h3 className="text-lg font-medium text-white mb-4">Secret Management</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-green-500/20 text-green-400 rounded">
+                                        POST
+                                    </span>
+                                    <span className="ml-2 text-gray-300">/api/v1/secret</span>
+                                </div>
+                                <p className="text-gray-300 text-sm">Create a new secret</p>
+                                <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
+                                    <code>
+                                        {JSON.stringify(
+                                            {
+                                                text: 'Your secret message',
+                                                ttl: 86400, // Time in seconds
+                                                password: 'optional_password',
+                                                title: 'optional_title',
+                                                maxViews: 1,
+                                                allowedIp: 'optional_ip_or_cidr',
+                                                preventBurn: false,
+                                                isPublic: false,
+                                                files: [], // Optional array of files
+                                            },
+                                            null,
+                                            2
+                                        )}
+                                    </code>
+                                </pre>
                             </div>
-                            <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
-                                <code>
-                                    {JSON.stringify(
-                                        {
-                                            text: 'Your secret message',
-                                            expiration: 3600,
-                                            password: 'optional_password',
-                                            title: 'optional_title',
-                                            maxViews: 1,
-                                            allowedIp: 'optional_ip_or_cidr',
-                                            preventBurn: false,
-                                            isPublic: false,
-                                        },
-                                        null,
-                                        2
-                                    )}
-                                </code>
-                            </pre>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">/api/v1/secret/:id</span>
+                                </div>
+                                <p className="text-gray-300 text-sm">Retrieve a secret by ID</p>
+                                <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
+                                    <code>
+                                        {JSON.stringify(
+                                            {
+                                                password: 'optional_if_protected',
+                                            },
+                                            null,
+                                            2
+                                        )}
+                                    </code>
+                                </pre>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/secret/:id/exist
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">
+                                    Check if a secret exists and get its view count
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-red-500/20 text-red-400 rounded">
+                                        POST
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/secret/:id/burn
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">Delete a secret immediately</p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/secret/public/
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">List all public secrets</p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/secret/public/:username
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">
+                                    List public secrets for a specific user
+                                </p>
+                            </div>
                         </div>
                     </div>
 
+                    {/* File Endpoints */}
                     <div className="bg-gray-800/50 rounded-lg p-4">
-                        <h3 className="text-lg font-medium text-white mb-4">Get Secret</h3>
-                        <div className="space-y-3">
-                            <div>
-                                <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
-                                    GET
-                                </span>
-                                <span className="ml-2 text-gray-300">/api/v1/secret/:id</span>
-                            </div>
-                            <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
-                                <code>
-                                    {JSON.stringify(
-                                        {
-                                            password: 'optional_if_protected',
-                                        },
-                                        null,
-                                        2
-                                    )}
-                                </code>
-                            </pre>
-                        </div>
-                    </div>
-
-                    <div className="bg-gray-800/50 rounded-lg p-4">
-                        <h3 className="text-lg font-medium text-white mb-4">Burn Secret</h3>
-                        <div className="space-y-3">
-                            <div>
-                                <span className="inline-block px-2 py-1 text-sm font-medium bg-red-500/20 text-red-400 rounded">
-                                    POST
-                                </span>
-                                <span className="ml-2 text-gray-300">/api/v1/secret/:id/burn</span>
+                        <h3 className="text-lg font-medium text-white mb-4">File Management</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-green-500/20 text-green-400 rounded">
+                                        POST
+                                    </span>
+                                    <span className="ml-2 text-gray-300">/api/v1/download</span>
+                                </div>
+                                <p className="text-gray-300 text-sm">Download a file</p>
+                                <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
+                                    <code>
+                                        {JSON.stringify(
+                                            {
+                                                key: 'file_key',
+                                                secretId: 'secret_id',
+                                            },
+                                            null,
+                                            2
+                                        )}
+                                    </code>
+                                </pre>
                             </div>
                         </div>
                     </div>
@@ -194,8 +264,8 @@ const ApiDocs = () => {
                                         {JSON.stringify(
                                             {
                                                 email: 'required',
-                                                username: 'required',
-                                                password: 'required',
+                                                username: 'required (4-20 chars)',
+                                                password: 'required (5-50 chars)',
                                             },
                                             null,
                                             2
@@ -237,6 +307,34 @@ const ApiDocs = () => {
                                     </span>
                                 </div>
                             </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/authentication/verify
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">
+                                    Verify authentication status
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/authentication/refresh
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">
+                                    Refresh authentication token
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -246,14 +344,18 @@ const ApiDocs = () => {
                             Admin (Requires Admin Role)
                         </h3>
                         <div className="space-y-6">
+                            {/* User Management */}
                             <div className="space-y-3">
+                                <h4 className="text-md font-medium text-white">User Management</h4>
                                 <div>
                                     <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
                                         GET
                                     </span>
                                     <span className="ml-2 text-gray-300">/api/v1/admin/users</span>
                                 </div>
-                                <p className="text-gray-300 text-sm">List all users</p>
+                                <p className="text-gray-300 text-sm">
+                                    List all users (supports pagination with skip/take)
+                                </p>
                             </div>
 
                             <div className="space-y-3">
@@ -270,8 +372,8 @@ const ApiDocs = () => {
                                                 username: 'required',
                                                 password: 'required',
                                                 email: 'required',
-                                                role: 'required',
-                                                generated: true,
+                                                role: 'optional (default: user)',
+                                                generated: 'optional (default: true)',
                                             },
                                             null,
                                             2
@@ -292,8 +394,8 @@ const ApiDocs = () => {
                                         {JSON.stringify(
                                             {
                                                 username: 'required',
-                                                email: 'required',
-                                                role: 'required',
+                                                email: 'optional',
+                                                role: 'optional',
                                             },
                                             null,
                                             2
@@ -314,6 +416,48 @@ const ApiDocs = () => {
                                         {JSON.stringify(
                                             {
                                                 username: 'required',
+                                            },
+                                            null,
+                                            2
+                                        )}
+                                    </code>
+                                </pre>
+                            </div>
+
+                            {/* Settings Management */}
+                            <div className="space-y-3">
+                                <h4 className="text-md font-medium text-white">
+                                    Settings Management
+                                </h4>
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-blue-500/20 text-blue-400 rounded">
+                                        GET
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/admin/settings
+                                    </span>
+                                </div>
+                                <p className="text-gray-300 text-sm">Get application settings</p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="inline-block px-2 py-1 text-sm font-medium bg-yellow-500/20 text-yellow-400 rounded">
+                                        PUT
+                                    </span>
+                                    <span className="ml-2 text-gray-300">
+                                        /api/v1/admin/settings
+                                    </span>
+                                </div>
+                                <pre className="bg-gray-900/50 p-3 rounded-md text-gray-300 overflow-x-auto">
+                                    <code>
+                                        {JSON.stringify(
+                                            {
+                                                disable_users: 'required boolean',
+                                                disable_user_account_creation: 'required boolean',
+                                                read_only: 'required boolean',
+                                                disable_file_upload: 'required boolean',
+                                                restrict_organization_email: 'optional string',
                                             },
                                             null,
                                             2
