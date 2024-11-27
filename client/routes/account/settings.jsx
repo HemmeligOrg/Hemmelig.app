@@ -6,14 +6,21 @@ import { useLoaderData } from 'react-router-dom';
 import { updateSettings } from '../../api/settings';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
+import useSettingsStore from '../../stores/settingsStore';
 
 const Settings = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
     const { t } = useTranslation();
     const adminSettings = useLoaderData();
+    const { setSettings } = useSettingsStore();
 
     const [formData, setFormData] = useState(adminSettings);
+
+    // Initialize settings store with loaded data
+    useState(() => {
+        setSettings(adminSettings);
+    }, [adminSettings]);
 
     const onUpdateSettings = async (e) => {
         e.preventDefault();
@@ -34,6 +41,7 @@ const Settings = () => {
             }
 
             setFormData(updatedAdminSettings);
+            setSettings(updatedAdminSettings);
             setError(null);
             setSuccess(true);
 

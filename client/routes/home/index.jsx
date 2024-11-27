@@ -23,13 +23,14 @@ import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
-import config from '../../config';
 import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
+import useSettingsStore from '../../stores/settingsStore';
 
 const Home = () => {
     const { t } = useTranslation();
     const { isLoggedIn } = useAuthStore();
+    const { settings } = useSettingsStore();
 
     const {
         formData,
@@ -101,14 +102,15 @@ const Home = () => {
     };
 
     const inputReadOnly = !!secretId;
-    const disableFileUpload =
-        (config.get('settings.upload_restriction') && !isLoggedIn) || isPublic;
+    const disableFileUpload = isPublic;
 
     const dismissError = () => {
         setField('errors.banner.title', '');
         setField('errors.banner.message', '');
         setField('errors.banner.dismissible', true);
     };
+
+    console.log(settings);
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -330,77 +332,87 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                {!disableFileUpload && (
-                    <FormSection title={t('home.file_upload')} error={errors.sections.files}>
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="file"
-                                    id="fileUpload"
-                                    onChange={(e) => {
-                                        const files = Array.from(e.target.files || []);
-                                        setField('formData.files', [...formData.files, ...files]);
-                                    }}
-                                    multiple
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="fileUpload"
-                                    className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                             hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
-                                >
-                                    <IconFileUpload size={16} />
-                                    <span>{t('home.upload_files')}</span>
-                                </label>
-                            </div>
-
-                            {formData.files.length > 0 && (
-                                <div className="space-y-2">
-                                    {formData.files.map((file, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center justify-between bg-gray-800 
-                                                                          rounded-md px-3 py-2"
-                                        >
-                                            <span className="text-sm text-gray-300">
-                                                {file.name}
-                                            </span>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeFile(index)}
-                                                className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
-                                                title={t('home.remove_file')}
-                                            >
-                                                <IconTrash size={14} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </FormSection>
-                )}
-                {!isLoggedIn && (
-                    <FormSection title={t('home.file_upload')}>
-                        <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                            <div className="flex items-center space-x-3">
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                    <IconFileUpload className="text-primary" size={18} />
-                                </div>
-                                <div>
-                                    <div className="text-sm font-medium text-white/90">
-                                        {t('home.login_to_upload')}
-                                    </div>
-                                </div>
-                            </div>
-                            <Link
-                                to="/signin"
-                                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+                {!settings.disable_file_upload && (
+                    <>
+                        {!disableFileUpload && (
+                            <FormSection
+                                title={t('home.file_upload')}
+                                error={errors.sections.files}
                             >
-                                {t('home.sign_in')}
-                            </Link>
-                        </div>
-                    </FormSection>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="file"
+                                            id="fileUpload"
+                                            onChange={(e) => {
+                                                const files = Array.from(e.target.files || []);
+                                                setField('formData.files', [
+                                                    ...formData.files,
+                                                    ...files,
+                                                ]);
+                                            }}
+                                            multiple
+                                            className="hidden"
+                                        />
+                                        <label
+                                            htmlFor="fileUpload"
+                                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                                     hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
+                                        >
+                                            <IconFileUpload size={16} />
+                                            <span>{t('home.upload_files')}</span>
+                                        </label>
+                                    </div>
+
+                                    {formData.files.length > 0 && (
+                                        <div className="space-y-2">
+                                            {formData.files.map((file, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center justify-between bg-gray-800 
+                                                                                  rounded-md px-3 py-2"
+                                                >
+                                                    <span className="text-sm text-gray-300">
+                                                        {file.name}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeFile(index)}
+                                                        className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
+                                                        title={t('home.remove_file')}
+                                                    >
+                                                        <IconTrash size={14} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </FormSection>
+                        )}
+                        {!isLoggedIn && (
+                            <FormSection title={t('home.file_upload')}>
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <IconFileUpload className="text-primary" size={18} />
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.login_to_upload')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Link
+                                        to="/signin"
+                                        className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+                                    >
+                                        {t('home.sign_in')}
+                                    </Link>
+                                </div>
+                            </FormSection>
+                        )}
+                    </>
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -421,7 +433,7 @@ const Home = () => {
                     ) : (
                         <button
                             type="submit"
-                            disabled={creatingSecret}
+                            disabled={creatingSecret || settings.read_only}
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
                                      bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
                                      disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

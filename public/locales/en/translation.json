@@ -207,7 +207,9 @@
         "username": "Username",
         "password": "Your password",
         "signin": "Sign in",
-        "wrong_credentials": "Wrong username or password. Please try again."
+        "wrong_credentials": "Wrong username or password. Please try again.",
+        "redirecting": "Redirecting to your account...",
+        "users_disabled": "User sign-in is currently disabled by the administrator."
     },
     "signup": {
         "title": "Sign up",

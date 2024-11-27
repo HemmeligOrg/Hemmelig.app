@@ -7,10 +7,26 @@ import { signUp } from '../../api/authentication';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 import useAuthStore from '../../stores/authStore';
+import useSettingsStore from '../../stores/settingsStore';
 
 const SignUp = () => {
     const { t } = useTranslation();
     const { setLogin } = useAuthStore();
+    const { settings } = useSettingsStore();
+
+    // Show error message if signup is disabled
+    if (settings.disable_user_account_creation || settings.disable_users) {
+        return (
+            <div className="min-h-screen flex items-start justify-center pt-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
+                <div className="max-w-md w-full space-y-6">
+                    <div className="text-center space-y-2">
+                        <h1 className="text-2xl font-bold text-white">{t('signup.title')}</h1>
+                    </div>
+                    <ErrorBox message="Bummer! User sign-up is currently disabled by the administrator." />
+                </div>
+            </div>
+        );
+    }
 
     // Form state
     const [formData, setFormData] = useState({

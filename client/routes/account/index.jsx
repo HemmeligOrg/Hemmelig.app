@@ -6,13 +6,17 @@ import { useTranslation } from 'react-i18next';
 
 const HomeAccount = () => {
     const { t } = useTranslation();
-
     const userInfo = useLoaderData();
 
-    if (userInfo?.error || [401, 500].includes(userInfo.statusCode)) {
+    // Handle error cases
+    if (
+        !userInfo ||
+        userInfo.error ||
+        (userInfo.statusCode && [401, 500].includes(userInfo.statusCode))
+    ) {
         return (
             <div className="animate-fadeIn">
-                <ErrorBox message={userInfo.error ? userInfo.error : t('not_logged_in')} />
+                <ErrorBox message={userInfo?.error || t('not_logged_in')} />
             </div>
         );
     }

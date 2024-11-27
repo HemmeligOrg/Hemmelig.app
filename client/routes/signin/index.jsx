@@ -7,10 +7,26 @@ import { signIn } from '../../api/authentication';
 import ErrorBox from '../../components/error-box';
 import SuccessBox from '../../components/success-box';
 import useAuthStore from '../../stores/authStore';
+import useSettingsStore from '../../stores/settingsStore';
 
 const SignIn = () => {
     const { t } = useTranslation();
     const { setLogin } = useAuthStore();
+    const { settings } = useSettingsStore();
+
+    // Redirect if users are disabled
+    if (settings.disable_users) {
+        return (
+            <div className="min-h-screen flex items-start justify-center pt-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
+                <div className="max-w-md w-full space-y-6">
+                    <div className="text-center space-y-2">
+                        <h1 className="text-2xl font-bold text-white">{t('signin.title')}</h1>
+                    </div>
+                    <ErrorBox message={t('signin.users_disabled')} />
+                </div>
+            </div>
+        );
+    }
 
     // Form state
     const [formData, setFormData] = useState({
@@ -54,7 +70,7 @@ const SignIn = () => {
         }
 
         if (data.statusCode === 403) {
-            setError(data.error);
+            setError(data.message || t('signin.users_disabled'));
             setSuccess(false);
             return;
         }

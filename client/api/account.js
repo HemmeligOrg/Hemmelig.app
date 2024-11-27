@@ -1,21 +1,31 @@
 import config from '../config';
 
 export const getUser = async () => {
-    const data = await fetch(`${config.get('api.host')}/account/`, {
-        method: 'GET',
-        cache: 'no-cache',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+    try {
+        const data = await fetch(`${config.get('api.host')}/account/`, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-    if (data.status === 401) {
+        const json = await data.json();
+
+        if (!data.ok) {
+            return {
+                statusCode: data.status,
+                error: json.error || 'Failed to fetch user data',
+            };
+        }
+
+        return json;
+    } catch (error) {
         return {
-            statusCode: 401,
+            statusCode: 500,
+            error: 'Failed to fetch user data',
         };
     }
-
-    return data.json();
 };
 
 export const deleteUser = async () => {

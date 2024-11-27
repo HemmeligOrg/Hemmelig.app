@@ -13,6 +13,7 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
             icon: <IconUser size="1rem" stroke={1.5} />,
             to: '/signup',
         });
+
         navItems.push({
             label: t('sign_in'),
             icon: <IconLogin size="1rem" stroke={1.5} />,
@@ -43,11 +44,6 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
             label: t('privacy.title'),
             icon: <IconFingerprint size="1rem" stroke={1.5} />,
             to: '/privacy',
-        },
-        {
-            label: t('terms.title'),
-            icon: <IconList size="1rem" stroke={1.5} />,
-            to: '/terms',
         }
     );
 

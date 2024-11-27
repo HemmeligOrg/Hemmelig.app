@@ -15,7 +15,18 @@ export function updateAdminSettings(settings = {}) {
 
 // Create admin settings we can use by the server
 async function createAdminSettings() {
-    const [settings] = await prisma.settings.findMany({ where: { id: 'admin_settings' } });
+    const settings = await prisma.settings.upsert({
+        where: { id: 'admin_settings' },
+        update: {},
+        create: {
+            id: 'admin_settings',
+            disable_users: false,
+            disable_user_account_creation: false,
+            read_only: false,
+            disable_file_upload: false,
+            restrict_organization_email: '',
+        },
+    });
 
     updateAdminSettings(settings);
 }
@@ -56,12 +67,16 @@ async function createRootUser() {
     });
 }
 
+// Initialize the application
 (async function main() {
-    setInterval(() => {
-        dbCleaner();
-    }, 20 * 1000);
+    try {
+        await createAdminSettings();
+        await createRootUser();
 
-    createAdminSettings();
-
-    createRootUser();
+        setInterval(() => {
+            dbCleaner();
+        }, 20 * 1000);
+    } catch (error) {
+        console.error('Failed to initialize application:', error);
+    }
 })();
