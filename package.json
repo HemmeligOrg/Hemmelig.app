@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "prisma migrate deploy && node server.js",
-    "test": "mocha tests/**/*.test.js --reporter nyan",
+    "test": "mocha tests/**/*.test.js --reporter nyan && hurl --test tests/api/*.hurl",
     "test-watch": "mocha --watch tests/**/*.test.js --reporter nyan",
     "build": "node pre.js && vite build",
     "dev": "npm run server-dev",
