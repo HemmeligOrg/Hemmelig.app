@@ -248,6 +248,22 @@ const Secret = () => {
                         </button>
                     )}
 
+                    {/* File Download Buttons */}
+                    {files?.length > 0 &&
+                        files.map((file) => (
+                            <button
+                                key={file.key}
+                                onClick={() => onFileDownload(file)}
+                                disabled={isDownloaded.some((key) => key === file.key)}
+                                className="flex items-center gap-2 px-4 py-2 bg-hemmelig text-white 
+                                     hover:bg-hemmelig-700 rounded-md transition-colors
+                                     disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <IconDownload size={14} />
+                                {'hemmelig_files' + file.ext}
+                            </button>
+                        ))}
+
                     {/* Convert Base64 Button */}
                     {isSecretOpen && (
                         <button
@@ -273,22 +289,6 @@ const Secret = () => {
                             {t('secret.create_secret')}
                         </Link>
                     )}
-
-                    {/* File Download Buttons */}
-                    {files?.length > 0 &&
-                        files.map((file) => (
-                            <button
-                                key={file.key}
-                                onClick={() => onFileDownload(file)}
-                                disabled={isDownloaded.some((key) => key === file.key)}
-                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                     hover:bg-gray-700 hover:text-white rounded-md transition-colors
-                                     disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <IconDownload size={14} />
-                                {'hemmelig_files' + file.ext}
-                            </button>
-                        ))}
                 </div>
             </div>
         </div>
