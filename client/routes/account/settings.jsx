@@ -17,11 +17,6 @@ const Settings = () => {
 
     const [formData, setFormData] = useState(adminSettings);
 
-    // Initialize settings store with loaded data
-    useState(() => {
-        setSettings(adminSettings);
-    }, [adminSettings]);
-
     const onUpdateSettings = async (e) => {
         e.preventDefault();
 

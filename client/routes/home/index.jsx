@@ -102,15 +102,13 @@ const Home = () => {
     };
 
     const inputReadOnly = !!secretId;
-    const disableFileUpload = isPublic;
+    const disableFileUpload = isPublic || !isLoggedIn;
 
     const dismissError = () => {
         setField('errors.banner.title', '');
         setField('errors.banner.message', '');
         setField('errors.banner.dismissible', true);
     };
-
-    console.log(settings);
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
