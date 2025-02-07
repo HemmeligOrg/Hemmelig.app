@@ -7,6 +7,8 @@ import Nav from './components/header/nav';
 import MainLinks from './components/settings/main-links';
 import SecondaryLinks from './components/settings/secondary-links';
 
+import config from './config';
+
 const AdminShell = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -72,7 +74,9 @@ const AdminShell = () => {
 
                     {/* Version or Additional Info (optional) */}
                     <div className="pt-4 mt-4 border-t border-gray-700/50">
-                        <div className="px-3 text-xs text-gray-500">Hemmelig</div>
+                        <div className="px-3 text-xs text-gray-500">
+                            Hemmelig - {config.get('git.tag')} ({config.get('git.sha')})
+                        </div>
                     </div>
                 </div>
             </aside>
