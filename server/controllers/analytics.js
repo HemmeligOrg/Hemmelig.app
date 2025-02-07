@@ -7,10 +7,8 @@ import prisma from '../services/prisma.js';
 const { enabled, ipSalt } = config.get('analytics');
 
 function hashIP(ip) {
-    return crypto
-        .createHash('sha256')
-        .update(ip + ipSalt)
-        .digest('hex');
+    // Use HMAC for secure hashing
+    return crypto.createHmac('sha256', ipSalt).update(ip).digest('hex');
 }
 
 // Validate path to prevent malicious inputs
