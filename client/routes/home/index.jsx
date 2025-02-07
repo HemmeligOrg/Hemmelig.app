@@ -16,7 +16,7 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { burnSecret } from '../../api/secret';
@@ -33,6 +33,7 @@ const Home = () => {
     const { t } = useTranslation();
     const { isLoggedIn } = useAuthStore();
     const { settings } = useSettingsStore();
+    const [isDragging, setIsDragging] = useState(false);
 
     const {
         formData,
@@ -112,6 +113,37 @@ const Home = () => {
         setField('errors.banner.message', '');
         setField('errors.banner.dismissible', true);
     };
+
+    const handleDragEnter = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    }, []);
+
+    const handleDragLeave = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    }, []);
+
+    const handleDragOver = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    }, []);
+
+    const handleDrop = useCallback(
+        (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragging(false);
+
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length > 0) {
+                setField('formData.files', [...formData.files, ...files]);
+            }
+        },
+        [formData.files, setField]
+    );
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -353,28 +385,47 @@ const Home = () => {
                                 error={errors.sections.files}
                             >
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="file"
-                                            id="fileUpload"
-                                            onChange={(e) => {
-                                                const files = Array.from(e.target.files || []);
-                                                setField('formData.files', [
-                                                    ...formData.files,
-                                                    ...files,
-                                                ]);
-                                            }}
-                                            multiple
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="fileUpload"
-                                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                                     hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
-                                        >
-                                            <IconFileUpload size={16} />
-                                            <span>{t('home.upload_files')}</span>
-                                        </label>
+                                    <div
+                                        onDragEnter={handleDragEnter}
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={handleDrop}
+                                        className={`
+                                            flex flex-col items-center justify-center p-8
+                                            border-2 border-dashed rounded-lg transition-colors duration-200
+                                            ${
+                                                isDragging
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-white/[0.08] hover:border-white/[0.12] bg-black/20'
+                                            }
+                                        `}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="file"
+                                                id="fileUpload"
+                                                onChange={(e) => {
+                                                    const files = Array.from(e.target.files || []);
+                                                    setField('formData.files', [
+                                                        ...formData.files,
+                                                        ...files,
+                                                    ]);
+                                                }}
+                                                multiple
+                                                className="hidden"
+                                            />
+                                            <label
+                                                htmlFor="fileUpload"
+                                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
+                                                         hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
+                                            >
+                                                <IconFileUpload size={16} />
+                                                <span>{t('home.upload_files')}</span>
+                                            </label>
+                                        </div>
+                                        <p className="mt-2 text-sm text-gray-400">
+                                            {t('home.drag_and_drop')}
+                                        </p>
                                     </div>
 
                                     {formData.files.length > 0 && (
