@@ -51,8 +51,6 @@ const ApplicationShell = () => {
                     </div>
 
                     {/* Always visible links */}
-                    <span className="text-gray-600">|</span>
-
                     <a
                         href="https://github.com/HemmeligOrg/Hemmelig.app"
                         rel="noreferrer"
