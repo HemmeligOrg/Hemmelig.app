@@ -255,6 +255,8 @@
         "total_visits": "Total Visits",
         "unique_visitors": "Unique Visitors",
         "unique_paths": "Unique Paths",
-        "most_visited_paths": "Most Visited Paths"
+        "most_visited_paths": "Most Visited Paths",
+        "daily_visits": "Daily Visits (Last 30 Days)",
+        "daily_average": "Daily Average"
     }
 }
