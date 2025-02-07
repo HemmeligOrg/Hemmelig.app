@@ -249,5 +249,14 @@
         "average_views": "Average Views",
         "views_per_secret": "Views per secret",
         "description": "A comprehensive overview of your platform's usage and security features"
+    },
+    "analytics": {
+        "title": "Analytics Overview",
+        "total_visits": "Total Visits",
+        "unique_visitors": "Unique Visitors",
+        "unique_paths": "Unique Paths",
+        "most_visited_paths": "Most Visited Paths",
+        "daily_visits": "Daily Visits (Last 30 Days)",
+        "daily_average": "Daily Average"
     }
 }

@@ -1,13 +1,16 @@
 import config from 'config';
 import crypto from 'crypto';
+import { isbot } from 'isbot';
+import getClientIp from '../helpers/client-ip.js';
 import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
 
-function hashIP(ip) {
+function createUniqueId(ip, userAgent) {
+    // Use HMAC for secure hashing
     return crypto
-        .createHash('sha256')
-        .update(ip + ipSalt)
+        .createHmac('sha256', ipSalt)
+        .update(ip + userAgent)
         .digest('hex');
 }
 
@@ -28,7 +31,6 @@ async function analytics(fastify) {
                     required: ['path'],
                     properties: {
                         path: { type: 'string', maxLength: 255 },
-                        referrer: { type: 'string', maxLength: 1024 },
                     },
                 },
             },
@@ -39,29 +41,23 @@ async function analytics(fastify) {
             }
 
             try {
-                const { path, referrer } = request.body;
+                const { path } = request.body;
+                const userAgent = request.headers['user-agent'];
+                const uniqueId = createUniqueId(getClientIp(request.headers), userAgent);
+
+                if (isbot(userAgent)) {
+                    return reply.code(403).send({ success: false });
+                }
 
                 // Validate path
                 if (!isValidPath(path)) {
                     return reply.code(400).send({ error: 'Invalid path format' });
                 }
 
-                // Validate origin
-                const origin = request.headers.origin;
-                const allowedOrigins = config.get('cors');
-                if (origin && !allowedOrigins.includes(origin)) {
-                    return reply.code(403).send({ error: 'Invalid origin' });
-                }
-
-                const userAgent = request.headers['user-agent'];
-                const ipAddress = hashIP(request.ip);
-
                 await prisma.visitorAnalytics.create({
                     data: {
                         path,
-                        userAgent,
-                        ipAddress,
-                        referrer: referrer?.slice(0, 1024) || '', // Limit referrer length
+                        uniqueId,
                     },
                 });
 

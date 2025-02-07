@@ -1,4 +1,4 @@
-import { IconLock, IconSettings, IconUser } from '@tabler/icons';
+import { IconChartBar, IconLock, IconSettings, IconUser } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ function MainLink({ icon, color, label, route }) {
         teal: 'bg-teal-500/20 text-teal-400',
         violet: 'bg-violet-500/20 text-violet-400',
         grape: 'bg-purple-500/20 text-purple-400',
+        orange: 'bg-orange-500/20 text-orange-400',
     };
 
     return (
@@ -59,6 +60,12 @@ export default function MainLinks() {
             color: 'grape',
             label: t('users.users'),
             route: 'users',
+        },
+        {
+            icon: <IconChartBar size="1rem" />,
+            color: 'orange',
+            label: t('analytics.title'),
+            route: 'analytics',
         },
     ];
 

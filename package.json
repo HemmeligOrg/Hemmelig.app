@@ -55,6 +55,7 @@
     "generate-password-browser": "^1.1.0",
     "ip-range-check": "^0.2.0",
     "is-base64": "^1.1.0",
+    "isbot": "^5.1.22",
     "jsdom": "^22.1.0",
     "meow": "^11.0.0",
     "nanoid": "^3.1.31",

@@ -3,7 +3,6 @@ import { Route, createBrowserRouter, createRoutesFromElements } from 'react-rout
 import AdminShell from './admin-shell.jsx';
 import ApplicationShell from './app-shell.jsx';
 import ApiDocs from './routes/api-docs/index.jsx';
-import useSettingsStore from './stores/settingsStore';
 
 const Home = lazy(() => import('./routes/home'));
 const Secret = lazy(() => import('./routes/secret'));
@@ -18,12 +17,11 @@ const Secrets = lazy(() => import('./routes/account/secrets'));
 const Settings = lazy(() => import('./routes/account/settings'));
 const Users = lazy(() => import('./routes/account/users'));
 const UserAccount = lazy(() => import('./routes/account/account'));
+const Analytics = lazy(() => import('./routes/account/analytics'));
 const NotFound = lazy(() => import('./routes/not-found'));
 const Statistics = lazy(() => import('./routes/statistics'));
 
 const createAppRouter = () => {
-    const { settings } = useSettingsStore.getState();
-
     return createBrowserRouter(
         createRoutesFromElements(
             <>
@@ -100,6 +98,14 @@ const createAppRouter = () => {
                         loader={async () => {
                             const { getUsers } = await import('./api/users');
                             return await getUsers();
+                        }}
+                    />
+                    <Route
+                        path="analytics"
+                        element={<Analytics />}
+                        loader={async () => {
+                            const { getAnalyticsData } = await import('./services/analytics');
+                            return await getAnalyticsData();
                         }}
                     />
                     <Route path="privacy" element={<Privacy />} />
