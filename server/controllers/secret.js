@@ -124,12 +124,11 @@ async function secret(fastify) {
         {
             preValidation: [fastify.userFeatures, fastify.attachment],
             schema: {
-                // Add a schema to define expected input
                 body: {
                     type: 'object',
                     required: ['text', 'ttl'],
                     properties: {
-                        text: { type: 'string' },
+                        text: { type: 'string', minLength: 1 },
                         title: { type: 'string', maxLength: 255 },
                         ttl: { type: 'integer', minimum: 1, enum: VALID_TTL },
                         password: { type: 'string' },
