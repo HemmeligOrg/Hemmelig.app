@@ -10,7 +10,7 @@ const ApplicationShell = () => {
     const location = useLocation();
 
     useEffect(() => {
-        if (config.get('analytics.enabled')) {
+        if (config.get('settings.analytics.enabled')) {
             trackPageView(location.pathname);
         }
     }, [location.pathname]);

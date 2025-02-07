@@ -22,7 +22,7 @@ const {
     SECRET_UPLOAD_RESTRICTION = 'true', // true = only allow uploads from signed in users
     SECRET_RATE_LIMIT_MAX = 1000,
     SECRET_RATE_LIMIT_TIME_WINDOW = 60,
-    SECRET_ANALYTICS_ENABLED = 'false',
+    SECRET_ANALYTICS_ENABLED = 'true',
     SECRET_ANALYTICS_IP_SALT = '1234567890',
     NODE_ENV = 'development',
 } = process.env;
