@@ -1,9 +1,19 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import HeaderContent from './components/header';
 import config from './config';
+import { trackPageView } from './services/analytics';
+
 const ApplicationShell = () => {
     const { t } = useTranslation();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (config.get('settings.analytics.enabled')) {
+            trackPageView(location.pathname);
+        }
+    }, [location.pathname]);
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-900">

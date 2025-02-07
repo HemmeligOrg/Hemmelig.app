@@ -32,6 +32,7 @@ import restrictOrganizationEmailHandler from './server/prehandlers/restrict-orga
 import accountRoute from './server/controllers/account.js';
 import adminSettingsRoute from './server/controllers/admin/settings.js';
 import usersRoute from './server/controllers/admin/users.js';
+import analyticsRoute from './server/controllers/analytics.js';
 import authenticationRoute from './server/controllers/authentication.js';
 import downloadRoute from './server/controllers/download.js';
 import healthzRoute from './server/controllers/healthz.js';
@@ -173,6 +174,7 @@ fastify.register(adminSettingsRoute, {
 fastify.register(downloadRoute, { prefix: '/api/download' });
 fastify.register(secretRoute, { prefix: '/api/secret' });
 fastify.register(statsRoute, { prefix: '/api/stats' });
+fastify.register(analyticsRoute, { prefix: '/api/analytics' });
 fastify.register(healthzRoute, { prefix: '/api/healthz' });
 fastify.register(healthzRoute, { prefix: '/healthz' });
 

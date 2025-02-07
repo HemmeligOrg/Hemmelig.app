@@ -171,7 +171,7 @@ npx hemmelig --help
 | `SECRET_JWT_SECRET`             | Override this for the secret signin JWT tokens for log in             | good_luck_have_fun   |
 | `SECRET_ROOT_USER`              | Override this for the root account username                           | groot                |
 | `SECRET_ROOT_PASSWORD`          | This is the root password, override it with your own password         | iamgroot             |
-| `SECRET_ROOT_EMAIL`             | This is the root email, override it with your own email               | <groot@hemmelig.app>   |
+| `SECRET_ROOT_EMAIL`             | This is the root email, override it with your own email               | <groot@hemmelig.app> |
 | `SECRET_FILE_SIZE`              | Set the total allowed upload file size in mb.                         | 4                    |
 | `SECRET_FORCED_LANGUAGE`        | Set the default language for the application.                         | en                   |
 | `SECRET_UPLOAD_RESTRICTION`     | Set the restriction for uploads to signed in users                    | "true"               |
@@ -187,6 +187,8 @@ npx hemmelig --help
 | `SECRET_AWS_S3_SECRET`          | The Digital AWS s3 secret                                             | ""                   |
 | `SECRET_AWS_S3_BUCKET`          | The Digital AWS s3 bucket name                                        | ""                   |
 | `SECRET_AWS_S3_FOLDER`          | The Digital AWS s3 folder for the uploaded files                      | ""                   |
+| `SECRET_ANALYTICS_ENABLED`      | Enable analytics tracking                                             | "false"              |
+| `SECRET_ANALYTICS_IP_SALT`      | The salt for the analytics ip hashing                                 | "1234567890"         |
 
 ## Supported languages
 
