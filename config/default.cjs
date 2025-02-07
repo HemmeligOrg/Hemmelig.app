@@ -2,7 +2,6 @@ const {
     SECRET_LOCAL_HOSTNAME = '0.0.0.0',
     SECRET_PORT = '3000',
     SECRET_HOST = 'localhost',
-    SECRET_MASTER_KEY = '11111222223333344444555556666677', // has to be 32 in length
     SECRET_JWT_SECRET = 'good_luck_have_fun',
     SECRET_ROOT_USER = 'groot',
     SECRET_ROOT_PASSWORD = 'iamgroot',
@@ -31,7 +30,6 @@ const config = {
     env: NODE_ENV,
     host: SECRET_HOST,
     port: SECRET_PORT,
-    secret_key: SECRET_MASTER_KEY,
     upload_restriction: JSON.parse(SECRET_UPLOAD_RESTRICTION),
     rateLimit: {
         max: Number(SECRET_RATE_LIMIT_MAX),
