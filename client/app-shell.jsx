@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet } from 'react-router-dom';
 import HeaderContent from './components/header';
-
+import config from './config';
 const ApplicationShell = () => {
     const { t } = useTranslation();
 
@@ -56,7 +56,9 @@ const ApplicationShell = () => {
                         rel="noreferrer"
                         className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
                     >
-                        <span className="text-xs">Github</span>
+                        <span className="text-xs">
+                            Github - {config.get('git.tag')} ({config.get('git.sha')})
+                        </span>
                     </a>
                 </div>
             </footer>

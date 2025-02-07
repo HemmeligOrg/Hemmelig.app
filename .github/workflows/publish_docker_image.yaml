@@ -26,6 +26,10 @@ jobs:
               with:
                   fallback: no-tag
 
+            - name: Get short SHA
+              id: short_sha
+              run: echo "sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
             - name: Get major version
               id: major_version
               run: |
@@ -42,6 +46,9 @@ jobs:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:latest
+                  build-args: |
+                      GIT_SHA=${{ steps.short_sha.outputs.sha }}
+                      GIT_TAG=${{ steps.latest_tag.outputs.tag }}
 
             - name: Push to Docker Hub (full version)
               uses: docker/build-push-action@v4
@@ -49,6 +56,9 @@ jobs:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
+                  build-args: |
+                      GIT_SHA=${{ steps.short_sha.outputs.sha }}
+                      GIT_TAG=${{ steps.latest_tag.outputs.tag }}
 
             - name: Push to Docker Hub (minor version)
               uses: docker/build-push-action@v4
@@ -56,6 +66,9 @@ jobs:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.minor_version.outputs.version }}
+                  build-args: |
+                      GIT_SHA=${{ steps.short_sha.outputs.sha }}
+                      GIT_TAG=${{ steps.latest_tag.outputs.tag }}
 
             - name: Push to Docker Hub (major version)
               uses: docker/build-push-action@v4
@@ -63,3 +76,6 @@ jobs:
                   platforms: linux/amd64, linux/arm64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.major_version.outputs.version }}
+                  build-args: |
+                      GIT_SHA=${{ steps.short_sha.outputs.sha }}
+                      GIT_TAG=${{ steps.latest_tag.outputs.tag }}
