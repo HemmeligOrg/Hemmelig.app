@@ -110,6 +110,7 @@
         "login_to_upload": "Sign in to upload files",
         "public_no_upload": "Public pastes do not allow file uploads",
         "upload_files": "Upload files",
+        "drag_and_drop": "or drag and drop files here",
         "your_secret_url": "Your secret URL",
         "share": "Share",
         "create_secret_link": "Create a secret link",
