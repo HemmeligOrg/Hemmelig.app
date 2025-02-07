@@ -114,6 +114,7 @@
         "your_secret_url": "Your secret URL",
         "share": "Share",
         "create_secret_link": "Create a secret link",
+        "text_required": "Text is required",
         "or": "Separate the link and decryption key",
         "secret_url": "Secret URL without decryption key",
         "decryption_key": "Decryption key",
