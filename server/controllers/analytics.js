@@ -1,5 +1,6 @@
 import config from 'config';
 import crypto from 'crypto';
+import getClientIp from '../helpers/client-ip.js';
 import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
@@ -46,15 +47,8 @@ async function analytics(fastify) {
                     return reply.code(400).send({ error: 'Invalid path format' });
                 }
 
-                // Validate origin
-                const origin = request.headers.origin;
-                const allowedOrigins = config.get('cors');
-                if (origin && !allowedOrigins.includes(origin)) {
-                    return reply.code(403).send({ error: 'Invalid origin' });
-                }
-
                 const userAgent = request.headers['user-agent'];
-                const ipAddress = hashIP(request.ip);
+                const ipAddress = hashIP(getClientIp(request.headers));
 
                 await prisma.visitorAnalytics.create({
                     data: {
