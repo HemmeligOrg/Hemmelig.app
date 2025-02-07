@@ -597,7 +597,6 @@ const ErrorBanner = ({ message, onDismiss }) => {
                         backdrop-blur-sm rounded-xl border border-red-500/20 
                         shadow-lg shadow-red-500/5"
         >
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
             <div className="relative px-6 py-4">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 min-w-0">
