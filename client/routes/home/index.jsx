@@ -391,16 +391,27 @@ const Home = () => {
                                         onDragLeave={handleDragLeave}
                                         onDrop={handleDrop}
                                         className={`
-                                            flex flex-col items-center justify-center p-8
-                                            border-2 border-dashed rounded-lg transition-colors duration-200
+                                            relative flex flex-col items-center justify-center p-8
+                                            border-2 border-dashed rounded-lg transition-all duration-200
                                             ${
                                                 isDragging
-                                                    ? 'border-primary bg-primary/5'
-                                                    : 'border-white/[0.08] hover:border-white/[0.12] bg-black/20'
+                                                    ? 'border-primary bg-primary/10 scale-[1.01] shadow-lg shadow-primary/5'
+                                                    : 'border-white/[0.08] hover:border-white/[0.15] bg-black/20 hover:bg-black/30'
                                             }
                                         `}
                                     >
-                                        <div className="flex items-center gap-2">
+                                        <div
+                                            className={`
+                                            p-4 rounded-full mb-3 transition-all duration-200
+                                            ${isDragging ? 'bg-primary/10' : 'bg-white/[0.02]'}
+                                        `}
+                                        >
+                                            <IconFileUpload
+                                                size={24}
+                                                className={`transition-colors duration-200 ${isDragging ? 'text-primary' : 'text-gray-400'}`}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col items-center gap-2">
                                             <input
                                                 type="file"
                                                 id="fileUpload"
@@ -416,16 +427,19 @@ const Home = () => {
                                             />
                                             <label
                                                 htmlFor="fileUpload"
-                                                className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                                         hover:bg-gray-700 rounded-md cursor-pointer transition-colors"
+                                                className="flex items-center gap-2 px-4 py-2 
+                                                    bg-gray-800/80 text-gray-300 font-medium
+                                                    hover:bg-gray-700 rounded-md cursor-pointer 
+                                                    transition-all duration-200 hover:scale-[1.02]
+                                                    active:scale-[0.98]"
                                             >
                                                 <IconFileUpload size={16} />
                                                 <span>{t('home.upload_files')}</span>
                                             </label>
+                                            <p className="text-sm text-gray-400">
+                                                {t('home.drag_and_drop')}
+                                            </p>
                                         </div>
-                                        <p className="mt-2 text-sm text-gray-400">
-                                            {t('home.drag_and_drop')}
-                                        </p>
                                     </div>
 
                                     {formData.files.length > 0 && (
@@ -433,16 +447,29 @@ const Home = () => {
                                             {formData.files.map((file, index) => (
                                                 <div
                                                     key={index}
-                                                    className="flex items-center justify-between bg-gray-800 
-                                                                                  rounded-md px-3 py-2"
+                                                    className="flex items-center justify-between 
+                                                        bg-gradient-to-r from-gray-800/90 to-gray-800/70
+                                                        backdrop-blur-sm rounded-md px-4 py-3
+                                                        border border-white/[0.05] hover:border-white/[0.08]
+                                                        transition-all duration-200"
                                                 >
-                                                    <span className="text-sm text-gray-300">
-                                                        {file.name}
-                                                    </span>
+                                                    <div className="flex items-center gap-3 min-w-0">
+                                                        <div className="p-2 bg-white/[0.05] rounded-lg">
+                                                            <IconFileUpload
+                                                                size={14}
+                                                                className="text-gray-400"
+                                                            />
+                                                        </div>
+                                                        <span className="text-sm text-gray-300 truncate">
+                                                            {file.name}
+                                                        </span>
+                                                    </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => removeFile(index)}
-                                                        className="p-1 text-red-500 hover:bg-red-500/20 rounded-md"
+                                                        className="p-2 text-red-400 hover:text-red-300 
+                                                            hover:bg-red-500/10 rounded-lg
+                                                            transition-all duration-200"
                                                         title={t('home.remove_file')}
                                                     >
                                                         <IconTrash size={14} />
@@ -455,7 +482,7 @@ const Home = () => {
                             </FormSection>
                         )}
                         {config.get('settings.upload_restriction') && !isLoggedIn && (
-                            <FormSection title={t('home.file_upload')}>
+                            <FormSection title={t('home.file_upload')} collapsible={!isLoggedIn}>
                                 <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                     <div className="flex items-center space-x-3">
                                         <div className="p-2 bg-primary/10 rounded-lg">
