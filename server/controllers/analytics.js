@@ -31,7 +31,6 @@ async function analytics(fastify) {
                     required: ['path'],
                     properties: {
                         path: { type: 'string', maxLength: 255 },
-                        referrer: { type: 'string', maxLength: 1024 },
                     },
                 },
             },
