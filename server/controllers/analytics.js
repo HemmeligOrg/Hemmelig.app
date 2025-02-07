@@ -1,5 +1,6 @@
 import config from 'config';
 import crypto from 'crypto';
+import { isbot } from 'isbot';
 import getClientIp from '../helpers/client-ip.js';
 import prisma from '../services/prisma.js';
 
@@ -41,14 +42,17 @@ async function analytics(fastify) {
 
             try {
                 const { path, referrer } = request.body;
+                const userAgent = request.headers['user-agent'];
+                const ipAddress = hashIP(getClientIp(request.headers));
+
+                if (isbot(userAgent)) {
+                    return reply.code(403).send({ success: false });
+                }
 
                 // Validate path
                 if (!isValidPath(path)) {
                     return reply.code(400).send({ error: 'Invalid path format' });
                 }
-
-                const userAgent = request.headers['user-agent'];
-                const ipAddress = hashIP(getClientIp(request.headers));
 
                 await prisma.visitorAnalytics.create({
                     data: {
