@@ -4,3 +4,5 @@ example_request_do.log
 bin/
 .git
 hemmelig.backup.db
+*.mp4
+desktop.gif

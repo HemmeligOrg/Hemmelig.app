@@ -41,7 +41,6 @@ RUN npm ci --production --ignore-scripts
 RUN chown -R node:node ./
 
 COPY . .
-RUN rm -f *.mp4 *.gif
 
 RUN npx prisma generate
 
