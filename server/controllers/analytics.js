@@ -1,13 +1,22 @@
+import config from 'config';
 import crypto from 'crypto';
 import prisma from '../services/prisma.js';
 
-// Hash IP address for privacy
+const { enabled, ipSalt } = config.get('analytics');
+
 function hashIP(ip) {
-    return crypto.createHash('sha256').update(ip).digest('hex');
+    return crypto
+        .createHash('sha256')
+        .update(ip + ipSalt)
+        .digest('hex');
 }
 
 async function analytics(fastify) {
     fastify.post('/track', async (request, reply) => {
+        if (!enabled) {
+            return reply.code(403).send({ success: false });
+        }
+
         try {
             const { path, referrer } = request.body;
             const userAgent = request.headers['user-agent'];

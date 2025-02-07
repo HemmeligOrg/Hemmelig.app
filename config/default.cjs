@@ -22,6 +22,8 @@ const {
     SECRET_UPLOAD_RESTRICTION = 'true', // true = only allow uploads from signed in users
     SECRET_RATE_LIMIT_MAX = 1000,
     SECRET_RATE_LIMIT_TIME_WINDOW = 60,
+    SECRET_ANALYTICS_ENABLED = 'false',
+    SECRET_ANALYTICS_IP_SALT = '1234567890',
     NODE_ENV = 'development',
 } = process.env;
 
@@ -78,6 +80,10 @@ const config = {
         // /var/tmp files can live up to 30 days
         folder: `/var/tmp/hemmelig/upload/files/`,
     },
+    analytics: {
+        enabled: JSON.parse(SECRET_ANALYTICS_ENABLED),
+        ipSalt: SECRET_ANALYTICS_IP_SALT,
+    },
     logger: true,
     cors: '*',
     __client_config: {
@@ -87,6 +93,9 @@ const config = {
         settings: {
             forcedLanguage: SECRET_FORCED_LANGUAGE,
             upload_restriction: JSON.parse(SECRET_UPLOAD_RESTRICTION),
+            analytics: {
+                enabled: JSON.parse(SECRET_ANALYTICS_ENABLED),
+            },
         },
     },
 };
