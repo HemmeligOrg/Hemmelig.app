@@ -52,26 +52,11 @@ const ApplicationShell = () => {
 
                     {/* Always visible links */}
                     <a
-                        href="https://lite.hemmelig.app"
-                        rel="noreferrer"
-                        className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
-                    >
-                        Lite version
-                    </a>
-
-                    <span className="text-gray-600">|</span>
-
-                    <a
                         href="https://github.com/HemmeligOrg/Hemmelig.app"
                         rel="noreferrer"
                         className="text-xs text-gray-400 hover:text-gray-200 uppercase transition-colors"
                     >
-                        <span className="text-xs">
-                            <span role="img" aria-label="a heart">
-                                ❤️
-                            </span>{' '}
-                            By Hemmelig
-                        </span>
+                        <span className="text-xs">Github</span>
                     </a>
                 </div>
             </footer>
