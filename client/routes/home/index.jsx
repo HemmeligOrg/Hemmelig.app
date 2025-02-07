@@ -16,6 +16,7 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { burnSecret } from '../../api/secret';
@@ -168,7 +169,11 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                <FormSection title={t('home.security')} subtitle={t('home.security_description')}>
+                <FormSection
+                    title={t('home.security')}
+                    subtitle={t('home.security_description')}
+                    collapsible
+                >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <div className="space-y-2">
@@ -626,29 +631,68 @@ const FieldError = ({ message }) => (
     </div>
 );
 
-const FormSection = ({ title, subtitle, children, error }) => (
-    <div className="relative space-y-4">
-        {title && (
-            <div className="space-y-1">
-                <h2 className="text-lg font-semibold text-white/90">{title}</h2>
-                {subtitle && <p className="text-sm text-gray-400">{subtitle}</p>}
+const FormSection = ({ title, subtitle, children, error, collapsible }) => {
+    const [isCollapsed, setIsCollapsed] = useState(collapsible);
+
+    return (
+        <div className="relative space-y-4">
+            {title && (
+                <div
+                    className={`space-y-1 ${collapsible ? 'cursor-pointer' : ''}`}
+                    onClick={() => collapsible && setIsCollapsed(!isCollapsed)}
+                >
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-white/90">{title}</h2>
+                        {collapsible && (
+                            <button
+                                type="button"
+                                className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+                                aria-label={isCollapsed ? 'Expand' : 'Collapse'}
+                            >
+                                <svg
+                                    className={`w-5 h-5 transform transition-transform duration-200 ${
+                                        isCollapsed ? '-rotate-90' : ''
+                                    }`}
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
+                    {subtitle && <p className="text-sm text-gray-400">{subtitle}</p>}
+                </div>
+            )}
+            <div
+                className={`
+                    relative overflow-hidden transition-all duration-200 ease-in-out
+                    ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[2000px] opacity-100'}
+                `}
+            >
+                <div
+                    className={`
+                        relative overflow-hidden
+                        bg-gradient-to-br from-gray-800/50 to-gray-900/50
+                        backdrop-blur-sm
+                        rounded-xl
+                        border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
+                        shadow-xl shadow-black/10
+                    `}
+                >
+                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
+                    <div className="relative p-6">{children}</div>
+                </div>
             </div>
-        )}
-        <div
-            className={`
-                relative overflow-hidden
-                bg-gradient-to-br from-gray-800/50 to-gray-900/50
-                backdrop-blur-sm
-                rounded-xl
-                border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
-                shadow-xl shadow-black/10
-            `}
-        >
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
-            <div className="relative p-6">{children}</div>
+            {error && <FieldError message={error} />}
         </div>
-        {error && <FieldError message={error} />}
-    </div>
-);
+    );
+};
 
 export default Home;
