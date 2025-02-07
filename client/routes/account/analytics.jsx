@@ -101,7 +101,7 @@ const Analytics = () => {
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_visitors')}</h3>
                         <p className="text-2xl font-bold text-white mt-1">
-                            {new Set(analyticsData.map((item) => item.ipAddress)).size}
+                            {new Set(analyticsData.map((item) => item.uniqueId)).size}
                         </p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
