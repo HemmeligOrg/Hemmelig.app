@@ -6,9 +6,12 @@ import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
 
-function hashIP(ip) {
+function createUniqueId(ip, userAgent) {
     // Use HMAC for secure hashing
-    return crypto.createHmac('sha256', ipSalt).update(ip).digest('hex');
+    return crypto
+        .createHmac('sha256', ipSalt)
+        .update(ip + userAgent)
+        .digest('hex');
 }
 
 // Validate path to prevent malicious inputs
@@ -39,9 +42,9 @@ async function analytics(fastify) {
             }
 
             try {
-                const { path, referrer } = request.body;
+                const { path } = request.body;
                 const userAgent = request.headers['user-agent'];
-                const ipAddress = hashIP(getClientIp(request.headers));
+                const uniqueId = createUniqueId(getClientIp(request.headers), userAgent);
 
                 if (isbot(userAgent)) {
                     return reply.code(403).send({ success: false });
@@ -55,9 +58,7 @@ async function analytics(fastify) {
                 await prisma.visitorAnalytics.create({
                     data: {
                         path,
-                        userAgent,
-                        ipAddress,
-                        referrer: referrer?.slice(0, 1024) || '', // Limit referrer length
+                        uniqueId,
                     },
                 });
 

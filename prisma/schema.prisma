@@ -68,8 +68,6 @@ model Settings {
 model VisitorAnalytics {
     id        String   @id @unique @default(uuid())
     path      String // The page path that was visited
-    userAgent String? // Browser user agent
-    ipAddress String? // Visitor IP address (hashed for privacy)
-    referrer  String? // Where the visitor came from
+    uniqueId  String?
     timestamp DateTime @default(now())
 }
