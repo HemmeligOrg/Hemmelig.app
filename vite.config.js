@@ -9,13 +9,10 @@ const root = resolve(dirname(path), 'client');
 
 // Get git info
 const getGitInfo = () => {
-    try {
-        const sha = process.env.GIT_SHA || 'main';
-        const tag = process.env.GIT_TAG || 'latest';
-        return { sha, tag };
-    } catch (e) {
-        return { sha: 'unknown', tag: 'unknown' };
-    }
+    const sha = process.env.GIT_SHA || 'main';
+    const tag = process.env.GIT_TAG || 'latest';
+
+    return { sha, tag };
 };
 
 export default defineConfig({
