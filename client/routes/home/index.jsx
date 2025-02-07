@@ -597,7 +597,6 @@ const ErrorBanner = ({ message, onDismiss }) => {
                         backdrop-blur-sm rounded-xl border border-red-500/20 
                         shadow-lg shadow-red-500/5"
         >
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 rounded-xl" />
             <div className="relative px-6 py-4">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 min-w-0">
@@ -679,15 +678,11 @@ const FormSection = ({ title, subtitle, children, error, collapsible }) => {
                 <div
                     className={`
                         relative overflow-hidden
-                        bg-gradient-to-br from-gray-800/50 to-gray-900/50
-                        backdrop-blur-sm
-                        rounded-xl
-                        border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
-                        shadow-xl shadow-black/10
+                        md:bg-gradient-to-br md:from-gray-800/50 md:to-gray-900/50
+                        md:border ${error ? 'border-red-500/20' : 'border-white/[0.08]'}
                     `}
                 >
-                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10" />
-                    <div className="relative p-6">{children}</div>
+                    <div className="relative md:p-6">{children}</div>
                 </div>
             </div>
             {error && <FieldError message={error} />}
