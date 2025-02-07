@@ -11,32 +11,67 @@ function hashIP(ip) {
         .digest('hex');
 }
 
+// Validate path to prevent malicious inputs
+function isValidPath(path) {
+    // Only allow paths that start with / and contain safe characters
+    const pathRegex = /^\/[a-zA-Z0-9\-_/]*$/;
+    return pathRegex.test(path) && path.length <= 255 && !path.includes('/secret');
+}
+
 async function analytics(fastify) {
-    fastify.post('/track', async (request, reply) => {
-        if (!enabled) {
-            return reply.code(403).send({ success: false });
-        }
-
-        try {
-            const { path, referrer } = request.body;
-            const userAgent = request.headers['user-agent'];
-            const ipAddress = hashIP(request.ip);
-
-            await prisma.visitorAnalytics.create({
-                data: {
-                    path,
-                    userAgent,
-                    ipAddress,
-                    referrer,
+    fastify.post(
+        '/track',
+        {
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['path'],
+                    properties: {
+                        path: { type: 'string', maxLength: 255 },
+                        referrer: { type: 'string', maxLength: 1024 },
+                    },
                 },
-            });
+            },
+        },
+        async (request, reply) => {
+            if (!enabled) {
+                return reply.code(403).send({ success: false });
+            }
 
-            return reply.code(201).send({ success: true });
-        } catch (error) {
-            console.error('Analytics tracking error:', error);
-            return reply.code(500).send({ error: 'Failed to track analytics' });
+            try {
+                const { path, referrer } = request.body;
+
+                // Validate path
+                if (!isValidPath(path)) {
+                    return reply.code(400).send({ error: 'Invalid path format' });
+                }
+
+                // Validate origin
+                const origin = request.headers.origin;
+                const allowedOrigins = config.get('cors');
+                if (origin && !allowedOrigins.includes(origin)) {
+                    return reply.code(403).send({ error: 'Invalid origin' });
+                }
+
+                const userAgent = request.headers['user-agent'];
+                const ipAddress = hashIP(request.ip);
+
+                await prisma.visitorAnalytics.create({
+                    data: {
+                        path,
+                        userAgent,
+                        ipAddress,
+                        referrer: referrer?.slice(0, 1024) || '', // Limit referrer length
+                    },
+                });
+
+                return reply.code(201).send({ success: true });
+            } catch (error) {
+                console.error('Analytics tracking error:', error);
+                return reply.code(500).send({ error: 'Failed to track analytics' });
+            }
         }
-    });
+    );
 
     // Endpoint to get analytics data (protected, admin only)
     fastify.get(

@@ -16,15 +16,16 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
+import { trackPageView } from '../../services/analytics';
 import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
 import useSettingsStore from '../../stores/settingsStore';
@@ -34,6 +35,7 @@ const Home = () => {
     const { isLoggedIn } = useAuthStore();
     const { settings } = useSettingsStore();
     const [isDragging, setIsDragging] = useState(false);
+    const location = useLocation();
 
     const {
         formData,
@@ -49,6 +51,12 @@ const Home = () => {
         onEnablePassword,
         setField,
     } = useSecretStore();
+
+    useEffect(() => {
+        if (config.get('settings.analytics.enabled')) {
+            trackPageView(location.pathname);
+        }
+    }, [location.pathname]);
 
     const onSubmit = (event) => {
         handleSubmit(event, t);
