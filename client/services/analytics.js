@@ -7,7 +7,6 @@ const trackPageView = async (path) => {
             },
             body: JSON.stringify({
                 path,
-                referrer: document.referrer,
             }),
         });
     } catch (error) {
