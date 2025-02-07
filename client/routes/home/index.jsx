@@ -444,7 +444,7 @@ const Home = () => {
                     ) : (
                         <button
                             type="submit"
-                            disabled={creatingSecret || settings.read_only}
+                            disabled={creatingSecret || (settings.read_only && !isLoggedIn)}
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
                                      bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
                                      disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
