@@ -24,6 +24,7 @@ import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
+import config from '../../config';
 import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
 import useSettingsStore from '../../stores/settingsStore';
@@ -103,7 +104,8 @@ const Home = () => {
     };
 
     const inputReadOnly = !!secretId;
-    const disableFileUpload = isPublic || !isLoggedIn;
+    const disableFileUpload =
+        isPublic || (config.get('settings.upload_restriction') && !isLoggedIn);
 
     const dismissError = () => {
         setField('errors.banner.title', '');
@@ -401,7 +403,7 @@ const Home = () => {
                                 </div>
                             </FormSection>
                         )}
-                        {!isLoggedIn && (
+                        {config.get('settings.upload_restriction') && !isLoggedIn && (
                             <FormSection title={t('home.file_upload')}>
                                 <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                     <div className="flex items-center space-x-3">
