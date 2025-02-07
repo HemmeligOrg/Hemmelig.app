@@ -15,6 +15,11 @@ RUN npm install
 
 COPY . .
 
+ARG GIT_SHA
+ARG GIT_TAG
+ENV GIT_SHA=${GIT_SHA}
+ENV GIT_TAG=${GIT_TAG}
+
 ENV NODE_ENV=production
 
 RUN npm run build

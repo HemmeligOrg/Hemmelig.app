@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react';
-import { execSync } from 'child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tailwindcss from 'tailwindcss';
@@ -11,8 +10,8 @@ const root = resolve(dirname(path), 'client');
 // Get git info
 const getGitInfo = () => {
     try {
-        const sha = execSync('git rev-parse --short HEAD').toString().trim();
-        const tag = execSync('git describe --tags --abbrev=0').toString().trim();
+        const sha = process.env.GIT_SHA || 'main';
+        const tag = process.env.GIT_TAG || 'latest';
         return { sha, tag };
     } catch (e) {
         return { sha: 'unknown', tag: 'unknown' };
