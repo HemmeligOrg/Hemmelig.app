@@ -23,7 +23,7 @@ const {
     SECRET_RATE_LIMIT_MAX = 1000,
     SECRET_RATE_LIMIT_TIME_WINDOW = 60,
     SECRET_ANALYTICS_ENABLED = 'true',
-    SECRET_ANALYTICS_IP_SALT = '1234567890',
+    SECRET_ANALYTICS_HMAC_SECRET = '1234567890',
     NODE_ENV = 'development',
 } = process.env;
 
@@ -82,7 +82,7 @@ const config = {
     },
     analytics: {
         enabled: JSON.parse(SECRET_ANALYTICS_ENABLED),
-        ipSalt: SECRET_ANALYTICS_IP_SALT,
+        ipSalt: SECRET_ANALYTICS_HMAC_SECRET,
     },
     logger: true,
     cors: '*',

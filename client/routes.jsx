@@ -105,6 +105,7 @@ const createAppRouter = () => {
                         element={<Analytics />}
                         loader={async () => {
                             const { getAnalyticsData } = await import('./services/analytics');
+
                             return await getAnalyticsData();
                         }}
                     />

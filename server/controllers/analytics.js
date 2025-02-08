@@ -6,6 +6,29 @@ import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
 
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+function getCacheKey(endpoint) {
+    return `analytics_${endpoint}`;
+}
+
+function getFromCache(key) {
+    const cached = cache.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+    }
+    cache.delete(key);
+    return null;
+}
+
+function setCache(key, data) {
+    cache.set(key, {
+        timestamp: Date.now(),
+        data,
+    });
+}
+
 function createUniqueId(ip, userAgent) {
     // Use HMAC for secure hashing
     return crypto
@@ -77,6 +100,12 @@ async function analytics(fastify) {
         },
         async (request, reply) => {
             try {
+                const cacheKey = getCacheKey('data');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
                 const user = await prisma.user.findFirst({
                     where: { username: request.user.username },
                 });
@@ -89,13 +118,114 @@ async function analytics(fastify) {
                     orderBy: {
                         timestamp: 'desc',
                     },
-                    take: 1000, // Limit to last 1000 entries
+                    take: 1000,
                 });
 
+                setCache(cacheKey, analytics);
                 return reply.send(analytics);
             } catch (error) {
                 console.error('Analytics retrieval error:', error);
                 return reply.code(500).send({ error: 'Failed to retrieve analytics' });
+            }
+        }
+    );
+
+    // Endpoint to get aggregated analytics data (protected, admin only)
+    fastify.get(
+        '/data/aggregate/unique',
+        {
+            preValidation: [fastify.authenticate],
+        },
+        async (request, reply) => {
+            try {
+                const cacheKey = getCacheKey('aggregate_unique');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
+                const user = await prisma.user.findFirst({
+                    where: { username: request.user.username },
+                });
+
+                if (user.role !== 'admin') {
+                    return reply.code(403).send({ error: 'Unauthorized' });
+                }
+
+                const aggregatedData = await prisma.visitorAnalytics.groupBy({
+                    by: ['uniqueId', 'path'],
+                    _count: {
+                        uniqueId: true,
+                    },
+                    orderBy: {
+                        _count: {
+                            uniqueId: 'desc',
+                        },
+                    },
+                    having: {
+                        uniqueId: {
+                            _count: {
+                                gt: 0,
+                            },
+                        },
+                    },
+                });
+
+                setCache(cacheKey, aggregatedData);
+                return reply.send(aggregatedData);
+            } catch (error) {
+                console.error('Aggregated analytics retrieval error:', error);
+                return reply.code(500).send({ error: 'Failed to retrieve aggregated analytics' });
+            }
+        }
+    );
+
+    fastify.get(
+        '/data/aggregate/daily',
+        {
+            preValidation: [fastify.authenticate],
+        },
+        async (request, reply) => {
+            try {
+                const cacheKey = getCacheKey('aggregate_daily');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
+                const user = await prisma.user.findFirst({
+                    where: { username: request.user.username },
+                });
+
+                if (user.role !== 'admin') {
+                    return reply.code(403).send({ error: 'Unauthorized' });
+                }
+
+                const rawData = await prisma.$queryRaw`
+                    SELECT 
+                        strftime('%Y-%m-%d', "timestamp" / 1000, 'unixepoch') as date,
+                        COUNT(DISTINCT "uniqueId") as unique_visitors,
+                        COUNT(*) as total_visits,
+                        GROUP_CONCAT(DISTINCT path) as paths
+                    FROM "VisitorAnalytics"
+                    GROUP BY strftime('%Y-%m-%d', "timestamp" / 1000, 'unixepoch')
+                    ORDER BY date DESC
+                    LIMIT 30
+                `;
+
+                // Convert BigInt to Number before sending
+                const aggregatedData = rawData.map((row) => ({
+                    date: row.date,
+                    unique_visitors: Number(row.unique_visitors),
+                    total_visits: Number(row.total_visits),
+                    paths: row.paths,
+                }));
+
+                setCache(cacheKey, aggregatedData);
+                return reply.send(aggregatedData);
+            } catch (error) {
+                console.error('Daily analytics retrieval error:', error);
+                return reply.code(500).send({ error: 'Failed to retrieve daily analytics' });
             }
         }
     );

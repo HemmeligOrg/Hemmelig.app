@@ -44,6 +44,12 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 // uniqueEncryptionKey is only shared via URL
 ```
 
+## Hetzner Cloud Referral
+
+Hemmelig is proudly hosted on [Hetzner Cloud](https://hetzner.cloud/?ref=Id028KbCZQoD). Hetzner provides reliable and scalable cloud solutions, making it an ideal choice for hosting secure applications like Hemmelig. By using our [referral link](https://hetzner.cloud/?ref=Id028KbCZQoD), you can join Hetzner Cloud and receive €20/$20 in credits. Once you spend at least €10/$10 (excluding credits), Hemmelig will receive €10/$10 in Hetzner Cloud credits. This is a great opportunity to explore Hetzner's services while supporting Hemmelig.
+
+For more information on the referral program, visit your Hetzner Cloud Console and select the Referrals tab.
+
 ## Features
 
 ### Core Security
@@ -188,7 +194,7 @@ npx hemmelig --help
 | `SECRET_AWS_S3_BUCKET`          | The Digital AWS s3 bucket name                                        | ""                   |
 | `SECRET_AWS_S3_FOLDER`          | The Digital AWS s3 folder for the uploaded files                      | ""                   |
 | `SECRET_ANALYTICS_ENABLED`      | Enable analytics tracking                                             | "false"              |
-| `SECRET_ANALYTICS_IP_SALT`      | The salt for the analytics ip hashing                                 | "1234567890"         |
+| `SECRET_ANALYTICS_HMAC_SECRET`  | The HMAC secret for the analytics tracking                            | "1234567890"         |
 
 ## Supported languages
 
