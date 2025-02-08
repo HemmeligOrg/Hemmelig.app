@@ -188,7 +188,7 @@ npx hemmelig --help
 | `SECRET_AWS_S3_BUCKET`          | The Digital AWS s3 bucket name                                        | ""                   |
 | `SECRET_AWS_S3_FOLDER`          | The Digital AWS s3 folder for the uploaded files                      | ""                   |
 | `SECRET_ANALYTICS_ENABLED`      | Enable analytics tracking                                             | "false"              |
-| `SECRET_ANALYTICS_IP_SALT`      | The salt for the analytics ip hashing                                 | "1234567890"         |
+| `SECRET_ANALYTICS_HMAC_SECRET`  | The HMAC secret for the analytics tracking                            | "1234567890"         |
 
 ## Supported languages
 
