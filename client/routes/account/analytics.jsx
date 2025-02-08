@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import {
     Bar,
     BarChart,
@@ -11,42 +11,11 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import ErrorBox from '../../components/error-box';
-import { getAnalyticsData } from '../../services/analytics';
 
 const Analytics = () => {
     const { t } = useTranslation();
-    const [analyticsData, setAnalyticsData] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchAnalytics = async () => {
-            try {
-                const data = await getAnalyticsData();
-                setAnalyticsData(data);
-                setError(null);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAnalytics();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center p-8">
-                <div className="text-gray-400">{t('loading')}</div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return <ErrorBox message={error} />;
-    }
+    const analyticsData = useLoaderData();
 
     // Process data for path visualization
     const pathCounts = analyticsData.reduce((acc, item) => {
