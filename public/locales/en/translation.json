@@ -10,13 +10,13 @@
         "home": {
             "title": "Account",
             "update_password": "Update your password",
-            "first_time_message": "If this is the first time you sign in on this user account, you should go to Account settings and update your password",
+            "first_time_message": "If this is the first time you sign in on this user account, you must go to the account settings and update your password.",
             "hi": "Hi",
-            "intro": "We are glad you logged in. Here is the list of features signed in users get",
+            "intro": "We are glad you logged in. Extra features are available for signed in users.",
             "upload_files": "Upload files",
             "expiration": "Expiration time of 14 and 28 days for secrets",
             "secrets": "List and delete your secrets",
-            "more": "Thanks for joining Hemmelig.app!",
+            "more": "Thanks for joining the Hemmelig.app!",
             "features": "Features"
         },
         "account": {
@@ -95,7 +95,7 @@
         "app_subtitle": "Paste a password, confidential message, or private data.",
         "welcome": "Ensure your sensitive data remains encrypted, secure, and confidential.",
         "bummer": "Bummer!",
-        "maintxtarea": "Write your sensitive information..",
+        "maintxtarea": "Write your sensitive information",
         "file_upload": "Upload files",
         "content_title": "Title",
         "lifetime": "Lifetime",
