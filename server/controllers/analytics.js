@@ -6,6 +6,29 @@ import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
 
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+function getCacheKey(endpoint) {
+    return `analytics_${endpoint}`;
+}
+
+function getFromCache(key) {
+    const cached = cache.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+    }
+    cache.delete(key);
+    return null;
+}
+
+function setCache(key, data) {
+    cache.set(key, {
+        timestamp: Date.now(),
+        data,
+    });
+}
+
 function createUniqueId(ip, userAgent) {
     // Use HMAC for secure hashing
     return crypto
@@ -77,6 +100,12 @@ async function analytics(fastify) {
         },
         async (request, reply) => {
             try {
+                const cacheKey = getCacheKey('data');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
                 const user = await prisma.user.findFirst({
                     where: { username: request.user.username },
                 });
@@ -89,9 +118,10 @@ async function analytics(fastify) {
                     orderBy: {
                         timestamp: 'desc',
                     },
-                    take: 1000, // Limit to last 1000 entries
+                    take: 1000,
                 });
 
+                setCache(cacheKey, analytics);
                 return reply.send(analytics);
             } catch (error) {
                 console.error('Analytics retrieval error:', error);
@@ -108,6 +138,12 @@ async function analytics(fastify) {
         },
         async (request, reply) => {
             try {
+                const cacheKey = getCacheKey('aggregate_unique');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
                 const user = await prisma.user.findFirst({
                     where: { username: request.user.username },
                 });
@@ -135,6 +171,7 @@ async function analytics(fastify) {
                     },
                 });
 
+                setCache(cacheKey, aggregatedData);
                 return reply.send(aggregatedData);
             } catch (error) {
                 console.error('Aggregated analytics retrieval error:', error);
@@ -150,6 +187,12 @@ async function analytics(fastify) {
         },
         async (request, reply) => {
             try {
+                const cacheKey = getCacheKey('aggregate_daily');
+                const cachedData = getFromCache(cacheKey);
+                if (cachedData) {
+                    return reply.send(cachedData);
+                }
+
                 const user = await prisma.user.findFirst({
                     where: { username: request.user.username },
                 });
@@ -178,6 +221,7 @@ async function analytics(fastify) {
                     paths: row.paths,
                 }));
 
+                setCache(cacheKey, aggregatedData);
                 return reply.send(aggregatedData);
             } catch (error) {
                 console.error('Daily analytics retrieval error:', error);
