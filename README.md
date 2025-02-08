@@ -106,7 +106,7 @@ For more information on the referral program, visit your Hetzner Cloud Console a
 
 ## Docker image
 
-Hemmelig strongly advice you to ue the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
+Hemmelig strongly advise you to use the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
 
 Supported docker platforms: `amd/64`, `arm/64`.
 
@@ -213,7 +213,7 @@ npm run dev
 
 ## Database
 
-Hemmelig has changed from using Redis as an backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
+Hemmelig moved from using Redis as a backend to sqlite. Here we are using Prisma, and the sqlite file is available here:
 `/database/hemmelig.db`. Have a look at the docker-compose.yml file for how to handle the database.
 
 ## Admin, roles and settings
@@ -242,7 +242,7 @@ Feel free to contribute to this repository. Have a look at CONTRIBUTION.md for t
 
 ## Common errors
 
-If this errors occur on the first run of your hemmelig instance, this means there are some issues with the ownership of the files/directory for the database.
+If this error occurs on the first run of your Hemmelig instance, this means there are some issues with the ownership of the files/directory for the database.
 
 ```bash
 Datasource "db": SQLite database "hemmelig.db" at "file:../database/hemmelig.db"
@@ -252,7 +252,7 @@ SQLite database error
 unable to open database file: ../database/hemmelig.db
 ```
 
-If you have any issues with uploading files for your instance, you will need the following as well:
+If you have any issues with uploading files to your instance, you will need the following as well:
 
 Here is an example of how you would solve that:
 
