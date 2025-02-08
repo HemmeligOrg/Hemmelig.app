@@ -106,7 +106,7 @@ For more information on the referral program, visit your Hetzner Cloud Console a
 
 ## Docker image
 
-Hemmelig strongly advise you to use the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
+Hemmelig strongly advises you to use the tagged docker images as the main branch will have breaking changes now and then. For Hemmelig versions supporting Redis, use <= v4.4.0.
 
 Supported docker platforms: `amd/64`, `arm/64`.
 
