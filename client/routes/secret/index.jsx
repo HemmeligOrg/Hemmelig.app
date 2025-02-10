@@ -167,74 +167,95 @@ const Secret = () => {
                 {error && <ErrorBox message={error} />}
 
                 {/* Main Content */}
-                <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg">
-                    {/* Title if exists */}
-                    {title && (
-                        <div className="relative">
-                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                                <IconHeading size={14} />
-                            </span>
-                            <input
-                                type="text"
-                                value={title}
-                                readOnly
-                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
-                                         text-gray-100"
-                            />
-                        </div>
-                    )}
+                <div
+                    className={`space-y-6 p-6 rounded-lg transition-all duration-200 ${
+                        !isSecretOpen
+                            ? 'bg-gray-800/30 border-2 border-gray-700/50 shadow-lg relative'
+                            : 'bg-gray-800/50'
+                    }`}
+                >
+                    {!isSecretOpen && (
+                        <div className="flex flex-col items-center justify-center gap-8 py-8">
+                            <IconLock className="text-gray-600 animate-pulse" size={48} />
 
-                    {/* Secret Content */}
-                    {isSecretOpen && (
-                        <div className="w-full">
-                            <Quill value={secret} secretId={secretId} readOnly />
-                        </div>
-                    )}
+                            <div className="w-full max-w-md space-y-6">
+                                {/* Password Input */}
+                                {isPasswordRequired && (
+                                    <div className="space-y-2">
+                                        <p className="text-base text-center text-gray-300">
+                                            {t('secret.password_required')}
+                                        </p>
+                                        <div className="relative">
+                                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                                <IconLock size={14} />
+                                            </span>
+                                            <input
+                                                type="password"
+                                                id="lemon-password"
+                                                placeholder="********"
+                                                value={password}
+                                                onChange={onPasswordChange}
+                                                maxLength={28}
+                                                required
+                                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent
+                                                         text-gray-100 placeholder-gray-500"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
 
-                    {/* Password Input */}
-                    {isPasswordRequired && !isSecretOpen && (
-                        <div className="space-y-2">
-                            <p className="text-base text-gray-300">
-                                {t('secret.password_required')}
-                            </p>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                                    <IconLock size={14} />
-                                </span>
-                                <input
-                                    type="password"
-                                    id="lemon-password"
-                                    placeholder="********"
-                                    value={password}
-                                    onChange={onPasswordChange}
-                                    maxLength={28}
-                                    required
-                                    className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
-                                             focus:ring-2 focus:ring-gray-600 focus:border-transparent
-                                             text-gray-100 placeholder-gray-500"
-                                />
+                                {/* Decryption Key Input */}
+                                {!encryptionKey && (
+                                    <div className="space-y-2">
+                                        <p className="text-base text-center text-gray-300">
+                                            {t('home.decryption_key')}
+                                        </p>
+                                        <div className="relative">
+                                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                                <IconShieldLock size={14} />
+                                            </span>
+                                            <input
+                                                type="text"
+                                                placeholder={t('home.decryption_key')}
+                                                value={decryptionKey}
+                                                onChange={(event) =>
+                                                    setDecryptionKey(event.target.value)
+                                                }
+                                                required
+                                                className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                                         focus:ring-2 focus:ring-gray-600 focus:border-transparent
+                                                         text-gray-100 placeholder-gray-500"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
 
-                    {/* Decryption Key Input */}
-                    {!encryptionKey && !isSecretOpen && (
-                        <div className="space-y-2">
-                            <p className="text-base text-gray-300">{t('home.decryption_key')}</p>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                                    <IconShieldLock size={14} />
-                                </span>
-                                <input
-                                    type="text"
-                                    placeholder={t('home.decryption_key')}
-                                    value={decryptionKey}
-                                    onChange={(event) => setDecryptionKey(event.target.value)}
-                                    required
-                                    className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
-                                             focus:ring-2 focus:ring-gray-600 focus:border-transparent
-                                             text-gray-100 placeholder-gray-500"
-                                />
+                    {/* Secret Content when open */}
+                    {isSecretOpen && (
+                        <div>
+                            {/* Title if exists */}
+                            {title && (
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                        <IconHeading size={14} />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        value={title}
+                                        readOnly
+                                        className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
+                                                 text-gray-100"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Secret Content */}
+                            <div className="w-full">
+                                <Quill value={secret} secretId={secretId} readOnly />
                             </div>
                         </div>
                     )}
