@@ -5,6 +5,7 @@
     "not_logged_in": "Niet ingelogd",
     "something_went_wrong": "Er is iets misgegaan!",
     "loading": "Laden",
+    "common": {},
     "account": {
         "home": {
             "title": "Account",
@@ -15,7 +16,7 @@
             "upload_files": "Bestanden uploaden",
             "expiration": "Een verlooptijd voor geheimen van 14 of 28 dagen",
             "secrets": "Het bekijken en verwijderen van je geheimen",
-            "more": "Meer functies zullen later worden toegevoegd! Fijn dat je Hemmelig.app gebruikt!",
+            "more": "Fijn dat je Hemmelig.app gebruikt!",
             "features": "Functies"
         },
         "account": {
@@ -52,6 +53,8 @@
             "disable_signin": "Moet het inloggen door gebruikers op deze server uitgeschakeld worden?",
             "disable_user_account_creation": "Accounts aanmaken niet toestaan",
             "disable_user_account_creation_description": "Schakel het aanmaken van nieuwe accounts uit. Als beheerder kun je nog steeds nieuwe accounts aanmaken.",
+            "hide_allowed_ip_input": "Beperken op IP-adres uitschakelen",
+            "hide_allowed_ip_input_description": "Verberg het invoerveld om toegang te beperken op IP-adres of CIDR",
             "disable_file_upload": "Uploaden niet toestaan",
             "disable_file_upload_description": "Schakel het uploaden van bestanden uit.",
             "restrict_organization_email": "E-mailadressen tot een domein beperken",
@@ -69,7 +72,6 @@
             "do_you_want_delete": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
             "delete_user": "Verwijderen",
             "dont_delete_user": "Annuleren",
-            "deleted": "Gebruiker verwijderd",
             "have_to_be_admin": "Je moet een beheerder zijn om de lijst met gebruikers te kunnen inzien"
         }
     },
@@ -94,8 +96,12 @@
         "welcome": "Houd gevoelige informatie versleuteld en gescheiden van e-mails en chatlogs.",
         "bummer": "Helaas!",
         "maintxtarea": "Plaats hier de geheime informatie",
+        "file_upload": "Bestanden uploaden",
+        "content_title": "Titel",
         "lifetime": "Geldigheid",
         "max_views": "Max. aantal weergaven",
+        "public_description": "Openbare uitwisselingen staan vermeld in /public en kunnen door iedereen met de link worden bekeken zolang er geen wachtwoord is ingesteld.",
+        "private_description": "Geheimen zijn versleuteld en kunnen alleen worden bekeken met de sleutel en/of een wachtwoord.",
         "enable_password": "Wachtwoord gebruiken",
         "optional_password": "Optioneel wachtwoord",
         "burn_aftertime": "Het geheim alleen vernietigen als de geldigheidsduur is verstreken",
@@ -104,9 +110,11 @@
         "login_to_upload": "Log in om bestanden te uploaden",
         "public_no_upload": "Bestanden uploaden is uitgeschakeld voor openbare uitwisselingen",
         "upload_files": "Bestanden uploaden",
+        "drag_and_drop": "of sleep je bestanden hierheen",
         "your_secret_url": "Geheime link",
         "share": "Delen",
         "create_secret_link": "Geheime link maken",
+        "text_required": "Vul eerst tekst in",
         "or": "Link en sleutel gescheiden aanbieden",
         "secret_url": "Geheime link zonder sleutel",
         "decryption_key": "Sleutel",
@@ -128,10 +136,6 @@
         "successful_share": "Geheim is gedeeld",
         "get_your_secret": "Vind de geheime informatie op hemmelig.app.",
         "set_public": "Openbaar toegankelijk maken",
-        "file_upload": "Bestanden uploaden",
-        "content_title": "Titel",
-        "public_description": "Openbare uitwisselingen staan vermeld in /public en kunnen door iedereen met de link worden bekeken zolang er geen wachtwoord is ingesteld.",
-        "private_description": "Geheimen zijn versleuteld en kunnen alleen worden bekeken met de sleutel en/of een wachtwoord.",
         "title_description": "Geef je geheim een gemakkelijk te onthouden titel (optioneel)",
         "ttl_description": "Stel in hoe lang het geheim beschikbaar moet zijn",
         "max_views_description": "Aantal keren dat het geheim kan worden bekeken",
@@ -166,7 +170,9 @@
         "view_secret": "Geheim bekijken",
         "create_secret": "Nieuw geheim delen",
         "convert_b64": "Tekst naar Base64 converteren",
-        "convert_utf8": "Base64 naar platte tekst converteren"
+        "convert_utf8": "Base64 naar platte tekst converteren",
+        "decryption_key_required": "Sleutel vereist!",
+        "incorrect_password": "Ongeldig wachtwoord!"
     },
     "settings": {
         "success": "Geslaagd",
@@ -207,7 +213,9 @@
         "username": "Gebruikersnaam",
         "password": "Wachtwoord",
         "signin": "Inloggen",
-        "wrong_credentials": "Gebruikersnaam of wachtwoord onjuist. Probeer het opnieuw."
+        "wrong_credentials": "Gebruikersnaam of wachtwoord onjuist. Probeer het opnieuw.",
+        "redirecting": "Laden van je account...",
+        "users_disabled": "Gebruikersaccounts zijn op dit moment uitgeschakeld door de beheerder."
     },
     "signup": {
         "title": "Registreren",
@@ -222,5 +230,35 @@
     },
     "terms": {
         "title": "Algemene voorwaarden"
+    },
+    "not_found": {
+        "title": "Pagina niet gevonden",
+        "description": "Het lijkt erop dat dit geheim is verdwenen! Geen zorgen, je kunt een nieuwe aanmaken of onze documentatie raadplegen.",
+        "go_home": "Nieuw geheim",
+        "view_docs": "API-documentatie"
+    },
+    "statistics": {
+        "heading": "Platformstatistieken",
+        "overview": "Overzicht",
+        "security_features": "Beveiligingsfuncties",
+        "total_secrets": "Totaal",
+        "active_secrets": "Actieve geheimen",
+        "public_secrets": "Openbare uitwisselingen",
+        "total_users": "Aantal gebruikers",
+        "total_files": "Aantal bestanden",
+        "password_protected": "Met wachtwoord beveiligd",
+        "ip_restricted": "Beperkt op IP-adres",
+        "average_views": "Gemiddeld aantal weergaven",
+        "views_per_secret": "Aantal weergaven per geheim",
+        "description": "Een uitgebreid overzicht van het gebruik en de beveiligingsfuncties van je platform"
+    },
+    "analytics": {
+        "title": "Overzicht analytics",
+        "total_visits": "Aantal bezoekers",
+        "unique_visitors": "Unieke bezoekers",
+        "unique_paths": "Unieke pagina's",
+        "most_visited_paths": "Meest bezochte pagina's",
+        "daily_visits": "Aantal dagelijkse bezoeken (laatste 30 dagen)",
+        "daily_average": "Daggemiddelde"
     }
 }
