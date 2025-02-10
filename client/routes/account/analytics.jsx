@@ -14,7 +14,6 @@ import {
 
 const Analytics = () => {
     const { t } = useTranslation();
-
     const analyticsData = useLoaderData();
 
     // Process data for path visualization
@@ -32,19 +31,15 @@ const Analytics = () => {
         .slice(0, 10); // Show top 10 most visited paths
 
     // Process data for time-based visualization
-    const dailyVisits = analyticsData.reduce((acc, item) => {
-        const date = new Date(item.timestamp).toISOString().split('T')[0];
-        acc[date] = (acc[date] || 0) + 1;
-        return acc;
-    }, {});
+    const timeChartData = analyticsData.map((item) => ({
+        date: item.date,
+        visits: item.total_visits,
+    }));
 
-    const timeChartData = Object.entries(dailyVisits)
-        .map(([date, count]) => ({
-            date,
-            visits: count,
-        }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(-30); // Show last 30 days
+    const totalVisits = analyticsData.reduce((acc, item) => acc + item.total_visits, 0);
+    const uniqueVisitors = analyticsData.reduce((acc, item) => acc + item.unique_visitors, 0);
+    const uniquePaths = Object.keys(pathCounts).length;
+    const dailyAverage = Math.round(totalVisits / analyticsData.length);
 
     // Custom tooltip component
     const CustomTooltip = ({ active, payload, label }) => {
@@ -65,25 +60,19 @@ const Analytics = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.total_visits')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">{analyticsData.length}</p>
+                        <p className="text-2xl font-bold text-white mt-1">{totalVisits}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_visitors')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {new Set(analyticsData.map((item) => item.uniqueId)).size}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{uniqueVisitors}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_paths')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {Object.keys(pathCounts).length}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{uniquePaths}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.daily_average')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {Math.round(analyticsData.length / Object.keys(dailyVisits).length)}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{dailyAverage}</p>
                     </div>
                 </div>
 

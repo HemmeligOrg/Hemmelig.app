@@ -6,6 +6,8 @@ import { compare, hash } from '../helpers/password.js';
 
 export const validUsername = /^(?=.*[a-z])[a-z0-9]+$/is;
 
+const COOKIE_EXPIRATION_TIME = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+
 const COOKIE_KEY = config.get('jwt.cookie');
 const COOKIE_KEY_PUBLIC = COOKIE_KEY + '_PUBLIC';
 const SACRED_COOKIE_SETTINGS = {
@@ -14,6 +16,7 @@ const SACRED_COOKIE_SETTINGS = {
     secure: 'auto',
     sameSite: 'Strict',
     httpOnly: true,
+    expires: COOKIE_EXPIRATION_TIME,
 };
 const PUBLIC_COOKIE_SETTINGS = {
     domain: config.get('host'),
@@ -21,6 +24,7 @@ const PUBLIC_COOKIE_SETTINGS = {
     secure: 'auto',
     sameSite: 'Strict',
     httpOnly: false,
+    expires: COOKIE_EXPIRATION_TIME,
 };
 
 async function authentication(fastify) {
