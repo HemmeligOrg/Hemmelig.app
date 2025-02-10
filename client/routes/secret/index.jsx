@@ -155,7 +155,7 @@ const Secret = () => {
                     {maxViews > 0 && !preventBurn && (
                         <p className="text-base text-gray-400">
                             {t('secret.views_left')}{' '}
-                            <strong className="text-white">{maxViews - 1}</strong>
+                            <strong className="text-white">{maxViews}</strong>
                         </p>
                     )}
                 </div>
