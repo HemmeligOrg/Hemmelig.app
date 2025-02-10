@@ -39,7 +39,7 @@ const Analytics = () => {
     const totalVisits = analyticsData.reduce((acc, item) => acc + item.total_visits, 0);
     const uniqueVisitors = analyticsData.reduce((acc, item) => acc + item.unique_visitors, 0);
     const uniquePaths = Object.keys(pathCounts).length;
-    const dailyAverage = Math.round(totalVisits / uniqueVisitors);
+    const dailyAverage = Math.round(totalVisits / analyticsData.length);
 
     // Custom tooltip component
     const CustomTooltip = ({ active, payload, label }) => {
