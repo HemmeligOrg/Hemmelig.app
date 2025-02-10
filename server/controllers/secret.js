@@ -71,6 +71,7 @@ async function getSecretRoute(request, reply) {
     return {
         title: data.title,
         preventBurn: data.preventBurn,
+        maxViews: data.maxViews,
         secret: data.data,
         files: data.files,
         isPublic: data.isPublic,
@@ -111,7 +112,9 @@ async function secret(fastify) {
             return reply.code(200).send(
                 secrets.map((secret) => ({
                     id: secret.id,
+                    preventBurn: secret.preventBurn,
                     expiresAt: secret.expiresAt,
+                    maxViews: secret.maxViews,
                     isPublic: secret.isPublic,
                     title: secret.title,
                 }))
