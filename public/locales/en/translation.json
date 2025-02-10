@@ -170,7 +170,9 @@
         "view_secret": "View the secret",
         "create_secret": "Create a new secret",
         "convert_b64": "Convert text to base64",
-        "convert_utf8": "Convert base64 to plain text"
+        "convert_utf8": "Convert base64 to plain text",
+        "decryption_key_required": "Decryption key is required!",
+        "incorrect_password": "Incorrect password!"
     },
     "settings": {
         "success": "Success",

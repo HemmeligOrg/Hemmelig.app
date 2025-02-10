@@ -68,7 +68,7 @@ const Secret = () => {
         }
 
         if (!decryptionKey) {
-            setError('Decryption key is required!');
+            setError(t('secret.decryption_key_required'));
             return;
         }
 
@@ -81,7 +81,7 @@ const Secret = () => {
 
         if (json.statusCode === 401) {
             setIsPasswordRequired(true);
-            setError('Incorrect password!');
+            setError(t('secret.incorrect_password'));
             return;
         }
 
