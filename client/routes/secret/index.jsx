@@ -101,7 +101,13 @@ const Secret = () => {
                     );
                 }
 
-                setMaxViews((prev) => Math.max(0, prev - 1));
+                // Only decrement maxViews if we successfully decrypted the secret
+                if (!json.isPublic && !isPasswordRequired) {
+                    setMaxViews((prev) => Math.max(0, prev - 1));
+                } else {
+                    // If password protected
+                    setMaxViews(json.maxViews - 1);
+                }
 
                 if (json.files) {
                     setFiles(json.files);
