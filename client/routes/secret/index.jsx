@@ -195,6 +195,11 @@ const Secret = () => {
                                                 placeholder="********"
                                                 value={password}
                                                 onChange={onPasswordChange}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        fetchSecret(e);
+                                                    }
+                                                }}
                                                 maxLength={28}
                                                 required
                                                 className="w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md 
