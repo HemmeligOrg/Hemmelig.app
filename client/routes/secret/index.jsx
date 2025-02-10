@@ -101,7 +101,7 @@ const Secret = () => {
                     );
                 }
 
-                setMaxViews(json.maxViews);
+                setMaxViews((prev) => Math.max(0, prev - 1));
 
                 if (json.files) {
                     setFiles(json.files);
