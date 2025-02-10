@@ -19,7 +19,6 @@ const Users = lazy(() => import('./routes/account/users'));
 const UserAccount = lazy(() => import('./routes/account/account'));
 const Analytics = lazy(() => import('./routes/account/analytics'));
 const NotFound = lazy(() => import('./routes/not-found'));
-const Statistics = lazy(() => import('./routes/statistics'));
 
 const createAppRouter = () => {
     return createBrowserRouter(
@@ -116,7 +115,6 @@ const createAppRouter = () => {
                 </Route>
                 <Route path="404" element={<NotFound />} />
                 <Route path="/api-docs" element={<ApiDocs />} />
-                <Route path="/stats" element={<Statistics />} />
             </>
         )
     );
