@@ -48,7 +48,7 @@
         },
         "settings": {
             "read_only_mode": "Mode lecture seule",
-            "readonly_only_for_non_admin": "L'instance Hemmelig doit-elle être en lecture seule pour les utilisateurs non administrateurs ?",
+            "readonly_only_for_non_admin": "L'instance Hemmelig doit-elle être en lecture seule pour les utilisateurs non administrateurs ou créateurs ?",
             "disable_users": "Désactiver les utilisateurs",
             "disable_signin": "Désactiver la connexion des utilisateurs ?",
             "disable_user_account_creation": "Désactiver la création de nouveaux comptes",
