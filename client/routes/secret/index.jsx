@@ -153,10 +153,14 @@ const Secret = () => {
                     </h1>
                     <p className="text-base text-gray-400">{t('secret.will_show_once')}</p>
                     {maxViews > 0 && !preventBurn && (
-                        <p className="text-base text-gray-400">
-                            {t('secret.views_left')}{' '}
-                            <strong className="text-white">{maxViews}</strong>
-                        </p>
+                        <div className="flex justify-end -mt-2">
+                            <div className="inline-flex items-center gap-2 text-sm bg-gray-800/50 px-3 py-1.5 rounded-full">
+                                <span className="text-gray-400">{t('secret.views_left')}</span>
+                                <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-gray-700">
+                                    <strong className="text-white">{maxViews}</strong>
+                                </span>
+                            </div>
+                        </div>
                     )}
                 </div>
 
