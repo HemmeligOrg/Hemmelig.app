@@ -239,7 +239,7 @@ const Secret = () => {
                         <div>
                             {/* Title if exists */}
                             {title && (
-                                <div className="relative">
+                                <div className="relative mb-4">
                                     <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                         <IconHeading size={14} />
                                     </span>
