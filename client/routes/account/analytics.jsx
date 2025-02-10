@@ -36,6 +36,11 @@ const Analytics = () => {
         visits: item.total_visits,
     }));
 
+    const totalVisits = analyticsData.reduce((acc, item) => acc + item.total_visits, 0);
+    const uniqueVisitors = analyticsData.reduce((acc, item) => acc + item.unique_visitors, 0);
+    const uniquePaths = Object.keys(pathCounts).length;
+    const dailyAverage = Math.round(totalVisits / uniqueVisitors);
+
     // Custom tooltip component
     const CustomTooltip = ({ active, payload, label }) => {
         if (!active || !payload || !payload.length) return null;
@@ -55,25 +60,19 @@ const Analytics = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.total_visits')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">{analyticsData.length}</p>
+                        <p className="text-2xl font-bold text-white mt-1">{totalVisits}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_visitors')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {analyticsData.reduce((acc, item) => acc + item.unique_visitors, 0)}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{uniqueVisitors}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_paths')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {Object.keys(pathCounts).length}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{uniquePaths}</p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.daily_average')}</h3>
-                        <p className="text-2xl font-bold text-white mt-1">
-                            {Math.round(analyticsData.length / Object.keys(timeChartData).length)}
-                        </p>
+                        <p className="text-2xl font-bold text-white mt-1">{dailyAverage}</p>
                     </div>
                 </div>
 
