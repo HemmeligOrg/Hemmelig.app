@@ -287,7 +287,7 @@ const Secret = () => {
                                      disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <IconDownload size={14} />
-                                {'hemmelig_files' + file.ext}
+                                {'hemmelig_files.' + file.ext}
                             </button>
                         ))}
 
