@@ -1,33 +1,11 @@
 import config from 'config';
 import crypto from 'crypto';
 import { isbot } from 'isbot';
+import { getCacheKey, getFromCache, setCache } from '../helpers/cache.js';
 import getClientIp from '../helpers/client-ip.js';
 import prisma from '../services/prisma.js';
 
 const { enabled, ipSalt } = config.get('analytics');
-
-const cache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-function getCacheKey(endpoint) {
-    return `analytics_${endpoint}`;
-}
-
-function getFromCache(key) {
-    const cached = cache.get(key);
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return cached.data;
-    }
-    cache.delete(key);
-    return null;
-}
-
-function setCache(key, data) {
-    cache.set(key, {
-        timestamp: Date.now(),
-        data,
-    });
-}
 
 function createUniqueId(ip, userAgent) {
     // Use HMAC for secure hashing

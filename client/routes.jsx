@@ -104,9 +104,11 @@ const createAppRouter = () => {
                         path="analytics"
                         element={<Analytics />}
                         loader={async () => {
-                            const { getAnalyticsData } = await import('./services/analytics');
+                            const { getAnalyticsData, getStatistics } = await import(
+                                './services/analytics'
+                            );
 
-                            return await getAnalyticsData();
+                            return await Promise.all([getAnalyticsData(), getStatistics()]);
                         }}
                     />
                     <Route path="privacy" element={<Privacy />} />

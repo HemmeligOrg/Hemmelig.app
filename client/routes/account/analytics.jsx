@@ -14,7 +14,7 @@ import {
 
 const Analytics = () => {
     const { t } = useTranslation();
-    const analyticsData = useLoaderData();
+    const [analyticsData, stats] = useLoaderData();
 
     // Process data for path visualization
     const pathCounts = analyticsData.reduce((acc, item) => {
@@ -132,6 +132,50 @@ const Analytics = () => {
                                 <Bar dataKey="visits" fill="#818CF8" />
                             </BarChart>
                         </ResponsiveContainer>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">Total Secrets Created</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.totalSecretsCreated || 0}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">Active Secrets</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.activeSecrets || 0}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">Public Secrets</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.isPublicSecrets || 0}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">Password Protected</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.secretsWithPassword || 0}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">IP Restricted</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.secretsWithIpRestriction || 0}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                        <h3 className="text-gray-400 text-sm">Average Views Per Secret</h3>
+                        <p className="text-2xl font-bold text-white mt-1">
+                            {stats?.averageViewsPerSecret || 0}
+                        </p>
                     </div>
                 </div>
             </div>
