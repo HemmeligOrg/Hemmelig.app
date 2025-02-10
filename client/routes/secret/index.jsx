@@ -46,7 +46,7 @@ const Secret = () => {
     // Fetch secret existence on mount
     useEffect(() => {
         (async () => {
-            const response = await secretExists(secretId, password);
+            const response = await secretExists(secretId);
             if (response.statusCode === 401) {
                 setIsPasswordRequired(true);
                 return;
@@ -100,6 +100,8 @@ const Secret = () => {
                     );
                 }
 
+                setMaxViews(json.maxViews);
+
                 if (json.files) {
                     setFiles(json.files);
                 }
@@ -150,10 +152,10 @@ const Secret = () => {
                         {t('secret.view_your_secret')}
                     </h1>
                     <p className="text-base text-gray-400">{t('secret.will_show_once')}</p>
-                    {maxViews > 1 && (
+                    {maxViews > 0 && !preventBurn && (
                         <p className="text-base text-gray-400">
                             {t('secret.views_left')}{' '}
-                            <strong className="text-white">{maxViews}</strong>
+                            <strong className="text-white">{maxViews - 1}</strong>
                         </p>
                     )}
                 </div>
