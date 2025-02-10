@@ -14,7 +14,6 @@ import {
 
 const Analytics = () => {
     const { t } = useTranslation();
-
     const analyticsData = useLoaderData();
 
     // Process data for path visualization
@@ -32,19 +31,10 @@ const Analytics = () => {
         .slice(0, 10); // Show top 10 most visited paths
 
     // Process data for time-based visualization
-    const dailyVisits = analyticsData.reduce((acc, item) => {
-        const date = new Date(item.timestamp).toISOString().split('T')[0];
-        acc[date] = (acc[date] || 0) + 1;
-        return acc;
-    }, {});
-
-    const timeChartData = Object.entries(dailyVisits)
-        .map(([date, count]) => ({
-            date,
-            visits: count,
-        }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(-30); // Show last 30 days
+    const timeChartData = analyticsData.map((item) => ({
+        date: item.date,
+        visits: item.total_visits,
+    }));
 
     // Custom tooltip component
     const CustomTooltip = ({ active, payload, label }) => {
@@ -70,7 +60,7 @@ const Analytics = () => {
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.unique_visitors')}</h3>
                         <p className="text-2xl font-bold text-white mt-1">
-                            {new Set(analyticsData.map((item) => item.uniqueId)).size}
+                            {analyticsData.reduce((acc, item) => acc + item.unique_visitors, 0)}
                         </p>
                     </div>
                     <div className="bg-gray-700/30 p-4 rounded-lg">
@@ -82,7 +72,7 @@ const Analytics = () => {
                     <div className="bg-gray-700/30 p-4 rounded-lg">
                         <h3 className="text-gray-400 text-sm">{t('analytics.daily_average')}</h3>
                         <p className="text-2xl font-bold text-white mt-1">
-                            {Math.round(analyticsData.length / Object.keys(dailyVisits).length)}
+                            {Math.round(analyticsData.length / Object.keys(timeChartData).length)}
                         </p>
                     </div>
                 </div>

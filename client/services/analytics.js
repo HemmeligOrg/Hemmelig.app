@@ -16,7 +16,7 @@ const trackPageView = async (path) => {
 
 const getAnalyticsData = async () => {
     try {
-        const response = await fetch('/api/analytics/data', {
+        const response = await fetch('/api/analytics/data/aggregate/daily', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
