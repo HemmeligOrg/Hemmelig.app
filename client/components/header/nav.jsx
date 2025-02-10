@@ -1,4 +1,11 @@
-import { IconFingerprint, IconList, IconLockOff, IconLogin, IconUser } from '@tabler/icons';
+import {
+    IconFile,
+    IconFingerprint,
+    IconList,
+    IconLockOff,
+    IconLogin,
+    IconUser,
+} from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSettingsStore from '../../stores/settingsStore.js';
@@ -8,6 +15,18 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
 
     const { settings } = useSettingsStore();
     const navItems = [];
+    const footerNavItems = [
+        {
+            label: t('privacy.title'),
+            icon: <IconFingerprint size="1rem" stroke={1.5} />,
+            to: '/privacy',
+        },
+        {
+            label: t('terms.title'),
+            icon: <IconFile size="1rem" stroke={1.5} />,
+            to: '/terms',
+        },
+    ];
 
     const hideSignUp =
         isLoggedIn || settings.disable_user_account_creation || settings.disable_users;
@@ -39,18 +58,11 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
         });
     }
 
-    navItems.push(
-        {
-            label: t('public_list'),
-            icon: <IconList size="1rem" stroke={1.5} />,
-            to: '/public',
-        },
-        {
-            label: t('privacy.title'),
-            icon: <IconFingerprint size="1rem" stroke={1.5} />,
-            to: '/privacy',
-        }
-    );
+    navItems.push({
+        label: t('public_list'),
+        icon: <IconList size="1rem" stroke={1.5} />,
+        to: '/public',
+    });
 
     if (!opened) {
         return null;
@@ -71,6 +83,22 @@ const Nav = ({ opened, toggle, isLoggedIn }) => {
                         <span className="text-sm font-medium">{item.label}</span>
                     </Link>
                 ))}
+
+                {/* Footer links - only visible in mobile menu */}
+                <div className="md:hidden mt-4 pt-4 border-t border-gray-800">
+                    {footerNavItems.map((item) => (
+                        <Link
+                            key={item.label}
+                            to={item.to}
+                            onClick={toggle}
+                            className="flex items-center gap-2 px-4 py-2.5 text-gray-300 hover:text-white 
+                                     hover:bg-gray-800 rounded-md transition-colors duration-200"
+                        >
+                            <span className="text-gray-400">{item.icon}</span>
+                            <span className="text-sm font-medium">{item.label}</span>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </nav>
     );
