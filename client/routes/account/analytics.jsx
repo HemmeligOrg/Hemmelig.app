@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import {
-    Bar,
-    BarChart,
     CartesianGrid,
     Line,
     LineChart,
@@ -21,14 +19,6 @@ const Analytics = () => {
         acc[item.path] = (acc[item.path] || 0) + 1;
         return acc;
     }, {});
-
-    const pathChartData = Object.entries(pathCounts)
-        .map(([path, count]) => ({
-            path: path.length > 20 ? path.substring(0, 20) + '...' : path,
-            visits: count,
-        }))
-        .sort((a, b) => b.visits - a.visits)
-        .slice(0, 10); // Show top 10 most visited paths
 
     // Process data for time-based visualization
     const timeChartData = analyticsData.map((item) => ({
@@ -104,33 +94,6 @@ const Analytics = () => {
                                     strokeWidth={2}
                                 />
                             </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Most Visited Paths Chart */}
-                <div className="bg-gray-700/30 p-4 rounded-lg">
-                    <h2 className="text-lg font-semibold text-white mb-4">
-                        {t('analytics.most_visited_paths')}
-                    </h2>
-                    <div className="h-[400px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart
-                                data={pathChartData}
-                                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-                            >
-                                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                                <XAxis
-                                    dataKey="path"
-                                    tick={{ fill: '#9CA3AF' }}
-                                    angle={-45}
-                                    textAnchor="end"
-                                    height={60}
-                                />
-                                <YAxis tick={{ fill: '#9CA3AF' }} />
-                                <Tooltip content={<CustomTooltip />} />
-                                <Bar dataKey="visits" fill="#818CF8" />
-                            </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
