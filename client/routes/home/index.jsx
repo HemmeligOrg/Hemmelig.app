@@ -411,7 +411,7 @@ const Home = () => {
                                                 setField('formData.password', e.target.value);
                                             }}
                                             readOnly={inputReadOnly}
-                                            className="w-full pl-10 pr-10 py-3 bg-black/20 border border-white/[0.08]
+                                            className="w-full pl-10 pr-10 py-3 text-sm bg-black/20 border border-white/[0.08]
                                                      rounded-lg text-gray-100 placeholder-gray-500
                                                      hover:border-white/[0.12] focus:border-primary focus:ring-1 
                                                      focus:ring-primary/50 transition-all duration-200"
