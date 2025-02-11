@@ -11,7 +11,7 @@
             "update_password": "Passwort ändern",
             "first_time_message": "Falls dies das erste Mal ist, dass du dich mit diesem Benutzerkonto anmeldest, solltest du zu den Kontoeinstellungen gehen und dein Passwort aktualisieren",
             "hi": "Hi",
-            "intro": "Danke fürs Einloggen. Hier ist eine Liste der Funktionen, die angemeldete Benutzer erhalten",
+            "intro": "Schön, dass Du da bist! Als angemeldeter Benutzer hast du Zugriff auf weitere Funktionen.",
             "upload_files": "Dateien hochladen",
             "expiration": "Ablauffrist von 14 und 28 Tagen für Geheimnisse",
             "secrets": "Eigene Geheimnisse anzeigen und löschen",
