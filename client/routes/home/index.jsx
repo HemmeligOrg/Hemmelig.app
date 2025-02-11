@@ -387,6 +387,7 @@ const Home = () => {
                                                                    opacity-0 group-hover:opacity-100 transition-opacity
                                                                    whitespace-normal min-w-[150px] pointer-events-none"
                                                     >
+                                                        gh
                                                         {t('home.max_views_description')}
                                                     </span>
                                                 </div>
@@ -587,7 +588,7 @@ const Home = () => {
                             <button
                                 type="button"
                                 onClick={injectPasswordToQuill}
-                                className="inline-flex items-center gap-2 px-4 py-2 
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm
                                          bg-primary text-white rounded-md hover:bg-primary-600 
                                          transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={
