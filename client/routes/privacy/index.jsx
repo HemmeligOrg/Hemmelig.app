@@ -24,10 +24,22 @@ const Privacy = () => {
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold text-white">Do you track me?</h2>
                         <p className="text-gray-300 leading-relaxed">
-                            We do not track anything. Hemmelig cares strongly about your privacy.
-                            Future wise we might track the status of how many secrets that are being
-                            created, which is not personal data, and will be publicly available on
-                            this site.
+                            We use privacy-focused analytics to understand how Hemmelig is being
+                            used. Our analytics system is designed with privacy in mind:
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2 text-gray-300">
+                            <li>
+                                We use HMAC-based hashing to create anonymous visitor IDs - your
+                                actual IP address is never stored
+                            </li>
+                            <li>We only track page visits and basic usage patterns</li>
+                            <li>Bot traffic is automatically filtered out</li>
+                            <li>No personal information or secret content is ever tracked</li>
+                            <li>Analytics can be disabled completely via configuration</li>
+                        </ul>
+                        <p className="text-gray-300 leading-relaxed">
+                            This minimal tracking helps us improve the service while maintaining
+                            your privacy. All analytics data is aggregated and non-identifiable.
                         </p>
                     </section>
 
