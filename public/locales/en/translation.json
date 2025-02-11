@@ -169,7 +169,7 @@
         "lowercase_letters": "Lowercase Letters",
         "numbers": "Numbers",
         "special_characters": "Special Characters",
-        "inject_password": "Insert Password into Text"
+        "inject_password": "Insert Password"
     },
     "secret": {
         "view_your_secret": "View your secret",

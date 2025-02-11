@@ -559,11 +559,11 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex justify-end">
                             <button
                                 type="button"
                                 onClick={injectPasswordToQuill}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+                                className="inline-flex items-center gap-2 px-4 py-2 
                                          bg-primary text-white rounded-md hover:bg-primary-600 
                                          transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={
