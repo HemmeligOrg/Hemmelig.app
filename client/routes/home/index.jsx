@@ -449,7 +449,7 @@ const Home = () => {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-primary/10 rounded-lg">
