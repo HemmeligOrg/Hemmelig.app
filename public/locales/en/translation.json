@@ -161,8 +161,6 @@
         "sign_in": "Sign In",
         "complete_url": "Complete Secret URL",
         "complete_url_description": "This is the complete URL including the decryption key. Share this URL to give direct access to the secret.",
-        "password_generator": "Password Generator",
-        "password_generator_description": "Generate a secure password with custom requirements",
         "password_length": "Password Length",
         "characters": "characters",
         "uppercase_letters": "Uppercase Letters",
