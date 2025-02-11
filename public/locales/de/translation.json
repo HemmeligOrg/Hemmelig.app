@@ -258,6 +258,6 @@
         "public_secrets": "Öffentliche Geheimnisse",
         "password_protected": "Passwortgeschützt",
         "ip_restricted": "IP-beschränkt",
-        "average_max_views": "Durchschnittliche maximale Aufrufe pro Geheimnis"
+        "average_max_views": "Durchschnittlich erlaubte Aufrufe pro Geheimnis"
     }
 }
