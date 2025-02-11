@@ -259,6 +259,12 @@
         "unique_paths": "Unique Paths",
         "most_visited_paths": "Most Visited Paths",
         "daily_visits": "Daily Visits (Last 30 Days)",
-        "daily_average": "Daily Average"
+        "daily_average": "Daily Average",
+        "total_secrets_created": "Total Secrets Created",
+        "active_secrets": "Active Secrets",
+        "public_secrets": "Public Secrets",
+        "password_protected": "Password Protected",
+        "ip_restricted": "IP Restricted",
+        "average_max_views": "Average Max Views Per Secret"
     }
 }
