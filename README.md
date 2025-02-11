@@ -97,6 +97,17 @@ For more information on the referral program, visit your Hetzner Cloud Console a
 - User account creation controls
 - Organization email domain restrictions
 
+### Analytics Overview
+
+When analytics are enabled (`SECRET_ANALYTICS_ENABLED=true`), administrators and creators have access to detailed visitor analytics through their account dashboard. The analytics system provides:
+
+- Aggregated Monthly visitor analytics showing unique visitors and total visits
+- Aggregated secret statistics of the current state of the instance
+- Privacy-focused tracking that uses secure HMAC hashing for visitor identification
+- Data caching for improved performance
+
+All analytics data excludes bot traffic and respects user privacy by not storing raw IP addresses or personal information.
+
 ### Deployment Options
 
 - Self-hosted version available
