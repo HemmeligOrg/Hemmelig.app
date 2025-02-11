@@ -117,7 +117,9 @@ const Home = () => {
 
     const inputReadOnly = !!secretId;
     const disableFileUpload =
-        isPublic || (config.get('settings.upload_restriction') && !isLoggedIn);
+        (config.get('settings.upload_restriction') && !isLoggedIn) ||
+        isPublic ||
+        settings.disable_file_upload;
 
     const dismissError = () => {
         setField('errors.banner.title', '');
@@ -311,7 +313,7 @@ const Home = () => {
                                 )}
                             </div>
                         )}
-                        {config.get('settings.upload_restriction') && !isLoggedIn && (
+                        {disableFileUpload && (
                             <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-primary/10 rounded-lg">
