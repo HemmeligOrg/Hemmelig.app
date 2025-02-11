@@ -385,7 +385,7 @@ const Home = () => {
                                         <span className="text-sm font-medium mb-0.5">
                                             {t('home.password')}
                                         </span>
-                                        <span className="text-xs text-gray-400 line-clamp-2">
+                                        <span className="text-xs text-left text-gray-400 line-clamp-2">
                                             {t(
                                                 'home.password_description',
                                                 'Add an additional layer of security with a password'
