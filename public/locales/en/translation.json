@@ -168,7 +168,8 @@
         "numbers": "Numbers",
         "special_characters": "Special Characters",
         "inject_password": "Insert Password",
-        "views": "view(s)"
+        "views": "view(s)",
+        "error_creating_secret": "Error creating the secret"
     },
     "secret": {
         "view_your_secret": "View your secret",
