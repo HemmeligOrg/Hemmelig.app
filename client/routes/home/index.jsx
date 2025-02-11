@@ -238,7 +238,7 @@ const Home = () => {
                                         <span className="text-sm font-medium mb-0.5">
                                             {t(isPublic ? 'home.public' : 'home.private')}
                                         </span>
-                                        <span className="text-xs text-gray-400 line-clamp-2">
+                                        <span className="text-xs text-gray-400 text-left">
                                             {isPublic
                                                 ? t('home.public_description')
                                                 : t('home.private_description')}
@@ -303,23 +303,25 @@ const Home = () => {
                             {!settings.hide_allowed_ip_input && (
                                 <div className="space-y-2">
                                     <div className="relative">
-                                        <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                        <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
                                             <IconNetwork size={18} />
                                         </div>
-                                        <input
-                                            type="text"
-                                            name="allowedIp"
-                                            placeholder="0.0.0.0/0"
-                                            value={formData.allowedIp}
-                                            onChange={(e) =>
-                                                setField('formData.allowedIp', e.target.value)
-                                            }
-                                            readOnly={inputReadOnly}
-                                            className="w-full pl-10 pr-3 py-3 bg-black/20 border border-white/[0.08]
-                                                     rounded-lg text-gray-100 placeholder-gray-500
-                                                     hover:border-white/[0.12] focus:border-primary focus:ring-1
-                                                     focus:ring-primary/50 transition-all duration-200"
-                                        />
+                                        <div className="flex items-center">
+                                            <input
+                                                type="text"
+                                                name="allowedIp"
+                                                placeholder="0.0.0.0/0"
+                                                value={formData.allowedIp}
+                                                onChange={(e) =>
+                                                    setField('formData.allowedIp', e.target.value)
+                                                }
+                                                readOnly={inputReadOnly}
+                                                className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
+                                                         rounded-lg text-gray-100 placeholder-gray-500
+                                                         hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                         focus:ring-primary/50 transition-all duration-200"
+                                            />
+                                        </div>
                                     </div>
                                     <p className="text-xs text-gray-400 pl-1">
                                         {t('home.restrict_from_ip')}
@@ -331,13 +333,13 @@ const Home = () => {
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <div className="relative">
-                                    <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
+                                    <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
                                         <IconClock size={18} />
                                     </div>
                                     <select
                                         value={formData.ttl}
                                         onChange={(e) => setField('formData.ttl', e.target.value)}
-                                        className="w-full pl-10 pr-8 py-3 bg-black/20 border border-white/[0.08]
+                                        className="w-full pl-10 pr-8 py-3 text-sm bg-black/20 border border-white/[0.08]
                                                  rounded-lg text-gray-100 placeholder-gray-500
                                                  hover:border-white/[0.12] focus:border-primary focus:ring-1
                                                  focus:ring-primary/50 transition-all duration-200
