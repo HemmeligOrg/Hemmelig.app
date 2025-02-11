@@ -364,25 +364,49 @@ const Home = () => {
                             </div>
 
                             {!formData.preventBurn && (
-                                <div className="relative">
-                                    <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
-                                        <IconEye size={18} />
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <IconEye className="text-primary" size={18} />
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm font-medium text-white/90">
+                                                    {t('home.max_views')}
+                                                </span>
+                                                <div className="group relative">
+                                                    <div className="p-1 bg-gray-700/50 rounded-full hover:bg-gray-700 transition-colors cursor-help">
+                                                        <IconAlertCircle
+                                                            size={12}
+                                                            className="text-gray-400"
+                                                        />
+                                                    </div>
+                                                    <span
+                                                        className="absolute left-1/2 -translate-x-1/2 -translate-y-full -top-2
+                                                                   px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded
+                                                                   opacity-0 group-hover:opacity-100 transition-opacity
+                                                                   whitespace-normal min-w-[150px] pointer-events-none"
+                                                    >
+                                                        {t('home.max_views_description')}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {formData.maxViews} {t('home.views')}
+                                            </div>
+                                        </div>
                                     </div>
                                     <input
-                                        type="number"
-                                        name="maxViews"
+                                        type="range"
+                                        min="1"
+                                        max="100"
                                         value={formData.maxViews}
                                         onChange={(e) =>
-                                            setField('formData.maxViews', e.target.value)
+                                            setField('formData.maxViews', parseInt(e.target.value))
                                         }
-                                        min="1"
-                                        max="999"
-                                        className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
-                                                 text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary"
+                                        className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
+                                                 accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
-                                    <p className="mt-2 text-xs text-gray-400">
-                                        {t('home.max_views_description')}
-                                    </p>
                                 </div>
                             )}
 
