@@ -82,7 +82,8 @@ const Home = () => {
         );
     }
 
-    const onSetPublic = () => {
+    const onSetPublic = (event) => {
+        event.preventDefault();
         setField('isPublic', !isPublic);
     };
 
@@ -403,9 +404,10 @@ const Home = () => {
                                             type="text"
                                             name="password"
                                             value={formData.password}
-                                            onChange={(e) =>
-                                                setField('formData.password', e.target.value)
-                                            }
+                                            onChange={(e) => {
+                                                e.preventDefault();
+                                                setField('formData.password', e.target.value);
+                                            }}
                                             readOnly={inputReadOnly}
                                             className="w-full pl-10 pr-10 py-3 bg-black/20 border border-white/[0.08]
                                                      rounded-lg text-gray-100 placeholder-gray-500
@@ -456,12 +458,13 @@ const Home = () => {
                                                     name="allowedIp"
                                                     placeholder="0.0.0.0/0"
                                                     value={formData.allowedIp}
-                                                    onChange={(e) =>
+                                                    onChange={(e) => {
+                                                        e.preventDefault();
                                                         setField(
                                                             'formData.allowedIp',
                                                             e.target.value
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                     readOnly={inputReadOnly}
                                                     className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
                                                              rounded-lg text-gray-100 placeholder-gray-500
