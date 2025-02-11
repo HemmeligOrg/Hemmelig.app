@@ -243,7 +243,7 @@
         "ip_restricted": "IP-beschränkt",
         "average_views": "Durchschnittliche Aufrufe",
         "views_per_secret": "Aufrufe pro Geheimnis",
-        "description": "Ein umfassender Überblick über die Nutzung Ihrer Plattform und Sicherheitsfunktionen"
+        "description": "Ein umfassender Überblick über die Nutzung der Plattform und Sicherheitsfunktionen"
     },
     "analytics": {
         "title": "Analytik-Übersicht",
