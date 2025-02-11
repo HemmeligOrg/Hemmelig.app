@@ -387,7 +387,6 @@ const Home = () => {
                                                                    opacity-0 group-hover:opacity-100 transition-opacity
                                                                    whitespace-normal min-w-[150px] pointer-events-none"
                                                     >
-                                                        gh
                                                         {t('home.max_views_description')}
                                                     </span>
                                                 </div>
