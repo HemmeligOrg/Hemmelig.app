@@ -41,7 +41,7 @@ Example encryption flow:
 ```javascript
 encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 // Only encryptedData is sent to server
-// uniqueEncryptionKey is only shared via URL
+// uniqueEncryptionKey is only shared via URL as a fragment.
 ```
 
 ## Hetzner Cloud Referral
