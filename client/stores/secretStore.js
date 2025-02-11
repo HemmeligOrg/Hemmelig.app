@@ -145,7 +145,7 @@ const useSecretStore = create((set, get) => ({
                 errors: {
                     banner: {
                         title: t('error'),
-                        message: t('error_creating_secret'),
+                        message: t('home.error_creating_secret'),
                         dismissible: true,
                     },
                     fields: {},
