@@ -23,7 +23,7 @@ async function statistics(fastify) {
                 totalFiles,
                 secretsWithPassword,
                 secretsWithIpRestriction,
-                averageViewsPerSecret,
+                averageMaxViewsPerSecret,
             ] = await Promise.all([
                 prisma.statistic.findMany(),
                 prisma.secret.count(),
@@ -65,7 +65,7 @@ async function statistics(fastify) {
                 totalFiles,
                 secretsWithPassword,
                 secretsWithIpRestriction,
-                averageViewsPerSecret: Math.round(averageViewsPerSecret._avg.maxViews || 0),
+                averageMaxViewsPerSecret: Math.round(averageMaxViewsPerSecret._avg.maxViews || 0),
             };
 
             setCache(cacheKey, stats);
