@@ -15,6 +15,14 @@ async function statistics(fastify) {
                 return reply.send(cachedData);
             }
 
+            const user = await prisma.user.findFirst({
+                where: { username: request.user.username },
+            });
+
+            if (user.role !== 'admin' || user.role !== 'creator') {
+                return reply.code(403).send({ error: 'Unauthorized' });
+            }
+
             const [
                 totalSecretsCreated,
                 activeSecrets,

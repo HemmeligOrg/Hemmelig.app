@@ -88,7 +88,7 @@ async function analytics(fastify) {
                     where: { username: request.user.username },
                 });
 
-                if (user.role !== 'admin') {
+                if (user.role !== 'admin' || user.role !== 'creator') {
                     return reply.code(403).send({ error: 'Unauthorized' });
                 }
 
@@ -126,7 +126,7 @@ async function analytics(fastify) {
                     where: { username: request.user.username },
                 });
 
-                if (user.role !== 'admin') {
+                if (user.role !== 'admin' || user.role !== 'creator') {
                     return reply.code(403).send({ error: 'Unauthorized' });
                 }
 
@@ -175,7 +175,7 @@ async function analytics(fastify) {
                     where: { username: request.user.username },
                 });
 
-                if (user.role !== 'admin') {
+                if (user.role !== 'admin' || user.role !== 'creator') {
                     return reply.code(403).send({ error: 'Unauthorized' });
                 }
 
