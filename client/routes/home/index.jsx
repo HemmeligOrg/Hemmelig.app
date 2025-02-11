@@ -241,11 +241,7 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                <FormSection
-                    title={t('home.security')}
-                    subtitle={t('home.security_description')}
-                    collapsible
-                >
+                <FormSection title={t('home.security')} subtitle={t('home.security_description')}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <div className="space-y-2">
