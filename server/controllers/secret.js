@@ -226,7 +226,7 @@ async function secret(fastify) {
             return reply.code(401).send({ error: 'Password required' });
         }
 
-        return { id, maxViews: data.maxViews };
+        return { id, maxViews: data.maxViews, preventBurn: data.preventBurn };
     });
 
     async function getPublicRoute(request, reply) {

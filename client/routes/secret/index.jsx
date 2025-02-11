@@ -56,6 +56,7 @@ const Secret = () => {
                 setError(response.error);
             } else {
                 setMaxViews(response.maxViews);
+                setPreventBurn(response.preventBurn);
             }
         })();
     }, [secretId]);
