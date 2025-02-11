@@ -52,6 +52,8 @@ const Home = () => {
         setField,
     } = useSecretStore();
 
+    const [enableIpRange, setEnableIpRange] = useState(false);
+
     useEffect(() => {
         if (config.get('settings.analytics.enabled')) {
             trackPageView(location.pathname);
@@ -301,31 +303,56 @@ const Home = () => {
                             </div>
 
                             {!settings.hide_allowed_ip_input && (
-                                <div className="space-y-2">
-                                    <div className="relative">
-                                        <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
-                                            <IconNetwork size={18} />
+                                <div className="space-y-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setEnableIpRange(!enableIpRange)}
+                                        className={`
+                                            w-full flex items-start gap-4 px-4 py-3.5
+                                            bg-black/20 rounded-lg border
+                                            hover:border-white/[0.12] transition-all duration-200
+                                            ${enableIpRange ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
+                                        `}
+                                    >
+                                        <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
+                                            <IconNetwork size={22} />
                                         </div>
-                                        <div className="flex items-center">
-                                            <input
-                                                type="text"
-                                                name="allowedIp"
-                                                placeholder="0.0.0.0/0"
-                                                value={formData.allowedIp}
-                                                onChange={(e) =>
-                                                    setField('formData.allowedIp', e.target.value)
-                                                }
-                                                readOnly={inputReadOnly}
-                                                className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
-                                                         rounded-lg text-gray-100 placeholder-gray-500
-                                                         hover:border-white/[0.12] focus:border-primary focus:ring-1
-                                                         focus:ring-primary/50 transition-all duration-200"
-                                            />
+                                        <div className="flex flex-col items-start min-w-0">
+                                            <span className="text-sm font-medium mb-0.5">
+                                                {t('home.restrict_from_ip_placeholder')}
+                                            </span>
+                                            <span className="text-xs text-left text-gray-400">
+                                                {t('home.restrict_from_ip')}
+                                            </span>
                                         </div>
-                                    </div>
-                                    <p className="text-xs text-gray-400 pl-1">
-                                        {t('home.restrict_from_ip')}
-                                    </p>
+                                    </button>
+
+                                    {enableIpRange && (
+                                        <div className="relative">
+                                            <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
+                                                <IconNetwork size={18} />
+                                            </div>
+                                            <div className="flex items-center">
+                                                <input
+                                                    type="text"
+                                                    name="allowedIp"
+                                                    placeholder="0.0.0.0/0"
+                                                    value={formData.allowedIp}
+                                                    onChange={(e) =>
+                                                        setField(
+                                                            'formData.allowedIp',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    readOnly={inputReadOnly}
+                                                    className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
+                                                             rounded-lg text-gray-100 placeholder-gray-500
+                                                             hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                             focus:ring-primary/50 transition-all duration-200"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

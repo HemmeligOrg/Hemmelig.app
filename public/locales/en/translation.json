@@ -105,7 +105,7 @@
         "enable_password": "Enable password",
         "optional_password": "Enter your custom password",
         "burn_aftertime": "Burn the secret only after the time expires",
-        "restrict_from_ip": "The CIDR input will allow users to specify IP address ranges that can access the secret. The default value of \"0.0.0.0/0\" typically means \"allow all IPs\"",
+        "restrict_from_ip": "The CIDR input will allow users to specify IP address ranges that can access the secret.",
         "restrict_from_ip_placeholder": "Restrict by IP or CIDR",
         "login_to_upload": "Sign in to upload files",
         "public_no_upload": "Public pastes do not allow file uploads",
