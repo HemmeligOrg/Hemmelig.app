@@ -72,6 +72,8 @@ const Home = () => {
         handleSubmit(event, t);
     };
 
+    const enablePasswordGeneration = false;
+
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
         { value: 259200, label: t('home.3_days') },
@@ -437,174 +439,176 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                <FormSection
-                    title={t('home.password_generator')}
-                    subtitle={t('home.password_generator_description')}
-                    collapsible
-                >
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                            <div className="flex items-center space-x-3">
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                    <IconKey className="text-primary" size={18} />
-                                </div>
-                                <div>
-                                    <div className="text-sm font-medium text-white/90">
-                                        {t('home.password_length')}
-                                    </div>
-                                    <div className="text-xs text-gray-400">
-                                        {passwordOptions.length} {t('home.characters')}
-                                    </div>
-                                </div>
-                            </div>
-                            <input
-                                type="range"
-                                min="4"
-                                max="64"
-                                value={passwordOptions.length}
-                                onChange={(e) =>
-                                    setPasswordOptions((prev) => ({
-                                        ...prev,
-                                        length: parseInt(e.target.value),
-                                    }))
-                                }
-                                className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
-                                         accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {enablePasswordGeneration && (
+                    <FormSection
+                        title={t('home.password_generator')}
+                        subtitle={t('home.password_generator_description')}
+                        collapsible
+                    >
+                        <div className="space-y-6">
                             <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
                                 <div className="flex items-center space-x-3">
                                     <div className="p-2 bg-primary/10 rounded-lg">
-                                        <span className="text-primary text-sm font-semibold">
-                                            A
-                                        </span>
+                                        <IconKey className="text-primary" size={18} />
                                     </div>
                                     <div>
                                         <div className="text-sm font-medium text-white/90">
-                                            {t('home.uppercase_letters')}
-                                        </div>
-                                        <div className="text-xs text-gray-400">A-Z</div>
-                                    </div>
-                                </div>
-                                <Switch
-                                    checked={passwordOptions.uppercase}
-                                    onChange={(checked) =>
-                                        setPasswordOptions((prev) => ({
-                                            ...prev,
-                                            uppercase: checked,
-                                        }))
-                                    }
-                                >
-                                    {t('home.uppercase_letters')}
-                                </Switch>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 bg-primary/10 rounded-lg">
-                                        <span className="text-primary text-sm font-semibold">
-                                            a
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-medium text-white/90">
-                                            {t('home.lowercase_letters')}
-                                        </div>
-                                        <div className="text-xs text-gray-400">a-z</div>
-                                    </div>
-                                </div>
-                                <Switch
-                                    checked={passwordOptions.lowercase}
-                                    onChange={(checked) =>
-                                        setPasswordOptions((prev) => ({
-                                            ...prev,
-                                            lowercase: checked,
-                                        }))
-                                    }
-                                >
-                                    {t('home.lowercase_letters')}
-                                </Switch>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 bg-primary/10 rounded-lg">
-                                        <span className="text-primary text-sm font-semibold">
-                                            9
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-medium text-white/90">
-                                            {t('home.numbers')}
-                                        </div>
-                                        <div className="text-xs text-gray-400">0-9</div>
-                                    </div>
-                                </div>
-                                <Switch
-                                    checked={passwordOptions.numbers}
-                                    onChange={(checked) =>
-                                        setPasswordOptions((prev) => ({
-                                            ...prev,
-                                            numbers: checked,
-                                        }))
-                                    }
-                                >
-                                    {t('home.numbers')}
-                                </Switch>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 bg-primary/10 rounded-lg">
-                                        <span className="text-primary text-sm font-semibold">
-                                            @
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-medium text-white/90">
-                                            {t('home.special_characters')}
+                                            {t('home.password_length')}
                                         </div>
                                         <div className="text-xs text-gray-400">
-                                            {'!@#$%^&*()+_-=}{[]|:;"/?.><,`~'}
+                                            {passwordOptions.length} {t('home.characters')}
                                         </div>
                                     </div>
                                 </div>
-                                <Switch
-                                    checked={passwordOptions.symbols}
-                                    onChange={(checked) =>
+                                <input
+                                    type="range"
+                                    min="4"
+                                    max="64"
+                                    value={passwordOptions.length}
+                                    onChange={(e) =>
                                         setPasswordOptions((prev) => ({
                                             ...prev,
-                                            symbols: checked,
+                                            length: parseInt(e.target.value),
                                         }))
                                     }
+                                    className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
+                                            accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <span className="text-primary text-sm font-semibold">
+                                                A
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.uppercase_letters')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">A-Z</div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={passwordOptions.uppercase}
+                                        onChange={(checked) =>
+                                            setPasswordOptions((prev) => ({
+                                                ...prev,
+                                                uppercase: checked,
+                                            }))
+                                        }
+                                    >
+                                        {t('home.uppercase_letters')}
+                                    </Switch>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <span className="text-primary text-sm font-semibold">
+                                                a
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.lowercase_letters')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">a-z</div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={passwordOptions.lowercase}
+                                        onChange={(checked) =>
+                                            setPasswordOptions((prev) => ({
+                                                ...prev,
+                                                lowercase: checked,
+                                            }))
+                                        }
+                                    >
+                                        {t('home.lowercase_letters')}
+                                    </Switch>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <span className="text-primary text-sm font-semibold">
+                                                9
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.numbers')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">0-9</div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={passwordOptions.numbers}
+                                        onChange={(checked) =>
+                                            setPasswordOptions((prev) => ({
+                                                ...prev,
+                                                numbers: checked,
+                                            }))
+                                        }
+                                    >
+                                        {t('home.numbers')}
+                                    </Switch>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-primary/10 rounded-lg">
+                                            <span className="text-primary text-sm font-semibold">
+                                                @
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.special_characters')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {'!@#$%^&*()+_-=}{[]|:;"/?.><,`~'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={passwordOptions.symbols}
+                                        onChange={(checked) =>
+                                            setPasswordOptions((prev) => ({
+                                                ...prev,
+                                                symbols: checked,
+                                            }))
+                                        }
+                                    >
+                                        {t('home.special_characters')}
+                                    </Switch>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={injectPasswordToQuill}
+                                    className="inline-flex items-center gap-2 px-4 py-2 text-sm
+                                            bg-primary text-white rounded-md hover:bg-primary-600 
+                                            transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={
+                                        !passwordOptions.uppercase &&
+                                        !passwordOptions.lowercase &&
+                                        !passwordOptions.numbers &&
+                                        !passwordOptions.symbols
+                                    }
                                 >
-                                    {t('home.special_characters')}
-                                </Switch>
+                                    <IconArrowRight size={14} />
+                                    {t('home.inject_password')}
+                                </button>
                             </div>
                         </div>
-
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={injectPasswordToQuill}
-                                className="inline-flex items-center gap-2 px-4 py-2 text-sm
-                                         bg-primary text-white rounded-md hover:bg-primary-600 
-                                         transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={
-                                    !passwordOptions.uppercase &&
-                                    !passwordOptions.lowercase &&
-                                    !passwordOptions.numbers &&
-                                    !passwordOptions.symbols
-                                }
-                            >
-                                <IconArrowRight size={14} />
-                                {t('home.inject_password')}
-                            </button>
-                        </div>
-                    </div>
-                </FormSection>
+                    </FormSection>
+                )}
 
                 {!settings.disable_file_upload && (
                     <>
