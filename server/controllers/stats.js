@@ -7,7 +7,7 @@ async function statistics(fastify) {
         {
             preValidation: [fastify.authenticate],
         },
-        async (_, reply) => {
+        async (request, reply) => {
             const cacheKey = getCacheKey('stats');
             const cachedData = getFromCache(cacheKey);
 
@@ -19,7 +19,7 @@ async function statistics(fastify) {
                 where: { username: request.user.username },
             });
 
-            if (user.role !== 'admin' || user.role !== 'creator') {
+            if (user.role !== 'admin' && user.role !== 'creator') {
                 return reply.code(403).send({ error: 'Unauthorized' });
             }
 
