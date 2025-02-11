@@ -99,7 +99,7 @@
         "optional_password": "您的可选密码",
         "burn_aftertime": "仅在时间过期后销毁该秘密",
         "restrict_from_ip": "基于IP或CIDR范围限制秘密的打开。例如CIDR: 192.168.1.0/24。",
-        "restrict_from_ip_placeholder": "通过IP或CIDR进行限���",
+        "restrict_from_ip_placeholder": "通过IP或CIDR进行限制",
         "login_to_upload": "登录以上传文件",
         "public_no_upload": "公开粘贴不允许上传文件",
         "upload_files": "上传文件",
@@ -155,7 +155,19 @@
         "create": "创建",
         "sign_in": "登录",
         "complete_url": "完整密钥URL",
-        "complete_url_description": "这是包含解密密钥的完整URL。分享此URL可直接访问密钥。"
+        "complete_url_description": "这是包含解密密钥的完整URL。分享此URL可直接访问密钥。",
+        "text_required": "文本是必需的",
+        "drag_and_drop": "或将文件拖放到此处",
+        "password_generator": "密码生成器",
+        "password_generator_description": "生成具有自定义要求的安全密码",
+        "password_length": "密码长度",
+        "characters": "字符",
+        "uppercase_letters": "大写字母",
+        "lowercase_letters": "小写字母",
+        "numbers": "数字",
+        "special_characters": "特殊字符",
+        "inject_password": "插入密码",
+        "views": "查看次数"
     },
     "secret": {
         "view_your_secret": "查看您的秘密",
@@ -165,7 +177,9 @@
         "view_secret": "查看秘密",
         "create_secret": "创建新秘密",
         "convert_b64": "将文本转换为 base64",
-        "convert_utf8": "将 base64 转换为纯文本"
+        "convert_utf8": "将 base64 转换为纯文本",
+        "decryption_key_required": "需要解密密钥！",
+        "incorrect_password": "密码错误！"
     },
     "settings": {
         "success": "成功",
@@ -206,7 +220,9 @@
         "username": "用户名",
         "password": "您的密码",
         "signin": "登录",
-        "wrong_credentials": "错误的用户名或密码。请再试一次。"
+        "wrong_credentials": "错误的用户名或密码。请再试一次。",
+        "redirecting": "正在重定向到您的账户...",
+        "users_disabled": "管理员当前已禁用用户登录。"
     },
     "signup": {
         "title": "注册",
@@ -221,5 +237,41 @@
     },
     "terms": {
         "title": "条款和条件"
+    },
+    "not_found": {
+        "title": "页面未找到",
+        "description": "哎呀！看来这个秘密已经消失了。别担心，您可以创建一个新的或查看我们的文档。",
+        "go_home": "创建新秘密",
+        "view_docs": "查看API文档"
+    },
+    "statistics": {
+        "heading": "平台统计",
+        "overview": "概览",
+        "security_features": "安全功能",
+        "total_secrets": "秘密总数",
+        "active_secrets": "活跃秘密",
+        "public_secrets": "公开秘密",
+        "total_users": "用户总数",
+        "total_files": "文件总数",
+        "password_protected": "密码保护",
+        "ip_restricted": "IP限制",
+        "average_views": "平均查看次数",
+        "views_per_secret": "每个秘密的查看次数",
+        "description": "平台使用情况和安全功能的全面概览"
+    },
+    "analytics": {
+        "title": "分析概览",
+        "total_visits": "总访问量",
+        "unique_visitors": "独立访客",
+        "unique_paths": "独特路径",
+        "most_visited_paths": "最常访问路径",
+        "daily_visits": "每日访问量（最近30天）",
+        "daily_average": "日均访问量",
+        "total_secrets_created": "创建的秘密总数",
+        "active_secrets": "活跃秘密",
+        "public_secrets": "公开秘密",
+        "password_protected": "密码保护",
+        "ip_restricted": "IP限制",
+        "average_max_views": "每个秘密的平均最大查看次数"
     }
 }

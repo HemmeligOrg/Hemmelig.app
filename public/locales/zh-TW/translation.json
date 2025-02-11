@@ -17,13 +17,19 @@
         "enable_password": "啟用密碼",
         "optional_password": "您的選擇性密碼",
         "burn_aftertime": "僅在過期後銷毀該機密",
-        "restrict_from_ip": "基於 IP 或 CIDR 範圍限制機密開啟。例如 CIDR: 192.168.1.0/24。",
+        "restrict_from_ip": "CIDR 輸入將允許使用者指定可以存取機密的 IP 位址範圍。預設值 \"0.0.0.0/0\" 表示「允許所有 IP」",
         "restrict_from_ip_placeholder": "透過 IP 或 CIDR 進行限制",
-        "login_to_upload": "登入以上傳文件",
-        "upload_files": "上傳文件",
-        "your_secret_url": "您的機密URL",
+        "login_to_upload": "登入以上傳檔案",
+        "public_no_upload": "公開內容不允許上傳檔案",
+        "upload_files": "上傳檔案",
+        "drag_and_drop": "或將檔案拖放到此處",
+        "your_secret_url": "您的機密網址",
         "share": "分享",
-        "create_secret_link": "創建機密連結",
+        "create_secret_link": "建立機密連結",
+        "text_required": "文字是必需的",
+        "or": "分開連結和解密金鑰",
+        "secret_url": "不含解密金鑰的機密網址",
+        "decryption_key": "解密金鑰",
         "create_new": "建立新的",
         "delete": "刪除",
         "link_only_works_once": "預設情況下，機密連結只能使用一次，之後將永久消失。",
@@ -46,7 +52,7 @@
         "public_description": "公開內容會列在 /public 目錄下，只要沒有設定密碼，任何有連結的人都可以查看。",
         "private_description": "私密內容經過加密，只能使用解密金鑰和/或密碼查看。",
         "set_public": "設為公開內容",
-        "title_description": "為你的秘密加上一個好記的標題（選填）",
+        "title_description": "為你的機密加上一個好記的標題（選填）",
         "ttl_description": "設定內容可用時長",
         "max_views_description": "可以查看的次數",
         "burn": "銷毀",
@@ -56,7 +62,7 @@
         "title": "Hemmelig.app",
         "description": "安全地分享加密訊息，閱讀後會自動銷毀。",
         "content": "內容",
-        "content_description": "輸入你想要安全分享的秘密訊息",
+        "content_description": "輸入你想要安全分享的機密訊息",
         "security": "安全設定",
         "security_description": "設定你的內容安全選項",
         "private": "私密",
@@ -64,43 +70,35 @@
         "password": "密碼保護",
         "secret_description": "將此網址分享給需要存取該內容的人",
         "one_time_use": "此內容只能查看一次，閱讀後將自動銷毀。",
-        "norwegian_meaning": "在挪威語中意為「秘密」",
+        "norwegian_meaning": "在挪威語中意為「機密」",
         "copy": "複製到剪貼簿",
         "copied": "已複製！",
         "create": "建立",
         "sign_in": "登入",
-        "complete_url": "完整密文網址",
+        "complete_url": "完整機密網址",
         "complete_url_description": "這是包含解密金鑰的完整網址。分享此網址可直接存取內容。",
-        "not_logged_in": "未登入",
-        "something_went_wrong": "發生錯誤！",
-        "loading": "載入中",
-        "common": {},
-        "account": {
-            "home": {
-                "features": "功能"
-            }
-        },
-        "header": {
-            "nav": {
-                "close": "關閉導覽",
-                "open": "開啟導覽"
-            },
-            "session": {
-                "auth": "認證",
-                "expire": "您的工作階段即將過期。是否要延長？",
-                "update": "更新工作階段"
-            }
-        }
+        "password_generator": "密碼產生器",
+        "password_generator_description": "產生具有自訂要求的安全密碼",
+        "password_length": "密碼長度",
+        "characters": "字元",
+        "uppercase_letters": "大寫字母",
+        "lowercase_letters": "小寫字母",
+        "numbers": "數字",
+        "special_characters": "特殊字元",
+        "inject_password": "插入密碼",
+        "views": "瀏覽次數"
     },
     "secret": {
         "view_your_secret": "查看您的機密",
         "will_show_once": "預設情況下，機密只能瀏覽一次。",
-        "views_left": "剩餘查看次數：",
+        "views_left": "剩餘瀏覽次數：",
         "password_required": "需要密碼才能打開此機密",
         "view_secret": "查看機密",
         "create_secret": "建立新機密",
         "convert_b64": "將文字轉換成 base64",
-        "convert_utf8": "將 base64 轉換為純文字"
+        "convert_utf8": "將 base64 轉換為純文字",
+        "decryption_key_required": "需要解密金鑰！",
+        "incorrect_password": "密碼錯誤！"
     },
     "settings": {
         "success": "成功",
@@ -123,5 +121,76 @@
         "secrets": "機密",
         "secret": "機密",
         "deleted": "機密已刪除"
+    },
+    "public": {
+        "heading": "公開內容",
+        "title": "標題",
+        "expires": "到期時間",
+        "username": "使用者名稱",
+        "of": "的"
+    },
+    "signout": {
+        "title": "登出中",
+        "waiting": "請稍候"
+    },
+    "signin": {
+        "title": "登入",
+        "heading": "存取和管理 Hemmelig 機密所需的一切。",
+        "username": "使用者名稱",
+        "password": "您的密碼",
+        "signin": "登入",
+        "wrong_credentials": "錯誤的使用者名稱或密碼。請再試一次。",
+        "redirecting": "正在重新導向到您的帳號...",
+        "users_disabled": "管理員目前已停用使用者登入。"
+    },
+    "signup": {
+        "title": "註冊",
+        "heading": "存取和管理 Hemmelig 機密所需的一切。",
+        "email": "電子郵件",
+        "username": "使用者名稱",
+        "password": "您的密碼",
+        "signup": "註冊"
+    },
+    "privacy": {
+        "title": "隱私權"
+    },
+    "terms": {
+        "title": "條款與條件"
+    },
+    "not_found": {
+        "title": "找不到頁面",
+        "description": "糟糕！看來這個機密已經消失了。別擔心，您可以建立一個新的或查看我們的文件。",
+        "go_home": "建立新機密",
+        "view_docs": "查看 API 文件"
+    },
+    "statistics": {
+        "heading": "平台統計",
+        "overview": "概覽",
+        "security_features": "安全功能",
+        "total_secrets": "機密總數",
+        "active_secrets": "活躍機密",
+        "public_secrets": "公開機密",
+        "total_users": "使用者總數",
+        "total_files": "檔案總數",
+        "password_protected": "密碼保護",
+        "ip_restricted": "IP 限制",
+        "average_views": "平均瀏覽次數",
+        "views_per_secret": "每個機密的瀏覽次數",
+        "description": "平台使用情況和安全功能的完整概覽"
+    },
+    "analytics": {
+        "title": "分析概覽",
+        "total_visits": "總瀏覽量",
+        "unique_visitors": "獨立訪客",
+        "unique_paths": "獨特路徑",
+        "most_visited_paths": "最常瀏覽路徑",
+        "daily_visits": "每日瀏覽量（最近30天）",
+        "daily_average": "日均瀏覽量",
+        "total_secrets_created": "建立的機密總數",
+        "active_secrets": "活躍機密",
+        "public_secrets": "公開機密",
+        "password_protected": "密碼保護",
+        "ip_restricted": "IP 限制",
+        "average_max_views": "每個機密的平均最大瀏覽次數"
     }
 }

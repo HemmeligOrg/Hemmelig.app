@@ -160,7 +160,17 @@
         "create": "Aanmaken",
         "sign_in": "Inloggen",
         "complete_url": "Complete geheime URL",
-        "complete_url_description": "Dit is de volledige URL inclusief de sleutel. Deel deze URL om directe toegang tot het geheim te verschaffen."
+        "complete_url_description": "Dit is de volledige URL inclusief de sleutel. Deel deze URL om directe toegang tot het geheim te verschaffen.",
+        "password_generator": "Wachtwoordgenerator",
+        "password_generator_description": "Genereer een veilig wachtwoord met aangepaste vereisten",
+        "password_length": "Wachtwoordlengte",
+        "characters": "tekens",
+        "uppercase_letters": "Hoofdletters",
+        "lowercase_letters": "Kleine letters",
+        "numbers": "Cijfers",
+        "special_characters": "Speciale tekens",
+        "inject_password": "Wachtwoord invoegen",
+        "views": "weergave(n)"
     },
     "secret": {
         "view_your_secret": "Bekijk het geheim",
@@ -249,16 +259,22 @@
         "password_protected": "Met wachtwoord beveiligd",
         "ip_restricted": "Beperkt op IP-adres",
         "average_views": "Gemiddeld aantal weergaven",
-        "views_per_secret": "Aantal weergaven per geheim",
-        "description": "Een uitgebreid overzicht van het gebruik en de beveiligingsfuncties van je platform"
+        "views_per_secret": "Weergaven per geheim",
+        "description": "Een uitgebreid overzicht van het gebruik van je platform en beveiligingsfuncties"
     },
     "analytics": {
-        "title": "Overzicht analytics",
-        "total_visits": "Aantal bezoekers",
+        "title": "Analyseoverzicht",
+        "total_visits": "Totaal aantal bezoeken",
         "unique_visitors": "Unieke bezoekers",
-        "unique_paths": "Unieke pagina's",
-        "most_visited_paths": "Meest bezochte pagina's",
-        "daily_visits": "Aantal dagelijkse bezoeken (laatste 30 dagen)",
-        "daily_average": "Daggemiddelde"
+        "unique_paths": "Unieke paden",
+        "most_visited_paths": "Meest bezochte paden",
+        "daily_visits": "Dagelijkse bezoeken (laatste 30 dagen)",
+        "daily_average": "Dagelijks gemiddelde",
+        "total_secrets_created": "Totaal aantal aangemaakte geheimen",
+        "active_secrets": "Actieve geheimen",
+        "public_secrets": "Openbare geheimen",
+        "password_protected": "Met wachtwoord beveiligd",
+        "ip_restricted": "Beperkt op IP-adres",
+        "average_max_views": "Gemiddeld maximum aantal weergaven per geheim"
     }
 }

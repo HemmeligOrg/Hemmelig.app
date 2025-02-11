@@ -223,5 +223,41 @@
     },
     "terms": {
         "title": "Nutzungsbedingungen"
+    },
+    "not_found": {
+        "title": "Seite nicht gefunden",
+        "description": "Ups! Es scheint, dass dieses Geheimnis sich in Luft aufgelöst hat. Keine Sorge, du kannst ein neues erstellen oder unsere Dokumentation ansehen.",
+        "go_home": "Neues Geheimnis erstellen",
+        "view_docs": "API-Dokumentation ansehen"
+    },
+    "statistics": {
+        "heading": "Plattform-Statistiken",
+        "overview": "Übersicht",
+        "security_features": "Sicherheitsfunktionen",
+        "total_secrets": "Gesamtzahl der Geheimnisse",
+        "active_secrets": "Aktive Geheimnisse",
+        "public_secrets": "Öffentliche Geheimnisse",
+        "total_users": "Gesamtzahl der Benutzer",
+        "total_files": "Gesamtzahl der Dateien",
+        "password_protected": "Passwortgeschützt",
+        "ip_restricted": "IP-beschränkt",
+        "average_views": "Durchschnittliche Aufrufe",
+        "views_per_secret": "Aufrufe pro Geheimnis",
+        "description": "Ein umfassender Überblick über die Nutzung Ihrer Plattform und Sicherheitsfunktionen"
+    },
+    "analytics": {
+        "title": "Analytik-Übersicht",
+        "total_visits": "Gesamtbesuche",
+        "unique_visitors": "Eindeutige Besucher",
+        "unique_paths": "Eindeutige Pfade",
+        "most_visited_paths": "Meistbesuchte Pfade",
+        "daily_visits": "Tägliche Besuche (Letzte 30 Tage)",
+        "daily_average": "Tagesdurchschnitt",
+        "total_secrets_created": "Erstellte Geheimnisse gesamt",
+        "active_secrets": "Aktive Geheimnisse",
+        "public_secrets": "Öffentliche Geheimnisse",
+        "password_protected": "Passwortgeschützt",
+        "ip_restricted": "IP-beschränkt",
+        "average_max_views": "Durchschnittliche maximale Aufrufe pro Geheimnis"
     }
 }
