@@ -566,7 +566,9 @@ const Home = () => {
                                         <div className="text-sm font-medium text-white/90">
                                             {t('home.special_characters')}
                                         </div>
-                                        <div className="text-xs text-gray-400">!@#$%^&*</div>
+                                        <div className="text-xs text-gray-400">
+                                            {'!@#$%^&*()+_-=}{[]|:;"/?.><,`~'}
+                                        </div>
                                     </div>
                                 </div>
                                 <Switch
