@@ -19,13 +19,13 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
+import { trackPageView } from '../../api/analytics';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
-import { trackPageView } from '../../services/analytics';
 import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
 import useSettingsStore from '../../stores/settingsStore';
