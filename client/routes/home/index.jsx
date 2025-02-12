@@ -158,7 +158,7 @@ const Home = () => {
         [formData.files, setField]
     );
 
-    const isTextEmpty = () => formData.text.trim() === '';
+    const isTextEmpty = () => formData.text.trim() === '' || formData.text.trim() === '<p><br></p>';
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -609,8 +609,8 @@ const Home = () => {
                             type="submit"
                             disabled={
                                 creatingSecret ||
-                                (settings.read_only && !isLoggedIn) ||
-                                isTextEmpty()
+                                isTextEmpty() ||
+                                (settings.read_only && !isLoggedIn)
                             }
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
                                      bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
