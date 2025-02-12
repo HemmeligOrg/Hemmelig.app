@@ -371,111 +371,124 @@ const Home = () => {
                             </div>
 
                             <div className="space-y-4">
-                                <button
-                                    type="button"
-                                    onClick={onEnablePassword}
+                                <div
                                     className={`
-                                        w-full flex items-start gap-4 px-4 py-3.5
-                                        bg-black/20 rounded-lg border
-                                        hover:border-white/[0.12] transition-all duration-200
-                                        ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
-                                    `}
+                                    w-full space-y-4 bg-black/20 rounded-lg border
+                                    hover:border-white/[0.12] transition-all duration-200
+                                    ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
+                                `}
                                 >
-                                    <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
-                                        <IconShieldLock size={22} />
-                                    </div>
-                                    <div className="flex flex-col items-start min-w-0">
-                                        <span className="text-sm font-medium mb-0.5">
-                                            {t('home.password')}
-                                        </span>
-                                        <span className="text-xs text-left text-gray-400 line-clamp-2">
-                                            {t(
-                                                'home.password_description',
-                                                'Add an additional layer of security with a password'
-                                            )}
-                                        </span>
-                                    </div>
-                                </button>
-
-                                {enablePassword && (
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <IconKey className="text-gray-400" size={14} />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                setField('formData.password', e.target.value);
-                                            }}
-                                            readOnly={inputReadOnly}
-                                            className="w-full pl-10 pr-10 py-3 text-sm bg-black/20 border border-white/[0.08]
-                                                     rounded-lg text-gray-100 placeholder-gray-500
-                                                     hover:border-white/[0.12] focus:border-primary focus:ring-1 
-                                                     focus:ring-primary/50 transition-all duration-200"
-                                            placeholder={t('home.password')}
-                                        />
-                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                            <CopyButton textToCopy={formData.password} />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {!settings.hide_allowed_ip_input && (
-                                <div className="space-y-4">
                                     <button
                                         type="button"
-                                        onClick={() => setEnableIpRange(!enableIpRange)}
-                                        className={`
-                                            w-full flex items-start gap-4 px-4 py-3.5
-                                            bg-black/20 rounded-lg border
-                                            hover:border-white/[0.12] transition-all duration-200
-                                            ${enableIpRange ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
-                                        `}
+                                        onClick={onEnablePassword}
+                                        className="w-full flex items-start gap-4 px-4 py-3.5"
                                     >
                                         <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
-                                            <IconNetwork size={22} />
+                                            <IconShieldLock size={22} />
                                         </div>
                                         <div className="flex flex-col items-start min-w-0">
                                             <span className="text-sm font-medium mb-0.5">
-                                                {t('home.restrict_from_ip_placeholder')}
+                                                {t('home.password')}
                                             </span>
-                                            <span className="text-xs text-left text-gray-400">
-                                                {t('home.restrict_from_ip')}
+                                            <span className="text-xs text-left text-gray-400 line-clamp-2">
+                                                {t(
+                                                    'home.password_description',
+                                                    'Add an additional layer of security with a password'
+                                                )}
                                             </span>
                                         </div>
                                     </button>
 
-                                    {enableIpRange && (
-                                        <div className="relative">
-                                            <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
-                                                <IconNetwork size={18} />
-                                            </div>
-                                            <div className="flex items-center">
+                                    {enablePassword && (
+                                        <div className="px-4 pb-4">
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <IconKey className="text-gray-400" size={14} />
+                                                </div>
                                                 <input
                                                     type="text"
-                                                    name="allowedIp"
-                                                    placeholder="0.0.0.0/0"
-                                                    value={formData.allowedIp}
+                                                    name="password"
+                                                    value={formData.password}
                                                     onChange={(e) => {
                                                         e.preventDefault();
                                                         setField(
-                                                            'formData.allowedIp',
+                                                            'formData.password',
                                                             e.target.value
                                                         );
                                                     }}
                                                     readOnly={inputReadOnly}
-                                                    className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
+                                                    className="w-full pl-10 pr-10 py-3 text-sm bg-black/20 border border-white/[0.08]
                                                              rounded-lg text-gray-100 placeholder-gray-500
-                                                             hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                             hover:border-white/[0.12] focus:border-primary focus:ring-1 
                                                              focus:ring-primary/50 transition-all duration-200"
+                                                    placeholder={t('home.password')}
                                                 />
+                                                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                                    <CopyButton textToCopy={formData.password} />
+                                                </div>
                                             </div>
                                         </div>
                                     )}
+                                </div>
+                            </div>
+
+                            {!settings.hide_allowed_ip_input && (
+                                <div className="space-y-4">
+                                    <div
+                                        className={`
+                                        w-full space-y-4 bg-black/20 rounded-lg border
+                                        hover:border-white/[0.12] transition-all duration-200
+                                        ${enableIpRange ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
+                                    `}
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => setEnableIpRange(!enableIpRange)}
+                                            className="w-full flex items-start gap-4 px-4 py-3.5"
+                                        >
+                                            <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
+                                                <IconNetwork size={22} />
+                                            </div>
+                                            <div className="flex flex-col items-start min-w-0">
+                                                <span className="text-sm font-medium mb-0.5">
+                                                    {t('home.restrict_from_ip_placeholder')}
+                                                </span>
+                                                <span className="text-xs text-left text-gray-400">
+                                                    {t('home.restrict_from_ip')}
+                                                </span>
+                                            </div>
+                                        </button>
+
+                                        {enableIpRange && (
+                                            <div className="px-4 pb-4">
+                                                <div className="relative">
+                                                    <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
+                                                        <IconNetwork size={18} />
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <input
+                                                            type="text"
+                                                            name="allowedIp"
+                                                            placeholder="0.0.0.0/0"
+                                                            value={formData.allowedIp}
+                                                            onChange={(e) => {
+                                                                e.preventDefault();
+                                                                setField(
+                                                                    'formData.allowedIp',
+                                                                    e.target.value
+                                                                );
+                                                            }}
+                                                            readOnly={inputReadOnly}
+                                                            className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
+                                                                     rounded-lg text-gray-100 placeholder-gray-500
+                                                                     hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                                     focus:ring-primary/50 transition-all duration-200"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </div>
