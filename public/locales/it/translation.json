@@ -142,7 +142,19 @@
         "create": "Crea",
         "sign_in": "Autenticati",
         "complete_url": "URL Segreto Completo",
-        "complete_url_description": "Questo è l'URL completo del segreto, inclusa la chiave di decriptazione. Condividilo per fornire l'accesso diretto al segreto."
+        "complete_url_description": "Questo è l'URL completo del segreto, inclusa la chiave di decriptazione. Condividilo per fornire l'accesso diretto al segreto.",
+        "password_generator": "Generatore di password",
+        "password_generator_description": "Genera una password sicura con requisiti personalizzati",
+        "password_length": "Lunghezza password",
+        "characters": "caratteri",
+        "uppercase_letters": "Lettere maiuscole",
+        "lowercase_letters": "Lettere minuscole",
+        "numbers": "Numeri",
+        "special_characters": "Caratteri speciali",
+        "inject_password": "Inserisci password",
+        "views": "visualizzazione/i",
+        "text_required": "Il testo è obbligatorio",
+        "drag_and_drop": "o trascina e rilascia i file qui"
     },
     "secret": {
         "view_your_secret": "Visualizza i tuoi dati segreti",
@@ -152,7 +164,9 @@
         "view_secret": "Visualizza dati segreti",
         "create_secret": "Crea un nuovo segreto",
         "convert_b64": "Converti testo in base64",
-        "convert_utf8": "Converti base64 in testo"
+        "convert_utf8": "Converti base64 in testo",
+        "decryption_key_required": "È richiesta la chiave di decifratura!",
+        "incorrect_password": "Password non corretta!"
     },
     "settings": {
         "success": "Salvataggio completato",
@@ -192,7 +206,10 @@
         "heading": "Tutto il necessario per accedere e gestire i segreti di Hemmelig.",
         "username": "Nome utente",
         "password": "La tua password",
-        "signin": "Accedi"
+        "signin": "Accedi",
+        "wrong_credentials": "Nome utente o password errati. Riprova.",
+        "redirecting": "Reindirizzamento al tuo profilo...",
+        "users_disabled": "L'accesso utente è attualmente disabilitato dall'amministratore."
     },
     "signup": {
         "title": "Registrati",
@@ -207,5 +224,41 @@
     },
     "terms": {
         "title": "Termini e condizioni"
+    },
+    "not_found": {
+        "title": "Pagina non trovata",
+        "description": "Ops! Sembra che questo segreto sia svanito nel nulla. Non preoccuparti, puoi crearne uno nuovo o consultare la nostra documentazione.",
+        "go_home": "Crea nuovo segreto",
+        "view_docs": "Visualizza documentazione API"
+    },
+    "statistics": {
+        "heading": "Statistiche della piattaforma",
+        "overview": "Panoramica",
+        "security_features": "Funzionalità di sicurezza",
+        "total_secrets": "Totale segreti",
+        "active_secrets": "Segreti attivi",
+        "public_secrets": "Segreti pubblici",
+        "total_users": "Totale utenti",
+        "total_files": "Totale file",
+        "password_protected": "Protetti da password",
+        "ip_restricted": "Limitati per IP",
+        "average_views": "Visualizzazioni medie",
+        "views_per_secret": "Visualizzazioni per segreto",
+        "description": "Una panoramica completa dell'utilizzo della piattaforma e delle funzionalità di sicurezza"
+    },
+    "analytics": {
+        "title": "Panoramica analisi",
+        "total_visits": "Visite totali",
+        "unique_visitors": "Visitatori unici",
+        "unique_paths": "Percorsi unici",
+        "most_visited_paths": "Percorsi più visitati",
+        "daily_visits": "Visite giornaliere (ultimi 30 giorni)",
+        "daily_average": "Media giornaliera",
+        "total_secrets_created": "Totale segreti creati",
+        "active_secrets": "Segreti attivi",
+        "public_secrets": "Segreti pubblici",
+        "password_protected": "Protetti da password",
+        "ip_restricted": "Limitati per IP",
+        "average_max_views": "Media visualizzazioni massime per segreto"
     }
 }

@@ -2,31 +2,125 @@
     "sign_in": "Iniciar sesión",
     "sign_out": "Cerrar sesión",
     "sign_up": "Registrarse",
-    "account": "Cuenta",
+    "not_logged_in": "No has iniciado sesión",
+    "something_went_wrong": "¡Algo salió mal!",
+    "loading": "Cargando",
+    "common": {},
+    "account": {
+        "home": {
+            "title": "Cuenta",
+            "update_password": "Actualizar tu contraseña",
+            "first_time_message": "Si es la primera vez que inicias sesión en esta cuenta de usuario, debes ir a la configuración de la cuenta y actualizar tu contraseña.",
+            "hi": "Hola",
+            "intro": "Nos alegra que hayas iniciado sesión. Hay funciones adicionales disponibles para usuarios registrados.",
+            "upload_files": "Subir archivos",
+            "expiration": "Tiempo de expiración de 14 y 28 días para secretos",
+            "secrets": "Listar y eliminar tus secretos",
+            "more": "¡Gracias por unirte a Hemmelig.app!",
+            "features": "Características"
+        },
+        "account": {
+            "passwords_does_not_match": "Las contraseñas no coinciden",
+            "can_not_update_profile": "No se pudo actualizar tu perfil de usuario",
+            "can_not_delete": "No se pudo eliminar el usuario",
+            "delete_account": "Eliminar tu perfil",
+            "do_you_want_delete": "¿Estás seguro de que quieres eliminar tu perfil?",
+            "dont_delete_account": "No, no lo elimines",
+            "email": "Correo electrónico",
+            "your_password": "Contraseña actual",
+            "current_password": "Tu contraseña actual",
+            "update_your_password": "Actualiza tu contraseña",
+            "new_password": "Nueva contraseña",
+            "confirm_password": "Confirmar contraseña",
+            "confirm_new_password": "Confirma tu nueva contraseña",
+            "update_details": "Actualizar detalles"
+        },
+        "secrets": {
+            "id": "Id",
+            "expires": "Expira",
+            "public": "Público",
+            "delete": "Eliminar",
+            "yes": "Sí",
+            "no": "No",
+            "delete_secret": "Eliminar secreto",
+            "dont_delete_secret": "No, no lo elimines",
+            "do_you_want_delete": "¿Estás seguro de que quieres eliminar este secreto?"
+        },
+        "settings": {
+            "read_only_mode": "Modo solo lectura",
+            "readonly_only_for_non_admin": "¿Debería la instancia de Hemmelig estar en modo solo lectura para usuarios no administradores?",
+            "disable_users": "Deshabilitar usuarios",
+            "disable_signin": "¿Debería deshabilitarse el inicio de sesión de usuarios?",
+            "disable_user_account_creation": "Deshabilitar creación de cuentas de usuario",
+            "disable_user_account_creation_description": "No permitir que los usuarios creen una nueva cuenta. Como administrador, aún podrás crear nuevas cuentas de usuario",
+            "hide_allowed_ip_input": "Deshabilitar restricción de IP",
+            "hide_allowed_ip_input_description": "Ocultar el campo de IPs permitidas en el formulario de creación de secretos",
+            "disable_file_upload": "Deshabilitar subida de archivos",
+            "disable_file_upload_description": "Deshabilitar la subida de archivos para tu instancia",
+            "restrict_organization_email": "Restringir a dominio de correo",
+            "restrict_organization_email_description": "Esto limitará el registro de usuarios a un determinado dominio de correo electrónico"
+        },
+        "users": {
+            "username": "Nombre de usuario",
+            "email": "Correo electrónico",
+            "password": "Contraseña",
+            "role": "Rol",
+            "admin": "Administrador",
+            "creator": "Creador",
+            "user": "Usuario",
+            "delete": "Eliminar",
+            "do_you_want_delete": "¿Estás seguro de que quieres eliminar este usuario?",
+            "delete_user": "Eliminar usuario",
+            "dont_delete_user": "No, no lo elimines",
+            "have_to_be_admin": "Debes ser administrador para ver los usuarios"
+        }
+    },
+    "public_list": "Contenidos públicos",
     "account_settings": "Configuración de la cuenta",
     "instance_settings": "Configuración de la instancia",
     "copied": "Copiado",
     "copy": "Copiar",
+    "header": {
+        "nav": {
+            "close": "Cerrar navegación",
+            "open": "Abrir navegación"
+        },
+        "session": {
+            "auth": "Autenticación",
+            "expire": "Tu sesión está a punto de expirar. ¿Quieres extenderla?",
+            "update": "Actualizar sesión"
+        }
+    },
     "home": {
         "app_subtitle": "Pega una contraseña, mensaje confidencial o datos privados.",
         "welcome": "Asegúrate de que tus datos sensibles permanezcan encriptados, seguros y confidenciales.",
         "bummer": "¡Qué lástima!",
         "maintxtarea": "Escribe tu información sensible",
-        "lifetime": "Vida útil",
-        "max_views": "Número máximo visualizaciones",
+        "file_upload": "Subir archivos",
+        "content_title": "Título",
+        "lifetime": "Tiempo de vida",
+        "max_views": "Máximo de visualizaciones",
+        "public_description": "Los secretos públicos se listan en /public y pueden ser vistos por cualquier persona con el enlace siempre que no se haya establecido una contraseña.",
+        "private_description": "Los secretos privados están cifrados y solo pueden verse con la clave de descifrado y/o contraseña.",
         "enable_password": "Habilitar contraseña",
-        "optional_password": "Contraseña (opcional)",
-        "burn_aftertime": "Quema el secreto solo después de que expire el tiempo",
-        "restrict_from_ip": "Restringe el acceso al secreto basado en una dirección IP o un rango CIDR. Ejemplo CIDR: 192.168.1.0/24.",
+        "optional_password": "Ingresa tu contraseña personalizada",
+        "burn_aftertime": "Destruir el secreto solo después de que expire el tiempo",
+        "restrict_from_ip": "La entrada CIDR permitirá a los usuarios especificar rangos de direcciones IP que pueden acceder al secreto. El valor predeterminado de \"0.0.0.0/0\" significa \"permitir todas las IPs\"",
         "restrict_from_ip_placeholder": "Restringir por IP o CIDR",
-        "login_to_upload": "Inicia sesión para cargar archivos",
-        "upload_files": "Cargar archivos",
+        "login_to_upload": "Inicia sesión para subir archivos",
+        "public_no_upload": "Los contenidos públicos no permiten subir archivos",
+        "upload_files": "Subir archivos",
+        "drag_and_drop": "o arrastra y suelta archivos aquí",
         "your_secret_url": "Tu URL secreta",
         "share": "Compartir",
         "create_secret_link": "Crear un enlace secreto",
+        "text_required": "El texto es requerido",
+        "or": "Separar el enlace y la clave de descifrado",
+        "secret_url": "URL secreta sin clave de descifrado",
+        "decryption_key": "Clave de descifrado",
         "create_new": "Crear nuevo",
         "delete": "Eliminar",
-        "link_only_works_once": "El enlace secreto, por defecto, solo se puede usar una vez, después de lo cual desaparecerá.",
+        "link_only_works_once": "El enlace secreto, por defecto, es de un solo uso, después del cual desaparecerá.",
         "app_name_meaning": "[he`m:(ə)li], significa secreto en noruego.",
         "please_add_secret": "Por favor, añade un secreto.",
         "14_days": "14 días",
@@ -41,10 +135,6 @@
         "5_minutes": "5 minutos",
         "successful_share": "Compartido con éxito",
         "get_your_secret": "Obtén tu secreto en hemmelig.app.",
-        "file_upload": "Subir archivos",
-        "content_title": "Título",
-        "public_description": "Los secretos públicos se listan en /public y pueden ser vistos por cualquier persona con el enlace siempre que no se haya establecido una contraseña.",
-        "private_description": "Los secretos privados están cifrados y solo pueden verse con la clave de descifrado y/o contraseña.",
         "set_public": "Establecer como contenido público",
         "title_description": "Dale a tu secreto un título memorable (opcional)",
         "ttl_description": "Establece cuánto tiempo debe estar disponible el secreto",
@@ -69,8 +159,18 @@
         "copied": "¡Copiado!",
         "create": "Crear",
         "sign_in": "Iniciar sesión",
-        "complete_url": "URL completa del secreto",
-        "complete_url_description": "Esta es la URL completa que incluye la clave de descifrado. Comparte esta URL para dar acceso directo al secreto."
+        "complete_url": "URL secreta completa",
+        "complete_url_description": "Esta es la URL completa que incluye la clave de descifrado. Comparte esta URL para dar acceso directo al secreto.",
+        "password_generator": "Generador de contraseñas",
+        "password_generator_description": "Genera una contraseña segura con requisitos personalizados",
+        "password_length": "Longitud de la contraseña",
+        "characters": "caracteres",
+        "uppercase_letters": "Letras mayúsculas",
+        "lowercase_letters": "Letras minúsculas",
+        "numbers": "Números",
+        "special_characters": "Caracteres especiales",
+        "inject_password": "Insertar contraseña",
+        "views": "vista(s)"
     },
     "secret": {
         "view_your_secret": "Ver tu secreto",
@@ -80,7 +180,9 @@
         "view_secret": "Ver el secreto",
         "create_secret": "Crear un nuevo secreto",
         "convert_b64": "Convertir texto a base64",
-        "convert_utf8": "Convertir base64 a texto plano"
+        "convert_utf8": "Convertir base64 a texto plano",
+        "decryption_key_required": "¡Se requiere clave de descifrado!",
+        "incorrect_password": "¡Contraseña incorrecta!"
     },
     "settings": {
         "success": "Éxito",
@@ -104,20 +206,75 @@
         "secret": "Secreto",
         "deleted": "Secreto eliminado"
     },
-    "not_logged_in": "No has iniciado sesión",
-    "something_went_wrong": "¡Algo salió mal!",
-    "loading": "Cargando",
-    "common": {},
-    "account": {
-        "home": {
-            "features": "Características"
-        }
+    "public": {
+        "heading": "Contenidos públicos",
+        "title": "Título",
+        "expires": "Expira",
+        "username": "Nombre de usuario",
+        "of": "de"
     },
-    "header": {
-        "session": {
-            "auth": "Autenticación",
-            "expire": "Tu sesión está a punto de expirar. ¿Quieres extenderla?",
-            "update": "Actualizar sesión"
-        }
+    "signout": {
+        "title": "Cerrando sesión",
+        "waiting": "Por favor espera"
+    },
+    "signin": {
+        "title": "Iniciar sesión",
+        "heading": "Todo lo que necesitas para acceder y gestionar los secretos de Hemmelig.",
+        "username": "Nombre de usuario",
+        "password": "Tu contraseña",
+        "signin": "Iniciar sesión",
+        "wrong_credentials": "Nombre de usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.",
+        "redirecting": "Redirigiendo a tu cuenta...",
+        "users_disabled": "El inicio de sesión de usuarios está actualmente deshabilitado por el administrador."
+    },
+    "signup": {
+        "title": "Registrarse",
+        "heading": "Todo lo que necesitas para acceder y gestionar los secretos de Hemmelig.",
+        "email": "Correo electrónico",
+        "username": "Nombre de usuario",
+        "password": "Tu contraseña",
+        "signup": "Registrarse"
+    },
+    "privacy": {
+        "title": "Privacidad"
+    },
+    "terms": {
+        "title": "Términos y condiciones"
+    },
+    "not_found": {
+        "title": "Página no encontrada",
+        "description": "¡Ups! Parece que este secreto se ha desvanecido. No te preocupes, puedes crear uno nuevo o consultar nuestra documentación.",
+        "go_home": "Crear nuevo secreto",
+        "view_docs": "Ver documentación de la API"
+    },
+    "statistics": {
+        "heading": "Estadísticas de la plataforma",
+        "overview": "Resumen",
+        "security_features": "Características de seguridad",
+        "total_secrets": "Total de secretos",
+        "active_secrets": "Secretos activos",
+        "public_secrets": "Secretos públicos",
+        "total_users": "Total de usuarios",
+        "total_files": "Total de archivos",
+        "password_protected": "Protegidos con contraseña",
+        "ip_restricted": "Restringidos por IP",
+        "average_views": "Vistas promedio",
+        "views_per_secret": "Vistas por secreto",
+        "description": "Una visión general completa del uso de tu plataforma y características de seguridad"
+    },
+    "analytics": {
+        "title": "Resumen de analíticas",
+        "total_visits": "Total de visitas",
+        "unique_visitors": "Visitantes únicos",
+        "unique_paths": "Rutas únicas",
+        "most_visited_paths": "Rutas más visitadas",
+        "daily_visits": "Visitas diarias (últimos 30 días)",
+        "daily_average": "Promedio diario",
+        "total_secrets_created": "Total de secretos creados",
+        "active_secrets": "Secretos activos",
+        "public_secrets": "Secretos públicos",
+        "password_protected": "Protegidos con contraseña",
+        "ip_restricted": "Restringidos por IP",
+        "average_max_views": "Promedio de vistas máximas por secreto"
     }
 }

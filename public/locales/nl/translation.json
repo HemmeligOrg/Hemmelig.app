@@ -263,8 +263,8 @@
         "description": "Een overzicht van het gebruik en de beveiligingsfuncties van je platform"
     },
     "analytics": {
-        "title": "Overzicht analytics",
-        "total_visits": "Aantal bezoekers",
+        "title": "Analyseoverzicht",
+        "total_visits": "Totaal aantal bezoeken",
         "unique_visitors": "Unieke bezoekers",
         "unique_paths": "Unieke pagina's",
         "most_visited_paths": "Meest bezochte pagina's",
