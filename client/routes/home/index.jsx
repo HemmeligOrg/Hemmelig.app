@@ -1,6 +1,5 @@
 import {
     IconAlertCircle,
-    IconArrowRight,
     IconClock,
     IconEye,
     IconFileUpload,
@@ -17,17 +16,16 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { generate } from 'generate-password-browser';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
+import { trackPageView } from '../../api/analytics';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
 import Quill from '../../components/quill';
 import { Switch } from '../../components/switch';
 import config from '../../config';
-import { trackPageView } from '../../services/analytics';
 import useAuthStore from '../../stores/authStore';
 import useSecretStore from '../../stores/secretStore';
 import useSettingsStore from '../../stores/settingsStore';
@@ -54,13 +52,7 @@ const Home = () => {
         setField,
     } = useSecretStore();
 
-    const [passwordOptions, setPasswordOptions] = useState({
-        length: 12,
-        uppercase: true,
-        lowercase: true,
-        numbers: true,
-        symbols: true,
-    });
+    const [enableIpRange, setEnableIpRange] = useState(false);
 
     useEffect(() => {
         if (config.get('settings.analytics.enabled')) {
@@ -71,8 +63,6 @@ const Home = () => {
     const onSubmit = (event) => {
         handleSubmit(event, t);
     };
-
-    const enablePasswordGeneration = false;
 
     const ttlValues = [
         { value: 604800, label: t('home.7_days') },
@@ -92,7 +82,8 @@ const Home = () => {
         );
     }
 
-    const onSetPublic = () => {
+    const onSetPublic = (event) => {
+        event.preventDefault();
         setField('isPublic', !isPublic);
     };
 
@@ -126,7 +117,9 @@ const Home = () => {
 
     const inputReadOnly = !!secretId;
     const disableFileUpload =
-        isPublic || (config.get('settings.upload_restriction') && !isLoggedIn);
+        (config.get('settings.upload_restriction') && !isLoggedIn) ||
+        isPublic ||
+        settings.disable_file_upload;
 
     const dismissError = () => {
         setField('errors.banner.title', '');
@@ -165,23 +158,7 @@ const Home = () => {
         [formData.files, setField]
     );
 
-    const isTextEmpty = () => formData.text.trim() === '';
-
-    const generatePassword = () => {
-        const password = generate({
-            length: passwordOptions.length,
-            numbers: passwordOptions.numbers,
-            symbols: passwordOptions.symbols,
-            uppercase: passwordOptions.uppercase,
-            lowercase: passwordOptions.lowercase,
-        });
-        return password;
-    };
-
-    const injectPasswordToQuill = () => {
-        const password = generatePassword();
-        setField('formData.text', formData.text + (formData.text ? '\n' : '') + password);
-    };
+    const isTextEmpty = () => formData.text.trim() === '' || formData.text.trim() === '<p><br></p>';
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -238,136 +215,311 @@ const Home = () => {
                                 {t('home.title_description')}
                             </p>
                         </div>
+
+                        {!disableFileUpload && (
+                            <div className="space-y-4">
+                                <div
+                                    onDragEnter={handleDragEnter}
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                    className={`
+                                            relative flex flex-col items-center justify-center p-8
+                                            border-2 border-dashed rounded-lg transition-all duration-200
+                                            ${
+                                                isDragging
+                                                    ? 'border-primary bg-primary/10 scale-[1.01] shadow-lg shadow-primary/5'
+                                                    : 'border-white/[0.08] hover:border-white/[0.15] bg-black/20 hover:bg-black/30'
+                                            }
+                                        `}
+                                >
+                                    <div
+                                        className={`
+                                            p-4 rounded-full mb-3 transition-all duration-200
+                                            ${isDragging ? 'bg-primary/10' : 'bg-white/[0.02]'}
+                                        `}
+                                    >
+                                        <IconFileUpload
+                                            size={24}
+                                            className={`transition-colors duration-200 ${isDragging ? 'text-primary' : 'text-gray-400'}`}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2">
+                                        <input
+                                            type="file"
+                                            id="fileUpload"
+                                            onChange={(e) => {
+                                                const files = Array.from(e.target.files || []);
+                                                setField('formData.files', [
+                                                    ...formData.files,
+                                                    ...files,
+                                                ]);
+                                            }}
+                                            multiple
+                                            className="hidden"
+                                        />
+                                        <label
+                                            htmlFor="fileUpload"
+                                            className="flex items-center gap-2 px-4 py-2 
+                                                    bg-gray-800/80 text-gray-300 font-medium
+                                                    hover:bg-gray-700 rounded-md cursor-pointer 
+                                                    transition-all duration-200 hover:scale-[1.02]
+                                                    active:scale-[0.98]"
+                                        >
+                                            <IconFileUpload size={16} />
+                                            <span>{t('home.upload_files')}</span>
+                                        </label>
+                                        <p className="text-sm text-gray-400">
+                                            {t('home.drag_and_drop')}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {formData.files.length > 0 && (
+                                    <div className="space-y-2">
+                                        {formData.files.map((file, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center justify-between 
+                                                        bg-gradient-to-r from-gray-800/90 to-gray-800/70
+                                                        backdrop-blur-sm rounded-md px-4 py-3
+                                                        border border-white/[0.05] hover:border-white/[0.08]
+                                                        transition-all duration-200"
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <div className="p-2 bg-white/[0.05] rounded-lg">
+                                                        <IconFileUpload
+                                                            size={14}
+                                                            className="text-gray-400"
+                                                        />
+                                                    </div>
+                                                    <span className="text-sm text-gray-300 truncate">
+                                                        {file.name}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFile(index)}
+                                                    className="p-2 text-red-400 hover:text-red-300 
+                                                            hover:bg-red-500/10 rounded-lg
+                                                            transition-all duration-200"
+                                                    title={t('home.remove_file')}
+                                                >
+                                                    <IconTrash size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {disableFileUpload && (
+                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
+                                <div className="flex items-center space-x-3">
+                                    <div className="p-2 bg-primary/10 rounded-lg">
+                                        <IconFileUpload className="text-primary" size={18} />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-white/90">
+                                            {t('home.login_to_upload')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <Link
+                                    to="/signin"
+                                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
+                                >
+                                    {t('home.sign_in')}
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </FormSection>
 
                 <FormSection title={t('home.security')} subtitle={t('home.security_description')}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-6">
+                            <div className="space-y-4">
                                 <button
                                     type="button"
                                     onClick={onSetPublic}
                                     className={`
-                                        w-full flex items-center gap-3 px-4 py-3
-                                        bg-black/20 rounded-lg border border-white/[0.08]
-                                        hover:border-white/[0.12] transition-colors duration-200
-                                        ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300'}
+                                        w-full flex items-start gap-4 px-4 py-3.5
+                                        bg-black/20 rounded-lg border
+                                        hover:border-white/[0.12] transition-all duration-200
+                                        ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
                                     `}
                                 >
-                                    {isPublic ? <IconLockOpen size={18} /> : <IconLock size={18} />}
-                                    <span className="text-sm font-medium">
-                                        {t(isPublic ? 'home.public' : 'home.private')}
-                                    </span>
+                                    <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
+                                        {isPublic ? (
+                                            <IconLockOpen size={22} />
+                                        ) : (
+                                            <IconLock size={22} />
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col items-start min-w-0">
+                                        <span className="text-sm font-medium mb-0.5">
+                                            {t(isPublic ? 'home.public' : 'home.private')}
+                                        </span>
+                                        <span className="text-xs text-gray-400 text-left">
+                                            {isPublic
+                                                ? t('home.public_description')
+                                                : t('home.private_description')}
+                                        </span>
+                                    </div>
                                 </button>
-                                <div className="px-4">
-                                    <p className="text-xs text-gray-400">
-                                        {isPublic
-                                            ? t(
-                                                  'home.public_description',
-                                                  'Public secrets are not encrypted and can be viewed by anyone with the link'
-                                              )
-                                            : t(
-                                                  'home.private_description',
-                                                  'Private secrets are encrypted and can only be viewed with the decryption key'
-                                              )}
-                                    </p>
-                                </div>
                             </div>
 
-                            <button
-                                type="button"
-                                onClick={onEnablePassword}
-                                className={`
-                                    w-full flex items-center gap-3 px-4 py-3
-                                    bg-black/20 rounded-lg border border-white/[0.08]
-                                    hover:border-white/[0.12] transition-colors duration-200
-                                    ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300'}
-                                `}
-                            >
-                                <IconShieldLock size={18} />
-                                <span className="text-sm font-medium">{t('home.password')}</span>
-                            </button>
+                            <div className="space-y-4">
+                                <button
+                                    type="button"
+                                    onClick={onEnablePassword}
+                                    className={`
+                                        w-full flex items-start gap-4 px-4 py-3.5
+                                        bg-black/20 rounded-lg border
+                                        hover:border-white/[0.12] transition-all duration-200
+                                        ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
+                                    `}
+                                >
+                                    <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
+                                        <IconShieldLock size={22} />
+                                    </div>
+                                    <div className="flex flex-col items-start min-w-0">
+                                        <span className="text-sm font-medium mb-0.5">
+                                            {t('home.password')}
+                                        </span>
+                                        <span className="text-xs text-left text-gray-400 line-clamp-2">
+                                            {t(
+                                                'home.password_description',
+                                                'Add an additional layer of security with a password'
+                                            )}
+                                        </span>
+                                    </div>
+                                </button>
 
-                            {enablePassword && (
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <IconKey className="text-gray-400" size={14} />
+                                {enablePassword && (
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <IconKey className="text-gray-400" size={14} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={(e) => {
+                                                e.preventDefault();
+                                                setField('formData.password', e.target.value);
+                                            }}
+                                            readOnly={inputReadOnly}
+                                            className="w-full pl-10 pr-10 py-3 text-sm bg-black/20 border border-white/[0.08]
+                                                     rounded-lg text-gray-100 placeholder-gray-500
+                                                     hover:border-white/[0.12] focus:border-primary focus:ring-1 
+                                                     focus:ring-primary/50 transition-all duration-200"
+                                            placeholder={t('home.password')}
+                                        />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <CopyButton textToCopy={formData.password} />
+                                        </div>
                                     </div>
-                                    <input
-                                        type="text"
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={(e) =>
-                                            setField('formData.password', e.target.value)
-                                        }
-                                        readOnly={inputReadOnly}
-                                        className="w-full pl-10 pr-10 bg-gray-800 border border-gray-700
-                                                 rounded-lg text-gray-100 placeholder-gray-500
-                                                 focus:border-primary focus:ring-1 focus:ring-primary"
-                                        placeholder={t('home.password')}
-                                    />
-                                    <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                                        <CopyButton textToCopy={formData.password} />
-                                    </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
 
                             {!settings.hide_allowed_ip_input && (
-                                <div className="relative">
-                                    <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
-                                        <IconNetwork size={18} />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        name="allowedIp"
-                                        placeholder="0.0.0.0/0"
-                                        value={formData.allowedIp}
-                                        onChange={(e) =>
-                                            setField('formData.allowedIp', e.target.value)
-                                        }
-                                        readOnly={inputReadOnly}
-                                        className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
-                                                 focus:ring-2 focus:ring-hemmelig focus:border-transparent
-                                                 text-base text-gray-100 placeholder-gray-500"
-                                    />
-                                    <p className="mt-2 text-xs text-gray-400">
-                                        {t('home.restrict_from_ip')}
-                                    </p>
+                                <div className="space-y-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setEnableIpRange(!enableIpRange)}
+                                        className={`
+                                            w-full flex items-start gap-4 px-4 py-3.5
+                                            bg-black/20 rounded-lg border
+                                            hover:border-white/[0.12] transition-all duration-200
+                                            ${enableIpRange ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
+                                        `}
+                                    >
+                                        <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
+                                            <IconNetwork size={22} />
+                                        </div>
+                                        <div className="flex flex-col items-start min-w-0">
+                                            <span className="text-sm font-medium mb-0.5">
+                                                {t('home.restrict_from_ip_placeholder')}
+                                            </span>
+                                            <span className="text-xs text-left text-gray-400">
+                                                {t('home.restrict_from_ip')}
+                                            </span>
+                                        </div>
+                                    </button>
+
+                                    {enableIpRange && (
+                                        <div className="relative">
+                                            <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
+                                                <IconNetwork size={18} />
+                                            </div>
+                                            <div className="flex items-center">
+                                                <input
+                                                    type="text"
+                                                    name="allowedIp"
+                                                    placeholder="0.0.0.0/0"
+                                                    value={formData.allowedIp}
+                                                    onChange={(e) => {
+                                                        e.preventDefault();
+                                                        setField(
+                                                            'formData.allowedIp',
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                    readOnly={inputReadOnly}
+                                                    className="w-full pl-10 pr-3 text-sm py-3 bg-black/20 border border-white/[0.08]
+                                                             rounded-lg text-gray-100 placeholder-gray-500
+                                                             hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                             focus:ring-primary/50 transition-all duration-200"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
 
-                        <div className="space-y-4">
-                            <div className="relative">
-                                <div className="absolute left-3 top-[13px] text-gray-400 pointer-events-none">
-                                    <IconClock size={18} />
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <div className="relative">
+                                    <div className="absolute left-3 top-[14px] text-gray-400 pointer-events-none">
+                                        <IconClock size={18} />
+                                    </div>
+                                    <select
+                                        value={formData.ttl}
+                                        onChange={(e) => setField('formData.ttl', e.target.value)}
+                                        className="w-full pl-10 pr-8 py-3 text-sm bg-black/20 border border-white/[0.08]
+                                                 rounded-lg text-gray-100 placeholder-gray-500
+                                                 hover:border-white/[0.12] focus:border-primary focus:ring-1
+                                                 focus:ring-primary/50 transition-all duration-200
+                                                 appearance-none cursor-pointer"
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                                            backgroundPosition: 'right 0.5rem center',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: '1.5em 1.5em',
+                                        }}
+                                    >
+                                        {ttlValues.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <select
-                                    value={formData.ttl}
-                                    onChange={(e) => setField('formData.ttl', e.target.value)}
-                                    className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
-                                             text-gray-100 focus:border-primary focus:ring-1 focus:ring-primary
-                                             appearance-none"
-                                >
-                                    {ttlValues.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p className="mt-2 text-xs text-gray-400">
+                                <p className="text-xs text-gray-400 pl-1">
                                     {t('home.ttl_description')}
                                 </p>
                             </div>
 
                             {!formData.preventBurn && (
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
+                                <div className="p-4 bg-black/20 rounded-lg border border-white/[0.08] space-y-4">
+                                    <div className="flex items-center gap-3">
                                         <div className="p-2 bg-primary/10 rounded-lg">
                                             <IconEye className="text-primary" size={18} />
                                         </div>
-                                        <div>
+                                        <div className="flex-1">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-sm font-medium text-white/90">
                                                     {t('home.max_views')}
@@ -383,7 +535,7 @@ const Home = () => {
                                                         className="absolute left-1/2 -translate-x-1/2 -translate-y-full -top-2
                                                                    px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded
                                                                    opacity-0 group-hover:opacity-100 transition-opacity
-                                                                   whitespace-normal min-w-[150px] pointer-events-none"
+                                                                   whitespace-normal min-w-[150px] pointer-events-none z-10"
                                                     >
                                                         {t('home.max_views_description')}
                                                     </span>
@@ -402,338 +554,40 @@ const Home = () => {
                                         onChange={(e) =>
                                             setField('formData.maxViews', parseInt(e.target.value))
                                         }
-                                        className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
+                                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
                                                  accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
                                 </div>
                             )}
 
-                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 bg-orange-500/10 rounded-lg">
-                                        <IconFlame className="text-orange-400" size={18} />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-medium text-white/90">
-                                            {t('home.burn_after_time')}
+                            <div className="p-4 bg-black/20 rounded-lg border border-white/[0.08]">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-orange-500/10 rounded-lg">
+                                            <IconFlame className="text-orange-400" size={18} />
                                         </div>
-                                        <div className="text-xs text-gray-400">
-                                            {t('home.burn_aftertime')}
+                                        <div>
+                                            <div className="text-sm font-medium text-white/90">
+                                                {t('home.burn_after_time')}
+                                            </div>
+                                            <div className="text-xs text-gray-400">
+                                                {t('home.burn_aftertime')}
+                                            </div>
                                         </div>
                                     </div>
+                                    <Switch
+                                        checked={formData.preventBurn}
+                                        onChange={(checked) =>
+                                            setField('formData.preventBurn', checked)
+                                        }
+                                    >
+                                        {t('home.burn_after_time')}
+                                    </Switch>
                                 </div>
-                                <Switch
-                                    checked={formData.preventBurn}
-                                    onChange={(checked) =>
-                                        setField('formData.preventBurn', checked)
-                                    }
-                                >
-                                    {t('home.burn_after_time')}
-                                </Switch>
                             </div>
                         </div>
                     </div>
                 </FormSection>
-
-                {enablePasswordGeneration && (
-                    <FormSection
-                        title={t('home.password_generator')}
-                        subtitle={t('home.password_generator_description')}
-                        collapsible
-                    >
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 bg-primary/10 rounded-lg">
-                                        <IconKey className="text-primary" size={18} />
-                                    </div>
-                                    <div>
-                                        <div className="text-sm font-medium text-white/90">
-                                            {t('home.password_length')}
-                                        </div>
-                                        <div className="text-xs text-gray-400">
-                                            {passwordOptions.length} {t('home.characters')}
-                                        </div>
-                                    </div>
-                                </div>
-                                <input
-                                    type="range"
-                                    min="4"
-                                    max="64"
-                                    value={passwordOptions.length}
-                                    onChange={(e) =>
-                                        setPasswordOptions((prev) => ({
-                                            ...prev,
-                                            length: parseInt(e.target.value),
-                                        }))
-                                    }
-                                    className="w-32 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
-                                            accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                            <span className="text-primary text-sm font-semibold">
-                                                A
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.uppercase_letters')}
-                                            </div>
-                                            <div className="text-xs text-gray-400">A-Z</div>
-                                        </div>
-                                    </div>
-                                    <Switch
-                                        checked={passwordOptions.uppercase}
-                                        onChange={(checked) =>
-                                            setPasswordOptions((prev) => ({
-                                                ...prev,
-                                                uppercase: checked,
-                                            }))
-                                        }
-                                    >
-                                        {t('home.uppercase_letters')}
-                                    </Switch>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                            <span className="text-primary text-sm font-semibold">
-                                                a
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.lowercase_letters')}
-                                            </div>
-                                            <div className="text-xs text-gray-400">a-z</div>
-                                        </div>
-                                    </div>
-                                    <Switch
-                                        checked={passwordOptions.lowercase}
-                                        onChange={(checked) =>
-                                            setPasswordOptions((prev) => ({
-                                                ...prev,
-                                                lowercase: checked,
-                                            }))
-                                        }
-                                    >
-                                        {t('home.lowercase_letters')}
-                                    </Switch>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                            <span className="text-primary text-sm font-semibold">
-                                                9
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.numbers')}
-                                            </div>
-                                            <div className="text-xs text-gray-400">0-9</div>
-                                        </div>
-                                    </div>
-                                    <Switch
-                                        checked={passwordOptions.numbers}
-                                        onChange={(checked) =>
-                                            setPasswordOptions((prev) => ({
-                                                ...prev,
-                                                numbers: checked,
-                                            }))
-                                        }
-                                    >
-                                        {t('home.numbers')}
-                                    </Switch>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                            <span className="text-primary text-sm font-semibold">
-                                                @
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.special_characters')}
-                                            </div>
-                                            <div className="text-xs text-gray-400">
-                                                {'!@#$%^&*()+_-=}{[]|:;"/?.><,`~'}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Switch
-                                        checked={passwordOptions.symbols}
-                                        onChange={(checked) =>
-                                            setPasswordOptions((prev) => ({
-                                                ...prev,
-                                                symbols: checked,
-                                            }))
-                                        }
-                                    >
-                                        {t('home.special_characters')}
-                                    </Switch>
-                                </div>
-                            </div>
-
-                            <div className="flex justify-end">
-                                <button
-                                    type="button"
-                                    onClick={injectPasswordToQuill}
-                                    className="inline-flex items-center gap-2 px-4 py-2 text-sm
-                                            bg-primary text-white rounded-md hover:bg-primary-600 
-                                            transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={
-                                        !passwordOptions.uppercase &&
-                                        !passwordOptions.lowercase &&
-                                        !passwordOptions.numbers &&
-                                        !passwordOptions.symbols
-                                    }
-                                >
-                                    <IconArrowRight size={14} />
-                                    {t('home.inject_password')}
-                                </button>
-                            </div>
-                        </div>
-                    </FormSection>
-                )}
-
-                {!settings.disable_file_upload && (
-                    <>
-                        {!disableFileUpload && (
-                            <FormSection
-                                title={t('home.file_upload')}
-                                error={errors.sections.files}
-                            >
-                                <div className="space-y-4">
-                                    <div
-                                        onDragEnter={handleDragEnter}
-                                        onDragOver={handleDragOver}
-                                        onDragLeave={handleDragLeave}
-                                        onDrop={handleDrop}
-                                        className={`
-                                            relative flex flex-col items-center justify-center p-8
-                                            border-2 border-dashed rounded-lg transition-all duration-200
-                                            ${
-                                                isDragging
-                                                    ? 'border-primary bg-primary/10 scale-[1.01] shadow-lg shadow-primary/5'
-                                                    : 'border-white/[0.08] hover:border-white/[0.15] bg-black/20 hover:bg-black/30'
-                                            }
-                                        `}
-                                    >
-                                        <div
-                                            className={`
-                                            p-4 rounded-full mb-3 transition-all duration-200
-                                            ${isDragging ? 'bg-primary/10' : 'bg-white/[0.02]'}
-                                        `}
-                                        >
-                                            <IconFileUpload
-                                                size={24}
-                                                className={`transition-colors duration-200 ${isDragging ? 'text-primary' : 'text-gray-400'}`}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col items-center gap-2">
-                                            <input
-                                                type="file"
-                                                id="fileUpload"
-                                                onChange={(e) => {
-                                                    const files = Array.from(e.target.files || []);
-                                                    setField('formData.files', [
-                                                        ...formData.files,
-                                                        ...files,
-                                                    ]);
-                                                }}
-                                                multiple
-                                                className="hidden"
-                                            />
-                                            <label
-                                                htmlFor="fileUpload"
-                                                className="flex items-center gap-2 px-4 py-2 
-                                                    bg-gray-800/80 text-gray-300 font-medium
-                                                    hover:bg-gray-700 rounded-md cursor-pointer 
-                                                    transition-all duration-200 hover:scale-[1.02]
-                                                    active:scale-[0.98]"
-                                            >
-                                                <IconFileUpload size={16} />
-                                                <span>{t('home.upload_files')}</span>
-                                            </label>
-                                            <p className="text-sm text-gray-400">
-                                                {t('home.drag_and_drop')}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {formData.files.length > 0 && (
-                                        <div className="space-y-2">
-                                            {formData.files.map((file, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex items-center justify-between 
-                                                        bg-gradient-to-r from-gray-800/90 to-gray-800/70
-                                                        backdrop-blur-sm rounded-md px-4 py-3
-                                                        border border-white/[0.05] hover:border-white/[0.08]
-                                                        transition-all duration-200"
-                                                >
-                                                    <div className="flex items-center gap-3 min-w-0">
-                                                        <div className="p-2 bg-white/[0.05] rounded-lg">
-                                                            <IconFileUpload
-                                                                size={14}
-                                                                className="text-gray-400"
-                                                            />
-                                                        </div>
-                                                        <span className="text-sm text-gray-300 truncate">
-                                                            {file.name}
-                                                        </span>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeFile(index)}
-                                                        className="p-2 text-red-400 hover:text-red-300 
-                                                            hover:bg-red-500/10 rounded-lg
-                                                            transition-all duration-200"
-                                                        title={t('home.remove_file')}
-                                                    >
-                                                        <IconTrash size={14} />
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </FormSection>
-                        )}
-                        {config.get('settings.upload_restriction') && !isLoggedIn && (
-                            <FormSection title={t('home.file_upload')} collapsible={!isLoggedIn}>
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/[0.08]">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-primary/10 rounded-lg">
-                                            <IconFileUpload className="text-primary" size={18} />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-medium text-white/90">
-                                                {t('home.login_to_upload')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Link
-                                        to="/signin"
-                                        className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 transition-colors"
-                                    >
-                                        {t('home.sign_in')}
-                                    </Link>
-                                </div>
-                            </FormSection>
-                        )}
-                    </>
-                )}
 
                 <div className="flex flex-col sm:flex-row gap-4">
                     {secretId ? (
@@ -755,8 +609,8 @@ const Home = () => {
                             type="submit"
                             disabled={
                                 creatingSecret ||
-                                (settings.read_only && !isLoggedIn) ||
-                                isTextEmpty()
+                                isTextEmpty() ||
+                                (settings.read_only && !isLoggedIn)
                             }
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
                                      bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 

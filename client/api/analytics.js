@@ -24,6 +24,13 @@ const getAnalyticsData = async () => {
         });
 
         if (!response.ok) {
+            if (response.status === 403) {
+                return {
+                    statusCode: 403,
+                    error: response.statusText,
+                };
+            }
+
             throw new Error('Failed to fetch analytics data');
         }
 
@@ -44,6 +51,13 @@ const getStatistics = async () => {
         });
 
         if (!response.ok) {
+            if (response.status === 403) {
+                return {
+                    statusCode: 403,
+                    error: response.statusText,
+                };
+            }
+
             throw new Error('Failed to fetch analytics data');
         }
 

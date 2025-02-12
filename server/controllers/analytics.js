@@ -192,12 +192,14 @@ async function analytics(fastify) {
                 `;
 
                 // Convert BigInt to Number before sending
-                const aggregatedData = rawData.map((row) => ({
-                    date: row.date,
-                    unique_visitors: Number(row.unique_visitors),
-                    total_visits: Number(row.total_visits),
-                    paths: row.paths,
-                }));
+                const aggregatedData = rawData
+                    .map((row) => ({
+                        date: row.date,
+                        unique_visitors: Number(row.unique_visitors),
+                        total_visits: Number(row.total_visits),
+                        paths: row.paths,
+                    }))
+                    .reverse();
 
                 setCache(cacheKey, aggregatedData);
                 return reply.send(aggregatedData);

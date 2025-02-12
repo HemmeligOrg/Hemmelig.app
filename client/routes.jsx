@@ -104,7 +104,7 @@ const createAppRouter = () => {
                         element={<Analytics />}
                         loader={async () => {
                             const { getAnalyticsData, getStatistics } = await import(
-                                './services/analytics'
+                                './api/analytics'
                             );
 
                             return await Promise.all([getAnalyticsData(), getStatistics()]);

@@ -9,10 +9,20 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import ErrorBox from '../../components/error-box';
 
 const Analytics = () => {
     const { t } = useTranslation();
     const [analyticsData, stats] = useLoaderData();
+
+    // Handle error cases
+    if (analyticsData?.statusCode === 403) {
+        return (
+            <div className="animate-fadeIn">
+                <ErrorBox message={analyticsData?.error} />
+            </div>
+        );
+    }
 
     // Process data for path visualization
     const pathCounts = analyticsData.reduce((acc, item) => {
