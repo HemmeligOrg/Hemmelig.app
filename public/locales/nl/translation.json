@@ -105,7 +105,7 @@
         "enable_password": "Wachtwoord gebruiken",
         "optional_password": "Optioneel wachtwoord",
         "burn_aftertime": "Het geheim alleen vernietigen als de geldigheidsduur is verstreken",
-        "restrict_from_ip": "Alleen toegankelijk maken voor een specifiek IP-adres of CIDR-bereik. Voorbeeld CIDR: 192.168.1.0/24.",
+        "restrict_from_ip": "Met een CIDR kun je een bereik opgeven van IP-adressen die toegang hebben tot het geheim.",
         "restrict_from_ip_placeholder": "Inzage beperken op IP-adres of CIDR",
         "login_to_upload": "Log in om bestanden te uploaden",
         "public_no_upload": "Bestanden uploaden is uitgeschakeld voor openbare uitwisselingen",
@@ -161,8 +161,6 @@
         "sign_in": "Inloggen",
         "complete_url": "Volledige link",
         "complete_url_description": "Dit is de volledige URL inclusief de sleutel. Deel deze link om directe toegang tot het geheim te verschaffen.",
-        "password_generator": "Wachtwoord genereren",
-        "password_generator_description": "Maak een veilig wachtwoord aan",
         "password_length": "Lengte",
         "characters": "tekens",
         "uppercase_letters": "Hoofdletters",
@@ -170,7 +168,8 @@
         "numbers": "Cijfers",
         "special_characters": "Speciale tekens",
         "inject_password": "Wachtwoord invoegen",
-        "views": "weergave(n)"
+        "views": "weergave(n)",
+        "error_creating_secret": "Fout bij het aanmaken van het geheim"
     },
     "secret": {
         "view_your_secret": "Bekijk het geheim",
@@ -263,7 +262,7 @@
         "description": "Een overzicht van het gebruik en de beveiligingsfuncties van je platform"
     },
     "analytics": {
-        "title": "Analyseoverzicht",
+        "title": "Statistieken",
         "total_visits": "Totaal aantal bezoeken",
         "unique_visitors": "Unieke bezoekers",
         "unique_paths": "Unieke pagina's",
