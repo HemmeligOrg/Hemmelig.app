@@ -23,12 +23,6 @@ import attachment from './server/decorators/attachment-upload.js';
 import jwtDecorator from './server/decorators/jwt.js';
 import userFeatures from './server/decorators/user-features.js';
 
-import readCookieAllRoutesHandler from './server/prehandlers/cookie-all-routes.js';
-import disableUserAccountCreationHandler from './server/prehandlers/disable-user-account-creation.js';
-import disableUserHandler from './server/prehandlers/disable-users.js';
-import readOnlyHandler from './server/prehandlers/read-only.js';
-import restrictOrganizationEmailHandler from './server/prehandlers/restrict-organization-email.js';
-
 import accountRoute from './server/controllers/account.js';
 import adminSettingsRoute from './server/controllers/admin/settings.js';
 import usersRoute from './server/controllers/admin/users.js';
@@ -39,6 +33,12 @@ import healthzRoute from './server/controllers/healthz.js';
 import secretRoute from './server/controllers/secret.js';
 import statsRoute from './server/controllers/stats.js';
 import customHeaders from './server/plugins/custom-headers.js';
+import blockBot from './server/prehandlers/block-bot.js';
+import readCookieAllRoutesHandler from './server/prehandlers/cookie-all-routes.js';
+import disableUserAccountCreationHandler from './server/prehandlers/disable-user-account-creation.js';
+import disableUserHandler from './server/prehandlers/disable-users.js';
+import readOnlyHandler from './server/prehandlers/read-only.js';
+import restrictOrganizationEmailHandler from './server/prehandlers/restrict-organization-email.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -137,6 +137,7 @@ fastify.addHook('preHandler', disableUserHandler);
 fastify.addHook('preHandler', disableUserAccountCreationHandler);
 fastify.addHook('preHandler', readOnlyHandler);
 fastify.addHook('preHandler', restrictOrganizationEmailHandler);
+fastify.addHook('preHandler', blockBot);
 
 function serveIndex(_, reply) {
     return reply.html();
