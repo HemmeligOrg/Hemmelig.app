@@ -82,7 +82,7 @@ const config = {
     },
     analytics: {
         enabled: JSON.parse(SECRET_ANALYTICS_ENABLED),
-        ipSalt: SECRET_ANALYTICS_HMAC_SECRET,
+        hmacSecret: SECRET_ANALYTICS_HMAC_SECRET,
     },
     logger: true,
     cors: '*',

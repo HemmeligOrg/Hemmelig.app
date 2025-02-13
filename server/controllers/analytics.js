@@ -5,12 +5,12 @@ import { getCacheKey, getFromCache, setCache } from '../helpers/cache.js';
 import getClientIp from '../helpers/client-ip.js';
 import prisma from '../services/prisma.js';
 
-const { enabled, ipSalt } = config.get('analytics');
+const { enabled, hmacSecret } = config.get('analytics');
 
 function createUniqueId(ip, userAgent) {
     // Use HMAC for secure hashing
     return crypto
-        .createHmac('sha256', ipSalt)
+        .createHmac('sha256', hmacSecret)
         .update(ip + userAgent)
         .digest('hex');
 }
