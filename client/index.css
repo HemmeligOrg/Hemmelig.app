@@ -285,3 +285,7 @@ html {
 .ql-bubble .ql-tooltip {
     display: none !important;
 }
+
+.ql-snow .ql-picker-label.ql-active {
+    color: inherit !important;
+}

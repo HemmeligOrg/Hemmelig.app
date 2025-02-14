@@ -90,8 +90,7 @@ const Quill = ({ value, onChange, readOnly, defaultValue }) => {
                     [&_.ql-editor_ul]:list-disc [&_.ql-editor_ul]:ml-4
                     [&_.ql-editor_ol]:list-decimal [&_.ql-editor_ol]:ml-4
                     [&_.ql-snow_.ql-toolbar_button]:text-gray-300
-                    [&_.ql-snow_.ql-toolbar_button:hover]:text-white
-                    [&_.ql-snow_.ql-toolbar_button.ql-active]:text-blue-400"
+                    [&_.ql-snow_.ql-toolbar_button:hover]:text-white"
                 />
                 {!readOnly && (
                     <div className="absolute top-0 right-0 transform -translate-x-1/2 h-[42px] flex items-center">
