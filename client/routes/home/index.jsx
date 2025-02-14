@@ -683,7 +683,7 @@ const Home = () => {
                                         readOnly
                                         onClick={handleFocus}
                                         className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
-                                                 rounded-md text-gray-100"
+                                                 rounded-md text-gray-100 focus:ring-hemmelig focus:border-hemmelig"
                                     />
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                                         <CopyButton textToCopy={getSecretURL(true)} />
@@ -711,7 +711,7 @@ const Home = () => {
                                             readOnly
                                             onClick={handleFocus}
                                             className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
-                                                     rounded-md text-gray-100"
+                                                     rounded-md text-gray-100 focus:ring-hemmelig focus:border-hemmelig"
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                                             <CopyButton textToCopy={getSecretURL(false)} />
@@ -733,7 +733,7 @@ const Home = () => {
                                             readOnly
                                             onClick={handleFocus}
                                             className="w-full pl-10 pr-20 py-2 bg-gray-800 border border-gray-700 
-                                                     rounded-md text-gray-100"
+                                                     rounded-md text-gray-100 focus:ring-hemmelig focus:border-hemmelig"
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                                             <CopyButton textToCopy={encryptionKey} />
