@@ -62,6 +62,15 @@ const Home = () => {
 
     const onSubmit = (event) => {
         handleSubmit(event, t);
+
+        // Scroll to bottom of page after form submission
+        // Ensure the UI has time to update before scrolling
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth',
+            });
+        }, 100);
     };
 
     const ttlValues = [
