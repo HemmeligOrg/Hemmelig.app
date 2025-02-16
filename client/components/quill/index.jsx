@@ -1,6 +1,6 @@
 import { IconKey } from '@tabler/icons';
 import { generate } from 'generate-password-browser';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -27,7 +27,28 @@ const PasswordButton = ({ onClick, tooltip }) => (
 
 const Quill = ({ value, onChange, readOnly, defaultValue }) => {
     const quillRef = useRef(null);
+    const containerRef = useRef(null);
     const { t } = useTranslation();
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(event.target) &&
+                quillRef.current
+            ) {
+                const editor = quillRef.current.getEditor();
+                if (editor) {
+                    editor.blur();
+                }
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     // Custom handler for password generation
     const handlePasswordGeneration = () => {
@@ -70,7 +91,10 @@ const Quill = ({ value, onChange, readOnly, defaultValue }) => {
           };
 
     return (
-        <div className="bg-gray-800 border border-gray-700 rounded-md overflow-hidden">
+        <div
+            ref={containerRef}
+            className="bg-gray-800 border border-gray-700 rounded-md overflow-hidden"
+        >
             <div className="relative">
                 <ReactQuillFixed
                     ref={quillRef}

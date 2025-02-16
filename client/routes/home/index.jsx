@@ -18,7 +18,7 @@ import {
 } from '@tabler/icons';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
@@ -34,7 +34,6 @@ const Home = () => {
     const { isLoggedIn } = useAuthStore();
     const { settings } = useSettingsStore();
     const [isDragging, setIsDragging] = useState(false);
-    const location = useLocation();
 
     const {
         formData,
