@@ -60,7 +60,14 @@ const useSecretStore = create((set, get) => ({
             }
             return { [field]: value };
         }),
-    reset: () => set(defaultValues),
+    reset: () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+
+        set(defaultValues);
+    },
     removeFile: (index) =>
         set((state) => {
             const files = [...state.formData.files];
