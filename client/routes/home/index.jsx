@@ -62,7 +62,7 @@ const Home = () => {
                 top: document.body.scrollHeight,
                 behavior: 'smooth',
             });
-        }, 100);
+        }, 300);
     };
 
     const ttlValues = [
