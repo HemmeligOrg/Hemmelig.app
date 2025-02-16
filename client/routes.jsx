@@ -1,7 +1,9 @@
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import AdminShell from './admin-shell.jsx';
+import { trackPageView } from './api/analytics';
 import ApplicationShell from './app-shell.jsx';
+import config from './config';
 import ApiDocs from './routes/api-docs/index.jsx';
 
 const Home = lazy(() => import('./routes/home'));
@@ -21,6 +23,13 @@ const Analytics = lazy(() => import('./routes/account/analytics'));
 const NotFound = lazy(() => import('./routes/not-found'));
 
 const createAppRouter = () => {
+    useEffect(() => {
+        if (config.get('settings.analytics.enabled')) {
+            console.log('tracking page view', location.pathname);
+            trackPageView(location.pathname);
+        }
+    }, [location.pathname]);
+
     return createBrowserRouter(
         createRoutesFromElements(
             <>

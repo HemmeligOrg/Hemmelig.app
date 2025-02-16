@@ -16,10 +16,9 @@ import {
     IconTrash,
     IconX,
 } from '@tabler/icons';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { trackPageView } from '../../api/analytics';
 import { burnSecret } from '../../api/secret';
 import CopyButton from '../../components/CopyButton';
 import QRLink from '../../components/qrlink';
@@ -53,12 +52,6 @@ const Home = () => {
     } = useSecretStore();
 
     const [enableIpRange, setEnableIpRange] = useState(false);
-
-    useEffect(() => {
-        if (config.get('settings.analytics.enabled')) {
-            trackPageView(location.pathname);
-        }
-    }, [location.pathname]);
 
     const onSubmit = (event) => {
         handleSubmit(event, t);
