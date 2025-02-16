@@ -25,7 +25,6 @@ const NotFound = lazy(() => import('./routes/not-found'));
 const createAppRouter = () => {
     useEffect(() => {
         if (config.get('settings.analytics.enabled')) {
-            console.log('tracking page view', location.pathname);
             trackPageView(location.pathname);
         }
     }, [location.pathname]);
