@@ -18,8 +18,8 @@ function createUniqueId(ip, userAgent) {
 // Validate path to prevent malicious inputs
 function isValidPath(path) {
     // Only allow paths that start with / and contain safe characters
-    const pathRegex = /^\/[a-zA-Z0-9\-_/]*$/;
-    return pathRegex.test(path) && path.length <= 255 && !path.includes('/secret');
+    const pathRegex = /^\/[a-zA-Z0-9\-?=&/]*$/;
+    return pathRegex.test(path) && path.length <= 255;
 }
 
 async function analytics(fastify) {
