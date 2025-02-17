@@ -40,11 +40,14 @@ RUN npm ci --omit=dev --ignore-scripts
 
 RUN chown -R node:node ./
 
-COPY server.js .
-COPY server/ .
-COPY shared/ .
-COPY prisma/ .
-COPY config/ .
+COPY server.js ./
+COPY .env ./
+COPY vite.config.js ./
+COPY server/ ./server/
+COPY shared/ ./shared/
+COPY prisma/ ./prisma/
+COPY config/ ./config/
+COPY public/ ./public/
 
 RUN npx prisma generate
 
