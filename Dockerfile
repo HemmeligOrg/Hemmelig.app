@@ -28,7 +28,7 @@ RUN npm run build
 # Get ready for step two of the docker image build
 FROM node:20-alpine
 
-RUN apk add curl openssl --no-cache
+RUN apk update && apk add --no-cache curl openssl && rm -rf /var/cache/apk/*
 
 WORKDIR /home/node/hemmelig
 
@@ -36,11 +36,18 @@ COPY --from=0 /usr/src/app/client/build client/build
 
 COPY package*.json ./
 
-RUN npm ci --production --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts
 
 RUN chown -R node:node ./
 
-COPY . .
+COPY server.js ./
+COPY .env ./
+COPY vite.config.js ./
+COPY server/ ./server/
+COPY shared/ ./shared/
+COPY prisma/ ./prisma/
+COPY config/ ./config/
+COPY public/ ./public/
 
 RUN npx prisma generate
 
