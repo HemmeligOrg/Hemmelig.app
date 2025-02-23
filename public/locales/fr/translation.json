@@ -161,8 +161,6 @@
         "sign_in": "Connexion",
         "complete_url": "URL secrète complète",
         "complete_url_description": "Il s'agit de l'URL complète qui inclut la clé de déchiffrement. Partagez cette URL pour donner un accès direct au secret.",
-        "password_generator": "Générateur de mot de passe",
-        "password_generator_description": "Générer un mot de passe sécurisé avec des exigences personnalisées",
         "password_length": "Longueur du mot de passe",
         "characters": "caractères",
         "uppercase_letters": "Lettres majuscules",
@@ -170,7 +168,8 @@
         "numbers": "Chiffres",
         "special_characters": "Caractères spéciaux",
         "inject_password": "Insérer le mot de passe",
-        "views": "vue(s)"
+        "views": "vue(s)",
+        "error_creating_secret": "Une erreur est survenue pendant la création du secret"
     },
     "secret": {
         "view_your_secret": "Afficher votre secret",
@@ -241,7 +240,7 @@
     },
     "not_found": {
         "title": "Page introuvable",
-        "description": "Oups ! Il semblerait que ce secret se soit évaporé. Ne vous inquiétez pas toutefois, vous pouvez en créer un nouveau ou consulter la documentation.",
+        "description": "Oups ! Il semblerait que ce secret se soit évaporé. Ne vous inquiétez pas toutefois, vous pouvez en créer un nouveau ou consulter la documentation.",
         "go_home": "Créer un nouveau secret",
         "view_docs": "Voir la doc de l'API"
     },
