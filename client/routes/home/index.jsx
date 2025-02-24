@@ -603,42 +603,6 @@ const Home = () => {
                     </div>
                 </FormSection>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                    {!secretId && (
-                        <button
-                            type="submit"
-                            disabled={
-                                creatingSecret ||
-                                isTextEmpty() ||
-                                (settings.read_only && !isLoggedIn)
-                            }
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-                                     bg-hemmelig text-white rounded-md hover:bg-hemmelig-700 
-                                     disabled:opacity-50 disabled:cursor-not-allowed transition-colors
-                                     group relative"
-                            title={isTextEmpty() ? t('home.text_required') : ''}
-                        >
-                            {creatingSecret ? (
-                                <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-b-transparent mr-2" />
-                            ) : (
-                                <>
-                                    <IconLockAccess size={14} />
-                                    {t('home.create')}
-                                </>
-                            )}
-                            {isTextEmpty() && (
-                                <span
-                                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 
-                                       px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded
-                                       opacity-0 group-hover:opacity-100 transition-opacity
-                                       whitespace-nowrap pointer-events-none"
-                                >
-                                    {t('home.text_required')}
-                                </span>
-                            )}
-                        </button>
-                    )}
-                </div>
 
                 {secretId && (
                     <>
