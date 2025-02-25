@@ -15,7 +15,7 @@ import {
     IconShieldLock,
     IconTrash,
     IconX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';

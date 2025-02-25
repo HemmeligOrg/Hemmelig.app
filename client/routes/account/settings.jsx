@@ -1,4 +1,4 @@
-import { IconAt, IconEdit } from '@tabler/icons';
+import { IconAt, IconEdit } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';

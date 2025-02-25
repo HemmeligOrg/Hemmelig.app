@@ -1,7 +1,7 @@
 import { Navigate, useLoaderData } from 'react-router-dom';
 import ErrorBox from '../../components/error-box';
 
-import { IconInfoCircle, IconRocket } from '@tabler/icons';
+import { IconInfoCircle, IconRocket } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 const HomeAccount = () => {

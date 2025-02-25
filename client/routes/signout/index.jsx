@@ -1,4 +1,4 @@
-import { IconLogout } from '@tabler/icons';
+import { IconLogout } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';

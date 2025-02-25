@@ -1,4 +1,4 @@
-import { IconFingerprint, IconInfoCircle } from '@tabler/icons';
+import { IconFingerprint, IconInfoCircle } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 const ApiDocs = () => {

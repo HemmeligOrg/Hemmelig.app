@@ -1,4 +1,4 @@
-import { IconCheck, IconFileOff, IconTrash } from '@tabler/icons';
+import { IconCheck, IconFileOff, IconTrash } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';

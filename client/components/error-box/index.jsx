@@ -1,4 +1,4 @@
-import { IconAlertCircle } from '@tabler/icons';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 const ErrorBox = ({ message, title = 'home.bummer' }) => {

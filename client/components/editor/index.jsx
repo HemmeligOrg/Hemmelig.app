@@ -1,7 +1,6 @@
 import {
     IconArrowBackUp,
     IconArrowForwardUp,
-    IconBinary,
     IconBold,
     IconBrandCodesandbox,
     IconCode,
@@ -16,11 +15,12 @@ import {
     IconLinkOff,
     IconList,
     IconListNumbers,
+    IconNumber64Small,
     IconQuote,
+    IconSourceCode,
     IconStrikethrough,
-    IconTextCaption,
     IconX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { Color } from '@tiptap/extension-color';
 import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
@@ -368,25 +368,25 @@ const ReadOnlyMenuBar = () => {
         <div className="mb-4 flex w-full">
             <div className="flex gap-2">
                 <div className={groupClass}>
-                    <Tooltip text={t('editor.tooltips.copy_html')}>
-                        <button onClick={copyAsHTML} className={buttonClass}>
-                            <IconCopy size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
                     <Tooltip text={t('editor.tooltips.copy_text')}>
                         <button onClick={copyAsPlainText} className={buttonClass}>
-                            <IconTextCaption size={18} stroke={1.5} className="text-gray-300" />
+                            <IconCopy size={20} stroke={1.5} className="text-gray-300" />
+                        </button>
+                    </Tooltip>
+                    <Tooltip text={t('editor.tooltips.copy_html')}>
+                        <button onClick={copyAsHTML} className={buttonClass}>
+                            <IconSourceCode size={20} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text={t('editor.tooltips.copy_base64')}>
                         <button onClick={copyAsBase64} className={buttonClass}>
-                            <IconBinary size={18} stroke={1.5} className="text-gray-300" />
+                            <IconNumber64Small size={20} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                 </div>
             </div>
             {copySuccess && (
-                <div className="text-sm text-green-400 animate-fade-in-out">{copySuccess}</div>
+                <div className="text-sm text-gray-200 animate-fade-in-out p-2">{copySuccess}</div>
             )}
         </div>
     );
@@ -421,7 +421,6 @@ const MenuBar = ({ content }) => {
 
     // Updated link handling function
     const openLinkModal = useCallback(() => {
-        const previousUrl = editor.getAttributes('link').href || '';
         setLinkModalOpen(true);
     }, [editor]);
 

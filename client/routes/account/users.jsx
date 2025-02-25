@@ -1,4 +1,4 @@
-import { IconAt, IconChefHat, IconEdit, IconPlus, IconTrash, IconUser } from '@tabler/icons';
+import { IconAt, IconChefHat, IconEdit, IconPlus, IconTrash, IconUser } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';

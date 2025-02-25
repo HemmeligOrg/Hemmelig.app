@@ -1,4 +1,4 @@
-import { IconMoodConfuzed } from '@tabler/icons';
+import { IconMoodConfuzed } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

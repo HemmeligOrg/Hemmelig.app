@@ -1,4 +1,4 @@
-import { IconCheck } from '@tabler/icons';
+import { IconCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 const SuccessBox = ({ message, title = 'settings.success' }) => {

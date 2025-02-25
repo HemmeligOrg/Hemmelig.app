@@ -6,7 +6,7 @@ import {
     IconLock,
     IconShieldLock,
     IconSquarePlus,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import { IconMenu2 } from '@tabler/icons';
+import { IconMenu2 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { IconEye, IconEyeOff, IconLock, IconLogin, IconUser } from '@tabler/icons';
+import { IconEye, IconEyeOff, IconLock, IconLogin, IconUser } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
