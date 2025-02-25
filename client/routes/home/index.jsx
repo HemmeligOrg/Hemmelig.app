@@ -212,7 +212,7 @@ const Home = () => {
                             value={formData.title}
                             onChange={(e) => setField('formData.title', e.target.value)}
                             readOnly={inputReadOnly}
-                            className="w-full pl-10 pr-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md
+                            className="w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-md
                                          focus:ring-2 focus:ring-hemmelig focus:border-transparent
                                          text-base text-gray-100 placeholder-gray-500"
                         />
