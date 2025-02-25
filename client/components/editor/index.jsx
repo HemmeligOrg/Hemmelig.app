@@ -162,7 +162,7 @@ const MenuBar = () => {
 
     return (
         <>
-            <div className="mb-4 p-1">
+            <div className="mb-4">
                 <div className="flex flex-wrap gap-2 items-center">
                     {/* Text formatting group */}
                     <div className={groupClass}>
@@ -433,7 +433,7 @@ const content = `
 
 export default function Editor({ setContent }) {
     return (
-        <div className="prose prose-sm max-w-none">
+        <div className="prose prose-sm max-w-none border border-gray-700 rounded-md p-2">
             <EditorProvider
                 slotBefore={<MenuBar />}
                 extensions={extensions}
@@ -443,7 +443,7 @@ export default function Editor({ setContent }) {
                 }}
                 editorProps={{
                     attributes: {
-                        class: 'focus:outline-none text-gray-100 prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-200 prose-a:text-gray-100 prose-a:underline prose-a:font-medium hover:prose-a:text-gray-50 prose-code:bg-gray-800 prose-code:text-gray-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-300 prose-hr:my-6 prose-hr:border-gray-700',
+                        class: 'focus:outline-none text-gray-100 prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-200 prose-strong:text-gray-200 prose-strong:font-bold prose-em:text-gray-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-200 prose-a:text-gray-100 prose-a:underline prose-a:font-medium hover:prose-a:text-gray-50 prose-code:bg-gray-800 prose-code:text-gray-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-300 prose-hr:my-6 prose-hr:border-gray-700',
                     },
                 }}
             />
