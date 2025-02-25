@@ -31,9 +31,9 @@ const Tooltip = ({ text, children }) => {
                 {children}
             </div>
             {isVisible && (
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-800 dark:bg-gray-700 rounded shadow-sm whitespace-nowrap z-10">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-800 rounded shadow-sm whitespace-nowrap z-10">
                     {text}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800 dark:border-t-gray-700"></div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
                 </div>
             )}
         </div>
@@ -47,18 +47,17 @@ const MenuBar = () => {
         return null;
     }
 
-    // Updated button styles with better dark mode support
+    // Updated button styles without dark mode prefixes
     const buttonClass =
-        'p-1.5 text-sm rounded-md hover:bg-gray-100 hover:dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors';
+        'p-1.5 text-sm rounded-md hover:bg-gray-700 text-gray-200 transition-colors';
     const activeButtonClass =
-        'p-1.5 text-sm rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-colors';
+        'p-1.5 text-sm rounded-md bg-blue-900/30 text-blue-400 transition-colors';
 
-    // Updated group styles for better dark mode appearance
-    const groupClass =
-        'flex items-center border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 shadow-sm';
+    // Updated group styles without dark mode prefixes
+    const groupClass = 'flex items-center border border-gray-700 rounded-md bg-gray-800 shadow-sm';
 
     return (
-        <div className="mb-4 p-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
+        <div className="mb-4 p-1">
             <div className="flex flex-wrap gap-2 items-center">
                 {/* Text formatting group */}
                 <div className={groupClass}>
@@ -68,11 +67,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().toggleBold().run()}
                             className={editor.isActive('bold') ? activeButtonClass : buttonClass}
                         >
-                            <IconBold
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconBold size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Italic">
@@ -81,11 +76,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().toggleItalic().run()}
                             className={editor.isActive('italic') ? activeButtonClass : buttonClass}
                         >
-                            <IconItalic
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconItalic size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Strikethrough">
@@ -94,11 +85,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().toggleStrike().run()}
                             className={editor.isActive('strike') ? activeButtonClass : buttonClass}
                         >
-                            <IconStrikethrough
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconStrikethrough size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Inline Code">
@@ -107,11 +94,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().toggleCode().run()}
                             className={editor.isActive('code') ? activeButtonClass : buttonClass}
                         >
-                            <IconCode
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconCode size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                 </div>
@@ -125,11 +108,7 @@ const MenuBar = () => {
                                 editor.isActive('paragraph') ? activeButtonClass : buttonClass
                             }
                         >
-                            <IconLetterP
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconLetterP size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Heading 1">
@@ -141,11 +120,7 @@ const MenuBar = () => {
                                     : buttonClass
                             }
                         >
-                            <IconH1
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconH1 size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Heading 2">
@@ -157,11 +132,7 @@ const MenuBar = () => {
                                     : buttonClass
                             }
                         >
-                            <IconH2
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconH2 size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Heading 3">
@@ -173,11 +144,7 @@ const MenuBar = () => {
                                     : buttonClass
                             }
                         >
-                            <IconH3
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconH3 size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                 </div>
@@ -191,11 +158,7 @@ const MenuBar = () => {
                                 editor.isActive('bulletList') ? activeButtonClass : buttonClass
                             }
                         >
-                            <IconList
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconList size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Numbered List">
@@ -205,11 +168,7 @@ const MenuBar = () => {
                                 editor.isActive('orderedList') ? activeButtonClass : buttonClass
                             }
                         >
-                            <IconListNumbers
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconListNumbers size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Blockquote">
@@ -219,11 +178,7 @@ const MenuBar = () => {
                                 editor.isActive('blockquote') ? activeButtonClass : buttonClass
                             }
                         >
-                            <IconQuote
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconQuote size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Code Block">
@@ -236,7 +191,7 @@ const MenuBar = () => {
                             <IconBrandCodesandbox
                                 size={18}
                                 stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
+                                className="text-gray-300"
                             />
                         </button>
                     </Tooltip>
@@ -250,11 +205,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().undo().run()}
                             className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
                         >
-                            <IconArrowBackUp
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconArrowBackUp size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                     <Tooltip text="Redo">
@@ -263,11 +214,7 @@ const MenuBar = () => {
                             disabled={!editor.can().chain().focus().redo().run()}
                             className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
                         >
-                            <IconArrowForwardUp
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-700 dark:text-gray-300"
-                            />
+                            <IconArrowForwardUp size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
                 </div>
