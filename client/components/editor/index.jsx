@@ -8,6 +8,7 @@ import {
     IconH2,
     IconH3,
     IconItalic,
+    IconKey,
     IconLetterP,
     IconLink,
     IconLinkOff,
@@ -24,6 +25,17 @@ import TextStyle from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback, useRef, useState } from 'react';
+
+// Password generator function
+const generatePassword = (length = 16) => {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+};
 
 // Tooltip component for buttons
 const Tooltip = ({ text, children }) => {
@@ -114,9 +126,97 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
     );
 };
 
+// Password Modal Component
+const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
+    const [passwordLength, setPasswordLength] = useState(16);
+    const [password, setPassword] = useState(generatePassword(16));
+
+    if (!isOpen) return null;
+
+    const regeneratePassword = () => {
+        setPassword(generatePassword(passwordLength));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(password);
+        onClose();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-100">Insert Password</h3>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-200">
+                        <IconX size={20} />
+                    </button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Password Length
+                        </label>
+                        <div className="flex items-center mb-4">
+                            <input
+                                type="range"
+                                min="8"
+                                max="32"
+                                value={passwordLength}
+                                onChange={(e) => {
+                                    const newLength = parseInt(e.target.value);
+                                    setPasswordLength(newLength);
+                                    setPassword(generatePassword(newLength));
+                                }}
+                                className="w-full mr-3"
+                            />
+                            <span className="text-gray-200 w-8 text-center">{passwordLength}</span>
+                        </div>
+
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Generated Password
+                        </label>
+                        <div className="flex">
+                            <input
+                                type="text"
+                                value={password}
+                                readOnly
+                                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-l-md text-gray-100"
+                            />
+                            <button
+                                type="button"
+                                onClick={regeneratePassword}
+                                className="px-3 py-2 bg-gray-600 text-gray-200 rounded-r-md hover:bg-gray-500"
+                            >
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                        >
+                            Insert
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 const MenuBar = () => {
     const { editor } = useCurrentEditor();
     const [linkModalOpen, setLinkModalOpen] = useState(false);
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
     if (!editor) {
         return null;
@@ -156,6 +256,14 @@ const MenuBar = () => {
             } catch (e) {
                 alert(e.message);
             }
+        },
+        [editor]
+    );
+
+    // Password handling function
+    const handlePasswordSubmit = useCallback(
+        (password) => {
+            editor.chain().focus().insertContent(password).run();
         },
         [editor]
     );
@@ -231,6 +339,14 @@ const MenuBar = () => {
                                 className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
                             >
                                 <IconLinkOff size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Insert Password">
+                            <button
+                                onClick={() => setPasswordModalOpen(true)}
+                                className={buttonClass}
+                            >
+                                <IconKey size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
                     </div>
@@ -373,6 +489,13 @@ const MenuBar = () => {
                 onClose={() => setLinkModalOpen(false)}
                 onSubmit={handleLinkSubmit}
                 initialUrl={editor?.getAttributes('link').href || ''}
+            />
+
+            {/* Password Modal */}
+            <PasswordModal
+                isOpen={passwordModalOpen}
+                onClose={() => setPasswordModalOpen(false)}
+                onSubmit={handlePasswordSubmit}
             />
         </>
     );
