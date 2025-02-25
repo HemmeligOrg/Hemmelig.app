@@ -9,17 +9,21 @@ import {
     IconH3,
     IconItalic,
     IconLetterP,
+    IconLink,
+    IconLinkOff,
     IconList,
     IconListNumbers,
     IconQuote,
     IconStrikethrough,
+    IconX,
 } from '@tabler/icons';
 import { Color } from '@tiptap/extension-color';
+import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
 import TextStyle from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 // Tooltip component for buttons
 const Tooltip = ({ text, children }) => {
@@ -40,8 +44,79 @@ const Tooltip = ({ text, children }) => {
     );
 };
 
+// Link Modal Component
+const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
+    const [url, setUrl] = useState(initialUrl);
+    const inputRef = useRef(null);
+
+    // Focus the input when the modal opens
+    useState(() => {
+        if (isOpen && inputRef.current) {
+            setTimeout(() => {
+                inputRef.current.focus();
+            }, 50);
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(url);
+        onClose();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-100">Insert Link</h3>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-200">
+                        <IconX size={20} />
+                    </button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label
+                            htmlFor="url"
+                            className="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                            URL
+                        </label>
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            id="url"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                            placeholder="https://example.com"
+                            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                        >
+                            {initialUrl ? 'Update' : 'Insert'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
 const MenuBar = () => {
     const { editor } = useCurrentEditor();
+    const [linkModalOpen, setLinkModalOpen] = useState(false);
 
     if (!editor) {
         return null;
@@ -56,176 +131,263 @@ const MenuBar = () => {
     // Updated group styles without dark mode prefixes
     const groupClass = 'flex items-center border border-gray-700 rounded-md bg-gray-800 shadow-sm';
 
+    // Updated link handling function
+    const openLinkModal = useCallback(() => {
+        const previousUrl = editor.getAttributes('link').href || '';
+        setLinkModalOpen(true);
+    }, [editor]);
+
+    const handleLinkSubmit = useCallback(
+        (url) => {
+            // Empty
+            if (url === '') {
+                editor.chain().focus().extendMarkRange('link').unsetLink().run();
+                return;
+            }
+
+            // Add protocol if missing
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+
+            // Update link
+            try {
+                editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+            } catch (e) {
+                alert(e.message);
+            }
+        },
+        [editor]
+    );
+
     return (
-        <div className="mb-4 p-1">
-            <div className="flex flex-wrap gap-2 items-center">
-                {/* Text formatting group */}
-                <div className={groupClass}>
-                    <Tooltip text="Bold">
-                        <button
-                            onClick={() => editor.chain().focus().toggleBold().run()}
-                            disabled={!editor.can().chain().focus().toggleBold().run()}
-                            className={editor.isActive('bold') ? activeButtonClass : buttonClass}
-                        >
-                            <IconBold size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Italic">
-                        <button
-                            onClick={() => editor.chain().focus().toggleItalic().run()}
-                            disabled={!editor.can().chain().focus().toggleItalic().run()}
-                            className={editor.isActive('italic') ? activeButtonClass : buttonClass}
-                        >
-                            <IconItalic size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Strikethrough">
-                        <button
-                            onClick={() => editor.chain().focus().toggleStrike().run()}
-                            disabled={!editor.can().chain().focus().toggleStrike().run()}
-                            className={editor.isActive('strike') ? activeButtonClass : buttonClass}
-                        >
-                            <IconStrikethrough size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Inline Code">
-                        <button
-                            onClick={() => editor.chain().focus().toggleCode().run()}
-                            disabled={!editor.can().chain().focus().toggleCode().run()}
-                            className={editor.isActive('code') ? activeButtonClass : buttonClass}
-                        >
-                            <IconCode size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                </div>
+        <>
+            <div className="mb-4 p-1">
+                <div className="flex flex-wrap gap-2 items-center">
+                    {/* Text formatting group */}
+                    <div className={groupClass}>
+                        <Tooltip text="Bold">
+                            <button
+                                onClick={() => editor.chain().focus().toggleBold().run()}
+                                disabled={!editor.can().chain().focus().toggleBold().run()}
+                                className={
+                                    editor.isActive('bold') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconBold size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Italic">
+                            <button
+                                onClick={() => editor.chain().focus().toggleItalic().run()}
+                                disabled={!editor.can().chain().focus().toggleItalic().run()}
+                                className={
+                                    editor.isActive('italic') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconItalic size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Strikethrough">
+                            <button
+                                onClick={() => editor.chain().focus().toggleStrike().run()}
+                                disabled={!editor.can().chain().focus().toggleStrike().run()}
+                                className={
+                                    editor.isActive('strike') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconStrikethrough
+                                    size={18}
+                                    stroke={1.5}
+                                    className="text-gray-300"
+                                />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Inline Code">
+                            <button
+                                onClick={() => editor.chain().focus().toggleCode().run()}
+                                disabled={!editor.can().chain().focus().toggleCode().run()}
+                                className={
+                                    editor.isActive('code') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconCode size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Link">
+                            <button
+                                onClick={openLinkModal}
+                                className={
+                                    editor.isActive('link') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconLink size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Remove Link">
+                            <button
+                                onClick={() => editor.chain().focus().unsetLink().run()}
+                                disabled={!editor.isActive('link')}
+                                className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
+                            >
+                                <IconLinkOff size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                    </div>
 
-                {/* Paragraph formatting group */}
-                <div className={groupClass}>
-                    <Tooltip text="Paragraph">
-                        <button
-                            onClick={() => editor.chain().focus().setParagraph().run()}
-                            className={
-                                editor.isActive('paragraph') ? activeButtonClass : buttonClass
-                            }
-                        >
-                            <IconLetterP size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Heading 1">
-                        <button
-                            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                            className={
-                                editor.isActive('heading', { level: 1 })
-                                    ? activeButtonClass
-                                    : buttonClass
-                            }
-                        >
-                            <IconH1 size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Heading 2">
-                        <button
-                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                            className={
-                                editor.isActive('heading', { level: 2 })
-                                    ? activeButtonClass
-                                    : buttonClass
-                            }
-                        >
-                            <IconH2 size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Heading 3">
-                        <button
-                            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                            className={
-                                editor.isActive('heading', { level: 3 })
-                                    ? activeButtonClass
-                                    : buttonClass
-                            }
-                        >
-                            <IconH3 size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                </div>
+                    {/* Paragraph formatting group */}
+                    <div className={groupClass}>
+                        <Tooltip text="Paragraph">
+                            <button
+                                onClick={() => editor.chain().focus().setParagraph().run()}
+                                className={
+                                    editor.isActive('paragraph') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconLetterP size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Heading 1">
+                            <button
+                                onClick={() =>
+                                    editor.chain().focus().toggleHeading({ level: 1 }).run()
+                                }
+                                className={
+                                    editor.isActive('heading', { level: 1 })
+                                        ? activeButtonClass
+                                        : buttonClass
+                                }
+                            >
+                                <IconH1 size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Heading 2">
+                            <button
+                                onClick={() =>
+                                    editor.chain().focus().toggleHeading({ level: 2 }).run()
+                                }
+                                className={
+                                    editor.isActive('heading', { level: 2 })
+                                        ? activeButtonClass
+                                        : buttonClass
+                                }
+                            >
+                                <IconH2 size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Heading 3">
+                            <button
+                                onClick={() =>
+                                    editor.chain().focus().toggleHeading({ level: 3 }).run()
+                                }
+                                className={
+                                    editor.isActive('heading', { level: 3 })
+                                        ? activeButtonClass
+                                        : buttonClass
+                                }
+                            >
+                                <IconH3 size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                    </div>
 
-                {/* List formatting group */}
-                <div className={groupClass}>
-                    <Tooltip text="Bullet List">
-                        <button
-                            onClick={() => editor.chain().focus().toggleBulletList().run()}
-                            className={
-                                editor.isActive('bulletList') ? activeButtonClass : buttonClass
-                            }
-                        >
-                            <IconList size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Numbered List">
-                        <button
-                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                            className={
-                                editor.isActive('orderedList') ? activeButtonClass : buttonClass
-                            }
-                        >
-                            <IconListNumbers size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Blockquote">
-                        <button
-                            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                            className={
-                                editor.isActive('blockquote') ? activeButtonClass : buttonClass
-                            }
-                        >
-                            <IconQuote size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Code Block">
-                        <button
-                            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                            className={
-                                editor.isActive('codeBlock') ? activeButtonClass : buttonClass
-                            }
-                        >
-                            <IconBrandCodesandbox
-                                size={18}
-                                stroke={1.5}
-                                className="text-gray-300"
-                            />
-                        </button>
-                    </Tooltip>
-                </div>
+                    {/* List formatting group */}
+                    <div className={groupClass}>
+                        <Tooltip text="Bullet List">
+                            <button
+                                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                                className={
+                                    editor.isActive('bulletList') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconList size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Numbered List">
+                            <button
+                                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                                className={
+                                    editor.isActive('orderedList') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconListNumbers size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Blockquote">
+                            <button
+                                onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                                className={
+                                    editor.isActive('blockquote') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconQuote size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Code Block">
+                            <button
+                                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                                className={
+                                    editor.isActive('codeBlock') ? activeButtonClass : buttonClass
+                                }
+                            >
+                                <IconBrandCodesandbox
+                                    size={18}
+                                    stroke={1.5}
+                                    className="text-gray-300"
+                                />
+                            </button>
+                        </Tooltip>
+                    </div>
 
-                {/* History controls */}
-                <div className={groupClass}>
-                    <Tooltip text="Undo">
-                        <button
-                            onClick={() => editor.chain().focus().undo().run()}
-                            disabled={!editor.can().chain().focus().undo().run()}
-                            className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
-                        >
-                            <IconArrowBackUp size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text="Redo">
-                        <button
-                            onClick={() => editor.chain().focus().redo().run()}
-                            disabled={!editor.can().chain().focus().redo().run()}
-                            className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
-                        >
-                            <IconArrowForwardUp size={18} stroke={1.5} className="text-gray-300" />
-                        </button>
-                    </Tooltip>
+                    {/* History controls */}
+                    <div className={groupClass}>
+                        <Tooltip text="Undo">
+                            <button
+                                onClick={() => editor.chain().focus().undo().run()}
+                                disabled={!editor.can().chain().focus().undo().run()}
+                                className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
+                            >
+                                <IconArrowBackUp size={18} stroke={1.5} className="text-gray-300" />
+                            </button>
+                        </Tooltip>
+                        <Tooltip text="Redo">
+                            <button
+                                onClick={() => editor.chain().focus().redo().run()}
+                                disabled={!editor.can().chain().focus().redo().run()}
+                                className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
+                            >
+                                <IconArrowForwardUp
+                                    size={18}
+                                    stroke={1.5}
+                                    className="text-gray-300"
+                                />
+                            </button>
+                        </Tooltip>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {/* Link Modal */}
+            <LinkModal
+                isOpen={linkModalOpen}
+                onClose={() => setLinkModalOpen(false)}
+                onSubmit={handleLinkSubmit}
+                initialUrl={editor?.getAttributes('link').href || ''}
+            />
+        </>
     );
 };
 
 const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
     TextStyle.configure({ types: [ListItem.name] }),
+    Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: 'https',
+        protocols: ['http', 'https'],
+        validate: (href) => /^https?:\/\//.test(href),
+    }),
     StarterKit.configure({
         bulletList: {
             keepMarks: true,
