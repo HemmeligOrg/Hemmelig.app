@@ -15,8 +15,8 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { decrypt } from '../../../shared/helpers/crypto';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
+import Quill from '../../components/editor';
 import ErrorBox from '../../components/error-box';
-import Quill from '../../components/quill';
 
 const getEncryptionKeyHash = (hash) => {
     const id = '#encryption_key=';
