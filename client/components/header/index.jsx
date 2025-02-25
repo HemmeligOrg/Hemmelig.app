@@ -112,7 +112,7 @@ const Header = () => {
 
             {/* Header */}
             <header className="fixed w-full top-0 z-50 bg-gray-900">
-                <div className="max-w-7xl mx-auto px-4 h-16">
+                <div className="max-w-4xl mx-auto px-4 h-16">
                     <div className="flex items-center justify-between h-full">
                         {/* Logo */}
                         <div className="flex-shrink-0">
@@ -152,9 +152,12 @@ const Header = () => {
 
                 {/* Dropdown Menu */}
                 <div
-                    className={`absolute top-16 right-0 w-64 bg-gray-900 border-b border-l border-gray-800 
+                    className={`absolute top-16 right-0 md:right-auto md:mr-4 w-64 bg-gray-900 border-b border-l border-gray-800 
                                transform transition-all duration-200 ease-in-out shadow-lg rounded-bl-lg
                                ${isMenuOpened ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none hidden'}`}
+                    style={{
+                        right: 'max(0px, calc((100% - 896px) / 2))',
+                    }}
                 >
                     <div className="py-2">
                         <Nav
