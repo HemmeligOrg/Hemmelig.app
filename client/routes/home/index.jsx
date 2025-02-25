@@ -160,7 +160,7 @@ const Home = () => {
         [formData.files, setField]
     );
 
-    const isTextEmpty = () => formData.text.trim() === '' || formData.text.trim() === '<p><br></p>';
+    const isTextEmpty = () => formData.text.trim() === '';
 
     const handleIpRangeToggle = (event) => {
         event.preventDefault();

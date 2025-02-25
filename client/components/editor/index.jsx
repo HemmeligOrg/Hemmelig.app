@@ -28,7 +28,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const generatePassword = (
     length = 16,
@@ -382,7 +382,7 @@ const ReadOnlyMenuBar = () => {
     );
 };
 
-const MenuBar = () => {
+const MenuBar = ({ content }) => {
     const { editor } = useCurrentEditor();
     const [linkModalOpen, setLinkModalOpen] = useState(false);
     const [passwordModalOpen, setPasswordModalOpen] = useState(false);
@@ -390,6 +390,14 @@ const MenuBar = () => {
     if (!editor) {
         return null;
     }
+
+    // If the content is empty, clear the editor content
+    // this is a hack until I figure out how to handle this better
+    useEffect(() => {
+        if (content === '') {
+            editor.commands.clearContent();
+        }
+    }, []);
 
     // Updated button styles without dark mode prefixes
     const buttonClass =
@@ -696,12 +704,12 @@ export default function Editor({ content = '', setContent, editable = true }) {
     return (
         <div className="prose prose-sm max-w-none border border-gray-700 rounded-md p-2 h-full flex flex-col">
             <EditorProvider
-                slotBefore={editable ? <MenuBar /> : <ReadOnlyMenuBar />}
+                slotBefore={editable ? <MenuBar content={content} /> : <ReadOnlyMenuBar />}
                 extensions={extensions}
                 editable={editable}
                 content={content}
                 onUpdate={({ editor }) => {
-                    if (editable && setContent) {
+                    if (setContent) {
                         setContent(editor.getHTML());
                     }
                 }}
