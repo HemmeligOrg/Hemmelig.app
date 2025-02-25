@@ -183,20 +183,8 @@ const Home = () => {
                             name="text"
                             content={formData.text}
                             setContent={(value) => setField('formData.text', value)}
-                            readOnly={inputReadOnly}
+                            editable={!inputReadOnly}
                         />
-                        {/*<Quill
-                                name="text"
-                                value={formData.text}
-                                onChange={(value) => setField('formData.text', value)}
-                                readOnly={inputReadOnly}
-                                className={`
-                                    bg-black/20 border-white/[0.08]
-                                    hover:border-white/[0.12] focus:border-primary
-                                    transition-colors duration-200
-                                    ${errors.fields.text ? 'border-red-500/50' : ''}
-                                `}
-                            />*/}
                         {errors.fields.text && <FieldError message={errors.fields.text} />}
                     </div>
 
