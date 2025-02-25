@@ -396,6 +396,7 @@ const MenuBar = ({ content }) => {
     const { editor } = useCurrentEditor();
     const [linkModalOpen, setLinkModalOpen] = useState(false);
     const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
 
     if (!editor) {
@@ -455,12 +456,43 @@ const MenuBar = ({ content }) => {
         [editor]
     );
 
+    // Toggle the mobile menu
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
     return (
         <>
             <div className="mb-4">
-                <div className="flex flex-wrap gap-2 items-center">
+                {/* Hamburger menu for small screens */}
+                <div className="md:hidden mb-2 flex justify-end">
+                    <button
+                        onClick={toggleMenu}
+                        className="p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-200"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Full toolbar for medium and larger screens */}
+                <div
+                    className={`md:flex md:flex-wrap md:gap-2 md:items-center ${menuOpen ? 'block' : 'hidden'}`}
+                >
                     {/* Text formatting group */}
-                    <div className={groupClass}>
+                    <div className={`${groupClass} mb-2 md:mb-0`}>
                         <Tooltip text={t('editor.tooltips.bold')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleBold().run()}
@@ -539,7 +571,7 @@ const MenuBar = ({ content }) => {
                     </div>
 
                     {/* Paragraph formatting group */}
-                    <div className={groupClass}>
+                    <div className={`${groupClass} mb-2 md:mb-0`}>
                         <Tooltip text={t('editor.tooltips.paragraph')}>
                             <button
                                 onClick={() => editor.chain().focus().setParagraph().run()}
@@ -595,7 +627,7 @@ const MenuBar = ({ content }) => {
                     </div>
 
                     {/* List formatting group */}
-                    <div className={groupClass}>
+                    <div className={`${groupClass} mb-2 md:mb-0`}>
                         <Tooltip text={t('editor.tooltips.bullet_list')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -643,7 +675,7 @@ const MenuBar = ({ content }) => {
                     </div>
 
                     {/* History controls */}
-                    <div className={groupClass}>
+                    <div className={`${groupClass} mb-2 md:mb-0`}>
                         <Tooltip text={t('editor.tooltips.undo')}>
                             <button
                                 onClick={() => editor.chain().focus().undo().run()}
