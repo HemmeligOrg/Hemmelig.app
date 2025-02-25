@@ -27,16 +27,18 @@ import ListItem from '@tiptap/extension-list-item';
 import TextStyle from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { generate } from 'generate-password-browser';
 import { useCallback, useRef, useState } from 'react';
 
-// Password generator function
 const generatePassword = (length = 16) => {
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+';
-    let password = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * charset.length);
-        password += charset[randomIndex];
-    }
+    const password = generate({
+        length,
+        numbers: true,
+        symbols: true,
+        uppercase: true,
+        lowercase: true,
+    });
+
     return password;
 };
 
