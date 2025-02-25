@@ -273,5 +273,55 @@
         "password_protected": "密码保护",
         "ip_restricted": "IP限制",
         "average_max_views": "每个秘密的平均最大查看次数"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "粗体",
+            "italic": "斜体",
+            "strikethrough": "删除线",
+            "inline_code": "内联代码",
+            "link": "链接",
+            "remove_link": "移除链接",
+            "insert_password": "插入密码",
+            "paragraph": "段落",
+            "heading1": "标题1",
+            "heading2": "标题2",
+            "heading3": "标题3",
+            "bullet_list": "无序列表",
+            "numbered_list": "有序列表",
+            "blockquote": "引用",
+            "code_block": "代码块",
+            "undo": "撤销",
+            "redo": "重做",
+            "copy_html": "复制为HTML",
+            "copy_text": "复制为纯文本",
+            "copy_base64": "复制为Base64"
+        },
+        "link_modal": {
+            "title": "插入链接",
+            "url_label": "URL",
+            "url_placeholder": "https://example.com",
+            "cancel": "取消",
+            "insert": "插入",
+            "update": "更新"
+        },
+        "password_modal": {
+            "title": "插入密码",
+            "length_label": "密码长度",
+            "options_label": "密码选项",
+            "include_numbers": "包含数字",
+            "include_symbols": "包含符号",
+            "include_uppercase": "包含大写字母",
+            "include_lowercase": "包含小写字母",
+            "generated_password": "生成的密码",
+            "refresh": "刷新",
+            "cancel": "取消",
+            "insert": "插入"
+        },
+        "copy_success": {
+            "html": "HTML已复制！",
+            "text": "纯文本已复制！",
+            "base64": "Base64已复制！"
+        }
     }
 }

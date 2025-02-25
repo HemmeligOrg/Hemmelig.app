@@ -260,5 +260,55 @@
         "password_protected": "Protetti da password",
         "ip_restricted": "Limitati per IP",
         "average_max_views": "Media visualizzazioni massime per segreto"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Grassetto",
+            "italic": "Corsivo",
+            "strikethrough": "Barrato",
+            "inline_code": "Codice in linea",
+            "link": "Collegamento",
+            "remove_link": "Rimuovi collegamento",
+            "insert_password": "Inserisci password",
+            "paragraph": "Paragrafo",
+            "heading1": "Titolo 1",
+            "heading2": "Titolo 2",
+            "heading3": "Titolo 3",
+            "bullet_list": "Elenco puntato",
+            "numbered_list": "Elenco numerato",
+            "blockquote": "Citazione",
+            "code_block": "Blocco di codice",
+            "undo": "Annulla",
+            "redo": "Ripristina",
+            "copy_html": "Copia come HTML",
+            "copy_text": "Copia come testo semplice",
+            "copy_base64": "Copia come Base64"
+        },
+        "link_modal": {
+            "title": "Inserisci collegamento",
+            "url_label": "URL",
+            "url_placeholder": "https://esempio.it",
+            "cancel": "Annulla",
+            "insert": "Inserisci",
+            "update": "Aggiorna"
+        },
+        "password_modal": {
+            "title": "Inserisci password",
+            "length_label": "Lunghezza password",
+            "options_label": "Opzioni password",
+            "include_numbers": "Includi numeri",
+            "include_symbols": "Includi simboli",
+            "include_uppercase": "Includi maiuscole",
+            "include_lowercase": "Includi minuscole",
+            "generated_password": "Password generata",
+            "refresh": "Aggiorna",
+            "cancel": "Annulla",
+            "insert": "Inserisci"
+        },
+        "copy_success": {
+            "html": "HTML copiato!",
+            "text": "Testo semplice copiato!",
+            "base64": "Base64 copiato!"
+        }
     }
 }

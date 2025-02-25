@@ -274,5 +274,55 @@
     "not_logged_in": "Nejste přihlášeni",
     "something_went_wrong": "Něco se pokazilo!",
     "loading": "Načítání",
-    "common": {}
+    "common": {},
+    "editor": {
+        "tooltips": {
+            "bold": "Tučné",
+            "italic": "Kurzíva",
+            "strikethrough": "Přeškrtnuté",
+            "inline_code": "Inline kód",
+            "link": "Odkaz",
+            "remove_link": "Odstranit odkaz",
+            "insert_password": "Vložit heslo",
+            "paragraph": "Odstavec",
+            "heading1": "Nadpis 1",
+            "heading2": "Nadpis 2",
+            "heading3": "Nadpis 3",
+            "bullet_list": "Odrážkový seznam",
+            "numbered_list": "Číslovaný seznam",
+            "blockquote": "Citace",
+            "code_block": "Blok kódu",
+            "undo": "Zpět",
+            "redo": "Znovu",
+            "copy_html": "Kopírovat jako HTML",
+            "copy_text": "Kopírovat jako prostý text",
+            "copy_base64": "Kopírovat jako Base64"
+        },
+        "link_modal": {
+            "title": "Vložit odkaz",
+            "url_label": "URL",
+            "url_placeholder": "https://priklad.cz",
+            "cancel": "Zrušit",
+            "insert": "Vložit",
+            "update": "Aktualizovat"
+        },
+        "password_modal": {
+            "title": "Vložit heslo",
+            "length_label": "Délka hesla",
+            "options_label": "Možnosti hesla",
+            "include_numbers": "Zahrnout čísla",
+            "include_symbols": "Zahrnout symboly",
+            "include_uppercase": "Zahrnout velká písmena",
+            "include_lowercase": "Zahrnout malá písmena",
+            "generated_password": "Vygenerované heslo",
+            "refresh": "Obnovit",
+            "cancel": "Zrušit",
+            "insert": "Vložit"
+        },
+        "copy_success": {
+            "html": "HTML zkopírováno!",
+            "text": "Prostý text zkopírován!",
+            "base64": "Base64 zkopírováno!"
+        }
+    }
 }

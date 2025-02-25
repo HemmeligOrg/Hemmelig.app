@@ -192,5 +192,55 @@
         "password_protected": "密碼保護",
         "ip_restricted": "IP 限制",
         "average_max_views": "每個機密的平均最大瀏覽次數"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "粗體",
+            "italic": "斜體",
+            "strikethrough": "刪除線",
+            "inline_code": "行內程式碼",
+            "link": "連結",
+            "remove_link": "移除連結",
+            "insert_password": "插入密碼",
+            "paragraph": "段落",
+            "heading1": "標題1",
+            "heading2": "標題2",
+            "heading3": "標題3",
+            "bullet_list": "項目符號列表",
+            "numbered_list": "編號列表",
+            "blockquote": "引用",
+            "code_block": "程式碼區塊",
+            "undo": "復原",
+            "redo": "重做",
+            "copy_html": "複製為HTML",
+            "copy_text": "複製為純文字",
+            "copy_base64": "複製為Base64"
+        },
+        "link_modal": {
+            "title": "插入連結",
+            "url_label": "URL",
+            "url_placeholder": "https://example.com",
+            "cancel": "取消",
+            "insert": "插入",
+            "update": "更新"
+        },
+        "password_modal": {
+            "title": "插入密碼",
+            "length_label": "密碼長度",
+            "options_label": "密碼選項",
+            "include_numbers": "包含數字",
+            "include_symbols": "包含符號",
+            "include_uppercase": "包含大寫字母",
+            "include_lowercase": "包含小寫字母",
+            "generated_password": "產生的密碼",
+            "refresh": "重新整理",
+            "cancel": "取消",
+            "insert": "插入"
+        },
+        "copy_success": {
+            "html": "HTML已複製！",
+            "text": "純文字已複製！",
+            "base64": "Base64已複製！"
+        }
     }
 }
