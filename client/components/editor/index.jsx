@@ -72,7 +72,7 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
     const { t } = useTranslation();
 
     // Focus the input when the modal opens
-    useState(() => {
+    useEffect(() => {
         if (isOpen && inputRef.current) {
             setTimeout(() => {
                 inputRef.current.focus();
