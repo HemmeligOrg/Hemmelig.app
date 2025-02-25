@@ -1,9 +1,11 @@
 import {
     IconArrowBackUp,
     IconArrowForwardUp,
+    IconBinary,
     IconBold,
     IconBrandCodesandbox,
     IconCode,
+    IconCopy,
     IconH1,
     IconH2,
     IconH3,
@@ -16,6 +18,7 @@ import {
     IconListNumbers,
     IconQuote,
     IconStrikethrough,
+    IconTextCaption,
     IconX,
 } from '@tabler/icons';
 import { Color } from '@tiptap/extension-color';
@@ -213,6 +216,92 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                     </div>
                 </form>
             </div>
+        </div>
+    );
+};
+
+// ReadOnlyMenuBar component for non-editable mode
+const ReadOnlyMenuBar = () => {
+    const { editor } = useCurrentEditor();
+    const [copySuccess, setCopySuccess] = useState('');
+
+    if (!editor) {
+        return null;
+    }
+
+    const copyAsHTML = () => {
+        const html = editor.getHTML();
+        navigator.clipboard
+            .writeText(html)
+            .then(() => {
+                setCopySuccess('HTML copied!');
+                setTimeout(() => setCopySuccess(''), 2000);
+            })
+            .catch((err) => {
+                console.error('Failed to copy: ', err);
+            });
+    };
+
+    const copyAsPlainText = () => {
+        const text = editor.getText();
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                setCopySuccess('Plain text copied!');
+                setTimeout(() => setCopySuccess(''), 2000);
+            })
+            .catch((err) => {
+                console.error('Failed to copy: ', err);
+            });
+    };
+
+    const copyAsBase64 = () => {
+        const text = editor.getText();
+        // Convert to Base64
+        const base64Content = btoa(
+            new TextEncoder()
+                .encode(text)
+                .reduce((acc, byte) => acc + String.fromCharCode(byte), '')
+        );
+        navigator.clipboard
+            .writeText(base64Content)
+            .then(() => {
+                setCopySuccess('Base64 copied!');
+                setTimeout(() => setCopySuccess(''), 2000);
+            })
+            .catch((err) => {
+                console.error('Failed to copy: ', err);
+            });
+    };
+
+    const buttonClass =
+        'p-1.5 text-sm rounded-md hover:bg-gray-700 text-gray-200 transition-colors';
+    const groupClass = 'flex items-center border border-gray-700 rounded-md bg-gray-800 shadow-sm';
+
+    return (
+        <div className="mb-4 flex w-full">
+            <div className="flex gap-2">
+                <div className={groupClass}>
+                    <Tooltip text="Copy as HTML">
+                        <button onClick={copyAsHTML} className={buttonClass}>
+                            <IconCopy size={18} stroke={1.5} className="text-gray-300" />
+                        </button>
+                    </Tooltip>
+                    <Tooltip text="Copy as Plain Text">
+                        <button onClick={copyAsPlainText} className={buttonClass}>
+                            <IconTextCaption size={18} stroke={1.5} className="text-gray-300" />
+                        </button>
+                    </Tooltip>
+                    <Tooltip text="Copy as Base64">
+                        <button onClick={copyAsBase64} className={buttonClass}>
+                            <IconBinary size={18} stroke={1.5} className="text-gray-300" />
+                        </button>
+                    </Tooltip>
+                </div>
+            </div>
+            {copySuccess && (
+                <div className="text-sm text-green-400 animate-fade-in-out">{copySuccess}</div>
+            )}
         </div>
     );
 };
@@ -562,12 +651,14 @@ export default function Editor({ content = '', setContent, editable = true }) {
     return (
         <div className="prose prose-sm max-w-none border border-gray-700 rounded-md p-2 min-h-72">
             <EditorProvider
-                slotBefore={editable ? <MenuBar /> : null}
+                slotBefore={editable ? <MenuBar /> : <ReadOnlyMenuBar />}
                 extensions={extensions}
                 editable={editable}
                 content={content}
                 onUpdate={({ editor }) => {
-                    setContent(editor.getHTML());
+                    if (editable && setContent) {
+                        setContent(editor.getHTML());
+                    }
                 }}
                 editorProps={{
                     attributes: {

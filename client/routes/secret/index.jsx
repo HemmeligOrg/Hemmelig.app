@@ -165,7 +165,7 @@ const Secret = () => {
 
                 {/* Main Content */}
                 <div
-                    className={`space-y-6 p-6 rounded-lg transition-all duration-200 ${
+                    className={`space-y-6 md:p-6 rounded-lg transition-all duration-200 ${
                         !isSecretOpen
                             ? 'bg-gray-800/30 border-2 border-gray-700/50 shadow-lg relative'
                             : 'bg-gray-800/50'
