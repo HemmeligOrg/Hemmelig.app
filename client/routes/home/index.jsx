@@ -51,6 +51,7 @@ const Home = () => {
     } = useSecretStore();
 
     const [enableIpRange, setEnableIpRange] = useState(false);
+    const inputReadOnly = !!secretId;
 
     const onSubmit = (event) => {
         handleSubmit(event, t);
@@ -85,6 +86,7 @@ const Home = () => {
 
     const onSetPublic = (event) => {
         event.preventDefault();
+
         setField('isPublic', !isPublic);
     };
 
@@ -116,7 +118,6 @@ const Home = () => {
         reset();
     };
 
-    const inputReadOnly = !!secretId;
     const disableFileUpload =
         (config.get('settings.upload_restriction') && !isLoggedIn) ||
         isPublic ||
@@ -160,6 +161,18 @@ const Home = () => {
     );
 
     const isTextEmpty = () => formData.text.trim() === '' || formData.text.trim() === '<p><br></p>';
+
+    const handleIpRangeToggle = (event) => {
+        event.preventDefault();
+
+        setEnableIpRange(!enableIpRange);
+    };
+
+    const handleEnablePassword = (event) => {
+        event.preventDefault();
+
+        onEnablePassword();
+    };
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -333,10 +346,12 @@ const Home = () => {
                             <button
                                 type="button"
                                 onClick={onSetPublic}
+                                disabled={inputReadOnly}
                                 className={`
                                         w-full flex items-start gap-4 px-4 py-3.5
                                         bg-black/20 rounded-lg border
-                                        hover:border-white/[0.12] transition-all duration-200
+                                        ${inputReadOnly ? 'cursor-not-allowed opacity-80' : 'hover:border-white/[0.12]'} 
+                                        transition-all duration-200
                                         ${!isPublic ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
                                     `}
                             >
@@ -360,14 +375,16 @@ const Home = () => {
                             <div
                                 className={`
                                     w-full space-y-4 bg-black/20 rounded-lg border
-                                    hover:border-white/[0.12] transition-all duration-200
+                                    ${inputReadOnly ? 'opacity-80' : 'hover:border-white/[0.12]'} 
+                                    transition-all duration-200
                                     ${enablePassword ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
                                 `}
                             >
                                 <button
                                     type="button"
-                                    onClick={onEnablePassword}
-                                    className="w-full flex items-start gap-4 px-4 py-3.5"
+                                    onClick={handleEnablePassword}
+                                    disabled={inputReadOnly}
+                                    className={`w-full flex items-start gap-4 px-4 py-3.5 ${inputReadOnly ? 'cursor-not-allowed' : ''}`}
                                 >
                                     <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
                                         <IconShieldLock size={22} />
@@ -420,14 +437,16 @@ const Home = () => {
                                 <div
                                     className={`
                                         w-full space-y-4 bg-black/20 rounded-lg border
-                                        hover:border-white/[0.12] transition-all duration-200
+                                        ${inputReadOnly ? 'opacity-80' : 'hover:border-white/[0.12]'} 
+                                        transition-all duration-200
                                         ${enableIpRange ? 'text-primary border-primary/50' : 'text-gray-300 border-white/[0.08]'}
                                     `}
                                 >
                                     <button
                                         type="button"
-                                        onClick={() => setEnableIpRange(!enableIpRange)}
-                                        className="w-full flex items-start gap-4 px-4 py-3.5"
+                                        onClick={handleIpRangeToggle}
+                                        disabled={inputReadOnly}
+                                        className={`w-full flex items-start gap-4 px-4 py-3.5 ${inputReadOnly ? 'cursor-not-allowed' : ''}`}
                                     >
                                         <div className="p-2.5 bg-black/20 rounded-lg shrink-0">
                                             <IconNetwork size={22} />
@@ -550,8 +569,10 @@ const Home = () => {
                                     onChange={(e) =>
                                         setField('formData.maxViews', parseInt(e.target.value))
                                     }
-                                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
-                                                 accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                    disabled={inputReadOnly}
+                                    className={`w-full h-2 bg-gray-700 rounded-lg appearance-none 
+                                        ${inputReadOnly ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} 
+                                        accent-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
                                 />
                             </div>
                         )}
@@ -576,6 +597,7 @@ const Home = () => {
                                     onChange={(checked) =>
                                         setField('formData.preventBurn', checked)
                                     }
+                                    disabled={inputReadOnly}
                                 >
                                     {t('home.burn_after_time')}
                                 </Switch>
