@@ -115,7 +115,7 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                            className="px-4 py-2 bg-primary text-white rounded-md "
                         >
                             {initialUrl ? 'Update' : 'Insert'}
                         </button>
@@ -168,7 +168,11 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                     setPasswordLength(newLength);
                                     setPassword(generatePassword(newLength));
                                 }}
-                                className="w-full mr-3"
+                                className="w-full mr-3 accent-primary"
+                                style={{
+                                    // Fallback for browsers that don't support accent-color
+                                    '--tw-accent-color': 'var(--color-primary)',
+                                }}
                             />
                             <span className="text-gray-200 w-8 text-center">{passwordLength}</span>
                         </div>
@@ -186,7 +190,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                             <button
                                 type="button"
                                 onClick={regeneratePassword}
-                                className="px-3 py-2 bg-gray-600 text-gray-200 rounded-r-md hover:bg-gray-500"
+                                className="px-3 py-2 bg-primary text-gray-200 rounded-r-md hover:opacity-90"
                             >
                                 Refresh
                             </button>
@@ -202,7 +206,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+                            className="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90"
                         >
                             Insert
                         </button>
@@ -554,19 +558,20 @@ const content = `
 </blockquote>
 `;
 
-export default function Editor({ setContent }) {
+export default function Editor({ content = '', setContent, editable = true }) {
     return (
-        <div className="prose prose-sm max-w-none border border-gray-700 rounded-md p-2">
+        <div className="prose prose-sm max-w-none border border-gray-700 rounded-md p-2 min-h-72">
             <EditorProvider
-                slotBefore={<MenuBar />}
+                slotBefore={editable ? <MenuBar /> : null}
                 extensions={extensions}
+                editable={editable}
                 content={content}
                 onUpdate={({ editor }) => {
                     setContent(editor.getHTML());
                 }}
                 editorProps={{
                     attributes: {
-                        class: 'focus:outline-none text-gray-100 prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-200 prose-strong:text-gray-200 prose-strong:font-bold prose-em:text-gray-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-200 prose-a:text-gray-100 prose-a:underline prose-a:font-medium hover:prose-a:text-gray-50 prose-code:bg-gray-800 prose-code:text-gray-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-300 prose-hr:my-6 prose-hr:border-gray-700',
+                        class: 'flex-1 h-full focus:outline-none text-gray-100 prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-200 prose-strong:text-gray-200 prose-strong:font-bold prose-em:text-gray-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-200 prose-a:text-gray-100 prose-a:underline prose-a:font-medium hover:prose-a:text-gray-50 prose-code:bg-gray-800 prose-code:text-gray-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-300 prose-hr:my-6 prose-hr:border-gray-700',
                     },
                 }}
             />

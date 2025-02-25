@@ -4,7 +4,6 @@ import {
     IconFile,
     IconHeading,
     IconLock,
-    IconPerspective,
     IconShieldLock,
     IconSquarePlus,
 } from '@tabler/icons';
@@ -15,7 +14,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { decrypt } from '../../../shared/helpers/crypto';
 import { getSecret, secretExists } from '../../api/secret';
 import { downloadFile } from '../../api/upload';
-import Quill from '../../components/editor';
+import Editor from '../../components/editor';
 import ErrorBox from '../../components/error-box';
 
 const getEncryptionKeyHash = (hash) => {
@@ -42,7 +41,6 @@ const Secret = () => {
     const [files, setFiles] = useState(null);
     const [isDownloaded, setIsDownloaded] = useState([]);
     const [error, setError] = useState(null);
-    const [hasConvertedBase64ToPlain, setHasConvertedBase64ToPlain] = useState(false);
 
     // Fetch secret existence on mount
     useEffect(() => {
@@ -140,15 +138,6 @@ const Secret = () => {
         if (!preventBurn) {
             setIsDownloaded([...isDownloaded, file.key]);
         }
-    };
-
-    const convertBase64ToPlain = () => {
-        if (!hasConvertedBase64ToPlain) {
-            setSecret(btoa(secret));
-        } else {
-            setSecret(atob(secret));
-        }
-        setHasConvertedBase64ToPlain(!hasConvertedBase64ToPlain);
     };
 
     return (
@@ -268,7 +257,7 @@ const Secret = () => {
 
                             {/* Secret Content */}
                             <div className="w-full">
-                                <Quill value={secret} secretId={secretId} readOnly />
+                                <Editor content={secret} editable={false} />
                             </div>
 
                             {/* File Downloads Section */}
@@ -318,20 +307,6 @@ const Secret = () => {
                         >
                             <IconEye size={14} />
                             {t('secret.view_secret')}
-                        </button>
-                    )}
-
-                    {/* Convert Base64 Button */}
-                    {isSecretOpen && (
-                        <button
-                            onClick={convertBase64ToPlain}
-                            className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-300 
-                                     hover:bg-gray-700 hover:text-white rounded-md transition-colors"
-                        >
-                            <IconPerspective size={14} />
-                            {!hasConvertedBase64ToPlain
-                                ? t('secret.convert_b64')
-                                : t('secret.convert_utf8')}
                         </button>
                     )}
 
