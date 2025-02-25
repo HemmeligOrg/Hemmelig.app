@@ -3,7 +3,7 @@
     "sign_out": "Se déconnecter",
     "sign_up": "S'enregistrer",
     "not_logged_in": "Non connecté",
-    "something_went_wrong": "Quelque chose s'est mal passé !",
+    "something_went_wrong": "Quelque chose s'est mal passé !",
     "loading": "Chargement",
     "common": {},
     "account": {
@@ -16,7 +16,7 @@
             "upload_files": "Téléversement de fichiers",
             "expiration": "Délai d'expiration de secret de 14 ou 28 jours",
             "secrets": "Lister et supprimer vos secrets",
-            "more": "Merci d'avoir rejoint Hemmelig.app !",
+            "more": "Merci d'avoir rejoint Hemmelig.app !",
             "features": "Fonctionnalités"
         },
         "account": {
@@ -24,7 +24,7 @@
             "can_not_update_profile": "Impossible de mettre à jour votre compte utilisateur",
             "can_not_delete": "Impossible de supprimer l'utilisateur",
             "delete_account": "Supprimer votre compte",
-            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer votre compte ?",
+            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer votre compte ?",
             "dont_delete_account": "Non, ne pas le supprimer",
             "email": "Email",
             "your_password": "Mot de passe actuel",
@@ -44,13 +44,13 @@
             "no": "Non",
             "delete_secret": "Supprimer ce secret",
             "dont_delete_secret": "Non, ne pas le supprimer",
-            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer ce secret ?"
+            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer ce secret ?"
         },
         "settings": {
             "read_only_mode": "Mode lecture seule",
-            "readonly_only_for_non_admin": "L'instance Hemmelig doit-elle être en lecture seule pour les utilisateurs non administrateurs ou créateurs ?",
+            "readonly_only_for_non_admin": "L'instance Hemmelig doit-elle être en lecture seule pour les utilisateurs non administrateurs ou créateurs ?",
             "disable_users": "Désactiver les utilisateurs",
-            "disable_signin": "Désactiver la connexion des utilisateurs ?",
+            "disable_signin": "Désactiver la connexion des utilisateurs ?",
             "disable_user_account_creation": "Désactiver la création de nouveaux comptes",
             "disable_user_account_creation_description": "Empêcher la création de compte par tout le monde. Un administrateur pourra toujours créer de nouveaux comptes utilisateurs",
             "hide_allowed_ip_input": "Désactiver les restrictions d'IPs",
@@ -69,7 +69,7 @@
             "creator": "Créateur",
             "user": "Utilisateur",
             "delete": "Suppression",
-            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer cet utilisateur ?",
+            "do_you_want_delete": "Êtes-vous sûr(e) de vouloir supprimer cet utilisateur ?",
             "delete_user": "Supprimer cet utilisateur",
             "dont_delete_user": "Non, ne pas le supprimer",
             "have_to_be_admin": "Vous devez être un administrateur pour voir les utilisateurs"
@@ -87,14 +87,14 @@
         },
         "session": {
             "auth": "Authentification",
-            "expire": "Votre session va expirer. Voulez-vous la renouveler ?",
+            "expire": "Votre session va expirer. Voulez-vous la renouveler ?",
             "update": "Renouveler la session"
         }
     },
     "home": {
         "app_subtitle": "Collez un mot de passe, un message confidentiel ou des données privées.",
         "welcome": "Assurez-vous que vos données sensibles restent chiffrées, sécurisées et confidentielles.",
-        "bummer": "C'est dommage !",
+        "bummer": "C'est dommage !",
         "maintxtarea": "Écrivez vos informations sensibles",
         "file_upload": "Téléverser des fichiers",
         "content_title": "Titre",
@@ -156,7 +156,7 @@
         "one_time_use": "Ce secret ne peut être vu qu'une seule fois et s'autodétruira après avoir été lu.",
         "norwegian_meaning": "signifie « secret » en norvégien",
         "copy": "Copier dans le presse-papiers",
-        "copied": "Copié !",
+        "copied": "Copié !",
         "create": "Créer",
         "sign_in": "Connexion",
         "complete_url": "URL secrète complète",
@@ -174,7 +174,7 @@
     "secret": {
         "view_your_secret": "Afficher votre secret",
         "will_show_once": "Par défaut, le secret ne sera affiché qu'une seule fois.",
-        "views_left": "Affichages restants :",
+        "views_left": "Affichages restants :",
         "password_required": "Un mot de passe est nécessaire pour ouvrir ce secret",
         "view_secret": "Voir le secret",
         "create_secret": "Créer un nouveau secret",
@@ -240,7 +240,7 @@
     },
     "not_found": {
         "title": "Page introuvable",
-        "description": "Oups ! Il semblerait que ce secret se soit évaporé. Ne vous inquiétez pas toutefois, vous pouvez en créer un nouveau ou consulter la documentation.",
+        "description": "Oups ! Il semblerait que ce secret se soit évaporé. Ne vous inquiétez pas toutefois, vous pouvez en créer un nouveau ou consulter la documentation.",
         "go_home": "Créer un nouveau secret",
         "view_docs": "Voir la doc de l'API"
     },
@@ -258,5 +258,55 @@
         "average_views": "Nombre moyen de vues",
         "views_per_secret": "Vues par secret",
         "description": "Un aperçu complet de l'utilisation de votre plateforme et de ses fonctionnalités de sécurité"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Gras",
+            "italic": "Italique",
+            "strikethrough": "Barré",
+            "inline_code": "Code en ligne",
+            "link": "Lien",
+            "remove_link": "Supprimer le lien",
+            "insert_password": "Insérer un mot de passe",
+            "paragraph": "Paragraphe",
+            "heading1": "Titre 1",
+            "heading2": "Titre 2",
+            "heading3": "Titre 3",
+            "bullet_list": "Liste à puces",
+            "numbered_list": "Liste numérotée",
+            "blockquote": "Citation",
+            "code_block": "Bloc de code",
+            "undo": "Annuler",
+            "redo": "Rétablir",
+            "copy_html": "Copier en HTML",
+            "copy_text": "Copier en texte brut",
+            "copy_base64": "Copier en Base64"
+        },
+        "link_modal": {
+            "title": "Insérer un lien",
+            "url_label": "URL",
+            "url_placeholder": "https://exemple.com",
+            "cancel": "Annuler",
+            "insert": "Insérer",
+            "update": "Mettre à jour"
+        },
+        "password_modal": {
+            "title": "Insérer un mot de passe",
+            "length_label": "Longueur du mot de passe",
+            "options_label": "Options du mot de passe",
+            "include_numbers": "Inclure des chiffres",
+            "include_symbols": "Inclure des symboles",
+            "include_uppercase": "Inclure des majuscules",
+            "include_lowercase": "Inclure des minuscules",
+            "generated_password": "Mot de passe généré",
+            "refresh": "Actualiser",
+            "cancel": "Annuler",
+            "insert": "Insérer"
+        },
+        "copy_success": {
+            "html": "HTML copié !",
+            "text": "Texte brut copié !",
+            "base64": "Base64 copié !"
+        }
     }
 }

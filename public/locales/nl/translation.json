@@ -275,5 +275,55 @@
         "password_protected": "Met wachtwoord",
         "ip_restricted": "Beperkt op IP",
         "average_max_views": "Gemiddelde voor max. aantal weergaven"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Vet",
+            "italic": "Cursief",
+            "strikethrough": "Doorhalen",
+            "inline_code": "Inline code",
+            "link": "Link",
+            "remove_link": "Link verwijderen",
+            "insert_password": "Wachtwoord invoegen",
+            "paragraph": "Paragraaf",
+            "heading1": "Kop 1",
+            "heading2": "Kop 2",
+            "heading3": "Kop 3",
+            "bullet_list": "Opsommingstekens",
+            "numbered_list": "Genummerde lijst",
+            "blockquote": "Citaat",
+            "code_block": "Codeblok",
+            "undo": "Ongedaan maken",
+            "redo": "Opnieuw",
+            "copy_html": "Kopiëren als HTML",
+            "copy_text": "Kopiëren als platte tekst",
+            "copy_base64": "Kopiëren als Base64"
+        },
+        "link_modal": {
+            "title": "Link invoegen",
+            "url_label": "URL",
+            "url_placeholder": "https://voorbeeld.nl",
+            "cancel": "Annuleren",
+            "insert": "Invoegen",
+            "update": "Bijwerken"
+        },
+        "password_modal": {
+            "title": "Wachtwoord invoegen",
+            "length_label": "Wachtwoordlengte",
+            "options_label": "Wachtwoordopties",
+            "include_numbers": "Cijfers opnemen",
+            "include_symbols": "Symbolen opnemen",
+            "include_uppercase": "Hoofdletters opnemen",
+            "include_lowercase": "Kleine letters opnemen",
+            "generated_password": "Gegenereerd wachtwoord",
+            "refresh": "Vernieuwen",
+            "cancel": "Annuleren",
+            "insert": "Invoegen"
+        },
+        "copy_success": {
+            "html": "HTML gekopieerd!",
+            "text": "Platte tekst gekopieerd!",
+            "base64": "Base64 gekopieerd!"
+        }
     }
 }

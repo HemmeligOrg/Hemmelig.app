@@ -259,5 +259,55 @@
         "password_protected": "Passwortgeschützt",
         "ip_restricted": "IP-beschränkt",
         "average_max_views": "Durchschnittlich erlaubte Aufrufe pro Geheimnis"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Fett",
+            "italic": "Kursiv",
+            "strikethrough": "Durchgestrichen",
+            "inline_code": "Inline-Code",
+            "link": "Link",
+            "remove_link": "Link entfernen",
+            "insert_password": "Passwort einfügen",
+            "paragraph": "Absatz",
+            "heading1": "Überschrift 1",
+            "heading2": "Überschrift 2",
+            "heading3": "Überschrift 3",
+            "bullet_list": "Aufzählungsliste",
+            "numbered_list": "Nummerierte Liste",
+            "blockquote": "Zitat",
+            "code_block": "Codeblock",
+            "undo": "Rückgängig",
+            "redo": "Wiederherstellen",
+            "copy_html": "Als HTML kopieren",
+            "copy_text": "Als Klartext kopieren",
+            "copy_base64": "Als Base64 kopieren"
+        },
+        "link_modal": {
+            "title": "Link einfügen",
+            "url_label": "URL",
+            "url_placeholder": "https://beispiel.de",
+            "cancel": "Abbrechen",
+            "insert": "Einfügen",
+            "update": "Aktualisieren"
+        },
+        "password_modal": {
+            "title": "Passwort einfügen",
+            "length_label": "Passwortlänge",
+            "options_label": "Passwortoptionen",
+            "include_numbers": "Zahlen einschließen",
+            "include_symbols": "Symbole einschließen",
+            "include_uppercase": "Großbuchstaben einschließen",
+            "include_lowercase": "Kleinbuchstaben einschließen",
+            "generated_password": "Generiertes Passwort",
+            "refresh": "Aktualisieren",
+            "cancel": "Abbrechen",
+            "insert": "Einfügen"
+        },
+        "copy_success": {
+            "html": "HTML kopiert!",
+            "text": "Klartext kopiert!",
+            "base64": "Base64 kopiert!"
+        }
     }
 }

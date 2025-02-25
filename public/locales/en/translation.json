@@ -275,5 +275,55 @@
         "password_protected": "Password Protected",
         "ip_restricted": "IP Restricted",
         "average_max_views": "Average Max Views Per Secret"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Bold",
+            "italic": "Italic",
+            "strikethrough": "Strikethrough",
+            "inline_code": "Inline Code",
+            "link": "Link",
+            "remove_link": "Remove Link",
+            "insert_password": "Insert Password",
+            "paragraph": "Paragraph",
+            "heading1": "Heading 1",
+            "heading2": "Heading 2",
+            "heading3": "Heading 3",
+            "bullet_list": "Bullet List",
+            "numbered_list": "Numbered List",
+            "blockquote": "Blockquote",
+            "code_block": "Code Block",
+            "undo": "Undo",
+            "redo": "Redo",
+            "copy_html": "Copy as HTML",
+            "copy_text": "Copy as Plain Text",
+            "copy_base64": "Copy as Base64"
+        },
+        "link_modal": {
+            "title": "Insert Link",
+            "url_label": "URL",
+            "url_placeholder": "https://example.com",
+            "cancel": "Cancel",
+            "insert": "Insert",
+            "update": "Update"
+        },
+        "password_modal": {
+            "title": "Insert Password",
+            "length_label": "Password Length",
+            "options_label": "Password Options",
+            "include_numbers": "Include Numbers",
+            "include_symbols": "Include Symbols",
+            "include_uppercase": "Include Uppercase",
+            "include_lowercase": "Include Lowercase",
+            "generated_password": "Generated Password",
+            "refresh": "Refresh",
+            "cancel": "Cancel",
+            "insert": "Insert"
+        },
+        "copy_success": {
+            "html": "HTML copied!",
+            "text": "Plain text copied!",
+            "base64": "Base64 copied!"
+        }
     }
 }

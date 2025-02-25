@@ -274,5 +274,55 @@
         "password_protected": "Zaščiteno z geslom",
         "ip_restricted": "Omejeno z IP",
         "average_max_views": "Povprečno največje število ogledov na skrivnost"
+    },
+    "editor": {
+        "tooltips": {
+            "bold": "Krepko",
+            "italic": "Ležeče",
+            "strikethrough": "Prečrtano",
+            "inline_code": "Vrstična koda",
+            "link": "Povezava",
+            "remove_link": "Odstrani povezavo",
+            "insert_password": "Vstavi geslo",
+            "paragraph": "Odstavek",
+            "heading1": "Naslov 1",
+            "heading2": "Naslov 2",
+            "heading3": "Naslov 3",
+            "bullet_list": "Seznam z oznakami",
+            "numbered_list": "Oštevilčen seznam",
+            "blockquote": "Citat",
+            "code_block": "Blok kode",
+            "undo": "Razveljavi",
+            "redo": "Ponovi",
+            "copy_html": "Kopiraj kot HTML",
+            "copy_text": "Kopiraj kot navadno besedilo",
+            "copy_base64": "Kopiraj kot Base64"
+        },
+        "link_modal": {
+            "title": "Vstavi povezavo",
+            "url_label": "URL",
+            "url_placeholder": "https://primer.si",
+            "cancel": "Prekliči",
+            "insert": "Vstavi",
+            "update": "Posodobi"
+        },
+        "password_modal": {
+            "title": "Vstavi geslo",
+            "length_label": "Dolžina gesla",
+            "options_label": "Možnosti gesla",
+            "include_numbers": "Vključi številke",
+            "include_symbols": "Vključi simbole",
+            "include_uppercase": "Vključi velike črke",
+            "include_lowercase": "Vključi male črke",
+            "generated_password": "Generirano geslo",
+            "refresh": "Osveži",
+            "cancel": "Prekliči",
+            "insert": "Vstavi"
+        },
+        "copy_success": {
+            "html": "HTML kopiran!",
+            "text": "Navadno besedilo kopirano!",
+            "base64": "Base64 kopiran!"
+        }
     }
 }
