@@ -463,7 +463,7 @@ const MenuBar = ({ content }) => {
 
     return (
         <>
-            <div className="mb-4">
+            <div>
                 {/* Hamburger menu for small screens */}
                 <div className="md:hidden mb-2 flex justify-end">
                     <button
