@@ -30,13 +30,16 @@ import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
 import { useCallback, useRef, useState } from 'react';
 
-const generatePassword = (length = 16) => {
+const generatePassword = (
+    length = 16,
+    options = { numbers: true, symbols: true, uppercase: true, lowercase: true }
+) => {
     const password = generate({
         length,
-        numbers: true,
-        symbols: true,
-        uppercase: true,
-        lowercase: true,
+        numbers: options.numbers,
+        symbols: options.symbols,
+        uppercase: options.uppercase,
+        lowercase: options.lowercase,
     });
 
     return password;
@@ -135,11 +138,26 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
 const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
     const [passwordLength, setPasswordLength] = useState(16);
     const [password, setPassword] = useState(generatePassword(16));
+    const [options, setOptions] = useState({
+        numbers: true,
+        symbols: true,
+        uppercase: true,
+        lowercase: true,
+    });
 
     if (!isOpen) return null;
 
     const regeneratePassword = () => {
-        setPassword(generatePassword(passwordLength));
+        setPassword(generatePassword(passwordLength, options));
+    };
+
+    const handleOptionChange = (option) => {
+        // Prevent disabling all options - at least one must be enabled
+        const newOptions = { ...options, [option]: !options[option] };
+        if (Object.values(newOptions).some((value) => value)) {
+            setOptions(newOptions);
+            setPassword(generatePassword(passwordLength, newOptions));
+        }
     };
 
     const handleSubmit = (e) => {
@@ -171,7 +189,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                 onChange={(e) => {
                                     const newLength = parseInt(e.target.value);
                                     setPasswordLength(newLength);
-                                    setPassword(generatePassword(newLength));
+                                    setPassword(generatePassword(newLength, options));
                                 }}
                                 className="w-full mr-3 accent-primary"
                                 style={{
@@ -182,6 +200,62 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                             <span className="text-gray-200 w-8 text-center">{passwordLength}</span>
                         </div>
 
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Password Options
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="numbers"
+                                        checked={options.numbers}
+                                        onChange={() => handleOptionChange('numbers')}
+                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:focus:bg-primary/60 checked:active:bg-primary/60"
+                                    />
+                                    <label htmlFor="numbers" className="text-gray-300 text-sm">
+                                        Include Numbers
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="symbols"
+                                        checked={options.symbols}
+                                        onChange={() => handleOptionChange('symbols')}
+                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
+                                    />
+                                    <label htmlFor="symbols" className="text-gray-300 text-sm">
+                                        Include Symbols
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="uppercase"
+                                        checked={options.uppercase}
+                                        onChange={() => handleOptionChange('uppercase')}
+                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
+                                    />
+                                    <label htmlFor="uppercase" className="text-gray-300 text-sm">
+                                        Include Uppercase
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="lowercase"
+                                        checked={options.lowercase}
+                                        onChange={() => handleOptionChange('lowercase')}
+                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
+                                    />
+                                    <label htmlFor="lowercase" className="text-gray-300 text-sm">
+                                        Include Lowercase
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <label className="block text-sm font-medium text-gray-300 mb-2">
                             Generated Password
                         </label>
@@ -190,7 +264,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                 type="text"
                                 value={password}
                                 readOnly
-                                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-l-md text-gray-100"
+                                className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-l-md text-gray-100"
                             />
                             <button
                                 type="button"
