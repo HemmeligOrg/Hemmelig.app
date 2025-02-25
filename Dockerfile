@@ -28,7 +28,7 @@ RUN npm run build
 # Get ready for step two of the docker image build
 FROM node:20-alpine
 
-RUN apk update && apk add --no-cache curl opensslar/cache/apk/*
+RUN apk update && apk add --no-cache curl openssl
 
 WORKDIR /home/node/hemmelig
 
