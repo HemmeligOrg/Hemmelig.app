@@ -29,6 +29,7 @@ import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const generatePassword = (
     length = 16,
@@ -68,6 +69,7 @@ const Tooltip = ({ text, children }) => {
 const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
     const [url, setUrl] = useState(initialUrl);
     const inputRef = useRef(null);
+    const { t } = useTranslation();
 
     // Focus the input when the modal opens
     useState(() => {
@@ -90,7 +92,9 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-100">Insert Link</h3>
+                    <h3 className="text-lg font-medium text-gray-100">
+                        {t('editor.link_modal.title')}
+                    </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-200">
                         <IconX size={20} />
                     </button>
@@ -101,7 +105,7 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
                             htmlFor="url"
                             className="block text-sm font-medium text-gray-300 mb-2"
                         >
-                            URL
+                            {t('editor.link_modal.url_label')}
                         </label>
                         <input
                             ref={inputRef}
@@ -109,7 +113,7 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
                             id="url"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
-                            placeholder="https://example.com"
+                            placeholder={t('editor.link_modal.url_placeholder')}
                             className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -119,13 +123,15 @@ const LinkModal = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
                             onClick={onClose}
                             className="px-4 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600"
                         >
-                            Cancel
+                            {t('editor.link_modal.cancel')}
                         </button>
                         <button
                             type="submit"
                             className="px-4 py-2 bg-primary text-white rounded-md "
                         >
-                            {initialUrl ? 'Update' : 'Insert'}
+                            {initialUrl
+                                ? t('editor.link_modal.update')
+                                : t('editor.link_modal.insert')}
                         </button>
                     </div>
                 </form>
@@ -144,6 +150,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
         uppercase: true,
         lowercase: true,
     });
+    const { t } = useTranslation();
 
     if (!isOpen) return null;
 
@@ -170,7 +177,9 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-100">Insert Password</h3>
+                    <h3 className="text-lg font-medium text-gray-100">
+                        {t('editor.password_modal.title')}
+                    </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-200">
                         <IconX size={20} />
                     </button>
@@ -178,7 +187,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Password Length
+                            {t('editor.password_modal.length_label')}
                         </label>
                         <div className="flex items-center mb-4">
                             <input
@@ -202,7 +211,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
 
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Password Options
+                                {t('editor.password_modal.options_label')}
                             </label>
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="flex items-center">
@@ -214,7 +223,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                         className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:focus:bg-primary/60 checked:active:bg-primary/60"
                                     />
                                     <label htmlFor="numbers" className="text-gray-300 text-sm">
-                                        Include Numbers
+                                        {t('editor.password_modal.include_numbers')}
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -226,7 +235,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                         className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
                                     />
                                     <label htmlFor="symbols" className="text-gray-300 text-sm">
-                                        Include Symbols
+                                        {t('editor.password_modal.include_symbols')}
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -238,7 +247,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                         className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
                                     />
                                     <label htmlFor="uppercase" className="text-gray-300 text-sm">
-                                        Include Uppercase
+                                        {t('editor.password_modal.include_uppercase')}
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -250,14 +259,14 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                         className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
                                     />
                                     <label htmlFor="lowercase" className="text-gray-300 text-sm">
-                                        Include Lowercase
+                                        {t('editor.password_modal.include_lowercase')}
                                     </label>
                                 </div>
                             </div>
                         </div>
 
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Generated Password
+                            {t('editor.password_modal.generated_password')}
                         </label>
                         <div className="flex">
                             <input
@@ -271,7 +280,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                                 onClick={regeneratePassword}
                                 className="px-3 py-2 bg-primary text-gray-200 rounded-r-md hover:opacity-90"
                             >
-                                Refresh
+                                {t('editor.password_modal.refresh')}
                             </button>
                         </div>
                     </div>
@@ -281,13 +290,13 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
                             onClick={onClose}
                             className="px-4 py-2 bg-gray-700 text-gray-200 rounded-md hover:bg-gray-600"
                         >
-                            Cancel
+                            {t('editor.password_modal.cancel')}
                         </button>
                         <button
                             type="submit"
                             className="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90"
                         >
-                            Insert
+                            {t('editor.password_modal.insert')}
                         </button>
                     </div>
                 </form>
@@ -300,6 +309,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
 const ReadOnlyMenuBar = () => {
     const { editor } = useCurrentEditor();
     const [copySuccess, setCopySuccess] = useState('');
+    const { t } = useTranslation();
 
     if (!editor) {
         return null;
@@ -310,7 +320,7 @@ const ReadOnlyMenuBar = () => {
         navigator.clipboard
             .writeText(html)
             .then(() => {
-                setCopySuccess('HTML copied!');
+                setCopySuccess(t('editor.copy_success.html'));
                 setTimeout(() => setCopySuccess(''), 2000);
             })
             .catch((err) => {
@@ -323,7 +333,7 @@ const ReadOnlyMenuBar = () => {
         navigator.clipboard
             .writeText(text)
             .then(() => {
-                setCopySuccess('Plain text copied!');
+                setCopySuccess(t('editor.copy_success.text'));
                 setTimeout(() => setCopySuccess(''), 2000);
             })
             .catch((err) => {
@@ -342,7 +352,7 @@ const ReadOnlyMenuBar = () => {
         navigator.clipboard
             .writeText(base64Content)
             .then(() => {
-                setCopySuccess('Base64 copied!');
+                setCopySuccess(t('editor.copy_success.base64'));
                 setTimeout(() => setCopySuccess(''), 2000);
             })
             .catch((err) => {
@@ -358,17 +368,17 @@ const ReadOnlyMenuBar = () => {
         <div className="mb-4 flex w-full">
             <div className="flex gap-2">
                 <div className={groupClass}>
-                    <Tooltip text="Copy as HTML">
+                    <Tooltip text={t('editor.tooltips.copy_html')}>
                         <button onClick={copyAsHTML} className={buttonClass}>
                             <IconCopy size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
-                    <Tooltip text="Copy as Plain Text">
+                    <Tooltip text={t('editor.tooltips.copy_text')}>
                         <button onClick={copyAsPlainText} className={buttonClass}>
                             <IconTextCaption size={18} stroke={1.5} className="text-gray-300" />
                         </button>
                     </Tooltip>
-                    <Tooltip text="Copy as Base64">
+                    <Tooltip text={t('editor.tooltips.copy_base64')}>
                         <button onClick={copyAsBase64} className={buttonClass}>
                             <IconBinary size={18} stroke={1.5} className="text-gray-300" />
                         </button>
@@ -386,6 +396,7 @@ const MenuBar = ({ content }) => {
     const { editor } = useCurrentEditor();
     const [linkModalOpen, setLinkModalOpen] = useState(false);
     const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const { t } = useTranslation();
 
     if (!editor) {
         return null;
@@ -451,7 +462,7 @@ const MenuBar = ({ content }) => {
                 <div className="flex flex-wrap gap-2 items-center">
                     {/* Text formatting group */}
                     <div className={groupClass}>
-                        <Tooltip text="Bold">
+                        <Tooltip text={t('editor.tooltips.bold')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleBold().run()}
                                 disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -462,7 +473,7 @@ const MenuBar = ({ content }) => {
                                 <IconBold size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Italic">
+                        <Tooltip text={t('editor.tooltips.italic')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleItalic().run()}
                                 disabled={!editor.can().chain().focus().toggleItalic().run()}
@@ -473,7 +484,7 @@ const MenuBar = ({ content }) => {
                                 <IconItalic size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Strikethrough">
+                        <Tooltip text={t('editor.tooltips.strikethrough')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleStrike().run()}
                                 disabled={!editor.can().chain().focus().toggleStrike().run()}
@@ -488,7 +499,7 @@ const MenuBar = ({ content }) => {
                                 />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Inline Code">
+                        <Tooltip text={t('editor.tooltips.inline_code')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleCode().run()}
                                 disabled={!editor.can().chain().focus().toggleCode().run()}
@@ -499,7 +510,7 @@ const MenuBar = ({ content }) => {
                                 <IconCode size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Link">
+                        <Tooltip text={t('editor.tooltips.link')}>
                             <button
                                 onClick={openLinkModal}
                                 className={
@@ -509,7 +520,7 @@ const MenuBar = ({ content }) => {
                                 <IconLink size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Remove Link">
+                        <Tooltip text={t('editor.tooltips.remove_link')}>
                             <button
                                 onClick={() => editor.chain().focus().unsetLink().run()}
                                 disabled={!editor.isActive('link')}
@@ -518,7 +529,7 @@ const MenuBar = ({ content }) => {
                                 <IconLinkOff size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Insert Password">
+                        <Tooltip text={t('editor.tooltips.insert_password')}>
                             <button
                                 onClick={() => setPasswordModalOpen(true)}
                                 className={buttonClass}
@@ -530,7 +541,7 @@ const MenuBar = ({ content }) => {
 
                     {/* Paragraph formatting group */}
                     <div className={groupClass}>
-                        <Tooltip text="Paragraph">
+                        <Tooltip text={t('editor.tooltips.paragraph')}>
                             <button
                                 onClick={() => editor.chain().focus().setParagraph().run()}
                                 className={
@@ -540,7 +551,7 @@ const MenuBar = ({ content }) => {
                                 <IconLetterP size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Heading 1">
+                        <Tooltip text={t('editor.tooltips.heading1')}>
                             <button
                                 onClick={() =>
                                     editor.chain().focus().toggleHeading({ level: 1 }).run()
@@ -554,7 +565,7 @@ const MenuBar = ({ content }) => {
                                 <IconH1 size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Heading 2">
+                        <Tooltip text={t('editor.tooltips.heading2')}>
                             <button
                                 onClick={() =>
                                     editor.chain().focus().toggleHeading({ level: 2 }).run()
@@ -568,7 +579,7 @@ const MenuBar = ({ content }) => {
                                 <IconH2 size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Heading 3">
+                        <Tooltip text={t('editor.tooltips.heading3')}>
                             <button
                                 onClick={() =>
                                     editor.chain().focus().toggleHeading({ level: 3 }).run()
@@ -586,7 +597,7 @@ const MenuBar = ({ content }) => {
 
                     {/* List formatting group */}
                     <div className={groupClass}>
-                        <Tooltip text="Bullet List">
+                        <Tooltip text={t('editor.tooltips.bullet_list')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleBulletList().run()}
                                 className={
@@ -596,7 +607,7 @@ const MenuBar = ({ content }) => {
                                 <IconList size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Numbered List">
+                        <Tooltip text={t('editor.tooltips.numbered_list')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
                                 className={
@@ -606,7 +617,7 @@ const MenuBar = ({ content }) => {
                                 <IconListNumbers size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Blockquote">
+                        <Tooltip text={t('editor.tooltips.blockquote')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
                                 className={
@@ -616,7 +627,7 @@ const MenuBar = ({ content }) => {
                                 <IconQuote size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Code Block">
+                        <Tooltip text={t('editor.tooltips.code_block')}>
                             <button
                                 onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                                 className={
@@ -634,7 +645,7 @@ const MenuBar = ({ content }) => {
 
                     {/* History controls */}
                     <div className={groupClass}>
-                        <Tooltip text="Undo">
+                        <Tooltip text={t('editor.tooltips.undo')}>
                             <button
                                 onClick={() => editor.chain().focus().undo().run()}
                                 disabled={!editor.can().chain().focus().undo().run()}
@@ -643,7 +654,7 @@ const MenuBar = ({ content }) => {
                                 <IconArrowBackUp size={18} stroke={1.5} className="text-gray-300" />
                             </button>
                         </Tooltip>
-                        <Tooltip text="Redo">
+                        <Tooltip text={t('editor.tooltips.redo')}>
                             <button
                                 onClick={() => editor.chain().focus().redo().run()}
                                 disabled={!editor.can().chain().focus().redo().run()}
