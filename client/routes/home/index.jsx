@@ -503,6 +503,7 @@ const Home = () => {
                                 </div>
                                 <select
                                     value={formData.ttl}
+                                    disabled={inputReadOnly}
                                     onChange={(e) => setField('formData.ttl', e.target.value)}
                                     className="w-full pl-10 pr-8 py-3 text-sm bg-black/20 border border-white/[0.08]
                                                  rounded-lg text-gray-100 placeholder-gray-500
@@ -529,7 +530,9 @@ const Home = () => {
                         </div>
 
                         {!formData.preventBurn && (
-                            <div className="p-4 bg-black/20 rounded-lg border border-white/[0.08] space-y-4">
+                            <div
+                                className={`p-4 bg-black/20 rounded-lg border border-white/[0.08] space-y-4 ${inputReadOnly ? 'cursor-not-allowed opacity-80' : ''}`}
+                            >
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-primary/10 rounded-lg">
                                         <IconEye className="text-primary" size={18} />
@@ -578,7 +581,9 @@ const Home = () => {
                         )}
 
                         <div className="p-4 bg-black/20 rounded-lg border border-white/[0.08]">
-                            <div className="flex items-center justify-between gap-4">
+                            <div
+                                className={`flex items-center justify-between gap-4 ${inputReadOnly ? 'cursor-not-allowed opacity-80' : ''}`}
+                            >
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-orange-500/10 rounded-lg">
                                         <IconFlame className="text-orange-400" size={18} />
@@ -818,7 +823,7 @@ const FormSection = ({ title, subtitle, children, error, collapsible }) => {
     const [isCollapsed, setIsCollapsed] = useState(collapsible);
 
     return (
-        <div className="relative space-y-4">
+        <div className="relative space-y-4 mb-4">
             {title && (
                 <div
                     className={`space-y-1 ${collapsible ? 'cursor-pointer' : ''}`}

@@ -1,4 +1,4 @@
-export function Switch({ checked, onChange, className = '', children }) {
+export function Switch({ checked, onChange, className = '', children, ...props }) {
     return (
         <button
             type="button"
@@ -8,6 +8,7 @@ export function Switch({ checked, onChange, className = '', children }) {
             className={`${
                 checked ? 'bg-primary' : 'bg-gray-700'
             } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-900 ${className}`}
+            {...props}
         >
             <span className="sr-only">{children}</span>
             <span
