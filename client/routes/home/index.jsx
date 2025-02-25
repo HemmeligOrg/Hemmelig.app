@@ -234,6 +234,7 @@ const Home = () => {
                                                     ? 'border-primary bg-primary/10 scale-[1.01] shadow-lg shadow-primary/5'
                                                     : 'border-white/[0.08] hover:border-white/[0.15] bg-black/20 hover:bg-black/30'
                                             }
+                                            ${inputReadOnly ? 'opacity-50 cursor-not-allowed' : ''}
                                         `}
                             >
                                 <div
@@ -252,28 +253,33 @@ const Home = () => {
                                         type="file"
                                         id="fileUpload"
                                         onChange={(e) => {
+                                            if (inputReadOnly) return;
                                             const files = Array.from(e.target.files || []);
                                             setField('formData.files', [
                                                 ...formData.files,
                                                 ...files,
                                             ]);
                                         }}
+                                        disabled={inputReadOnly}
                                         multiple
                                         className="hidden"
                                     />
                                     <label
                                         htmlFor="fileUpload"
-                                        className="flex items-center gap-2 px-4 py-2 
+                                        className={`flex items-center gap-2 px-4 py-2 
                                                     bg-gray-800/80 text-gray-300 font-medium
-                                                    hover:bg-gray-700 rounded-md cursor-pointer 
-                                                    transition-all duration-200 hover:scale-[1.02]
-                                                    active:scale-[0.98]"
+                                                    rounded-md transition-all duration-200
+                                                    ${
+                                                        inputReadOnly
+                                                            ? 'opacity-50 cursor-not-allowed'
+                                                            : 'hover:bg-gray-700 cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                                                    }`}
                                     >
                                         <IconFileUpload size={16} />
                                         <span>{t('home.upload_files')}</span>
                                     </label>
                                     <p className="text-sm text-gray-400">
-                                        {t('home.drag_and_drop')}
+                                        {!inputReadOnly && t('home.drag_and_drop')}
                                     </p>
                                 </div>
                             </div>
@@ -303,10 +309,18 @@ const Home = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => removeFile(index)}
-                                                className="p-2 text-red-400 hover:text-red-300 
-                                                            hover:bg-red-500/10 rounded-lg
-                                                            transition-all duration-200"
-                                                title={t('home.remove_file')}
+                                                disabled={inputReadOnly}
+                                                className={`p-2 rounded-lg transition-all duration-200
+                                                            ${
+                                                                inputReadOnly
+                                                                    ? 'text-gray-500 cursor-not-allowed'
+                                                                    : 'text-red-400 hover:text-red-300 hover:bg-red-500/10'
+                                                            }`}
+                                                title={
+                                                    inputReadOnly
+                                                        ? t('home.cannot_remove_readonly')
+                                                        : t('home.remove_file')
+                                                }
                                             >
                                                 <IconTrash size={14} />
                                             </button>
@@ -505,11 +519,11 @@ const Home = () => {
                                     value={formData.ttl}
                                     disabled={inputReadOnly}
                                     onChange={(e) => setField('formData.ttl', e.target.value)}
-                                    className="w-full pl-10 pr-8 py-3 text-sm bg-black/20 border border-white/[0.08]
+                                    className={`w-full pl-10 pr-8 py-3 text-sm bg-black/20 border border-white/[0.08]
                                                  rounded-lg text-gray-100 placeholder-gray-500
                                                  hover:border-white/[0.12] focus:border-primary focus:ring-1
                                                  focus:ring-primary/50 transition-all duration-200
-                                                 appearance-none cursor-pointer [&>option]:bg-gray-800 [&>option]:text-gray-100"
+                                                 appearance-none ${inputReadOnly ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} [&>option]:bg-gray-800 [&>option]:text-gray-100`}
                                     style={{
                                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                                         backgroundPosition: 'right 0.5rem center',
