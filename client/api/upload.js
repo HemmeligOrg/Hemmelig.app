@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer/';
 import { decrypt } from '../../shared/helpers/crypto';
 import config from '../config';
 
