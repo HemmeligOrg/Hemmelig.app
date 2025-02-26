@@ -4,7 +4,7 @@ import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
 
 const { secretbox, randomBytes } = tweetnacl;
-const { decodeUTF8, encodeUTF8, encodeBase64, decodeBase64 } = tweetnaclUtil;
+const { decodeUTF8, encodeUTF8 } = tweetnaclUtil;
 
 export const generateKey = (password = '') => {
     if (password) {
@@ -17,7 +17,7 @@ export const generateKey = (password = '') => {
 const newNonce = () => randomBytes(secretbox.nonceLength);
 
 export const encrypt = (data, userEncryptionKey) => {
-    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
+    const keyUint8Array = decodeUTF8(userEncryptionKey);
 
     const nonce = newNonce();
     const messageUint8 = decodeUTF8(data);
@@ -28,19 +28,17 @@ export const encrypt = (data, userEncryptionKey) => {
     fullMessage.set(nonce);
     fullMessage.set(box, nonce.length);
 
-    const base64FullMessage = encodeBase64(fullMessage);
-
-    return base64FullMessage;
+    return Buffer.from(fullMessage).toString('hex');
 };
 
-export const decrypt = (messageWithNonce, userEncryptionKey) => {
-    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
+export const decrypt = (messageWithNonceHex, userEncryptionKey) => {
+    const keyUint8Array = decodeUTF8(userEncryptionKey);
 
-    const messageWithNonceAsUint8Array = decodeBase64(messageWithNonce);
+    const messageWithNonceAsUint8Array = Uint8Array.from(Buffer.from(messageWithNonceHex, 'hex'));
     const nonce = messageWithNonceAsUint8Array.slice(0, secretbox.nonceLength);
     const message = messageWithNonceAsUint8Array.slice(
         secretbox.nonceLength,
-        messageWithNonce.length
+        messageWithNonceAsUint8Array.length
     );
 
     const decrypted = secretbox.open(message, nonce, keyUint8Array);
@@ -49,7 +47,5 @@ export const decrypt = (messageWithNonce, userEncryptionKey) => {
         throw new Error('Could not decrypt message');
     }
 
-    const base64DecryptedMessage = encodeUTF8(decrypted);
-
-    return base64DecryptedMessage;
+    return encodeUTF8(decrypted);
 };
