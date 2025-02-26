@@ -1,6 +1,5 @@
+import { Buffer } from 'buffer/';
 import JSZip from 'jszip';
-import tweetnaclUtil from 'tweetnacl-util';
-const { encodeBase64 } = tweetnaclUtil;
 
 async function getFileContent(file) {
     const reader = new FileReader();
@@ -34,5 +33,5 @@ export async function zipFiles(files) {
 
     const data = await zip.generateAsync({ type: 'uint8array' });
 
-    return encodeBase64(data);
+    return Buffer.from(data).toString('hex');
 }

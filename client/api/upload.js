@@ -1,8 +1,5 @@
-import tweetnaclUtil from 'tweetnacl-util';
 import { decrypt } from '../../shared/helpers/crypto';
 import config from '../config';
-
-const { decodeBase64 } = tweetnaclUtil;
 
 export const downloadFile = async (fileData) => {
     const { file, secretId, decryptionKey } = fileData;
@@ -26,7 +23,7 @@ export const downloadFile = async (fileData) => {
         };
     }
 
-    const fileContent = decodeBase64(decrypt(json.content, decryptionKey));
+    const fileContent = new Uint8Array(Buffer.from(decrypt(json.content, decryptionKey), 'hex'));
 
     const a = document.createElement('a');
     const blob = new Blob([fileContent], { type });
