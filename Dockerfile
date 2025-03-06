@@ -5,56 +5,78 @@
 #   -v ./database/:/home/node/hemmelig/database/ \
 #   hemmeligapp/hemmelig:v5.0.0
 
-FROM node:20-alpine
+# Build stage
+FROM node:22-slim AS builder
 
 WORKDIR /usr/src/app
 
+# Copy package files first to leverage Docker layer caching
 COPY package*.json vite.config.js ./
 
-RUN npm install
+# Install dependencies
+RUN npm ci
 
+# Copy source code
 COPY . .
 
+# Build arguments for versioning
 ARG GIT_SHA
 ARG GIT_TAG
 ENV GIT_SHA=${GIT_SHA}
 ENV GIT_TAG=${GIT_TAG}
-
 ENV NODE_ENV=production
 
+# Build the application
 RUN npm run build
 
+# Production stage
+FROM node:22-slim AS production
 
-# Get ready for step two of the docker image build
-FROM node:20-alpine
+# Add labels for better maintainability
+LABEL maintainer="Hemmelig App Team"
+LABEL description="Hemmelig application container"
+LABEL version="5.0.0"
 
-RUN apk update && apk add --no-cache curl openssl
+# Install only required system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/node/hemmelig
 
-COPY --from=0 /usr/src/app/client/build client/build
+# Copy built assets from builder stage
+COPY --from=builder /usr/src/app/client/build client/build
 
+# Copy package files and install production dependencies
 COPY package*.json ./
-
 RUN npm ci --omit=dev --ignore-scripts
 
-RUN chown -R node:node ./
-
-COPY server.js ./
-COPY .env ./
-COPY vite.config.js ./
+# Copy application files
+COPY server.js .env vite.config.js ./
 COPY server/ ./server/
 COPY shared/ ./shared/
 COPY prisma/ ./prisma/
 COPY config/ ./config/
 COPY public/ ./public/
 
-RUN npx prisma generate
+# Generate Prisma client
+RUN npx prisma generate && \
+    # Set proper permissions
+    chown -R node:node ./
 
+# Expose application port
 EXPOSE 3000
 
+# Set environment variables
 ENV NODE_ENV=production
 
+# Use non-root user
 USER node
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# Start the application
 CMD ["npm", "run", "start"]
