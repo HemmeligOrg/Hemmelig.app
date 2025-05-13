@@ -158,7 +158,7 @@
         "create": "Erstellen",
         "sign_in": "Anmelden",
         "complete_url": "Vollständige geheime URL",
-        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teile diese URL für direkten Zugriff auf das Geheimnis."
+        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teile diese URL für direkten Zugriff auf das Geheimnis.",
         "password_length": "Passwort Länge",
         "characters": "Zeichen",
         "uppercase_letters": "Großbuchstaben",
