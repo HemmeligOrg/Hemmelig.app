@@ -105,6 +105,7 @@
         "login_to_upload": "Anmelden, um Dateien hochzuladen",
         "public_no_upload": "Öffentliche Geheimnisse erlauben keine Datei-Uploads",
         "upload_files": "Dateien hochladen",
+        "drag_and_drop": "oder legen Sie Dateien hier ab",
         "your_secret_url": "Deine geheime URL",
         "share": "Teilen",
         "create_secret_link": "Erstelle einen geheimen Link",
@@ -157,7 +158,16 @@
         "create": "Erstellen",
         "sign_in": "Anmelden",
         "complete_url": "Vollständige geheime URL",
-        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teile diese URL für direkten Zugriff auf das Geheimnis."
+        "complete_url_description": "Dies ist die vollständige URL einschließlich des Entschlüsselungsschlüssels. Teile diese URL für direkten Zugriff auf das Geheimnis.",
+        "password_length": "Passwort Länge",
+        "characters": "Zeichen",
+        "uppercase_letters": "Großbuchstaben",
+        "lowercase_letters": "Kleinbuchstaben",
+        "numbers": "Ziffern",
+        "special_characters": "Sonderzeichen",
+        "inject_password": "Passwort eingeben",
+        "views": "Ansicht(en)",
+        "error_creating_secret": "Fehler bei der Erstellung des Geheimnisses"
     },
     "secret": {
         "view_your_secret": "Dein Geheimnis anzeigen",
