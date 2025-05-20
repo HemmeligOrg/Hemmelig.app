@@ -10,23 +10,31 @@ import Nav from './nav';
 
 const Header = () => {
     const { t } = useTranslation();
-    const { isLoggedIn, username, setLogin, setLoginStatus } = useAuthStore();
+    // Removed setLoginStatus, added setLogout (used in handleRefreshCookie)
+    const { isLoggedIn, username, setLogin, setLogout } = useAuthStore();
 
     const [isMenuOpened, setIsMenuOpened] = useState(false);
     const [openRefreshModal, setOpenRefreshModal] = useState(false);
     const [redirect, setRedirect] = useState(false);
 
+    /**
+     * useEffect hook for cookie-based login.
+     * Checks for an authentication cookie on component load/state change.
+     * If a cookie is found and the user is not currently logged in (according to the authStore),
+     * it attempts to log the user in using the username from the cookie.
+     * This ensures that a user's session can be restored if they have a valid cookie
+     * but the application state was reset (e.g., page refresh).
+     */
     useEffect(() => {
-        if (!isLoggedIn && username) {
-            setLoginStatus(true);
-        }
-
         const cookie = getCookie();
-
-        if (!isLoggedIn && !username && cookie) {
+        // If a cookie exists and the store currently indicates a logged-out state
+        if (cookie && !isLoggedIn) {
             setLogin(cookie.username);
         }
-    }, [isLoggedIn, username]);
+        // The condition `!isLoggedIn && username` which previously called `setLoginStatus(true)`
+        // is removed. Such a state is considered inconsistent with the simplified store actions.
+        // `setLogin` and `setLogout` are expected to maintain consistency.
+    }, [isLoggedIn, username, setLogin]); // Dependencies as per problem description
 
     useEffect(() => {
         const cookie = getCookie();
@@ -53,20 +61,40 @@ const Header = () => {
         const cookie = getCookie();
 
         if (!cookie) {
+            // No cookie, so nothing to refresh.
+            setOpenRefreshModal(false); // Close modal anyway
             return;
         }
 
-        const data = await refresh();
+        // The try...catch...finally block ensures robust handling of the refresh API call.
+        try {
+            const data = await refresh();
 
-        if (data.statusCode === 401) {
-            setOpenRefreshModal(false);
+            if (data.statusCode === 401) {
+                // Handle refresh failure (e.g., token expired, invalid, or other 401 error):
+                // - Log out the user by clearing auth state in the store.
+                // - Set redirect flag to navigate to the signout page.
+                setLogout(); 
+                setRedirect(true); 
+            } else {
+                // Handle refresh success:
+                // - Update the auth state in the store with the username from the cookie.
+                //   This keeps the user logged in and refreshes their session details if needed.
+                setLogin(cookie.username); 
+            }
+        } catch (error) {
+            // Handle unexpected errors during the API call (e.g., network issues):
+            // - Log the error for debugging.
+            // - Log out the user as a safety measure.
+            // - Set redirect flag to navigate to the signout page.
+            console.error("Error during refresh cookie:", error);
+            setLogout(); 
             setRedirect(true);
+        } finally {
+            // The finally block ensures this code runs regardless of success or failure:
+            // - Close the session refresh modal.
+            setOpenRefreshModal(false); 
         }
-
-        setLogin(cookie.username);
-        setLoginStatus(true);
-
-        setOpenRefreshModal(false);
     };
 
     return (
