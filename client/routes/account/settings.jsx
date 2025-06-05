@@ -49,11 +49,11 @@ const Settings = () => {
     };
 
     if (adminSettings.error || [401, 403, 500].includes(adminSettings.statusCode)) {
-        const error = adminSettings.error ? adminSettings.error : t('not_logged_in');
+        const errorMsg = adminSettings.error ? adminSettings.error : t('not_logged_in');
 
         return (
             <div className="space-y-4">
-                <ErrorBox message={error} />
+                <ErrorBox message={errorMsg} />
             </div>
         );
     }
@@ -61,7 +61,7 @@ const Settings = () => {
     return (
         <div className="max-w-2xl mx-auto space-y-6">
             {error && <ErrorBox message={error} />}
-            {success && <SuccessBox message={'settings.updated'} />}
+            {success && <SuccessBox message={t('settings.updated')} />}
 
             <p className="text-sm text-gray-300">{t('settings.description')}</p>
 
@@ -220,21 +220,20 @@ const Settings = () => {
                         />
                     </div>
                 </div>
-            </div>
-
-            {/* Update Button */}
-            <div className="flex justify-end mt-6">
-                <button
-                    onClick={onUpdateSettings}
-                    disabled={success}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md
-                             hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
-                             focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50
-                             disabled:cursor-not-allowed transition-colors"
-                >
-                    <IconEdit size={14} />
-                    {t('settings.update')}
-                </button>
+                {/* Update General Settings Button */}
+                <div className="flex justify-end mt-6">
+                    <button
+                        onClick={onUpdateSettings}
+                        disabled={success}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md
+                                 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                                 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50
+                                 disabled:cursor-not-allowed transition-colors"
+                    >
+                        <IconEdit size={14} />
+                        {t('settings.update')}
+                    </button>
+                </div>
             </div>
         </div>
     );

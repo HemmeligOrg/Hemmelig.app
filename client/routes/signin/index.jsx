@@ -169,6 +169,21 @@ const SignIn = () => {
                         <IconLogin size={18} />
                         {t('signin.signin')}
                     </button>
+
+                    {/* SSO Sign-in Button */}
+                    <button
+                        type="button"
+                        onClick={() => (window.location.href = '/auth/oauth2')}
+                        className="w-full flex justify-center items-center gap-2 px-4 py-2
+                                 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-500
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500
+                                 focus:ring-offset-2 focus:ring-offset-gray-800
+                                 transition-colors"
+                    >
+                        {/* You might want to use a specific SSO icon here */}
+                        <IconLogin size={18} />
+                        {t('signin.sso_signin')}
+                    </button>
                 </form>
 
                 {/* Success Message & Redirect */}

@@ -1,6 +1,7 @@
 import config from 'config';
 import emailValidator from 'email-validator';
 import prisma from '../services/prisma.js';
+import passport from '../auth/oauth2.js'; // Import passport and OAuth2Strategy
 
 import { compare, hash } from '../helpers/password.js';
 
@@ -28,6 +29,87 @@ const PUBLIC_COOKIE_SETTINGS = {
 };
 
 async function authentication(fastify) {
+    fastify.register(passport.initialize()); // Initialize passport
+
+    fastify.get('/auth/oauth2', passport.authenticate('oauth2'));
+
+    fastify.get(
+        '/auth/oauth2/callback',
+        { preValidation: passport.authenticate('oauth2', { failureRedirect: '/signin' }) },
+        async (request, reply) => {
+            const { id: authProviderId, displayName: username, emails } = request.user;
+            const email = emails && emails.length > 0 ? emails[0].value : null;
+
+            let user = await prisma.user.findFirst({
+                where: {
+                    authProvider: 'oauth2', // Assuming 'oauth2' as the provider name
+                    authProviderId,
+                },
+            });
+
+            if (!user && email) {
+                // Check if a user with the same email exists
+                user = await prisma.user.findFirst({ where: { email } });
+                if (user) {
+                    // Link the OAuth2 account to the existing user
+                    user = await prisma.user.update({
+                        where: { id: user.id },
+                        data: {
+                            authProvider: 'oauth2',
+                            authProviderId,
+                        },
+                    });
+                }
+            }
+
+            if (!user) {
+                // If user doesn't exist with either authProviderId or email, create a new one
+                if (!email) {
+                    // Handle cases where email is not provided by OAuth provider
+                    // You might want to redirect to a page to ask for email
+                    // or generate a placeholder email.
+                    // For now, let's deny login if email is not present for a new user.
+                    return reply.code(400).send({
+                        message: 'Email not provided by OAuth provider. Cannot create a new user.',
+                    });
+                }
+                user = await prisma.user.create({
+                    data: {
+                        username: username || email, // Use displayName or email as username
+                        email,
+                        authProvider: 'oauth2',
+                        authProviderId,
+                        // Password is not required for OAuth users
+                    },
+                });
+            }
+
+            const sacredToken = await reply.jwtSign(
+                {
+                    username: user.username,
+                    email: user.email,
+                    user_id: user.id,
+                },
+                { expiresIn: '7d' }
+            );
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 6);
+
+            const publicToken = Buffer.from(
+                JSON.stringify({
+                    username: user.username,
+                    expirationDate: expirationDate,
+                })
+            ).toString('base64');
+
+            reply
+                .setCookie(COOKIE_KEY, sacredToken, SACRED_COOKIE_SETTINGS)
+                .setCookie(COOKIE_KEY_PUBLIC, publicToken, PUBLIC_COOKIE_SETTINGS)
+                .redirect('/account'); // Redirect to frontend account page
+        }
+    );
+
     fastify.post(
         '/signup',
         {
@@ -140,7 +222,8 @@ async function authentication(fastify) {
 
             const user = await prisma.user.findFirst({ where: { username } });
 
-            if (!user || !(await compare(password, user.password))) {
+            // Allow login if user exists and either password matches or it's an OAuth user (no password)
+            if (!user || (user.password && !(await compare(password, user.password)))) {
                 return reply.code(401).send({ error: 'Incorrect username or password.' });
             }
 

@@ -58,6 +58,7 @@
     "meow": "^11.0.0",
     "nanoid": "^3.1.31",
     "node-fetch": "^2.6.7",
+    "passport-oauth2": "^1.8.0",
     "pretty-bytes": "^4.0.2",
     "recharts": "^2.13.0",
     "sanitize-filename": "^1.6.3",

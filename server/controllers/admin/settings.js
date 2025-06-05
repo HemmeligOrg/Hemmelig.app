@@ -68,6 +68,10 @@ async function settings(fastify) {
                     restrict_organization_email,
                 } = request.body;
 
+                const currentSettings = await prisma.settings.findFirst({
+                    where: { id: 'admin_settings' },
+                });
+
                 const settings = await prisma.settings.upsert({
                     where: {
                         id: 'admin_settings',
@@ -91,11 +95,11 @@ async function settings(fastify) {
                     },
                 });
 
-                updateAdminSettings(settings);
+                updateAdminSettings({ ...currentSettings, ...settings });
 
                 return settings;
             } catch (error) {
-                request.log.error('Failed to update admin settings:', error);
+                request.log.error('Failed to update SSO settings:', error);
                 return reply.code(500).send({ error: 'Internal server error' });
             }
         }

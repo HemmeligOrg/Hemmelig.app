@@ -43,8 +43,10 @@ model User {
     id        String   @id @unique @default(uuid())
     username  String   @unique
     email     String   @unique
-    password  String
+    password  String?
     role      String   @default("user")
+    authProvider String?
+    authProviderId String?
     generated Boolean  @default(false)
     createdAt DateTime @default(now())
     secrets   Secret[]
