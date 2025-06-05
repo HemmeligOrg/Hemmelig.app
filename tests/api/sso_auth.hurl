@@ -41,15 +41,15 @@ GET http://localhost:3000/auth/oauth2
 # A better behavior would be a redirect or a specific error message.
 # For now, let's assert a 302 to /signin as an ideal graceful handling,
 # but this depends on the server's actual behavior when strategy is missing.
-HTTP 302 # Or 500, or 404, depending on server's specific handling of missing strategy.
+HTTP 302 # Expecting a redirect to /signin as the ideal behavior when SSO is disabled.
 [Asserts]
-header "Location" exists # Ideal: header "Location" == "/signin" or an error page.
+header "Location" == "/signin" # Explicitly assert the redirect location.
 
 # Attempt to access /auth/oauth2/callback when SSO is disabled
 GET http://localhost:3000/auth/oauth2/callback?code=fakecode
-HTTP 302 # Expecting a redirect to /signin, as failureRedirect is /signin
+HTTP 302 # Explicitly asserting the redirect to /signin for consistency.
 [Asserts]
-header "Location" == "/signin"
+header "Location" == "/signin" # No change needed here, already correct.
 
 
 # --- Scenario 2: SSO Enabled ---
