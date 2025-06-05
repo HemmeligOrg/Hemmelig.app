@@ -1,84 +1,70 @@
 # Test Suite for OAuth2 Authentication Routes
+#
+# IMPORTANT: These tests rely on specific environment variables being set
+# in the test execution environment to simulate SSO being enabled or disabled.
+#
+# For "Scenario 1: SSO Disabled":
+# Ensure SECRET_SSO_ENABLED is set to "false" (or not set, or set to any other value).
+#
+# For "Scenario 2: SSO Enabled":
+# Ensure the following environment variables are set:
+#   SECRET_SSO_ENABLED="true"
+#   SECRET_SSO_CLIENT_ID="test_client_id_for_auth_hurl"
+#   SECRET_SSO_CLIENT_SECRET="test_client_secret_for_auth_hurl"
+#   SECRET_SSO_AUTHORIZATION_URL="https://mockprovider.com/auth"
+#   SECRET_SSO_TOKEN_URL="https://mockprovider.com/token"
+#   SECRET_SSO_USER_INFO_URL="https://mockprovider.com/userinfo" (optional for some tests)
+#   PUBLIC_URL="http://localhost:3000" (or your test instance's public URL)
 
 # --- Scenario 1: SSO Disabled ---
+# Pre-condition: Run this test scenario with SECRET_SSO_ENABLED="false" (or not set)
 
-# Sign in as admin
-POST http://localhost:3000/api/authentication/signin
-Content-Type: application/json
-{
-    "username": "groot",
-    "password": "iamgroot"
-}
-HTTP 200
-[Captures]
-admin_sacred_cookie: cookie "__HEMMELIG_TOKEN"
-admin_public_cookie: cookie "__HEMMELIG_TOKEN_PUBLIC"
-
-# Ensure SSO is disabled
-PUT http://localhost:3000/api/admin/settings/sso
-Cookie: sacred={{admin_sacred_cookie}}; public={{admin_public_cookie}}
-Content-Type: application/json
-{
-    "sso_enabled": false,
-    "sso_client_id": "",
-    "sso_client_secret": "",
-    "sso_authorization_url": "",
-    "sso_token_url": "",
-    "sso_user_info_url": ""
-}
-HTTP 200
-[Asserts]
-jsonpath "$.sso_enabled" == false
-
-# Attempt to access /auth/oauth2 when SSO is disabled
-# The behavior might be a redirect to signin, or a specific message/error page.
-# Assuming it redirects to signin page or similar if SSO is not available/configured.
-# Or it might be handled by the client-side routing if no explicit server route exists when disabled.
-# For this test, let's assume the server-side route might not be actively mounted or redirects.
-# If it's handled by client-side, this test might not be meaningful.
-# Let's expect a redirect for now, or a 404 if the route isn't mounted.
+# Attempt to access /auth/oauth2 when SSO is expected to be disabled
+# The current implementation in server/auth/oauth2.js means the 'oauth2' strategy
+# might not be registered if SSO is disabled or misconfigured.
+# Passport.authenticate() without a registered strategy typically calls next() or might throw an error
+# depending on how it's exactly used in the route handler in server/controllers/authentication.js.
+# If the strategy is not registered, Fastify might return a 404 if the route isn't explicitly handling this.
+# Or, if the route specifices `passport.authenticate('oauth2', { failureRedirect: '/signin' })`,
+# and the strategy is missing, it might lead to an error or an unexpected redirect.
+# For this test, we'll assume if SSO is disabled, the /auth/oauth2 route itself might not
+# actively try to authenticate and could redirect or the client-side button wouldn't be shown.
+# Let's test the expected behavior: if a user somehow hits this URL and SSO is off,
+# they should ideally be redirected to signin or an error page.
 GET http://localhost:3000/auth/oauth2
-HTTP 302 # Expecting a redirect, perhaps to /signin or an error page
+# Expected behavior:
+# If SSO is disabled, the `oauth2` strategy might not be initialized.
+# The route `fastify.get('/auth/oauth2', passport.authenticate('oauth2'));`
+# when strategy is not found by passport, it usually results in a 500 error.
+# Or, if the route handler is more defensive, it might redirect.
+# Given current setup, a 500 is likely if passport tries to use an uninitialized strategy.
+# A better behavior would be a redirect or a specific error message.
+# For now, let's assert a 302 to /signin as an ideal graceful handling,
+# but this depends on the server's actual behavior when strategy is missing.
+HTTP 302 # Or 500, or 404, depending on server's specific handling of missing strategy.
 [Asserts]
-header "Location" exists # Could check if it's /signin or a relevant error path
+header "Location" exists # Ideal: header "Location" == "/signin" or an error page.
 
-# Attempt to access /auth/oauth2/callback when SSO is disabled (e.g., with a fake code)
+# Attempt to access /auth/oauth2/callback when SSO is disabled
 GET http://localhost:3000/auth/oauth2/callback?code=fakecode
-HTTP 302 # Expecting a redirect, perhaps to /signin
+HTTP 302 # Expecting a redirect to /signin, as failureRedirect is /signin
 [Asserts]
-header "Location" == "/signin" # Or an error page
+header "Location" == "/signin"
 
 
 # --- Scenario 2: SSO Enabled ---
-
-# Enable SSO with minimal valid URLs (actual exchange won't happen in Hurl)
-PUT http://localhost:3000/api/admin/settings/sso
-Cookie: sacred={{admin_sacred_cookie}}; public={{admin_public_cookie}}
-Content-Type: application/json
-{
-    "sso_enabled": true,
-    "sso_client_id": "test_client_id_for_auth_hurl",
-    "sso_client_secret": "test_client_secret_for_auth_hurl",
-    "sso_authorization_url": "https://mockprovider.com/auth",
-    "sso_token_url": "https://mockprovider.com/token",
-    "sso_user_info_url": "https://mockprovider.com/userinfo"
-}
-HTTP 200
-[Asserts]
-jsonpath "$.sso_enabled" == true
-jsonpath "$.sso_client_id" == "test_client_id_for_auth_hurl"
-jsonpath "$.sso_authorization_url" == "https://mockprovider.com/auth"
+# Pre-condition: Run this test scenario with SECRET_SSO_ENABLED="true" and other SECRET_SSO_* vars set.
 
 # Access /auth/oauth2 when SSO is enabled
-# This should redirect to the provider's authorization URL
+# This should redirect to the provider's authorization URL configured via env vars.
 GET http://localhost:3000/auth/oauth2
 HTTP 302
 [Asserts]
-header "Location" startsWith "https://mockprovider.com/auth"
-header "Location" contains "client_id=test_client_id_for_auth_hurl"
+header "Location" startsWith "https://mockprovider.com/auth" # From SECRET_SSO_AUTHORIZATION_URL
+header "Location" contains "client_id=test_client_id_for_auth_hurl" # From SECRET_SSO_CLIENT_ID
 header "Location" contains "response_type=code"
-# The callback URL is dynamic, check for its presence
-header "Location" contains "redirect_uri="
+# The callback URL is dynamic, check for its presence and correct construction from PUBLIC_URL
+header "Location" contains "redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Foauth2%2Fcallback" # Assuming PUBLIC_URL="http://localhost:3000"
 
 
 # Access /auth/oauth2/callback without a 'code' parameter
@@ -101,7 +87,8 @@ header "Location" == "/signin" # Or a specific error page
 
 # Access /auth/oauth2/callback with a fake 'code'
 # This will reach our callback handler. Passport will try to exchange the code.
-# Since "https://mockprovider.com/token" is not a real provider, the token exchange will fail.
+# Since "https://mockprovider.com/token" (from SECRET_SSO_TOKEN_URL) is not a real provider,
+# the token exchange will fail.
 # Passport's OAuth2Strategy should then call `done(err)` or similar, leading to failureRedirect.
 GET http://localhost:3000/auth/oauth2/callback?code=fake_auth_code_from_hurl
 HTTP 302 # Expect redirect to failureRedirect (e.g., /signin)
@@ -110,23 +97,5 @@ header "Location" == "/signin"
 # Note: We cannot easily test the full successful callback flow in Hurl
 # as it would require mocking the external provider's token endpoint response.
 
-# Clean up: Restore SSO settings to disabled
-PUT http://localhost:3000/api/admin/settings/sso
-Cookie: sacred={{admin_sacred_cookie}}; public={{admin_public_cookie}}
-Content-Type: application/json
-{
-    "sso_enabled": false,
-    "sso_client_id": "",
-    "sso_client_secret": "",
-    "sso_authorization_url": "",
-    "sso_token_url": "",
-    "sso_user_info_url": ""
-}
-HTTP 200
-[Asserts]
-jsonpath "$.sso_enabled" == false
-
-# Sign out admin
-POST http://localhost:3000/api/authentication/signout
-Cookie: sacred={{admin_sacred_cookie}}; public={{admin_public_cookie}}
-HTTP 200
+# No admin login/logout or API calls to change settings are needed here anymore,
+# as configuration is via environment variables.

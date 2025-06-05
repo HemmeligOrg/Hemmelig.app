@@ -65,12 +65,6 @@ model Settings {
     disable_file_upload           Boolean @default(false)
     hide_allowed_ip_input         Boolean @default(false)
     restrict_organization_email   String  @default("")
-    sso_client_id                 String?
-    sso_client_secret             String?
-    sso_authorization_url         String?
-    sso_token_url                 String?
-    sso_user_info_url             String?
-    sso_enabled                   Boolean @default(false)
 }
 
 model VisitorAnalytics {

@@ -30,67 +30,6 @@ export const getSettings = async () => {
     }
 };
 
-export const getSsoSettings = async () => {
-    try {
-        const response = await fetch(`${config.get('api.host')}/admin/settings/sso`, {
-            method: 'GET',
-            cache: 'no-cache',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        const json = await response.json();
-
-        if (!response.ok) {
-            return {
-                statusCode: response.status,
-                error: json.error || 'Failed to fetch SSO settings',
-            };
-        }
-
-        return json;
-    } catch (error) {
-        console.error('Failed to fetch SSO settings:', error);
-        return {
-            statusCode: 500,
-            error: 'Failed to fetch SSO settings',
-        };
-    }
-};
-
-export const updateSsoSettings = async (data) => {
-    try {
-        const response = await fetch(`${config.get('api.host')}/admin/settings/sso`, {
-            method: 'PUT',
-            cache: 'no-cache',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-
-        const json = await response.json();
-
-        if (!response.ok) {
-            return {
-                statusCode: response.status,
-                error: json.error || 'Failed to update SSO settings',
-            };
-        }
-
-        return json;
-    } catch (error) {
-        console.error('Failed to update SSO settings:', error);
-        return {
-            statusCode: 500,
-            error: 'Failed to update SSO settings',
-        };
-    }
-};
-
 export const updateSettings = async (data) => {
     try {
         const response = await fetch(`${config.get('api.host')}/admin/settings`, {

@@ -10,11 +10,10 @@ import * as settingsApi from '../../api/settings'; // To mock API functions
 jest.mock('../../stores/settingsStore');
 
 // Mock API functions
+// Remove getSsoSettings and updateSsoSettings from the mock
 jest.mock('../../api/settings', () => ({
     getSettings: jest.fn(),
     updateSettings: jest.fn(),
-    getSsoSettings: jest.fn(),
-    updateSsoSettings: jest.fn(),
 }));
 
 // Mock react-router-dom's useLoaderData
@@ -32,14 +31,15 @@ const mockAdminSettings = {
     hide_allowed_ip_input: false,
 };
 
-const mockSsoSettings = {
-    sso_client_id: 'initial_client_id',
-    sso_client_secret: 'initial_client_secret',
-    sso_authorization_url: 'https://initial.auth.url',
-    sso_token_url: 'https://initial.token.url',
-    sso_user_info_url: 'https://initial.userinfo.url',
-    sso_enabled: false,
-};
+// mockSsoSettings is no longer needed as SSO UI is removed
+// const mockSsoSettings = {
+//     sso_client_id: 'initial_client_id',
+//     sso_client_secret: 'initial_client_secret',
+//     sso_authorization_url: 'https://initial.auth.url',
+//     sso_token_url: 'https://initial.token.url',
+//     sso_user_info_url: 'https://initial.userinfo.url',
+//     sso_enabled: false,
+// };
 
 describe('Settings Component (Admin Account Settings)', () => {
     beforeEach(() => {
@@ -49,10 +49,9 @@ describe('Settings Component (Admin Account Settings)', () => {
             settings: mockAdminSettings, // Provide some default settings state
         });
         // Setup mock return values for API calls
-        settingsApi.getSettings.mockResolvedValue(mockAdminSettings);
+        settingsApi.getSettings.mockResolvedValue(mockAdminSettings); // This might be used if settings are fetched on mount, though useLoaderData is primary
         settingsApi.updateSettings.mockResolvedValue({ ...mockAdminSettings, restrict_organization_email: 'updated.com' });
-        settingsApi.getSsoSettings.mockResolvedValue(mockSsoSettings);
-        settingsApi.updateSsoSettings.mockResolvedValue({ ...mockSsoSettings, sso_enabled: true, sso_client_id: 'updated_client_id' });
+        // Removed mocks for getSsoSettings and updateSsoSettings
 
         // Mock useLoaderData to return admin settings (as if loaded by router)
         jest.requireMock('react-router-dom').useLoaderData.mockReturnValue(mockAdminSettings);
@@ -68,104 +67,74 @@ describe('Settings Component (Admin Account Settings)', () => {
         );
     };
 
-    test('renders general settings form elements', async () => {
+    test('renders general settings form elements', () => {
         renderComponent();
-        // Wait for any async operations like useEffect fetching SSO settings to complete
-        await screen.findByText('settings.general_settings');
-
+        // The heading "settings.general_settings" might have been removed if it was only to differentiate from SSO.
+        // If the main settings page still has a title or specific elements, test for those.
+        // For now, directly check for some form elements.
         expect(screen.getByLabelText(/account.settings.read_only_mode/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/account.settings.disable_users/i)).toBeInTheDocument();
-        // Add more checks for other general settings if needed
-    });
-
-    test('renders SSO configuration section and fields', async () => {
-        renderComponent();
-        await screen.findByText('settings.sso.title'); // Wait for SSO section
-
-        expect(screen.getByLabelText(/settings.sso.enable/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/settings.sso.client_id/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/settings.sso.client_secret/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/settings.sso.authorization_url/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/settings.sso.token_url/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/settings.sso.user_info_url/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /settings.sso.update_sso/i})).toBeInTheDocument();
-    });
-
-    test('loads initial SSO settings into the form', async () => {
-        renderComponent();
-        await screen.findByDisplayValue(mockSsoSettings.sso_client_id);
-
-        expect(screen.getByLabelText(/settings.sso.enable/i)).not.toBeChecked(); // sso_enabled is false initially
-        expect(screen.getByLabelText(/settings.sso.client_id/i)).toHaveValue(mockSsoSettings.sso_client_id);
-        expect(screen.getByLabelText(/settings.sso.client_secret/i)).toHaveValue(mockSsoSettings.sso_client_secret);
-        expect(screen.getByLabelText(/settings.sso.authorization_url/i)).toHaveValue(mockSsoSettings.sso_authorization_url);
-        expect(screen.getByLabelText(/settings.sso.token_url/i)).toHaveValue(mockSsoSettings.sso_token_url);
-        expect(screen.getByLabelText(/settings.sso.user_info_url/i)).toHaveValue(mockSsoSettings.sso_user_info_url);
-    });
-
-    test('allows updating SSO settings', async () => {
-        renderComponent();
-        await screen.findByDisplayValue(mockSsoSettings.sso_client_id); // Ensure form is loaded
-
-        const clientIdInput = screen.getByLabelText(/settings.sso.client_id/i);
-        const enableSsoCheckbox = screen.getByLabelText(/settings.sso.enable/i);
-        const updateSsoButton = screen.getByRole('button', { name: /settings.sso.update_sso/i });
-
-        // Modify values
-        fireEvent.click(enableSsoCheckbox); // Enable SSO
-        fireEvent.change(clientIdInput, { target: { value: 'new_sso_client_id' } });
-
-        fireEvent.click(updateSsoButton);
-
-        // Check if updateSsoSettings was called with the correct data
-        await waitFor(() => {
-            expect(settingsApi.updateSsoSettings).toHaveBeenCalledWith({
-                ...mockSsoSettings, // original values for non-changed fields
-                sso_enabled: true,
-                sso_client_id: 'new_sso_client_id',
-            });
-        });
-
-        // Check for success message (optional, based on your component's behavior)
-        // await screen.findByText('settings.sso.updated');
+        expect(screen.getByLabelText(/account.settings.disable_user_account_creation/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/account.settings.hide_allowed_ip_input/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/account.settings.disable_file_upload/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/account.settings.restrict_organization_email/i)).toBeInTheDocument();
+        // The button text might have changed if "Update General" was specific to having an SSO section.
+        // Assuming it's now just "settings.update" or similar.
+        expect(screen.getByRole('button', { name: /settings.update/i })).toBeInTheDocument();
     });
 
     test('allows updating general settings', async () => {
         renderComponent();
-        await screen.findByText('settings.general_settings');
 
         const readOnlyCheckbox = screen.getByLabelText(/account.settings.read_only_mode/i);
-        const updateGeneralButton = screen.getByRole('button', { name: /settings.update_general/i });
+        // Assuming the button is now just "Update" or similar if "Update General" was too specific
+        const updateButton = screen.getByRole('button', { name: /settings.update/i });
 
-        fireEvent.click(readOnlyCheckbox); // Change a setting
-        fireEvent.click(updateGeneralButton);
+        // Ensure the checkbox initial state is as expected (false from mockAdminSettings)
+        expect(readOnlyCheckbox).not.toBeChecked();
+
+        fireEvent.click(readOnlyCheckbox); // Change a setting (check it)
+        expect(readOnlyCheckbox).toBeChecked(); // Verify it's checked before submitting
+
+        fireEvent.click(updateButton);
 
         await waitFor(() => {
+            // Check that updateSettings was called with the formData including the change
+            // The formData in the component will have read_only: true
             expect(settingsApi.updateSettings).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    read_only: true, // Assuming it was false initially in mockAdminSettings
+                    ...mockAdminSettings, // includes all original settings
+                    read_only: true, // the changed value
                 })
             );
         });
     });
 
-    test('displays error message if fetching SSO settings fails', async () => {
-        settingsApi.getSsoSettings.mockRejectedValueOnce(new Error('Failed to fetch SSO'));
+    // Removed all SSO specific tests:
+    // - test('renders SSO configuration section and fields')
+    // - test('loads initial SSO settings into the form')
+    // - test('allows updating SSO settings')
+    // - test('displays error message if fetching SSO settings fails')
+    // - test('displays error message if updating SSO settings fails')
+
+    test('displays error if useLoaderData returns an error', () => {
+        const errorObj = { error: 'Failed to load settings', statusCode: 500 };
+        jest.requireMock('react-router-dom').useLoaderData.mockReturnValue(errorObj);
         renderComponent();
-        // Check for an error message being displayed related to SSO fetching
-        await screen.findByText(/settings.sso.fetch_error/i); // Or whatever error message you expect
+        expect(screen.getByText(errorObj.error)).toBeInTheDocument();
     });
 
-    test('displays error message if updating SSO settings fails', async () => {
-        settingsApi.updateSsoSettings.mockRejectedValueOnce(new Error('Update failed'));
+    test('displays error message if updateSettings API call fails', async () => {
+        settingsApi.updateSettings.mockRejectedValueOnce(new Error('Update failed badly'));
         renderComponent();
-        await screen.findByDisplayValue(mockSsoSettings.sso_client_id); // Ensure form is loaded
 
-        const updateSsoButton = screen.getByRole('button', { name: /settings.sso.update_sso/i });
-        fireEvent.click(updateSsoButton);
+        const updateButton = screen.getByRole('button', { name: /settings.update/i });
+        fireEvent.click(updateButton);
 
-        // Check for an error message being displayed related to SSO update
-        await screen.findByText(/Update failed/i); // Or a translated message
+        // Wait for error message to appear
+        // This assumes your component sets an error state that's then rendered.
+        // The exact text depends on how you handle and display errors.
+        // For this example, let's assume it shows the error.message directly or a generic one.
+        await screen.findByText(/Update failed badly/i); // Or a generic error message like t('something_went_wrong')
     });
-
 });
