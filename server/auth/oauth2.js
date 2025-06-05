@@ -59,7 +59,7 @@ function initializeOAuth2Strategy() {
 
                     // For now, we'll just log and use the limited profile or a placeholder
                     // You'll need to map fields from your actual userInfoURL response to userProfileDetails
-                    console.log('Access Token (for UserInfo):', accessToken ? ' vorhanden' : 'nicht vorhanden');
+                    console.log('Access Token (for UserInfo):', accessToken ? 'present' : 'not present');
                     console.log('Profile from provider (before UserInfo fetch):', profile);
 
                     // If using a real fetch, you'd update userProfileDetails here:
