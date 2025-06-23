@@ -11,7 +11,8 @@
     "migrate:deploy": "bunx prisma migrate deploy",
     "migrate:reset": "bunx prisma migrate reset",
     "migrate:status": "bunx prisma migrate status",
-    "deploy": "bun run build && bun run migrate:deploy && bun run start"
+    "deploy": "bun run build && bun run migrate:deploy && bun run start",
+    "test": "hurl api/tests"
   },
   "keywords": [
     "hono",
