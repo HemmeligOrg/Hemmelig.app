@@ -11,7 +11,7 @@ generator client {
 }
 
 model Secrets {
-  id         BigInt    @id @default(autoincrement())
+  id         String    @id @default(uuid())
   secret     String
   title      String?
   views      Int?      @default(1)
@@ -19,7 +19,6 @@ model Secrets {
   isBurnable Boolean?  @default(false) @map("is_burnable")
   createdAt  DateTime  @default(now()) @map("created_at")
   expiresAt  DateTime? @map("expires_at")
-  isPublic   Boolean?  @default(false) @map("is_public")
   ipRange    String?   @default("") @map("ip_range")
 
   @@map("secrets")
