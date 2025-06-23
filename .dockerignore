@@ -6,3 +6,4 @@ bin/
 hemmelig.backup.db
 *.mp4
 desktop.gif
+prisma/generated/*

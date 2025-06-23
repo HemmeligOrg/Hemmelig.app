@@ -1,77 +1,67 @@
-# Bare minimum run
-# ------------------------------
-# $ docker run -p 3000:3000 -d --name=hemmelig \
-#   -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \
-#   -v ./database/:/home/node/hemmelig/database/ \
-#   hemmeligapp/hemmelig:v5.0.0
+# Use the official Bun image as the base image
+FROM oven/bun:1 AS builder
 
-# Build stage
-FROM node:22-slim AS builder
+# Set working directory
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Install OpenSSL
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy package files first to leverage Docker layer caching
-COPY package*.json vite.config.js ./
+# Create a non-root user
+RUN chown -R bun:bun /app
 
-# Install dependencies
-RUN npm ci
+# Install dependencies only when needed
+COPY --chown=bun:bun package*.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-# Copy source code
-COPY . .
-
-# Build arguments for versioning
-ARG GIT_SHA
-ARG GIT_TAG
-ENV GIT_SHA=${GIT_SHA}
-ENV GIT_TAG=${GIT_TAG}
-ENV NODE_ENV=production
-
-# Build the application
-RUN npm run build
-
-# Production stage
-FROM node:22-slim AS production
-
-# Install only required system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    openssl \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /home/node/hemmelig
-
-# Copy built assets from builder stage
-COPY --from=builder /usr/src/app/client/build client/build
-
-# Copy package files and install production dependencies
-COPY package*.json ./
-RUN npm ci --omit=dev --ignore-scripts
-
-# Copy application files
-COPY server.js .env vite.config.js ./
-COPY server/ ./server/
-COPY shared/ ./shared/
-COPY prisma/ ./prisma/
-COPY config/ ./config/
-COPY public/ ./public/
+# Copy the rest of the application code
+COPY --chown=bun:bun . .
 
 # Generate Prisma client
-RUN npx prisma generate && \
-    # Set proper permissions
-    chown -R node:node ./
+RUN bunx prisma generate --schema=./prisma/schema.prisma
 
-# Expose application port
+# Build the application
+RUN bun build ./app.ts --outdir ./dist --target node
+
+# Production stage
+FROM oven/bun:1
+
+# Set working directory
+WORKDIR /app
+
+# Install OpenSSL in production
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user
+RUN chown -R bun:bun /app
+
+# Copy only necessary files from builder
+COPY --from=builder --chown=bun:bun /app/dist ./dist
+COPY --from=builder --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=builder --chown=bun:bun /app/package.json ./package.json
+COPY --from=builder --chown=bun:bun /app/prisma ./prisma
+
+# Ensure proper permissions for Prisma in production
+RUN chown -R bun:bun /app/prisma && \
+    chmod -R 755 /app/prisma
+
+# Switch to non-root user
+USER bun
+
+# Expose the port the app runs on
 EXPOSE 3000
 
 # Set environment variables
 ENV NODE_ENV=production
-
-# Use non-root user
-USER node
+ENV PORT=3000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/healthz || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000/api/healthz || exit 1
 
-# Start the application
-CMD ["npm", "run", "start"]
+# Start the application with Prisma migrations
+CMD ["sh", "-c", "bunx prisma migrate deploy && bun dist/app.js"]

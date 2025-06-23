@@ -1,73 +1,86 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// TODO: We should migrate all camel cases to underscore
-
-generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["metrics"]
-}
 
 datasource db {
-    provider = "sqlite"
-    url      = env("SECRET_DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
-model File {
-    id       String @id @unique @default(uuid())
-    type     String
-    ext      String
-    key      String
-    secret   Secret @relation(fields: [secretId], references: [id], onDelete: Cascade)
-    secretId String
+generator client {
+  provider      = "prisma-client-js"
+  output        = "./generated/client"
+  binaryTargets = ["native"]
 }
 
-model Secret {
-    id          String   @id @unique @default(uuid())
-    data        String
-    title       String?
-    maxViews    Int      @default(1)
-    files       File[]
-    password    String?
-    allowed_ip  String?
-    preventBurn Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    expiresAt   DateTime
-    user        User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    user_id     String?
-    isPublic    Boolean  @default(false)
-    ipAddress   String   @default("")
+model Secrets {
+  id         BigInt    @id @default(autoincrement())
+  secret     String
+  title      String?
+  views      Int?      @default(1)
+  password   String?
+  isBurnable Boolean?  @default(false) @map("is_burnable")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  expiresAt  DateTime? @map("expires_at")
+  isPublic   Boolean?  @default(false) @map("is_public")
+  ipRange    String?   @default("") @map("ip_range")
+
+  @@map("secrets")
 }
 
 model User {
-    id        String   @id @unique @default(uuid())
-    username  String   @unique
-    email     String   @unique
-    password  String
-    role      String   @default("user")
-    generated Boolean  @default(false)
-    createdAt DateTime @default(now())
-    secrets   Secret[]
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
 }
 
-model Statistic {
-    id    String @id
-    value Int    @default(1)
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
 }
 
-model Settings {
-    id                            String  @id
-    disable_users                 Boolean @default(false)
-    disable_user_account_creation Boolean @default(false)
-    read_only                     Boolean @default(false)
-    disable_file_upload           Boolean @default(false)
-    hide_allowed_ip_input         Boolean @default(false)
-    restrict_organization_email   String  @default("")
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
 }
 
-model VisitorAnalytics {
-    id        String   @id @unique @default(uuid())
-    path      String // The page path that was visited
-    uniqueId  String?
-    timestamp DateTime @default(now())
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }
