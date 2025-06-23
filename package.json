@@ -4,9 +4,11 @@
   "description": "Prisma CRUD API using Hono",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc app.ts && bunx --bun vite build",
     "start": "bunx prisma migrate deploy && bun dist/app.js",
-    "dev": "bunx prisma migrate dev && bun --watch app.ts",
+    "dev:api": "bunx prisma migrate dev",
+    "dev:client": "bunx --bun vite",
+    "dev": "bun run dev:api & bun run dev:client",
     "migrate:dev": "bunx prisma migrate dev",
     "migrate:deploy": "bunx prisma migrate deploy",
     "migrate:reset": "bunx prisma migrate reset",
@@ -22,18 +24,38 @@
     "rest"
   ],
   "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@hono/vite-dev-server": "^0.19.1",
     "@hono/zod-validator": "^0.5.0",
     "@prisma/client": "^6.8.2",
     "better-auth": "^1.2.10",
     "better-sqlite3": "^12.0.0",
+    "clsx": "^2.1.0",
     "hono": "^4.7.9",
     "is-cidr": "^5.1.1",
+    "lucide-react": "^0.344.0",
     "prisma": "^6.8.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.20.1",
     "zod": "^3.24.4"
   },
   "devDependencies": {
     "@types/bun": "^1.2.13",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"

@@ -5,17 +5,13 @@ import { secureHeaders } from 'hono/secure-headers';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-import { csrf } from 'hono/csrf';
-import { cors } from 'hono/cors';
+import { serveStatic } from "@hono/node-server/serve-static";
+//import { csrf } from 'hono/csrf';
+//import { cors } from 'hono/cors';
 
 import { auth } from "./auth";
 import prisma from './api/lib/db';
 import routes from './api/routes';
-
-// Add support for BigInt serialization in JSON responses
-(BigInt.prototype as unknown as { toJSON(): string }).toJSON = function() {
-    return this.toString();
-};
 
 // Initialize Hono app
 const app = new Hono<{
@@ -46,10 +42,10 @@ app.use(
 
 // ------ Configure these youself ------
 // Configure CORS: https://hono.dev/docs/middleware/builtin/cors
-app.use(`/${API_VERSION}/*`, cors())
+//app.use(`/${API_VERSION}/*`, cors())
 
 // Configure CSRF: https://hono.dev/docs/middleware/builtin/csrf
-app.use(csrf())
+//app.use(csrf())
 // -------------------------------------
 
 // Custom middlewares
@@ -72,7 +68,14 @@ app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
     return auth.handler(c.req.raw);
 });
 
+
 app.route(`/${API_VERSION}`, routes);
+
+// Serve static assets from the 'dist' directory
+app.use("/*", serveStatic({ root: "./dist" }));
+
+// SPA fallback: serve index.html for any request that doesn't have a file extension
+app.get("*", serveStatic({ path: "./dist/index.html" }));
 
 // https://hono.dev/docs/guides/rpc#rpc
 export type AppType = typeof routes;
