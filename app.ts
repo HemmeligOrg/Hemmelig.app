@@ -9,7 +9,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
 
-import { auth } from "./auth";
+import { auth } from "./api/auth";
 import prisma from './api/lib/db';
 import routes from './api/routes';
 
@@ -63,19 +63,20 @@ app.use("*", async (c, next) => {
     return next();
 });
 
-// Add the routes
-app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
-    return auth.handler(c.req.raw);
-});
-
-
-app.route(`/${API_VERSION}`, routes);
-
 // Serve static assets from the 'dist' directory
 app.use("/*", serveStatic({ root: "./dist" }));
 
 // SPA fallback: serve index.html for any request that doesn't have a file extension
 app.get("*", serveStatic({ path: "./dist/index.html" }));
+
+// Add the routes
+app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
+    return auth.handler(c.req.raw);
+});
+
+// Add the application routes 
+app.route(`/${API_VERSION}`, routes);
+
 
 // https://hono.dev/docs/guides/rpc#rpc
 export type AppType = typeof routes;
