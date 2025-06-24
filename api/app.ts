@@ -9,9 +9,9 @@ import { serveStatic } from "@hono/node-server/serve-static";
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
 
-import { auth } from "./api/auth";
-import prisma from './api/lib/db';
-import routes from './api/routes';
+import { auth } from "./auth";
+import prisma from './lib/db';
+import routes from './routes';
 
 // Initialize Hono app
 const app = new Hono<{
@@ -19,8 +19,8 @@ const app = new Hono<{
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null
     }
-}>();
-const PORT = Number(process.env.PORT) || 3000;
+}>().basePath('/api');
+
 const API_VERSION = process.env.API_VERSION || 'v1';
 
 // Add the middlewares
@@ -63,12 +63,6 @@ app.use("*", async (c, next) => {
     return next();
 });
 
-// Serve static assets from the 'dist' directory
-app.use("/*", serveStatic({ root: "./dist" }));
-
-// SPA fallback: serve index.html for any request that doesn't have a file extension
-app.get("*", serveStatic({ path: "./dist/index.html" }));
-
 // Add the routes
 app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
     return auth.handler(c.req.raw);
@@ -77,14 +71,16 @@ app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
 // Add the application routes 
 app.route(`/${API_VERSION}`, routes);
 
+// Serve static assets from the 'dist' directory
+app.use("/*", serveStatic({ root: "./dist" }));
+
+// SPA fallback: serve index.html for any request that doesn't have a file extension
+app.get("*", serveStatic({ path: "./dist/index.html" }));
 
 // https://hono.dev/docs/guides/rpc#rpc
 export type AppType = typeof routes;
 
-export default {
-    port: PORT,
-    fetch: app.fetch,
-};
+export default app;
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {

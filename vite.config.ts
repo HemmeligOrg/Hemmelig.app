@@ -4,10 +4,13 @@ import devServer from '@hono/vite-dev-server';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    ssr: {
+        external: ['./prisma/generated/client', '@prisma/client'],
+    },
     plugins: [
         react(),
         devServer({
-            entry: 'src/server/app.ts',
+            entry: 'api/app.ts',
             exclude: [
                 // Exclude all paths that don't start with /api
                 /^(?!\/api).*/,
