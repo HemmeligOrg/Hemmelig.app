@@ -19,7 +19,7 @@ i18next
     .use(HttpApi)
     .use(LanguageDetector)
     .init({
-        fallbackLng: language,
+        lng: language,
         detection: {
             order: detectionMethod,
         },
