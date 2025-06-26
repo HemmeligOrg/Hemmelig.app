@@ -44,7 +44,7 @@
     "hono": "^4.7.9",
     "i18next": "^25.2.1",
     "is-cidr": "^5.1.1",
-    "lucide-react": "^0.344.0",
+    "lucide-react": "^0.523.0",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-prisma": "^5.0.0",
     "prisma": "^6.8.2",

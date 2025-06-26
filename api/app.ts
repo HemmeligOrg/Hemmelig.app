@@ -21,20 +21,18 @@ const app = new Hono<{
     }
 }>().basePath('/api');
 
-const API_VERSION = process.env.API_VERSION || 'v1';
-
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
 app.use(secureHeaders());
 app.use(logger());
 app.use(trimTrailingSlash());
-app.use(`/${API_VERSION}/*`, requestId());
-app.use(`/${API_VERSION}/*`, timeout(15 * 1000)); // 15 seconds timeout to the API calls
+app.use(`/*`, requestId());
+app.use(`/*`, timeout(15 * 1000)); // 15 seconds timeout to the API calls
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag
 app.use(
-    `/${API_VERSION}/*`,
+    `/*`,
     etag({
         retainedHeaders: ['x-message', ...RETAINED_304_HEADERS],
     }),
@@ -42,7 +40,7 @@ app.use(
 
 // ------ Configure these youself ------
 // Configure CORS: https://hono.dev/docs/middleware/builtin/cors
-//app.use(`/${API_VERSION}/*`, cors())
+//app.use(`/*`, cors())
 
 // Configure CSRF: https://hono.dev/docs/middleware/builtin/csrf
 //app.use(csrf())
@@ -64,12 +62,12 @@ app.use("*", async (c, next) => {
 });
 
 // Add the routes
-app.on(["POST", "GET"], `/${API_VERSION}/api/auth/*`, (c) => {
+app.on(["POST", "GET"], `/auth/*`, (c) => {
     return auth.handler(c.req.raw);
 });
 
 // Add the application routes 
-app.route(`/${API_VERSION}`, routes);
+app.route("/", routes);
 
 // Serve static assets from the 'dist' directory
 app.use("/*", serveStatic({ root: "./dist" }));
