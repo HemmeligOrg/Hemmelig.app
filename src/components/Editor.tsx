@@ -362,12 +362,14 @@ const ReadOnlyMenuBar: FC = () => {
 
     const copyAsBase64 = () => {
         const text = editor.getText();
-        // Convert to Base64
-        const base64Content = btoa(
-            new TextEncoder()
-                .encode(text)
-                .reduce((acc, byte) => acc + String.fromCharCode(byte), '')
-        );
+        // Convert to Base64 in a way that is safe for large strings
+        const uint8Array = new TextEncoder().encode(text);
+        let binaryString = '';
+        for (const byte of uint8Array) {
+            binaryString += String.fromCharCode(byte);
+        }
+        const base64Content = btoa(binaryString);
+
         navigator.clipboard
             .writeText(base64Content)
             .then(() => {
@@ -442,11 +444,7 @@ const MenuBar: FC = () => {
             if (!/^https?:\/\//i.test(url)) {
                 url = 'https://' + url;
             }
-            try {
-                editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-            } catch (e: any) {
-                alert(e.message);
-            }
+            editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
         },
         [editor]
     );
