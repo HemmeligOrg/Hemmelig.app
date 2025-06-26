@@ -1,0 +1,52 @@
+{
+    "editor": {
+        "tooltips": {
+            "copy_text": "Copy as Plain Text",
+            "copy_html": "Copy as HTML",
+            "copy_base64": "Copy as Base64",
+            "bold": "Bold",
+            "italic": "Italic",
+            "strikethrough": "Strikethrough",
+            "inline_code": "Inline Code",
+            "link": "Link",
+            "remove_link": "Remove Link",
+            "insert_password": "Insert Password",
+            "paragraph": "Paragraph",
+            "heading1": "Heading 1",
+            "heading2": "Heading 2",
+            "heading3": "Heading 3",
+            "bullet_list": "Bullet List",
+            "numbered_list": "Numbered List",
+            "blockquote": "Blockquote",
+            "code_block": "Code Block",
+            "undo": "Undo",
+            "redo": "Redo"
+        },
+        "copy_success": {
+            "html": "HTML copied!",
+            "text": "Text copied!",
+            "base64": "Base64 copied!"
+        },
+        "link_modal": {
+            "title": "Add Link",
+            "url_label": "URL",
+            "url_placeholder": "Enter URL",
+            "cancel": "Cancel",
+            "update": "Update",
+            "insert": "Insert"
+        },
+        "password_modal": {
+            "title": "Generate Password",
+            "length_label": "Password Length",
+            "options_label": "Options",
+            "include_numbers": "Numbers",
+            "include_symbols": "Symbols",
+            "include_uppercase": "Uppercase",
+            "include_lowercase": "Lowercase",
+            "generated_password": "Generated Password",
+            "refresh": "Refresh",
+            "cancel": "Cancel",
+            "insert": "Insert"
+        }
+    }
+}

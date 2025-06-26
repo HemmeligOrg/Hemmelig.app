@@ -1,0 +1,52 @@
+{
+    "editor": {
+        "tooltips": {
+            "copy_text": "Copiar como texto plano",
+            "copy_html": "Copiar como HTML",
+            "copy_base64": "Copiar como Base64",
+            "bold": "Negrita",
+            "italic": "Cursiva",
+            "strikethrough": "Tachado",
+            "inline_code": "Código en línea",
+            "link": "Enlace",
+            "remove_link": "Eliminar enlace",
+            "insert_password": "Insertar contraseña",
+            "paragraph": "Párrafo",
+            "heading1": "Encabezado 1",
+            "heading2": "Encabezado 2",
+            "heading3": "Encabezado 3",
+            "bullet_list": "Lista de viñetas",
+            "numbered_list": "Lista numerada",
+            "blockquote": "Cita en bloque",
+            "code_block": "Bloque de código",
+            "undo": "Deshacer",
+            "redo": "Rehacer"
+        },
+        "copy_success": {
+            "html": "HTML copiado!",
+            "text": "Texto copiado!",
+            "base64": "Base64 copiado!"
+        },
+        "link_modal": {
+            "title": "Añadir enlace",
+            "url_label": "URL",
+            "url_placeholder": "Introducir URL",
+            "cancel": "Cancelar",
+            "update": "Actualizar",
+            "insert": "Insertar"
+        },
+        "password_modal": {
+            "title": "Generar contraseña",
+            "length_label": "Longitud de la contraseña",
+            "options_label": "Opciones",
+            "include_numbers": "Números",
+            "include_symbols": "Símbolos",
+            "include_uppercase": "Mayúsculas",
+            "include_lowercase": "Minúsculas",
+            "generated_password": "Contraseña generada",
+            "refresh": "Actualizar",
+            "cancel": "Cancelar",
+            "insert": "Insertar"
+        }
+    }
+}

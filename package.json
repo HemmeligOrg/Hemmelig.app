@@ -42,6 +42,7 @@
     "clsx": "^2.1.0",
     "generate-password-browser": "^1.1.0",
     "hono": "^4.7.9",
+    "i18next": "^25.2.1",
     "is-cidr": "^5.1.1",
     "lucide-react": "^0.344.0",
     "prettier-plugin-organize-imports": "^4.1.0",
