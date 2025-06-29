@@ -37,6 +37,7 @@
     "@tiptap/extension-text-style": "^2.22.3",
     "@tiptap/react": "^2.22.3",
     "@tiptap/starter-kit": "^2.22.3",
+    "@types/validator": "^13.15.2",
     "better-auth": "^1.2.10",
     "better-sqlite3": "^12.0.0",
     "clsx": "^2.1.0",
@@ -44,6 +45,8 @@
     "generate-password-browser": "^1.1.0",
     "hono": "^4.7.9",
     "i18next": "^25.2.1",
+    "ip-address": "^10.0.1",
+    "ip-range-check": "^0.2.0",
     "is-cidr": "^5.1.1",
     "js-md5": "^0.8.3",
     "lucide-react": "^0.523.0",
@@ -56,6 +59,7 @@
     "react-router-dom": "^6.20.1",
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",
+    "validator": "^13.15.15",
     "zod": "^3.24.4"
   },
   "devDependencies": {

@@ -10,7 +10,10 @@ import {
     processSecretsQueryParams,
 } from '../validations/secrets';
 
+import { ipRestriction } from '../middlewares/ip-restriction';
+
 const app = new Hono()
+    // GET /secrets - Get all secrets
     // GET /secrets - Get all secrets
     .get('/', zValidator('query', secretsQuerySchema), async c => {
         // TODO: Use this GET request to retrieve all secrets for a user from the admin panel
@@ -51,7 +54,8 @@ const app = new Hono()
         }
     })
     // POST /secrets/:id - Get Secrets by ID
-    .post('/:id', zValidator('param', secretsIdParamSchema), async c => {
+    // TODO: Use a transaction to ensure atomicity of read and delete operations
+    .post('/:id', zValidator('param', secretsIdParamSchema), ipRestriction, async c => {
         try {
             // Get validated ID from URL parameters
             const { id: validatedIdString } = c.req.valid('param');

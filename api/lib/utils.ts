@@ -20,3 +20,4 @@ export const handleNotFound = (error: any, c: Context) => {
         details: error.message,
     });
 };
+
