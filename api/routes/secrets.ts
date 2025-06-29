@@ -81,12 +81,12 @@ const app = new Hono()
             // Handle not found
             if (!item) {
                 c.status(404);
-                return c.json({ error: 'secrets not found' });
+                return c.json({ error: 'Secret not found' });
             }
 
             if (item.password) {
                 const data = c.req.valid('json');
-                const isValidPassword = await compare(data.password, item.password);
+                const isValidPassword = await compare(data.password!, item.password);
 
                 if (!isValidPassword) {
                     c.status(401);
