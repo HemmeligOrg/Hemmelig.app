@@ -50,8 +50,8 @@ const app = new Hono()
             });
         }
     })
-    // GET /secrets/:id - Get Secrets by ID
-    .get('/:id', zValidator('param', secretsIdParamSchema), async c => {
+    // POST /secrets/:id - Get Secrets by ID
+    .post('/:id', zValidator('param', secretsIdParamSchema), async c => {
         try {
             // Get validated ID from URL parameters
             const { id: validatedIdString } = c.req.valid('param');
@@ -80,7 +80,9 @@ const app = new Hono()
             }
 
             if (item.password) {
-                const isValidPassword = await compare(item.password, c.req.body.password);
+                const body = await c.req.json()
+                console.log(body)
+                const isValidPassword = await compare(body.password, item.password);
 
                 if (!isValidPassword) {
                     c.status(401);
