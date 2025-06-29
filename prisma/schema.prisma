@@ -17,7 +17,7 @@ model Secrets {
     password   String?
     isBurnable Boolean? @default(false) @map("is_burnable")
     createdAt  DateTime @default(now()) @map("created_at")
-    expiresAt  Int      @map("expires_at")
+    expiresAt  DateTime @map("expires_at")
     ipRange    String?  @default("") @map("ip_range")
 
     @@map("secrets")

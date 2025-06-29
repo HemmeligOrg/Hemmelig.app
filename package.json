@@ -40,6 +40,7 @@
     "better-auth": "^1.2.10",
     "better-sqlite3": "^12.0.0",
     "clsx": "^2.1.0",
+    "croner": "^9.1.0",
     "generate-password-browser": "^1.1.0",
     "hono": "^4.7.9",
     "i18next": "^25.2.1",

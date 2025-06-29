@@ -109,16 +109,16 @@ const app = new Hono()
             // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
 
+            const { expiresAt, password, ...rest } = validatedData;
             const data = {
-                ...validatedData,
-                password: validatedData.password ? await hash(validatedData.password) : null,
+                ...rest,
+                password: password ? await hash(password) : null,
+                expiresAt: new Date(Date.now() + expiresAt * 1000),
             }
 
             // Create secrets using the validated data
             const item = await prisma.secrets.create({
                 data,
-                // https://www.prisma.io/docs/orm/reference/prisma-client-reference#include
-                // include: { name_of_relation: true }
             });
 
             c.status(201);

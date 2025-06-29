@@ -12,6 +12,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { auth } from "./auth";
 import prisma from './lib/db';
 import routes from './routes';
+import startJobs from './jobs';
 
 // Initialize Hono app
 const app = new Hono<{
@@ -20,6 +21,9 @@ const app = new Hono<{
         session: typeof auth.$Infer.Session.session | null
     }
 }>().basePath('/api');
+
+// Start the background jobs
+startJobs();
 
 // Add the middlewares
 // More middlewares can be found here:
