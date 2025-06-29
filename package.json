@@ -37,6 +37,7 @@
     "@tiptap/extension-text-style": "^2.22.3",
     "@tiptap/react": "^2.22.3",
     "@tiptap/starter-kit": "^2.22.3",
+    "@types/dlv": "^1.1.5",
     "@types/validator": "^13.15.2",
     "better-auth": "^1.2.10",
     "better-sqlite3": "^12.0.0",

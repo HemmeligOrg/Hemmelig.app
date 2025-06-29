@@ -9,6 +9,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
 
+import config from './config';
 import { auth } from "./auth";
 import prisma from './lib/db';
 import routes from './routes';
