@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-
 // https://www.npmjs.com/package/bcrypt
 /**
  * Hashes a password using bcrypt.
@@ -9,9 +7,7 @@ import bcrypt from 'bcryptjs';
  */
 export async function hash(password: string): Promise<string> {
     try {
-        // salt rounds: https://www.npmjs.com/package/bcrypt#a-note-on-rounds
-        const saltRounds = 10;
-        return await bcrypt.hash(password, saltRounds);
+        return await Bun.password.hash(password);
     } catch (error) {
         console.error('Error during password hashing:', error);
         throw new Error('Error hashing the password.');
@@ -26,7 +22,7 @@ export async function hash(password: string): Promise<string> {
  */
 export async function compare(password: string, hash: string): Promise<boolean> {
     try {
-        return await bcrypt.compare(password, hash);
+        return await Bun.password.verify(password, hash);
     } catch (error) {
         console.error('Error during password comparison:', error);
         // In case of an error, return false as a safe default.
