@@ -92,6 +92,21 @@ const app = new Hono()
 
             delete item.password; // Remove password from response
 
+            if (item.views! > 1) {
+                await prisma.secrets.update({
+                    where: {
+                        id: item.id,
+                    },
+                    data: {
+                        views: {
+                            decrement: 1,
+                        }
+                    }
+                });
+            } else if (!item.isBurnable && item.views === 1) {
+                await prisma.secrets.delete({ where: { id: item.id } });
+            }
+
             return c.json(item);
         } catch (error: unknown) {
             console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
