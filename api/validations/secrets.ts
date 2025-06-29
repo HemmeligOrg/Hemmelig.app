@@ -46,11 +46,21 @@ export const secretsSearchQuerySchema = z.object({
         }),
 });
 
+const jsonToUint8ArraySchema = z.preprocess((arg) => {
+    if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
+        const values = Object.values(arg);
+
+        return new Uint8Array(values);
+    }
+
+    return arg;
+}, z.instanceof(Uint8Array));
+
+// .min(1, { message: 'Secret is required and cannot be empty' })
 const secretSchema = {
-    secret: z
-        .string()
-        .min(1, { message: 'Secret is required and cannot be empty' }),
-    title: z.string().optional().nullable(),
+    secret: jsonToUint8ArraySchema
+    ,
+    title: jsonToUint8ArraySchema.optional().nullable(),
     password: z.string().optional(),
     expiresAt: z
         .number()

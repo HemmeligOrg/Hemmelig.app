@@ -11,8 +11,8 @@ generator client {
 
 model Secrets {
     id         String   @id @default(uuid())
-    secret     String
-    title      String?
+    secret     Bytes
+    title      Bytes
     views      Int?     @default(1)
     password   String?
     isBurnable Boolean? @default(false) @map("is_burnable")

@@ -5,6 +5,7 @@ import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
 import Editor from './Editor';
 import { api } from '../lib/api'; // Import the RPC client
+import { encrypt, generateEncryptionKey } from '../lib/nacl';
 
 export interface SecretFormData {
     secret: string;
@@ -29,10 +30,13 @@ export function SecretForm() {
     const handleSubmit = async () => {
         setIsLoading(true);
 
+        const encryptionKey = generateEncryptionKey();
+
         // Transform empty strings to null for nullable fields
         const dataToSend = {
             ...formData,
-            title: formData.title === '' ? null : formData.title,
+            secret: encrypt(formData.secret, encryptionKey),
+            title: encrypt(formData.title, encryptionKey),
             password: formData.password === '' ? null : formData.password,
             ipRange: formData.ipRange === '' ? null : formData.ipRange,
         };
