@@ -9,8 +9,8 @@ import { encrypt, generateEncryptionKey } from '../lib/nacl';
 
 export interface SecretFormData {
     secret: string;
-    title: string | null;
-    password?: string | null;
+    title: string;
+    password?: string;
     expiresAt?: number;
     views: number;
     isBurnable: boolean;
@@ -23,6 +23,8 @@ export function SecretForm() {
         title: '',
         views: 1,
         isBurnable: false,
+        expiresAt: 14400, // 4 hours
+        password: '',
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -30,22 +32,20 @@ export function SecretForm() {
     const handleSubmit = async () => {
         setIsLoading(true);
 
-        const encryptionKey = generateEncryptionKey();
+        const encryptionKey = generateEncryptionKey(formData.password);
 
         // Transform empty strings to null for nullable fields
         const dataToSend = {
             ...formData,
             secret: encrypt(formData.secret, encryptionKey),
             title: encrypt(formData.title, encryptionKey),
-            password: formData.password === '' ? null : formData.password,
+            password: formData.password === '' ? '' : encryptionKey,
             ipRange: formData.ipRange === '' ? null : formData.ipRange,
         };
 
         try {
-            console.log(dataToSend);
             const response = await api.secrets.$post({ json: dataToSend });
 
-            console.log('Secret created successfully:', response);
             // Reset form
             setFormData({
                 secret: '',
@@ -53,6 +53,7 @@ export function SecretForm() {
                 views: 1,
                 isBurnable: false,
                 expiresAt: 14400, // 4 hours
+                password: '',
             });
         } catch (error: any) {
             console.error('Failed to create secret:', error.message);

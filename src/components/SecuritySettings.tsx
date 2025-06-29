@@ -143,7 +143,7 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                                     Enter Password
                                 </label>
                                 <input
-                                    type="password"
+                                    type="text"
                                     value={formData.password}
                                     onChange={(e) => onChange({ password: e.target.value })}
                                     placeholder="Enter a secure password..."

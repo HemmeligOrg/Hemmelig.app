@@ -24,28 +24,6 @@ export const secretsQuerySchema = z.object({
     description: z.string().optional(),
 });
 
-// Schema for secrets search query parameters
-export const secretsSearchQuerySchema = z.object({
-    query: z
-        .string({
-            required_error: 'Search query is required',
-            invalid_type_error: 'Search query must be a string',
-        })
-        .min(1, { message: 'Search query cannot be empty' }),
-    page: z
-        .string()
-        .optional()
-        .refine(val => val === undefined || /^\d+$/.test(val), {
-            message: 'Page must be a positive integer string',
-        }),
-    limit: z
-        .string()
-        .optional()
-        .refine(val => val === undefined || /^\d+$/.test(val), {
-            message: 'Limit must be a positive integer string',
-        }),
-});
-
 const jsonToUint8ArraySchema = z.preprocess((arg) => {
     if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
         const values = Object.values(arg);
@@ -90,8 +68,6 @@ const secretSchema = {
 };
 
 export const createSecretsSchema = z.object(secretSchema);
-
-export const updateSecretsSchema = z.object(secretSchema);
 
 const internalQueryParamsSchema = z.object({
     skip: z.number().int().min(0).optional(),

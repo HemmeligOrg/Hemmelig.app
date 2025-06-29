@@ -1,19 +1,19 @@
 import { Hono } from 'hono';
+import { hash, compare } from '../lib/password'
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
 import {
     createSecretsSchema,
-    updateSecretsSchema,
     secretsIdParamSchema,
     secretsQuerySchema,
-    secretsSearchQuerySchema,
     processSecretsQueryParams,
 } from '../validations/secrets';
 
 const app = new Hono()
     // GET /secrets - Get all secrets
     .get('/', zValidator('query', secretsQuerySchema), async c => {
+        // TODO: Use this GET request to retrieve all secrets for a user from the admin panel
         try {
             const validatedQuery = c.req.valid('query');
             const options = processSecretsQueryParams(validatedQuery);
@@ -60,8 +60,17 @@ const app = new Hono()
 
             const item = await prisma.secrets.findUnique({
                 where: whereClause,
-                // https://www.prisma.io/docs/orm/reference/prisma-client-reference#include
-                // include: { name_of_relation: true }
+                select: {
+                    id: true,
+                    secret: true,
+                    title: true,
+                    ipRange: true,
+                    views: true,
+                    expiresAt: true,
+                    createdAt: true,
+                    isBurnable: true,
+                    password: true, // Include password if it exists
+                }
             });
 
             // Handle not found
@@ -69,6 +78,17 @@ const app = new Hono()
                 c.status(404);
                 return c.json({ error: 'secrets not found' });
             }
+
+            if (item.password) {
+                const isValidPassword = await compare(item.password, c.req.body.password);
+
+                if (!isValidPassword) {
+                    c.status(401);
+                    return c.json({ error: 'Invalid password' });
+                }
+            }
+
+            delete item.password; // Remove password from response
 
             return c.json(item);
         } catch (error: unknown) {
@@ -87,16 +107,21 @@ const app = new Hono()
             // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
 
+            const data = {
+                ...validatedData,
+                password: validatedData.password ? await hash(validatedData.password) : null,
+            }
+
             // Create secrets using the validated data
             const item = await prisma.secrets.create({
-                data: validatedData,
+                data,
                 // https://www.prisma.io/docs/orm/reference/prisma-client-reference#include
                 // include: { name_of_relation: true }
             });
 
             c.status(201);
 
-            return c.json(item);
+            return c.json({ id: item.id });
         } catch (error: unknown) {
             console.error('Failed to create secrets:', error);
             // Handle potential Prisma unique constraint errors, etc.
@@ -118,36 +143,6 @@ const app = new Hono()
             });
         }
     })
-    // PUT /secrets/:id - Update Secrets by ID
-    .put(
-        '/:id',
-        zValidator('param', secretsIdParamSchema),
-        zValidator('json', updateSecretsSchema),
-        async c => {
-            try {
-                // Get validated ID and JSON body data (with cast)
-                const { id: validatedIdString } = c.req.valid('param');
-                const validatedData = c.req.valid('json');
-                const id = validatedIdString;
-
-                const whereClause: { id: string } = { id };
-
-                const item = await prisma.secrets.update({
-                    where: whereClause,
-                    data: validatedData,
-                    // https://www.prisma.io/docs/orm/reference/prisma-client-reference#include
-                    // include: { name_of_relation: true }
-                });
-
-                return c.json(item);
-            } catch (error: unknown) {
-                console.error(`Failed to update secrets ${c.req.param('id')}:`, error);
-                // Use the service function to handle common errors like 'not found' (P2025)
-                // Also catches potential unique constraint errors on update (P2002)
-                return handleNotFound(error, c);
-            }
-        },
-    )
     // DELETE /secrets/:id - Delete Secrets by ID
     .delete('/:id', zValidator('param', secretsIdParamSchema), async c => {
         console.log("slay")
@@ -165,88 +160,12 @@ const app = new Hono()
             // Return standard success response
             return c.json({
                 success: true,
-                message: 'secrets deleted successfully',
+                message: 'Secret deleted successfully',
             });
         } catch (error: unknown) {
-            console.error(`Failed to delete secrets ${c.req.param('id')}:`, error);
+            console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
             // Use the service function to handle 'not found' (P2025)
             return handleNotFound(error, c);
-        }
-    })
-    // GET /secrets/search - Search secrets by name
-    .get('/search', zValidator('query', secretsSearchQuerySchema), async c => {
-        try {
-            // Get validated query parameters from middleware
-            const validatedQuery = c.req.valid('query');
-
-            // Pagination logic (similar to processsecretsQueryParams but simpler for just page/limit)
-            const page = validatedQuery.page ? parseInt(validatedQuery.page, 10) : 1;
-            const limit = validatedQuery.limit
-                ? parseInt(validatedQuery.limit, 10)
-                : 10;
-            const take = Math.min(Math.max(limit, 1), 100); // Clamp limit between 1 and 100
-            const skip = (page - 1) * take;
-
-            // Prepare the where clause for Prisma
-            const whereClause = {
-                OR: [
-                    {
-                        secret: {
-                            startsWith: validatedQuery.query,
-                            mode: 'insensitive' as const,
-                        },
-                    },
-                    {
-                        title: {
-                            startsWith: validatedQuery.query,
-                            mode: 'insensitive' as const,
-                        },
-                    },
-                    {
-                        password: {
-                            startsWith: validatedQuery.query,
-                            mode: 'insensitive' as const,
-                        },
-                    },
-                    {
-                        ipRange: {
-                            startsWith: validatedQuery.query,
-                            mode: 'insensitive' as const,
-                        },
-                    },
-                ],
-            };
-
-            // Execute the search query and count query concurrently
-            const [items, total] = await Promise.all([
-                prisma.secrets.findMany({
-                    where: whereClause,
-                    skip: skip,
-                    take: take,
-                    orderBy: { id: 'desc' },
-                }),
-                prisma.secrets.count({ where: whereClause }),
-            ]);
-
-            // Return the paginated results
-            return c.json({
-                data: items,
-                meta: {
-                    total,
-                    skip,
-                    take,
-                    page: page,
-                    totalPages: Math.ceil(total / take),
-                },
-            });
-        } catch (error) {
-            console.error('Failed to search secrets:', error);
-            c.status(500);
-            return c.json({
-                error: 'Failed to search secrets',
-                details:
-                    error instanceof Error ? error.message : 'Unknown internal error',
-            });
         }
     });
 

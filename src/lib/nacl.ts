@@ -2,18 +2,17 @@ import { Buffer } from 'buffer/';
 import { nanoid } from 'nanoid';
 import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
+import { md5 } from "js-md5"
 
 const { secretbox, randomBytes } = tweetnacl;
 const { decodeUTF8, encodeUTF8 } = tweetnaclUtil; // No longer need Base64 utils
 
-// This key generation is NOT secure for passwords.
-// TODO: Can we do this differently?
-// TODO: Transform the password into a 32-byte key using a hash function like SHA-256.
-// TODO: Then we don't need to return the encryption key to be used as a string
-export const generateEncryptionKey = (password = '') => {
+export const generateEncryptionKey = (password: string) => {
     if (password) {
-        return nanoid(32 - password.length);
+        const hash = md5.create();
+        return hash.update(password).hex();
     }
+
     return nanoid(32);
 };
 
