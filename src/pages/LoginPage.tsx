@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import Logo from '../components/Logo.tsx';
 
 import { createAuthClient } from "better-auth/react";
 
@@ -60,9 +61,7 @@ export function LoginPage() {
                     <div className="flex items-center justify-center mb-6">
                         <div className="relative">
                             <div className="absolute inset-0 bg-teal-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-                            <div className="relative bg-gradient-to-br from-teal-400 to-teal-600 p-3 rounded-xl shadow-2xl">
-                                <Shield className="w-6 h-6 text-white" />
-                            </div>
+                            <Logo className="w-12 h-12 sm:w-12 sm:h-12 fill-white" />
                         </div>
                     </div>
                     <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
