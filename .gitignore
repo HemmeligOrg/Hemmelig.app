@@ -123,5 +123,6 @@ data/
 .vscode
 hemmelig.backup.db
 client/build/
-
+api/**/*.js
+api/*.js
 .idea

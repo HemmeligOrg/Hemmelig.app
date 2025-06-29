@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import { RichTextEditor } from './RichTextEditor';
+import { useState } from 'react';
 import { SecuritySettings } from './SecuritySettings';
 import { FileUpload } from './FileUpload';
 import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
 import Editor from './Editor';
+import { api } from '../lib/api'; // Import the RPC client
 
 export interface SecretFormData {
     secret: string;
-    title: string;
-    password?: string;
-    expiresAt?: Date;
+    title: string | null;
+    password?: string | null;
+    expiresAt?: number;
     views: number;
     isBurnable: boolean;
-    isPublic: boolean;
-    ipRange?: string;
+    ipRange?: string | null;
 }
 
 export function SecretForm() {
@@ -23,7 +22,6 @@ export function SecretForm() {
         title: '',
         views: 1,
         isBurnable: false,
-        isPublic: false,
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -31,21 +29,33 @@ export function SecretForm() {
     const handleSubmit = async () => {
         setIsLoading(true);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Transform empty strings to null for nullable fields
+        const dataToSend = {
+            ...formData,
+            title: formData.title === '' ? null : formData.title,
+            password: formData.password === '' ? null : formData.password,
+            ipRange: formData.ipRange === '' ? null : formData.ipRange,
+        };
 
-        console.log('Creating secret with data:', formData);
+        try {
+            console.log(dataToSend);
+            const response = await api.secrets.$post({ json: dataToSend });
 
-        setIsLoading(false);
-
-        // Reset form
-        setFormData({
-            secret: '',
-            title: '',
-            views: 1,
-            isBurnable: false,
-            isPublic: false,
-        });
+            console.log('Secret created successfully:', response);
+            // Reset form
+            setFormData({
+                secret: '',
+                title: '',
+                views: 1,
+                isBurnable: false,
+                expiresAt: 14400, // 4 hours
+            });
+        } catch (error: any) {
+            console.error('Failed to create secret:', error.message);
+            // Handle error, e.g., show a toast notification
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const updateFormData = (updates: Partial<SecretFormData>) => {
@@ -61,7 +71,7 @@ export function SecretForm() {
                 <Editor
                     name="text"
                     content={formData.secret}
-                    setContent={(value) => updateFormData({ secret: value })}
+                    onChange={(value) => updateFormData({ secret: value })}
                 //editable={!inputReadOnly}
                 />
 

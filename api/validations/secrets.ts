@@ -50,17 +50,32 @@ const secretSchema = {
     secret: z
         .string()
         .min(1, { message: 'Secret is required and cannot be empty' }),
-    title: z.string().nullable(),
-    password: z.string().nullable(),
-    expiresAt: z.coerce.date().nullable(),
+    title: z.string().optional().nullable(),
+    password: z.string().optional(),
+    expiresAt: z
+        .number()
+        .refine(val => [
+            2419200, // 28 days
+            1209600, // 14 days
+            604800, // 7 days
+            259200, // 3 days
+            86400, // 1 day
+            43200, // 12 hours
+            14400, // 4 hours
+            3600, // 1 hour
+            1800, // 30 minutes
+            300, // 5 minutes
+        ].indexOf(val) > -1,
+            { message: 'Invalid expiration time' }
+        ),
     views: z.number().int().min(1).max(9999).optional(),
-    isBurnable: z.boolean().optional(),
-    isPublic: z.boolean().optional(),
+    isBurnable: z.boolean().default(true).optional(),
     ipRange: z.string()
         .refine(
             (val) => isCidr(val),
             { message: 'Must be a valid IPv4, IPv6, or CIDR' }
         )
+        .nullable()
         .optional(),
 };
 
