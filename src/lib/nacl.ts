@@ -7,7 +7,9 @@ const { secretbox, randomBytes } = tweetnacl;
 const { decodeUTF8, encodeUTF8 } = tweetnaclUtil; // No longer need Base64 utils
 
 // This key generation is NOT secure for passwords.
-// See the security recommendation section below.
+// TODO: Can we do this differently?
+// TODO: Transform the password into a 32-byte key using a hash function like SHA-256.
+// TODO: Then we don't need to return the encryption key to be used as a string
 export const generateEncryptionKey = (password = '') => {
     if (password) {
         return nanoid(32 - password.length);
