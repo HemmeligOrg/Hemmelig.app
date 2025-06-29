@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { Lock, Shield, Clock, Eye, Key, Globe, Flame } from 'lucide-react';
 import { SecretFormData } from './SecretForm';
 import { ToggleSwitch } from './ToggleSwitch';
@@ -11,13 +11,7 @@ interface SecuritySettingsProps {
 }
 
 export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) {
-    const handlePasswordToggle = (enabled: boolean) => {
-        if (enabled) {
-            onChange({ password: '' });
-        } else {
-            onChange({ password: undefined });
-        }
-    };
+    const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
 
     const handleIpRangeToggle = (enabled: boolean) => {
         if (enabled) {
@@ -131,13 +125,13 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                             </div>
                             <div className="flex-shrink-0 ml-3">
                                 <ToggleSwitch
-                                    checked={formData.password !== undefined}
-                                    onChange={handlePasswordToggle}
+                                    checked={isPasswordEnabled}
+                                    onChange={val => setIsPasswordEnabled(val)}
                                 />
                             </div>
                         </div>
 
-                        {formData.password !== undefined && (
+                        {isPasswordEnabled && (
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-slate-300">
                                     Enter Password
