@@ -5,6 +5,7 @@ import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
 import {
     createSecretsSchema,
+    getSecretSchema,
     secretsIdParamSchema,
     secretsQuerySchema,
     processSecretsQueryParams,
@@ -55,7 +56,7 @@ const app = new Hono()
     })
     // POST /secrets/:id - Get Secrets by ID
     // TODO: Use a transaction to ensure atomicity of read and delete operations
-    .post('/:id', zValidator('param', secretsIdParamSchema), ipRestriction, async c => {
+    .post('/:id', zValidator('param', secretsIdParamSchema), zValidator('json', getSecretSchema), ipRestriction, async c => {
         try {
             // Get validated ID from URL parameters
             const { id: validatedIdString } = c.req.valid('param');
@@ -84,9 +85,8 @@ const app = new Hono()
             }
 
             if (item.password) {
-                const body = await c.req.json()
-                console.log(body)
-                const isValidPassword = await compare(body.password, item.password);
+                const data = c.req.valid('json');
+                const isValidPassword = await compare(data.password, item.password);
 
                 if (!isValidPassword) {
                     c.status(401);
@@ -94,7 +94,8 @@ const app = new Hono()
                 }
             }
 
-            delete item.password; // Remove password from response
+            // TODO: Handle this in a different way
+            delete item.password;
 
             if (item.views! > 1) {
                 await prisma.secrets.update({

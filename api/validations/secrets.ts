@@ -69,6 +69,10 @@ const secretSchema = {
 
 export const createSecretsSchema = z.object(secretSchema);
 
+export const getSecretSchema = z.object({
+    password: z.string().optional(),
+})
+
 const internalQueryParamsSchema = z.object({
     skip: z.number().int().min(0).optional(),
     take: z.number().int().min(1).max(100).optional(),
