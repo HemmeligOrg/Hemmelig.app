@@ -41,10 +41,13 @@ export function SecretForm() {
 
         try {
             const response = await api.secrets.$post({ json: dataToSend });
-            const data = await response.json()
+            const data = await response.json();
 
-            if (data?.id) {
+            if (response.ok && data?.id) {
                 setSecretIdAndKeys(data.id, encryptionKey, password);
+            } else {
+                const errorMessage = data?.error?.issues?.[0]?.message || data?.error?.message || 'An unknown error occurred.';
+                alert(`Failed to create secret: ${errorMessage}`);
             }
         } catch (error: any) {
             console.error('Failed to create secret:', error.message);

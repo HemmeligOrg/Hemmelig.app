@@ -36,7 +36,6 @@ export function SecretPage() {
 
     const fetchSecretContent = async (password: string) => {
         setIsLoading(true);
-        setError(null);
         try {
             const finalDecryptionKey = password ? generateEncryptionKey(password) : decryptionKey;
             const response = await api.secrets[':id'].$post({ param: { id: id! }, json: { password: finalDecryptionKey } });
@@ -49,14 +48,9 @@ export function SecretPage() {
                 setTitle(decryptedTitle);
                 setShowSecretContent(true);
                 setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
-            } else if (response.status === 401) {
-                setError('You are not authorized to view this secret.');
-            } else {
-                setError(data.message || 'Failed to retrieve secret.');
             }
         } catch (err: any) {
             console.error('Error fetching secret:', err);
-            setError('An error occurred while fetching the secret.');
         } finally {
             setIsLoading(false);
         }
@@ -101,13 +95,6 @@ export function SecretPage() {
                             </div>
                         )}
                     </div>
-
-                    {error && (
-                        <div className="bg-red-900/50 border border-red-600/50 text-red-300 p-4 rounded-xl mb-6 text-center shadow-lg">
-                            <p className="font-semibold text-lg">Error</p>
-                            <p className="text-sm mt-1">{error}</p>
-                        </div>
-                    )}
 
                     {isLoading && (
                         <div className="flex justify-center items-center text-slate-400">

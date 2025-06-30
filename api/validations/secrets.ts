@@ -35,7 +35,6 @@ const jsonToUint8ArraySchema = z.preprocess((arg) => {
     return arg;
 }, z.instanceof(Uint8Array));
 
-// .min(1, { message: 'Secret is required and cannot be empty' })
 const secretSchema = {
     secret: jsonToUint8ArraySchema
     ,
