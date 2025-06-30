@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import isCidr from 'is-cidr';
+import { isIP } from 'is-ip';
 
 // Schema for URL parameters (expecting string from URL)
 export const secretsIdParamSchema = z.object({
@@ -60,7 +61,7 @@ const secretSchema = {
     isBurnable: z.boolean().default(true).optional(),
     ipRange: z.string()
         .refine(
-            (val) => isCidr(val),
+            (val) => isCidr(val) || isIP(val),
             { message: 'Must be a valid IPv4, IPv6, or CIDR' }
         )
         .nullable()

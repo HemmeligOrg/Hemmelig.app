@@ -50,6 +50,7 @@
     "ip-address": "^10.0.1",
     "ip-range-check": "^0.2.0",
     "is-cidr": "^5.1.1",
+    "is-ip": "^5.0.1",
     "js-md5": "^0.8.3",
     "lucide-react": "^0.523.0",
     "prettier-plugin-organize-imports": "^4.1.0",
