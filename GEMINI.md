@@ -31,6 +31,7 @@ This project is built with a specific stack. Adherence to its conventions is cri
 - **State Management:** Utilize the existing state management patterns, including `src/store/errorStore.ts` for global error state management.
 - **Styling:** Apply styles using Tailwind CSS classes, following the conventions in existing components and `tailwind.config.js`.
 - **API Interaction:** The frontend communicates with the backend via Hono's RPC client. Centralized error handling is implemented in `src/lib/api.ts`, and errors are displayed using `src/components/ErrorDisplay.tsx`. When making changes that affect the API, ensure the frontend client code is correctly aligned with the backend route definitions.
+- **Internationalization (i18n):** All user-facing strings in React components must use `useTranslation` from `react-i18next` for internationalization. Ensure new strings are added to the appropriate JSON translation files (`src/i18n/locales/en/en.json`, `src/i18n/locales/es/es.json`, etc.) and referenced correctly.
 
 ### Backend (Hono RPC)
 
