@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react'
 import { Copy, Check, Plus } from 'lucide-react';
 import { api } from '../lib/api';
+import { useSecretStore } from '../store/secretStore';
 
-interface SecretSettingsProps {
-    secretId: string;
-    decryptionKey?: string;
-    password?: string;
-    onReset: () => void;
-}
-
-export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey, password, onReset }) => {
-    const secretUrl = `${window.location.origin}/secret/${secretId}${decryptionKey ? `#decryptionKey=${decryptionKey}` : ''}`;
+export const SecretSettings = () => {
+    const { secretId, decryptionKey, password, resetSecret } = useSecretStore();
+    const secretUrl = `${window.location.origin}/secret/${secretId}${!password ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
 
     useEffect(() => {
@@ -29,7 +24,7 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
     const handleBurnSecret = async () => {
         try {
             await api.secrets[':id'].$delete({ param: { id: secretId } });
-            onReset();
+            resetSecret();
         } catch (error) {
             console.error("Failed to burn secret:", error);
             alert("Failed to burn secret. Please try again.");
@@ -96,7 +91,7 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
 
             <div className="mt-8 flex items-center justify-between">
                 <button
-                    onClick={onReset}
+                    onClick={resetSecret}
                     className="inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                     <Plus className="h-5 w-5" />

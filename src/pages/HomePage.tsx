@@ -1,34 +1,17 @@
-import { useState } from 'react';
 import { Header } from '../components/Header';
 import { SecretForm } from '../components/SecretForm';
 import { Footer } from '../components/Footer';
 import { SecretSettings } from '../components/SecretSettings';
+import { useSecretStore } from '../store/secretStore';
 
 export function HomePage() {
-    const [secretId, setSecretId] = useState<string | null>(null);
-    const [decryptionKey, setDecryptionKey] = useState<string | null>(null);
-    const [password, setPassword] = useState<string>('');
-
-    const handleSecretCreated = (id: string, key: string, password?: string) => {
-        setSecretId(id);
-        setDecryptionKey(key);
-        setPassword(password || '');
-
-        console.log(password)
-    };
-
-    const handleReset = () => {
-        setSecretId(null);
-        setDecryptionKey(null);
-        setPassword('');
-    };
-
+    const { secretId } = useSecretStore();
     return (
         <>
             <Header />
             <main className="container mx-auto px-4 py-8 max-w-4xl">
-                {!secretId && <SecretForm onSecretCreated={handleSecretCreated} />}
-                {secretId && <SecretSettings secretId={secretId} decryptionKey={decryptionKey} password={password} onReset={handleReset} />}
+                {!secretId && <SecretForm />}
+                {secretId && <SecretSettings />}
             </main>
             <Footer />
         </>

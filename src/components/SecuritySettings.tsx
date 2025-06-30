@@ -1,33 +1,30 @@
 import { useState } from 'react';
 import { Lock, Shield, Clock, Eye, Key, Globe, Flame } from 'lucide-react';
-import { SecretFormData } from './SecretForm';
 import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
 import { ExpirationSelect } from './ExpirationSelect';
+import { useSecretStore } from '../store/secretStore';
 
-interface SecuritySettingsProps {
-    formData: SecretFormData;
-    onChange: (updates: Partial<SecretFormData>) => void;
-}
+export function SecuritySettings() {
+    const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
 
-export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) {
-    const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
+    const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!password);
 
     const handleIpRangeToggle = (enabled: boolean) => {
         if (enabled) {
-            onChange({ ipRange: '' });
+            setSecretData({ ipRange: '' });
         } else {
-            onChange({ ipRange: undefined });
+            setSecretData({ ipRange: undefined });
         }
     };
 
-    const handleBurnAfterTimeToggle = (isBurnable: boolean) => {
-        onChange({ isBurnable });
+    const handleBurnAfterTimeToggle = (checked: boolean) => {
+        setSecretData({ isBurnable: checked });
 
         // When enabling burn after time, set a default expiration if none exists
-        if (isBurnable && !formData.expiresAt) {
+        if (checked && !expiresAt) {
             const defaultExpiration = 14400; // Default to 4 hours in seconds
-            onChange({ isBurnable, expiresAt: defaultExpiration });
+            setSecretData({ expiresAt: defaultExpiration });
         }
     };
 
@@ -66,11 +63,11 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                             <span className="text-sm font-medium text-slate-300">Expiration</span>
                         </div>
                         <ExpirationSelect
-                            value={formData.expiresAt}
-                            onChange={(expiresAt) => onChange({ expiresAt })}
+                            value={expiresAt}
+                            onChange={(value) => setSecretData({ expiresAt: value })}
                         />
                         <p className="text-xs text-slate-400">
-                            {formData.isBurnable
+                            {isBurnable
                                 ? "Set when the secret should be destroyed"
                                 : "Set how long the secret should be available"
                             }
@@ -78,22 +75,22 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                     </div>
 
                     {/* Max Views - Only show when burn after time is NOT enabled */}
-                    {!formData.isBurnable && (
+                    {!isBurnable && (
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                                 <Eye className="w-4 h-4 text-slate-400" />
                                 <span className="text-sm font-medium text-slate-300">Max views</span>
                             </div>
                             <ViewsSlider
-                                value={formData.views}
-                                onChange={(views) => onChange({ views })}
+                                value={views}
+                                onChange={(value) => setSecretData({ views: value })}
                             />
                         </div>
                     )}
                 </div>
 
                 {/* Burn After Time Notice - Mobile optimized */}
-                {formData.isBurnable && (
+                {isBurnable && (
                     <div className="p-3 sm:p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
                         <div className="flex items-start space-x-3">
                             <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
@@ -126,7 +123,10 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                             <div className="flex-shrink-0 ml-3">
                                 <ToggleSwitch
                                     checked={isPasswordEnabled}
-                                    onChange={val => setIsPasswordEnabled(val)}
+                                    onChange={val => {
+                                        setIsPasswordEnabled(val);
+                                        if (!val) setSecretData({ password: null });
+                                    }}
                                 />
                             </div>
                         </div>
@@ -138,8 +138,8 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                                 </label>
                                 <input
                                     type="text"
-                                    value={formData.password}
-                                    onChange={(e) => onChange({ password: e.target.value })}
+                                    value={password || ''}
+                                    onChange={(e) => setSecretData({ password: e.target.value })}
                                     placeholder="Enter a secure password..."
                                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
                                 />
@@ -166,21 +166,21 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                             </div>
                             <div className="flex-shrink-0 ml-3">
                                 <ToggleSwitch
-                                    checked={formData.ipRange !== undefined}
+                                    checked={ipRange !== undefined}
                                     onChange={handleIpRangeToggle}
                                 />
                             </div>
                         </div>
 
-                        {formData.ipRange !== undefined && (
+                        {ipRange !== undefined && (
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-slate-300">
                                     IP Address or CIDR Range
                                 </label>
                                 <input
                                     type="text"
-                                    value={formData.ipRange}
-                                    onChange={(e) => onChange({ ipRange: e.target.value })}
+                                    value={ipRange || ''}
+                                    onChange={(e) => setSecretData({ ipRange: e.target.value })}
                                     placeholder="192.168.1.0/24 or 203.0.113.5"
                                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
                                 />
@@ -206,7 +206,7 @@ export function SecuritySettings({ formData, onChange }: SecuritySettingsProps) 
                         </div>
                         <div className="flex-shrink-0 ml-3">
                             <ToggleSwitch
-                                checked={formData.isBurnable}
+                                checked={isBurnable}
                                 onChange={handleBurnAfterTimeToggle}
                             />
                         </div>

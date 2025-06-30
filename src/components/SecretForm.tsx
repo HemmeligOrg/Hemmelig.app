@@ -6,6 +6,7 @@ import { TitleField } from './TitleField';
 import Editor from './Editor';
 import { api } from '../lib/api'; // Import the RPC client
 import { encrypt, generateEncryptionKey } from '../lib/nacl';
+import { useSecretStore } from '../store/secretStore';
 
 export interface SecretFormData {
     secret: string;
@@ -17,34 +18,25 @@ export interface SecretFormData {
     ipRange?: string | null;
 }
 
-interface SecretFormProps {
-    onSecretCreated: (id: string, key: string, password?: string) => void;
-}
-
-export function SecretForm({ onSecretCreated }: SecretFormProps) {
-    const [formData, setFormData] = useState<SecretFormData>({
-        secret: '',
-        title: '',
-        views: 1,
-        isBurnable: false,
-        expiresAt: 14400, // 4 hours
-        password: '',
-    });
+export function SecretForm() {
+    const { secret, title, password, expiresAt, views, isBurnable, ipRange, setSecretIdAndKeys, setSecretData } = useSecretStore();
 
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
         setIsLoading(true);
 
-        const encryptionKey = generateEncryptionKey(formData.password);
+        const encryptionKey = generateEncryptionKey(password);
 
         // Transform empty strings to null for nullable fields
         const dataToSend = {
-            ...formData,
-            secret: encrypt(formData.secret, encryptionKey),
-            title: encrypt(formData.title, encryptionKey),
-            password: formData.password === '' ? '' : encryptionKey,
-            ipRange: formData.ipRange === '' ? null : formData.ipRange,
+            secret: encrypt(secret, encryptionKey),
+            title: encrypt(title, encryptionKey),
+            password: password ? encryptionKey : '',
+            expiresAt,
+            views,
+            isBurnable,
+            ipRange: ipRange === '' ? null : ipRange,
         };
 
         try {
@@ -52,18 +44,8 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
             const data = await response.json()
 
             if (data?.id) {
-                onSecretCreated(data.id, formData.password === '' ? encryptionKey : '', formData.password);
+                setSecretIdAndKeys(data.id, encryptionKey, password);
             }
-
-            // Reset form
-            setFormData({
-                secret: '',
-                title: '',
-                views: 1,
-                isBurnable: false,
-                expiresAt: 14400, // 4 hours
-                password: '',
-            });
         } catch (error: any) {
             console.error('Failed to create secret:', error.message);
             // Handle error, e.g., show a toast notification
@@ -72,11 +54,7 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
         }
     };
 
-    const updateFormData = (updates: Partial<SecretFormData>) => {
-        setFormData(prev => ({ ...prev, ...updates }));
-    };
-
-    const isFormValid = formData.secret.trim().length > 0;
+    const isFormValid = secret.trim().length > 0;
 
     return (
         <div className="space-y-8">
@@ -84,15 +62,15 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
                 <Editor
                     name="text"
-                    content={formData.secret}
-                    onChange={(value) => updateFormData({ secret: value })}
+                    content={secret}
+                    onChange={(value) => setSecretData({ secret: value })}
                 //editable={!inputReadOnly}
                 />
 
                 <div className="mt-6">
                     <TitleField
-                        value={formData.title}
-                        onChange={(title) => updateFormData({ title })}
+                        value={title}
+                        onChange={(value) => setSecretData({ title: value })}
                     />
                 </div>
 
@@ -102,10 +80,7 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
             </div>
 
             {/* Security settings */}
-            <SecuritySettings
-                formData={formData}
-                onChange={updateFormData}
-            />
+            <SecuritySettings />
 
             {/* Create button */}
             <CreateButton

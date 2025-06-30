@@ -63,7 +63,8 @@
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",
     "validator": "^13.15.15",
-    "zod": "^3.24.4"
+    "zod": "^3.24.4",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
