@@ -5,9 +5,10 @@ import { Copy, Check } from 'lucide-react';
 interface SecretSettingsProps {
     secretId: string;
     decryptionKey?: string;
+    password?: string;
 }
 
-export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey }) => {
+export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey, password }) => {
     const secretUrl = `${window.location.origin}/secret/${secretId}${decryptionKey ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -47,20 +48,38 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
                         </button>
                     </div>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-slate-300">Decryption Key</label>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            readOnly
-                            value={decryptionKey}
-                            className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
-                        />
-                        <button onClick={() => copyToClipboard(decryptionKey, 'key')} className="absolute inset-y-0 right-0 flex items-center pr-3">
-                            {copied === 'key' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
-                        </button>
+                {!password && (
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300">Decryption Key</label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                readOnly
+                                value={decryptionKey}
+                                className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                            />
+                            <button onClick={() => copyToClipboard(decryptionKey, 'key')} className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                {copied === 'key' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
+                {password && (
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300">Password</label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                readOnly
+                                value={password}
+                                className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                            />
+                            <button onClick={() => copyToClipboard(password, 'password')} className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                {copied === 'password' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="mt-6 flex justify-end space-x-4">

@@ -18,7 +18,7 @@ export interface SecretFormData {
 }
 
 interface SecretFormProps {
-    onSecretCreated: (id: string, key: string) => void;
+    onSecretCreated: (id: string, key: string, password?: string) => void;
 }
 
 export function SecretForm({ onSecretCreated }: SecretFormProps) {
@@ -52,7 +52,7 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
             const data = await response.json()
 
             if (data?.id) {
-                onSecretCreated(data.id, formData.password === '' ? encryptionKey : '');
+                onSecretCreated(data.id, formData.password === '' ? encryptionKey : '', formData.password);
             }
 
             // Reset form
