@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Hash } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface TitleFieldProps {
     value: string;
@@ -8,6 +9,7 @@ interface TitleFieldProps {
 
 export function TitleField({ value, onChange }: TitleFieldProps) {
     const [isFocused, setIsFocused] = useState(false);
+    const { t } = useTranslation();
 
     return (
         <div className="space-y-2">
@@ -21,12 +23,12 @@ export function TitleField({ value, onChange }: TitleFieldProps) {
                     onChange={(e) => onChange(e.target.value)}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    placeholder="Title"
+                    placeholder={t('title_field.placeholder')}
                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                 />
             </div>
             <p className="text-sm text-slate-400 ml-1">
-                Give your secret a memorable title (optional)
+                {t('title_field.hint')}
             </p>
         </div>
     );

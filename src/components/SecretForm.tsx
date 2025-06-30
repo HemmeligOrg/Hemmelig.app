@@ -7,6 +7,7 @@ import Editor from './Editor';
 import { api } from '../lib/api'; // Import the RPC client
 import { encrypt, generateEncryptionKey } from '../lib/nacl';
 import { useSecretStore } from '../store/secretStore';
+import { useTranslation } from 'react-i18next';
 
 export interface SecretFormData {
     secret: string;
@@ -20,6 +21,7 @@ export interface SecretFormData {
 
 export function SecretForm() {
     const { secret, title, password, expiresAt, views, isBurnable, ipRange, setSecretIdAndKeys, setSecretData } = useSecretStore();
+    const { t } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -47,7 +49,7 @@ export function SecretForm() {
                 setSecretIdAndKeys(data.id, encryptionKey, password);
             } else {
                 const errorMessage = data?.error?.issues?.[0]?.message || data?.error?.message || 'An unknown error occurred.';
-                alert(`Failed to create secret: ${errorMessage}`);
+                alert(t('secret_form.failed_to_create_secret', { errorMessage: errorMessage }));
             }
         } catch (error: any) {
             console.error('Failed to create secret:', error.message);

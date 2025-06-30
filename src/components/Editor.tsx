@@ -468,7 +468,7 @@ const MenuBar: FC = () => {
                         onClick={toggleMenu}
                         className="flex items-center justify-between w-full p-3 bg-slate-700/30 rounded-xl border border-slate-600/30 text-slate-300 hover:text-white transition-all duration-200"
                     >
-                        <span className="text-sm font-medium">Formatting Tools</span>
+                        <span className="text-sm font-medium">{t('formatting_tools')}</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5"

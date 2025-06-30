@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     User,
     Mail,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 export function AccountPage() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'danger'>('profile');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -41,7 +43,7 @@ export function AccountPage() {
 
     const handlePasswordChange = async () => {
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            alert('New passwords do not match');
+            alert(t('account_page.security_settings.password_mismatch_alert'));
             return;
         }
 
@@ -54,23 +56,23 @@ export function AccountPage() {
     };
 
     const handleDeleteAccount = () => {
-        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        if (confirm(t('account_page.danger_zone.delete_account_confirm'))) {
             console.log('Account deletion requested');
         }
     };
 
     const tabs = [
-        { id: 'profile', name: 'Profile', icon: User },
-        { id: 'security', name: 'Security', icon: Shield },
-        { id: 'danger', name: 'Danger Zone', icon: AlertTriangle },
+        { id: 'profile', name: t('account_page.tabs.profile'), icon: User },
+        { id: 'security', name: t('account_page.tabs.security'), icon: Shield },
+        { id: 'danger', name: t('account_page.tabs.danger_zone'), icon: AlertTriangle },
     ];
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">Account Settings</h1>
-                <p className="text-slate-400 mt-1">Manage your account preferences and security</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('account_page.title')}</h1>
+                <p className="text-slate-400 mt-1">{t('account_page.description')}</p>
             </div>
 
             {/* Tabs */}
@@ -106,8 +108,8 @@ export function AccountPage() {
                                 <User className="w-5 h-5 text-teal-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Profile Information</h2>
-                                <p className="text-sm text-slate-400">Update your personal information</p>
+                                <h2 className="text-lg font-semibold text-white">{t('account_page.profile_info.title')}</h2>
+                                <p className="text-sm text-slate-400">{t('account_page.profile_info.description')}</p>
                             </div>
                         </div>
 
@@ -115,7 +117,7 @@ export function AccountPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        First Name
+                                        {t('account_page.profile_info.first_name_label')}
                                     </label>
                                     <input
                                         type="text"
@@ -126,7 +128,7 @@ export function AccountPage() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Last Name
+                                        {t('account_page.profile_info.last_name_label')}
                                     </label>
                                     <input
                                         type="text"
@@ -139,7 +141,7 @@ export function AccountPage() {
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">
-                                    Username
+                                    {t('account_page.profile_info.username_label')}
                                 </label>
                                 <input
                                     type="text"
@@ -151,7 +153,7 @@ export function AccountPage() {
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">
-                                    Email Address
+                                    {t('account_page.profile_info.email_label')}
                                 </label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -171,7 +173,7 @@ export function AccountPage() {
                                     className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Save className="w-4 h-4" />
-                                    <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
+                                    <span>{isLoading ? t('account_page.profile_info.saving_button') : t('account_page.profile_info.save_changes_button')}</span>
                                 </button>
                             </div>
                         </div>
@@ -185,18 +187,18 @@ export function AccountPage() {
                                 <Shield className="w-5 h-5 text-orange-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Security Settings</h2>
-                                <p className="text-sm text-slate-400">Manage your password and security preferences</p>
+                                <h2 className="text-lg font-semibold text-white">{t('account_page.security_settings.title')}</h2>
+                                <p className="text-sm text-slate-400">{t('account_page.security_settings.description')}</p>
                             </div>
                         </div>
 
                         <div className="space-y-6">
                             <div>
-                                <h3 className="text-md font-medium text-white mb-4">Change Password</h3>
+                                <h3 className="text-md font-medium text-white mb-4">{t('account_page.security_settings.change_password_title')}</h3>
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-slate-300 mb-2">
-                                            Current Password
+                                            {t('account_page.security_settings.current_password_label')}
                                         </label>
                                         <div className="relative">
                                             <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -205,7 +207,7 @@ export function AccountPage() {
                                                 value={passwordData.currentPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
                                                 className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                                placeholder="Enter current password"
+                                                placeholder={t('account_page.security_settings.current_password_placeholder')}
                                             />
                                             <button
                                                 type="button"
@@ -219,7 +221,7 @@ export function AccountPage() {
 
                                     <div>
                                         <label className="block text-sm font-medium text-slate-300 mb-2">
-                                            New Password
+                                            {t('account_page.security_settings.new_password_label')}
                                         </label>
                                         <div className="relative">
                                             <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -228,7 +230,7 @@ export function AccountPage() {
                                                 value={passwordData.newPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
                                                 className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                                placeholder="Enter new password"
+                                                placeholder={t('account_page.security_settings.new_password_placeholder')}
                                             />
                                             <button
                                                 type="button"
@@ -242,7 +244,7 @@ export function AccountPage() {
 
                                     <div>
                                         <label className="block text-sm font-medium text-slate-300 mb-2">
-                                            Confirm New Password
+                                            {t('account_page.security_settings.confirm_new_password_label')}
                                         </label>
                                         <div className="relative">
                                             <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -251,7 +253,7 @@ export function AccountPage() {
                                                 value={passwordData.confirmPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                                                 className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                                placeholder="Confirm new password"
+                                                placeholder={t('account_page.security_settings.confirm_new_password_placeholder')}
                                             />
                                             <button
                                                 type="button"
@@ -269,7 +271,7 @@ export function AccountPage() {
                                         className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Key className="w-4 h-4" />
-                                        <span>{isLoading ? 'Changing...' : 'Change Password'}</span>
+                                        <span>{isLoading ? t('account_page.security_settings.changing_password_button') : t('account_page.security_settings.change_password_button')}</span>
                                     </button>
                                 </div>
                             </div>
@@ -284,8 +286,8 @@ export function AccountPage() {
                                 <AlertTriangle className="w-5 h-5 text-red-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Danger Zone</h2>
-                                <p className="text-sm text-slate-400">Irreversible and destructive actions</p>
+                                <h2 className="text-lg font-semibold text-white">{t('account_page.danger_zone.title')}</h2>
+                                <p className="text-sm text-slate-400">{t('account_page.danger_zone.description')}</p>
                             </div>
                         </div>
 
@@ -293,16 +295,15 @@ export function AccountPage() {
                             <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
-                                        <h3 className="text-md font-medium text-red-300 mb-2">Delete Account</h3>
+                                        <h3 className="text-md font-medium text-red-300 mb-2">{t('account_page.danger_zone.delete_account_title')}</h3>
                                         <p className="text-sm text-red-200/80 mb-4">
-                                            Once you delete your account, there is no going back. This will permanently delete your account,
-                                            all your secrets, and remove all associated data. This action cannot be undone.
+                                            {t('account_page.danger_zone.delete_account_description')}
                                         </p>
                                         <ul className="text-sm text-red-200/70 space-y-1 mb-4">
-                                            <li>• All your secrets will be permanently deleted</li>
-                                            <li>• Your account data will be removed from our servers</li>
-                                            <li>• Any shared secret links will become invalid</li>
-                                            <li>• This action cannot be reversed</li>
+                                            <li>• {t('account_page.danger_zone.delete_account_bullet1')}</li>
+                                            <li>• {t('account_page.danger_zone.delete_account_bullet2')}</li>
+                                            <li>• {t('account_page.danger_zone.delete_account_bullet3')}</li>
+                                            <li>• {t('account_page.danger_zone.delete_account_bullet4')}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -311,7 +312,7 @@ export function AccountPage() {
                                     className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 hover:scale-105"
                                 >
                                     <Trash2 className="w-4 h-4" />
-                                    <span>Delete Account</span>
+                                    <span>{t('account_page.danger_zone.delete_account_button')}</span>
                                 </button>
                             </div>
                         </div>

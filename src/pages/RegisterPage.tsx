@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, User, Github, Eye, EyeOff, ArrowLeft, Check } from 'lucide-react';
 import Logo from '../components/Logo';
+import { useTranslation } from 'react-i18next';
 
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({ baseURL: "http://localhost:5173" });
 
 export function RegisterPage() {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -22,7 +24,7 @@ export function RegisterPage() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
+            alert(t('register_page.password_mismatch_alert'));
             return;
         }
 
@@ -101,7 +103,7 @@ export function RegisterPage() {
                     className="inline-flex items-center space-x-2 text-slate-400 hover:text-teal-400 transition-colors duration-300 mb-8 group"
                 >
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-                    <span>Back to Hemmelig</span>
+                    <span>{t('register_page.back_to_hemmelig')}</span>
                 </Link>
 
                 {/* Header */}
@@ -112,8 +114,8 @@ export function RegisterPage() {
                             <Logo className="w-12 h-12 sm:w-12 sm:h-12 fill-white" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Create account</h1>
-                    <p className="text-slate-400">Join Hemmelig to share secrets securely</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">{t('register_page.create_account_title')}</h1>
+                    <p className="text-slate-400">{t('register_page.create_account_description')}</p>
                 </div>
 
                 {/* Register Form */}
@@ -122,7 +124,7 @@ export function RegisterPage() {
                         {/* Username Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Username
+                                {t('register_page.username_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -132,7 +134,7 @@ export function RegisterPage() {
                                     type="text"
                                     value={formData.username}
                                     onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-                                    placeholder="Choose a username"
+                                    placeholder={t('register_page.username_placeholder')}
                                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -142,7 +144,7 @@ export function RegisterPage() {
                         {/* Email Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Email
+                                {t('register_page.email_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -152,7 +154,7 @@ export function RegisterPage() {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                                    placeholder="Enter your email"
+                                    placeholder={t('register_page.email_placeholder')}
                                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -162,7 +164,7 @@ export function RegisterPage() {
                         {/* Password Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Password
+                                {t('register_page.password_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -172,7 +174,7 @@ export function RegisterPage() {
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
                                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                                    placeholder="Create a password"
+                                    placeholder={t('register_page.password_placeholder')}
                                     className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -198,7 +200,7 @@ export function RegisterPage() {
                                         ))}
                                     </div>
                                     <p className={`text-xs ${passwordStrength >= 3 ? 'text-green-400' : passwordStrength >= 2 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                        Password strength: {strengthLabels[passwordStrength - 1] || 'Very Weak'}
+                                        {t('register_page.password_strength_label')}: {t(`register_page.password_strength_levels.${strengthLabels[passwordStrength - 1].toLowerCase().replace(' ', '_')}`)}
                                     </p>
                                 </div>
                             )}
@@ -207,7 +209,7 @@ export function RegisterPage() {
                         {/* Confirm Password Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Confirm Password
+                                {t('register_page.confirm_password_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -217,7 +219,7 @@ export function RegisterPage() {
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                    placeholder="Confirm your password"
+                                    placeholder={t('register_page.confirm_password_placeholder')}
                                     className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -236,10 +238,10 @@ export function RegisterPage() {
                                     {formData.password === formData.confirmPassword ? (
                                         <>
                                             <Check className="w-4 h-4 text-green-400" />
-                                            <span className="text-xs text-green-400">Passwords match</span>
+                                            <span className="text-xs text-green-400">{t('register_page.passwords_match')}</span>
                                         </>
                                     ) : (
-                                        <span className="text-xs text-red-400">Passwords do not match</span>
+                                        <span className="text-xs text-red-400">{t('register_page.passwords_do_not_match')}</span>
                                     )}
                                 </div>
                             )}
@@ -261,10 +263,10 @@ export function RegisterPage() {
                             {isLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Creating account...</span>
+                                    <span>{t('register_page.creating_account_button')}</span>
                                 </>
                             ) : (
-                                <span>Create Account</span>
+                                <span>{t('register_page.create_account_button')}</span>
                             )}
                         </button>
                     </form>
@@ -275,7 +277,7 @@ export function RegisterPage() {
                             <div className="w-full border-t border-slate-600/50"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-slate-800/50 text-slate-400">Or continue with</span>
+                            <span className="px-4 bg-slate-800/50 text-slate-400">{t('register_page.or_continue_with')}</span>
                         </div>
                     </div>
 
@@ -285,18 +287,18 @@ export function RegisterPage() {
                         className="w-full flex items-center justify-center space-x-3 py-3 px-4 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600/50 hover:border-slate-500/50 rounded-xl text-slate-100 font-medium transition-all duration-300 hover:scale-105"
                     >
                         <Github className="w-5 h-5" />
-                        <span>Continue with GitHub</span>
+                        <span>{t('register_page.continue_with_github')}</span>
                     </button>
 
                     {/* Sign In Link */}
                     <div className="text-center mt-8 pt-6 border-t border-slate-700/50">
                         <p className="text-slate-400">
-                            Already have an account?{' '}
+                            {t('register_page.already_have_account_question')}{' '}
                             <Link
                                 to="/login"
                                 className="text-teal-400 hover:text-teal-300 font-medium transition-colors duration-300"
                             >
-                                Sign in
+                                {t('register_page.sign_in_link')}
                             </Link>
                         </p>
                     </div>

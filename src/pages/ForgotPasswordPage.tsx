@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import Logo from '../components/Logo.tsx';
+import { useTranslation } from 'react-i18next';
 
 import { createAuthClient } from "better-auth/react";
 
@@ -11,6 +12,7 @@ export function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,7 +48,7 @@ export function ForgotPasswordPage() {
                         className="inline-flex items-center space-x-2 text-slate-400 hover:text-teal-400 transition-colors duration-300 mb-8 group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-                        <span>Back to Sign In</span>
+                        <span>{t('forgot_password_page.back_to_sign_in')}</span>
                     </Link>
 
                     {/* Success Message */}
@@ -60,21 +62,21 @@ export function ForgotPasswordPage() {
                             </div>
                         </div>
 
-                        <h1 className="text-2xl font-bold text-white mb-4">Check your email</h1>
+                        <h1 className="text-2xl font-bold text-white mb-4">{t('forgot_password_page.check_email_title')}</h1>
                         <p className="text-slate-400 mb-6">
-                            We've sent a password reset link to <span className="text-teal-400 font-medium">{email}</span>
+                            {t('forgot_password_page.check_email_description', { email: email })}
                         </p>
 
                         <div className="space-y-4">
                             <p className="text-sm text-slate-500">
-                                Didn't receive the email? Check your spam folder or try again.
+                                {t('forgot_password_page.did_not_receive_email')}
                             </p>
 
                             <button
                                 onClick={() => setIsSubmitted(false)}
                                 className="text-teal-400 hover:text-teal-300 font-medium transition-colors duration-300"
                             >
-                                Try again
+                                {t('forgot_password_page.try_again_button')}
                             </button>
                         </div>
                     </div>
@@ -103,8 +105,8 @@ export function ForgotPasswordPage() {
                             <Logo className="w-12 h-12 sm:w-12 sm:h-12 fill-white" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Forgot password?</h1>
-                    <p className="text-slate-400">No worries, we'll send you reset instructions</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">{t('forgot_password_page.forgot_password_title')}</h1>
+                    <p className="text-slate-400">{t('forgot_password_page.forgot_password_description')}</p>
                 </div>
 
                 {/* Reset Form */}
@@ -113,7 +115,7 @@ export function ForgotPasswordPage() {
                         {/* Email Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Email
+                                {t('forgot_password_page.email_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -123,13 +125,13 @@ export function ForgotPasswordPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email"
+                                    placeholder={t('forgot_password_page.email_placeholder')}
                                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
                             </div>
                             <p className="text-xs text-slate-400">
-                                Enter the email associated with your account
+                                {t('forgot_password_page.email_hint')}
                             </p>
                         </div>
 
@@ -149,10 +151,10 @@ export function ForgotPasswordPage() {
                             {isLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Sending...</span>
+                                    <span>{t('forgot_password_page.sending_button')}</span>
                                 </>
                             ) : (
-                                <span>Reset Password</span>
+                                <span>{t('forgot_password_page.reset_password_button')}</span>
                             )}
                         </button>
                     </form>
@@ -160,12 +162,12 @@ export function ForgotPasswordPage() {
                     {/* Additional Help */}
                     <div className="text-center mt-8 pt-6 border-t border-slate-700/50">
                         <p className="text-slate-400 text-sm">
-                            Remember your password?{' '}
+                            {t('forgot_password_page.remember_password')}{' '}
                             <Link
                                 to="/login"
                                 className="text-teal-400 hover:text-teal-300 font-medium transition-colors duration-300"
                             >
-                                Sign in
+                                {t('forgot_password_page.sign_in_link')}
                             </Link>
                         </p>
                     </div>

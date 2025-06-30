@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     BarChart3,
     TrendingUp,
@@ -12,6 +13,7 @@ import {
 
 export function AnalyticsPage() {
     const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
+    const { t } = useTranslation();
 
     // Mock analytics data - in real app this would come from API
     const analytics = {
@@ -39,10 +41,10 @@ export function AnalyticsPage() {
     };
 
     const timeRangeOptions = [
-        { value: '7d', label: 'Last 7 days' },
-        { value: '30d', label: 'Last 30 days' },
-        { value: '90d', label: 'Last 90 days' },
-        { value: '1y', label: 'Last year' }
+        { value: '7d', label: t('analytics_page.time_range.last_7_days') },
+        { value: '30d', label: t('analytics_page.time_range.last_30_days') },
+        { value: '90d', label: t('analytics_page.time_range.last_90_days') },
+        { value: '1y', label: t('analytics_page.time_range.last_year') }
     ];
 
     return (
@@ -51,8 +53,8 @@ export function AnalyticsPage() {
             <div className="mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white">Analytics</h1>
-                        <p className="text-slate-400 mt-1">Track your secret sharing activity and insights</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('analytics_page.title')}</h1>
+                        <p className="text-slate-400 mt-1">{t('analytics_page.description')}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Calendar className="w-4 h-4 text-slate-400" />
@@ -80,12 +82,12 @@ export function AnalyticsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{analytics.totalSecrets}</p>
-                            <p className="text-sm text-slate-400">Total Secrets</p>
+                            <p className="text-sm text-slate-400">{t('analytics_page.total_secrets')}</p>
                         </div>
                     </div>
                     <div className="mt-4 flex items-center space-x-2">
                         <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">+12% from last period</span>
+                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 12 })}</span>
                     </div>
                 </div>
 
@@ -96,12 +98,12 @@ export function AnalyticsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{analytics.totalViews.toLocaleString()}</p>
-                            <p className="text-sm text-slate-400">Total Views</p>
+                            <p className="text-sm text-slate-400">{t('analytics_page.total_views')}</p>
                         </div>
                     </div>
                     <div className="mt-4 flex items-center space-x-2">
                         <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">+8% from last period</span>
+                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 8 })}</span>
                     </div>
                 </div>
 
@@ -112,12 +114,12 @@ export function AnalyticsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{analytics.averageViews}</p>
-                            <p className="text-sm text-slate-400">Avg Views/Secret</p>
+                            <p className="text-sm text-slate-400">{t('analytics_page.avg_views_per_secret')}</p>
                         </div>
                     </div>
                     <div className="mt-4 flex items-center space-x-2">
                         <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">+5% from last period</span>
+                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 5 })}</span>
                     </div>
                 </div>
 
@@ -128,12 +130,12 @@ export function AnalyticsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{analytics.activeSecrets}</p>
-                            <p className="text-sm text-slate-400">Active Secrets</p>
+                            <p className="text-sm text-slate-400">{t('analytics_page.active_secrets')}</p>
                         </div>
                     </div>
                     <div className="mt-4 flex items-center space-x-2">
                         <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">+3% from last period</span>
+                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 3 })}</span>
                     </div>
                 </div>
             </div>
@@ -146,8 +148,8 @@ export function AnalyticsPage() {
                             <BarChart3 className="w-5 h-5 text-purple-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Daily Activity</h2>
-                            <p className="text-sm text-slate-400">Secrets created and views over time</p>
+                            <h2 className="text-lg font-semibold text-white">{t('analytics_page.daily_activity.title')}</h2>
+                            <p className="text-sm text-slate-400">{t('analytics_page.daily_activity.description')}</p>
                         </div>
                     </div>
 
@@ -157,14 +159,14 @@ export function AnalyticsPage() {
                             <div key={day.date} className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-400">
-                                        {new Date(day.date).toLocaleDateString('en-US', {
+                                        {new Date(day.date).toLocaleDateString(t('analytics_page.locale'), {
                                             month: 'short',
                                             day: 'numeric'
                                         })}
                                     </span>
                                     <div className="flex space-x-4">
-                                        <span className="text-teal-400">{day.secrets} secrets</span>
-                                        <span className="text-blue-400">{day.views} views</span>
+                                        <span className="text-teal-400">{day.secrets} {t('analytics_page.daily_activity.secrets')}</span>
+                                        <span className="text-blue-400">{day.views} {t('analytics_page.daily_activity.views')}</span>
                                     </div>
                                 </div>
                                 <div className="flex space-x-2">
@@ -193,8 +195,8 @@ export function AnalyticsPage() {
                             <Globe className="w-5 h-5 text-green-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Top Countries</h2>
-                            <p className="text-sm text-slate-400">Where your secrets are being viewed</p>
+                            <h2 className="text-lg font-semibold text-white">{t('analytics_page.top_countries.title')}</h2>
+                            <p className="text-sm text-slate-400">{t('analytics_page.top_countries.description')}</p>
                         </div>
                     </div>
 
@@ -207,7 +209,7 @@ export function AnalyticsPage() {
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium text-white">{country.country}</p>
-                                        <p className="text-xs text-slate-400">{country.views} views</p>
+                                        <p className="text-xs text-slate-400">{country.views} {t('analytics_page.top_countries.views')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
@@ -235,13 +237,13 @@ export function AnalyticsPage() {
                             <Users className="w-5 h-5 text-yellow-400" />
                         </div>
                         <div>
-                            <h3 className="text-md font-semibold text-white">Secret Types</h3>
-                            <p className="text-sm text-slate-400">Distribution by protection level</p>
+                            <h3 className="text-md font-semibold text-white">{t('analytics_page.secret_types.title')}</h3>
+                            <p className="text-sm text-slate-400">{t('analytics_page.secret_types.description')}</p>
                         </div>
                     </div>
                     <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">Password Protected</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.secret_types.password_protected')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-yellow-500 h-2 rounded-full w-3/4" />
@@ -250,7 +252,7 @@ export function AnalyticsPage() {
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">IP Restricted</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.secret_types.ip_restricted')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-yellow-500 h-2 rounded-full w-1/3" />
@@ -259,7 +261,7 @@ export function AnalyticsPage() {
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">Burn After Time</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.secret_types.burn_after_time')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-yellow-500 h-2 rounded-full w-1/2" />
@@ -276,13 +278,13 @@ export function AnalyticsPage() {
                             <Clock className="w-5 h-5 text-red-400" />
                         </div>
                         <div>
-                            <h3 className="text-md font-semibold text-white">Expiration Stats</h3>
-                            <p className="text-sm text-slate-400">How long secrets typically last</p>
+                            <h3 className="text-md font-semibold text-white">{t('analytics_page.expiration_stats.title')}</h3>
+                            <p className="text-sm text-slate-400">{t('analytics_page.expiration_stats.description')}</p>
                         </div>
                     </div>
                     <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">1 Hour</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_hour')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-red-500 h-2 rounded-full w-1/4" />
@@ -291,7 +293,7 @@ export function AnalyticsPage() {
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">1 Day</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_day')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-red-500 h-2 rounded-full w-2/5" />
@@ -300,7 +302,7 @@ export function AnalyticsPage() {
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-300">1 Week+</span>
+                            <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_week_plus')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
                                     <div className="bg-red-500 h-2 rounded-full w-1/3" />

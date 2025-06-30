@@ -3,9 +3,11 @@ import { QRCodeCanvas } from 'qrcode.react'
 import { Copy, Check, Plus } from 'lucide-react';
 import { api } from '../lib/api';
 import { useSecretStore } from '../store/secretStore';
+import { useTranslation } from 'react-i18next';
 
 export const SecretSettings = () => {
     const { secretId, decryptionKey, password, resetSecret } = useSecretStore();
+    const { t } = useTranslation();
     const secretUrl = `${window.location.origin}/secret/${secretId}${!password ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -33,8 +35,8 @@ export const SecretSettings = () => {
 
     return (
         <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl mt-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Secret Created!</h2>
-            <p className="text-slate-400 mb-6">Your secret is now available at the following URL. Keep your decryption key safe, as it cannot be recovered.</p>
+            <h2 className="text-2xl font-bold text-white mb-4">{t('secret_settings.secret_created_title')}</h2>
+            <p className="text-slate-400 mb-6">{t('secret_settings.secret_created_description')}</p>
 
             <div className="flex justify-center mb-6">
                 <QRCodeCanvas value={secretUrl} size={256} bgColor="#1e293b" fgColor="#ffffff" />
@@ -42,7 +44,7 @@ export const SecretSettings = () => {
 
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-slate-300">Secret URL</label>
+                    <label className="block text-sm font-medium text-slate-300">{t('secret_settings.secret_url_label')}</label>
                     <div className="relative">
                         <input
                             type="text"
@@ -57,7 +59,7 @@ export const SecretSettings = () => {
                 </div>
                 {!password && (
                     <div>
-                        <label className="block text-sm font-medium text-slate-300">Decryption Key</label>
+                        <label className="block text-sm font-medium text-slate-300">{t('secret_settings.decryption_key_label')}</label>
                         <div className="relative">
                             <input
                                 type="text"
@@ -73,7 +75,7 @@ export const SecretSettings = () => {
                 )}
                 {password && (
                     <div>
-                        <label className="block text-sm font-medium text-slate-300">Password</label>
+                        <label className="block text-sm font-medium text-slate-300">{t('secret_settings.password_label')}</label>
                         <div className="relative">
                             <input
                                 type="text"
@@ -95,11 +97,11 @@ export const SecretSettings = () => {
                     className="inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                     <Plus className="h-5 w-5" />
-                    Create New Secret
+                    {t('secret_settings.create_new_secret_button')}
                 </button>
                 <div className="flex space-x-4">
-                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">Copy URL</button>
-                    <button onClick={handleBurnSecret} className="px-4 py-2 bg-red-500 text-white rounded-lg">Burn Secret</button>
+                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">{t('secret_settings.copy_url_button')}</button>
+                    <button onClick={handleBurnSecret} className="px-4 py-2 bg-red-500 text-white rounded-lg">{t('secret_settings.burn_secret_button')}</button>
                 </div>
             </div>
         </div>

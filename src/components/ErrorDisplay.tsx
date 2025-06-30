@@ -1,8 +1,10 @@
 import { useErrorStore } from '../store/errorStore';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ErrorDisplay = () => {
     const { errors, clearErrors } = useErrorStore();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -29,6 +31,7 @@ const ErrorDisplay = () => {
                     <button
                         onClick={clearErrors}
                         className="ml-4 text-white hover:text-red-100 focus:outline-none"
+                        title={t('error_display.clear_errors_button_title')}
                     >
                         &times;
                     </button>

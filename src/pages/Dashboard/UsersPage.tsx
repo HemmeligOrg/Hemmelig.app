@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Users,
     Search,
@@ -27,6 +28,7 @@ interface User {
 }
 
 export function UsersPage() {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'user'>('all');
     const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'pending'>('all');
@@ -138,15 +140,15 @@ export function UsersPage() {
             <div className="mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white">User Management</h1>
-                        <p className="text-slate-400 mt-1">Manage users and their permissions</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('users_page.title')}</h1>
+                        <p className="text-slate-400 mt-1">{t('users_page.description')}</p>
                     </div>
                     <button
                         onClick={() => setShowUserModal(true)}
                         className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 w-fit"
                     >
                         <UserPlus className="w-4 h-4" />
-                        <span>Add User</span>
+                        <span>{t('users_page.add_user_button')}</span>
                     </button>
                 </div>
             </div>
@@ -158,7 +160,7 @@ export function UsersPage() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <input
                         type="text"
-                        placeholder="Search users..."
+                        placeholder={t('users_page.search_placeholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
@@ -173,9 +175,9 @@ export function UsersPage() {
                         onChange={(e) => setRoleFilter(e.target.value as any)}
                         className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                     >
-                        <option value="all">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
+                        <option value="all">{t('users_page.filter.all_roles')}</option>
+                        <option value="admin">{t('users_page.filter.admin')}</option>
+                        <option value="user">{t('users_page.filter.user')}</option>
                     </select>
                 </div>
 
@@ -185,10 +187,10 @@ export function UsersPage() {
                     onChange={(e) => setStatusFilter(e.target.value as any)}
                     className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                 >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="pending">Pending</option>
+                    <option value="all">{t('users_page.filter.all_status')}</option>
+                    <option value="active">{t('users_page.filter.active')}</option>
+                    <option value="suspended">{t('users_page.filter.suspended')}</option>
+                    <option value="pending">{t('users_page.filter.pending')}</option>
                 </select>
             </div>
 
@@ -201,7 +203,7 @@ export function UsersPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{users.length}</p>
-                            <p className="text-sm text-slate-400">Total Users</p>
+                            <p className="text-sm text-slate-400">{t('users_page.total_users')}</p>
                         </div>
                     </div>
                 </div>
@@ -213,7 +215,7 @@ export function UsersPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{users.filter(u => u.status === 'active').length}</p>
-                            <p className="text-sm text-slate-400">Active</p>
+                            <p className="text-sm text-slate-400">{t('users_page.active_users')}</p>
                         </div>
                     </div>
                 </div>
@@ -225,7 +227,7 @@ export function UsersPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{users.filter(u => u.role === 'admin').length}</p>
-                            <p className="text-sm text-slate-400">Admins</p>
+                            <p className="text-sm text-slate-400">{t('users_page.admins')}</p>
                         </div>
                     </div>
                 </div>
@@ -237,7 +239,7 @@ export function UsersPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{users.filter(u => u.status === 'pending').length}</p>
-                            <p className="text-sm text-slate-400">Pending</p>
+                            <p className="text-sm text-slate-400">{t('users_page.pending_users')}</p>
                         </div>
                     </div>
                 </div>
@@ -248,11 +250,11 @@ export function UsersPage() {
                 {filteredUsers.length === 0 ? (
                     <div className="p-8 text-center">
                         <Users className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-white mb-2">No users found</h3>
+                        <h3 className="text-lg font-medium text-white mb-2">{t('users_page.no_users_found_title')}</h3>
                         <p className="text-slate-400">
                             {searchTerm || roleFilter !== 'all' || statusFilter !== 'all'
-                                ? 'Try adjusting your search or filter criteria.'
-                                : 'No users have been added yet.'
+                                ? t('users_page.no_users_found_description_filter')
+                                : t('users_page.no_users_found_description_empty')
                             }
                         </p>
                     </div>
@@ -261,12 +263,12 @@ export function UsersPage() {
                         <table className="w-full">
                             <thead className="bg-slate-700/30 border-b border-slate-600/50">
                                 <tr>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">User</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden sm:table-cell">Role</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">Status</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">Activity</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">Last Login</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">Actions</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('users_page.table.user_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden sm:table-cell">{t('users_page.table.role_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('users_page.table.status_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">{t('users_page.table.activity_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">{t('users_page.table.last_login_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('users_page.table.actions_header')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-600/30">

@@ -12,15 +12,10 @@ i18n.use(initReactI18next).init({
         escapeValue: false, // not needed for react as it escapes by default
     },
     resources: {
-        en: {
-            editor: enTranslations.editor,
-        },
-        es: {
-            editor: esTranslations.editor,
-        },
+        en: { translations: enTranslations },
+        es: { translations: esTranslations },
     },
-    ns: ['editor'],
-    defaultNS: 'editor',
+    defaultNS: 'translations',
 });
 
 export default i18n;

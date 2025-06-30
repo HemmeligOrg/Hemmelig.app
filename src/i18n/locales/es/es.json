@@ -47,6 +47,382 @@
             "refresh": "Actualizar",
             "cancel": "Cancelar",
             "insert": "Insertar"
+        },
+        "formatting_tools": "Herramientas de formato"
+    },
+    "create_button": {
+        "creating_secret": "Creando secreto...",
+        "create": "Crear"
+    },
+    "file_upload": {
+        "sign_in_to_upload": "Inicia sesión para subir archivos",
+        "sign_in": "Iniciar sesión"
+    },
+    "footer": {
+        "tagline": "Hemmelig, [heˈm(ɛ)li], significa 'secreto' en noruego"
+    },
+    "header": {
+        "sign_in": "Iniciar sesión",
+        "sign_up": "Registrarse",
+        "hero_text_part1": "Comparte secretos de forma segura con mensajes cifrados que automáticamente",
+        "hero_text_part2": " se autodestruyen",
+        "hero_text_part3": " después de ser leídos."
+    },
+    "dashboard_layout": {
+        "secrets": "Secretos",
+        "account": "Cuenta",
+        "analytics": "Analítica",
+        "users": "Usuarios",
+        "instance": "Instancia",
+        "sign_out": "Cerrar sesión",
+        "hemmelig": "Hemmelig"
+    },
+    "secret_settings": {
+        "secret_created_title": "¡Secreto creado!",
+        "secret_created_description": "Tu secreto ya está disponible en la siguiente URL. Guarda tu clave de descifrado de forma segura, ya que no se puede recuperar.",
+        "secret_url_label": "URL del secreto",
+        "decryption_key_label": "Clave de descifrado",
+        "password_label": "Contraseña",
+        "create_new_secret_button": "Crear nuevo secreto",
+        "copy_url_button": "Copiar URL",
+        "burn_secret_button": "Quemar secreto"
+    },
+    "security_settings": {
+        "security_title": "Seguridad",
+        "security_description": "Configura los ajustes de seguridad para tu secreto",
+        "private_title": "Privado",
+        "private_description": "Los secretos privados están cifrados y solo se pueden ver con la clave de descifrado y/o la contraseña.",
+        "expiration_title": "Caducidad",
+        "expiration_burn_after_time_description": "Establece cuándo debe destruirse el secreto",
+        "expiration_default_description": "Establece cuánto tiempo debe estar disponible el secreto",
+        "max_views_title": "Vistas máximas",
+        "burn_after_time_mode_title": "Modo de autodestrucción por tiempo",
+        "burn_after_time_mode_description": "El secreto se destruirá después de que expire el tiempo, independientemente de cuántas veces se vea.",
+        "password_protection_title": "Protección con contraseña",
+        "password_protection_description": "Añade una capa adicional de seguridad con una contraseña",
+        "enter_password_label": "Introduce la contraseña",
+        "password_placeholder": "Introduce una contraseña segura...",
+        "password_hint": "Los destinatarios necesitarán esta contraseña para ver el secreto",
+        "ip_restriction_title": "Restringir por IP o CIDR",
+        "ip_restriction_description": "La entrada CIDR permitirá a los usuarios especificar rangos de direcciones IP que pueden acceder al secreto.",
+        "ip_address_cidr_label": "Dirección IP o rango CIDR",
+        "ip_address_cidr_placeholder": "192.168.1.0/24 o 203.0.113.5",
+        "ip_address_cidr_hint": "Solo las solicitudes de estas direcciones IP podrán acceder al secreto",
+        "burn_after_time_title": "Autodestrucción al expirar el tiempo",
+        "burn_after_time_description": "Quemar el secreto solo después de que expire el tiempo"
+    },
+    "title_field": {
+        "placeholder": "Título",
+        "hint": "Dale a tu secreto un título memorable (opcional)"
+    },
+    "views_slider": {
+        "min_views": "1",
+        "max_views": "999",
+        "views_label": "vista{{count}}"
+    },
+    "account_page": {
+        "title": "Configuración de la cuenta",
+        "description": "Gestiona las preferencias y la seguridad de tu cuenta",
+        "tabs": {
+            "profile": "Perfil",
+            "security": "Seguridad",
+            "danger_zone": "Zona de peligro"
+        },
+        "profile_info": {
+            "title": "Información del perfil",
+            "description": "Actualiza tu información personal",
+            "first_name_label": "Nombre",
+            "last_name_label": "Apellido",
+            "username_label": "Nombre de usuario",
+            "email_label": "Dirección de correo electrónico",
+            "saving_button": "Guardando...",
+            "save_changes_button": "Guardar cambios"
+        },
+        "security_settings": {
+            "title": "Configuración de seguridad",
+            "description": "Gestiona tu contraseña y preferencias de seguridad",
+            "change_password_title": "Cambiar contraseña",
+            "current_password_label": "Contraseña actual",
+            "current_password_placeholder": "Introduce la contraseña actual",
+            "new_password_label": "Nueva contraseña",
+            "new_password_placeholder": "Introduce la nueva contraseña",
+            "confirm_new_password_label": "Confirma la nueva contraseña",
+            "confirm_new_password_placeholder": "Confirma la nueva contraseña",
+            "password_mismatch_alert": "Las nuevas contraseñas no coinciden",
+            "changing_password_button": "Cambiando...",
+            "change_password_button": "Cambiar contraseña"
+        },
+        "danger_zone": {
+            "title": "Zona de peligro",
+            "description": "Acciones irreversibles y destructivas",
+            "delete_account_title": "Eliminar cuenta",
+            "delete_account_description": "Una vez que elimines tu cuenta, no hay vuelta atrás. Esto eliminará permanentemente tu cuenta, todos tus secretos y todos los datos asociados. Esta acción no se puede deshacer.",
+            "delete_account_bullet1": "Todos tus secretos se eliminarán permanentemente",
+            "delete_account_bullet2": "Tus datos de cuenta se eliminarán de nuestros servidores",
+            "delete_account_bullet3": "Cualquier enlace secreto compartido dejará de ser válido",
+            "delete_account_bullet4": "Esta acción no se puede revertir",
+            "delete_account_confirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
+            "delete_account_button": "Eliminar cuenta"
         }
+    },
+    "analytics_page": {
+        "title": "Analítica",
+        "description": "Rastrea la actividad y los conocimientos de tus secretos compartidos",
+        "time_range": {
+            "last_7_days": "Últimos 7 días",
+            "last_30_days": "Últimos 30 días",
+            "last_90_days": "Últimos 90 días",
+            "last_year": "Último año"
+        },
+        "total_secrets": "Total de secretos",
+        "from_last_period": "+{{percentage}}% desde el último período",
+        "total_views": "Total de vistas",
+        "avg_views_per_secret": "Promedio de vistas/secreto",
+        "active_secrets": "Secretos activos",
+        "daily_activity": {
+            "title": "Actividad diaria",
+            "description": "Secretos creados y vistas a lo largo del tiempo",
+            "secrets": "secretos",
+            "views": "vistas"
+        },
+        "locale": "es-ES",
+        "top_countries": {
+            "title": "Países principales",
+            "description": "Dónde se están viendo tus secretos",
+            "views": "vistas"
+        },
+        "secret_types": {
+            "title": "Tipos de secretos",
+            "description": "Distribución por nivel de protección",
+            "password_protected": "Protegido con contraseña",
+            "ip_restricted": "Restringido por IP",
+            "burn_after_time": "Autodestrucción por tiempo"
+        },
+        "expiration_stats": {
+            "title": "Estadísticas de caducidad",
+            "description": "Cuánto tiempo suelen durar los secretos",
+            "one_hour": "1 Hora",
+            "one_day": "1 Día",
+            "one_week_plus": "1 Semana+"
+        }
+    },
+    "instance_page": {
+        "title": "Configuración de la instancia",
+        "description": "Configura tu instancia de Hemmelig",
+        "system_status": {
+            "title": "Estado del sistema",
+            "description": "Métricas de salud y rendimiento de la instancia",
+            "version": "Versión",
+            "uptime": "Tiempo de actividad",
+            "memory": "Memoria",
+            "cpu_usage": "Uso de CPU"
+        },
+        "general_settings": {
+            "title": "Configuración general",
+            "description": "Configuración básica de la instancia",
+            "instance_name_label": "Nombre de la instancia",
+            "max_secrets_per_user_label": "Máximo de secretos por usuario",
+            "instance_description_label": "Descripción de la instancia",
+            "allow_registration_title": "Permitir registro",
+            "allow_registration_description": "Permitir que los nuevos usuarios se registren",
+            "email_verification_title": "Verificación de correo electrónico",
+            "email_verification_description": "Requerir verificación de correo electrónico"
+        },
+        "saving_button": "Guardando...",
+        "save_settings_button": "Guardar configuración",
+        "security_settings": {
+            "title": "Configuración de seguridad",
+            "description": "Configurar controles de seguridad y acceso",
+            "enforce_https_title": "Forzar HTTPS",
+            "enforce_https_description": "Requerir conexiones seguras",
+            "rate_limiting_title": "Limitación de velocidad",
+            "rate_limiting_description": "Habilitar limitación de velocidad de solicitudes",
+            "max_password_attempts_label": "Intentos máximos de contraseña",
+            "session_timeout_label": "Tiempo de espera de sesión (horas)"
+        },
+        "email_settings": {
+            "title": "Configuración de correo electrónico",
+            "description": "Configurar SMTP y notificaciones por correo electrónico",
+            "smtp_host_label": "Host SMTP",
+            "smtp_port_label": "Puerto SMTP",
+            "username_label": "Nombre de usuario",
+            "password_label": "Contraseña"
+        },
+        "database_info": {
+            "title": "Información de la base de datos",
+            "description": "Estado y estadísticas de la base de datos",
+            "stats_title": "Estadísticas de la base de datos",
+            "total_secrets": "Total de secretos:",
+            "total_users": "Total de usuarios:",
+            "disk_usage": "Uso del disco:",
+            "connection_status_title": "Estado de la conexión",
+            "connected": "Conectado",
+            "connected_description": "La base de datos está sana y responde normalmente"
+        },
+        "system_info": {
+            "title": "Información del sistema",
+            "description": "Detalles del servidor y mantenimiento",
+            "system_info_title": "Información del sistema",
+            "version": "Versión:",
+            "uptime": "Tiempo de actividad:",
+            "status": "Estado:",
+            "resource_usage_title": "Uso de recursos",
+            "memory": "Memoria:",
+            "cpu": "CPU:",
+            "disk": "Disco:"
+        },
+        "maintenance_actions": {
+            "title": "Acciones de mantenimiento",
+            "description": "Estas acciones pueden afectar la disponibilidad del sistema. Úselas con precaución.",
+            "restart_service_button": "Reiniciar servicio",
+            "clear_cache_button": "Borrar caché",
+            "export_logs_button": "Exportar registros"
+        }
+    },
+    "secrets_page": {
+        "title": "Tus secretos",
+        "description": "Gestiona y monitoriza tus secretos compartidos",
+        "create_secret_button": "Crear secreto",
+        "search_placeholder": "Buscar secretos...",
+        "filter": {
+            "all_secrets": "Todos los secretos",
+            "active": "Activo",
+            "expired": "Caducado"
+        },
+        "total_secrets": "Total de secretos",
+        "active_secrets": "Activo",
+        "expired_secrets": "Caducado",
+        "no_secrets_found_title": "No se encontraron secretos",
+        "no_secrets_found_description_filter": "Intenta ajustar tus criterios de búsqueda o filtro.",
+        "no_secrets_found_description_empty": "Crea tu primer secreto para empezar.",
+        "table": {
+            "secret_header": "Secreto",
+            "created_header": "Creado",
+            "status_header": "Estado",
+            "views_header": "Vistas",
+            "actions_header": "Acciones",
+            "untitled_secret": "Secreto sin título",
+            "expired_status": "Caducado",
+            "active_status": "Activo",
+            "never_expires": "Nunca caduca",
+            "expired_time": "Caducado",
+            "copy_url_tooltip": "Copiar URL",
+            "open_secret_tooltip": "Abrir secreto",
+            "delete_secret_tooltip": "Eliminar secreto"
+        }
+    },
+    "users_page": {
+        "title": "Gestión de usuarios",
+        "description": "Gestiona usuarios y sus permisos",
+        "add_user_button": "Añadir usuario",
+        "search_placeholder": "Buscar usuarios...",
+        "filter": {
+            "all_roles": "Todos los roles",
+            "admin": "Administrador",
+            "user": "Usuario"
+        },
+        "filter": {
+            "all_status": "Todos los estados",
+            "active": "Activo",
+            "suspended": "Suspendido",
+            "pending": "Pendiente"
+        },
+        "total_users": "Total de usuarios",
+        "active_users": "Activo",
+        "admins": "Administradores",
+        "pending_users": "Pendiente",
+        "no_users_found_title": "No se encontraron usuarios",
+        "no_users_found_description_filter": "Intenta ajustar tus criterios de búsqueda o filtro.",
+        "no_users_found_description_empty": "Aún no se han añadido usuarios.",
+        "table": {
+            "user_header": "Usuario",
+            "role_header": "Rol",
+            "status_header": "Estado",
+            "activity_header": "Actividad",
+            "last_login_header": "Último inicio de sesión",
+            "actions_header": "Acciones"
+        }
+    },
+    "forgot_password_page": {
+        "back_to_sign_in": "Volver a iniciar sesión",
+        "check_email_title": "Revisa tu correo electrónico",
+        "check_email_description": "Hemos enviado un enlace de restablecimiento de contraseña a {{email}}",
+        "did_not_receive_email": "¿No recibiste el correo electrónico? Revisa tu carpeta de spam o inténtalo de nuevo.",
+        "try_again_button": "Intentar de nuevo",
+        "forgot_password_title": "¿Olvidaste tu contraseña?",
+        "forgot_password_description": "No te preocupes, te enviaremos instrucciones para restablecerla",
+        "email_label": "Correo electrónico",
+        "email_placeholder": "Introduce tu correo electrónico",
+        "email_hint": "Introduce el correo electrónico asociado a tu cuenta",
+        "sending_button": "Enviando...",
+        "reset_password_button": "Restablecer contraseña",
+        "remember_password": "¿Recuerdas tu contraseña?",
+        "sign_in_link": "Iniciar sesión"
+    },
+    "login_page": {
+        "back_to_hemmelig": "Volver a Hemmelig",
+        "welcome_back_title": "Bienvenido de nuevo",
+        "welcome_back_description": "Inicia sesión en tu cuenta de Hemmelig",
+        "email_label": "Correo electrónico",
+        "email_placeholder": "Introduce tu correo electrónico",
+        "password_label": "Contraseña",
+        "password_placeholder": "Introduce tu contraseña",
+        "forgot_password_link": "¿Olvidaste tu contraseña?",
+        "signing_in_button": "Iniciando sesión...",
+        "sign_in_button": "Iniciar sesión",
+        "or_continue_with": "O continuar con",
+        "continue_with_github": "Continuar con GitHub",
+        "no_account_question": "¿No tienes una cuenta?",
+        "sign_up_link": "Registrarse"
+    },
+    "register_page": {
+        "back_to_hemmelig": "Volver a Hemmelig",
+        "create_account_title": "Crear cuenta",
+        "create_account_description": "Únete a Hemmelig para compartir secretos de forma segura",
+        "username_label": "Nombre de usuario",
+        "username_placeholder": "Elige un nombre de usuario",
+        "email_label": "Correo electrónico",
+        "email_placeholder": "Introduce tu correo electrónico",
+        "password_label": "Contraseña",
+        "password_placeholder": "Crea una contraseña",
+        "password_strength_label": "Fuerza de la contraseña",
+        "password_strength_levels": {
+            "very_weak": "Muy débil",
+            "weak": "Débil",
+            "fair": "Regular",
+            "good": "Buena",
+            "strong": "Fuerte"
+        },
+        "confirm_password_label": "Confirma la contraseña",
+        "confirm_password_placeholder": "Confirma tu contraseña",
+        "passwords_match": "Las contraseñas coinciden",
+        "passwords_do_not_match": "Las contraseñas no coinciden",
+        "password_mismatch_alert": "Las contraseñas no coinciden",
+        "creating_account_button": "Creando cuenta...",
+        "create_account_button": "Crear cuenta",
+        "or_continue_with": "O continuar con",
+        "continue_with_github": "Continuar con GitHub",
+        "already_have_account_question": "¿Ya tienes una cuenta?",
+        "sign_in_link": "Iniciar sesión"
+    },
+    "secret_page": {
+        "password_label": "Contraseña",
+        "password_placeholder": "Introduce la contraseña para ver el secreto",
+        "view_secret_button": "Ver secreto",
+        "views_remaining_tooltip": "Vistas restantes: {{count}}",
+        "loading_message": "Cargando..."
+    },
+    "expiration": {
+        "7_days": "7 Días",
+        "3_days": "3 Días",
+        "1_day": "1 Día",
+        "12_hours": "12 Horas",
+        "4_hours": "4 Horas",
+        "1_hour": "1 Hora",
+        "30_minutes": "30 Minutos",
+        "5_minutes": "5 Minutos"
+    },
+    "error_display": {
+        "clear_errors_button_title": "Borrar errores"
     }
 }

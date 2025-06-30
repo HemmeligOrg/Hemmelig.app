@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus } from 'lucide-react';
 import Logo from './Logo.tsx';
+import { useTranslation } from 'react-i18next';
 
 export function Header() {
+    const { t } = useTranslation();
     return (
         <header className="pt-6 sm:pt-12 pb-6 sm:pb-8">
             <div className="container mx-auto px-4">
@@ -19,14 +21,14 @@ export function Header() {
                             className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 text-slate-300 hover:text-white transition-colors duration-300 text-sm sm:text-base"
                         >
                             <LogIn className="w-4 h-4" />
-                            <span className="hidden xs:inline">Sign In</span>
+                            <span className="hidden xs:inline">{t('header.sign_in')}</span>
                         </Link>
                         <Link
                             to="/register"
                             className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                         >
                             <UserPlus className="w-4 h-4" />
-                            <span className="hidden xs:inline">Sign Up</span>
+                            <span className="hidden xs:inline">{t('header.sign_up')}</span>
                         </Link>
                     </div>
                 </div>
@@ -45,8 +47,8 @@ export function Header() {
                     </h1>
 
                     <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
-                        Share secrets securely with encrypted messages that automatically
-                        <span className="text-teal-400 font-medium"> self-destruct</span> after being read.
+                        {t('header.hero_text_part1')}
+                        <span className="text-teal-400 font-medium">{t('header.hero_text_part2')}</span>{t('header.hero_text_part3')}
                     </p>
                 </div>
             </div>

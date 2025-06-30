@@ -4,9 +4,11 @@ import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
 import { ExpirationSelect } from './ExpirationSelect';
 import { useSecretStore } from '../store/secretStore';
+import { useTranslation } from 'react-i18next';
 
 export function SecuritySettings() {
     const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
+    const { t } = useTranslation();
 
     const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!password);
 
@@ -35,8 +37,8 @@ export function SecuritySettings() {
                     <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                    <h2 className="text-lg sm:text-xl font-semibold text-white">Security</h2>
-                    <p className="text-slate-400 text-xs sm:text-sm">Configure security settings for your secret</p>
+                    <h2 className="text-lg sm:text-xl font-semibold text-white">{t('security_settings.security_title')}</h2>
+                    <p className="text-slate-400 text-xs sm:text-sm">{t('security_settings.security_description')}</p>
                 </div>
             </div>
 
@@ -47,9 +49,9 @@ export function SecuritySettings() {
                         <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-teal-400" />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <h3 className="font-medium text-white text-sm sm:text-base">Private</h3>
+                        <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.private_title')}</h3>
                         <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                            Private secrets are encrypted and can only be viewed with the decryption key, and/or password.
+                            {t('security_settings.private_description')}
                         </p>
                     </div>
                 </div>
@@ -60,7 +62,7 @@ export function SecuritySettings() {
                     <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                             <Clock className="w-4 h-4 text-slate-400" />
-                            <span className="text-sm font-medium text-slate-300">Expiration</span>
+                            <span className="text-sm font-medium text-slate-300">{t('security_settings.expiration_title')}</span>
                         </div>
                         <ExpirationSelect
                             value={expiresAt}
@@ -68,8 +70,8 @@ export function SecuritySettings() {
                         />
                         <p className="text-xs text-slate-400">
                             {isBurnable
-                                ? "Set when the secret should be destroyed"
-                                : "Set how long the secret should be available"
+                                ? t('security_settings.expiration_burn_after_time_description')
+                                : t('security_settings.expiration_default_description')
                             }
                         </p>
                     </div>
@@ -79,7 +81,7 @@ export function SecuritySettings() {
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2">
                                 <Eye className="w-4 h-4 text-slate-400" />
-                                <span className="text-sm font-medium text-slate-300">Max views</span>
+                                <span className="text-sm font-medium text-slate-300">{t('security_settings.max_views_title')}</span>
                             </div>
                             <ViewsSlider
                                 value={views}
@@ -95,9 +97,9 @@ export function SecuritySettings() {
                         <div className="flex items-start space-x-3">
                             <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                             <div className="min-w-0 flex-1">
-                                <h3 className="font-medium text-orange-300 text-sm sm:text-base">Burn After Time Mode</h3>
+                                <h3 className="font-medium text-orange-300 text-sm sm:text-base">{t('security_settings.burn_after_time_mode_title')}</h3>
                                 <p className="text-xs sm:text-sm text-orange-200/80 mt-1">
-                                    The secret will be destroyed after the time expires, regardless of how many times it's viewed.
+                                    {t('security_settings.burn_after_time_mode_description')}
                                 </p>
                             </div>
                         </div>
@@ -114,10 +116,10 @@ export function SecuritySettings() {
                                     <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h3 className="font-medium text-white text-sm sm:text-base">Password Protection</h3>
-                                    <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                                        Add an additional layer of security with a password
-                                    </p>
+                                    <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.password_protection_title')}</h3>
+                                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                                    {t('security_settings.password_protection_description')}
+                                </p>
                                 </div>
                             </div>
                             <div className="flex-shrink-0 ml-3">
@@ -134,17 +136,17 @@ export function SecuritySettings() {
                         {isPasswordEnabled && (
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-slate-300">
-                                    Enter Password
+                                    {t('security_settings.enter_password_label')}
                                 </label>
                                 <input
                                     type="text"
                                     value={password || ''}
                                     onChange={(e) => setSecretData({ password: e.target.value })}
-                                    placeholder="Enter a secure password..."
+                                    placeholder={t('security_settings.password_placeholder')}
                                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
                                 />
                                 <p className="text-xs text-slate-400">
-                                    Recipients will need this password to view the secret
+                                    {t('security_settings.password_hint')}
                                 </p>
                             </div>
                         )}
@@ -158,10 +160,10 @@ export function SecuritySettings() {
                                     <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h3 className="font-medium text-white text-sm sm:text-base">Restrict by IP or CIDR</h3>
-                                    <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                                        The CIDR input will allow users to specify IP address ranges that can access the secret.
-                                    </p>
+                                    <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.ip_restriction_title')}</h3>
+                                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                                    {t('security_settings.ip_restriction_description')}
+                                </p>
                                 </div>
                             </div>
                             <div className="flex-shrink-0 ml-3">
@@ -175,17 +177,17 @@ export function SecuritySettings() {
                         {ipRange !== undefined && (
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-slate-300">
-                                    IP Address or CIDR Range
+                                    {t('security_settings.ip_address_cidr_label')}
                                 </label>
                                 <input
                                     type="text"
                                     value={ipRange || ''}
                                     onChange={(e) => setSecretData({ ipRange: e.target.value })}
-                                    placeholder="192.168.1.0/24 or 203.0.113.5"
+                                    placeholder={t('security_settings.ip_address_cidr_placeholder')}
                                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
                                 />
                                 <p className="text-xs text-slate-400">
-                                    Only requests from these IP addresses will be able to access the secret
+                                    {t('security_settings.ip_address_cidr_hint')}
                                 </p>
                             </div>
                         )}
@@ -198,9 +200,9 @@ export function SecuritySettings() {
                                 <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
                             </div>
                             <div className="min-w-0 flex-1">
-                                <h3 className="font-medium text-white text-sm sm:text-base">Burn after time expires</h3>
+                                <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.burn_after_time_title')}</h3>
                                 <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                                    Burn the secret only after the time expires
+                                    {t('security_settings.burn_after_time_description')}
                                 </p>
                             </div>
                         </div>

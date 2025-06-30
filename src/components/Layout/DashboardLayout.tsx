@@ -11,6 +11,7 @@ import {
     X
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -58,7 +59,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
                                 <Link to="/" className="flex items-center space-x-2 text-white">
                                     <Shield className="w-6 h-6" />
-                                    <span className="text-xl font-bold">Hemmelig</span>
+                                    <span className="text-xl font-bold">{t('dashboard_layout.hemmelig')}</span>
                                 </Link>
                                 <button
                                     onClick={() => setIsMobileMenuOpen(false)}
@@ -135,7 +136,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                 </div>
                                 <button className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-slate-400 hover:text-white transition-colors duration-200">
                                     <LogOut className="w-4 h-4" />
-                                    <span className="text-sm">Sign out</span>
+                                    <span className="text-sm">{t('dashboard_layout.sign_out')}</span>
                                 </button>
                             </div>
                         </div>

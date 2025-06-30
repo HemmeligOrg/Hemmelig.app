@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Server,
     Settings,
@@ -16,6 +17,7 @@ import {
 export function InstancePage() {
     const [activeTab, setActiveTab] = useState<'general' | 'security' | 'email' | 'database' | 'system'>('general');
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
 
     const [generalSettings, setGeneralSettings] = useState({
         instanceName: 'Hemmelig Instance',
@@ -79,8 +81,8 @@ export function InstancePage() {
         <div className="p-4 sm:p-6 lg:p-8">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">Instance Settings</h1>
-                <p className="text-slate-400 mt-1">Configure your Hemmelig instance</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('instance_page.title')}</h1>
+                <p className="text-slate-400 mt-1">{t('instance_page.description')}</p>
             </div>
 
             {/* System Status */}
@@ -90,8 +92,8 @@ export function InstancePage() {
                         <CheckCircle className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-white">System Status</h2>
-                        <p className="text-sm text-slate-400">Instance health and performance metrics</p>
+                        <h2 className="text-lg font-semibold text-white">{t('instance_page.system_status.title')}</h2>
+                        <p className="text-sm text-slate-400">{t('instance_page.system_status.description')}</p>
                     </div>
                 </div>
 
@@ -99,7 +101,7 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Version</p>
+                                <p className="text-sm text-slate-400">{t('instance_page.system_status.version')}</p>
                                 <p className="text-lg font-semibold text-white">{systemInfo.version}</p>
                             </div>
                             <Info className="w-5 h-5 text-blue-400" />
@@ -109,7 +111,7 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Uptime</p>
+                                <p className="text-sm text-slate-400">{t('instance_page.system_status.uptime')}</p>
                                 <p className="text-lg font-semibold text-white">{systemInfo.uptime}</p>
                             </div>
                             <Server className="w-5 h-5 text-green-400" />
@@ -119,7 +121,7 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">Memory</p>
+                                <p className="text-sm text-slate-400">{t('instance_page.system_status.memory')}</p>
                                 <p className="text-lg font-semibold text-white">{systemInfo.memoryUsage}</p>
                             </div>
                             <Database className="w-5 h-5 text-yellow-400" />
@@ -129,7 +131,7 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">CPU Usage</p>
+                                <p className="text-sm text-slate-400">{t('instance_page.system_status.cpu_usage')}</p>
                                 <p className="text-lg font-semibold text-white">{systemInfo.cpuUsage}</p>
                             </div>
                             <Settings className="w-5 h-5 text-purple-400" />
@@ -171,8 +173,8 @@ export function InstancePage() {
                                 <Settings className="w-5 h-5 text-blue-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">General Settings</h2>
-                                <p className="text-sm text-slate-400">Basic instance configuration</p>
+                                <h2 className="text-lg font-semibold text-white">{t('instance_page.general_settings.title')}</h2>
+                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.description')}</p>
                             </div>
                         </div>
 
@@ -180,7 +182,7 @@ export function InstancePage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Instance Name
+                                        {t('instance_page.general_settings.instance_name_label')}
                                     </label>
                                     <input
                                         type="text"
@@ -192,7 +194,7 @@ export function InstancePage() {
 
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Max Secrets per User
+                                        {t('instance_page.general_settings.max_secrets_per_user_label')}
                                     </label>
                                     <input
                                         type="number"
@@ -205,7 +207,7 @@ export function InstancePage() {
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">
-                                    Instance Description
+                                    {t('instance_page.general_settings.instance_description_label')}
                                 </label>
                                 <textarea
                                     value={generalSettings.instanceDescription}
@@ -218,8 +220,8 @@ export function InstancePage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
-                                        <h3 className="font-medium text-white">Allow Registration</h3>
-                                        <p className="text-sm text-slate-400">Allow new users to register</p>
+                                        <h3 className="font-medium text-white">{t('instance_page.general_settings.allow_registration_title')}</h3>
+                                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.allow_registration_description')}</p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
@@ -234,8 +236,8 @@ export function InstancePage() {
 
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
-                                        <h3 className="font-medium text-white">Email Verification</h3>
-                                        <p className="text-sm text-slate-400">Require email verification</p>
+                                        <h3 className="font-medium text-white">{t('instance_page.general_settings.email_verification_title')}</h3>
+                                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.email_verification_description')}</p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
@@ -255,7 +257,7 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? 'Saving...' : 'Save Settings'}</span>
+                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
                             </button>
                         </div>
                     </div>
@@ -340,7 +342,7 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? 'Saving...' : 'Save Settings'}</span>
+                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
                             </button>
                         </div>
                     </div>
@@ -417,7 +419,7 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? 'Saving...' : 'Save Settings'}</span>
+                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
                             </button>
                         </div>
                     </div>

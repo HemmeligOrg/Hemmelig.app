@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Logo from '../components/Logo.tsx';
+import { useTranslation } from 'react-i18next';
 
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({ baseURL: "http://localhost:5173" });
 
 export function LoginPage() {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -53,7 +55,7 @@ export function LoginPage() {
                     className="inline-flex items-center space-x-2 text-slate-400 hover:text-teal-400 transition-colors duration-300 mb-8 group"
                 >
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-                    <span>Back to Hemmelig</span>
+                    <span>{t('login_page.back_to_hemmelig')}</span>
                 </Link>
 
                 {/* Header */}
@@ -64,8 +66,8 @@ export function LoginPage() {
                             <Logo className="w-12 h-12 sm:w-12 sm:h-12 fill-white" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-                    <p className="text-slate-400">Sign in to your Hemmelig account</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">{t('login_page.welcome_back_title')}</h1>
+                    <p className="text-slate-400">{t('login_page.welcome_back_description')}</p>
                 </div>
 
                 {/* Login Form */}
@@ -74,7 +76,7 @@ export function LoginPage() {
                         {/* Email Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Email
+                                {t('login_page.email_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -84,7 +86,7 @@ export function LoginPage() {
                                     type="text"
                                     value={formData.email}
                                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                                    placeholder="Enter your email"
+                                    placeholder={t('login_page.email_placeholder')}
                                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -94,7 +96,7 @@ export function LoginPage() {
                         {/* Password Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                Password
+                                {t('login_page.password_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
@@ -104,7 +106,7 @@ export function LoginPage() {
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
                                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                                    placeholder="Enter your password"
+                                    placeholder={t('login_page.password_placeholder')}
                                     className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
@@ -124,7 +126,7 @@ export function LoginPage() {
                                 to="/forgot-password"
                                 className="text-sm text-teal-400 hover:text-teal-300 transition-colors duration-300"
                             >
-                                Forgot your password?
+                                {t('login_page.forgot_password_link')}
                             </Link>
                         </div>
 
@@ -144,10 +146,10 @@ export function LoginPage() {
                             {isLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Signing in...</span>
+                                    <span>{t('login_page.signing_in_button')}</span>
                                 </>
                             ) : (
-                                <span>Sign In</span>
+                                <span>{t('login_page.sign_in_button')}</span>
                             )}
                         </button>
                     </form>
@@ -158,7 +160,7 @@ export function LoginPage() {
                             <div className="w-full border-t border-slate-600/50"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-slate-800/50 text-slate-400">Or continue with</span>
+                            <span className="px-4 bg-slate-800/50 text-slate-400">{t('login_page.or_continue_with')}</span>
                         </div>
                     </div>
 
@@ -168,18 +170,18 @@ export function LoginPage() {
                         className="w-full flex items-center justify-center space-x-3 py-3 px-4 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600/50 hover:border-slate-500/50 rounded-xl text-slate-100 font-medium transition-all duration-300 hover:scale-105"
                     >
                         <Github className="w-5 h-5" />
-                        <span>Continue with GitHub</span>
+                        <span>{t('login_page.continue_with_github')}</span>
                     </button>
 
                     {/* Sign Up Link */}
                     <div className="text-center mt-8 pt-6 border-t border-slate-700/50">
                         <p className="text-slate-400">
-                            Don't have an account?{' '}
+                            {t('login_page.no_account_question')}{' '}
                             <Link
                                 to="/register"
                                 className="text-teal-400 hover:text-teal-300 font-medium transition-colors duration-300"
                             >
-                                Sign up
+                                {t('login_page.sign_up_link')}
                             </Link>
                         </p>
                     </div>

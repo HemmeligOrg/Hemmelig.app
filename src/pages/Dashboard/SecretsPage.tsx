@@ -12,6 +12,7 @@ import {
     Lock
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface Secret {
     id: string;
@@ -26,6 +27,7 @@ interface Secret {
 }
 
 export function SecretsPage() {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'expired'>('all');
 
@@ -112,15 +114,15 @@ export function SecretsPage() {
             <div className="mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white">Your Secrets</h1>
-                        <p className="text-slate-400 mt-1">Manage and monitor your shared secrets</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('secrets_page.title')}</h1>
+                        <p className="text-slate-400 mt-1">{t('secrets_page.description')}</p>
                     </div>
                     <Link
                         to="/"
                         className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 w-fit"
                     >
                         <Plus className="w-4 h-4" />
-                        <span>Create Secret</span>
+                        <span>{t('secrets_page.create_secret_button')}</span>
                     </Link>
                 </div>
             </div>
@@ -132,7 +134,7 @@ export function SecretsPage() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <input
                         type="text"
-                        placeholder="Search secrets..."
+                        placeholder={t('secrets_page.search_placeholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
@@ -147,9 +149,9 @@ export function SecretsPage() {
                         onChange={(e) => setFilterStatus(e.target.value as any)}
                         className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                     >
-                        <option value="all">All Secrets</option>
-                        <option value="active">Active</option>
-                        <option value="expired">Expired</option>
+                        <option value="all">{t('secrets_page.filter.all_secrets')}</option>
+                        <option value="active">{t('secrets_page.filter.active')}</option>
+                        <option value="expired">{t('secrets_page.filter.expired')}</option>
                     </select>
                 </div>
             </div>
@@ -163,7 +165,7 @@ export function SecretsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{secrets.length}</p>
-                            <p className="text-sm text-slate-400">Total Secrets</p>
+                            <p className="text-sm text-slate-400">{t('secrets_page.total_secrets')}</p>
                         </div>
                     </div>
                 </div>
@@ -175,7 +177,7 @@ export function SecretsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{secrets.filter(s => !s.isExpired).length}</p>
-                            <p className="text-sm text-slate-400">Active</p>
+                            <p className="text-sm text-slate-400">{t('secrets_page.active_secrets')}</p>
                         </div>
                     </div>
                 </div>
@@ -187,7 +189,7 @@ export function SecretsPage() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-white">{secrets.filter(s => s.isExpired).length}</p>
-                            <p className="text-sm text-slate-400">Expired</p>
+                            <p className="text-sm text-slate-400">{t('secrets_page.expired_secrets')}</p>
                         </div>
                     </div>
                 </div>
@@ -198,11 +200,11 @@ export function SecretsPage() {
                 {filteredSecrets.length === 0 ? (
                     <div className="p-8 text-center">
                         <Shield className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-white mb-2">No secrets found</h3>
+                        <h3 className="text-lg font-medium text-white mb-2">{t('secrets_page.no_secrets_found_title')}</h3>
                         <p className="text-slate-400 mb-4">
                             {searchTerm || filterStatus !== 'all'
-                                ? 'Try adjusting your search or filter criteria.'
-                                : 'Create your first secret to get started.'
+                                ? t('secrets_page.no_secrets_found_description_filter')
+                                : t('secrets_page.no_secrets_found_description_empty')
                             }
                         </p>
                         {!searchTerm && filterStatus === 'all' && (
@@ -211,7 +213,7 @@ export function SecretsPage() {
                                 className="inline-flex items-center space-x-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300"
                             >
                                 <Plus className="w-4 h-4" />
-                                <span>Create Secret</span>
+                                <span>{t('secrets_page.create_secret_button')}</span>
                             </Link>
                         )}
                     </div>
@@ -220,11 +222,11 @@ export function SecretsPage() {
                         <table className="w-full">
                             <thead className="bg-slate-700/30 border-b border-slate-600/50">
                                 <tr>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">Secret</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden sm:table-cell">Created</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">Status</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">Views</th>
-                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">Actions</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('secrets_page.table.secret_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden sm:table-cell">{t('secrets_page.table.created_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('secrets_page.table.status_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden lg:table-cell">{t('secrets_page.table.views_header')}</th>
+                                    <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('secrets_page.table.actions_header')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-600/30">
@@ -239,7 +241,7 @@ export function SecretsPage() {
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="text-sm font-medium text-white truncate">
-                                                        {secret.title || 'Untitled Secret'}
+                                                        {secret.title || t('secrets_page.table.untitled_secret')}
                                                     </p>
                                                     <div className="flex items-center space-x-2 mt-1">
                                                         {secret.isPasswordProtected && (
@@ -261,10 +263,10 @@ export function SecretsPage() {
                                                     ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                                                     : 'bg-green-500/20 text-green-400 border border-green-500/30'
                                                     }`}>
-                                                    {secret.isExpired ? 'Expired' : 'Active'}
+                                                    {secret.isExpired ? t('secrets_page.table.expired_status') : t('secrets_page.table.active_status')}
                                                 </span>
                                                 <p className="text-xs text-slate-400">
-                                                    {getTimeRemaining(secret.expiresAt)}
+                                                    {getTimeRemaining(secret.expiresAt) === 'Never expires' ? t('secrets_page.table.never_expires') : getTimeRemaining(secret.expiresAt) === 'Expired' ? t('secrets_page.table.expired_time') : getTimeRemaining(secret.expiresAt)}
                                                 </p>
                                             </div>
                                         </td>
@@ -279,7 +281,7 @@ export function SecretsPage() {
                                                 <button
                                                     onClick={() => copyToClipboard(secret.url)}
                                                     className="p-2 text-slate-400 hover:text-teal-400 transition-colors duration-200"
-                                                    title="Copy URL"
+                                                    title={t('secrets_page.table.copy_url_tooltip')}
                                                 >
                                                     <Copy className="w-4 h-4" />
                                                 </button>
@@ -288,14 +290,14 @@ export function SecretsPage() {
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="p-2 text-slate-400 hover:text-blue-400 transition-colors duration-200"
-                                                    title="Open Secret"
+                                                    title={t('secrets_page.table.open_secret_tooltip')}
                                                 >
                                                     <ExternalLink className="w-4 h-4" />
                                                 </a>
                                                 <button
                                                     onClick={() => deleteSecret(secret.id)}
                                                     className="p-2 text-slate-400 hover:text-red-400 transition-colors duration-200"
-                                                    title="Delete Secret"
+                                                    title={t('secrets_page.table.delete_secret_tooltip')}
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>

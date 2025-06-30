@@ -6,8 +6,10 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Copy, Check, Loader2, Eye, Hash } from 'lucide-react';
 import Editor from '../components/Editor';
+import { useTranslation } from 'react-i18next';
 
 export function SecretPage() {
+    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const initialData = useLoaderData();
@@ -87,7 +89,7 @@ export function SecretPage() {
                             </div>
                         )}
                         {viewsRemaining !== null && (
-                            <div className="relative inline-block" title={`Views remaining: ${viewsRemaining}`}>
+                            <div className="relative inline-block" title={t('secret_page.views_remaining_tooltip', { count: viewsRemaining })}>
                                 <div className="flex items-center text-slate-400">
                                     <Eye className="h-5 w-5 mr-2" />
                                     <span>{viewsRemaining}</span>
@@ -99,24 +101,25 @@ export function SecretPage() {
                     {isLoading && (
                         <div className="flex justify-center items-center text-slate-400">
                             <Loader2 className="h-8 w-8 animate-spin" />
+                            <span>{t('secret_page.loading_message')}</span>
                         </div>
                     )}
 
                     {!isLoading && !showSecretContent && isPasswordProtected && (
                         <div className="space-y-4">
-                            <label className="block text-sm font-medium text-slate-300">Password</label>
+                            <label className="block text-sm font-medium text-slate-300">{t('secret_page.password_label')}</label>
                             <input
                                 type="password"
                                 value={passwordInput}
                                 onChange={(e) => setPasswordInput(e.target.value)}
                                 className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
-                                placeholder="Enter password to view secret"
+                                placeholder={t('secret_page.password_placeholder')}
                             />
                             <button
                                 onClick={handleViewSecret}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg"
                             >
-                                View Secret
+                                {t('secret_page.view_secret_button')}
                             </button>
                         </div>
                     )}
