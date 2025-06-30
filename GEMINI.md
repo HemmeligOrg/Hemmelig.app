@@ -28,9 +28,9 @@ This project is built with a specific stack. Adherence to its conventions is cri
 ### Frontend (React & Vite)
 
 - **Component Structure:** Follow the existing component patterns in `src/components` and `src/pages`. Use functional components with hooks.
-- **State Management:** Utilize the existing state management patterns.
+- **State Management:** Utilize the existing state management patterns, including `src/store/errorStore.ts` for global error state management.
 - **Styling:** Apply styles using Tailwind CSS classes, following the conventions in existing components and `tailwind.config.js`.
-- **API Interaction:** The frontend communicates with the backend via Hono's RPC client. When making changes that affect the API, ensure the frontend client code is correctly aligned with the backend route definitions.
+- **API Interaction:** The frontend communicates with the backend via Hono's RPC client. Centralized error handling is implemented in `src/lib/api.ts`, and errors are displayed using `src/components/ErrorDisplay.tsx`. When making changes that affect the API, ensure the frontend client code is correctly aligned with the backend route definitions.
 
 ### Backend (Hono RPC)
 
