@@ -1,17 +1,26 @@
-import React from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
-import { Copy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { QRCodeCanvas } from 'qrcode.react'
+import { Copy, Check } from 'lucide-react';
 
 interface SecretSettingsProps {
     secretId: string;
-    decryptionKey: string;
+    decryptionKey?: string;
 }
 
 export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey }) => {
-    const secretUrl = `${window.location.origin}/secret/${secretId}${decryptionKey ? `#decryptionKey=${decryptionKey}` : ''}`
+    const secretUrl = `${window.location.origin}/secret/${secretId}${decryptionKey ? `#decryptionKey=${decryptionKey}` : ''}`;
+    const [copied, setCopied] = useState<string | null>(null);
 
-    const copyToClipboard = (text: string) => {
+    useEffect(() => {
+        if (copied) {
+            const timer = setTimeout(() => setCopied(null), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [copied]);
+
+    const copyToClipboard = (text: string, field: string) => {
         navigator.clipboard.writeText(text);
+        setCopied(field);
     };
 
     return (
@@ -33,8 +42,8 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
                             value={secretUrl}
                             className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
                         />
-                        <button onClick={() => copyToClipboard(secretUrl)} className="absolute inset-y-0 right-0 flex items-center pr-3">
-                            <Copy className="h-5 w-5 text-slate-400 hover:text-white" />
+                        <button onClick={() => copyToClipboard(secretUrl, 'url')} className="absolute inset-y-0 right-0 flex items-center pr-3">
+                            {copied === 'url' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
                         </button>
                     </div>
                 </div>
@@ -47,15 +56,15 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
                             value={decryptionKey}
                             className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
                         />
-                        <button onClick={() => copyToClipboard(decryptionKey)} className="absolute inset-y-0 right-0 flex items-center pr-3">
-                            <Copy className="h-5 w-5 text-slate-400 hover:text-white" />
+                        <button onClick={() => copyToClipboard(decryptionKey, 'key')} className="absolute inset-y-0 right-0 flex items-center pr-3">
+                            {copied === 'key' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
                         </button>
                     </div>
                 </div>
             </div>
 
             <div className="mt-6 flex justify-end space-x-4">
-                <button onClick={() => copyToClipboard(secretUrl)} className="px-4 py-2 bg-teal-500 text-white rounded-lg">Copy URL</button>
+                <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">Copy URL</button>
                 <button className="px-4 py-2 bg-red-500 text-white rounded-lg">Burn Secret</button>
             </div>
         </div>

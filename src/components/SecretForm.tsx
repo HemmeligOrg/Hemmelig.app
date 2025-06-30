@@ -52,7 +52,7 @@ export function SecretForm({ onSecretCreated }: SecretFormProps) {
             const data = await response.json()
 
             if (data?.id) {
-                onSecretCreated(data.id, formData.password ? encryptionKey : '');
+                onSecretCreated(data.id, formData.password === '' ? encryptionKey : '');
             }
 
             // Reset form
