@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useLoaderData } from 'react-router-dom';
 import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey } from '../lib/nacl';
 import { Header } from '../components/Header';
@@ -9,9 +9,10 @@ import { Copy, Check, Loader2, Eye } from 'lucide-react';
 export function SecretPage() {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
+    const initialData = useLoaderData();
     const [secretContent, setSecretContent] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState<boolean>(false);
     const [passwordInput, setPasswordInput] = useState<string>('');
@@ -22,37 +23,15 @@ export function SecretPage() {
     const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
 
     useEffect(() => {
-        const checkSecretStatus = async () => {
-            if (!id) {
-                setError('Secret ID is missing.');
-                setIsLoading(false);
-                return;
+        if (initialData) {
+            setIsPasswordProtected(initialData.isPasswordProtected);
+            setViewsRemaining(initialData.views);
+
+            if (!initialData.isPasswordProtected) {
+                fetchSecretContent(''); // Fetch immediately if no password is required
             }
-
-            try {
-                const response = await api.secrets[':id'].check.$get({ param: { id } });
-                const data = await response.json();
-
-                if (response.status === 200) {
-                    setIsPasswordProtected(data.isPasswordProtected);
-                    setViewsRemaining(data.views);
-
-                    if (!data.isPasswordProtected) {
-                        await fetchSecretContent(''); // Fetch immediately if no password is required
-                    }
-                } else {
-                    setError(data.message || 'Failed to check secret status.');
-                }
-            } catch (err: any) {
-                console.error('Error checking secret status:', err);
-                setError('An error occurred while checking secret status.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        checkSecretStatus();
-    }, [id, decryptionKey]);
+        }
+    }, [initialData]);
 
     const fetchSecretContent = async (password: string) => {
         setIsLoading(true);
