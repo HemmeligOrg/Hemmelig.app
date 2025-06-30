@@ -4,7 +4,8 @@ import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey } from '../lib/nacl';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { Copy, Check, Loader2, Eye } from 'lucide-react';
+import { Copy, Check, Loader2, Eye, Hash } from 'lucide-react';
+import Editor from '../components/Editor';
 
 export function SecretPage() {
     const { id } = useParams<{ id: string }>();
@@ -84,15 +85,22 @@ export function SecretPage() {
             <Header />
             <main className="container mx-auto px-4 py-8 max-w-4xl">
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
-                    {title && <h2 className="text-2xl font-bold text-white mb-4">Title: {title}</h2>}
-                    {viewsRemaining !== null && (
-                        <div className="relative inline-block" title={`Views remaining: ${viewsRemaining}`}>
-                            <div className="flex items-center text-slate-400 mb-4">
-                                <Eye className="h-5 w-5 mr-2" />
-                                <span>{viewsRemaining}</span>
+                    <div className="flex justify-between items-center mb-4">
+                        {title && (
+                            <div className="flex items-center text-2xl font-bold text-white">
+                                <Hash className="h-6 w-6 mr-2 text-slate-400" />
+                                <span>{title}</span>
                             </div>
-                        </div>
-                    )}
+                        )}
+                        {viewsRemaining !== null && (
+                            <div className="relative inline-block" title={`Views remaining: ${viewsRemaining}`}>
+                                <div className="flex items-center text-slate-400">
+                                    <Eye className="h-5 w-5 mr-2" />
+                                    <span>{viewsRemaining}</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     {error && (
                         <div className="bg-red-900/50 border border-red-600/50 text-red-300 p-4 rounded-xl mb-6 text-center shadow-lg">
@@ -127,22 +135,7 @@ export function SecretPage() {
                     )}
 
                     {showSecretContent && (
-                        <>
-                            <h2 className="text-2xl font-bold text-white mb-4">Your Secret</h2>
-                            <div className="relative">
-                                <textarea
-                                    readOnly
-                                    value={secretContent || ''}
-                                    className="w-full h-96 mt-1 p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none resize-none"
-                                />
-                                <button
-                                    onClick={copyToClipboard}
-                                    className="absolute top-4 right-4 flex items-center p-2 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 transition-colors"
-                                >
-                                    {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
-                                </button>
-                            </div>
-                        </>
+                        <Editor value={secretContent || ''} editable={false} />
                     )}
                 </div>
             </main>
