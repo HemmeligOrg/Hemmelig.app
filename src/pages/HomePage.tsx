@@ -17,12 +17,18 @@ export function HomePage() {
         console.log(password)
     };
 
+    const handleReset = () => {
+        setSecretId(null);
+        setDecryptionKey(null);
+        setPassword('');
+    };
+
     return (
         <>
             <Header />
             <main className="container mx-auto px-4 py-8 max-w-4xl">
                 {!secretId && <SecretForm onSecretCreated={handleSecretCreated} />}
-                {secretId && <SecretSettings secretId={secretId} decryptionKey={decryptionKey} password={password} />}
+                {secretId && <SecretSettings secretId={secretId} decryptionKey={decryptionKey} password={password} onReset={handleReset} />}
             </main>
             <Footer />
         </>

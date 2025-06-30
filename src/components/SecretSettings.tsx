@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react'
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Plus } from 'lucide-react';
+import { api } from '../lib/api';
 
 interface SecretSettingsProps {
     secretId: string;
     decryptionKey?: string;
     password?: string;
+    onReset: () => void;
 }
 
-export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey, password }) => {
+export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryptionKey, password, onReset }) => {
     const secretUrl = `${window.location.origin}/secret/${secretId}${decryptionKey ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -22,6 +24,16 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
     const copyToClipboard = (text: string, field: string) => {
         navigator.clipboard.writeText(text);
         setCopied(field);
+    };
+
+    const handleBurnSecret = async () => {
+        try {
+            await api.secrets[':id'].$delete({ param: { id: secretId } });
+            onReset();
+        } catch (error) {
+            console.error("Failed to burn secret:", error);
+            alert("Failed to burn secret. Please try again.");
+        }
     };
 
     return (
@@ -82,9 +94,18 @@ export const SecretSettings: React.FC<SecretSettingsProps> = ({ secretId, decryp
                 )}
             </div>
 
-            <div className="mt-6 flex justify-end space-x-4">
-                <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">Copy URL</button>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-lg">Burn Secret</button>
+            <div className="mt-8 flex items-center justify-between">
+                <button
+                    onClick={onReset}
+                    className="inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                    <Plus className="h-5 w-5" />
+                    Create New Secret
+                </button>
+                <div className="flex space-x-4">
+                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">Copy URL</button>
+                    <button onClick={handleBurnSecret} className="px-4 py-2 bg-red-500 text-white rounded-lg">Burn Secret</button>
+                </div>
             </div>
         </div>
     );
