@@ -4,7 +4,7 @@ import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey } from '../lib/nacl';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Loader2, Eye } from 'lucide-react';
 
 export function SecretPage() {
     const { id } = useParams<{ id: string }>();
@@ -68,6 +68,9 @@ export function SecretPage() {
                 setSecretContent(decryptedSecret);
                 setTitle(decryptedTitle);
                 setShowSecretContent(true);
+                setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
+            } else if (response.status === 401) {
+                setError('You are not authorized to view this secret.');
             } else {
                 setError(data.message || 'Failed to retrieve secret.');
             }
@@ -97,30 +100,6 @@ export function SecretPage() {
         fetchSecretContent(passwordInput);
     };
 
-    if (isLoading) {
-        return (
-            <>
-                <Header />
-                <main className="container mx-auto px-4 py-8 max-w-4xl text-white text-center">
-                    <p>Loading secret...</p>
-                </main>
-                <Footer />
-            </>
-        );
-    }
-
-    if (error) {
-        return (
-            <>
-                <Header />
-                <main className="container mx-auto px-4 py-8 max-w-4xl text-white text-center">
-                    <p className="text-red-500">Error: {error}</p>
-                </main>
-                <Footer />
-            </>
-        );
-    }
-
     return (
         <>
             <Header />
@@ -128,10 +107,28 @@ export function SecretPage() {
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
                     {title && <h2 className="text-2xl font-bold text-white mb-4">Title: {title}</h2>}
                     {viewsRemaining !== null && (
-                        <p className="text-slate-400 mb-4">Views remaining: {viewsRemaining}</p>
+                        <div className="relative inline-block" title={`Views remaining: ${viewsRemaining}`}>
+                            <div className="flex items-center text-slate-400 mb-4">
+                                <Eye className="h-5 w-5 mr-2" />
+                                <span>{viewsRemaining}</span>
+                            </div>
+                        </div>
                     )}
 
-                    {!showSecretContent && isPasswordProtected && (
+                    {error && (
+                        <div className="bg-red-900/50 border border-red-600/50 text-red-300 p-4 rounded-xl mb-6 text-center shadow-lg">
+                            <p className="font-semibold text-lg">Error</p>
+                            <p className="text-sm mt-1">{error}</p>
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div className="flex justify-center items-center text-slate-400">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                        </div>
+                    )}
+
+                    {!isLoading && !showSecretContent && isPasswordProtected && (
                         <div className="space-y-4">
                             <label className="block text-sm font-medium text-slate-300">Password</label>
                             <input
