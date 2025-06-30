@@ -15,7 +15,6 @@ import { ipRestriction } from '../middlewares/ip-restriction';
 
 const app = new Hono()
     // GET /secrets - Get all secrets
-    // GET /secrets - Get all secrets
     .get('/', zValidator('query', secretsQuerySchema), async c => {
         // TODO: Use this GET request to retrieve all secrets for a user from the admin panel
         try {
@@ -123,6 +122,39 @@ const app = new Hono()
             });
         }
     })
+    .get('/:id/check', zValidator('param', secretsIdParamSchema), ipRestriction, async c => {
+        try {
+            const { id } = c.req.valid('param');
+
+            const item = await prisma.secrets.findUnique({
+                where: { id },
+                select: {
+                    id: true,
+                    views: true,
+                    title: true,
+                    password: true,
+                }
+            });
+
+            if (!item) {
+                c.status(404);
+                return c.json({ error: 'Secret not found' });
+            }
+
+            return c.json({
+                views: item.views,
+                title: item.title,
+                isPasswordProtected: !!item.password,
+            });
+        } catch (error: unknown) {
+            console.error(`Failed to check secret ${c.req.param('id')}:`, error);
+            return c.json({
+                error: 'Failed to check secret',
+                details:
+                    error instanceof Error ? error.message : 'An unknown error occurred',
+            });
+        }
+    })
     // POST /secrets - Create a new Secrets
     .post('/', zValidator('json', createSecretsSchema), async c => {
         try {
@@ -167,7 +199,6 @@ const app = new Hono()
     })
     // DELETE /secrets/:id - Delete Secrets by ID
     .delete('/:id', zValidator('param', secretsIdParamSchema), async c => {
-        console.log("slay")
         try {
             // Get validated ID (with cast)
             const { id: validatedIdString } = c.req.valid('param');

@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { SecretPage } from './pages/SecretPage';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { SecretsPage } from './pages/Dashboard/SecretsPage';
 import { AccountPage } from './pages/Dashboard/AccountPage';
@@ -26,6 +27,7 @@ function App() {
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegisterPage />} />
                             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                            <Route path="/secret/:id" element={<SecretPage />} />
 
                             {/* Dashboard Routes */}
                             <Route path="/dashboard" element={
