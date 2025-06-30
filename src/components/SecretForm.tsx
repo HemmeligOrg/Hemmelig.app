@@ -17,7 +17,11 @@ export interface SecretFormData {
     ipRange?: string | null;
 }
 
-export function SecretForm() {
+interface SecretFormProps {
+    onSecretCreated: (id: string, key: string) => void;
+}
+
+export function SecretForm({ onSecretCreated }: SecretFormProps) {
     const [formData, setFormData] = useState<SecretFormData>({
         secret: '',
         title: '',
@@ -45,6 +49,11 @@ export function SecretForm() {
 
         try {
             const response = await api.secrets.$post({ json: dataToSend });
+            const data = await response.json()
+
+            if (data?.id) {
+                onSecretCreated(data.id, formData.password ? encryptionKey : '');
+            }
 
             // Reset form
             setFormData({
