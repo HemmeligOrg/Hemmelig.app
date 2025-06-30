@@ -29,7 +29,7 @@ export function ViewsSlider({ value, onChange }: ViewsSliderProps) {
             </div>
             <div className="text-center">
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-teal-500/20 text-teal-400 border border-teal-500/30">
-                    {value} {t('views_slider.views_label', { count: value })}
+                    {value} {t('views_slider.views_label')}
                 </span>
             </div>
         </div>
