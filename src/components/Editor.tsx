@@ -489,7 +489,7 @@ const MenuBar: FC = () => {
                 <div
                     className={`${menuOpen ? 'block' : 'hidden'} sm:block p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30`}
                 >
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:flex-wrap">
+                    <div className="flex flex-col justify-center sm:flex-row gap-2 sm:gap-0 sm:flex-wrap">
                         <div className={groupClass}>
                             <Tooltip text={t('tooltips.bold')}>
                                 <button
@@ -668,34 +668,6 @@ const MenuBar: FC = () => {
                                     }
                                 >
                                     <IconBrandCodesandbox
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                        </div>
-
-                        <div className="hidden sm:block w-px h-8 bg-slate-600 mx-2"></div>
-                        <div className="block sm:hidden w-full h-px bg-slate-600 my-1"></div>
-
-                        <div className={groupClass}>
-                            <Tooltip text={t('tooltips.undo')}>
-                                <button
-                                    onClick={() => editor.chain().focus().undo().run()}
-                                    disabled={!editor.can().chain().focus().undo().run()}
-                                    className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
-                                >
-                                    <IconArrowBackUp size={18} stroke={1.5} className="text-slate-300 mx-auto" />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('tooltips.redo')}>
-                                <button
-                                    onClick={() => editor.chain().focus().redo().run()}
-                                    disabled={!editor.can().chain().focus().redo().run()}
-                                    className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
-                                >
-                                    <IconArrowForwardUp
                                         size={18}
                                         stroke={1.5}
                                         className="text-slate-300 mx-auto"
