@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     User,
@@ -11,21 +12,19 @@ import {
     Trash2,
     AlertTriangle
 } from 'lucide-react';
+import { api } from '../../lib/api';
+import { useAccountStore } from '../../store/accountStore';
 
 export function AccountPage() {
     const { t } = useTranslation();
+    const { profileData, setProfileData } = useAccountStore();
+    const initialData = useLoaderData() as { username: string, email: string };
+
     const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'danger'>('profile');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
-    const [profileData, setProfileData] = useState({
-        username: 'johndoe',
-        email: 'john@example.com',
-        firstName: 'John',
-        lastName: 'Doe'
-    });
 
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -33,12 +32,30 @@ export function AccountPage() {
         confirmPassword: ''
     });
 
+    useEffect(() => {
+        setProfileData(initialData);
+    }, [initialData, setProfileData]);
+
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setProfileData({ ...profileData, [name]: value });
+    };
+
     const handleProfileSave = async () => {
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Profile updated:', profileData);
-        setIsLoading(false);
+        try {
+            const res = await api.account.$put({ json: profileData });
+            if (res.ok) {
+                const updatedData = await res.json();
+                setProfileData(updatedData);
+            } else {
+                console.error("Failed to update profile");
+            }
+        } catch (error) {
+            console.error("An error occurred", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handlePasswordChange = async () => {
@@ -86,8 +103,8 @@ export function AccountPage() {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id as any)}
                                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${activeTab === tab.id
-                                            ? 'border-teal-500 text-teal-400'
-                                            : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                                        ? 'border-teal-500 text-teal-400'
+                                        : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
                                         }`}
                                 >
                                     <Icon className="w-4 h-4" />
@@ -114,39 +131,15 @@ export function AccountPage() {
                         </div>
 
                         <div className="space-y-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        {t('account_page.profile_info.first_name_label')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={profileData.firstName}
-                                        onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        {t('account_page.profile_info.last_name_label')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={profileData.lastName}
-                                        onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
-                                </div>
-                            </div>
-
                             <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">
                                     {t('account_page.profile_info.username_label')}
                                 </label>
                                 <input
                                     type="text"
+                                    name="username"
                                     value={profileData.username}
-                                    onChange={(e) => setProfileData(prev => ({ ...prev, username: e.target.value }))}
+                                    onChange={handleProfileChange}
                                     className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                 />
                             </div>
@@ -159,8 +152,9 @@ export function AccountPage() {
                                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                                     <input
                                         type="email"
+                                        name="email"
                                         value={profileData.email}
-                                        onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                                        onChange={handleProfileChange}
                                         className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>

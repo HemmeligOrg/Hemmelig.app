@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -47,6 +47,17 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard/account',
         element: <DashboardLayout><AccountPage /></DashboardLayout>,
+        loader: async () => {
+            try {
+                const res = await api.account.$get();
+                if (res.status === 401) {
+                    return redirect('/login');
+                }
+                return res.json();
+            } catch (error) {
+                return redirect('/login');
+            }
+        }
     },
     {
         path: '/dashboard/analytics',
