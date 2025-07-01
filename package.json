@@ -1,7 +1,7 @@
 {
   "name": "hemmelig-app",
   "version": "7.0.0",
-  "description": "Prisma CRUD API using Hono",
+  "description": "Share secrets securely with encrypted messages that automatically self-destruct after being read.",
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
@@ -18,11 +18,13 @@
     "test": "hurl api/tests"
   },
   "keywords": [
+    "react",
+    "vite",
     "hono",
-    "prisma",
-    "api",
-    "crud",
-    "rest"
+    "secrets",
+    "encryption",
+    "privacy",
+    "security"
   ],
   "dependencies": {
     "@hono/node-server": "^1.14.4",
