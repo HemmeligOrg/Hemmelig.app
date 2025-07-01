@@ -10,7 +10,7 @@ export default defineConfig({
     plugins: [
         react(),
         devServer({
-            entry: 'api/app.ts',
+            entry: 'server.ts',
             exclude: [
                 // Exclude all paths that don't start with /api
                 /^(?!\/api).*/,
@@ -26,4 +26,5 @@ export default defineConfig({
             '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
         },
     },
+    publicDir: 'public',
 });

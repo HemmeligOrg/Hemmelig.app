@@ -5,11 +5,10 @@ import { secureHeaders } from 'hono/secure-headers';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-import { serveStatic } from "@hono/node-server/serve-static";
+
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
 
-import config from './config';
 import { auth } from "./auth";
 import prisma from './lib/db';
 import routes from './routes';
@@ -21,7 +20,7 @@ const app = new Hono<{
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null
     }
-}>().basePath('/api');
+}>();
 
 // Start the background jobs
 startJobs();
@@ -74,11 +73,7 @@ app.on(["POST", "GET"], `/auth/*`, (c) => {
 // Add the application routes 
 app.route("/", routes);
 
-// Serve static assets from the 'dist' directory
-app.use("/*", serveStatic({ root: "./dist" }));
 
-// SPA fallback: serve index.html for any request that doesn't have a file extension
-app.get("*", serveStatic({ path: "./dist/index.html" }));
 
 // https://hono.dev/docs/guides/rpc#rpc
 export type AppType = typeof routes;
