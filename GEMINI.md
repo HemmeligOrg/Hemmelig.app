@@ -23,7 +23,7 @@ This project is built with a specific stack. Adherence to its conventions is cri
 
 - **No Unsolicited Changes:** Do not refactor, restyle, or optimize code unless specifically asked. If a change is requested for "file A," do not touch "file B" without permission.
 - **Dependency Management:** Do not add, remove, or update any dependencies in `package.json` unless explicitly instructed to do so.
-- **Tooling:** Use the existing project tools. Run `bun install`, `bun dev`, and `bun test` as needed.
+- **Tooling:** Use the existing project tools. Run `bun install` and `bun test` as needed. Do not start the development server (`bun dev`) for verification, as the user will handle this.
 
 ### Frontend (React & Vite)
 
