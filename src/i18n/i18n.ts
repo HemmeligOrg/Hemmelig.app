@@ -7,6 +7,9 @@ import esTranslations from './locales/es/es.json';
 i18n.use(initReactI18next).init({
     fallbackLng: 'en',
     lng: 'en', // default language
+    detection: {
+        order: ['navigator'],
+    },
     debug: true,
     interpolation: {
         escapeValue: false, // not needed for react as it escapes by default
