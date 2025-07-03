@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Shield,
     Eye,
@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { api } from '../../lib/api';
+import { Modal } from '../../components/Modal';
 
 interface Secret {
     id: string;
@@ -30,42 +32,24 @@ export function SecretsPage() {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'expired'>('all');
+    const [secrets, setSecrets] = useState<Secret[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [secretToDelete, setSecretToDelete] = useState<string | null>(null);
 
-    // Mock data - in real app this would come from API
-    const [secrets] = useState<Secret[]>([
-        {
-            id: '1',
-            title: 'API Keys for Production',
-            createdAt: new Date('2024-01-15'),
-            expiresAt: new Date('2024-02-15'),
-            views: 3,
-            maxViews: 5,
-            isPasswordProtected: true,
-            isExpired: false,
-            url: 'https://hemmelig.app/s/abc123'
-        },
-        {
-            id: '2',
-            title: 'Database Credentials',
-            createdAt: new Date('2024-01-10'),
-            expiresAt: new Date('2024-01-20'),
-            views: 1,
-            maxViews: 1,
-            isPasswordProtected: false,
-            isExpired: true,
-            url: 'https://hemmelig.app/s/def456'
-        },
-        {
-            id: '3',
-            title: 'Meeting Notes',
-            createdAt: new Date('2024-01-20'),
-            views: 0,
-            maxViews: 10,
-            isPasswordProtected: false,
-            isExpired: false,
-            url: 'https://hemmelig.app/s/ghi789'
-        }
-    ]);
+    useEffect(() => {
+        const fetchSecrets = async () => {
+            const res = await api.secrets.$get();
+            const data = await res.json();
+            setSecrets(data.data.map(secret => ({
+                ...secret,
+                url: `https://hemmelig.app/secret/${secret.id}`,
+                isPasswordProtected: !!secret.password,
+                isExpired: secret.expiresAt ? new Date(secret.expiresAt) < new Date() : false,
+                maxViews: secret.views,
+            })));
+        };
+        fetchSecrets();
+    }, []);
 
     const filteredSecrets = secrets.filter(secret => {
         const matchesSearch = secret.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,13 +64,30 @@ export function SecretsPage() {
         // In real app, show toast notification
     };
 
-    const deleteSecret = (id: string) => {
-        // In real app, show confirmation dialog and delete
-        console.log('Delete secret:', id);
+    const openDeleteModal = (id: string) => {
+        setSecretToDelete(id);
+        setIsModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setSecretToDelete(null);
+        setIsModalOpen(false);
+    };
+
+    const confirmDelete = async () => {
+        if (secretToDelete) {
+            try {
+                await api.secrets[':id'].$delete({ param: { id: secretToDelete } });
+                setSecrets(secrets.filter(secret => secret.id !== secretToDelete));
+                closeDeleteModal();
+            } catch (error) {
+                console.error("Failed to delete secret:", error);
+            }
+        }
     };
 
     const formatDate = (date: Date) => {
-        return date.toLocaleDateString('en-US', {
+        return new Date(date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
@@ -97,7 +98,7 @@ export function SecretsPage() {
         if (!expiresAt) return 'Never expires';
 
         const now = new Date();
-        const diff = expiresAt.getTime() - now.getTime();
+        const diff = new Date(expiresAt).getTime() - now.getTime();
 
         if (diff <= 0) return 'Expired';
 
@@ -295,7 +296,7 @@ export function SecretsPage() {
                                                     <ExternalLink className="w-4 h-4" />
                                                 </a>
                                                 <button
-                                                    onClick={() => deleteSecret(secret.id)}
+                                                    onClick={() => openDeleteModal(secret.id)}
                                                     className="p-2 text-slate-400 hover:text-red-400 transition-colors duration-200"
                                                     title={t('secrets_page.table.delete_secret_tooltip')}
                                                 >
@@ -310,6 +311,16 @@ export function SecretsPage() {
                     </div>
                 )}
             </div>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeDeleteModal}
+                onConfirm={confirmDelete}
+                title={t('secrets_page.table.delete_confirmation_title')}
+                confirmText={t('secrets_page.table.delete_confirm_button')}
+                cancelText={t('secrets_page.table.delete_cancel_button')}
+            >
+                <p>{t('secrets_page.table.delete_confirmation_text')}</p>
+            </Modal>
         </div>
     );
 }

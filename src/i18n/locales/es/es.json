@@ -164,7 +164,8 @@
             "delete_account_bullet3": "Cualquier enlace secreto compartido dejará de ser válido",
             "delete_account_bullet4": "Esta acción no se puede revertir",
             "delete_account_confirm": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
-            "delete_account_button": "Eliminar cuenta"
+            "delete_account_button": "Eliminar cuenta",
+            "deleting_account_button": "Eliminando cuenta..."
         }
     },
     "analytics_page": {

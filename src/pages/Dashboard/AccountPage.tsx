@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     User,
@@ -14,9 +14,11 @@ import {
 } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAccountStore } from '../../store/accountStore';
+import { Modal } from '../../components/Modal';
 
 export function AccountPage() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const { profileData, setProfileData } = useAccountStore();
     const initialData = useLoaderData() as { username: string, email: string };
 
@@ -25,6 +27,7 @@ export function AccountPage() {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -97,9 +100,21 @@ export function AccountPage() {
         }
     };
 
-    const handleDeleteAccount = () => {
-        if (confirm(t('account_page.danger_zone.delete_account_confirm'))) {
-            console.log('Account deletion requested');
+    const handleDeleteAccount = async () => {
+        setIsLoading(true);
+        try {
+            const res = await api.account.$delete();
+            if (res.ok) {
+                // Redirect to login page after successful deletion
+                navigate('/login');
+            } else {
+                console.error("Failed to delete account");
+            }
+        } catch (error) {
+            console.error("An error occurred", error);
+        } finally {
+            setIsLoading(false);
+            setIsDeleteModalOpen(false);
         }
     };
 
@@ -333,17 +348,28 @@ export function AccountPage() {
                                     </div>
                                 </div>
                                 <button
-                                    onClick={handleDeleteAccount}
-                                    className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 hover:scale-105"
+                                    onClick={() => setIsDeleteModalOpen(true)}
+                                    disabled={isLoading}
+                                    className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Trash2 className="w-4 h-4" />
-                                    <span>{t('account_page.danger_zone.delete_account_button')}</span>
+                                    <span>{isLoading ? t('account_page.danger_zone.deleting_account_button') : t('account_page.danger_zone.delete_account_button')}</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteAccount}
+                title={t('account_page.danger_zone.delete_account_title')}
+                confirmText={t('account_page.danger_zone.delete_account_button')}
+                cancelText={t('secrets_page.table.delete_cancel_button')}
+            >
+                <p>{t('account_page.danger_zone.delete_account_confirm')}</p>
+            </Modal>
         </div>
     );
 }

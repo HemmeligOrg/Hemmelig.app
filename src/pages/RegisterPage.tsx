@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Github, Eye, EyeOff, ArrowLeft, Check } from 'lucide-react';
 import Logo from '../components/Logo';
 import { useTranslation } from 'react-i18next';
+import { Modal } from '../components/Modal';
 
 import { createAuthClient } from "better-auth/react";
 
@@ -10,6 +11,7 @@ const authClient = createAuthClient({ baseURL: "http://localhost:5173" });
 
 export function RegisterPage() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -19,12 +21,15 @@ export function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            alert(t('register_page.password_mismatch_alert'));
+            setErrorMessage(t('register_page.password_mismatch_alert'));
+            setIsErrorModalOpen(true);
             return;
         }
 
@@ -39,14 +44,16 @@ export function RegisterPage() {
             });
 
             if (error) {
-                alert(`Registration failed: ${error.message}`);
+                setErrorMessage(`Registration failed: ${error.message}`);
+                setIsErrorModalOpen(true);
             } else {
                 console.log('Registration successful', data);
-                // Handle successful registration, e.g., redirect to login
+                navigate('/dashboard');
             }
         } catch (error) {
             console.error('An error occurred:', error);
-            alert('An unexpected error occurred. Please try again.');
+            setErrorMessage('An unexpected error occurred. Please try again.');
+            setIsErrorModalOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -304,6 +311,16 @@ export function RegisterPage() {
                     </div>
                 </div>
             </div>
+            <Modal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                title="Registration Error"
+                confirmText="OK"
+                onConfirm={() => setIsErrorModalOpen(false)}
+                confirmButtonClass="bg-blue-600 hover:bg-blue-700"
+            >
+                <p>{errorMessage}</p>
+            </Modal>
         </div>
     );
 }

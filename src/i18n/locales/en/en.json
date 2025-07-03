@@ -164,7 +164,8 @@
       "delete_account_bullet3": "Any shared secret links will become invalid",
       "delete_account_bullet4": "This action cannot be reversed",
       "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
-      "delete_account_button": "Delete Account"
+      "delete_account_button": "Delete Account",
+      "deleting_account_button": "Deleting Account..."
     }
   },
   "analytics_page": {
@@ -310,7 +311,11 @@
       "expired_time": "Expired",
       "copy_url_tooltip": "Copy URL",
       "open_secret_tooltip": "Open Secret",
-      "delete_secret_tooltip": "Delete Secret"
+      "delete_secret_tooltip": "Delete Secret",
+      "delete_confirmation_title": "Are you sure?",
+      "delete_confirmation_text": "This action cannot be undone. This will permanently delete the secret.",
+      "delete_confirm_button": "Yes, delete it",
+      "delete_cancel_button": "Cancel"
     }
   },
   "users_page": {

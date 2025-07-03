@@ -92,4 +92,24 @@ app.put('/password', authMiddleware, zValidator('json', updatePasswordSchema), a
     }
 });
 
+// Delete user account
+app.delete('/', authMiddleware, async (c) => {
+    const user = c.get('user');
+
+    if (!user) {
+        return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    try {
+        await prisma.user.delete({
+            where: { id: user.id },
+        });
+
+        return c.json({ message: 'Account deleted successfully' });
+    } catch (error) {
+        console.error('Failed to delete account:', error);
+        return c.json({ error: 'Failed to delete account' }, 500);
+    }
+});
+
 export default app;
