@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Shield, Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Logo from '../components/Logo.tsx';
 import { useTranslation } from 'react-i18next';
+import { Modal } from '../components/Modal';
 
 import { createAuthClient } from "better-auth/react";
 
@@ -10,12 +11,15 @@ const authClient = createAuthClient({ baseURL: "http://localhost:5173" });
 
 export function LoginPage() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,14 +32,15 @@ export function LoginPage() {
             });
 
             if (error) {
-                alert(`Login failed: ${error.message}`);
+                setErrorMessage(`Login failed: ${error.message}`);
+                setIsErrorModalOpen(true);
             } else {
-                console.log('Login successful', data);
-                // Handle successful login, e.g., redirect to dashboard
+                navigate('/dashboard');
             }
         } catch (error) {
             console.error('An error occurred:', error);
-            alert('An unexpected error occurred. Please try again.');
+            setErrorMessage('An unexpected error occurred. Please try again.');
+            setIsErrorModalOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -187,6 +192,16 @@ export function LoginPage() {
                     </div>
                 </div>
             </div>
+            <Modal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                title="Login Error"
+                confirmText="OK"
+                onConfirm={() => setIsErrorModalOpen(false)}
+                confirmButtonClass="bg-blue-600 hover:bg-blue-700"
+            >
+                <p>{errorMessage}</p>
+            </Modal>
         </div>
     );
 }
