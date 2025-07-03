@@ -65,11 +65,21 @@ export function AccountPage() {
         }
 
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Password changed');
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        setIsLoading(false);
+        try {
+            const res = await api.account.password.$put({ json: passwordData });
+            if (res.ok) {
+                alert(t('account_page.security_settings.password_change_success'));
+                setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            } else {
+                const errorData = await res.json();
+                alert(errorData.error || t('account_page.security_settings.password_change_error'));
+            }
+        } catch (error) {
+            console.error("An error occurred", error);
+            alert(t('account_page.security_settings.password_change_error'));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDeleteAccount = () => {
