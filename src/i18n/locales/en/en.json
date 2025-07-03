@@ -150,7 +150,9 @@
       "confirm_new_password_placeholder": "Confirm new password",
       "password_mismatch_alert": "New passwords do not match",
       "changing_password_button": "Changing...",
-      "change_password_button": "Change Password"
+      "change_password_button": "Change Password",
+      "password_change_success": "Password changed successfully!",
+      "password_change_error": "Failed to change password. Please try again."
     },
     "danger_zone": {
       "title": "Danger Zone",

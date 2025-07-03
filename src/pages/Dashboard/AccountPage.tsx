@@ -31,6 +31,8 @@ export function AccountPage() {
         newPassword: '',
         confirmPassword: ''
     });
+    const [passwordErrors, setPasswordErrors] = useState<{ [key: string]: string }>({});
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         setProfileData(initialData);
@@ -59,8 +61,11 @@ export function AccountPage() {
     };
 
     const handlePasswordChange = async () => {
+        setSuccessMessage('');
+        setPasswordErrors({});
+
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            alert(t('account_page.security_settings.password_mismatch_alert'));
+            setPasswordErrors({ confirmPassword: t('account_page.security_settings.password_mismatch_alert') });
             return;
         }
 
@@ -68,15 +73,25 @@ export function AccountPage() {
         try {
             const res = await api.account.password.$put({ json: passwordData });
             if (res.ok) {
-                alert(t('account_page.security_settings.password_change_success'));
+                setSuccessMessage(t('account_page.security_settings.password_change_success'));
                 setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
             } else {
                 const errorData = await res.json();
-                alert(errorData.error || t('account_page.security_settings.password_change_error'));
+                if (errorData.error && errorData.error.issues) {
+                    const newErrors: { [key: string]: string } = {};
+                    errorData.error.issues.forEach((issue: { path: (string | number)[]; message: string; }) => {
+                        if (issue.path && issue.path.length > 0) {
+                            newErrors[issue.path[0]] = issue.message;
+                        }
+                    });
+                    setPasswordErrors(newErrors);
+                } else {
+                    setPasswordErrors({ form: errorData.error || t('account_page.security_settings.password_change_error') });
+                }
             }
         } catch (error) {
             console.error("An error occurred", error);
-            alert(t('account_page.security_settings.password_change_error'));
+            setPasswordErrors({ form: t('account_page.security_settings.password_change_error') });
         } finally {
             setIsLoading(false);
         }
@@ -210,7 +225,7 @@ export function AccountPage() {
                                                 type={showCurrentPassword ? 'text' : 'password'}
                                                 value={passwordData.currentPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                                                className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                                className={`w-full pl-12 pr-12 py-3 bg-slate-700/50 border rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-300 ${passwordErrors.currentPassword ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50' : 'border-slate-600/50 focus:ring-teal-500/50 focus:border-teal-500/50'}`}
                                                 placeholder={t('account_page.security_settings.current_password_placeholder')}
                                             />
                                             <button
@@ -221,6 +236,7 @@ export function AccountPage() {
                                                 {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
+                                        {passwordErrors.currentPassword && <p className="text-sm text-red-400 mt-1">{passwordErrors.currentPassword}</p>}
                                     </div>
 
                                     <div>
@@ -233,7 +249,7 @@ export function AccountPage() {
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 value={passwordData.newPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                                                className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                                className={`w-full pl-12 pr-12 py-3 bg-slate-700/50 border rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-300 ${passwordErrors.newPassword ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50' : 'border-slate-600/50 focus:ring-teal-500/50 focus:border-teal-500/50'}`}
                                                 placeholder={t('account_page.security_settings.new_password_placeholder')}
                                             />
                                             <button
@@ -244,6 +260,7 @@ export function AccountPage() {
                                                 {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
+                                        {passwordErrors.newPassword && <p className="text-sm text-red-400 mt-1">{passwordErrors.newPassword}</p>}
                                     </div>
 
                                     <div>
@@ -256,7 +273,7 @@ export function AccountPage() {
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 value={passwordData.confirmPassword}
                                                 onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                                                className="w-full pl-12 pr-12 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                                className={`w-full pl-12 pr-12 py-3 bg-slate-700/50 border rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-300 ${passwordErrors.confirmPassword ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50' : 'border-slate-600/50 focus:ring-teal-500/50 focus:border-teal-500/50'}`}
                                                 placeholder={t('account_page.security_settings.confirm_new_password_placeholder')}
                                             />
                                             <button
@@ -267,7 +284,11 @@ export function AccountPage() {
                                                 {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
+                                        {passwordErrors.confirmPassword && <p className="text-sm text-red-400 mt-1">{passwordErrors.confirmPassword}</p>}
                                     </div>
+
+                                    {passwordErrors.form && <p className="text-sm text-red-400 my-2">{passwordErrors.form}</p>}
+                                    {successMessage && <p className="text-sm text-teal-400 my-2">{successMessage}</p>}
 
                                     <button
                                         onClick={handlePasswordChange}

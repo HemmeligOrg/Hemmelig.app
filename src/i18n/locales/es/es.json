@@ -150,7 +150,9 @@
             "confirm_new_password_placeholder": "Confirma la nueva contraseña",
             "password_mismatch_alert": "Las nuevas contraseñas no coinciden",
             "changing_password_button": "Cambiando...",
-            "change_password_button": "Cambiar contraseña"
+            "change_password_button": "Cambiar contraseña",
+            "password_change_success": "¡Contraseña cambiada con éxito!",
+            "password_change_error": "Error al cambiar la contraseña. Por favor, inténtalo de nuevo."
         },
         "danger_zone": {
             "title": "Zona de peligro",
