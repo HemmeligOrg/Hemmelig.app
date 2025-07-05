@@ -413,6 +413,10 @@
         "already_have_account_question": "¿Ya tienes una cuenta?",
         "sign_in_link": "Iniciar sesión"
     },
+    "secret_form": {
+        "failed_to_create_secret": "Error al crear el secreto: {{errorMessage}}",
+        "failed_to_upload_file": "Error al subir el archivo: {{fileName}}"
+    },
     "secret_page": {
         "password_label": "Contraseña",
         "password_placeholder": "Introduce la contraseña para ver el secreto",

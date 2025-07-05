@@ -3,10 +3,12 @@ import { nanoid } from 'nanoid';
 import { writeFile, mkdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import prisma from '../lib/db';
+import config from '../config';
 
 const files = new Hono();
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
+const MAX_FILE_SIZE = config.get('file.maxSize');
 
 // Ensure upload directory exists
 const ensureUploadDir = async () => {
@@ -46,6 +48,10 @@ files.post('/', async (c) => {
         return c.json({ error: 'File is required and must be a file.' }, 400);
     }
 
+    if (file.size > MAX_FILE_SIZE) {
+        return c.json({ error: `File size exceeds the limit of ${MAX_FILE_SIZE / 1024 / 1024}MB.` }, 413);
+    }
+
     const id = nanoid();
     const filename = `${id}-${file.name}`;
     const path = join(UPLOAD_DIR, filename);
@@ -69,4 +75,5 @@ files.post('/', async (c) => {
 });
 
 export default files;
+
 

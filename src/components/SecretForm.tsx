@@ -4,6 +4,7 @@ import { FileUpload } from './FileUpload';
 import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
 import Editor from './Editor';
+import { Modal } from './Modal';
 import { api } from '../lib/api'; // Import the RPC client
 import { encrypt, generateEncryptionKey, encryptFile } from '../lib/nacl';
 import { useSecretStore } from '../store/secretStore';
@@ -26,6 +27,8 @@ export function SecretForm() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleFileChange = (files: File[]) => {
         setFiles(files);
@@ -39,10 +42,10 @@ export function SecretForm() {
         const fileIds = [];
         if (files.length > 0) {
             for (const file of files) {
-                const encryptedFile = encryptFile(await file.arrayBuffer(), encryptionKey);
-                const encryptedFileAsFile = new File([encryptedFile], file.name, { type: file.type });
-
                 try {
+                    const encryptedFile = encryptFile(await file.arrayBuffer(), encryptionKey);
+                    const encryptedFileAsFile = new File([encryptedFile], file.name, { type: file.type });
+
                     const response = await api.files.$post({
                         form: {
                             file: encryptedFileAsFile,
@@ -51,9 +54,15 @@ export function SecretForm() {
                     const data = await response.json();
                     if (response.ok) {
                         fileIds.push(data.id);
+                    } else {
+                        throw new Error(data.error || 'File upload failed');
                     }
                 } catch (error) {
+                    setErrorMessage(t('secret_form.failed_to_upload_file', { fileName: file.name }));
+                    setIsErrorModalOpen(true);
+                    setIsLoading(false);
                     console.error('File upload failed:', error);
+                    return;
                 }
             }
         }
@@ -78,10 +87,13 @@ export function SecretForm() {
                 setSecretIdAndKeys(data.id, encryptionKey, password);
             } else {
                 const errorMessage = data?.error?.issues?.[0]?.message || data?.error?.message || 'An unknown error occurred.';
-                alert(t('secret_form.failed_to_create_secret', { errorMessage: errorMessage }));
+                setErrorMessage(t('secret_form.failed_to_create_secret', { errorMessage: errorMessage }));
+                setIsErrorModalOpen(true);
             }
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+            setErrorMessage(t('secret_form.failed_to_create_secret', { errorMessage: errorMessage }));
+            setIsErrorModalOpen(true);
             console.error('Failed to create secret:', errorMessage);
             // Handle error, e.g., show a toast notification
         } finally {
@@ -123,6 +135,15 @@ export function SecretForm() {
                 isLoading={isLoading}
                 disabled={!isFormValid}
             />
+            <Modal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                title="Error"
+                confirmText="OK"
+                onConfirm={() => setIsErrorModalOpen(false)}
+            >
+                <p>{errorMessage}</p>
+            </Modal>
         </div>
     );
 }

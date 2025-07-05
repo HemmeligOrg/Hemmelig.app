@@ -418,6 +418,10 @@
     "already_have_account_question": "Already have an account?",
     "sign_in_link": "Sign in"
   },
+  "secret_form": {
+    "failed_to_create_secret": "Failed to create secret: {{errorMessage}}",
+    "failed_to_upload_file": "Failed to upload file: {{fileName}}"
+  },
   "secret_page": {
     "password_label": "Password",
     "password_placeholder": "Enter password to view secret",

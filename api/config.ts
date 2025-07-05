@@ -4,6 +4,9 @@ const config = {
     server: {
         port: Number(process.env.PORT) || 3000,
     },
+    file: {
+        maxSize: (Number(process.env.MAX_FILE_SIZE_MB) || 10) * 1024 * 1024, // Default 10MB
+    }
 } as const;
 
 /**
