@@ -4,7 +4,8 @@ import {
     Eye,
     Trash2,
     Plus,
-    Lock
+    Lock,
+    File as FileIcon
 } from 'lucide-react';
 import { Link, useLoaderData } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ interface Secret {
     url: string;
     ipRange?: string;
     isBurnable: boolean;
+    fileCount: number;
 }
 
 import { formatDate, getTimeRemaining } from '../../utils/date';
@@ -34,14 +36,10 @@ export function SecretsPage() {
     useEffect(() => {
         if (rawData && rawData.data) {
             setSecrets(rawData.data.map((secret: Secret) => ({
-                id: secret.id,
+                ...secret,
                 createdAt: new Date(secret.createdAt),
                 expiresAt: secret.expiresAt ? new Date(secret.expiresAt) : undefined,
-                views: secret.views,
-                isPasswordProtected: secret.isPasswordProtected,
                 url: `/secret/${secret.id}`,
-                ipRange: secret.ipRange,
-                isBurnable: secret.isBurnable,
             })));
         }
     }, [rawData]);
@@ -129,6 +127,12 @@ export function SecretsPage() {
                                                 <div className="flex items-center space-x-2 mt-1">
                                                     {secret.isPasswordProtected && (
                                                         <Lock className="w-3 h-3 text-slate-400" />
+                                                    )}
+                                                    {secret.fileCount > 0 && (
+                                                        <div className="flex items-center space-x-1">
+                                                            <FileIcon className="w-3 h-3 text-slate-400" />
+                                                            <span className="text-xs text-slate-400">{secret.fileCount}</span>
+                                                        </div>
                                                     )}
                                                     <p className="text-xs text-slate-400 truncate">
                                                         {secret.url}

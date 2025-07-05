@@ -48,6 +48,11 @@ const app = new Hono<{
                         password: true,
                         ipRange: true,
                         isBurnable: true,
+                        _count: {
+                            select: {
+                                files: true,
+                            }
+                        }
                     }
                 }),
                 prisma.secrets.count({ where: whereClause }),
@@ -61,6 +66,7 @@ const app = new Hono<{
                 isPasswordProtected: !!item.password,
                 ipRange: item.ipRange,
                 isBurnable: item.isBurnable,
+                fileCount: item._count.files,
             }));
 
             return c.json({

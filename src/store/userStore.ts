@@ -10,14 +10,12 @@ interface User {
     isAdmin: boolean;
 }
 
-type UserState = {
-  user: User | null;
-  isLoading: boolean;
-  error: Error | null;
-  fetchUser: () => Promise<void>;
-};
-
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<{
+    user: User | null;
+    isLoading: boolean;
+    error: Error | null;
+    fetchUser: () => Promise<void>;
+}>((set) => ({
   user: null,
   isLoading: true,
   error: null,
