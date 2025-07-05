@@ -3,12 +3,10 @@ import {
     Shield,
     Eye,
     Clock,
-    Copy,
     Trash2,
     Plus,
     Search,
     Filter,
-    ExternalLink,
     Lock
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -18,14 +16,12 @@ import { Modal } from '../../components/Modal';
 
 interface Secret {
     id: string;
-    title: string;
     createdAt: Date;
     expiresAt?: Date;
     views: number;
-    maxViews: number;
     isPasswordProtected: boolean;
-    isExpired: boolean;
-    url: string;
+    ipRange?: string;
+    isBurnable: boolean;
 }
 
 export function SecretsPage() {
@@ -40,29 +36,26 @@ export function SecretsPage() {
         const fetchSecrets = async () => {
             const res = await api.secrets.$get();
             const data = await res.json();
-            setSecrets(data.data.map(secret => ({
-                ...secret,
-                url: `https://hemmelig.app/secret/${secret.id}`,
+            setSecrets(data.data.map((secret: any) => ({
+                id: secret.id,
+                createdAt: new Date(secret.createdAt),
+                expiresAt: secret.expiresAt ? new Date(secret.expiresAt) : undefined,
+                views: secret.views,
                 isPasswordProtected: !!secret.password,
                 isExpired: secret.expiresAt ? new Date(secret.expiresAt) < new Date() : false,
-                maxViews: secret.views,
+                url: `/secret/${secret.id}`,
             })));
         };
         fetchSecrets();
     }, []);
 
     const filteredSecrets = secrets.filter(secret => {
-        const matchesSearch = secret.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = secret.id.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesFilter = filterStatus === 'all' ||
             (filterStatus === 'active' && !secret.isExpired) ||
             (filterStatus === 'expired' && secret.isExpired);
         return matchesSearch && matchesFilter;
     });
-
-    const copyToClipboard = (url: string) => {
-        navigator.clipboard.writeText(url);
-        // In real app, show toast notification
-    };
 
     const openDeleteModal = (id: string) => {
         setSecretToDelete(id);
@@ -108,6 +101,8 @@ export function SecretsPage() {
         if (days > 0) return `${days}d ${hours}h`;
         return `${hours}h`;
     };
+
+    const totalViews = secrets.reduce((acc, secret) => acc + secret.views, 0);
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
@@ -177,8 +172,8 @@ export function SecretsPage() {
                             <Eye className="w-5 h-5 text-green-400" />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold text-white">{secrets.filter(s => !s.isExpired).length}</p>
-                            <p className="text-sm text-slate-400">{t('secrets_page.active_secrets')}</p>
+                            <p className="text-2xl font-bold text-white">{totalViews}</p>
+                            <p className="text-sm text-slate-400">{t('secrets_page.table.views_header')}</p>
                         </div>
                     </div>
                 </div>
@@ -242,7 +237,7 @@ export function SecretsPage() {
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="text-sm font-medium text-white truncate">
-                                                        {secret.title || t('secrets_page.table.untitled_secret')}
+                                                        {secret.id}
                                                     </p>
                                                     <div className="flex items-center space-x-2 mt-1">
                                                         {secret.isPasswordProtected && (
@@ -264,7 +259,7 @@ export function SecretsPage() {
                                                     ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                                                     : 'bg-green-500/20 text-green-400 border border-green-500/30'
                                                     }`}>
-                                                    {secret.isExpired ? t('secrets_page.table.expired_status') : t('secrets_page.table.active_status')}
+                                                    {secret.isExpired ? t('secrets_page.table.expired_status') : `${secret.views} ${t('secrets_page.table.views_left')}`}
                                                 </span>
                                                 <p className="text-xs text-slate-400">
                                                     {getTimeRemaining(secret.expiresAt) === 'Never expires' ? t('secrets_page.table.never_expires') : getTimeRemaining(secret.expiresAt) === 'Expired' ? t('secrets_page.table.expired_time') : getTimeRemaining(secret.expiresAt)}
@@ -274,27 +269,11 @@ export function SecretsPage() {
                                         <td className="px-4 sm:px-6 py-4 text-sm text-slate-400 hidden lg:table-cell">
                                             <div className="flex items-center space-x-2">
                                                 <Eye className="w-4 h-4" />
-                                                <span>{secret.views}/{secret.maxViews}</span>
+                                                <span>{secret.views}</span>
                                             </div>
                                         </td>
                                         <td className="px-4 sm:px-6 py-4">
                                             <div className="flex items-center space-x-2">
-                                                <button
-                                                    onClick={() => copyToClipboard(secret.url)}
-                                                    className="p-2 text-slate-400 hover:text-teal-400 transition-colors duration-200"
-                                                    title={t('secrets_page.table.copy_url_tooltip')}
-                                                >
-                                                    <Copy className="w-4 h-4" />
-                                                </button>
-                                                <a
-                                                    href={secret.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="p-2 text-slate-400 hover:text-blue-400 transition-colors duration-200"
-                                                    title={t('secrets_page.table.open_secret_tooltip')}
-                                                >
-                                                    <ExternalLink className="w-4 h-4" />
-                                                </a>
                                                 <button
                                                     onClick={() => openDeleteModal(secret.id)}
                                                     className="p-2 text-slate-400 hover:text-red-400 transition-colors duration-200"

@@ -10,17 +10,28 @@ import {
     secretsQuerySchema,
     processSecretsQueryParams,
 } from '../validations/secrets';
+import { authMiddleware } from '../middlewares/auth';
+import { auth } from '../auth';
 
 import { ipRestriction } from '../middlewares/ip-restriction';
 
-const app = new Hono()
+const app = new Hono<{
+    Variables: {
+        user: typeof auth.$Infer.Session.user | null;
+    }
+}>()
     // GET /secrets - Get all secrets
-    .get('/', zValidator('query', secretsQuerySchema), async c => {
-        // TODO: Use this GET request to retrieve all secrets for a user from the admin panel
+    .get('/', authMiddleware, zValidator('query', secretsQuerySchema), async c => {
+        // TODO: Use this GET request to retrieve all secrets for a user from the adminipanel
         try {
+            const user = c.get('user');
+            if (!user) {
+                return c.json({ error: 'Unauthorized' }, 401);
+            }
+
             const validatedQuery = c.req.valid('query');
             const options = processSecretsQueryParams(validatedQuery);
-            const whereClause = { ...options.where }; // Start with existing where conditions
+            const whereClause = { ...options.where, userId: user.id }; // Start with existing where conditions
 
             // Get total count and items based on processed options (where, skip, take)
             const [items, total] = await Promise.all([
@@ -28,13 +39,32 @@ const app = new Hono()
                     where: whereClause,
                     skip: options.skip,
                     take: options.take,
-                    orderBy: { id: 'desc' },
+                    orderBy: { createdAt: 'desc' },
+                    select: {
+                        id: true,
+                        createdAt: true,
+                        expiresAt: true,
+                        views: true,
+                        password: true,
+                        ipRange: true,
+                        isBurnable: true,
+                    }
                 }),
                 prisma.secrets.count({ where: whereClause }),
             ]);
 
+            const formattedItems = items.map(item => ({
+                id: item.id,
+                createdAt: item.createdAt,
+                expiresAt: item.expiresAt,
+                views: item.views,
+                isPasswordProtected: !!item.password,
+                ipRange: item.ipRange,
+                isBurnable: item.isBurnable,
+            }));
+
             return c.json({
-                data: items,
+                data: formattedItems,
                 meta: {
                     total,
                     skip: options.skip,
@@ -158,6 +188,8 @@ const app = new Hono()
     // POST /secrets - Create a new Secrets
     .post('/', zValidator('json', createSecretsSchema), async c => {
         try {
+            const user = c.get('user');
+
             // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
 
@@ -166,6 +198,7 @@ const app = new Hono()
                 ...rest,
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
+                userId: user?.id || null, // Ensure userId is set if available
             }
 
             // Create secrets using the validated data

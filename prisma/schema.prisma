@@ -19,6 +19,8 @@ model Secrets {
     createdAt  DateTime @default(now()) @map("created_at")
     expiresAt  DateTime @map("expires_at")
     ipRange    String?  @default("") @map("ip_range")
+    userId     String?
+    user       User?    @relation(fields: [userId], references: [id])
 
     @@map("secrets")
 }
@@ -36,6 +38,7 @@ model User {
     accounts      Account[]
 
     displayUsername String?
+    Secrets         Secrets[]
 
     @@unique([email])
     @@map("user")

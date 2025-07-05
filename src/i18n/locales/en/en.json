@@ -309,6 +309,7 @@
       "active_status": "Active",
       "never_expires": "Never expires",
       "expired_time": "Expired",
+      "views_left": "views left",
       "copy_url_tooltip": "Copy URL",
       "open_secret_tooltip": "Open Secret",
       "delete_secret_tooltip": "Delete Secret",
