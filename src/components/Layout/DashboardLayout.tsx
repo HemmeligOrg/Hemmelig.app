@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Logo from '../Logo';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -32,8 +33,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const navigation = [
         { name: 'Secrets', href: '/dashboard', icon: Shield },
         { name: 'Account', href: '/dashboard/account', icon: User },
-        { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
         ...(user.isAdmin ? [
+            { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
             { name: 'Users', href: '/dashboard/users', icon: Users },
             { name: 'Instance', href: '/dashboard/instance', icon: Server },
         ] : []),
@@ -59,7 +60,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         <div className="fixed inset-y-0 left-0 w-64 bg-slate-800/95 backdrop-blur-sm border-r border-slate-700/50">
                             <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
                                 <Link to="/" className="flex items-center space-x-2 text-white">
-                                    <Shield className="w-6 h-6" />
+                                    <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                                     <span className="text-xl font-bold">{t('dashboard_layout.hemmelig')}</span>
                                 </Link>
                                 <button
@@ -99,7 +100,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             {/* Logo */}
                             <div className="flex items-center px-6 py-6 border-b border-slate-700/50">
                                 <Link to="/" className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors duration-300">
-                                    <Shield className="w-6 h-6" />
+                                    <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                                     <span className="text-xl font-bold">Hemmelig</span>
                                 </Link>
                             </div>
@@ -154,7 +155,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                 <Menu className="w-6 h-6" />
                             </button>
                             <Link to="/" className="flex items-center space-x-2 text-white">
-                                <Shield className="w-6 h-6" />
+                                <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                                 <span className="text-xl font-bold">Hemmelig</span>
                             </Link>
                             <div className="w-10" /> {/* Spacer for centering */}
