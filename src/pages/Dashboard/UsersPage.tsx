@@ -32,8 +32,6 @@ export function UsersPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'user'>('all');
     const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'pending'>('all');
-    const [showUserModal, setShowUserModal] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     // Mock data - in real app this would come from API
     const [users] = useState<User[]>([
@@ -172,7 +170,7 @@ export function UsersPage() {
                     <Filter className="w-4 h-4 text-slate-400" />
                     <select
                         value={roleFilter}
-                        onChange={(e) => setRoleFilter(e.target.value as any)}
+                        onChange={(e) => setRoleFilter(e.target.value as 'all' | 'admin' | 'user')}
                         className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                     >
                         <option value="all">{t('users_page.filter.all_roles')}</option>
@@ -184,7 +182,7 @@ export function UsersPage() {
                 {/* Status Filter */}
                 <select
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                    onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'suspended' | 'pending')}
                     className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                 >
                     <option value="all">{t('users_page.filter.all_status')}</option>

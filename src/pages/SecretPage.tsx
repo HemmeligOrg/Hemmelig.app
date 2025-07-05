@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useLocation, useLoaderData } from 'react-router-dom';
 import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey } from '../lib/nacl';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { Copy, Check, Loader2, Eye, Hash } from 'lucide-react';
+import { Loader2, Eye, Hash } from 'lucide-react';
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
 
@@ -12,12 +12,10 @@ export function SecretPage() {
     const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
-    const initialData = useLoaderData();
+    const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number };
     const [secretContent, setSecretContent] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [copied, setCopied] = useState<boolean>(false);
     const [passwordInput, setPasswordInput] = useState<string>('');
     const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
     const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
@@ -25,18 +23,7 @@ export function SecretPage() {
 
     const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
 
-    useEffect(() => {
-        if (initialData) {
-            setIsPasswordProtected(initialData.isPasswordProtected);
-            setViewsRemaining(initialData.views);
-
-            if (!initialData.isPasswordProtected) {
-                fetchSecretContent(''); // Fetch immediately if no password is required
-            }
-        }
-    }, [initialData]);
-
-    const fetchSecretContent = async (password: string) => {
+    const fetchSecretContent = useCallback(async (password: string) => {
         setIsLoading(true);
         try {
             const finalDecryptionKey = password ? generateEncryptionKey(password) : decryptionKey;
@@ -51,26 +38,23 @@ export function SecretPage() {
                 setShowSecretContent(true);
                 setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Error fetching secret:', err);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [decryptionKey, id]);
 
     useEffect(() => {
-        if (copied) {
-            const timer = setTimeout(() => setCopied(false), 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [copied]);
+        if (initialData) {
+            setIsPasswordProtected(initialData.isPasswordProtected);
+            setViewsRemaining(initialData.views);
 
-    const copyToClipboard = () => {
-        if (secretContent) {
-            navigator.clipboard.writeText(secretContent);
-            setCopied(true);
+            if (!initialData.isPasswordProtected) {
+                fetchSecretContent(''); // Fetch immediately if no password is required
+            }
         }
-    };
+    }, [initialData, fetchSecretContent]);
 
     const handleViewSecret = () => {
         fetchSecretContent(passwordInput);

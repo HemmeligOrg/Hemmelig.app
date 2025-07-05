@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Logo from '../components/Logo.tsx';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';

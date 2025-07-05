@@ -60,7 +60,7 @@ export function AnalyticsPage() {
                         <Calendar className="w-4 h-4 text-slate-400" />
                         <select
                             value={timeRange}
-                            onChange={(e) => setTimeRange(e.target.value as any)}
+                            onChange={(e) => setTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
                             className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         >
                             {timeRangeOptions.map((option) => (
@@ -155,7 +155,7 @@ export function AnalyticsPage() {
 
                     {/* Simple bar chart representation */}
                     <div className="space-y-4">
-                        {analytics.dailyStats.map((day, index) => (
+                        {analytics.dailyStats.map((day) => (
                             <div key={day.date} className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-400">

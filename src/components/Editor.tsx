@@ -418,23 +418,13 @@ const MenuBar: FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
 
-    if (!editor) {
-        return null;
-    }
-
-    const buttonClass =
-        'p-2 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105 min-w-[44px] touch-manipulation';
-    const activeButtonClass =
-        'p-2 rounded-lg bg-teal-500/50 text-white transition-all duration-200 min-w-[44px] touch-manipulation';
-
-    const groupClass = 'flex flex-wrap gap-1 w-full sm:w-auto';
-
     const openLinkModal = useCallback(() => {
         setLinkModalOpen(true);
     }, []);
 
     const handleLinkSubmit = useCallback(
         (url: string) => {
+            if (!editor) return;
             if (url === '') {
                 editor.chain().focus().extendMarkRange('link').unsetLink().run();
                 return;
@@ -449,10 +439,22 @@ const MenuBar: FC = () => {
 
     const handlePasswordSubmit = useCallback(
         (password: string) => {
+            if (!editor) return;
             editor.chain().focus().insertContent(password).run();
         },
         [editor]
     );
+
+    if (!editor) {
+        return null;
+    }
+
+    const buttonClass =
+        'p-2 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105 min-w-[44px] touch-manipulation';
+    const activeButtonClass =
+        'p-2 rounded-lg bg-teal-500/50 text-white transition-all duration-200 min-w-[44px] touch-manipulation';
+
+    const groupClass = 'flex flex-wrap gap-1 w-full sm:w-auto';
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -720,7 +722,6 @@ interface EditorProps {
     value?: string;
     onChange?: (content: string) => void;
     editable?: boolean;
-    [key: string]: any;
 }
 
 export default function Editor({

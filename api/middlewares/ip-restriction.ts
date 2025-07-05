@@ -1,8 +1,9 @@
+import { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
 import ipRangeCheck from 'ip-range-check';
 import prisma from '../lib/db';
 
-const getClientIp = (c: any): string | undefined => {
+const getClientIp = (c: Context): string | undefined => {
     const forwardedFor = c.req.header('x-forwarded-for');
     if (forwardedFor) {
         return forwardedFor.split(',')[0].trim();

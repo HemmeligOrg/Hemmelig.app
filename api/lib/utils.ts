@@ -6,7 +6,7 @@ import { type Context } from 'hono';
  * @param c Hono context
  * @returns JSON error response
  */
-export const handleNotFound = (error: any, c: Context) => {
+export const handleNotFound = (error: Error & { code?: string }, c: Context) => {
     // Handle record not found error (Prisma P2025)
     if (error?.code === 'P2025') {
         c.status(404);

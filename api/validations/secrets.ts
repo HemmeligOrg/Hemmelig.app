@@ -83,7 +83,10 @@ const internalQueryParamsSchema = z.object({
 });
 
 interface ProcessedSecretsQueryParams {
-    where: Record<string, any>; // Using Record<string, any> for the dynamic where clause
+    where: {
+        name?: { contains: string; mode: 'insensitive' };
+        description?: { contains: string; mode: 'insensitive' };
+    };
     skip: number;
     take: number;
 }
@@ -117,7 +120,7 @@ export const processSecretsQueryParams = (
 
     // Use validated name/description for the where clause
     const { name, description } = parseResult.data;
-    const where: Record<string, any> = {}; // Match interface type
+        const where: ProcessedSecretsQueryParams['where'] = {};
     if (name) {
         where.name = { contains: name, mode: 'insensitive' };
     }

@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
                     return redirect('/login');
                 }
                 return res.json();
-            } catch (error) {
+            } catch {
                 return redirect('/login');
             }
         }

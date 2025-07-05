@@ -141,7 +141,7 @@ export function AccountPage() {
                             return (
                                 <button
                                     key={tab.id}
-                                    onClick={() => setActiveTab(tab.id as any)}
+                                    onClick={() => setActiveTab(tab.id as 'profile' | 'security' | 'danger')}
                                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${activeTab === tab.id
                                         ? 'border-teal-500 text-teal-400'
                                         : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'

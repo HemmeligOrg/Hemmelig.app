@@ -51,8 +51,9 @@ export function SecretForm() {
                 const errorMessage = data?.error?.issues?.[0]?.message || data?.error?.message || 'An unknown error occurred.';
                 alert(t('secret_form.failed_to_create_secret', { errorMessage: errorMessage }));
             }
-        } catch (error: any) {
-            console.error('Failed to create secret:', error.message);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+            console.error('Failed to create secret:', errorMessage);
             // Handle error, e.g., show a toast notification
         } finally {
             setIsLoading(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function FileUpload() {
