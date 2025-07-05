@@ -116,6 +116,7 @@ size-plugin.json
 .env.local
 
 hemmelig.db*
+uploads/
 prisma_test.js
 database/
 data/
