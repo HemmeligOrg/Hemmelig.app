@@ -57,12 +57,8 @@ export function SecretPage() {
             setIsPasswordProtected(initialData.isPasswordProtected);
             setViewsRemaining(initialData.views);
             setFiles(initialData.files);
-
-            if (!initialData.isPasswordProtected) {
-                fetchSecretContent(''); // Fetch immediately if no password is required
-            }
         }
-    }, [initialData, fetchSecretContent]);
+    }, [initialData]);
 
     const handleViewSecret = () => {
         fetchSecretContent(passwordInput);
@@ -110,16 +106,20 @@ export function SecretPage() {
                         </div>
                     )}
 
-                    {!isLoading && !showSecretContent && isPasswordProtected && (
+                    {!isLoading && !showSecretContent && (
                         <div className="space-y-4">
-                            <label className="block text-sm font-medium text-slate-300">{t('secret_page.password_label')}</label>
-                            <input
-                                type="password"
-                                value={passwordInput}
-                                onChange={(e) => setPasswordInput(e.target.value)}
-                                className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
-                                placeholder={t('secret_page.password_placeholder')}
-                            />
+                            {isPasswordProtected && (
+                                <>
+                                    <label className="block text-sm font-medium text-slate-300">{t('secret_page.password_label')}</label>
+                                    <input
+                                        type="password"
+                                        value={passwordInput}
+                                        onChange={(e) => setPasswordInput(e.target.value)}
+                                        className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                                        placeholder={t('secret_page.password_placeholder')}
+                                    />
+                                </>
+                            )}
                             <button
                                 onClick={handleViewSecret}
                                 className="px-4 py-2 bg-teal-500 text-white rounded-lg"
