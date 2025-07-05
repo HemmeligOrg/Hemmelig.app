@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
     Shield,
@@ -13,6 +13,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Logo from '../Logo';
+import { useUserStore } from '../../store/userStore';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -22,18 +23,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const { t } = useTranslation();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { user, isLoading, fetchUser } = useUserStore();
 
-    // Mock user data - in real app this would come from auth context
-    const user = {
-        username: 'johndoe',
-        email: 'john@example.com',
-        isAdmin: true
-    };
+    useEffect(() => {
+        fetchUser();
+    }, [fetchUser]);
 
     const navigation = [
         { name: 'Secrets', href: '/dashboard', icon: Shield },
         { name: 'Account', href: '/dashboard/account', icon: User },
-        ...(user.isAdmin ? [
+        ...(user?.isAdmin ? [
             { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
             { name: 'Users', href: '/dashboard/users', icon: Users },
             { name: 'Instance', href: '/dashboard/instance', icon: Server },
@@ -132,8 +131,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                         <User className="w-4 h-4 text-white" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-white truncate">{user.username}</p>
-                                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                                        {isLoading ? (
+                                            <p className="text-sm font-medium text-white truncate">Loading...</p>
+                                        ) : (
+                                            <>
+                                                <p className="text-sm font-medium text-white truncate">{user?.username}</p>
+                                                <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 <button className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-slate-400 hover:text-white transition-colors duration-200">
@@ -171,3 +176,4 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
     );
 }
+
