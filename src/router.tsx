@@ -43,6 +43,10 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: <DashboardLayout><SecretsPage /></DashboardLayout>,
+        loader: async () => {
+            const res = await api.secrets.$get();
+            return await res.json();
+        },
     },
     {
         path: '/dashboard/account',

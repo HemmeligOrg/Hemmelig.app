@@ -6,7 +6,7 @@ import {
     Plus,
     Lock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { Modal } from '../../components/Modal';
@@ -17,6 +17,7 @@ interface Secret {
     expiresAt?: Date;
     views: number;
     isPasswordProtected: boolean;
+    url: string;
     ipRange?: string;
     isBurnable: boolean;
 }
@@ -24,27 +25,26 @@ interface Secret {
 import { formatDate, getTimeRemaining } from '../../utils/date';
 
 export function SecretsPage() {
+    const rawData = useLoaderData() as { data: Secret[] };
     const { t } = useTranslation();
     const [secrets, setSecrets] = useState<Secret[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [secretToDelete, setSecretToDelete] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchSecrets = async () => {
-            const res = await api.secrets.$get();
-            const data = await res.json();
-            setSecrets(data.data.map((secret: any) => ({
+        if (rawData && rawData.data) {
+            setSecrets(rawData.data.map((secret: Secret) => ({
                 id: secret.id,
                 createdAt: new Date(secret.createdAt),
                 expiresAt: secret.expiresAt ? new Date(secret.expiresAt) : undefined,
                 views: secret.views,
-                isPasswordProtected: !!secret.password,
-                isExpired: secret.expiresAt ? new Date(secret.expiresAt) < new Date() : false,
+                isPasswordProtected: secret.isPasswordProtected,
                 url: `/secret/${secret.id}`,
+                ipRange: secret.ipRange,
+                isBurnable: secret.isBurnable,
             })));
-        };
-        fetchSecrets();
-    }, []);
+        }
+    }, [rawData]);
 
     const openDeleteModal = (id: string) => {
         setSecretToDelete(id);
@@ -67,8 +67,6 @@ export function SecretsPage() {
             }
         }
     };
-
-
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
