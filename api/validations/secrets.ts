@@ -65,6 +65,7 @@ const secretSchema = {
         )
         .nullable()
         .optional(),
+    fileIds: z.array(z.string()).optional(),
 };
 
 export const createSecretsSchema = z.object(secretSchema);

@@ -56,7 +56,11 @@
     },
     "file_upload": {
         "sign_in_to_upload": "Inicia sesión para subir archivos",
-        "sign_in": "Iniciar sesión"
+        "sign_in": "Iniciar sesión",
+        "drop_files_here": "Suelta los archivos aquí",
+        "drag_and_drop": "Arrastra y suelta un archivo, o haz clic para seleccionar un archivo",
+        "uploading": "Subiendo...",
+        "upload_file": "Subir archivo"
     },
     "footer": {
         "tagline": "Hemmelig, [heˈm(ɛ)li], significa 'secreto' en noruego"
@@ -414,7 +418,8 @@
         "password_placeholder": "Introduce la contraseña para ver el secreto",
         "view_secret_button": "Ver secreto",
         "views_remaining_tooltip": "Vistas restantes: {{count}}",
-        "loading_message": "Cargando..."
+        "loading_message": "Cargando...",
+        "files_title": "Archivos"
     },
     "expiration": {
         "7_days": "7 Días",

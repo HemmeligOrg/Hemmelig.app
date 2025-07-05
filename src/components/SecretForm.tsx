@@ -5,7 +5,7 @@ import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
 import Editor from './Editor';
 import { api } from '../lib/api'; // Import the RPC client
-import { encrypt, generateEncryptionKey } from '../lib/nacl';
+import { encrypt, generateEncryptionKey, encryptFile } from '../lib/nacl';
 import { useSecretStore } from '../store/secretStore';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +17,7 @@ export interface SecretFormData {
     views: number;
     isBurnable: boolean;
     ipRange?: string | null;
+    files?: File[];
 }
 
 export function SecretForm() {
@@ -24,11 +25,38 @@ export function SecretForm() {
     const { t } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [files, setFiles] = useState<File[]>([]);
+
+    const handleFileChange = (files: File[]) => {
+        setFiles(files);
+    };
 
     const handleSubmit = async () => {
         setIsLoading(true);
 
         const encryptionKey = generateEncryptionKey(password);
+
+        const fileIds = [];
+        if (files.length > 0) {
+            for (const file of files) {
+                const encryptedFile = encryptFile(await file.arrayBuffer(), encryptionKey);
+                const encryptedFileAsFile = new File([encryptedFile], file.name, { type: file.type });
+
+                try {
+                    const response = await api.files.$post({
+                        form: {
+                            file: encryptedFileAsFile,
+                        },
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        fileIds.push(data.id);
+                    }
+                } catch (error) {
+                    console.error('File upload failed:', error);
+                }
+            }
+        }
 
         // Transform empty strings to null for nullable fields
         const dataToSend = {
@@ -39,6 +67,7 @@ export function SecretForm() {
             views,
             isBurnable,
             ipRange: ipRange === '' ? null : ipRange,
+            fileIds,
         };
 
         try {
@@ -81,7 +110,7 @@ export function SecretForm() {
                 </div>
 
                 <div className="mt-6">
-                    <FileUpload />
+                    <FileUpload onFileChange={handleFileChange} />
                 </div>
             </div>
 

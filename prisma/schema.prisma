@@ -21,9 +21,21 @@ model Secrets {
     ipRange    String?  @default("") @map("ip_range")
     userId     String?
     user       User?    @relation(fields: [userId], references: [id])
+    files      File[]   @relation
 
     @@map("secrets")
 }
+
+model File {
+    id        String    @id @default(uuid())
+    filename  String
+    path      String
+    createdAt DateTime  @default(now())
+    secrets   Secrets[] @relation
+
+    @@map("files")
+}
+
 
 model User {
     id            String    @id

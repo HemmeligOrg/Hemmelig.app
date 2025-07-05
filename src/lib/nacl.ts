@@ -39,6 +39,20 @@ export const encrypt = (text, userEncryptionKey) => {
     return fullMessage;
 };
 
+export const encryptFile = (fileBuffer: ArrayBuffer, userEncryptionKey: string) => {
+    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
+    const nonce = newNonce();
+    const messageUint8 = new Uint8Array(fileBuffer);
+
+    const box = secretbox(messageUint8, nonce, keyUint8Array);
+
+    const fullMessage = new Uint8Array(nonce.length + box.length);
+    fullMessage.set(nonce);
+    fullMessage.set(box, nonce.length);
+
+    return fullMessage;
+};
+
 /**
  * Decrypts a Uint8Array or Buffer from a BLOB field.
  * @param {Uint8Array | Buffer} fullMessage - The raw encrypted data from the database.
@@ -59,4 +73,18 @@ export const decrypt = (fullMessage, userEncryptionKey) => {
     }
 
     return encodeUTF8(decrypted);
+};
+
+export const decryptFile = (fullMessage: Uint8Array, userEncryptionKey: string): Uint8Array => {
+    const keyUint8Array = new Uint8Array(Buffer.from(userEncryptionKey));
+    const nonce = fullMessage.slice(0, secretbox.nonceLength);
+    const message = fullMessage.slice(secretbox.nonceLength);
+
+    const decrypted = secretbox.open(message, nonce, keyUint8Array);
+
+    if (!decrypted) {
+        throw new Error('Could not decrypt message');
+    }
+
+    return decrypted;
 };

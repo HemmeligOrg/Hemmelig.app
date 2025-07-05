@@ -104,6 +104,12 @@ const app = new Hono<{
                     createdAt: true,
                     isBurnable: true,
                     password: true, // Include password if it exists
+                    files: {
+                        select: {
+                            id: true,
+                            filename: true,
+                        }
+                    }
                 }
             });
 
@@ -193,12 +199,17 @@ const app = new Hono<{
             // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
 
-            const { expiresAt, password, ...rest } = validatedData;
+            const { expiresAt, password, fileIds, ...rest } = validatedData;
             const data = {
                 ...rest,
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
                 userId: user?.id || null, // Ensure userId is set if available
+                ...(fileIds && {
+                    files: {
+                        connect: fileIds.map((id: string) => ({ id })),
+                    },
+                }),
             }
 
             // Create secrets using the validated data

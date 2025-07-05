@@ -1,20 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useLocation, useLoaderData } from 'react-router-dom';
 import { api } from '../lib/api';
-import { decrypt, generateEncryptionKey } from '../lib/nacl';
+import { decrypt, generateEncryptionKey, decryptFile } from '../lib/nacl';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { Loader2, Eye, Hash } from 'lucide-react';
+import { Loader2, Eye, Hash, File as FileIcon, Download } from 'lucide-react';
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
+
+interface File {
+    id: string;
+    filename: string;
+}
 
 export function SecretPage() {
     const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
-    const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number };
+    const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number, files: File[] };
     const [secretContent, setSecretContent] = useState<string | null>(null);
     const [title, setTitle] = useState<string | null>(null);
+    const [files, setFiles] = useState<File[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [passwordInput, setPasswordInput] = useState<string>('');
     const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
@@ -35,6 +41,7 @@ export function SecretPage() {
                 const decryptedTitle = data.title ? decrypt(new Uint8Array(Object.values(data.title)), finalDecryptionKey) : null;
                 setSecretContent(decryptedSecret);
                 setTitle(decryptedTitle);
+                setFiles(data.files);
                 setShowSecretContent(true);
                 setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
             }
@@ -49,6 +56,7 @@ export function SecretPage() {
         if (initialData) {
             setIsPasswordProtected(initialData.isPasswordProtected);
             setViewsRemaining(initialData.views);
+            setFiles(initialData.files);
 
             if (!initialData.isPasswordProtected) {
                 fetchSecretContent(''); // Fetch immediately if no password is required
@@ -58,6 +66,19 @@ export function SecretPage() {
 
     const handleViewSecret = () => {
         fetchSecretContent(passwordInput);
+    };
+
+    const handleDownload = async (file: File) => {
+        const finalDecryptionKey = passwordInput ? generateEncryptionKey(passwordInput) : decryptionKey;
+        const response = await api.files[':id'].$get({ param: { id: file.id } });
+        const encryptedFile = await response.arrayBuffer();
+        const decryptedFile = decryptFile(new Uint8Array(encryptedFile), finalDecryptionKey);
+        const blob = new Blob([decryptedFile]);
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = file.filename.split('-').slice(1).join('-');
+        link.click();
+        URL.revokeObjectURL(link.href);
     };
 
     return (
@@ -109,7 +130,27 @@ export function SecretPage() {
                     )}
 
                     {showSecretContent && (
-                        <Editor value={secretContent || ''} editable={false} />
+                        <>
+                            <Editor value={secretContent || ''} editable={false} />
+                            {files && files.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="text-lg font-semibold text-white mb-2">{t('secret_page.files_title')}</h3>
+                                    <div className="space-y-2">
+                                        {files.map(file => (
+                                            <div key={file.id} className="flex items-center justify-between bg-slate-700/50 p-3 rounded-lg">
+                                                <div className="flex items-center space-x-3">
+                                                    <FileIcon className="w-5 h-5 text-slate-400" />
+                                                    <span className="text-sm text-slate-300">{file.filename.split('-').slice(1).join('-')}</span>
+                                                </div>
+                                                <button onClick={() => handleDownload(file)} className="p-2 text-slate-400 hover:text-white">
+                                                    <Download className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </main>
