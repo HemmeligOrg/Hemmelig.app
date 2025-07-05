@@ -1,10 +1,18 @@
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn, UserPlus, LayoutDashboard } from 'lucide-react';
 import Logo from './Logo.tsx';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '../store/userStore.ts';
+import { useEffect } from 'react';
 
 export function Header() {
     const { t } = useTranslation();
+    const { user, fetchUser } = useUserStore();
+
+    useEffect(() => {
+        fetchUser();
+    }, [fetchUser]);
+
     return (
         <header className="pt-6 sm:pt-12 pb-6 sm:pb-8">
             <div className="container mx-auto px-4">
@@ -16,20 +24,32 @@ export function Header() {
                     </Link>
 
                     <div className="flex items-center space-x-2 sm:space-x-4">
-                        <Link
-                            to="/login"
-                            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 text-slate-300 hover:text-white transition-colors duration-300 text-sm sm:text-base"
-                        >
-                            <LogIn className="w-4 h-4" />
-                            <span className="hidden xs:inline">{t('header.sign_in')}</span>
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
-                        >
-                            <UserPlus className="w-4 h-4" />
-                            <span className="hidden xs:inline">{t('header.sign_up')}</span>
-                        </Link>
+                        {user ? (
+                            <Link
+                                to="/dashboard"
+                                className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                            >
+                                <LayoutDashboard className="w-4 h-4" />
+                                <span className="hidden xs:inline">{t('header.dashboard')}</span>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 text-slate-300 hover:text-white transition-colors duration-300 text-sm sm:text-base"
+                                >
+                                    <LogIn className="w-4 h-4" />
+                                    <span className="hidden xs:inline">{t('header.sign_in')}</span>
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                                >
+                                    <UserPlus className="w-4 h-4" />
+                                    <span className="hidden xs:inline">{t('header.sign_up')}</span>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 

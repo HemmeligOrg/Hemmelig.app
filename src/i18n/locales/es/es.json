@@ -64,6 +64,7 @@
     "header": {
         "sign_in": "Iniciar sesión",
         "sign_up": "Registrarse",
+        "dashboard": "Panel",
         "hero_text_part1": "Comparte secretos de forma segura con mensajes cifrados que automáticamente",
         "hero_text_part2": " se autodestruyen",
         "hero_text_part3": " después de ser leídos."

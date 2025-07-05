@@ -64,6 +64,7 @@
   "header": {
     "sign_in": "Sign In",
     "sign_up": "Sign Up",
+    "dashboard": "Dashboard",
     "hero_text_part1": "Share secrets securely with encrypted messages that automatically",
     "hero_text_part2": " self-destruct",
     "hero_text_part3": " after being read."
