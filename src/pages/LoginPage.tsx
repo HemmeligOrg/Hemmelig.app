@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { User, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Logo from '../components/Logo.tsx';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
@@ -13,7 +13,7 @@ export function LoginPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        email: '',
+        username: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
@@ -26,8 +26,8 @@ export function LoginPage() {
         setIsLoading(true);
 
         try {
-            const { error } = await authClient.signIn.email({
-                email: formData.email,
+            const { error } = await authClient.signIn.username({
+                username: formData.username,
                 password: formData.password,
             });
 
@@ -78,20 +78,20 @@ export function LoginPage() {
                 {/* Login Form */}
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Email Field */}
+                        {/* Username Field */}
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-300">
-                                {t('login_page.email_label')}
+                                {t('login_page.username_label')}
                             </label>
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
-                                    <Mail className="w-5 h-5" />
+                                    <User className="w-5 h-5" />
                                 </div>
                                 <input
                                     type="text"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                                    placeholder={t('login_page.email_placeholder')}
+                                    value={formData.username}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                                    placeholder={t('login_page.username_placeholder')}
                                     className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />

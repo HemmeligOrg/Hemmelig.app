@@ -13,7 +13,10 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Logo from '../Logo';
+import { createAuthClient } from 'better-auth/react';
 import { useUserStore } from '../../store/userStore';
+
+const authClient = createAuthClient({ baseURL: window.location.origin });
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -29,14 +32,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         fetchUser();
     }, [fetchUser]);
 
+    const handleLogout = async () => {
+        await authClient.signOut();
+        window.location.href = '/login';
+    };
+
     const navigation = [
         { name: 'Secrets', href: '/dashboard', icon: Shield },
         { name: 'Account', href: '/dashboard/account', icon: User },
-        ...(user?.isAdmin ? [
-            { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-            { name: 'Users', href: '/dashboard/users', icon: Users },
-            { name: 'Instance', href: '/dashboard/instance', icon: Server },
-        ] : []),
+        //...(user?.isAdmin ? [
+        { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+        { name: 'Users', href: '/dashboard/users', icon: Users },
+        { name: 'Instance', href: '/dashboard/instance', icon: Server },
+        //] : []),
     ];
 
     const isActive = (href: string) => {
@@ -87,6 +95,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                         </Link>
                                     );
                                 })}
+                                <button onClick={handleLogout} className="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/50 w-full">
+                                    <LogOut className="w-5 h-5" />
+                                    <span>{t('dashboard_layout.sign_out')}</span>
+                                </button>
                             </nav>
                         </div>
                     </div>
@@ -141,7 +153,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                         )}
                                     </div>
                                 </div>
-                                <button className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-slate-400 hover:text-white transition-colors duration-200">
+                                <button onClick={handleLogout} className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-slate-400 hover:text-white transition-colors duration-200">
                                     <LogOut className="w-4 h-4" />
                                     <span className="text-sm">{t('dashboard_layout.sign_out')}</span>
                                 </button>
