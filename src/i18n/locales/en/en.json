@@ -353,7 +353,37 @@
       "status_header": "Status",
       "activity_header": "Activity",
       "last_login_header": "Last Login",
-      "actions_header": "Actions"
+      "actions_header": "Actions",
+      "created_at": "Created At"
+    },
+    "status": {
+        "active": "Active",
+        "banned": "Banned"
+    },
+    "delete_user_modal": {
+        "title": "Delete User",
+        "confirmation_message": "Are you sure you want to delete the user {{username}}? This action cannot be undone.",
+        "confirm_button": "Delete",
+        "cancel_button": "Cancel"
+    },
+    "edit_user_modal": {
+        "title": "Edit User: {{username}}",
+        "username_label": "Username",
+        "email_label": "Email",
+        "role_label": "Role",
+        "banned_label": "Banned",
+        "save_button": "Save",
+        "cancel_button": "Cancel"
+    },
+    "add_user_modal": {
+        "title": "Add New User",
+        "name_label": "Name",
+        "username_label": "Username",
+        "email_label": "Email",
+        "password_label": "Password",
+        "role_label": "Role",
+        "save_button": "Add User",
+        "cancel_button": "Cancel"
     }
   },
   "forgot_password_page": {

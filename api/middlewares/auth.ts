@@ -1,5 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import { auth } from '../auth';
+import db from '../lib/db';
 
 type Env = {
     Variables: {
@@ -15,3 +16,20 @@ export const authMiddleware = createMiddleware<Env>(async (c, next) => {
     }
     await next()
 })
+
+export const checkAdmin = createMiddleware<Env>(async (c, next) => {
+    const sessionUser = c.get('user');
+    if (!sessionUser) {
+        return c.json({ error: 'Forbidden' }, 403);
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: sessionUser.id },
+        select: { role: true }
+    });
+
+    if (!user || user.role !== 'admin') {
+        return c.json({ error: 'Forbidden' }, 403);
+    }
+    await next();
+});

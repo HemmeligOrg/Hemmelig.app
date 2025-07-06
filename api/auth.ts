@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { username } from "better-auth/plugins"
+import { username, admin } from "better-auth/plugins"
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 import prisma from "./lib/db";
@@ -20,7 +20,8 @@ export const auth = betterAuth({
          },*/
     },
     plugins: [
-        username()
+        username(),
+        admin()
     ],
     trustedOrigins: config.get('trustedOrigins')
 });
