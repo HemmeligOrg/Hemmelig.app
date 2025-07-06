@@ -7,7 +7,7 @@ import { Modal } from '../components/Modal';
 
 import { createAuthClient } from "better-auth/react";
 
-const authClient = createAuthClient({ baseURL: "http://localhost:5173" });
+const authClient = createAuthClient({ baseURL: window.location.origin });
 
 export function RegisterPage() {
     const { t } = useTranslation();
