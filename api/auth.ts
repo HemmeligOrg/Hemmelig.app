@@ -3,6 +3,8 @@ import { username } from "better-auth/plugins"
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 import prisma from "./lib/db";
+import config from "./config";
+
 export const auth = betterAuth({
     //basePath: "/api/v1",
     database: prismaAdapter(prisma, {
@@ -20,8 +22,5 @@ export const auth = betterAuth({
     plugins: [
         username()
     ],
-    trustedOrigins: [
-        "http://localhost:5173",
-        "https://hemmelig.app"
-    ]
+    trustedOrigins: config.get('trustedOrigins')
 });

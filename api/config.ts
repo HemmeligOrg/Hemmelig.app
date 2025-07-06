@@ -1,12 +1,19 @@
 import delve from 'dlv';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const config = {
     server: {
         port: Number(process.env.PORT) || 3000,
     },
     file: {
         maxSize: (Number(process.env.MAX_FILE_SIZE_MB) || 10) * 1024 * 1024, // Default 10MB
-    }
+    },
+    trustedOrigins: [
+        "https://hemmelig.app",
+        ...(!isProduction ? ["http://localhost:5173"] : []),
+        process.env.TRUSTED_ORIGIN || "",
+    ].filter(Boolean), // Filter out any empty strings
 } as const;
 
 /**
