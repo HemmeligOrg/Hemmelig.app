@@ -4,6 +4,7 @@ import * as os from 'os';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { instanceSettingsSchema } from '../validations/instance';
+import config from '../config';
 
 const app = new Hono();
 
@@ -31,15 +32,38 @@ app.get('/status', async (c) => {
 // GET /api/instance/settings
 app.get('/settings', async (c) => {
     try {
-        let settings = await prisma.instanceSettings.findFirst();
+        let dbSettings = await prisma.instanceSettings.findFirst();
 
-        if (!settings) {
-            settings = await prisma.instanceSettings.create({
-                data: {},
+        if (!dbSettings) {
+            // Prepare initial data from config, filtering out undefined values
+            const initialData = {
+                ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
+                ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
+                ...Object.fromEntries(Object.entries(config.get('email')).filter(([, v]) => v !== undefined)),
+            };
+
+            dbSettings = await prisma.instanceSettings.create({
+                data: initialData,
             });
         }
 
-        return c.json(settings);
+        // Get config settings and filter out undefined values
+        const configSettings = {
+            ...config.get('general'),
+            ...config.get('security'),
+            ...config.get('email'),
+        };
+        const filteredConfigSettings = Object.fromEntries(
+            Object.entries(configSettings).filter(([, value]) => value !== undefined)
+        );
+
+        // Override DB settings with any settings defined in config (env vars)
+        const finalSettings = {
+            ...dbSettings,
+            ...filteredConfigSettings,
+        };
+
+        return c.json(finalSettings);
     } catch (error) {
         console.error('Failed to fetch instance settings:', error);
         throw new HTTPException(500, { message: 'Failed to fetch instance settings' });

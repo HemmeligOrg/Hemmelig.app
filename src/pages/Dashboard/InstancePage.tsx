@@ -150,7 +150,7 @@ export function InstancePage() {
                         </div>
 
                         <div className="space-y-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
                                         {t('instance_page.general_settings.instance_name_label')}
@@ -171,6 +171,30 @@ export function InstancePage() {
                                         type="number"
                                         value={generalSettings.maxSecretsPerUser}
                                         onChange={(e) => setGeneralSetting('maxSecretsPerUser', parseInt(e.target.value))}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        Default Secret Expiration (hours)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={generalSettings.defaultSecretExpiration}
+                                        onChange={(e) => setGeneralSetting('defaultSecretExpiration', parseInt(e.target.value))}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        Max Secret Size (bytes)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={generalSettings.maxSecretSize}
+                                        onChange={(e) => setGeneralSetting('maxSecretSize', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -279,6 +303,38 @@ export function InstancePage() {
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
+
+                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                    <div>
+                                        <h3 className="font-medium text-white">Allow Password Protection</h3>
+                                        <p className="text-sm text-slate-400">Allow users to password protect secrets</p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={securitySettings.allowPasswordProtection}
+                                            onChange={(e) => setSecuritySetting('allowPasswordProtection', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                    </label>
+                                </div>
+
+                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                    <div>
+                                        <h3 className="font-medium text-white">Allow IP Restriction</h3>
+                                        <p className="text-sm text-slate-400">Allow users to restrict secrets by IP</p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={securitySettings.allowIpRestriction}
+                                            onChange={(e) => setSecuritySetting('allowIpRestriction', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -302,6 +358,30 @@ export function InstancePage() {
                                         type="number"
                                         value={securitySettings.sessionTimeout}
                                         onChange={(e) => setSecuritySetting('sessionTimeout', parseInt(e.target.value))}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        Rate Limit Requests
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={securitySettings.rateLimitRequests}
+                                        onChange={(e) => setSecuritySetting('rateLimitRequests', parseInt(e.target.value))}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        Rate Limit Window (seconds)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={securitySettings.rateLimitWindow}
+                                        onChange={(e) => setSecuritySetting('rateLimitWindow', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -382,6 +462,48 @@ export function InstancePage() {
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        From Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        value={emailSettings.fromEmail}
+                                        onChange={(e) => setEmailSetting('fromEmail', e.target.value)}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        From Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={emailSettings.fromName}
+                                        onChange={(e) => setEmailSetting('fromName', e.target.value)}
+                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                <div>
+                                    <h3 className="font-medium text-white">SMTP Secure</h3>
+                                    <p className="text-sm text-slate-400">Use TLS for SMTP connection</p>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={emailSettings.smtpSecure}
+                                        onChange={(e) => setEmailSetting('smtpSecure', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                </label>
                             </div>
 
                             <button

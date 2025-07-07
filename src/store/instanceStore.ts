@@ -35,13 +35,13 @@ type SecuritySettings = {
 };
 
 type EmailSettings = {
-    smtpHost: string;
-    smtpPort: number;
-    smtpUsername: string;
-    smtpPassword: string;
+    smtpHost: string | null;
+    smtpPort: number | null;
+    smtpUsername: string | null;
+    smtpPassword: string | null;
     smtpSecure: boolean;
-    fromEmail: string;
-    fromName: string;
+    fromEmail: string | null;
+    fromName: string | null;
 };
 
 type SystemInfo = {
@@ -85,7 +85,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         instanceDescription: '',
         allowRegistration: true,
         requireEmailVerification: false,
-        maxSecretsPerUser: 100,
+        maxSecretsPerUser: 1000,
         defaultSecretExpiration: 72,
         maxSecretSize: 1024
     },
@@ -100,13 +100,13 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         rateLimitWindow: 60
     },
     emailSettings: {
-        smtpHost: '',
-        smtpPort: 587,
-        smtpUsername: '',
-        smtpPassword: '',
+        smtpHost: null,
+        smtpPort: null,
+        smtpUsername: null,
+        smtpPassword: null,
         smtpSecure: true,
-        fromEmail: '',
-        fromName: ''
+        fromEmail: null,
+        fromName: null
     },
     isLoading: false,
 

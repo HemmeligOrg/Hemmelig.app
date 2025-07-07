@@ -2,18 +2,59 @@ import dlv from 'dlv';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Helper to parse number from env, returns undefined if not set or invalid
+const parseNumber = (value: string | undefined): number | undefined => {
+    if (value === undefined || value === null || value === '') return undefined;
+    const num = parseInt(value, 10);
+    return isNaN(num) ? undefined : num;
+};
+
+// Helper to parse boolean from env, returns undefined if not set
+const parseBoolean = (value: string | undefined): boolean | undefined => {
+    if (value === undefined || value === null || value === '') return undefined;
+    return value.toLowerCase() === 'true';
+};
+
 const config = {
     server: {
-        port: Number(process.env.PORT) || 3000,
+        port: Number(process.env.HEMMELIG_PORT) || 3000,
     },
     file: {
-        maxSize: (Number(process.env.MAX_FILE_SIZE_MB) || 10) * 1024 * 1024, // Default 10MB
+        maxSize: (Number(process.env.HEMMELIG_MAX_FILE_SIZE_MB) || 10) * 1024 * 1024, // Default 10MB
     },
     trustedOrigins: [
         "https://hemmelig.app",
         ...(!isProduction ? ["http://localhost:5173"] : []),
-        process.env.TRUSTED_ORIGIN || "",
+        process.env.HEMMELIG_TRUSTED_ORIGIN || "",
     ].filter(Boolean), // Filter out any empty strings
+    general: {
+        instanceName: process.env.HEMMELIG_INSTANCE_NAME,
+        instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION,
+        allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION),
+        requireEmailVerification: parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION),
+        maxSecretsPerUser: parseNumber(process.env.HEMMELIG_MAX_SECRETS_PER_USER),
+        defaultSecretExpiration: parseNumber(process.env.HEMMELIG_DEFAULT_SECRET_EXPIRATION),
+        maxSecretSize: parseNumber(process.env.HEMMELIG_MAX_SECRET_SIZE),
+    },
+    security: {
+        enforceHttps: parseBoolean(process.env.HEMMELIG_ENFORCE_HTTPS),
+        allowPasswordProtection: parseBoolean(process.env.HEMMELIG_ALLOW_PASSWORD_PROTECTION),
+        allowIpRestriction: parseBoolean(process.env.HEMMELIG_ALLOW_IP_RESTRICTION),
+        maxPasswordAttempts: parseNumber(process.env.HEMMELIG_MAX_PASSWORD_ATTEMPTS),
+        sessionTimeout: parseNumber(process.env.HEMMELIG_SESSION_TIMEOUT),
+        enableRateLimiting: parseBoolean(process.env.HEMMELIG_ENABLE_RATE_LIMITING),
+        rateLimitRequests: parseNumber(process.env.HEMMELIG_RATE_LIMIT_REQUESTS),
+        rateLimitWindow: parseNumber(process.env.HEMMELIG_RATE_LIMIT_WINDOW),
+    },
+    email: {
+        smtpHost: process.env.HEMMELIG_SMTP_HOST,
+        smtpPort: parseNumber(process.env.HEMMELIG_SMTP_PORT),
+        smtpUsername: process.env.HEMMELIG_SMTP_USERNAME,
+        smtpPassword: process.env.HEMMELIG_SMTP_PASSWORD,
+        smtpSecure: parseBoolean(process.env.HEMMELIG_SMTP_SECURE),
+        fromEmail: process.env.HEMMELIG_FROM_EMAIL,
+        fromName: process.env.HEMMELIG_FROM_NAME,
+    },
 } as const;
 
 /**
