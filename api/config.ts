@@ -1,4 +1,4 @@
-import delve from 'dlv';
+import dlv from 'dlv';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -25,7 +25,7 @@ const config = {
  */
 function get<T>(path: string, defaultValue?: T): T {
     // `delve` returns `any`, so we cast its result to the expected generic type `T`.
-    return delve(config, path, defaultValue) as T;
+    return dlv(config, path, defaultValue) as T;
 }
 
 // Export the get function.

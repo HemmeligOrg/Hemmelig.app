@@ -28,7 +28,7 @@ This project is built with a specific stack. Adherence to its conventions is cri
 ### Frontend (React & Vite)
 
 - **Component Structure:** Follow the existing component patterns in `src/components` and `src/pages`. Use functional components with hooks.
-- **State Management:** Utilize the existing state management patterns, including `src/store/errorStore.ts` for global error state management.
+- **State Management:** Use Zustand for state management where applicable. Utilize the existing state management patterns, including `src/store/errorStore.ts` for global error state management.
 - **Styling:** Apply styles using Tailwind CSS classes, following the conventions in existing components and `tailwind.config.js`.
 - **API Interaction:** The frontend communicates with the backend via Hono's RPC client. Centralized error handling is implemented in `src/lib/api.ts`, and errors are displayed using `src/components/ErrorDisplay.tsx`. When making changes that affect the API, ensure the frontend client code is correctly aligned with the backend route definitions.
 - **Internationalization (i18n):** All user-facing strings in React components must use `useTranslation` from `react-i18next` for internationalization. Ensure new strings are added to the appropriate JSON translation files (`src/i18n/locales/en/en.json`, `src/i18n/locales/es/es.json`, etc.) and referenced correctly.
@@ -37,6 +37,7 @@ This project is built with a specific stack. Adherence to its conventions is cri
 ### Backend (Hono RPC)
 
 - **API Routes:** Define and modify API routes in the `api/` directory, primarily within `api/routes.ts` and the `api/routes/` subdirectory.
+- **Validation:** Always add input validation to API routes to ensure data integrity and security. Use Zod for validation schemas.
 - **RPC Mode:** Remember that Hono is used in RPC mode. Backend routes are directly callable from the frontend client. Maintain this contract.
 - **Database:** All database interactions must go through the Prisma client. The schema is defined in `prisma/schema.prisma`. When making model changes, new migrations must be created correctly.
 - **Utilities:** Place all backend utility functions in the `api/lib/` directory. Before creating a new utility function, check this folder to see if a reusable function already exists.

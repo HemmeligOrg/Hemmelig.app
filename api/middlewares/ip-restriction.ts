@@ -1,5 +1,4 @@
-import { Context } from 'hono';
-import { createMiddleware } from 'hono/factory';
+import { Context, Next } from 'hono';
 import ipRangeCheck from 'ip-range-check';
 import prisma from '../lib/db';
 
@@ -18,8 +17,8 @@ const getClientIp = (c: Context): string | undefined => {
         c.req.header('via');
 };
 
-export const ipRestriction = createMiddleware(async (c, next) => {
-    const { id }: { id: string } = c.req.valid('param');
+export const ipRestriction = async (c: Context, next: Next) => {
+    const { id } = c.req.param();
 
     const item = await prisma.secrets.findUnique({
         where: { id },
@@ -45,4 +44,4 @@ export const ipRestriction = createMiddleware(async (c, next) => {
     }
 
     await next();
-});
+};

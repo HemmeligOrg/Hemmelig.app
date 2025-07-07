@@ -8,7 +8,7 @@ import config from '../config';
 const files = new Hono();
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
-const MAX_FILE_SIZE = config.get('file.maxSize');
+const MAX_FILE_SIZE = config.get('file.maxSize') as number;
 
 // Ensure upload directory exists
 const ensureUploadDir = async () => {
@@ -33,7 +33,7 @@ files.get('/:id', async (c) => {
         }
 
         const fileBuffer = await readFile(file.path);
-        return c.body(fileBuffer.buffer);
+        return c.body(fileBuffer);
     } catch (error) {
         console.error('Failed to download file:', error);
         return c.json({ error: 'Failed to download file' }, 500);

@@ -206,16 +206,19 @@ const app = new Hono<{
             const validatedData = c.req.valid('json');
 
             const { expiresAt, password, fileIds, ...rest } = validatedData;
-            const data = {
+            const data: any = {
                 ...rest,
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
-                userId: user?.id || null, // Ensure userId is set if available
                 ...(fileIds && {
                     files: {
                         connect: fileIds.map((id: string) => ({ id })),
                     },
                 }),
+            }
+
+            if (user) {
+                data.userId = user.id;
             }
 
             // Create secrets using the validated data
@@ -226,16 +229,14 @@ const app = new Hono<{
             c.status(201);
 
             return c.json({ id: item.id });
-        } catch (error: unknown) {
+        } catch (error: any) {
             console.error('Failed to create secrets:', error);
             // Handle potential Prisma unique constraint errors, etc.
-            // @ts-expect-error: error is unknown
             if (error?.code === 'P2002') {
                 // Example: Unique constraint failed
                 c.status(409); // Conflict
                 return c.json({
                     error: 'Could not create secrets',
-                    // @ts-expect-error: error is unknown
                     details: error.meta?.target,
                 });
             }

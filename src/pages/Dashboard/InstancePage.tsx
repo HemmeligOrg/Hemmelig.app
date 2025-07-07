@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Server,
@@ -11,60 +11,33 @@ import {
     Info,
     CheckCircle,
 } from 'lucide-react';
+import { useInstanceStore } from '../../store/instanceStore';
 
 export function InstancePage() {
     const [activeTab, setActiveTab] = useState<'general' | 'security' | 'email' | 'database' | 'system'>('general');
-    const [isLoading, setIsLoading] = useState(false);
     const { t } = useTranslation();
 
-    const [generalSettings, setGeneralSettings] = useState({
-        instanceName: 'Hemmelig Instance',
-        instanceDescription: 'Secure secret sharing platform',
-        allowRegistration: true,
-        requireEmailVerification: false,
-        maxSecretsPerUser: 100,
-        defaultSecretExpiration: 72, // hours
-        maxSecretSize: 1024 // KB
-    });
+    const {
+        systemInfo,
+        generalSettings,
+        securitySettings,
+        emailSettings,
+        isLoading,
+        fetchStatus,
+        fetchSettings,
+        setGeneralSetting,
+        setSecuritySetting,
+        setEmailSetting,
+        saveSettings,
+    } = useInstanceStore();
 
-    const [securitySettings, setSecuritySettings] = useState({
-        enforceHttps: true,
-        allowPasswordProtection: true,
-        allowIpRestriction: true,
-        maxPasswordAttempts: 3,
-        sessionTimeout: 24, // hours
-        enableRateLimiting: true,
-        rateLimitRequests: 100,
-        rateLimitWindow: 60 // minutes
-    });
+    useEffect(() => {
+        fetchStatus();
+        fetchSettings();
+    }, [fetchStatus, fetchSettings]);
 
-    const [emailSettings, setEmailSettings] = useState({
-        smtpHost: 'smtp.example.com',
-        smtpPort: 587,
-        smtpUsername: 'noreply@example.com',
-        smtpPassword: '',
-        smtpSecure: true,
-        fromEmail: 'noreply@example.com',
-        fromName: 'Hemmelig'
-    });
-
-    const [systemInfo] = useState({
-        version: '2.1.0',
-        uptime: '15 days, 3 hours',
-        totalSecrets: 1247,
-        totalUsers: 89,
-        diskUsage: '2.3 GB',
-        memoryUsage: '512 MB',
-        cpuUsage: '12%',
-        status: 'healthy'
-    });
-
-    const handleSaveSettings = async (section: string) => {
-        setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log(`Saved ${section} settings`);
-        setIsLoading(false);
+    const handleSaveSettings = (section: 'general' | 'security' | 'email') => {
+        saveSettings(section);
     };
 
     const tabs = [
@@ -149,8 +122,8 @@ export function InstancePage() {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id as 'general' | 'security' | 'email' | 'database' | 'system')}
                                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${activeTab === tab.id
-                                            ? 'border-teal-500 text-teal-400'
-                                            : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                                        ? 'border-teal-500 text-teal-400'
+                                        : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
                                         }`}
                                 >
                                     <Icon className="w-4 h-4" />
@@ -172,7 +145,7 @@ export function InstancePage() {
                             </div>
                             <div>
                                 <h2 className="text-lg font-semibold text-white">{t('instance_page.general_settings.title')}</h2>
-                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.description')}</p>
+                                <p className="text-sm text-slate-400">{t('instance_page.general_settings.description')}</p>
                             </div>
                         </div>
 
@@ -185,7 +158,7 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={generalSettings.instanceName}
-                                        onChange={(e) => setGeneralSettings(prev => ({ ...prev, instanceName: e.target.value }))}
+                                        onChange={(e) => setGeneralSetting('instanceName', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -197,7 +170,7 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={generalSettings.maxSecretsPerUser}
-                                        onChange={(e) => setGeneralSettings(prev => ({ ...prev, maxSecretsPerUser: parseInt(e.target.value) }))}
+                                        onChange={(e) => setGeneralSetting('maxSecretsPerUser', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -209,7 +182,7 @@ export function InstancePage() {
                                 </label>
                                 <textarea
                                     value={generalSettings.instanceDescription}
-                                    onChange={(e) => setGeneralSettings(prev => ({ ...prev, instanceDescription: e.target.value }))}
+                                    onChange={(e) => setGeneralSetting('instanceDescription', e.target.value)}
                                     rows={3}
                                     className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                 />
@@ -225,7 +198,7 @@ export function InstancePage() {
                                         <input
                                             type="checkbox"
                                             checked={generalSettings.allowRegistration}
-                                            onChange={(e) => setGeneralSettings(prev => ({ ...prev, allowRegistration: e.target.checked }))}
+                                            onChange={(e) => setGeneralSetting('allowRegistration', e.target.checked)}
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -241,7 +214,7 @@ export function InstancePage() {
                                         <input
                                             type="checkbox"
                                             checked={generalSettings.requireEmailVerification}
-                                            onChange={(e) => setGeneralSettings(prev => ({ ...prev, requireEmailVerification: e.target.checked }))}
+                                            onChange={(e) => setGeneralSetting('requireEmailVerification', e.target.checked)}
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -284,7 +257,7 @@ export function InstancePage() {
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.enforceHttps}
-                                            onChange={(e) => setSecuritySettings(prev => ({ ...prev, enforceHttps: e.target.checked }))}
+                                            onChange={(e) => setSecuritySetting('enforceHttps', e.target.checked)}
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -300,7 +273,7 @@ export function InstancePage() {
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.enableRateLimiting}
-                                            onChange={(e) => setSecuritySettings(prev => ({ ...prev, enableRateLimiting: e.target.checked }))}
+                                            onChange={(e) => setSecuritySetting('enableRateLimiting', e.target.checked)}
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -316,7 +289,7 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={securitySettings.maxPasswordAttempts}
-                                        onChange={(e) => setSecuritySettings(prev => ({ ...prev, maxPasswordAttempts: parseInt(e.target.value) }))}
+                                        onChange={(e) => setSecuritySetting('maxPasswordAttempts', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -328,7 +301,7 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={securitySettings.sessionTimeout}
-                                        onChange={(e) => setSecuritySettings(prev => ({ ...prev, sessionTimeout: parseInt(e.target.value) }))}
+                                        onChange={(e) => setSecuritySetting('sessionTimeout', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -367,7 +340,7 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={emailSettings.smtpHost}
-                                        onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpHost: e.target.value }))}
+                                        onChange={(e) => setEmailSetting('smtpHost', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -379,7 +352,7 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={emailSettings.smtpPort}
-                                        onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpPort: parseInt(e.target.value) }))}
+                                        onChange={(e) => setEmailSetting('smtpPort', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -393,7 +366,7 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={emailSettings.smtpUsername}
-                                        onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpUsername: e.target.value }))}
+                                        onChange={(e) => setEmailSetting('smtpUsername', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -405,7 +378,7 @@ export function InstancePage() {
                                     <input
                                         type="password"
                                         value={emailSettings.smtpPassword}
-                                        onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpPassword: e.target.value }))}
+                                        onChange={(e) => setEmailSetting('smtpPassword', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>

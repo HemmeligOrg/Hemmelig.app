@@ -1,0 +1,28 @@
+-- CreateTable
+CREATE TABLE "instance_settings" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "instanceName" TEXT DEFAULT 'Hemmelig Instance',
+    "instanceDescription" TEXT DEFAULT 'Secure secret sharing platform',
+    "allowRegistration" BOOLEAN DEFAULT true,
+    "requireEmailVerification" BOOLEAN DEFAULT false,
+    "maxSecretsPerUser" INTEGER DEFAULT 100,
+    "defaultSecretExpiration" INTEGER DEFAULT 72,
+    "maxSecretSize" INTEGER DEFAULT 1024,
+    "enforceHttps" BOOLEAN DEFAULT true,
+    "allowPasswordProtection" BOOLEAN DEFAULT true,
+    "allowIpRestriction" BOOLEAN DEFAULT true,
+    "maxPasswordAttempts" INTEGER DEFAULT 3,
+    "sessionTimeout" INTEGER DEFAULT 24,
+    "enableRateLimiting" BOOLEAN DEFAULT true,
+    "rateLimitRequests" INTEGER DEFAULT 100,
+    "rateLimitWindow" INTEGER DEFAULT 60,
+    "smtpHost" TEXT,
+    "smtpPort" INTEGER,
+    "smtpUsername" TEXT,
+    "smtpPassword" TEXT,
+    "smtpSecure" BOOLEAN DEFAULT true,
+    "fromEmail" TEXT,
+    "fromName" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);

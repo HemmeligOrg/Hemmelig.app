@@ -65,6 +65,7 @@
     "react-dropzone": "^14.3.8",
     "react-i18next": "^15.5.3",
     "react-router-dom": "^6.20.1",
+    "sonner": "^2.0.6",
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",
     "validator": "^13.15.15",
