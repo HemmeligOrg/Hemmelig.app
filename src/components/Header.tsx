@@ -4,10 +4,12 @@ import Logo from './Logo.tsx';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/userStore.ts';
 import { useEffect } from 'react';
+import { useHemmeligStore } from '../store/hemmeligStore.ts';
 
 export function Header() {
     const { t } = useTranslation();
     const { user, fetchUser } = useUserStore();
+    const { settings } = useHemmeligStore();
 
     useEffect(() => {
         fetchUser();
@@ -61,15 +63,28 @@ export function Header() {
                         </div>
                     </div>
 
-                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
-                        Hemmelig
-                        <span className="text-teal-400">.app</span>
-                    </h1>
+                    {settings.instanceName ? (
+                        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                            {settings.instanceName}
+                        </h1>
+                    ) : (
+                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
+                            Hemmelig
+                            <span className="text-teal-400">.app</span>
+                        </h1>
+                    )}
 
-                    <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
-                        {t('header.hero_text_part1')}
-                        <span className="text-teal-400 font-medium">{t('header.hero_text_part2')}</span>{t('header.hero_text_part3')}
-                    </p>
+                    {settings.instanceDescription ? (
+                        <p className="mt-6 text-lg leading-8 text-slate-300">
+                            {settings.instanceDescription}
+                        </p>
+                    ) : (
+                        <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
+                            {t('header.hero_text_part1')}
+                            <span className="text-teal-400 font-medium">{t('header.hero_text_part2')}</span>{t('header.hero_text_part3')}
+                        </p>
+                    )}
+
                 </div>
             </div>
         </header>

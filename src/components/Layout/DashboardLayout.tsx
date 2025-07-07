@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 import {
     Shield,
     User,
@@ -18,11 +18,7 @@ import { useUserStore } from '../../store/userStore';
 
 const authClient = createAuthClient({ baseURL: window.location.origin });
 
-interface DashboardLayoutProps {
-    children: React.ReactNode;
-}
-
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function DashboardLayout() {
     const { t } = useTranslation();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -180,7 +176,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
                         {/* Page content */}
                         <main className="relative">
-                            {children}
+                            <Outlet />
                         </main>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const instanceSettingsSchema = z.object({
-    instanceName: z.string().min(1, "Instance name is required.").optional(),
+    instanceName: z.string().optional(),
     instanceDescription: z.string().optional(),
     allowRegistration: z.boolean().optional(),
     requireEmailVerification: z.boolean().optional(),
