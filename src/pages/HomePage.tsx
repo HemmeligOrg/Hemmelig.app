@@ -6,11 +6,9 @@ export function HomePage() {
     const { secretId } = useSecretStore();
 
     return (
-        <div className="text-center">
-            <div className="mt-10">
-                {!secretId && <SecretForm />}
-                {secretId && <SecretSettings />}
-            </div>
+        <div className="mt-10">
+            {!secretId && <SecretForm />}
+            {secretId && <SecretSettings />}
         </div>
     );
 }
