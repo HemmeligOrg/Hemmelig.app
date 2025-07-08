@@ -115,14 +115,14 @@ export function SecretPage() {
                                         type="password"
                                         value={passwordInput}
                                         onChange={(e) => setPasswordInput(e.target.value)}
-                                        className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                                        className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none sm:text-sm"
                                         placeholder={t('secret_page.password_placeholder')}
                                     />
                                 </>
                             )}
                             <button
                                 onClick={handleViewSecret}
-                                className="px-4 py-2 bg-teal-500 text-white rounded-lg"
+                                className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white rounded-lg sm:text-base text-sm"
                             >
                                 {t('secret_page.view_secret_button')}
                             </button>

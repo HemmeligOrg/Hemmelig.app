@@ -91,17 +91,17 @@ export const SecretSettings = () => {
                 )}
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <button
                     onClick={resetSecret}
-                    className="inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                     <Plus className="h-5 w-5" />
                     {t('secret_settings.create_new_secret_button')}
                 </button>
-                <div className="flex space-x-4">
-                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="px-4 py-2 bg-teal-500 text-white rounded-lg">{t('secret_settings.copy_url_button')}</button>
-                    <button onClick={handleBurnSecret} className="px-4 py-2 bg-red-500 text-white rounded-lg">{t('secret_settings.burn_secret_button')}</button>
+                <div className="w-full sm:w-auto flex space-x-4">
+                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white rounded-lg">{t('secret_settings.copy_url_button')}</button>
+                    <button onClick={handleBurnSecret} className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg">{t('secret_settings.burn_secret_button')}</button>
                 </div>
             </div>
         </div>
