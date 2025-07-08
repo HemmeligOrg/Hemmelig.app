@@ -135,8 +135,9 @@ const app = new Hono<{
                 }
             }
 
+            // Track the secret view
             // TODO: Handle this in a different way
-            delete item.password;
+            delete (item as { password?: string }).password;
 
             if (item.views! > 1) {
                 await prisma.secrets.update({

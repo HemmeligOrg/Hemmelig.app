@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     BarChart3,
@@ -7,38 +7,33 @@ import {
     Shield,
     Clock,
     Users,
-    Globe,
     Calendar
 } from 'lucide-react';
+import { api } from '../../lib/api';
+import { toast } from 'sonner';
 
 export function AnalyticsPage() {
     const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
     const { t } = useTranslation();
+    const [analytics, setAnalytics] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-    // Mock analytics data - in real app this would come from API
-    const analytics = {
-        totalSecrets: 156,
-        totalViews: 1247,
-        activeSecrets: 89,
-        expiredSecrets: 67,
-        averageViews: 8.2,
-        topCountries: [
-            { country: 'United States', views: 456, percentage: 36.6 },
-            { country: 'Germany', views: 234, percentage: 18.8 },
-            { country: 'United Kingdom', views: 189, percentage: 15.2 },
-            { country: 'France', views: 123, percentage: 9.9 },
-            { country: 'Canada', views: 98, percentage: 7.9 }
-        ],
-        dailyStats: [
-            { date: '2024-01-15', secrets: 12, views: 89 },
-            { date: '2024-01-16', secrets: 8, views: 67 },
-            { date: '2024-01-17', secrets: 15, views: 123 },
-            { date: '2024-01-18', secrets: 6, views: 45 },
-            { date: '2024-01-19', secrets: 11, views: 78 },
-            { date: '2024-01-20', secrets: 9, views: 56 },
-            { date: '2024-01-21', secrets: 14, views: 98 }
-        ]
-    };
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            setLoading(true);
+            try {
+                const res = await api.analytics.$get({ query: { timeRange } });
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
+                setAnalytics(data);
+            } catch (error) {
+                toast.error('Failed to fetch analytics data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchAnalytics();
+    }, [timeRange]);
 
     const timeRangeOptions = [
         { value: '7d', label: t('analytics_page.time_range.last_7_days') },
@@ -46,6 +41,14 @@ export function AnalyticsPage() {
         { value: '90d', label: t('analytics_page.time_range.last_90_days') },
         { value: '1y', label: t('analytics_page.time_range.last_year') }
     ];
+
+    if (loading) {
+        return <div className="p-8 text-center">Loading analytics...</div>;
+    }
+
+    if (!analytics) {
+        return <div className="p-8 text-center">Could not load analytics.</div>;
+    }
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
@@ -85,10 +88,6 @@ export function AnalyticsPage() {
                             <p className="text-sm text-slate-400">{t('analytics_page.total_secrets')}</p>
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center space-x-2">
-                        <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 12 })}</span>
-                    </div>
                 </div>
 
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
@@ -100,10 +99,6 @@ export function AnalyticsPage() {
                             <p className="text-2xl font-bold text-white">{analytics.totalViews.toLocaleString()}</p>
                             <p className="text-sm text-slate-400">{t('analytics_page.total_views')}</p>
                         </div>
-                    </div>
-                    <div className="mt-4 flex items-center space-x-2">
-                        <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 8 })}</span>
                     </div>
                 </div>
 
@@ -117,10 +112,6 @@ export function AnalyticsPage() {
                             <p className="text-sm text-slate-400">{t('analytics_page.avg_views_per_secret')}</p>
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center space-x-2">
-                        <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 5 })}</span>
-                    </div>
                 </div>
 
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
@@ -133,14 +124,10 @@ export function AnalyticsPage() {
                             <p className="text-sm text-slate-400">{t('analytics_page.active_secrets')}</p>
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center space-x-2">
-                        <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-green-400">{t('analytics_page.from_last_period', { percentage: 3 })}</span>
-                    </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
                 {/* Activity Chart */}
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
                     <div className="flex items-center space-x-3 mb-6">
@@ -187,46 +174,6 @@ export function AnalyticsPage() {
                         ))}
                     </div>
                 </div>
-
-                {/* Geographic Distribution */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
-                    <div className="flex items-center space-x-3 mb-6">
-                        <div className="p-2 bg-green-500/20 rounded-lg">
-                            <Globe className="w-5 h-5 text-green-400" />
-                        </div>
-                        <div>
-                            <h2 className="text-lg font-semibold text-white">{t('analytics_page.top_countries.title')}</h2>
-                            <p className="text-sm text-slate-400">{t('analytics_page.top_countries.description')}</p>
-                        </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        {analytics.topCountries.map((country, index) => (
-                            <div key={country.country} className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-700 rounded-full flex items-center justify-center">
-                                        <span className="text-xs font-medium text-white">{index + 1}</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-white">{country.country}</p>
-                                        <p className="text-xs text-slate-400">{country.views} {t('analytics_page.top_countries.views')}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-24 bg-slate-700 rounded-full h-2">
-                                        <div
-                                            className="bg-green-500 h-2 rounded-full transition-all duration-500"
-                                            style={{ width: `${country.percentage}%` }}
-                                        />
-                                    </div>
-                                    <span className="text-sm text-slate-400 w-12 text-right">
-                                        {country.percentage}%
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
             </div>
 
             {/* Additional Stats */}
@@ -246,27 +193,27 @@ export function AnalyticsPage() {
                             <span className="text-sm text-slate-300">{t('analytics_page.secret_types.password_protected')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-yellow-500 h-2 rounded-full w-3/4" />
+                                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${analytics.secretTypes.passwordProtected}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">75%</span>
+                                <span className="text-sm text-slate-400">{analytics.secretTypes.passwordProtected}%</span>
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-sm text-slate-300">{t('analytics_page.secret_types.ip_restricted')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-yellow-500 h-2 rounded-full w-1/3" />
+                                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${analytics.secretTypes.ipRestricted}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">33%</span>
+                                <span className="text-sm text-slate-400">{analytics.secretTypes.ipRestricted}%</span>
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-sm text-slate-300">{t('analytics_page.secret_types.burn_after_time')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-yellow-500 h-2 rounded-full w-1/2" />
+                                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${analytics.secretTypes.burnable}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">50%</span>
+                                <span className="text-sm text-slate-400">{analytics.secretTypes.burnable}%</span>
                             </div>
                         </div>
                     </div>
@@ -287,27 +234,27 @@ export function AnalyticsPage() {
                             <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_hour')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-red-500 h-2 rounded-full w-1/4" />
+                                    <div className="bg-red-500 h-2 rounded-full" style={{ width: `${analytics.expirationStats.oneHour}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">25%</span>
+                                <span className="text-sm text-slate-400">{analytics.expirationStats.oneHour}%</span>
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_day')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-red-500 h-2 rounded-full w-2/5" />
+                                    <div className="bg-red-500 h-2 rounded-full" style={{ width: `${analytics.expirationStats.oneDay}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">40%</span>
+                                <span className="text-sm text-slate-400">{analytics.expirationStats.oneDay}%</span>
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-sm text-slate-300">{t('analytics_page.expiration_stats.one_week_plus')}</span>
                             <div className="flex items-center space-x-2">
                                 <div className="w-16 bg-slate-700 rounded-full h-2">
-                                    <div className="bg-red-500 h-2 rounded-full w-1/3" />
+                                    <div className="bg-red-500 h-2 rounded-full" style={{ width: `${analytics.expirationStats.oneWeekPlus}%` }} />
                                 </div>
-                                <span className="text-sm text-slate-400">35%</span>
+                                <span className="text-sm text-slate-400">{analytics.expirationStats.oneWeekPlus}%</span>
                             </div>
                         </div>
                     </div>
