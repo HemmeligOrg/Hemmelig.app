@@ -436,6 +436,12 @@
         "5_minutes": "5 Minutos"
     },
     "error_display": {
-        "clear_errors_button_title": "Borrar errores"
-    }
+    "clear_errors_button_title": "Borrar errores"
+  },
+  "secret_not_found_page": {
+    "title": "Secreto no encontrado",
+    "message": "El secreto que estás buscando no existe, ha caducado o ha sido quemado.",
+    "error_details": "Detalles del error:",
+    "go_home_button": "Ir a la página de inicio"
+  }
 }

@@ -472,5 +472,11 @@
   },
   "error_display": {
     "clear_errors_button_title": "Clear errors"
+  },
+  "secret_not_found_page": {
+    "title": "Secret Not Found",
+    "message": "The secret you are looking for does not exist, has expired, or has been burned.",
+    "error_details": "Error details:",
+    "go_home_button": "Go to Homepage"
   }
 }

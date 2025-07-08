@@ -4,6 +4,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { SecretPage } from './pages/SecretPage';
+import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { SecretsPage } from './pages/Dashboard/SecretsPage';
 import { AccountPage } from './pages/Dashboard/AccountPage';
@@ -59,6 +60,7 @@ export const router = createBrowserRouter([
             {
                 path: '/secret/:id',
                 element: <SecretPage />,
+                errorElement: <SecretNotFoundPage />,
                 loader: async ({ params }) => {
                     if (!params.id) {
                         throw new Response('Not Found', { status: 404 });
