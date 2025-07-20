@@ -5,6 +5,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
+import { instanceSettingsMiddleware } from './middlewares/instanceSettings';
 
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
@@ -18,7 +19,8 @@ import startJobs from './jobs';
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
-        session: typeof auth.$Infer.Session.session | null
+        session: typeof auth.$Infer.Session.session | null;
+        instanceSettings: any; // Add instanceSettings to Variables
     }
 }>();
 
@@ -28,6 +30,7 @@ startJobs();
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
+app.use(instanceSettingsMiddleware); // Add this first
 app.use(secureHeaders());
 app.use(logger());
 app.use(trimTrailingSlash());
