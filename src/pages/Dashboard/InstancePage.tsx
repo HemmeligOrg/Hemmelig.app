@@ -228,22 +228,6 @@ export function InstancePage() {
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
-
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
-                                    <div>
-                                        <h3 className="font-medium text-white">{t('instance_page.general_settings.email_verification_title')}</h3>
-                                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.email_verification_description')}</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={generalSettings.requireEmailVerification}
-                                            onChange={(e) => setGeneralSetting('requireEmailVerification', e.target.checked)}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
-                                    </label>
-                                </div>
                             </div>
 
                             <button
@@ -400,18 +384,35 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'email' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 opacity-50 cursor-not-allowed">
                         <div className="flex items-center space-x-3 mb-6">
                             <div className="p-2 bg-green-500/20 rounded-lg">
                                 <Mail className="w-5 h-5 text-green-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Email Settings</h2>
+                                <h2 className="text-lg font-semibold text-white">Email Settings <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Coming</span></h2>
                                 <p className="text-sm text-slate-400">Configure SMTP and email notifications</p>
                             </div>
                         </div>
 
                         <div className="space-y-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                                        {t('instance_page.general_settings.email_verification_title')}
+                                    </label>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={generalSettings.requireEmailVerification}
+                                            onChange={(e) => setGeneralSetting('requireEmailVerification', e.target.checked)}
+                                            className="sr-only peer"
+                                            disabled
+                                        />
+                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                    </label>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -422,6 +423,7 @@ export function InstancePage() {
                                         value={emailSettings.smtpHost}
                                         onChange={(e) => setEmailSetting('smtpHost', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
 
@@ -434,6 +436,7 @@ export function InstancePage() {
                                         value={emailSettings.smtpPort}
                                         onChange={(e) => setEmailSetting('smtpPort', parseInt(e.target.value))}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -448,6 +451,7 @@ export function InstancePage() {
                                         value={emailSettings.smtpUsername}
                                         onChange={(e) => setEmailSetting('smtpUsername', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
 
@@ -460,6 +464,7 @@ export function InstancePage() {
                                         value={emailSettings.smtpPassword}
                                         onChange={(e) => setEmailSetting('smtpPassword', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -474,6 +479,7 @@ export function InstancePage() {
                                         value={emailSettings.fromEmail}
                                         onChange={(e) => setEmailSetting('fromEmail', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
 
@@ -486,6 +492,7 @@ export function InstancePage() {
                                         value={emailSettings.fromName}
                                         onChange={(e) => setEmailSetting('fromName', e.target.value)}
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -501,6 +508,7 @@ export function InstancePage() {
                                         checked={emailSettings.smtpSecure}
                                         onChange={(e) => setEmailSetting('smtpSecure', e.target.checked)}
                                         className="sr-only peer"
+                                        disabled
                                     />
                                     <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                 </label>
