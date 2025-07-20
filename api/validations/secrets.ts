@@ -36,8 +36,8 @@ const jsonToUint8ArraySchema = z.preprocess((arg) => {
 }, z.instanceof(Uint8Array));
 
 const secretSchema = {
-    secret: jsonToUint8ArraySchema
-    ,
+    salt: z.string(),
+    secret: jsonToUint8ArraySchema,
     title: jsonToUint8ArraySchema.optional().nullable(),
     password: z.string().optional(),
     expiresAt: z
@@ -121,7 +121,7 @@ export const processSecretsQueryParams = (
 
     // Use validated name/description for the where clause
     const { name, description } = parseResult.data;
-        const where: ProcessedSecretsQueryParams['where'] = {};
+    const where: ProcessedSecretsQueryParams['where'] = {};
     if (name) {
         where.name = { contains: name, mode: 'insensitive' };
     }

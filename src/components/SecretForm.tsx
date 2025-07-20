@@ -6,7 +6,7 @@ import { TitleField } from './TitleField';
 import Editor from './Editor';
 import { Modal } from './Modal';
 import { api } from '../lib/api'; // Import the RPC client
-import { encrypt, generateEncryptionKey, encryptFile } from '../lib/nacl';
+import { encrypt, generateEncryptionKey, encryptFile, generateSalt } from '../lib/crypto';
 import { useSecretStore } from '../store/secretStore';
 import { useTranslation } from 'react-i18next';
 
@@ -38,12 +38,13 @@ export function SecretForm() {
         setIsLoading(true);
 
         const encryptionKey = generateEncryptionKey(password);
+        const salt = generateSalt();
 
         const fileIds = [];
         if (files.length > 0) {
             for (const file of files) {
                 try {
-                    const encryptedFile = encryptFile(await file.arrayBuffer(), encryptionKey);
+                    const encryptedFile = await encryptFile(await file.arrayBuffer(), encryptionKey, salt);
                     const encryptedFileAsFile = new File([encryptedFile], file.name, { type: file.type });
 
                     const response = await api.files.$post({
@@ -67,10 +68,14 @@ export function SecretForm() {
             }
         }
 
+        const encryptedSecret = await encrypt(secret, encryptionKey, salt);
+        const encryptedTitle = await encrypt(title, encryptionKey, salt);
+
         // Transform empty strings to null for nullable fields
         const dataToSend = {
-            secret: encrypt(secret, encryptionKey),
-            title: encrypt(title, encryptionKey),
+            secret: encryptedSecret,
+            title: encryptedTitle,
+            salt,
             password: password ? encryptionKey : '',
             expiresAt,
             views,

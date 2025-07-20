@@ -15,6 +15,7 @@ model Secrets {
     title      Bytes
     views      Int?     @default(1)
     password   String?
+    salt       String
     isBurnable Boolean? @default(false) @map("is_burnable")
     createdAt  DateTime @default(now()) @map("created_at")
     expiresAt  DateTime @map("expires_at")
@@ -35,7 +36,6 @@ model File {
 
     @@map("files")
 }
-
 
 model User {
     id            String    @id
@@ -106,31 +106,31 @@ model Verification {
 }
 
 model InstanceSettings {
-    id                        String    @id @default(uuid())
-    instanceName              String?   @default("Hemmelig Instance")
-    instanceDescription       String?   @default("Secure secret sharing platform")
-    allowRegistration         Boolean?  @default(true)
-    requireEmailVerification  Boolean?  @default(false)
-    maxSecretsPerUser         Int?      @default(100)
-    defaultSecretExpiration   Int?      @default(72) // hours
-    maxSecretSize             Int?      @default(1024) // KB
-    enforceHttps              Boolean?  @default(true)
-    allowPasswordProtection   Boolean?  @default(true)
-    allowIpRestriction        Boolean?  @default(true)
-    maxPasswordAttempts       Int?      @default(3)
-    sessionTimeout            Int?      @default(24) // hours
-    enableRateLimiting        Boolean?  @default(true)
-    rateLimitRequests         Int?      @default(100)
-    rateLimitWindow           Int?      @default(60) // minutes
-    smtpHost                  String?
-    smtpPort                  Int?
-    smtpUsername              String?
-    smtpPassword              String?
-    smtpSecure                Boolean?  @default(true)
-    fromEmail                 String?
-    fromName                  String?
-    createdAt                 DateTime  @default(now())
-    updatedAt                 DateTime  @updatedAt
+    id                       String   @id @default(uuid())
+    instanceName             String?  @default("Hemmelig Instance")
+    instanceDescription      String?  @default("Secure secret sharing platform")
+    allowRegistration        Boolean? @default(true)
+    requireEmailVerification Boolean? @default(false)
+    maxSecretsPerUser        Int?     @default(100)
+    defaultSecretExpiration  Int?     @default(72) // hours
+    maxSecretSize            Int?     @default(1024) // KB
+    enforceHttps             Boolean? @default(true)
+    allowPasswordProtection  Boolean? @default(true)
+    allowIpRestriction       Boolean? @default(true)
+    maxPasswordAttempts      Int?     @default(3)
+    sessionTimeout           Int?     @default(24) // hours
+    enableRateLimiting       Boolean? @default(true)
+    rateLimitRequests        Int?     @default(100)
+    rateLimitWindow          Int?     @default(60) // minutes
+    smtpHost                 String?
+    smtpPort                 Int?
+    smtpUsername             String?
+    smtpPassword             String?
+    smtpSecure               Boolean? @default(true)
+    fromEmail                String?
+    fromName                 String?
+    createdAt                DateTime @default(now())
+    updatedAt                DateTime @updatedAt
 
     @@map("instance_settings")
 }

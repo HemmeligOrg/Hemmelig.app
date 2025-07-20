@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useLocation, useLoaderData } from 'react-router-dom';
 import { api } from '../lib/api';
-import { decrypt, generateEncryptionKey, decryptFile } from '../lib/nacl';
+import { decrypt, generateEncryptionKey, decryptFile } from '../lib/crypto';
 import { Loader2, Eye, Hash, File as FileIcon, Download } from 'lucide-react';
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ export function SecretPage() {
     const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
     const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
     const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
+    const [salt, setSalt] = useState<string | null>(null);
 
     const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
 
@@ -35,11 +36,12 @@ export function SecretPage() {
             const data = await response.json();
 
             if (response.status === 200 && data.secret) {
-                const decryptedSecret = decrypt(new Uint8Array(Object.values(data.secret)), finalDecryptionKey);
-                const decryptedTitle = data.title ? decrypt(new Uint8Array(Object.values(data.title)), finalDecryptionKey) : null;
+                const decryptedSecret = await decrypt(new Uint8Array(Object.values(data.secret)), finalDecryptionKey, data.salt);
+                const decryptedTitle = data.title ? await decrypt(new Uint8Array(Object.values(data.title)), finalDecryptionKey, data.salt) : null;
                 setSecretContent(decryptedSecret);
                 setTitle(decryptedTitle);
                 setFiles(data.files);
+                setSalt(data.salt);
                 setShowSecretContent(true);
                 setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
             }
@@ -66,7 +68,7 @@ export function SecretPage() {
         const finalDecryptionKey = passwordInput ? generateEncryptionKey(passwordInput) : decryptionKey;
         const response = await api.files[':id'].$get({ param: { id: file.id } });
         const encryptedFile = await response.arrayBuffer();
-        const decryptedFile = decryptFile(new Uint8Array(encryptedFile), finalDecryptionKey);
+        const decryptedFile = await decryptFile(new Uint8Array(encryptedFile), finalDecryptionKey, salt!);
         const blob = new Blob([decryptedFile]);
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);

@@ -110,6 +110,7 @@ const app = new Hono<{
                     createdAt: true,
                     isBurnable: true,
                     password: true, // Include password if it exists
+                    salt: true,
                     files: {
                         select: {
                             id: true,
@@ -206,9 +207,10 @@ const app = new Hono<{
             // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
 
-            const { expiresAt, password, fileIds, ...rest } = validatedData;
+            const { expiresAt, password, fileIds, salt, ...rest } = validatedData;
             const data: any = {
                 ...rest,
+                salt,
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
                 ...(fileIds && {
