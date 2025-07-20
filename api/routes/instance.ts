@@ -8,6 +8,22 @@ import config from '../config';
 
 const app = new Hono();
 
+const selectFields = {
+    instanceName: true,
+    instanceDescription: true,
+    allowRegistration: true,
+    requireEmailVerification: true,
+    maxSecretsPerUser: true,
+    defaultSecretExpiration: true,
+    maxSecretSize: true,
+    allowPasswordProtection: true,
+    allowIpRestriction: true,
+    maxPasswordAttempts: true,
+    enableRateLimiting: true,
+    rateLimitRequests: true,
+    rateLimitWindow: true,
+};
+
 // GET /api/instance/status
 app.get('/status', async (c) => {
     try {
@@ -32,7 +48,7 @@ app.get('/status', async (c) => {
 // GET /api/instance/settings
 app.get('/settings', async (c) => {
     try {
-        let dbSettings = await prisma.instanceSettings.findFirst();
+        let dbSettings = await prisma.instanceSettings.findFirst({ select: selectFields });
 
         if (!dbSettings) {
             // Prepare initial data from config, filtering out undefined values
@@ -44,6 +60,7 @@ app.get('/settings', async (c) => {
 
             dbSettings = await prisma.instanceSettings.create({
                 data: initialData,
+                select: selectFields,
             });
         }
 
@@ -70,6 +87,7 @@ app.get('/settings', async (c) => {
     }
 });
 
+
 // PUT /api/instance/settings
 app.put(
     '/settings',
@@ -82,6 +100,7 @@ app.put(
             const updatedSettings = await prisma.instanceSettings.update({
                 where: { id: settings.id },
                 data: body,
+                select: selectFields,
             });
 
             return c.json(updatedSettings);
