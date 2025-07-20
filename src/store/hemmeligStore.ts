@@ -32,8 +32,8 @@ type HemmeligState = {
 
 export const useHemmeligStore = create<HemmeligState>((set) => ({
     settings: {
-        instanceName: 'Hemmelig',
-        instanceDescription: 'Share secrets securely.',
+        instanceName: '',
+        instanceDescription: '',
         allowRegistration: true,
     },
     setSettings: (settings) => {

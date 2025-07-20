@@ -3,17 +3,31 @@ import { useDropzone } from 'react-dropzone';
 import { Lock, File as FileIcon, X, UploadCloud } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/userStore';
+import { useHemmeligStore } from '../store/hemmeligStore';
 
 export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => void }) {
     const { t } = useTranslation();
     const { user } = useUserStore();
+    const { settings: instanceSettings } = useHemmeligStore();
     const [files, setFiles] = useState<File[]>([]);
+    const [fileError, setFileError] = useState<string | null>(null);
+
+    const maxFileSizeInBytes = instanceSettings.maxSecretSize * 1024; // Convert KB to bytes
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
+        setFileError(null); // Clear previous errors
+        const currentTotalSize = files.reduce((sum, file) => sum + file.size, 0);
+        const newFilesTotalSize = acceptedFiles.reduce((sum, file) => sum + file.size, 0);
+
+        if (currentTotalSize + newFilesTotalSize > maxFileSizeInBytes) {
+            setFileError(t('file_upload.max_size_exceeded', { maxSize: instanceSettings.maxSecretSize }));
+            return;
+        }
+
         const newFiles = [...files, ...acceptedFiles];
         setFiles(newFiles);
         onFileChange(newFiles);
-    }, [files, onFileChange]);
+    }, [files, onFileChange, maxFileSizeInBytes, instanceSettings.maxSecretSize, t]);
 		
 		const removeFile = (fileToRemove: File) => {
         const newFiles = files.filter(file => file !== fileToRemove);
@@ -23,6 +37,7 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
 		
 		const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
+        maxSize: maxFileSizeInBytes, // Enforce max size per file as well
     });
 
     if (!user) {
@@ -76,6 +91,7 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
                     ))}
                 </div>
             )}
+            {fileError && <p className="text-red-500 text-sm mt-2">{fileError}</p>}
         </div>
     );
 }

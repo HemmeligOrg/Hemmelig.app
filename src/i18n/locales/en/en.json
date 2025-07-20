@@ -90,7 +90,8 @@
     "password_label": "Password",
     "create_new_secret_button": "Create New Secret",
     "copy_url_button": "Copy URL",
-    "burn_secret_button": "Burn Secret"
+    "burn_secret_button": "Burn Secret",
+    "max_secrets_per_user_info": "You can create up to {{count}} secrets."
   },
   "security_settings": {
     "security_title": "Security",

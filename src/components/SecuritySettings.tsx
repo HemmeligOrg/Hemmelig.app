@@ -6,8 +6,11 @@ import { ExpirationSelect } from './ExpirationSelect';
 import { useSecretStore } from '../store/secretStore';
 import { useTranslation } from 'react-i18next';
 
+import { useHemmeligStore } from '../store/hemmeligStore';
+
 export function SecuritySettings() {
     const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
+    const { settings: instanceSettings } = useHemmeligStore();
     const { t } = useTranslation();
 
     const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!password);
@@ -109,89 +112,93 @@ export function SecuritySettings() {
                 {/* Additional Security Options - Mobile optimized */}
                 <div className="space-y-3 sm:space-y-4">
                     {/* Password Protection */}
-                    <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
-                        <div className="flex items-start justify-between mb-3 sm:mb-4">
-                            <div className="flex items-start space-x-3 min-w-0 flex-1">
-                                <div className="p-2 bg-blue-500/20 rounded-lg flex-shrink-0">
-                                    <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                    {instanceSettings.allowPasswordProtection && (
+                        <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
+                            <div className="flex items-start justify-between mb-3 sm:mb-4">
+                                <div className="flex items-start space-x-3 min-w-0 flex-1">
+                                    <div className="p-2 bg-blue-500/20 rounded-lg flex-shrink-0">
+                                        <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.password_protection_title')}</h3>
+                                        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                                            {t('security_settings.password_protection_description')}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.password_protection_title')}</h3>
-                                <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                                    {t('security_settings.password_protection_description')}
-                                </p>
+                                <div className="flex-shrink-0 ml-3">
+                                    <ToggleSwitch
+                                        checked={isPasswordEnabled}
+                                        onChange={val => {
+                                            setIsPasswordEnabled(val);
+                                            if (!val) setSecretData({ password: null });
+                                        }}
+                                    />
                                 </div>
                             </div>
-                            <div className="flex-shrink-0 ml-3">
-                                <ToggleSwitch
-                                    checked={isPasswordEnabled}
-                                    onChange={val => {
-                                        setIsPasswordEnabled(val);
-                                        if (!val) setSecretData({ password: null });
-                                    }}
-                                />
-                            </div>
-                        </div>
 
-                        {isPasswordEnabled && (
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-300">
-                                    {t('security_settings.enter_password_label')}
-                                </label>
-                                <input
-                                    type="text"
-                                    value={password || ''}
-                                    onChange={(e) => setSecretData({ password: e.target.value })}
-                                    placeholder={t('security_settings.password_placeholder')}
-                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
-                                />
-                                <p className="text-xs text-slate-400">
-                                    {t('security_settings.password_hint')}
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                            {isPasswordEnabled && (
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-medium text-slate-300">
+                                        {t('security_settings.enter_password_label')}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={password || ''}
+                                        onChange={(e) => setSecretData({ password: e.target.value })}
+                                        placeholder={t('security_settings.password_placeholder')}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
+                                    />
+                                    <p className="text-xs text-slate-400">
+                                        {t('security_settings.password_hint')}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* IP Restriction */}
-                    <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
-                        <div className="flex items-start justify-between mb-3 sm:mb-4">
-                            <div className="flex items-start space-x-3 min-w-0 flex-1">
-                                <div className="p-2 bg-purple-500/20 rounded-lg flex-shrink-0">
-                                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                    {instanceSettings.allowIpRestriction && (
+                        <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
+                            <div className="flex items-start justify-between mb-3 sm:mb-4">
+                                <div className="flex items-start space-x-3 min-w-0 flex-1">
+                                    <div className="p-2 bg-purple-500/20 rounded-lg flex-shrink-0">
+                                        <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.ip_restriction_title')}</h3>
+                                        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                                            {t('security_settings.ip_restriction_description')}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-medium text-white text-sm sm:text-base">{t('security_settings.ip_restriction_title')}</h3>
-                                <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                                    {t('security_settings.ip_restriction_description')}
-                                </p>
+                                <div className="flex-shrink-0 ml-3">
+                                    <ToggleSwitch
+                                        checked={ipRange !== undefined}
+                                        onChange={handleIpRangeToggle}
+                                    />
                                 </div>
                             </div>
-                            <div className="flex-shrink-0 ml-3">
-                                <ToggleSwitch
-                                    checked={ipRange !== undefined}
-                                    onChange={handleIpRangeToggle}
-                                />
-                            </div>
-                        </div>
 
-                        {ipRange !== undefined && (
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-300">
-                                    {t('security_settings.ip_address_cidr_label')}
-                                </label>
-                                <input
-                                    type="text"
-                                    value={ipRange || ''}
-                                    onChange={(e) => setSecretData({ ipRange: e.target.value })}
-                                    placeholder={t('security_settings.ip_address_cidr_placeholder')}
-                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
-                                />
-                                <p className="text-xs text-slate-400">
-                                    {t('security_settings.ip_address_cidr_hint')}
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                            {ipRange !== undefined && (
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-medium text-slate-300">
+                                        {t('security_settings.ip_address_cidr_label')}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={ipRange || ''}
+                                        onChange={(e) => setSecretData({ ipRange: e.target.value })}
+                                        placeholder={t('security_settings.ip_address_cidr_placeholder')}
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
+                                    />
+                                    <p className="text-xs text-slate-400">
+                                        {t('security_settings.ip_address_cidr_hint')}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Burn After Time */}
                     <div className="flex items-start justify-between p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">

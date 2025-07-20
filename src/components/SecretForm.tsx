@@ -21,7 +21,10 @@ export interface SecretFormData {
     files?: File[];
 }
 
+import { useHemmeligStore } from '../store/hemmeligStore';
+
 export function SecretForm() {
+    const { settings: instanceSettings } = useHemmeligStore();
     const { secret, title, password, expiresAt, views, isBurnable, ipRange, setSecretIdAndKeys, setSecretData } = useSecretStore();
     const { t } = useTranslation();
 
@@ -116,6 +119,7 @@ export function SecretForm() {
                     name="text"
                     content={secret}
                     onChange={(value) => setSecretData({ secret: value })}
+                    maxSize={instanceSettings.maxSecretSize}
                 //editable={!inputReadOnly}
                 />
 
@@ -127,12 +131,12 @@ export function SecretForm() {
                 </div>
 
                 <div className="mt-6">
-                    <FileUpload onFileChange={handleFileChange} />
+                    <FileUpload onFileChange={handleFileChange} instanceSettings={instanceSettings} />
                 </div>
             </div>
 
             {/* Security settings */}
-            <SecuritySettings />
+            <SecuritySettings instanceSettings={instanceSettings} />
 
             {/* Create button */}
             <CreateButton

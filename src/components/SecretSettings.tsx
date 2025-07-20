@@ -5,9 +5,12 @@ import { api } from '../lib/api';
 import { useSecretStore } from '../store/secretStore';
 import { useTranslation } from 'react-i18next';
 
+import { useHemmeligStore } from '../store/hemmeligStore';
+
 export const SecretSettings = () => {
     const { secretId, decryptionKey, password, resetSecret } = useSecretStore();
     const { t } = useTranslation();
+    const { settings: instanceSettings } = useHemmeligStore();
     const secretUrl = `${window.location.origin}/secret/${secretId}${!password ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
 
@@ -104,6 +107,11 @@ export const SecretSettings = () => {
                     <button onClick={handleBurnSecret} className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg">{t('secret_settings.burn_secret_button')}</button>
                 </div>
             </div>
+            {instanceSettings?.maxSecretsPerUser && (
+                <p className="text-slate-400 text-xs mt-4 text-center">
+                    {t('secret_settings.max_secrets_per_user_info', { count: instanceSettings.maxSecretsPerUser })}
+                </p>
+            )}
         </div>
     );
 };

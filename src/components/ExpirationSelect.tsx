@@ -1,15 +1,22 @@
 import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { useHemmeligStore } from '../store/hemmeligStore';
+
 interface ExpirationSelectProps {
     value?: number;
     onChange: (expiration?: number) => void;
 }
 
 export function ExpirationSelect({ value, onChange }: ExpirationSelectProps) {
+    const { settings: instanceSettings } = useHemmeligStore();
     const { t } = useTranslation();
 
-    const options = [
+    const defaultExpirationInSeconds = instanceSettings?.defaultSecretExpiration ? instanceSettings.defaultSecretExpiration * 3600 : undefined;
+
+    const baseOptions = [
+        { value: 2419200, label: t('expiration.28_days') },
+        { value: 1209600, label: t('expiration.14_days') },
         { value: 604800, label: t('expiration.7_days') },
         { value: 259200, label: t('expiration.3_days') },
         { value: 86400, label: t('expiration.1_day') },
@@ -20,14 +27,16 @@ export function ExpirationSelect({ value, onChange }: ExpirationSelectProps) {
         { value: 300, label: t('expiration.5_minutes') },
     ];
 
+    const options = defaultExpirationInSeconds && !baseOptions.some(opt => opt.value === defaultExpirationInSeconds)
+        ? [{ value: defaultExpirationInSeconds, label: t('expiration.default_hours', { hours: instanceSettings.defaultSecretExpiration }) }, ...baseOptions]
+        : baseOptions;
+
     const getCurrentValue = () => {
-        return options.find(opt => opt.value === value)?.value;
+        return value !== undefined ? value : defaultExpirationInSeconds;
     };
 
     const handleChange = (expiration: number) => {
-        onChange(
-            expiration,
-        )
+        onChange(expiration);
     };
 
     return (
