@@ -242,8 +242,7 @@
     "security_settings": {
       "title": "Security Settings",
       "description": "Configure security and access controls",
-      "enforce_https_title": "Enforce HTTPS",
-      "enforce_https_description": "Require secure connections",
+      
       "rate_limiting_title": "Rate Limiting",
       "rate_limiting_description": "Enable request rate limiting",
       "max_password_attempts_label": "Max Password Attempts",

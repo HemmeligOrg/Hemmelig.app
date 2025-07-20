@@ -240,22 +240,6 @@ export function InstancePage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
-                                        <h3 className="font-medium text-white">Enforce HTTPS</h3>
-                                        <p className="text-sm text-slate-400">Require secure connections</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={securitySettings.enforceHttps}
-                                            onChange={(e) => setSecuritySetting('enforceHttps', e.target.checked)}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
-                                    </label>
-                                </div>
-
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
-                                    <div>
                                         <h3 className="font-medium text-white">Rate Limiting</h3>
                                         <p className="text-sm text-slate-400">Enable request rate limiting</p>
                                     </div>

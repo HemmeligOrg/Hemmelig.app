@@ -8,7 +8,7 @@ export const instanceSettingsSchema = z.object({
     maxSecretsPerUser: z.number().int().min(1).optional(),
     defaultSecretExpiration: z.number().int().min(1).optional(),
     maxSecretSize: z.number().int().min(1).optional(),
-    enforceHttps: z.boolean().optional(),
+    
     allowPasswordProtection: z.boolean().optional(),
     allowIpRestriction: z.boolean().optional(),
     maxPasswordAttempts: z.number().int().min(1).optional(),

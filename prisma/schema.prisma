@@ -114,7 +114,6 @@ model InstanceSettings {
     maxSecretsPerUser        Int?     @default(100)
     defaultSecretExpiration  Int?     @default(72) // hours
     maxSecretSize            Int?     @default(1024) // KB
-    enforceHttps             Boolean? @default(true)
     allowPasswordProtection  Boolean? @default(true)
     allowIpRestriction       Boolean? @default(true)
     maxPasswordAttempts      Int?     @default(3)

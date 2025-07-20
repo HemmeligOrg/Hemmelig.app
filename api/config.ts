@@ -37,7 +37,6 @@ const config = {
         maxSecretSize: parseNumber(process.env.HEMMELIG_MAX_SECRET_SIZE),
     },
     security: {
-        enforceHttps: parseBoolean(process.env.HEMMELIG_ENFORCE_HTTPS),
         allowPasswordProtection: parseBoolean(process.env.HEMMELIG_ALLOW_PASSWORD_PROTECTION),
         allowIpRestriction: parseBoolean(process.env.HEMMELIG_ALLOW_IP_RESTRICTION),
         maxPasswordAttempts: parseNumber(process.env.HEMMELIG_MAX_PASSWORD_ATTEMPTS),
