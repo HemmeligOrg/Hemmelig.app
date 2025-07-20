@@ -212,24 +212,6 @@ export function InstancePage() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
-                                    <div>
-                                        <h3 className="font-medium text-white">{t('instance_page.general_settings.allow_registration_title')}</h3>
-                                        <p className="text-sm text-slate-400">{t('instance_page.general_settings.allow_registration_description')}</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={generalSettings.allowRegistration}
-                                            onChange={(e) => setGeneralSetting('allowRegistration', e.target.checked)}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
-                                    </label>
-                                </div>
-                            </div>
-
                             <button
                                 onClick={() => handleSaveSettings('general')}
                                 disabled={isLoading}
@@ -551,7 +533,7 @@ export function InstancePage() {
                                         <span className="text-white">{systemInfo.totalUsers}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-slate-400">Disk Usage:</span>
+                                        <span className="text-slate-400">{t('instance_page.database_info.disk_usage')}</span>
                                         <span className="text-white">{systemInfo.diskUsage}</span>
                                     </div>
                                 </div>
@@ -622,32 +604,10 @@ export function InstancePage() {
                                 </div>
                             </div>
 
-                            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                    <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                                    <div>
-                                        <h3 className="font-medium text-red-300 mb-2">Maintenance Actions</h3>
-                                        <p className="text-sm text-red-200/80 mb-4">
-                                            These actions can affect system availability. Use with caution.
-                                        </p>
-                                        <div className="flex flex-wrap gap-3">
-                                            <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300">
-                                                Restart Service
-                                            </button>
-                                            <button className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-all duration-300">
-                                                Clear Cache
-                                            </button>
-                                            <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all duration-300">
-                                                Export Logs
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }

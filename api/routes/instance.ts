@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import prisma from '../lib/db';
 import * as os from 'os';
+import * as fs from 'fs';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { instanceSettingsSchema } from '../validations/instance';
@@ -30,6 +31,14 @@ app.get('/status', async (c) => {
         const totalSecrets = await prisma.secrets.count();
         const totalUsers = await prisma.user.count();
 
+        let diskUsage = 'N/A';
+        try {
+            const stats = fs.statSync('./database/hemmelig.db');
+            diskUsage = `${(stats.size / (1024 * 1024)).toFixed(2)} MB`;
+        } catch (error) {
+            console.error('Failed to get database file size:', error);
+        }
+
         return c.json({
             version: process.env.npm_package_version || 'dev',
             uptime: os.uptime(),
@@ -38,6 +47,7 @@ app.get('/status', async (c) => {
             memoryUsage: process.memoryUsage().rss,
             cpuUsage: os.loadavg()[0],
             status: 'healthy',
+            diskUsage,
         });
     } catch (error) {
         console.error('Failed to fetch system status:', error);
