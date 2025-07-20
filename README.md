@@ -44,6 +44,17 @@ encryptedData = encrypt(yourSecretData, uniqueEncryptionKey)
 // uniqueEncryptionKey is only shared via URL as a fragment.
 ```
 
+## Cryptography
+
+Hemmelig uses the Web Crypto API for all cryptographic operations, ensuring a high level of security and compliance with modern web standards. The platform employs the following cryptographic features:
+
+- **Encryption Algorithm:** AES-256-GCM is used for symmetric encryption of all secrets and files. This algorithm provides both confidentiality and data integrity.
+- **Key Derivation:** PBKDF2 with 100,000 iterations and SHA-256 is used to derive a 256-bit encryption key from a user-provided password or a randomly generated key.
+- **Salting:** Each secret is protected with a unique, randomly generated 256-bit salt. This salt is used in the key derivation process to protect against rainbow table attacks.
+- **Client-Side Operations:** All encryption and decryption operations are performed in the user's browser. The server only ever receives encrypted data, ensuring that the platform operators cannot access the content of the secrets.
+
+**BREAKING CHANGE:** As of version [version number], the encryption algorithm was migrated from TweetNaCl (XSalsa20-Poly1305) to the Web Crypto API (AES-256-GCM). Secrets created with previous versions of the application are not compatible with this new version and cannot be decrypted.
+
 ## Hetzner Cloud Referral
 
 Hemmelig is proudly hosted on [Hetzner Cloud](https://hetzner.cloud/?ref=Id028KbCZQoD). Hetzner provides reliable and scalable cloud solutions, making it an ideal choice for hosting secure applications like Hemmelig. By using our [referral link](https://hetzner.cloud/?ref=Id028KbCZQoD), you can join Hetzner Cloud and receive €20/$20 in credits. Once you spend at least €10/$10 (excluding credits), Hemmelig will receive €10/$10 in Hetzner Cloud credits. This is a great opportunity to explore Hetzner's services while supporting Hemmelig.
