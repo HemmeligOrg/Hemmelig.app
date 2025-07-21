@@ -1,20 +1,12 @@
-import { useState, useEffect } from 'react';
+import { CheckCircle, Database, Info, Mail, Save, Server, Settings, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    Server,
-    Settings,
-    Database,
-    Shield,
-    Mail,
-    Save,
-    AlertTriangle,
-    Info,
-    CheckCircle,
-} from 'lucide-react';
 import { useInstanceStore } from '../../store/instanceStore';
 
 export function InstancePage() {
-    const [activeTab, setActiveTab] = useState<'general' | 'security' | 'email' | 'database' | 'system'>('general');
+    const [activeTab, setActiveTab] = useState<
+        'general' | 'security' | 'email' | 'database' | 'system'
+    >('general');
     const { t } = useTranslation();
 
     const {
@@ -23,6 +15,7 @@ export function InstancePage() {
         securitySettings,
         emailSettings,
         isLoading,
+        error,
         fetchStatus,
         fetchSettings,
         setGeneralSetting,
@@ -40,6 +33,19 @@ export function InstancePage() {
         saveSettings(section);
     };
 
+    if (isLoading) {
+        return <div className="p-8 text-center">Loading instance settings...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="p-8 text-center">
+                <h2 className="text-2xl font-bold text-red-500">Error</h2>
+                <p className="text-slate-400 mt-2">{error}</p>
+            </div>
+        );
+    }
+
     const tabs = [
         { id: 'general', name: 'General', icon: Settings },
         { id: 'security', name: 'Security', icon: Shield },
@@ -52,7 +58,9 @@ export function InstancePage() {
         <div className="p-4 sm:p-6 lg:p-8">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('instance_page.title')}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">
+                    {t('instance_page.title')}
+                </h1>
                 <p className="text-slate-400 mt-1">{t('instance_page.description')}</p>
             </div>
 
@@ -63,8 +71,12 @@ export function InstancePage() {
                         <CheckCircle className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-white">{t('instance_page.system_status.title')}</h2>
-                        <p className="text-sm text-slate-400">{t('instance_page.system_status.description')}</p>
+                        <h2 className="text-lg font-semibold text-white">
+                            {t('instance_page.system_status.title')}
+                        </h2>
+                        <p className="text-sm text-slate-400">
+                            {t('instance_page.system_status.description')}
+                        </p>
                     </div>
                 </div>
 
@@ -72,8 +84,12 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">{t('instance_page.system_status.version')}</p>
-                                <p className="text-lg font-semibold text-white">{systemInfo.version}</p>
+                                <p className="text-sm text-slate-400">
+                                    {t('instance_page.system_status.version')}
+                                </p>
+                                <p className="text-lg font-semibold text-white">
+                                    {systemInfo.version}
+                                </p>
                             </div>
                             <Info className="w-5 h-5 text-blue-400" />
                         </div>
@@ -82,8 +98,12 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">{t('instance_page.system_status.uptime')}</p>
-                                <p className="text-lg font-semibold text-white">{systemInfo.uptime}</p>
+                                <p className="text-sm text-slate-400">
+                                    {t('instance_page.system_status.uptime')}
+                                </p>
+                                <p className="text-lg font-semibold text-white">
+                                    {systemInfo.uptime}
+                                </p>
                             </div>
                             <Server className="w-5 h-5 text-green-400" />
                         </div>
@@ -92,8 +112,12 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">{t('instance_page.system_status.memory')}</p>
-                                <p className="text-lg font-semibold text-white">{systemInfo.memoryUsage}</p>
+                                <p className="text-sm text-slate-400">
+                                    {t('instance_page.system_status.memory')}
+                                </p>
+                                <p className="text-lg font-semibold text-white">
+                                    {systemInfo.memoryUsage}
+                                </p>
                             </div>
                             <Database className="w-5 h-5 text-yellow-400" />
                         </div>
@@ -102,8 +126,12 @@ export function InstancePage() {
                     <div className="bg-slate-700/30 rounded-lg p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-slate-400">{t('instance_page.system_status.cpu_usage')}</p>
-                                <p className="text-lg font-semibold text-white">{systemInfo.cpuUsage}</p>
+                                <p className="text-sm text-slate-400">
+                                    {t('instance_page.system_status.cpu_usage')}
+                                </p>
+                                <p className="text-lg font-semibold text-white">
+                                    {systemInfo.cpuUsage}
+                                </p>
                             </div>
                             <Settings className="w-5 h-5 text-purple-400" />
                         </div>
@@ -120,11 +148,21 @@ export function InstancePage() {
                             return (
                                 <button
                                     key={tab.id}
-                                    onClick={() => setActiveTab(tab.id as 'general' | 'security' | 'email' | 'database' | 'system')}
-                                    className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${activeTab === tab.id
-                                        ? 'border-teal-500 text-teal-400'
-                                        : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
-                                        }`}
+                                    onClick={() =>
+                                        setActiveTab(
+                                            tab.id as
+                                                | 'general'
+                                                | 'security'
+                                                | 'email'
+                                                | 'database'
+                                                | 'system'
+                                        )
+                                    }
+                                    className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
+                                        activeTab === tab.id
+                                            ? 'border-teal-500 text-teal-400'
+                                            : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                                    }`}
                                 >
                                     <Icon className="w-4 h-4" />
                                     <span>{tab.name}</span>
@@ -144,8 +182,12 @@ export function InstancePage() {
                                 <Settings className="w-5 h-5 text-blue-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">{t('instance_page.general_settings.title')}</h2>
-                                <p className="text-sm text-slate-400">{t('instance_page.general_settings.description')}</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    {t('instance_page.general_settings.title')}
+                                </h2>
+                                <p className="text-sm text-slate-400">
+                                    {t('instance_page.general_settings.description')}
+                                </p>
                             </div>
                         </div>
 
@@ -158,7 +200,9 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={generalSettings.instanceName}
-                                        onChange={(e) => setGeneralSetting('instanceName', e.target.value)}
+                                        onChange={(e) =>
+                                            setGeneralSetting('instanceName', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -170,7 +214,12 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={generalSettings.defaultSecretExpiration}
-                                        onChange={(e) => setGeneralSetting('defaultSecretExpiration', parseInt(e.target.value))}
+                                        onChange={(e) =>
+                                            setGeneralSetting(
+                                                'defaultSecretExpiration',
+                                                parseInt(e.target.value)
+                                            )
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -182,7 +231,12 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={generalSettings.maxSecretSize}
-                                        onChange={(e) => setGeneralSetting('maxSecretSize', parseInt(e.target.value))}
+                                        onChange={(e) =>
+                                            setGeneralSetting(
+                                                'maxSecretSize',
+                                                parseInt(e.target.value)
+                                            )
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -194,7 +248,9 @@ export function InstancePage() {
                                 </label>
                                 <textarea
                                     value={generalSettings.instanceDescription}
-                                    onChange={(e) => setGeneralSetting('instanceDescription', e.target.value)}
+                                    onChange={(e) =>
+                                        setGeneralSetting('instanceDescription', e.target.value)
+                                    }
                                     rows={3}
                                     className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                 />
@@ -206,7 +262,11 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
+                                <span>
+                                    {isLoading
+                                        ? t('instance_page.saving_button')
+                                        : t('instance_page.save_settings_button')}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -219,8 +279,12 @@ export function InstancePage() {
                                 <Shield className="w-5 h-5 text-orange-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Security Settings</h2>
-                                <p className="text-sm text-slate-400">Configure security and access controls</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    Security Settings
+                                </h2>
+                                <p className="text-sm text-slate-400">
+                                    Configure security and access controls
+                                </p>
                             </div>
                         </div>
 
@@ -229,13 +293,20 @@ export function InstancePage() {
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
                                         <h3 className="font-medium text-white">Rate Limiting</h3>
-                                        <p className="text-sm text-slate-400">Enable request rate limiting</p>
+                                        <p className="text-sm text-slate-400">
+                                            Enable request rate limiting
+                                        </p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.enableRateLimiting}
-                                            onChange={(e) => setSecuritySetting('enableRateLimiting', e.target.checked)}
+                                            onChange={(e) =>
+                                                setSecuritySetting(
+                                                    'enableRateLimiting',
+                                                    e.target.checked
+                                                )
+                                            }
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -244,14 +315,23 @@ export function InstancePage() {
 
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
-                                        <h3 className="font-medium text-white">Allow Password Protection</h3>
-                                        <p className="text-sm text-slate-400">Allow users to password protect secrets</p>
+                                        <h3 className="font-medium text-white">
+                                            Allow Password Protection
+                                        </h3>
+                                        <p className="text-sm text-slate-400">
+                                            Allow users to password protect secrets
+                                        </p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.allowPasswordProtection}
-                                            onChange={(e) => setSecuritySetting('allowPasswordProtection', e.target.checked)}
+                                            onChange={(e) =>
+                                                setSecuritySetting(
+                                                    'allowPasswordProtection',
+                                                    e.target.checked
+                                                )
+                                            }
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -260,14 +340,23 @@ export function InstancePage() {
 
                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                     <div>
-                                        <h3 className="font-medium text-white">Allow IP Restriction</h3>
-                                        <p className="text-sm text-slate-400">Allow users to restrict secrets by IP</p>
+                                        <h3 className="font-medium text-white">
+                                            Allow IP Restriction
+                                        </h3>
+                                        <p className="text-sm text-slate-400">
+                                            Allow users to restrict secrets by IP
+                                        </p>
                                     </div>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.allowIpRestriction}
-                                            onChange={(e) => setSecuritySetting('allowIpRestriction', e.target.checked)}
+                                            onChange={(e) =>
+                                                setSecuritySetting(
+                                                    'allowIpRestriction',
+                                                    e.target.checked
+                                                )
+                                            }
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
@@ -283,7 +372,12 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={securitySettings.rateLimitRequests}
-                                        onChange={(e) => setSecuritySetting('rateLimitRequests', parseInt(e.target.value))}
+                                        onChange={(e) =>
+                                            setSecuritySetting(
+                                                'rateLimitRequests',
+                                                parseInt(e.target.value)
+                                            )
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -295,7 +389,12 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={securitySettings.rateLimitWindow}
-                                        onChange={(e) => setSecuritySetting('rateLimitWindow', parseInt(e.target.value))}
+                                        onChange={(e) =>
+                                            setSecuritySetting(
+                                                'rateLimitWindow',
+                                                parseInt(e.target.value)
+                                            )
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
@@ -307,7 +406,11 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
+                                <span>
+                                    {isLoading
+                                        ? t('instance_page.saving_button')
+                                        : t('instance_page.save_settings_button')}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -320,8 +423,15 @@ export function InstancePage() {
                                 <Mail className="w-5 h-5 text-green-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Email Settings <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Coming</span></h2>
-                                <p className="text-sm text-slate-400">Configure SMTP and email notifications</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    Email Settings{' '}
+                                    <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                                        Coming
+                                    </span>
+                                </h2>
+                                <p className="text-sm text-slate-400">
+                                    Configure SMTP and email notifications
+                                </p>
                             </div>
                         </div>
 
@@ -329,13 +439,20 @@ export function InstancePage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        {t('instance_page.general_settings.email_verification_title')}
+                                        {t(
+                                            'instance_page.general_settings.email_verification_title'
+                                        )}
                                     </label>
                                     <label className="relative inline-flex items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={generalSettings.requireEmailVerification}
-                                            onChange={(e) => setGeneralSetting('requireEmailVerification', e.target.checked)}
+                                            onChange={(e) =>
+                                                setGeneralSetting(
+                                                    'requireEmailVerification',
+                                                    e.target.checked
+                                                )
+                                            }
                                             className="sr-only peer"
                                             disabled
                                         />
@@ -351,7 +468,9 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={emailSettings.smtpHost}
-                                        onChange={(e) => setEmailSetting('smtpHost', e.target.value)}
+                                        onChange={(e) =>
+                                            setEmailSetting('smtpHost', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -364,7 +483,9 @@ export function InstancePage() {
                                     <input
                                         type="number"
                                         value={emailSettings.smtpPort}
-                                        onChange={(e) => setEmailSetting('smtpPort', parseInt(e.target.value))}
+                                        onChange={(e) =>
+                                            setEmailSetting('smtpPort', parseInt(e.target.value))
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -379,7 +500,9 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={emailSettings.smtpUsername}
-                                        onChange={(e) => setEmailSetting('smtpUsername', e.target.value)}
+                                        onChange={(e) =>
+                                            setEmailSetting('smtpUsername', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -392,7 +515,9 @@ export function InstancePage() {
                                     <input
                                         type="password"
                                         value={emailSettings.smtpPassword}
-                                        onChange={(e) => setEmailSetting('smtpPassword', e.target.value)}
+                                        onChange={(e) =>
+                                            setEmailSetting('smtpPassword', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -407,7 +532,9 @@ export function InstancePage() {
                                     <input
                                         type="email"
                                         value={emailSettings.fromEmail}
-                                        onChange={(e) => setEmailSetting('fromEmail', e.target.value)}
+                                        onChange={(e) =>
+                                            setEmailSetting('fromEmail', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -420,7 +547,9 @@ export function InstancePage() {
                                     <input
                                         type="text"
                                         value={emailSettings.fromName}
-                                        onChange={(e) => setEmailSetting('fromName', e.target.value)}
+                                        onChange={(e) =>
+                                            setEmailSetting('fromName', e.target.value)
+                                        }
                                         className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
@@ -430,13 +559,17 @@ export function InstancePage() {
                             <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                 <div>
                                     <h3 className="font-medium text-white">SMTP Secure</h3>
-                                    <p className="text-sm text-slate-400">Use TLS for SMTP connection</p>
+                                    <p className="text-sm text-slate-400">
+                                        Use TLS for SMTP connection
+                                    </p>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
                                         checked={emailSettings.smtpSecure}
-                                        onChange={(e) => setEmailSetting('smtpSecure', e.target.checked)}
+                                        onChange={(e) =>
+                                            setEmailSetting('smtpSecure', e.target.checked)
+                                        }
                                         className="sr-only peer"
                                         disabled
                                     />
@@ -450,7 +583,11 @@ export function InstancePage() {
                                 className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{isLoading ? t('instance_page.saving_button') : t('instance_page.save_settings_button')}</span>
+                                <span>
+                                    {isLoading
+                                        ? t('instance_page.saving_button')
+                                        : t('instance_page.save_settings_button')}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -463,8 +600,12 @@ export function InstancePage() {
                                 <Database className="w-5 h-5 text-purple-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Database Information</h2>
-                                <p className="text-sm text-slate-400">Database status and statistics</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    Database Information
+                                </h2>
+                                <p className="text-sm text-slate-400">
+                                    Database status and statistics
+                                </p>
                             </div>
                         </div>
 
@@ -474,14 +615,18 @@ export function InstancePage() {
                                 <div className="space-y-2">
                                     <div className="flex justify-between">
                                         <span className="text-slate-400">Total Secrets:</span>
-                                        <span className="text-white">{systemInfo.totalSecrets}</span>
+                                        <span className="text-white">
+                                            {systemInfo.totalSecrets}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-slate-400">Total Users:</span>
                                         <span className="text-white">{systemInfo.totalUsers}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-slate-400">{t('instance_page.database_info.disk_usage')}</span>
+                                        <span className="text-slate-400">
+                                            {t('instance_page.database_info.disk_usage')}
+                                        </span>
                                         <span className="text-white">{systemInfo.diskUsage}</span>
                                     </div>
                                 </div>
@@ -508,8 +653,12 @@ export function InstancePage() {
                                 <Server className="w-5 h-5 text-red-400" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-white">System Information</h2>
-                                <p className="text-sm text-slate-400">Server details and maintenance</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    System Information
+                                </h2>
+                                <p className="text-sm text-slate-400">
+                                    Server details and maintenance
+                                </p>
                             </div>
                         </div>
 
@@ -528,7 +677,9 @@ export function InstancePage() {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-slate-400">Status:</span>
-                                            <span className="text-green-400 capitalize">{systemInfo.status}</span>
+                                            <span className="text-green-400 capitalize">
+                                                {systemInfo.status}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -538,24 +689,29 @@ export function InstancePage() {
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
                                             <span className="text-slate-400">Memory:</span>
-                                            <span className="text-white">{systemInfo.memoryUsage}</span>
+                                            <span className="text-white">
+                                                {systemInfo.memoryUsage}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-slate-400">CPU:</span>
-                                            <span className="text-white">{systemInfo.cpuUsage}</span>
+                                            <span className="text-white">
+                                                {systemInfo.cpuUsage}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-slate-400">Disk:</span>
-                                            <span className="text-white">{systemInfo.diskUsage}</span>
+                                            <span className="text-white">
+                                                {systemInfo.diskUsage}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 )}
             </div>
-        </div >
+        </div>
     );
 }

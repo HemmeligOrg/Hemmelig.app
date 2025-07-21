@@ -4,6 +4,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
+import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
 import instanceSettings from '../instance-settings';
 import config from '../config';
@@ -25,7 +26,7 @@ const selectFields = {
 };
 
 // GET /api/instance/status
-app.get('/status', async (c) => {
+app.get('/status', checkAdmin, async (c) => {
     try {
         const totalSecrets = await prisma.secrets.count();
         const totalUsers = await prisma.user.count();
@@ -100,6 +101,8 @@ app.get('/settings', async (c) => {
 // PUT /api/instance/settings
 app.put(
     '/settings',
+    authMiddleware,
+    checkAdmin,
     zValidator('json', instanceSettingsSchema),
     async (c) => {
         const body = c.req.valid('json');

@@ -12,10 +12,6 @@ const schema = z.object({
 });
 
 app.get('/', authMiddleware, zValidator('query', schema), async (c) => {
-    if (c.get('user')?.role !== 'admin') {
-        throw new HTTPException(403, { message: 'Forbidden' });
-    }
-
     const { timeRange } = c.req.valid('query');
     const now = new Date();
     const startDate = new Date();

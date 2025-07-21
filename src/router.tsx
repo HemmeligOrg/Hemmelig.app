@@ -1,19 +1,19 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
+import { DashboardLayout } from './components/Layout/DashboardLayout';
+import { RootLayout } from './components/Layout/RootLayout';
+import { api } from './lib/api';
+import { AccountPage } from './pages/Dashboard/AccountPage';
+import { AnalyticsPage } from './pages/Dashboard/AnalyticsPage';
+import { InstancePage } from './pages/Dashboard/InstancePage';
+import { SecretsPage } from './pages/Dashboard/SecretsPage';
+import { UsersPage } from './pages/Dashboard/UsersPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
-import { SecretPage } from './pages/SecretPage';
 import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
-import { DashboardLayout } from './components/Layout/DashboardLayout';
-import { SecretsPage } from './pages/Dashboard/SecretsPage';
-import { AccountPage } from './pages/Dashboard/AccountPage';
-import { AnalyticsPage } from './pages/Dashboard/AnalyticsPage';
-import { UsersPage } from './pages/Dashboard/UsersPage';
-import { InstancePage } from './pages/Dashboard/InstancePage';
-import { api } from './lib/api';
+import { SecretPage } from './pages/SecretPage';
 import { useHemmeligStore } from './store/hemmeligStore';
-import { RootLayout } from './components/Layout/RootLayout';
 
 export const router = createBrowserRouter([
     {
@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
                     return res.json();
                 },
             },
-        ]
+        ],
     },
     {
         path: '/dashboard',
@@ -96,11 +96,26 @@ export const router = createBrowserRouter([
                     } catch {
                         return redirect('/login');
                     }
-                }
+                },
             },
             {
                 path: 'analytics',
                 element: <AnalyticsPage />,
+                loader: async () => {
+                    try {
+                        const res = await api.analytics.$get({ query: { timeRange: '30d' } });
+                        if (res.status === 403) {
+                            return { error: "You don't have permission to view analytics." };
+                        }
+                        if (!res.ok) {
+                            return { error: 'Failed to fetch analytics data.' };
+                        }
+                        return await res.json();
+                    } catch (error) {
+                        console.error('Failed to fetch analytics data:', error);
+                        return { error: 'Failed to fetch analytics data.' };
+                    }
+                },
             },
             {
                 path: 'users',
@@ -110,6 +125,6 @@ export const router = createBrowserRouter([
                 path: 'instance',
                 element: <InstancePage />,
             },
-        ]
-    }
+        ],
+    },
 ]);

@@ -1,10 +1,11 @@
-import { create } from 'zustand';
 import { createAuthClient } from 'better-auth/client';
 import { adminClient } from 'better-auth/client/plugins';
+import { toast } from 'sonner';
+import { create } from 'zustand';
 import { api } from '../lib/api';
 
 const auth = createAuthClient({
-    plugins: [adminClient()]
+    plugins: [adminClient()],
 });
 
 interface User {
@@ -37,6 +38,7 @@ interface UsersStore {
     userToEdit: User | null;
     isAddUserModalOpen: boolean;
     searchTerm: string;
+    error: string | null;
     fetchUsers: () => Promise<void>;
     addUser: (newUser: NewUser) => Promise<void>;
     editUser: (user: User & { password?: string }) => Promise<void>;
@@ -53,13 +55,23 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     userToEdit: null,
     isAddUserModalOpen: false,
     searchTerm: '',
+    error: null,
     fetchUsers: async () => {
+        set({ error: null });
         try {
             const response = await auth.admin.listUsers();
+            if (response.status === 403) {
+                const errorMsg = "You don't have permission to view users.";
+                toast.error(errorMsg);
+                set({ error: errorMsg, users: [] });
+                return;
+            }
             set({ users: response?.data?.users || [] });
         } catch (error) {
-            console.error("Failed to fetch users", error);
-            set({ users: [] });
+            const errorMsg = 'Failed to fetch users';
+            console.error(errorMsg, error);
+            toast.error(errorMsg);
+            set({ users: [], error: errorMsg });
         }
     },
     addUser: async (newUser) => {
@@ -72,17 +84,20 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
                 data: {
                     username: newUser.username,
                     displayUsername: newUser.username,
-                }
+                },
             });
             await get().fetchUsers();
             set({ isAddUserModalOpen: false });
         } catch (error) {
-            console.error("Failed to create user", error);
+            console.error('Failed to create user', error);
         }
     },
     editUser: async (user) => {
         try {
-            await api.user[":id"].$put({ param: { id: user.id }, json: { username: user.username, email: user.email } });
+            await api.user[':id'].$put({
+                param: { id: user.id },
+                json: { username: user.username, email: user.email },
+            });
             await auth.admin.setRole({ userId: user.id, role: user.role });
             if (user.banned) {
                 await auth.admin.banUser({ userId: user.id });
@@ -92,7 +107,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
             await get().fetchUsers();
             set({ userToEdit: null });
         } catch (error) {
-            console.error("Failed to update user", error);
+            console.error('Failed to update user', error);
         }
     },
     deleteUser: async () => {
@@ -103,7 +118,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
             await get().fetchUsers();
             set({ userToDelete: null });
         } catch (error) {
-            console.error("Failed to delete user", error);
+            console.error('Failed to delete user', error);
         }
     },
     setUserToDelete: (user) => set({ userToDelete: user }),

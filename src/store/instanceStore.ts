@@ -1,6 +1,6 @@
+import { toast } from 'sonner';
 import { create } from 'zustand';
 import { api } from '../lib/api';
-import { toast } from 'sonner';
 
 // Helper function to format uptime
 const formatUptime = (seconds: number) => {
@@ -61,10 +61,14 @@ type InstanceState = {
     securitySettings: SecuritySettings;
     emailSettings: EmailSettings;
     isLoading: boolean;
+    error: string | null;
     fetchStatus: () => Promise<void>;
     fetchSettings: () => Promise<void>;
     setGeneralSetting: <K extends keyof GeneralSettings>(key: K, value: GeneralSettings[K]) => void;
-    setSecuritySetting: <K extends keyof SecuritySettings>(key: K, value: SecuritySettings[K]) => void;
+    setSecuritySetting: <K extends keyof SecuritySettings>(
+        key: K,
+        value: SecuritySettings[K]
+    ) => void;
     setEmailSetting: <K extends keyof EmailSettings>(key: K, value: EmailSettings[K]) => void;
     saveSettings: (section: 'general' | 'security' | 'email') => Promise<void>;
 };
@@ -78,7 +82,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         diskUsage: '',
         memoryUsage: '',
         cpuUsage: '',
-        status: ''
+        status: '',
     },
     generalSettings: {
         instanceName: '',
@@ -87,7 +91,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         requireEmailVerification: false,
         maxSecretsPerUser: 1000,
         defaultSecretExpiration: 72,
-        maxSecretSize: 1024
+        maxSecretSize: 1024,
     },
     securitySettings: {
         enforceHttps: true,
@@ -97,7 +101,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         sessionTimeout: 24,
         enableRateLimiting: true,
         rateLimitRequests: 100,
-        rateLimitWindow: 60
+        rateLimitWindow: 60,
     },
     emailSettings: {
         smtpHost: null,
@@ -106,13 +110,21 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         smtpPassword: null,
         smtpSecure: true,
         fromEmail: null,
-        fromName: null
+        fromName: null,
     },
     isLoading: false,
+    error: null,
 
     fetchStatus: async () => {
+        set({ isLoading: true, error: null });
         try {
             const res = await api.instance.status.$get();
+            if (res.status === 403) {
+                const errorMsg = "You don't have permission to view system status.";
+                toast.error(errorMsg);
+                set({ error: errorMsg, isLoading: false });
+                return;
+            }
             const data = await res.json();
             set({
                 systemInfo: {
@@ -120,17 +132,27 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     uptime: formatUptime(data.uptime),
                     memoryUsage: `${(data.memoryUsage / 1024 / 1024).toFixed(2)} MB`,
                     cpuUsage: `${(data.cpuUsage * 100).toFixed(2)}%`,
-                }
+                },
+                isLoading: false,
             });
         } catch (error) {
-            console.error("Failed to fetch system status:", error);
-            toast.error("Failed to fetch system status.");
+            const errorMsg = 'Failed to fetch system status.';
+            console.error(errorMsg, error);
+            toast.error(errorMsg);
+            set({ error: errorMsg, isLoading: false });
         }
     },
 
     fetchSettings: async () => {
+        set({ isLoading: true, error: null });
         try {
             const res = await api.instance.settings.$get();
+            if (res.status === 403) {
+                const errorMsg = "You don't have permission to view settings.";
+                toast.error(errorMsg);
+                set({ error: errorMsg, isLoading: false });
+                return;
+            }
             const settings = await res.json();
             set({
                 generalSettings: {
@@ -160,29 +182,32 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     smtpSecure: settings.smtpSecure,
                     fromEmail: settings.fromEmail,
                     fromName: settings.fromName,
-                }
+                },
+                isLoading: false,
             });
         } catch (error) {
-            console.error("Failed to fetch settings:", error);
-            toast.error("Failed to fetch settings.");
+            const errorMsg = 'Failed to fetch settings.';
+            console.error(errorMsg, error);
+            toast.error(errorMsg);
+            set({ error: errorMsg, isLoading: false });
         }
     },
 
     setGeneralSetting: (key, value) => {
-        set(state => ({
-            generalSettings: { ...state.generalSettings, [key]: value }
+        set((state) => ({
+            generalSettings: { ...state.generalSettings, [key]: value },
         }));
     },
 
     setSecuritySetting: (key, value) => {
-        set(state => ({
-            securitySettings: { ...state.securitySettings, [key]: value }
+        set((state) => ({
+            securitySettings: { ...state.securitySettings, [key]: value },
         }));
     },
 
     setEmailSetting: (key, value) => {
-        set(state => ({
-            emailSettings: { ...state.emailSettings, [key]: value }
+        set((state) => ({
+            emailSettings: { ...state.emailSettings, [key]: value },
         }));
     },
 
@@ -200,7 +225,9 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
             }
 
             await api.instance.settings.$put({ json: settingsToSave });
-            toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} settings saved successfully.`);
+            toast.success(
+                `${section.charAt(0).toUpperCase() + section.slice(1)} settings saved successfully.`
+            );
         } catch (error) {
             console.error(`Failed to save ${section} settings:`, error);
             toast.error(`Failed to save ${section} settings.`);
