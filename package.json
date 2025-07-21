@@ -49,6 +49,7 @@
     "croner": "^9.1.0",
     "generate-password-browser": "^1.1.0",
     "hono": "^4.7.9",
+    "hono-rate-limiter": "^0.4.2",
     "i18next": "^25.2.1",
     "ip-address": "^10.0.1",
     "ip-range-check": "^0.2.0",
