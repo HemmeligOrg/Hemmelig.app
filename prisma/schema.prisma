@@ -107,17 +107,14 @@ model Verification {
 
 model InstanceSettings {
     id                       String   @id @default(uuid())
-    instanceName             String?  @default("Hemmelig Instance")
-    instanceDescription      String?  @default("Secure secret sharing platform")
+    instanceName             String?  @default("")
+    instanceDescription      String?  @default("")
     allowRegistration        Boolean? @default(true)
     requireEmailVerification Boolean? @default(false)
-    maxSecretsPerUser        Int?     @default(100)
     defaultSecretExpiration  Int?     @default(72) // hours
     maxSecretSize            Int?     @default(1024) // KB
     allowPasswordProtection  Boolean? @default(true)
     allowIpRestriction       Boolean? @default(true)
-    maxPasswordAttempts      Int?     @default(3)
-    sessionTimeout           Int?     @default(24) // hours
     enableRateLimiting       Boolean? @default(true)
     rateLimitRequests        Int?     @default(100)
     rateLimitWindow          Int?     @default(60) // minutes

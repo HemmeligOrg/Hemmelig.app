@@ -165,18 +165,6 @@ export function InstancePage() {
 
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        {t('instance_page.general_settings.max_secrets_per_user_label')}
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={generalSettings.maxSecretsPerUser}
-                                        onChange={(e) => setGeneralSetting('maxSecretsPerUser', parseInt(e.target.value))}
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
                                         Default Secret Expiration (hours)
                                     </label>
                                     <input
@@ -288,30 +276,6 @@ export function InstancePage() {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Max Password Attempts
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={securitySettings.maxPasswordAttempts}
-                                        onChange={(e) => setSecuritySetting('maxPasswordAttempts', parseInt(e.target.value))}
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                                        Session Timeout (hours)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={securitySettings.sessionTimeout}
-                                        onChange={(e) => setSecuritySetting('sessionTimeout', parseInt(e.target.value))}
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
-                                </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-slate-300 mb-2">
                                         Rate Limit Requests
