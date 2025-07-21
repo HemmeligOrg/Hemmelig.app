@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { instanceSettingsSchema } from '../validations/instance';
+import instanceSettings from '../instance-settings';
 import config from '../config';
 
 const app = new Hono();
@@ -111,6 +112,13 @@ app.put(
                 where: { id: settings.id },
                 data: body,
                 select: selectFields,
+            });
+
+
+            const currentSettings = instanceSettings.get('instanceSettings');
+            instanceSettings.set('instanceSettings', {
+                ...currentSettings,
+                ...updatedSettings,
             });
 
             return c.json(updatedSettings);

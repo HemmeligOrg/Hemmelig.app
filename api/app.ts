@@ -5,9 +5,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-import { instanceSettingsMiddleware } from './middlewares/instanceSettings';
-import { rateLimiter } from 'hono-rate-limiter';
-import { getClientIp } from './middlewares/ip-restriction';
+
 
 //import { csrf } from 'hono/csrf';
 //import { cors } from 'hono/cors';
@@ -16,17 +14,16 @@ import { auth } from "./auth";
 import prisma from './lib/db';
 import routes from './routes';
 import startJobs from './jobs';
+import ratelimit from './middlewares/ratelimit';
 
 // Initialize Hono app
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null;
-        instanceSettings: any; // Add instanceSettings to Variables
     }
 }>();
 
-const instanceSettings = await prisma.instanceSettings.findFirst();
 
 // Start the background jobs
 startJobs();
@@ -34,22 +31,13 @@ startJobs();
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
-app.use(instanceSettingsMiddleware(instanceSettings)); // Add this first
 app.use(secureHeaders());
 app.use(logger());
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
 app.use(`/*`, timeout(15 * 1000)); // 15 seconds timeout to the API calls
+app.use(ratelimit);
 
-// TODO: Different routes different rate limit
-if (instanceSettings.enableRateLimiting) {
-    app.use(rateLimiter({
-        windowMs: instanceSettings.rateLimitWindow * 1000, // Convert seconds to milliseconds
-        limit: instanceSettings.rateLimitRequests,
-        standardHeaders: true,
-        keyGenerator: (c) => getClientIp(c) || "anonymous"
-    }));
-}
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag
 app.use(

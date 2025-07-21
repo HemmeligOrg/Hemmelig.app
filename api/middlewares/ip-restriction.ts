@@ -3,7 +3,6 @@ import ipRangeCheck from 'ip-range-check';
 import prisma from '../lib/db';
 
 export const getClientIp = (c: Context): string | undefined => {
-    return "127.0.0.1"
     const forwardedFor = c.req.header('x-forwarded-for');
     if (forwardedFor) {
         return forwardedFor.split(',')[0].trim();
