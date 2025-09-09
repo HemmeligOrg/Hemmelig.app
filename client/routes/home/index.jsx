@@ -192,12 +192,21 @@ const Home = () => {
             <FormSection>
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <Editor
-                            name="text"
-                            content={formData.text}
-                            setContent={(value) => setField('formData.text', value)}
-                            editable={!inputReadOnly}
-                        />
+                        {inputReadOnly ? (
+                            <Editor
+                                key={`ro-${secretId}`}
+                                content={formData.text}
+                                editable={false}
+                            />
+                        ) : (
+                            <Editor
+                                key={`edit-${secretId}`}
+                                name="text"
+                                content={formData.text}
+                                setContent={(value) => setField('formData.text', value)}
+                                editable={true}
+                            />
+                        )}
                         {errors.fields.text && <FieldError message={errors.fields.text} />}
                     </div>
 
