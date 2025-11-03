@@ -222,7 +222,7 @@ const Home = () => {
                             onChange={(e) => setField('formData.title', e.target.value)}
                             readOnly={inputReadOnly}
                             className="w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-md
-                                         focus:ring-2 focus:ring-hemmelig focus:border-transparent
+                                        focus:border-hemmelig focus:ring-0 
                                          text-base text-gray-100 placeholder-gray-500"
                         />
                         <p className="mt-2 text-sm text-gray-400">{t('home.title_description')}</p>
