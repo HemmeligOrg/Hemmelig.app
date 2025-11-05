@@ -1,6 +1,6 @@
 services:
     hemmelig:
-        image: hemmelig # https://github.com/HemmeligOrg/Hemmelig.app/tags
+        image: hemmeligapp/hemmelig:vX.X.X # Change it to the version here https://github.com/HemmeligOrg/Hemmelig.app/tags
         hostname: hemmelig
         init: true
         volumes:
