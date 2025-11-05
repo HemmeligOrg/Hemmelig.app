@@ -132,7 +132,7 @@ If you have to follow some sort of compliance, and have to self-host, [https://h
 
 ```bash
 mkdir -p data/hemmelig database
-chown 1000:1000 data/hemmelig database
+sudo chown 1000:1000 data/hemmelig database
 
 docker run -p 3000:3000 -d --name=hemmelig \
    -v ./data/hemmelig/:/var/tmp/hemmelig/upload/files \ # For the file uploads
@@ -152,7 +152,7 @@ wget https://raw.githubusercontent.com/HemmeligOrg/Hemmelig.app/main/docker-comp
 mkdir -p data/hemmelig database
 
 # set permissions (Node user has UID 1000 within the container)
-chown 1000:1000 data/hemmelig database
+sudo chown 1000:1000 data/hemmelig database
 
 # start hemmelig 
 docker compose up -d
