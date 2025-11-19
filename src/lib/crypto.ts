@@ -1,11 +1,11 @@
 import { nanoid } from 'nanoid';
 
 /**
- * Returns the user-provided password or generates a random 32-character string to be used as an encryption key.
- * @param {string} [password] - The user's password. If not provided, a random key is generated.
- * @returns {string} - The password or the generated key.
+ * returns the user-provided password or generates a random 32-character string to be used as an encryption key.
+ * @param {string} [password] - the user's password. if not provided, a random key is generated.
+ * @returns {string} - the password or the generated key.
  */
-export const generateEncryptionKey = (password?: string): string => {
+export const generateencryptionkey = (password?: string): string => {
     if (password && password.length > 0) {
         return password;
     }
@@ -13,10 +13,10 @@ export const generateEncryptionKey = (password?: string): string => {
 };
 
 /**
- * Generates a random 256-bit (32-byte) salt.
- * @returns {string} A 32-character string to be used as a salt.
+ * generates a random 256-bit (32-byte) salt.
+ * @returns {string} a 32-character string to be used as a salt.
  */
-export const generateSalt = (): string => {
+export const generatesalt = (): string => {
     return nanoid(32);
 };
 
