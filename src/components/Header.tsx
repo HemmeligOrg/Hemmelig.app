@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus, LayoutDashboard } from 'lucide-react';
+import { LogIn, UserPlus, CircleUser } from 'lucide-react';
 import Logo from './Logo.tsx';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/userStore.ts';
@@ -33,7 +33,7 @@ export function Header() {
                 to="/dashboard"
                 className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-sm sm:text-base"
               >
-                <LayoutDashboard className="w-4 h-4" />
+                <CircleUser className="w-4 h-4" />
                 <span className="hidden xs:inline">{t('header.dashboard')}</span>
               </Link>
             ) : (

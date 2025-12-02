@@ -48,7 +48,7 @@ export function UsersPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {t('users_page.title')}
@@ -57,7 +57,7 @@ export function UsersPage() {
         </div>
         <button
           onClick={() => setIsAddUserModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105"
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 w-full sm:w-auto"
         >
           <UserPlus className="w-4 h-4" />
           <span>{t('users_page.add_user_button')}</span>
@@ -80,7 +80,7 @@ export function UsersPage() {
       <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-600">
-            <thead className="bg-dark-800">
+            <thead className="bg-gray-50 dark:bg-dark-800">
               <tr>
                 <th
                   scope="col"

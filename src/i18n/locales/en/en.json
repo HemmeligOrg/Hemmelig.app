@@ -303,6 +303,8 @@
     "no_secrets_found_title": "No secrets found",
     "no_secrets_found_description_filter": "Try adjusting your search or filter criteria.",
     "no_secrets_found_description_empty": "Create your first secret to get started.",
+    "password_protected": "Password",
+    "files": "files",
     "table": {
       "secret_header": "Secret",
       "created_header": "Created",

@@ -55,13 +55,13 @@ export function DashboardLayout() {
     <div className="min-h-screen bg-light-800 dark:bg-dark-900">
       <div className="relative">
         {/* Background pattern */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
         {/* Mobile menu overlay */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
-            <div className="fixed inset-0 bg-light-800 dark:bg-dark-900/90 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-            <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-dark-800 border-r border-gray-200 dark:border-dark-600">
+            <div className="fixed inset-0 bg-light-800/90 dark:bg-dark-900/90 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-dark-800 border-r border-gray-200 dark:border-dark-600 z-50">
               <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-dark-600">
                 <Link to="/" className="flex items-center space-x-2 text-gray-900 dark:text-white">
                   <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-gray-900 dark:fill-white" />
@@ -164,10 +164,11 @@ export function DashboardLayout() {
           {/* Main content */}
           <div className="flex-1 lg:pl-64">
             {/* Mobile header */}
-            <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-800 border-b border-gray-200 dark:border-dark-600">
+            <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between p-4 bg-white dark:bg-dark-800 border-b border-gray-200 dark:border-dark-600">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+                aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />
               </button>
