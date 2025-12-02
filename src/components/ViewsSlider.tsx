@@ -7,6 +7,7 @@ interface ViewsSliderProps {
 
 export function ViewsSlider({ value, onChange }: ViewsSliderProps) {
   const { t } = useTranslation();
+  
   return (
     <div className="space-y-3">
       <div className="relative">
@@ -16,10 +17,7 @@ export function ViewsSlider({ value, onChange }: ViewsSliderProps) {
           max="999"
           value={value}
           onChange={(e) => onChange(parseInt(e.target.value))}
-          className="w-full h-2 bg-gray-300 dark:bg-dark-600 appearance-none cursor-pointer slider touch-manipulation"
-          style={{
-            background: `linear-gradient(to right, #14b8a6 0%, #14b8a6 ${(value - 1) / 999 * 100}%, #475569 ${(value - 1) / 999 * 100}%, #475569 100%)`
-          }}
+          className="w-full h-2 bg-gray-200 dark:bg-dark-600 appearance-none cursor-pointer slider touch-manipulation"
         />
         <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mt-1 px-1">
           <span>{t('views_slider.min_views')}</span>

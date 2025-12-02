@@ -35,7 +35,6 @@
     background: #14b8a6;
     cursor: pointer;
     border: 2px solid #e2e8f0;
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
     transition: all 0.3s ease;
   }
 
@@ -45,7 +44,6 @@
   
   .slider::-webkit-slider-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(20, 184, 166, 0.6);
   }
   
   .slider::-moz-range-thumb {
@@ -55,7 +53,6 @@
     background: #14b8a6;
     cursor: pointer;
     border: 2px solid #e2e8f0;
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
   }
 
   .dark .slider::-moz-range-thumb {
