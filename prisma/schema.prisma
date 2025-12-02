@@ -123,3 +123,12 @@ model InstanceSettings {
 
     @@map("instance_settings")
 }
+
+model VisitorAnalytics {
+    id        String   @id @default(uuid())
+    path      String
+    uniqueId  String
+    timestamp DateTime @default(now())
+
+    @@map("visitor_analytics")
+}

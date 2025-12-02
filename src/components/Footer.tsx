@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Footer() {
@@ -7,9 +8,24 @@ export function Footer() {
     <footer className="py-4">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <p className="text-gray-500 dark:text-slate-400 text-xs">
-            {t('footer.tagline')}
-          </p>
+          {/* Left - Links */}
+          <div className="flex items-center space-x-4">
+            <Link
+              to="/privacy"
+              className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs transition-colors"
+            >
+              Privacy
+            </Link>
+            <span className="text-gray-400 dark:text-slate-500">|</span>
+            <Link
+              to="/terms"
+              className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs transition-colors"
+            >
+              Terms & Conditions
+            </Link>
+          </div>
+          
+          {/* Right - X and Theme Toggle */}
           <div className="flex items-center space-x-3">
             <a
               href="https://x.com/iamdothash"
@@ -25,6 +41,11 @@ export function Footer() {
             <ThemeToggle />
           </div>
         </div>
+        
+        {/* Center - Tagline on its own line */}
+        <p className="text-gray-500 dark:text-slate-400 text-xs text-center mt-3">
+          {t('footer.tagline')}
+        </p>
       </div>
     </footer>
   );

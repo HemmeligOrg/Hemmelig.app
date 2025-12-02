@@ -45,6 +45,10 @@ const config = {
         rateLimitRequests: parseNumber(process.env.HEMMELIG_RATE_LIMIT_REQUESTS),
         rateLimitWindow: parseNumber(process.env.HEMMELIG_RATE_LIMIT_WINDOW),
     },
+    analytics: {
+        enabled: parseBoolean(process.env.HEMMELIG_ANALYTICS_ENABLED) ?? true,
+        hmacSecret: process.env.HEMMELIG_ANALYTICS_HMAC_SECRET || 'default-analytics-secret-change-me',
+    },
 } as const;
 
 /**

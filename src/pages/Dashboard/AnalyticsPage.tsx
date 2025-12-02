@@ -1,9 +1,16 @@
-import { BarChart3, Calendar, Clock, Eye, Shield, Users } from 'lucide-react';
-import { useState } from 'react';
+import { BarChart3, Calendar, Clock, Eye, Globe, Shield, TrendingUp, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import { toast } from 'sonner';
 import { api } from '../../lib/api';
+
+interface DailyVisitor {
+  date: string;
+  unique_visitors: number;
+  total_visits: number;
+  paths: string;
+}
 
 export function AnalyticsPage() {
   const initialAnalytics = useLoaderData() as any;
@@ -14,6 +21,8 @@ export function AnalyticsPage() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(initialAnalytics.error || null);
+  const [visitorStats, setVisitorStats] = useState<DailyVisitor[]>([]);
+  const [visitorLoading, setVisitorLoading] = useState(false);
 
   const fetchAnalytics = async (range: '7d' | '30d' | '90d' | '1y') => {
     setLoading(true);
@@ -34,11 +43,34 @@ export function AnalyticsPage() {
     }
   };
 
+  const fetchVisitorStats = async () => {
+    setVisitorLoading(true);
+    try {
+      const res = await api.analytics.visitors.daily.$get();
+      if (!res.ok) throw new Error('Failed to fetch visitor stats');
+      const data = await res.json();
+      setVisitorStats(data as DailyVisitor[]);
+    } catch (error) {
+      console.error('Failed to fetch visitor stats:', error);
+    } finally {
+      setVisitorLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVisitorStats();
+  }, []);
+
   const handleTimeRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newTimeRange = e.target.value as '7d' | '30d' | '90d' | '1y';
     setTimeRange(newTimeRange);
     fetchAnalytics(newTimeRange);
   };
+
+  const totalUniqueVisitors = visitorStats.reduce((acc, day) => acc + day.unique_visitors, 0);
+  const totalPageViews = visitorStats.reduce((acc, day) => acc + day.total_visits, 0);
+  const maxVisitors = Math.max(...visitorStats.map(d => d.unique_visitors), 1);
+  const maxViews = Math.max(...visitorStats.map(d => d.total_visits), 1);
 
   const timeRangeOptions = [
     { value: '7d', label: t('analytics_page.time_range.last_7_days') },
@@ -65,7 +97,7 @@ export function AnalyticsPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 overflow-hidden">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -201,16 +233,16 @@ export function AnalyticsPage() {
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <div className="flex-1 bg-gray-200 dark:bg-dark-700 rounded-full h-2">
+                  <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
                     <div
-                      className="bg-teal-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${(day.secrets / 20) * 100}%` }}
+                      className="bg-teal-500 h-2 transition-all duration-500"
+                      style={{ width: `${Math.min((day.secrets / 20) * 100, 100)}%` }}
                     />
                   </div>
-                  <div className="flex-1 bg-gray-200 dark:bg-dark-700 rounded-full h-2">
+                  <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
                     <div
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${(day.views / 150) * 100}%` }}
+                      className="bg-blue-500 h-2 transition-all duration-500"
+                      style={{ width: `${Math.min((day.views / 150) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
@@ -356,6 +388,88 @@ export function AnalyticsPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Visitor Analytics Section */}
+      <div className="mt-8">
+        <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-indigo-500/20">
+                <Globe className="w-5 h-5 text-indigo-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Visitor Analytics
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-slate-400">
+                  Page views and unique visitors (last 30 days)
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <Users className="w-4 h-4 text-indigo-400" />
+                <span className="text-gray-600 dark:text-slate-300">
+                  {totalUniqueVisitors.toLocaleString()} unique
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <span className="text-gray-600 dark:text-slate-300">
+                  {totalPageViews.toLocaleString()} views
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {visitorLoading ? (
+            <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+              Loading visitor data...
+            </div>
+          ) : visitorStats.length === 0 ? (
+            <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+              No visitor data available yet.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {visitorStats.map((day) => (
+                <div key={day.date} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-slate-400">
+                      {new Date(day.date).toLocaleDateString(t('analytics_page.locale'), {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                    <div className="flex space-x-4">
+                      <span className="text-indigo-400">
+                        {day.unique_visitors} unique
+                      </span>
+                      <span className="text-emerald-400">
+                        {day.total_visits} views
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
+                      <div
+                        className="bg-indigo-500 h-2 transition-all duration-500"
+                        style={{ width: `${Math.min((day.unique_visitors / maxVisitors) * 100, 100)}%` }}
+                      />
+                    </div>
+                    <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
+                      <div
+                        className="bg-emerald-500 h-2 transition-all duration-500"
+                        style={{ width: `${Math.min((day.total_visits / maxViews) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

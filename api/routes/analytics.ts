@@ -4,14 +4,69 @@ import { HTTPException } from 'hono/http-exception';
 import prisma from '../lib/db';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
+import { createHmac } from 'crypto';
+import { isbot } from 'isbot';
+import config from '../config';
+import { getClientIp } from '../lib/utils';
 
-const app = new Hono().use(checkAdmin);
+const app = new Hono();
 
-const schema = z.object({
+const analyticsConfig = config.get('analytics') as { enabled: boolean; hmacSecret: string };
+
+function createUniqueId(ip: string, userAgent: string): string {
+    return createHmac('sha256', analyticsConfig.hmacSecret)
+        .update(ip + userAgent)
+        .digest('hex');
+}
+
+function isValidPath(path: string): boolean {
+    const pathRegex = /^\/[a-zA-Z0-9\-?=&/#]*$/;
+    return pathRegex.test(path) && path.length <= 255;
+}
+
+const trackSchema = z.object({
+    path: z.string().max(255),
+});
+
+// POST /api/analytics/track - Public endpoint for visitor tracking
+app.post('/track', zValidator('json', trackSchema), async (c) => {
+    if (!analyticsConfig.enabled) {
+        return c.json({ success: false }, 403);
+    }
+
+    try {
+        const { path } = c.req.valid('json');
+        const userAgent = c.req.header('user-agent') || '';
+        const uniqueId = createUniqueId(getClientIp(c), userAgent);
+
+        if (isbot(userAgent)) {
+            return c.json({ success: false }, 403);
+        }
+
+        if (!isValidPath(path)) {
+            return c.json({ error: 'Invalid path format' }, 400);
+        }
+
+        await prisma.visitorAnalytics.create({
+            data: {
+                path,
+                uniqueId,
+            },
+        });
+
+        return c.json({ success: true }, 201);
+    } catch (error) {
+        console.error('Analytics tracking error:', error);
+        return c.json({ error: 'Failed to track analytics' }, 500);
+    }
+});
+
+const timeRangeSchema = z.object({
     timeRange: z.enum(['7d', '30d', '90d', '1y']).default('30d'),
 });
 
-app.get('/', authMiddleware, zValidator('query', schema), async (c) => {
+// GET /api/analytics - Secret analytics (admin only)
+app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), async (c) => {
     const { timeRange } = c.req.valid('query');
     const now = new Date();
     const startDate = new Date();
@@ -80,6 +135,79 @@ app.get('/', authMiddleware, zValidator('query', schema), async (c) => {
     } catch (error) {
         console.error('Failed to fetch analytics data:', error);
         throw new HTTPException(500, { message: 'Failed to fetch analytics data' });
+    }
+});
+
+// GET /api/analytics/visitors - Visitor analytics data (admin only)
+app.get('/visitors', authMiddleware, checkAdmin, async (c) => {
+    try {
+        const analytics = await prisma.visitorAnalytics.findMany({
+            orderBy: { timestamp: 'desc' },
+            take: 1000,
+        });
+        return c.json(analytics);
+    } catch (error) {
+        console.error('Analytics retrieval error:', error);
+        throw new HTTPException(500, { message: 'Failed to retrieve analytics' });
+    }
+});
+
+// GET /api/analytics/visitors/unique - Aggregated unique visitor data (admin only)
+app.get('/visitors/unique', authMiddleware, checkAdmin, async (c) => {
+    try {
+        const aggregatedData = await prisma.visitorAnalytics.groupBy({
+            by: ['uniqueId', 'path'],
+            _count: { uniqueId: true },
+            orderBy: { _count: { uniqueId: 'desc' } },
+        });
+        return c.json(aggregatedData);
+    } catch (error) {
+        console.error('Aggregated analytics retrieval error:', error);
+        throw new HTTPException(500, { message: 'Failed to retrieve aggregated analytics' });
+    }
+});
+
+// GET /api/analytics/visitors/daily - Daily visitor statistics (admin only)
+app.get('/visitors/daily', authMiddleware, checkAdmin, async (c) => {
+    try {
+        // Get last 30 days of data using Prisma instead of raw SQL for better compatibility
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const visitors = await prisma.visitorAnalytics.findMany({
+            where: {
+                timestamp: { gte: thirtyDaysAgo },
+            },
+            orderBy: { timestamp: 'desc' },
+        });
+
+        // Aggregate by date in JavaScript
+        const dailyMap = new Map<string, { uniqueIds: Set<string>; total: number; paths: Set<string> }>();
+
+        for (const visitor of visitors) {
+            const date = visitor.timestamp.toISOString().split('T')[0];
+            if (!dailyMap.has(date)) {
+                dailyMap.set(date, { uniqueIds: new Set(), total: 0, paths: new Set() });
+            }
+            const day = dailyMap.get(date)!;
+            day.uniqueIds.add(visitor.uniqueId);
+            day.total++;
+            day.paths.add(visitor.path);
+        }
+
+        const aggregatedData = Array.from(dailyMap.entries())
+            .map(([date, data]) => ({
+                date,
+                unique_visitors: data.uniqueIds.size,
+                total_visits: data.total,
+                paths: Array.from(data.paths).join(','),
+            }))
+            .sort((a, b) => a.date.localeCompare(b.date));
+
+        return c.json(aggregatedData);
+    } catch (error) {
+        console.error('Daily analytics retrieval error:', error);
+        throw new HTTPException(500, { message: 'Failed to retrieve daily analytics' });
     }
 });
 

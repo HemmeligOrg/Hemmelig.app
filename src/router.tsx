@@ -13,6 +13,8 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
 import { SecretPage } from './pages/SecretPage';
+import { TermsPage } from './pages/TermsPage';
+import { PrivacyPage } from './pages/PrivacyPage';
 import { useHemmeligStore } from './store/hemmeligStore';
 
 export const router = createBrowserRouter([
@@ -68,6 +70,14 @@ export const router = createBrowserRouter([
           const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
           return res.json();
         },
+      },
+      {
+        path: '/terms',
+        element: <TermsPage />,
+      },
+      {
+        path: '/privacy',
+        element: <PrivacyPage />,
       },
     ],
   },

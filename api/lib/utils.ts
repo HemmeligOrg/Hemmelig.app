@@ -21,3 +21,18 @@ export const handleNotFound = (error: Error & { code?: string }, c: Context) => 
     });
 };
 
+/**
+ * Get client IP from request headers
+ * @param headers Request headers object
+ * @returns Client IP address
+ */
+export const getClientIp = (c: Context): string => {
+    const headers = c.req.header;
+    return (
+        c.req.header('cf-connecting-ip') ||
+        c.req.header('x-real-ip') ||
+        c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
+        '127.0.0.1'
+    );
+};
+
