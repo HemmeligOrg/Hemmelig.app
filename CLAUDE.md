@@ -28,7 +28,7 @@ Hemmelig.app is a secure secret-sharing application that enables users to share 
 | **Runtime** | Bun | Fast JavaScript runtime, used for both dev and production |
 | **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx` |
 | **Backend** | Hono (RPC mode) | Type-safe API client generation |
-| **Database** | SQLite + Prisma ORM | Schema in `prisma/schema.prisma` |
+| **Database** | PostgreSQL + Prisma ORM | Schema in `prisma/schema.prisma` |
 | **Styling** | Tailwind CSS | Class-based, supports light/dark mode |
 | **State** | Zustand | Lightweight state management |
 | **Auth** | better-auth | Session-based authentication |
@@ -48,7 +48,8 @@ hemmelig.app/
 │   │   ├── files.ts       # File upload/download
 │   │   ├── user.ts        # User management (admin)
 │   │   ├── instance.ts    # Instance settings
-│   │   └── analytics.ts   # Usage analytics
+│   │   ├── analytics.ts   # Usage analytics
+│   │   └── invites.ts     # Invite code management
 │   ├── lib/               # Backend utilities
 │   │   ├── db.ts          # Prisma client singleton
 │   │   ├── password.ts    # Password hashing utilities
@@ -69,7 +70,7 @@ hemmelig.app/
 │   ├── store/             # Zustand stores
 │   │   ├── secretStore.ts # Secret creation state
 │   │   ├── userStore.ts   # Current user state
-│   │   ├── themeStore.ts  # Light/dark mode
+│   │   ├── themeStore.ts  # Light/dark mode (persisted to localStorage)
 │   │   └── ...
 │   ├── lib/               # Frontend utilities
 │   │   ├── api.ts         # Hono RPC client
@@ -142,13 +143,24 @@ export function MyComponent({ prop1, prop2 }: MyComponentProps) {
 }
 ```
 
+#### Design System
+
+**UI Principles:**
+- Compact design with minimal padding
+- Sharp corners (no `rounded-*` classes)
+- All components must support both light and dark modes
+- Mobile-first responsive design
+
 #### Styling with Tailwind
 ```tsx
-// ✅ Correct: Light mode first, then dark variant
-className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white"
+// ✅ Correct: Light mode first, then dark variant, sharp corners
+className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600"
 
 // ❌ Wrong: Missing light mode variant
 className="dark:bg-dark-800"
+
+// ❌ Wrong: Using rounded corners
+className="rounded-lg"
 
 // ❌ Wrong: Using arbitrary values when design tokens exist
 className="bg-[#111111]"  // Use bg-dark-800 instead
@@ -341,9 +353,81 @@ When modifying security-sensitive code, verify:
 
 ### Environment Variables
 ```bash
-DATABASE_URL=        # SQLite connection string
-BETTER_AUTH_SECRET=  # Auth secret key
+DATABASE_URL=          # PostgreSQL connection string
+BETTER_AUTH_SECRET=    # Auth secret key
+ANALYTICS_ENABLED=     # Enable/disable analytics tracking
+ANALYTICS_HMAC_SECRET= # HMAC secret for anonymizing visitor IDs
 ```
+
+## Organization Features
+
+Hemmelig supports organization-level configuration for enterprise deployments:
+
+### Invite-Only Registration
+- Admins can enable invite-only mode via Instance Settings
+- Generate invite codes with configurable max uses
+- Track invite code usage and creation
+
+### Email Domain Restrictions
+- Restrict registration to specific email domains (e.g., `company.com`)
+- Multiple domains supported (comma-separated)
+- Works independently or alongside invite codes
+
+### Configuration (Instance Settings)
+- `allowRegistration`: Enable/disable public registration
+- `requireInvite`: Require invite code to register
+- `allowedEmailDomains`: Comma-separated list of allowed email domains
+
+## Analytics System
+
+Privacy-focused analytics for tracking usage:
+
+### How It Works
+- HMAC-SHA256 hashing creates anonymous visitor IDs (IP never stored)
+- Tracks page visits on landing page and secret view page
+- Bot traffic automatically filtered using `isbot`
+- Configurable via environment variables
+
+### Dashboard
+- Admins can view analytics at `/dashboard/analytics`
+- Shows daily visitor counts with a bar chart
+- Displays unique visitors vs total visits
+
+### Frontend Integration
+```typescript
+// Analytics tracking is automatic via useAnalytics hook
+// Tracks: HomePage, SecretPage (on view)
+import { useAnalytics } from '../hooks/useAnalytics';
+
+// In components that should be tracked:
+useAnalytics('/path-to-track');
+```
+
+## Authentication (better-auth)
+
+### Custom Hooks
+The auth system uses better-auth with custom hooks:
+
+```typescript
+// In api/auth.ts - email domain validation example
+emailAndPassword: {
+    enabled: true,
+    hooks: {
+        before: createBeforeSignupHook(async (data) => {
+            // Validate email domain
+            const settings = await prisma.settings.findFirst();
+            if (settings?.allowedEmailDomains) {
+                // Check domain and throw BetterAuthError if not allowed
+            }
+        }),
+    },
+}
+```
+
+### Error Handling
+- Custom errors thrown with `BetterAuthError` 
+- Error codes: `EMAIL_DOMAIN_NOT_ALLOWED`, `INVALID_INVITE_CODE`, etc.
+- Frontend catches and displays user-friendly messages
 
 ---
 
