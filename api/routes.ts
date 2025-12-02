@@ -6,6 +6,7 @@ import { userRoute } from './routes/user';
 import instanceRoute from './routes/instance';
 import analyticsRoute from './routes/analytics';
 import { inviteRoute, invitePublicRoute } from './routes/invites';
+import { getEnabledSocialProviders } from './auth';
 
 // Create a new router
 const routes = new Hono()
@@ -17,7 +18,19 @@ const routes = new Hono()
   .route('/analytics', analyticsRoute)
   .route('/invites/public', invitePublicRoute)
   .route('/invites', inviteRoute)
-  .get('/healthz', c => c.text('Health OK'));
+  .get('/healthz', c => c.text('Health OK'))
+  .get('/config/social-providers', c => {
+    const providers = getEnabledSocialProviders();
+    const baseUrl = process.env.HEMMELIG_BASE_URL || c.req.header('origin') || '';
+    const callbackBaseUrl = baseUrl ? `${baseUrl}/api/auth/callback` : '';
+    
+    return c.json({ 
+      providers,
+      callbackBaseUrl,
+    });
+  });
 
 export default routes;
+
+export type AppType = typeof routes;
 

@@ -2,24 +2,34 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { username, admin } from "better-auth/plugins"
 import { prismaAdapter } from "better-auth/adapters/prisma";
-// If your Prisma file is located elsewhere, you can change the path
 import prisma from "./lib/db";
-import config from "./config";
+import config, { type SocialProviderConfig } from "./config";
+
+// Build better-auth social providers configuration dynamically
+const buildBetterAuthSocialProviders = () => {
+    const providers = config.getSocialProviders();
+    const betterAuthProviders: Record<string, { clientId: string; clientSecret: string; tenantId?: string }> = {};
+
+    for (const [provider, providerConfig] of Object.entries(providers)) {
+        const typedConfig = providerConfig as SocialProviderConfig;
+        betterAuthProviders[provider] = {
+            clientId: typedConfig.clientId,
+            clientSecret: typedConfig.clientSecret,
+            ...(typedConfig.tenantId && { tenantId: typedConfig.tenantId }),
+        };
+    }
+
+    return betterAuthProviders;
+};
 
 export const auth = betterAuth({
-    //basePath: "/api/v1",
     database: prismaAdapter(prisma, {
-        provider: "sqlite", // or "mysql", "postgresql", ...etc
+        provider: "sqlite",
     }),
     emailAndPassword: {
         enabled: true,
     },
-    socialProviders: {
-        /* github: {
-             clientId: process.env.GITHUB_CLIENT_ID as string,
-             clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-         },*/
-    },
+    socialProviders: buildBetterAuthSocialProviders(),
     plugins: [
         username(),
         admin()
@@ -72,3 +82,8 @@ export const auth = betterAuth({
         }
     }
 });
+
+// Export enabled social providers for frontend consumption
+export const getEnabledSocialProviders = (): string[] => {
+    return Object.keys(config.getSocialProviders());
+};

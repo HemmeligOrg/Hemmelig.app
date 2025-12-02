@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Github, Eye, EyeOff, ArrowLeft, Check, Ticket } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, Check, Ticket } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { apiRaw } from '../lib/api';
 import { authClient } from '../lib/auth';
 import { getPasswordStrength } from '../utils/date';
+import { SocialLoginButtons } from '../components/SocialLoginButtons';
 
 export function RegisterPage() {
   const { t } = useTranslation();
@@ -155,11 +156,6 @@ export function RegisterPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGithubLogin = () => {
-    console.log('GitHub OAuth registration');
-    // Implement GitHub OAuth
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
@@ -365,24 +361,8 @@ export function RegisterPage() {
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-dark-500/50"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-dark-800/80 text-gray-500 dark:text-slate-400">{t('register_page.or_continue_with')}</span>
-            </div>
-          </div>
-
-          {/* GitHub Login */}
-          <button
-            onClick={handleGithubLogin}
-            className="w-full flex items-center justify-center space-x-3 py-2.5 px-4 bg-gray-100 dark:bg-dark-700/50 hover:bg-gray-200 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 hover:border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 font-medium transition-all duration-300 hover:scale-105"
-          >
-            <Github className="w-5 h-5" />
-            <span>{t('register_page.continue_with_github')}</span>
-          </button>
+          {/* Social Login Buttons */}
+          <SocialLoginButtons mode="register" />
 
           {/* Sign In Link */}
           <div className="text-center mt-6 pt-4 border-t border-gray-200 dark:border-dark-600">

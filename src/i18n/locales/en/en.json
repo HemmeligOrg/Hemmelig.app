@@ -578,5 +578,9 @@
       "create_error": "Failed to create invite code",
       "delete_error": "Failed to deactivate invite code"
     }
+  },
+  "social_login": {
+    "continue_with": "Continue with {{provider}}",
+    "sign_up_with": "Sign up with {{provider}}"
   }
 }

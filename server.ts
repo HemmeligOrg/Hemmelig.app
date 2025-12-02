@@ -9,19 +9,13 @@ console.log(`Server is running on port ${port}`);
 
 const app = new Hono();
 
+// Mount the API first (before static files)
+app.route('/api', api);
+
 // Serve static files from the 'dist' directory
 app.use('/*', serveStatic({ root: './dist' }));
 
 // SPA fallback
 app.get('*', serveStatic({ path: './dist/index.html' }));
-
-// Mount the API
-app.route('/api', api);
-/*
-serve({
-    fetch: app.fetch,
-    port,
-});
-*/
 
 export default app;

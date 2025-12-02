@@ -15,6 +15,79 @@ const parseBoolean = (value: string | undefined): boolean | undefined => {
     return value.toLowerCase() === 'true';
 };
 
+// Social provider configuration type
+export interface SocialProviderConfig {
+    clientId: string;
+    clientSecret: string;
+    tenantId?: string; // For Microsoft/Azure AD
+}
+
+// Build social providers config dynamically from env vars
+const buildSocialProviders = () => {
+    const providers: Record<string, SocialProviderConfig> = {};
+
+    // GitHub
+    if (process.env.HEMMELIG_AUTH_GITHUB_ID && process.env.HEMMELIG_AUTH_GITHUB_SECRET) {
+        providers.github = {
+            clientId: process.env.HEMMELIG_AUTH_GITHUB_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_GITHUB_SECRET,
+        };
+    }
+
+    // Google
+    if (process.env.HEMMELIG_AUTH_GOOGLE_ID && process.env.HEMMELIG_AUTH_GOOGLE_SECRET) {
+        providers.google = {
+            clientId: process.env.HEMMELIG_AUTH_GOOGLE_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_GOOGLE_SECRET,
+        };
+    }
+
+    // Microsoft (Azure AD)
+    if (process.env.HEMMELIG_AUTH_MICROSOFT_ID && process.env.HEMMELIG_AUTH_MICROSOFT_SECRET) {
+        providers.microsoft = {
+            clientId: process.env.HEMMELIG_AUTH_MICROSOFT_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_MICROSOFT_SECRET,
+            tenantId: process.env.HEMMELIG_AUTH_MICROSOFT_TENANT_ID,
+        };
+    }
+
+    // Discord
+    if (process.env.HEMMELIG_AUTH_DISCORD_ID && process.env.HEMMELIG_AUTH_DISCORD_SECRET) {
+        providers.discord = {
+            clientId: process.env.HEMMELIG_AUTH_DISCORD_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_DISCORD_SECRET,
+        };
+    }
+
+    // GitLab
+    if (process.env.HEMMELIG_AUTH_GITLAB_ID && process.env.HEMMELIG_AUTH_GITLAB_SECRET) {
+        providers.gitlab = {
+            clientId: process.env.HEMMELIG_AUTH_GITLAB_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_GITLAB_SECRET,
+        };
+    }
+
+    // Apple
+    if (process.env.HEMMELIG_AUTH_APPLE_ID && process.env.HEMMELIG_AUTH_APPLE_SECRET) {
+        providers.apple = {
+            clientId: process.env.HEMMELIG_AUTH_APPLE_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_APPLE_SECRET,
+        };
+    }
+
+    // Twitter/X
+    if (process.env.HEMMELIG_AUTH_TWITTER_ID && process.env.HEMMELIG_AUTH_TWITTER_SECRET) {
+        providers.twitter = {
+            clientId: process.env.HEMMELIG_AUTH_TWITTER_ID,
+            clientSecret: process.env.HEMMELIG_AUTH_TWITTER_SECRET,
+        };
+    }
+
+    return providers;
+};
+
+const socialProviders = buildSocialProviders();
+
 const config = {
     server: {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
@@ -26,7 +99,7 @@ const config = {
         "https://hemmelig.app",
         ...(!isProduction ? ["http://localhost:5173"] : []),
         process.env.HEMMELIG_TRUSTED_ORIGIN || "",
-    ].filter(Boolean), // Filter out any empty strings
+    ].filter(Boolean),
     general: {
         instanceName: process.env.HEMMELIG_INSTANCE_NAME,
         instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION,
@@ -49,7 +122,8 @@ const config = {
         enabled: parseBoolean(process.env.HEMMELIG_ANALYTICS_ENABLED) ?? true,
         hmacSecret: process.env.HEMMELIG_ANALYTICS_HMAC_SECRET || 'default-analytics-secret-change-me',
     },
-} as const;
+    socialProviders,
+};
 
 /**
  * A type-safe utility to get a value from the configuration.
@@ -59,19 +133,12 @@ const config = {
  * @returns The found configuration value or the default value.
  */
 function get<T>(path: string, defaultValue?: T): T {
-    // `delve` returns `any`, so we cast its result to the expected generic type `T`.
     return dlv(config, path, defaultValue) as T;
 }
 
-// Export the get function.
+// Export the get function and social providers helper
 export default {
     get,
+    getSocialProviders: () => config.socialProviders,
 };
-
-// -------------------------------------------------------------------
-// EXAMPLE USAGE (how you would use this in other parts of your app)
-// -------------------------------------------------------------------
-// 
-// Fallback to 8080 if 'server.port' is not defined in the config.
-// const port = get('server.port', 8080);
 
