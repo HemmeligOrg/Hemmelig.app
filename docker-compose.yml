@@ -1,27 +1,21 @@
 services:
-    hemmelig:
-        image: hemmelig # https://github.com/HemmeligOrg/Hemmelig.app/tags
-        hostname: hemmelig
-        init: true
-        volumes:
-            - ./data/hemmelig/:/var/tmp/hemmelig/upload/files
-            - ./database/:/home/node/hemmelig/database/
-        environment:
-            - SECRET_LOCAL_HOSTNAME=0.0.0.0 # The local hostname for the fastify instance
-            - SECRET_PORT=3000 # The port number for the fastify instance
-            - SECRET_HOST=!changeme! # Used for i.e. set cors/cookies to your domain name
-            - SECRET_ROOT_USER=groot # User as the root admin user
-            - SECRET_ROOT_PASSWORD=iamroot # The admin user password (change this after signed in)
-            - SECRET_ROOT_EMAIL=groot@hemmelig.app # The email for the admin user
-            - SECRET_FILE_SIZE=4 # Set the total allowed upload file size in mb
-            - SECRET_FORCED_LANGUAGE=en # Set the default language for the application
-            - SECRET_JWT_SECRET=!changeme! # Override this for the secret signin JWT tokens for log in
-            - SECRET_MAX_TEXT_SIZE=256 # The max text size for the secret. Is set in kb. i.e. 256 for 256kb
-        ports:
-            - '3000:3000'
-        restart: always
-        stop_grace_period: 1m
-        healthcheck:
-            test: 'curl -o /dev/null localhost:3000/api/healthz || exit 1'
-            timeout: 5s
-            retries: 3
+  hemmelig:
+    image: hemmelig/hemmelig:v7
+    container_name: hemmelig
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    environment:
+      - DATABASE_URL=file:/app/data/hemmelig.db
+      - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+      - NODE_ENV=production
+      - HEMMELIG_BASE_URL=https://secrets.example.com
+    ports:
+      - '3000:3000'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/api/healthz']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
