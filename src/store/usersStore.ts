@@ -18,6 +18,7 @@ interface User {
     image: string | null;
     role: string;
     banned: boolean;
+    approved: boolean;
     banReason: string | null;
     banExpires: string | null;
     createdAt: string;
@@ -43,6 +44,8 @@ interface UsersStore {
     addUser: (newUser: NewUser) => Promise<void>;
     editUser: (user: User & { password?: string }) => Promise<void>;
     deleteUser: () => Promise<void>;
+    approveUser: (userId: string) => Promise<void>;
+    rejectUser: (userId: string) => Promise<void>;
     setUserToDelete: (user: User | null) => void;
     setUserToEdit: (user: User | null) => void;
     setIsAddUserModalOpen: (isOpen: boolean) => void;
@@ -119,6 +122,31 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
             set({ userToDelete: null });
         } catch (error) {
             console.error('Failed to delete user', error);
+        }
+    },
+    approveUser: async (userId: string) => {
+        try {
+            await api.user[':id'].approve.$post({
+                param: { id: userId },
+            });
+            toast.success('User approved');
+            await get().fetchUsers();
+        } catch (error) {
+            console.error('Failed to approve user', error);
+            toast.error('Failed to approve user');
+        }
+    },
+    rejectUser: async (userId: string) => {
+        try {
+            await api.user[':id'].reject.$post({
+                param: { id: userId },
+                json: {},
+            });
+            toast.success('User rejected and removed');
+            await get().fetchUsers();
+        } catch (error) {
+            console.error('Failed to reject user', error);
+            toast.error('Failed to reject user');
         }
     },
     setUserToDelete: (user) => set({ userToDelete: user }),

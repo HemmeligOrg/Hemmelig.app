@@ -16,4 +16,8 @@ export const instanceSettingsSchema = z.object({
     enableRateLimiting: z.boolean().optional(),
     rateLimitRequests: z.number().int().min(1).optional(),
     rateLimitWindow: z.number().int().min(1).optional(),
+    
+    // Organization features
+    requireInviteCode: z.boolean().optional(),
+    allowedEmailDomains: z.string().optional(),
 });

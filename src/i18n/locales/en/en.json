@@ -406,6 +406,7 @@
   },
   "login_page": {
     "back_to_hemmelig": "Back to Hemmelig",
+    "welcome_back": "Welcome back to Hemmelig",
     "welcome_back_title": "Welcome back",
     "welcome_back_description": "Sign in to your Hemmelig account",
     "username_label": "Username",
@@ -422,6 +423,7 @@
   },
   "register_page": {
     "back_to_hemmelig": "Back to Hemmelig",
+    "join_hemmelig": "Join Hemmelig to share secrets securely",
     "create_account_title": "Create account",
     "create_account_description": "Join Hemmelig to share secrets securely",
     "username_label": "Username",
@@ -491,5 +493,90 @@
     "message": "The secret you are looking for does not exist, has expired, or has been burned.",
     "error_details": "Error details:",
     "go_home_button": "Go to Homepage"
+  },
+  "organization_page": {
+    "title": "Organization Settings",
+    "description": "Configure organization-wide settings and access controls",
+    "registration_settings": {
+      "title": "Registration Settings",
+      "description": "Control how users can join your organization",
+      "invite_only_title": "Invite Only Registration",
+      "invite_only_description": "Users can only register with a valid invite code",
+      "allowed_domains_title": "Allowed Email Domains",
+      "allowed_domains_description": "Only allow registration from specific email domains (comma-separated, e.g., company.com, org.net)",
+      "allowed_domains_placeholder": "company.com, org.net",
+      "allowed_domains_hint": "Comma-separated list of email domains. Leave empty to allow all domains."
+    },
+    "invite_codes": {
+      "title": "Invite Codes",
+      "description": "Create and manage invitation codes for new users",
+      "create_invite_button": "Create Invite Code",
+      "code_header": "Code",
+      "uses_header": "Uses",
+      "expires_header": "Expires",
+      "actions_header": "Actions",
+      "unlimited": "Unlimited",
+      "never": "Never",
+      "expired": "Expired",
+      "no_invites": "No invite codes yet",
+      "no_invites_description": "Create an invite code to allow new users to register",
+      "copy_tooltip": "Copy code",
+      "delete_tooltip": "Delete code"
+    },
+    "create_invite_modal": {
+      "title": "Create Invite Code",
+      "max_uses_label": "Max Uses",
+      "max_uses_placeholder": "Leave empty for unlimited",
+      "expiration_label": "Expiration",
+      "expiration_options": {
+        "never": "Never",
+        "24_hours": "24 Hours",
+        "7_days": "7 Days",
+        "30_days": "30 Days"
+      },
+      "cancel_button": "Cancel",
+      "create_button": "Create"
+    },
+    "saving_button": "Saving...",
+    "save_settings_button": "Save Settings"
+  },
+  "invites_page": {
+    "title": "Invite Codes",
+    "description": "Manage invite codes for new user registrations",
+    "create_invite_button": "Create Invite",
+    "loading": "Loading invite codes...",
+    "table": {
+      "code_header": "Code",
+      "uses_header": "Uses",
+      "expires_header": "Expires",
+      "status_header": "Status",
+      "never": "Never"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "used": "Used",
+      "inactive": "Inactive"
+    },
+    "no_invites": "No invite codes yet",
+    "create_modal": {
+      "title": "Create Invite Code",
+      "max_uses_label": "Maximum Uses",
+      "expires_in_label": "Expires In (days)"
+    },
+    "delete_modal": {
+      "title": "Deactivate Invite Code",
+      "confirm_text": "Deactivate",
+      "cancel_text": "Cancel",
+      "message": "Are you sure you want to deactivate invite code {{code}}? This action cannot be undone."
+    },
+    "toast": {
+      "created": "Invite code created",
+      "deactivated": "Invite code deactivated",
+      "copied": "Invite code copied to clipboard",
+      "fetch_error": "Failed to fetch invite codes",
+      "create_error": "Failed to create invite code",
+      "delete_error": "Failed to deactivate invite code"
+    }
   }
 }

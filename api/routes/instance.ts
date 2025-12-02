@@ -21,6 +21,8 @@ const selectFields = {
     enableRateLimiting: true,
     rateLimitRequests: true,
     rateLimitWindow: true,
+    requireInviteCode: true,
+    allowedEmailDomains: true,
 };
 
 // GET /api/instance/settings

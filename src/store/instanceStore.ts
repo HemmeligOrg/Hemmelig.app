@@ -23,9 +23,15 @@ type SecuritySettings = {
     rateLimitWindow: number;
 };
 
+type OrganizationSettings = {
+    requireInviteCode: boolean;
+    allowedEmailDomains: string;
+};
+
 type InstanceState = {
     generalSettings: GeneralSettings;
     securitySettings: SecuritySettings;
+    organizationSettings: OrganizationSettings;
     isLoading: boolean;
     error: string | null;
     fetchSettings: () => Promise<void>;
@@ -34,7 +40,11 @@ type InstanceState = {
         key: K,
         value: SecuritySettings[K]
     ) => void;
-    saveSettings: (section: 'general' | 'security') => Promise<void>;
+    setOrganizationSetting: <K extends keyof OrganizationSettings>(
+        key: K,
+        value: OrganizationSettings[K]
+    ) => void;
+    saveSettings: (section: 'general' | 'security' | 'organization') => Promise<void>;
 };
 
 export const useInstanceStore = create<InstanceState>((set, get) => ({
@@ -56,6 +66,10 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         enableRateLimiting: true,
         rateLimitRequests: 100,
         rateLimitWindow: 60,
+    },
+    organizationSettings: {
+        requireInviteCode: false,
+        allowedEmailDomains: '',
     },
     isLoading: false,
     error: null,
@@ -91,6 +105,10 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     rateLimitRequests: settings.rateLimitRequests,
                     rateLimitWindow: settings.rateLimitWindow,
                 },
+                organizationSettings: {
+                    requireInviteCode: settings.requireInviteCode ?? false,
+                    allowedEmailDomains: settings.allowedEmailDomains ?? '',
+                },
                 isLoading: false,
             });
         } catch (error) {
@@ -113,15 +131,23 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         }));
     },
 
+    setOrganizationSetting: (key, value) => {
+        set((state) => ({
+            organizationSettings: { ...state.organizationSettings, [key]: value },
+        }));
+    },
+
     saveSettings: async (section) => {
         set({ isLoading: true });
         try {
-            const { generalSettings, securitySettings } = get();
+            const { generalSettings, securitySettings, organizationSettings } = get();
             let settingsToSave = {};
             if (section === 'general') {
                 settingsToSave = generalSettings;
             } else if (section === 'security') {
                 settingsToSave = securitySettings;
+            } else if (section === 'organization') {
+                settingsToSave = organizationSettings;
             }
 
             await api.instance.settings.$put({ json: settingsToSave });

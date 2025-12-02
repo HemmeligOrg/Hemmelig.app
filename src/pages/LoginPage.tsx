@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import Logo from '../components/Logo.tsx';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
 
@@ -64,14 +63,9 @@ export function LoginPage() {
         </Link>
 
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <div className="relative">
-              <Logo className="w-10 h-10 fill-gray-900 dark:fill-white" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('login_page.welcome_back_title')}</h1>
-          <p className="text-gray-500 dark:text-slate-400 text-sm">{t('login_page.welcome_back_description')}</p>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('login_page.sign_in_button')}</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">{t('login_page.welcome_back')}</p>
         </div>
 
         {/* Login Form */}

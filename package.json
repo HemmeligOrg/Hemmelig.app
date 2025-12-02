@@ -43,7 +43,7 @@
     "@types/dlv": "^1.1.5",
     "@types/qrcode.react": "^3.0.0",
     "@types/validator": "^13.15.2",
-    "better-auth": "^1.2.10",
+    "better-auth": "^1.4.4",
     "better-sqlite3": "^12.0.0",
     "clsx": "^2.1.0",
     "croner": "^9.1.0",

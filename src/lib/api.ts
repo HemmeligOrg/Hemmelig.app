@@ -7,7 +7,7 @@ const client = hc<AppType>('/api', {
         return fetch(input, init).then(async (res) => {
             if (!res.ok) {
                 const errorData = await res.json();
-                const errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error?.issues?.[0]?.message || errorData.error?.message || t('api.unknown_error');
+                const errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error?.issues?.[0]?.message || errorData.error?.message || 'Unknown error';
                 useErrorStore.getState().addError(errorMessage);
                 throw new Error(errorMessage);
             }
@@ -15,5 +15,8 @@ const client = hc<AppType>('/api', {
         });
     },
 });
+
+// Raw client without error handling (for validation endpoints where errors are expected)
+export const apiRaw = hc<AppType>('/api');
 
 export const api = client;

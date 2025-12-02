@@ -6,6 +6,7 @@ import {
   BarChart3,
   Users,
   Server,
+  Ticket,
   LogOut,
   Menu,
   X
@@ -39,6 +40,7 @@ export function DashboardLayout() {
     //...(user?.isAdmin ? [
     { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
     { name: 'Users', href: '/dashboard/users', icon: Users },
+    { name: 'Invites', href: '/dashboard/invites', icon: Ticket },
     { name: 'Instance', href: '/dashboard/instance', icon: Server },
     //] : []),
   ];

@@ -16,13 +16,9 @@ export type HemmeligSettings = {
     enableRateLimiting: boolean;
     rateLimitRequests: number;
     rateLimitWindow: number;
-    smtpHost: string | null;
-    smtpPort: number | null;
-    smtpUsername: string | null;
-    smtpPassword: string | null;
-    smtpSecure: boolean;
-    fromEmail: string | null;
-    fromName: string | null;
+    requireInviteCode: boolean;
+    logoUrl: string;
+    primaryColor: string;
 };
 
 type HemmeligState = {
@@ -35,6 +31,7 @@ export const useHemmeligStore = create<HemmeligState>((set) => ({
         instanceName: '',
         instanceDescription: '',
         allowRegistration: true,
+        requireInviteCode: false,
     },
     setSettings: (settings) => {
         set({ settings });

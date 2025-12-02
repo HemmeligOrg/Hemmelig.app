@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Github, Eye, EyeOff, ArrowLeft, Check } from 'lucide-react';
-import Logo from '../components/Logo';
+import { Mail, Lock, User, Github, Eye, EyeOff, ArrowLeft, Check, Ticket } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
+import { useHemmeligStore } from '../store/hemmeligStore';
+import { apiRaw } from '../lib/api';
 
 import { createAuthClient } from "better-auth/react";
 
@@ -12,17 +13,20 @@ const authClient = createAuthClient({ baseURL: window.location.origin });
 export function RegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { settings } = useHemmeligStore();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
+    inviteCode: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [inviteCodeError, setInviteCodeError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,21 +37,111 @@ export function RegisterPage() {
       return;
     }
 
+    // Validate invite code if required
+    if (settings.requireInviteCode) {
+      if (!formData.inviteCode) {
+        setInviteCodeError('Invite code is required');
+        return;
+      }
+      try {
+        const res = await apiRaw.invites.public.validate.$post({
+          json: { code: formData.inviteCode },
+        });
+        const result = await res.json();
+        if (!result.valid) {
+          setInviteCodeError('error' in result ? result.error : 'Invalid invite code');
+          return;
+        }
+      } catch {
+        setInviteCodeError('Failed to validate invite code');
+        return;
+      }
+    }
+
     setIsLoading(true);
+    setInviteCodeError('');
 
     try {
+      let registrationError: string | null = null;
+      
       const { data, error } = await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         username: formData.username,
         name: formData.username
+      }, {
+        onError: (ctx) => {
+          // Access error details from the context
+          const errorDetails = ctx.error as any;
+          console.log('Registration onError:', errorDetails);
+          
+          // Try to get error message from various locations
+          const errorMessage = 
+            errorDetails?.error?.message ||
+            errorDetails?.message ||
+            errorDetails?.body?.message ||
+            '';
+          
+          if (errorMessage && errorMessage.includes('restricted to')) {
+            registrationError = errorMessage;
+          } else if (errorMessage) {
+            registrationError = errorMessage;
+          }
+        }
       });
 
-      if (error) {
-        setErrorMessage(`Registration failed: ${error.message}`);
+      if (error || registrationError) {
+        // Handle specific error codes with user-friendly messages
+        let userMessage = registrationError || 'An unexpected error occurred';
+        
+        if (!registrationError && error) {
+          // Debug: log the full error structure
+          console.log('Registration error:', error);
+          
+          // Get error details from various possible locations
+          const errorObj = error as any;
+          const errorCode = errorObj.code || errorObj.error?.code || '';
+          const errorMsg = errorObj.message || errorObj.error?.message || '';
+          const causeMsg = errorObj.cause?.message || errorObj.error?.cause?.message || '';
+          const statusText = errorObj.statusText || '';
+          
+          // Combine all error info for checking
+          const allErrorText = `${errorCode} ${errorMsg} ${causeMsg} ${statusText}`.toLowerCase();
+          
+          // Check for email domain restriction
+          if (allErrorText.includes('email_domain_not_allowed') || 
+              allErrorText.includes('email domain') ||
+              allErrorText.includes('domain not allowed') ||
+              allErrorText.includes('restricted to') ||
+              allErrorText.includes('forbidden')) {
+            userMessage = 'Email domain not allowed';
+          } else if (allErrorText.includes('already exists') || errorCode === 'USER_ALREADY_EXISTS') {
+            userMessage = 'An account with this email already exists. Please sign in instead.';
+          } else if (causeMsg && causeMsg.length > 0) {
+            userMessage = causeMsg;
+          } else if (errorMsg && errorMsg.length > 0 && errorMsg !== 'Internal Server Error') {
+            userMessage = errorMsg;
+          } else if (statusText && statusText.length > 0 && statusText !== 'Internal Server Error') {
+            userMessage = statusText;
+          }
+        }
+        
+        setErrorMessage(userMessage);
         setIsErrorModalOpen(true);
-      } else {
+      } else if (data) {
         console.log('Registration successful', data);
+        
+        // If invite code was used, mark it as used and link to user
+        if (formData.inviteCode && data?.user?.id) {
+          try {
+            await apiRaw.invites.public.use.$post({
+              json: { code: formData.inviteCode, userId: data.user.id },
+            });
+          } catch (e) {
+            console.error('Failed to mark invite code as used:', e);
+          }
+        }
+        
         navigate('/dashboard');
       }
     } catch (error) {
@@ -114,19 +208,42 @@ export function RegisterPage() {
         </Link>
 
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <div className="relative">
-              <Logo className="w-10 h-10 fill-gray-900 dark:fill-white" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('register_page.create_account_title')}</h1>
-          <p className="text-gray-500 dark:text-slate-400 text-sm">{t('register_page.create_account_description')}</p>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('register_page.create_account_button')}</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">{t('register_page.join_hemmelig')}</p>
         </div>
 
         {/* Register Form */}
         <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Invite Code Field (conditional) */}
+            {settings.requireInviteCode && (
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
+                  Invite Code
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400">
+                    <Ticket className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.inviteCode}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, inviteCode: e.target.value.toUpperCase() }));
+                      setInviteCodeError('');
+                    }}
+                    placeholder="Enter your invite code"
+                    className={`w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-dark-700/50 border ${inviteCodeError ? 'border-red-500' : 'border-gray-300 dark:border-dark-500/50'} text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300`}
+                    required
+                  />
+                </div>
+                {inviteCodeError && (
+                  <p className="text-xs text-red-400">{inviteCodeError}</p>
+                )}
+              </div>
+            )}
+
             {/* Username Field */}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">

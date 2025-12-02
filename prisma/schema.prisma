@@ -54,6 +54,7 @@ model User {
     banned          Boolean?  @default(false)
     banReason       String?
     banExpires      DateTime?
+    inviteCodeUsed  String?
     Secrets         Secrets[]
 
     @@unique([email])
@@ -118,10 +119,26 @@ model InstanceSettings {
     enableRateLimiting       Boolean? @default(true)
     rateLimitRequests        Int?     @default(100)
     rateLimitWindow          Int?     @default(60) // minutes
+    // Organization features
+    requireInviteCode        Boolean? @default(false)
+    allowedEmailDomains      String?  @default("") // comma-separated list of allowed email domains
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 
     @@map("instance_settings")
+}
+
+model InviteCode {
+    id        String    @id @default(uuid())
+    code      String    @unique
+    uses      Int       @default(0)
+    maxUses   Int?      @default(1)
+    expiresAt DateTime?
+    createdBy String
+    createdAt DateTime  @default(now())
+    isActive  Boolean   @default(true)
+
+    @@map("invite_codes")
 }
 
 model VisitorAnalytics {
