@@ -78,7 +78,7 @@ export function SecretPage() {
     };
 
     return (
-        <main className="container mx-auto px-4 py-8 sm:max-w-4xl">
+        <main className="py-8">
             <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
                 <div className="flex justify-between items-center mb-4">
                     {title && (
