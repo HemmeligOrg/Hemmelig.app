@@ -33,7 +33,6 @@ app.get('/settings', async (c) => {
             const initialData = {
                 ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
                 ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
-                ...Object.fromEntries(Object.entries(config.get('email')).filter(([, v]) => v !== undefined)),
             };
 
             dbSettings = await prisma.instanceSettings.create({
@@ -46,7 +45,6 @@ app.get('/settings', async (c) => {
         const configSettings = {
             ...config.get('general'),
             ...config.get('security'),
-            ...config.get('email'),
         };
         const filteredConfigSettings = Object.fromEntries(
             Object.entries(configSettings).filter(([, value]) => value !== undefined)

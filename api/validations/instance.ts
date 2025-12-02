@@ -16,11 +16,4 @@ export const instanceSettingsSchema = z.object({
     enableRateLimiting: z.boolean().optional(),
     rateLimitRequests: z.number().int().min(1).optional(),
     rateLimitWindow: z.number().int().min(1).optional(),
-    smtpHost: z.string().optional(),
-    smtpPort: z.number().int().optional(),
-    smtpUsername: z.string().optional(),
-    smtpPassword: z.string().optional(),
-    smtpSecure: z.boolean().optional(),
-    fromEmail: z.string().email().optional(),
-    fromName: z.string().optional(),
 });

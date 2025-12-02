@@ -45,15 +45,6 @@ const config = {
         rateLimitRequests: parseNumber(process.env.HEMMELIG_RATE_LIMIT_REQUESTS),
         rateLimitWindow: parseNumber(process.env.HEMMELIG_RATE_LIMIT_WINDOW),
     },
-    email: {
-        smtpHost: process.env.HEMMELIG_SMTP_HOST,
-        smtpPort: parseNumber(process.env.HEMMELIG_SMTP_PORT),
-        smtpUsername: process.env.HEMMELIG_SMTP_USERNAME,
-        smtpPassword: process.env.HEMMELIG_SMTP_PASSWORD,
-        smtpSecure: parseBoolean(process.env.HEMMELIG_SMTP_SECURE),
-        fromEmail: process.env.HEMMELIG_FROM_EMAIL,
-        fromName: process.env.HEMMELIG_FROM_NAME,
-    },
 } as const;
 
 /**

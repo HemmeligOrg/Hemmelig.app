@@ -118,13 +118,6 @@ model InstanceSettings {
     enableRateLimiting       Boolean? @default(true)
     rateLimitRequests        Int?     @default(100)
     rateLimitWindow          Int?     @default(60) // minutes
-    smtpHost                 String?
-    smtpPort                 Int?
-    smtpUsername             String?
-    smtpPassword             String?
-    smtpSecure               Boolean? @default(true)
-    fromEmail                String?
-    fromName                 String?
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 
