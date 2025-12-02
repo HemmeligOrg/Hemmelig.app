@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, Shield, Clock, Eye, Key, Globe, Flame } from 'lucide-react';
+import { Clock, Eye, Key, Globe, Flame } from 'lucide-react';
 import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
 import { ExpirationSelect } from './ExpirationSelect';
@@ -35,30 +35,12 @@ export function SecuritySettings() {
 
   return (
     <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-5 shadow-xl">
-      <div className="flex items-start sm:items-center space-x-3 mb-4">
-        <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 flex-shrink-0">
-          <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900 dark:text-white" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{t('security_settings.security_title')}</h2>
-          <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">{t('security_settings.security_description')}</p>
-        </div>
+      <div className="mb-4">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{t('security_settings.security_title')}</h2>
+        <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">{t('security_settings.security_description')}</p>
       </div>
 
       <div className="space-y-3">
-        {/* Privacy Level */}
-        <div className="flex items-start p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30">
-          <div className="p-2 bg-teal-500/20 flex-shrink-0 mr-3">
-            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-teal-400" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">{t('security_settings.private_title')}</h3>
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
-              {t('security_settings.private_description')}
-            </p>
-          </div>
-        </div>
-
         {/* Expiration and Views - Mobile-first responsive grid */}
         <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-3 lg:gap-4">
           {/* Expiration - Always visible */}
