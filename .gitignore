@@ -126,3 +126,4 @@ client/build/
 api/**/*.js
 api/*.js
 .idea
+prisma/generated/

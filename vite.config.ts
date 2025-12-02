@@ -5,7 +5,7 @@ import devServer from '@hono/vite-dev-server';
 // https://vitejs.dev/config/
 export default defineConfig({
     ssr: {
-        external: ['./prisma/generated/client', '@prisma/client'],
+        external: ['@prisma/client'],
     },
     plugins: [
         react(),

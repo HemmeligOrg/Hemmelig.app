@@ -28,6 +28,8 @@
   "include": [
     "vite.config.ts",
     "server.ts",
-    "api/**/*.ts"
+    "api/**/*.ts",
+    "prisma.config.ts",
+    "prisma/generated/**/*.ts"
   ]
 }
