@@ -1,7 +1,5 @@
 import { Hono } from 'hono';
 import prisma from '../lib/db';
-import * as os from 'os';
-import * as fs from 'fs';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
@@ -24,36 +22,6 @@ const selectFields = {
     rateLimitRequests: true,
     rateLimitWindow: true,
 };
-
-// GET /api/instance/status
-app.get('/status', checkAdmin, async (c) => {
-    try {
-        const totalSecrets = await prisma.secrets.count();
-        const totalUsers = await prisma.user.count();
-
-        let diskUsage = 'N/A';
-        try {
-            const stats = fs.statSync('./database/hemmelig.db');
-            diskUsage = `${(stats.size / (1024 * 1024)).toFixed(2)} MB`;
-        } catch (error) {
-            console.error('Failed to get database file size:', error);
-        }
-
-        return c.json({
-            version: process.env.npm_package_version || 'dev',
-            uptime: os.uptime(),
-            totalSecrets,
-            totalUsers,
-            memoryUsage: process.memoryUsage().rss,
-            cpuUsage: os.loadavg()[0],
-            status: 'healthy',
-            diskUsage,
-        });
-    } catch (error) {
-        console.error('Failed to fetch system status:', error);
-        throw new HTTPException(500, { message: 'Failed to fetch system status' });
-    }
-});
 
 // GET /api/instance/settings
 app.get('/settings', async (c) => {
