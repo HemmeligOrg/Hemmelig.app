@@ -457,8 +457,19 @@
     "password_placeholder": "Enter password to view secret",
     "view_secret_button": "View Secret",
     "views_remaining_tooltip": "Views remaining: {{count}}",
-    "loading_message": "Loading...",
-    "files_title": "Files"
+    "loading_message": "Decrypting secret...",
+    "files_title": "Attached Files",
+    "secret_waiting_title": "Someone shared a secret with you",
+    "secret_waiting_description": "This secret is encrypted and can only be viewed once you click the button below.",
+    "one_view_remaining": "This secret can only be viewed 1 more time",
+    "views_remaining": "This secret can be viewed {{count}} more times",
+    "view_warning": "Once viewed, this action cannot be undone",
+    "secret_revealed": "Secret",
+    "copy_secret": "Copy to clipboard",
+    "download": "Download",
+    "create_your_own": "Create your own secret",
+    "encrypted_secret": "Encrypted Secret",
+    "unlock_secret": "Unlock Secret"
   },
   "expiration": {
     "7_days": "7 Days",

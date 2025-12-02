@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useLocation, useLoaderData } from 'react-router-dom';
+import { useParams, useLocation, useLoaderData, Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey, decryptFile } from '../lib/crypto';
-import { Loader2, Eye, Hash, File as FileIcon, Download } from 'lucide-react';
+import { Loader2, Eye, Lock, LockOpen, File as FileIcon, Download, Copy, Check, Plus, ShieldCheck } from 'lucide-react';
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,7 @@ export function SecretPage() {
   const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
   const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
   const [salt, setSalt] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
 
@@ -77,79 +78,172 @@ export function SecretPage() {
     URL.revokeObjectURL(link.href);
   };
 
-  return (
-    <main className="py-4">
-      <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6 shadow-xl">
-        <div className="flex justify-between items-center mb-4">
-          {title && (
-            <div className="flex items-center text-xl font-bold text-gray-900 dark:text-white">
-              <Hash className="h-5 w-5 mr-2 text-gray-500 dark:text-slate-400" />
-              <span>{title}</span>
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(secretContent || '');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <main className="py-8">
+        <div className="flex flex-col items-center justify-center py-16">
+          <Loader2 className="h-10 w-10 animate-spin text-teal-500 mb-4" />
+          <p className="text-gray-500 dark:text-slate-400">{t('secret_page.loading_message')}</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Pre-reveal state (view secret button)
+  if (!showSecretContent) {
+    return (
+      <main className="py-8">
+        <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 shadow-xl">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-dark-600">
+            <div className="flex items-center gap-3">
+              <Lock className="w-5 h-5 text-gray-500 dark:text-slate-400" />
+              <span className="font-medium text-gray-900 dark:text-white">
+                {t('secret_page.encrypted_secret')}
+              </span>
             </div>
-          )}
-          {viewsRemaining !== null && (
-            <div className="relative inline-block" title={t('secret_page.views_remaining_tooltip', { count: viewsRemaining })}>
-              <div className="flex items-center text-gray-500 dark:text-slate-400">
-                <Eye className="h-5 w-5 mr-2" />
-                <span>{viewsRemaining}</span>
+            {viewsRemaining !== null && (
+              <span className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                {viewsRemaining}
+              </span>
+            )}
+          </div>
+
+          {/* Blurred content preview with overlay */}
+          <div className="relative">
+            {/* Fake blurred content */}
+            <div className="p-4 sm:p-6 select-none pointer-events-none" aria-hidden="true">
+              <div className="blur-sm opacity-50 space-y-3">
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-3/4"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-full"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-5/6"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-2/3"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-full"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-4/5"></div>
+                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-1/2"></div>
+              </div>
+            </div>
+
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-white/80 dark:bg-dark-800/80 backdrop-blur-[2px] flex flex-col items-center justify-center p-6">
+              {isPasswordProtected && (
+                <div className="w-full max-w-xs mb-4">
+                  <input
+                    type="password"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
+                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 text-center"
+                    placeholder={t('secret_page.password_placeholder')}
+                    autoFocus
+                  />
+                </div>
+              )}
+              
+              <button
+                onClick={handleViewSecret}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium transition-colors"
+              >
+                <LockOpen className="w-5 h-5" />
+                {t('secret_page.unlock_secret')}
+              </button>
+
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-4 text-center">
+                {viewsRemaining === 1 
+                  ? t('secret_page.one_view_remaining')
+                  : t('secret_page.views_remaining', { count: viewsRemaining })
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Secret revealed state
+  return (
+    <main className="py-8">
+      <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 shadow-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-dark-600">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="w-5 h-5 text-teal-500" />
+            <span className="font-medium text-gray-900 dark:text-white">
+              {title || t('secret_page.secret_revealed')}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {viewsRemaining !== null && viewsRemaining > 0 && (
+              <span className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                {viewsRemaining}
+              </span>
+            )}
+            <button
+              onClick={copyToClipboard}
+              className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              title={t('secret_page.copy_secret')}
+            >
+              {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-6">
+          <Editor value={secretContent || ''} editable={false} />
+
+          {/* Files */}
+          {files && files.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600">
+              <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-3">
+                {t('secret_page.files_title')} ({files.length})
+              </h3>
+              <div className="space-y-2">
+                {files.map(file => (
+                  <div 
+                    key={file.id} 
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-teal-500/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <FileIcon className="w-4 h-4 text-gray-500 dark:text-slate-400" />
+                      <span className="text-sm text-gray-700 dark:text-slate-300">
+                        {file.filename.split('-').slice(1).join('-')}
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => handleDownload(file)} 
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm text-teal-600 dark:text-teal-400 hover:bg-teal-500/10 transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      {t('secret_page.download')}
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
         </div>
 
-        {isLoading && (
-          <div className="flex justify-center items-center text-gray-500 dark:text-slate-400">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <span>{t('secret_page.loading_message')}</span>
-          </div>
-        )}
-
-        {!isLoading && !showSecretContent && (
-          <div className="space-y-3">
-            {isPasswordProtected && (
-              <>
-                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">{t('secret_page.password_label')}</label>
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full mt-1 pl-4 pr-10 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none sm:text-sm"
-                  placeholder={t('secret_page.password_placeholder')}
-                />
-              </>
-            )}
-            <button
-              onClick={handleViewSecret}
-              className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white sm:text-base text-sm"
-            >
-              {t('secret_page.view_secret_button')}
-            </button>
-          </div>
-        )}
-
-        {showSecretContent && (
-          <>
-            <Editor value={secretContent || ''} editable={false} />
-            {files && files.length > 0 && (
-              <div className="mt-4">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">{t('secret_page.files_title')}</h3>
-                <div className="space-y-2">
-                  {files.map(file => (
-                    <div key={file.id} className="flex items-center justify-between bg-gray-100 dark:bg-dark-700/50 p-3">
-                      <div className="flex items-center space-x-3">
-                        <FileIcon className="w-5 h-5 text-gray-500 dark:text-slate-400" />
-                        <span className="text-sm text-gray-600 dark:text-slate-300">{file.filename.split('-').slice(1).join('-')}</span>
-                      </div>
-                      <button onClick={() => handleDownload(file)} className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white">
-                        <Download className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-700/30">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            {t('secret_page.create_your_own')}
+          </Link>
+        </div>
       </div>
     </main>
   );
