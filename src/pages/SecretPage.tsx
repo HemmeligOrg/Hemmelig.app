@@ -7,150 +7,150 @@ import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
 
 interface File {
-    id: string;
-    filename: string;
+  id: string;
+  filename: string;
 }
 
 export function SecretPage() {
-    const { t } = useTranslation();
-    const { id } = useParams<{ id: string }>();
-    const location = useLocation();
-    const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number, files: File[] };
-    const [secretContent, setSecretContent] = useState<string | null>(null);
-    const [title, setTitle] = useState<string | null>(null);
-    const [files, setFiles] = useState<File[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [passwordInput, setPasswordInput] = useState<string>('');
-    const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
-    const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
-    const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
-    const [salt, setSalt] = useState<string | null>(null);
+  const { t } = useTranslation();
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number, files: File[] };
+  const [secretContent, setSecretContent] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [passwordInput, setPasswordInput] = useState<string>('');
+  const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
+  const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
+  const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
+  const [salt, setSalt] = useState<string | null>(null);
 
-    const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
+  const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
 
-    const fetchSecretContent = useCallback(async (password: string) => {
-        setIsLoading(true);
-        try {
-            const finalDecryptionKey = password ? generateEncryptionKey(password) : decryptionKey;
-            const response = await api.secrets[':id'].$post({ param: { id: id! }, json: { password: finalDecryptionKey } });
-            const data = await response.json();
+  const fetchSecretContent = useCallback(async (password: string) => {
+    setIsLoading(true);
+    try {
+      const finalDecryptionKey = password ? generateEncryptionKey(password) : decryptionKey;
+      const response = await api.secrets[':id'].$post({ param: { id: id! }, json: { password: finalDecryptionKey } });
+      const data = await response.json();
 
-            if (response.status === 200 && data.secret) {
-                const decryptedSecret = await decrypt(new Uint8Array(Object.values(data.secret)), finalDecryptionKey, data.salt);
-                const decryptedTitle = data.title ? await decrypt(new Uint8Array(Object.values(data.title)), finalDecryptionKey, data.salt) : null;
-                setSecretContent(decryptedSecret);
-                setTitle(decryptedTitle);
-                setFiles(data.files);
-                setSalt(data.salt);
-                setShowSecretContent(true);
-                setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
-            }
-        } catch (err: unknown) {
-            console.error('Error fetching secret:', err);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [decryptionKey, id]);
+      if (response.status === 200 && data.secret) {
+        const decryptedSecret = await decrypt(new Uint8Array(Object.values(data.secret)), finalDecryptionKey, data.salt);
+        const decryptedTitle = data.title ? await decrypt(new Uint8Array(Object.values(data.title)), finalDecryptionKey, data.salt) : null;
+        setSecretContent(decryptedSecret);
+        setTitle(decryptedTitle);
+        setFiles(data.files);
+        setSalt(data.salt);
+        setShowSecretContent(true);
+        setViewsRemaining(prev => (prev !== null ? prev - 1 : null));
+      }
+    } catch (err: unknown) {
+      console.error('Error fetching secret:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [decryptionKey, id]);
 
-    useEffect(() => {
-        if (initialData) {
-            setIsPasswordProtected(initialData.isPasswordProtected);
-            setViewsRemaining(initialData.views);
-            setFiles(initialData.files);
-        }
-    }, [initialData]);
+  useEffect(() => {
+    if (initialData) {
+      setIsPasswordProtected(initialData.isPasswordProtected);
+      setViewsRemaining(initialData.views);
+      setFiles(initialData.files);
+    }
+  }, [initialData]);
 
-    const handleViewSecret = () => {
-        fetchSecretContent(passwordInput);
-    };
+  const handleViewSecret = () => {
+    fetchSecretContent(passwordInput);
+  };
 
-    const handleDownload = async (file: File) => {
-        const finalDecryptionKey = passwordInput ? generateEncryptionKey(passwordInput) : decryptionKey;
-        const response = await api.files[':id'].$get({ param: { id: file.id } });
-        const encryptedFile = await response.arrayBuffer();
-        const decryptedFile = await decryptFile(new Uint8Array(encryptedFile), finalDecryptionKey, salt!);
-        const blob = new Blob([decryptedFile]);
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = file.filename.split('-').slice(1).join('-');
-        link.click();
-        URL.revokeObjectURL(link.href);
-    };
+  const handleDownload = async (file: File) => {
+    const finalDecryptionKey = passwordInput ? generateEncryptionKey(passwordInput) : decryptionKey;
+    const response = await api.files[':id'].$get({ param: { id: file.id } });
+    const encryptedFile = await response.arrayBuffer();
+    const decryptedFile = await decryptFile(new Uint8Array(encryptedFile), finalDecryptionKey, salt!);
+    const blob = new Blob([decryptedFile]);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = file.filename.split('-').slice(1).join('-');
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
 
-    return (
-        <main className="py-4">
-            <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-4 sm:p-6 shadow-xl">
-                <div className="flex justify-between items-center mb-4">
-                    {title && (
-                        <div className="flex items-center text-xl font-bold text-white">
-                            <Hash className="h-5 w-5 mr-2 text-slate-400" />
-                            <span>{title}</span>
-                        </div>
-                    )}
-                    {viewsRemaining !== null && (
-                        <div className="relative inline-block" title={t('secret_page.views_remaining_tooltip', { count: viewsRemaining })}>
-                            <div className="flex items-center text-slate-400">
-                                <Eye className="h-5 w-5 mr-2" />
-                                <span>{viewsRemaining}</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {isLoading && (
-                    <div className="flex justify-center items-center text-slate-400">
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                        <span>{t('secret_page.loading_message')}</span>
-                    </div>
-                )}
-
-                {!isLoading && !showSecretContent && (
-                    <div className="space-y-3">
-                        {isPasswordProtected && (
-                            <>
-                                <label className="block text-sm font-medium text-slate-300">{t('secret_page.password_label')}</label>
-                                <input
-                                    type="password"
-                                    value={passwordInput}
-                                    onChange={(e) => setPasswordInput(e.target.value)}
-                                    className="w-full mt-1 pl-4 pr-10 py-2.5 bg-dark-700/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none sm:text-sm"
-                                    placeholder={t('secret_page.password_placeholder')}
-                                />
-                            </>
-                        )}
-                        <button
-                            onClick={handleViewSecret}
-                            className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white sm:text-base text-sm"
-                        >
-                            {t('secret_page.view_secret_button')}
-                        </button>
-                    </div>
-                )}
-
-                {showSecretContent && (
-                    <>
-                        <Editor value={secretContent || ''} editable={false} />
-                        {files && files.length > 0 && (
-                            <div className="mt-4">
-                                <h3 className="text-base font-semibold text-white mb-2">{t('secret_page.files_title')}</h3>
-                                <div className="space-y-2">
-                                    {files.map(file => (
-                                        <div key={file.id} className="flex items-center justify-between bg-dark-700/50 p-3">
-                                            <div className="flex items-center space-x-3">
-                                                <FileIcon className="w-5 h-5 text-slate-400" />
-                                                <span className="text-sm text-slate-300">{file.filename.split('-').slice(1).join('-')}</span>
-                                            </div>
-                                            <button onClick={() => handleDownload(file)} className="p-2 text-slate-400 hover:text-white">
-                                                <Download className="w-5 h-5" />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </>
-                )}
+  return (
+    <main className="py-4">
+      <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6 shadow-xl">
+        <div className="flex justify-between items-center mb-4">
+          {title && (
+            <div className="flex items-center text-xl font-bold text-gray-900 dark:text-white">
+              <Hash className="h-5 w-5 mr-2 text-gray-500 dark:text-slate-400" />
+              <span>{title}</span>
             </div>
-        </main>
-    );
+          )}
+          {viewsRemaining !== null && (
+            <div className="relative inline-block" title={t('secret_page.views_remaining_tooltip', { count: viewsRemaining })}>
+              <div className="flex items-center text-gray-500 dark:text-slate-400">
+                <Eye className="h-5 w-5 mr-2" />
+                <span>{viewsRemaining}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {isLoading && (
+          <div className="flex justify-center items-center text-gray-500 dark:text-slate-400">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span>{t('secret_page.loading_message')}</span>
+          </div>
+        )}
+
+        {!isLoading && !showSecretContent && (
+          <div className="space-y-3">
+            {isPasswordProtected && (
+              <>
+                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">{t('secret_page.password_label')}</label>
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className="w-full mt-1 pl-4 pr-10 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none sm:text-sm"
+                  placeholder={t('secret_page.password_placeholder')}
+                />
+              </>
+            )}
+            <button
+              onClick={handleViewSecret}
+              className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white sm:text-base text-sm"
+            >
+              {t('secret_page.view_secret_button')}
+            </button>
+          </div>
+        )}
+
+        {showSecretContent && (
+          <>
+            <Editor value={secretContent || ''} editable={false} />
+            {files && files.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">{t('secret_page.files_title')}</h3>
+                <div className="space-y-2">
+                  {files.map(file => (
+                    <div key={file.id} className="flex items-center justify-between bg-gray-100 dark:bg-dark-700/50 p-3">
+                      <div className="flex items-center space-x-3">
+                        <FileIcon className="w-5 h-5 text-gray-500 dark:text-slate-400" />
+                        <span className="text-sm text-gray-600 dark:text-slate-300">{file.filename.split('-').slice(1).join('-')}</span>
+                      </div>
+                      <button onClick={() => handleDownload(file)} className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white">
+                        <Download className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  );
 }

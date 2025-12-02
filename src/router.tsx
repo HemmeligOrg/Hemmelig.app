@@ -16,115 +16,115 @@ import { SecretPage } from './pages/SecretPage';
 import { useHemmeligStore } from './store/hemmeligStore';
 
 export const router = createBrowserRouter([
-    {
-        element: <RootLayout />,
-        loader: async () => {
-            try {
-                const res = await api.instance.settings.$get();
-                if (!res.ok) {
-                    console.error('Failed to fetch instance settings');
-                    return null;
-                }
-                const settings = await res.json();
-                useHemmeligStore.getState().setSettings(settings);
-                return settings;
-            } catch (error) {
-                console.error('Error fetching instance settings:', error);
-                return null;
-            }
+  {
+    element: <RootLayout />,
+    loader: async () => {
+      try {
+        const res = await api.instance.settings.$get();
+        if (!res.ok) {
+          console.error('Failed to fetch instance settings');
+          return null;
+        }
+        const settings = await res.json();
+        useHemmeligStore.getState().setSettings(settings);
+        return settings;
+      } catch (error) {
+        console.error('Error fetching instance settings:', error);
+        return null;
+      }
+    },
+    children: [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />,
+        loader: () => {
+          const { settings } = useHemmeligStore.getState();
+          if (!settings.allowRegistration) {
+            return redirect('/login');
+          }
+          return null;
         },
-        children: [
-            {
-                path: '/',
-                element: <HomePage />,
-            },
-            {
-                path: '/login',
-                element: <LoginPage />,
-            },
-            {
-                path: '/register',
-                element: <RegisterPage />,
-                loader: () => {
-                    const { settings } = useHemmeligStore.getState();
-                    if (!settings.allowRegistration) {
-                        return redirect('/login');
-                    }
-                    return null;
-                },
-            },
-            {
-                path: '/forgot-password',
-                element: <ForgotPasswordPage />,
-            },
-            {
-                path: '/secret/:id',
-                element: <SecretPage />,
-                errorElement: <SecretNotFoundPage />,
-                loader: async ({ params }) => {
-                    if (!params.id) {
-                        throw new Response('Not Found', { status: 404 });
-                    }
-                    const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
-                    return res.json();
-                },
-            },
-        ],
-    },
-    {
-        path: '/dashboard',
-        element: <DashboardLayout />,
-        children: [
-            {
-                index: true,
-                element: <SecretsPage />,
-                loader: async () => {
-                    const res = await api.secrets.$get();
-                    return await res.json();
-                },
-            },
-            {
-                path: 'account',
-                element: <AccountPage />,
-                loader: async () => {
-                    try {
-                        const res = await api.account.$get();
-                        if (res.status === 401) {
-                            return redirect('/login');
-                        }
-                        return res.json();
-                    } catch {
-                        return redirect('/login');
-                    }
-                },
-            },
-            {
-                path: 'analytics',
-                element: <AnalyticsPage />,
-                loader: async () => {
-                    try {
-                        const res = await api.analytics.$get({ query: { timeRange: '30d' } });
-                        if (res.status === 403) {
-                            return { error: "You don't have permission to view analytics." };
-                        }
-                        if (!res.ok) {
-                            return { error: 'Failed to fetch analytics data.' };
-                        }
-                        return await res.json();
-                    } catch (error) {
-                        console.error('Failed to fetch analytics data:', error);
-                        return { error: 'Failed to fetch analytics data.' };
-                    }
-                },
-            },
-            {
-                path: 'users',
-                element: <UsersPage />,
-            },
-            {
-                path: 'instance',
-                element: <InstancePage />,
-            },
-        ],
-    },
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: '/secret/:id',
+        element: <SecretPage />,
+        errorElement: <SecretNotFoundPage />,
+        loader: async ({ params }) => {
+          if (!params.id) {
+            throw new Response('Not Found', { status: 404 });
+          }
+          const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
+          return res.json();
+        },
+      },
+    ],
+  },
+  {
+    path: '/dashboard',
+    element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <SecretsPage />,
+        loader: async () => {
+          const res = await api.secrets.$get();
+          return await res.json();
+        },
+      },
+      {
+        path: 'account',
+        element: <AccountPage />,
+        loader: async () => {
+          try {
+            const res = await api.account.$get();
+            if (res.status === 401) {
+              return redirect('/login');
+            }
+            return res.json();
+          } catch {
+            return redirect('/login');
+          }
+        },
+      },
+      {
+        path: 'analytics',
+        element: <AnalyticsPage />,
+        loader: async () => {
+          try {
+            const res = await api.analytics.$get({ query: { timeRange: '30d' } });
+            if (res.status === 403) {
+              return { error: "You don't have permission to view analytics." };
+            }
+            if (!res.ok) {
+              return { error: 'Failed to fetch analytics data.' };
+            }
+            return await res.json();
+          } catch (error) {
+            console.error('Failed to fetch analytics data:', error);
+            return { error: 'Failed to fetch analytics data.' };
+          }
+        },
+      },
+      {
+        path: 'users',
+        element: <UsersPage />,
+      },
+      {
+        path: 'instance',
+        element: <InstancePage />,
+      },
+    ],
+  },
 ]);
