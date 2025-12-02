@@ -12,17 +12,27 @@ import {
 } from '../validations/secrets';
 import { authMiddleware } from '../middlewares/auth';
 import { auth } from '../auth';
-
 import { ipRestriction } from '../middlewares/ip-restriction';
+
+interface SecretCreateData {
+    salt: string;
+    secret: Uint8Array;
+    title?: Uint8Array | null;
+    password: string | null;
+    expiresAt: Date;
+    views?: number;
+    isBurnable?: boolean;
+    ipRange?: string | null;
+    files?: { connect: { id: string }[] };
+    userId?: string;
+}
 
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
     }
 }>()
-    // GET /secrets - Get all secrets
     .get('/', authMiddleware, zValidator('query', secretsQuerySchema), async c => {
-        // TODO: Use this GET request to retrieve all secrets for a user from the adminipanel
         try {
             const user = c.get('user');
             if (!user) {
@@ -31,9 +41,8 @@ const app = new Hono<{
 
             const validatedQuery = c.req.valid('query');
             const options = processSecretsQueryParams(validatedQuery);
-            const whereClause = { ...options.where, userId: user.id }; // Start with existing where conditions
+            const whereClause = { ...options.where, userId: user.id };
 
-            // Get total count and items based on processed options (where, skip, take)
             const [items, total] = await Promise.all([
                 prisma.secrets.findMany({
                     where: whereClause,
@@ -49,9 +58,7 @@ const app = new Hono<{
                         ipRange: true,
                         isBurnable: true,
                         _count: {
-                            select: {
-                                files: true,
-                            }
+                            select: { files: true }
                         }
                     }
                 }),
@@ -80,26 +87,19 @@ const app = new Hono<{
                 },
             });
         } catch (error) {
-            console.error('Failed to retrieve secrets:', error); // Log error
-            c.status(500);
+            console.error('Failed to retrieve secrets:', error);
             return c.json({
                 error: 'Failed to retrieve secrets',
-                details:
-                    error instanceof Error ? error.message : 'Unknown internal error',
-            });
+                details: error instanceof Error ? error.message : 'Unknown internal error',
+            }, 500);
         }
     })
-    // POST /secrets/:id - Get Secrets by ID
-    // TODO: Use a transaction to ensure atomicity of read and delete operations
     .post('/:id', zValidator('param', secretsIdParamSchema), zValidator('json', getSecretSchema), ipRestriction, async c => {
         try {
-            // Get validated ID from URL parameters
-            const { id: validatedIdString } = c.req.valid('param');
-            const id = validatedIdString;
-            const whereClause: { id: string } = { id };
+            const { id } = c.req.valid('param');
 
             const item = await prisma.secrets.findUnique({
-                where: whereClause,
+                where: { id },
                 select: {
                     id: true,
                     secret: true,
@@ -109,21 +109,16 @@ const app = new Hono<{
                     expiresAt: true,
                     createdAt: true,
                     isBurnable: true,
-                    password: true, // Include password if it exists
+                    password: true,
                     salt: true,
                     files: {
-                        select: {
-                            id: true,
-                            filename: true,
-                        }
+                        select: { id: true, filename: true }
                     }
                 }
             });
 
-            // Handle not found
             if (!item) {
-                c.status(404);
-                return c.json({ error: 'Secret not found' });
+                return c.json({ error: 'Secret not found' }, 404);
             }
 
             if (item.password) {
@@ -131,39 +126,29 @@ const app = new Hono<{
                 const isValidPassword = await compare(data.password!, item.password);
 
                 if (!isValidPassword) {
-                    c.status(401);
-                    return c.json({ error: 'Invalid password' });
+                    return c.json({ error: 'Invalid password' }, 401);
                 }
             }
 
-            // Track the secret view
-            // TODO: Handle this in a different way
-            delete (item as { password?: string }).password;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password: _password, ...itemWithoutPassword } = item;
 
             if (item.views! > 1) {
                 await prisma.secrets.update({
-                    where: {
-                        id: item.id,
-                    },
-                    data: {
-                        views: {
-                            decrement: 1,
-                        }
-                    }
+                    where: { id: item.id },
+                    data: { views: { decrement: 1 } }
                 });
             } else if (!item.isBurnable && item.views === 1) {
                 await prisma.secrets.delete({ where: { id: item.id } });
             }
 
-            return c.json(item);
-        } catch (error: unknown) {
+            return c.json(itemWithoutPassword);
+        } catch (error) {
             console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
-
             return c.json({
                 error: 'Failed to retrieve item',
-                details:
-                    error instanceof Error ? error.message : 'An unknown error occurred',
-            });
+                details: error instanceof Error ? error.message : 'An unknown error occurred',
+            }, 500);
         }
     })
     .get('/:id/check', zValidator('param', secretsIdParamSchema), ipRestriction, async c => {
@@ -181,8 +166,7 @@ const app = new Hono<{
             });
 
             if (!item) {
-                c.status(404);
-                return c.json({ error: 'Secret not found' });
+                return c.json({ error: 'Secret not found' }, 404);
             }
 
             return c.json({
@@ -190,89 +174,67 @@ const app = new Hono<{
                 title: item.title,
                 isPasswordProtected: !!item.password,
             });
-        } catch (error: unknown) {
+        } catch (error) {
             console.error(`Failed to check secret ${c.req.param('id')}:`, error);
             return c.json({
                 error: 'Failed to check secret',
-                details:
-                    error instanceof Error ? error.message : 'An unknown error occurred',
-            });
+                details: error instanceof Error ? error.message : 'An unknown error occurred',
+            }, 500);
         }
     })
-    // POST /secrets - Create a new Secrets
     .post('/', zValidator('json', createSecretsSchema), async c => {
         try {
             const user = c.get('user');
-
-            // Get validated data from the request body middleware (with cast)
             const validatedData = c.req.valid('json');
-
             const { expiresAt, password, fileIds, salt, ...rest } = validatedData;
-            const data: any = {
+
+            const data: SecretCreateData = {
                 ...rest,
                 salt,
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
                 ...(fileIds && {
-                    files: {
-                        connect: fileIds.map((id: string) => ({ id })),
-                    },
+                    files: { connect: fileIds.map((id: string) => ({ id })) },
                 }),
-            }
+            };
 
             if (user) {
                 data.userId = user.id;
             }
 
-            // Create secrets using the validated data
-            const item = await prisma.secrets.create({
-                data,
-            });
+            const item = await prisma.secrets.create({ data });
 
-            c.status(201);
-
-            return c.json({ id: item.id });
-        } catch (error: any) {
+            return c.json({ id: item.id }, 201);
+        } catch (error: unknown) {
             console.error('Failed to create secrets:', error);
-            // Handle potential Prisma unique constraint errors, etc.
-            if (error?.code === 'P2002') {
-                // Example: Unique constraint failed
-                c.status(409); // Conflict
+
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+                const prismaError = error as { meta?: { target?: string } };
                 return c.json({
                     error: 'Could not create secrets',
-                    details: error.meta?.target,
-                });
+                    details: prismaError.meta?.target,
+                }, 409);
             }
-            c.status(500);
+
             return c.json({
                 error: 'Failed to create secrets',
-                details:
-                    error instanceof Error ? error.message : 'An unknown error occurred',
-            });
+                details: error instanceof Error ? error.message : 'An unknown error occurred',
+            }, 500);
         }
     })
-    // DELETE /secrets/:id - Delete Secrets by ID
     .delete('/:id', zValidator('param', secretsIdParamSchema), async c => {
         try {
-            // Get validated ID (with cast)
-            const { id: validatedIdString } = c.req.valid('param');
-            const id = validatedIdString;
+            const { id } = c.req.valid('param');
 
-            const whereClause: { id: string } = { id };
+            await prisma.secrets.delete({ where: { id } });
 
-            await prisma.secrets.delete({
-                where: whereClause,
-            });
-
-            // Return standard success response
             return c.json({
                 success: true,
                 message: 'Secret deleted successfully',
             });
-        } catch (error: unknown) {
+        } catch (error) {
             console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
-            // Use the service function to handle 'not found' (P2025)
-            return handleNotFound(error, c);
+            return handleNotFound(error as Error & { code?: string }, c);
         }
     });
 

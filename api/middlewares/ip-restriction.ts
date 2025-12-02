@@ -1,21 +1,7 @@
 import { Context, Next } from 'hono';
 import ipRangeCheck from 'ip-range-check';
 import prisma from '../lib/db';
-
-export const getClientIp = (c: Context): string | undefined => {
-    const forwardedFor = c.req.header('x-forwarded-for');
-    if (forwardedFor) {
-        return forwardedFor.split(',')[0].trim();
-    }
-    return c.req.header('x-real-ip') ||
-        c.req.header('cf-connecting-ip') ||
-        c.req.header('client-ip') ||
-        c.req.header('x-client-ip') ||
-        c.req.header('x-cluster-client-ip') ||
-        c.req.header('forwarded-for') ||
-        c.req.header('forwarded') ||
-        c.req.header('via');
-};
+import { getClientIp } from '../lib/utils';
 
 export const ipRestriction = async (c: Context, next: Next) => {
     const { id } = c.req.param();

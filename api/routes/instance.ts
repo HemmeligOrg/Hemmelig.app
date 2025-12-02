@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import prisma from '../lib/db';
-import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
@@ -31,7 +30,6 @@ app.get('/settings', async (c) => {
         let dbSettings = await prisma.instanceSettings.findFirst({ select: selectFields });
 
         if (!dbSettings) {
-            // Prepare initial data from config, filtering out undefined values
             const initialData = {
                 ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
                 ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
@@ -43,7 +41,6 @@ app.get('/settings', async (c) => {
             });
         }
 
-        // Get config settings and filter out undefined values
         const configSettings = {
             ...config.get('general'),
             ...config.get('security'),
@@ -52,7 +49,6 @@ app.get('/settings', async (c) => {
             Object.entries(configSettings).filter(([, value]) => value !== undefined)
         );
 
-        // Override DB settings with any settings defined in config (env vars)
         const finalSettings = {
             ...dbSettings,
             ...filteredConfigSettings,
@@ -61,7 +57,7 @@ app.get('/settings', async (c) => {
         return c.json(finalSettings);
     } catch (error) {
         console.error('Failed to fetch instance settings:', error);
-        throw new HTTPException(500, { message: 'Failed to fetch instance settings' });
+        return c.json({ error: 'Failed to fetch instance settings' }, 500);
     }
 });
 
@@ -77,12 +73,16 @@ app.put(
 
         try {
             const settings = await prisma.instanceSettings.findFirst();
+            
+            if (!settings) {
+                return c.json({ error: 'Instance settings not found' }, 404);
+            }
+
             const updatedSettings = await prisma.instanceSettings.update({
                 where: { id: settings.id },
                 data: body,
                 select: selectFields,
             });
-
 
             const currentSettings = instanceSettings.get('instanceSettings');
             instanceSettings.set('instanceSettings', {
@@ -93,7 +93,7 @@ app.put(
             return c.json(updatedSettings);
         } catch (error) {
             console.error('Failed to update instance settings:', error);
-            throw new HTTPException(500, { message: 'Failed to update instance settings' });
+            return c.json({ error: 'Failed to update instance settings' }, 500);
         }
     }
 );

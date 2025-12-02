@@ -12,32 +12,78 @@ interface DailyVisitor {
   paths: string;
 }
 
+interface DailyStat {
+  date: string;
+  secrets: number;
+  views: number;
+}
+
+interface SecretTypes {
+  passwordProtected: number;
+  ipRestricted: number;
+  burnable: number;
+}
+
+interface ExpirationStats {
+  oneHour: number;
+  oneDay: number;
+  oneWeekPlus: number;
+}
+
+interface AnalyticsData {
+  totalSecrets: number;
+  totalViews: number;
+  averageViews: number;
+  activeSecrets: number;
+  expiredSecrets: number;
+  dailyStats: DailyStat[];
+  secretTypes: SecretTypes;
+  expirationStats: ExpirationStats;
+}
+
+interface AnalyticsLoaderData {
+  error?: string;
+  totalSecrets?: number;
+  totalViews?: number;
+  averageViews?: number;
+  activeSecrets?: number;
+  expiredSecrets?: number;
+  dailyStats?: DailyStat[];
+  secretTypes?: SecretTypes;
+  expirationStats?: ExpirationStats;
+}
+
+type TimeRange = '7d' | '30d' | '90d' | '1y';
+
 export function AnalyticsPage() {
-  const initialAnalytics = useLoaderData() as any;
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
+  const initialAnalytics = useLoaderData() as AnalyticsLoaderData;
+  const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const { t } = useTranslation();
-  const [analytics, setAnalytics] = useState<any>(
-    initialAnalytics.error ? null : initialAnalytics
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(
+    initialAnalytics.error ? null : (initialAnalytics as AnalyticsData)
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(initialAnalytics.error || null);
   const [visitorStats, setVisitorStats] = useState<DailyVisitor[]>([]);
   const [visitorLoading, setVisitorLoading] = useState(false);
 
-  const fetchAnalytics = async (range: '7d' | '30d' | '90d' | '1y') => {
+  const fetchAnalytics = async (range: TimeRange) => {
     setLoading(true);
     try {
       const res = await api.analytics.$get({ query: { timeRange: range } });
       if (res.status === 403) {
         toast.error("You don't have permission to view analytics.");
-        setAnalytics(null); // Clear analytics data
+        setAnalytics(null);
+        setError("You don't have permission to view analytics.");
         return;
       }
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      setAnalytics(data);
-    } catch (error) {
+      setAnalytics(data as AnalyticsData);
+      setError(null);
+    } catch {
       toast.error('Failed to fetch analytics data.');
+      setError('Failed to fetch analytics data.');
     } finally {
       setLoading(false);
     }
@@ -50,8 +96,8 @@ export function AnalyticsPage() {
       if (!res.ok) throw new Error('Failed to fetch visitor stats');
       const data = await res.json();
       setVisitorStats(data as DailyVisitor[]);
-    } catch (error) {
-      console.error('Failed to fetch visitor stats:', error);
+    } catch (err) {
+      console.error('Failed to fetch visitor stats:', err);
     } finally {
       setVisitorLoading(false);
     }
@@ -62,7 +108,7 @@ export function AnalyticsPage() {
   }, []);
 
   const handleTimeRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newTimeRange = e.target.value as '7d' | '30d' | '90d' | '1y';
+    const newTimeRange = e.target.value as TimeRange;
     setTimeRange(newTimeRange);
     fetchAnalytics(newTimeRange);
   };

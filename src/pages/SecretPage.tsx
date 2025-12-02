@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useLocation, useLoaderData, Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey, decryptFile } from '../lib/crypto';
@@ -6,28 +6,36 @@ import { Loader2, Eye, Lock, LockOpen, File as FileIcon, Download, Copy, Check, 
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
 
-interface File {
+interface SecretFile {
   id: string;
   filename: string;
+}
+
+interface SecretLoaderData {
+  isPasswordProtected: boolean;
+  views: number;
+  files: SecretFile[];
 }
 
 export function SecretPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const initialData = useLoaderData() as { isPasswordProtected: boolean, views: number, files: File[] };
+  const initialData = useLoaderData() as SecretLoaderData;
   const [secretContent, setSecretContent] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<SecretFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordInput, setPasswordInput] = useState<string>('');
-  const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
-  const [showSecretContent, setShowSecretContent] = useState<boolean>(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  const [showSecretContent, setShowSecretContent] = useState(false);
   const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
   const [salt, setSalt] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const decryptionKey = location.hash.startsWith('#decryptionKey=') ? location.hash.substring('#decryptionKey='.length) : '';
+  const decryptionKey = location.hash.startsWith('#decryptionKey=') 
+    ? location.hash.substring('#decryptionKey='.length) 
+    : '';
 
   const fetchSecretContent = useCallback(async (password: string) => {
     setIsLoading(true);
@@ -65,7 +73,7 @@ export function SecretPage() {
     fetchSecretContent(passwordInput);
   };
 
-  const handleDownload = async (file: File) => {
+  const handleDownload = async (file: SecretFile) => {
     const finalDecryptionKey = passwordInput ? generateEncryptionKey(passwordInput) : decryptionKey;
     const response = await api.files[':id'].$get({ param: { id: file.id } });
     const encryptedFile = await response.arrayBuffer();

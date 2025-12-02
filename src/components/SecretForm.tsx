@@ -5,22 +5,10 @@ import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
 import Editor from './Editor';
 import { Modal } from './Modal';
-import { api } from '../lib/api'; // Import the RPC client
+import { api } from '../lib/api';
 import { encrypt, generateEncryptionKey, encryptFile, generateSalt } from '../lib/crypto';
 import { useSecretStore } from '../store/secretStore';
 import { useTranslation } from 'react-i18next';
-
-export interface SecretFormData {
-  secret: string;
-  title: string;
-  password?: string;
-  expiresAt?: number;
-  views: number;
-  isBurnable: boolean;
-  ipRange?: string | null;
-  files?: File[];
-}
-
 import { useHemmeligStore } from '../store/hemmeligStore';
 
 export function SecretForm() {

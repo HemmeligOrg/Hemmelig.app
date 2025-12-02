@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
-import { HTTPException } from 'hono/http-exception';
 import prisma from '../lib/db';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
@@ -28,30 +27,33 @@ const trackSchema = z.object({
     path: z.string().max(255),
 });
 
+const timeRangeSchema = z.object({
+    timeRange: z.enum(['7d', '30d', '90d', '1y']).default('30d'),
+});
+
 // POST /api/analytics/track - Public endpoint for visitor tracking
 app.post('/track', zValidator('json', trackSchema), async (c) => {
     if (!analyticsConfig.enabled) {
         return c.json({ success: false }, 403);
     }
 
+    const userAgent = c.req.header('user-agent') || '';
+    
+    if (isbot(userAgent)) {
+        return c.json({ success: false }, 403);
+    }
+
     try {
         const { path } = c.req.valid('json');
-        const userAgent = c.req.header('user-agent') || '';
-        const uniqueId = createUniqueId(getClientIp(c), userAgent);
-
-        if (isbot(userAgent)) {
-            return c.json({ success: false }, 403);
-        }
 
         if (!isValidPath(path)) {
             return c.json({ error: 'Invalid path format' }, 400);
         }
 
+        const uniqueId = createUniqueId(getClientIp(c), userAgent);
+
         await prisma.visitorAnalytics.create({
-            data: {
-                path,
-                uniqueId,
-            },
+            data: { path, uniqueId },
         });
 
         return c.json({ success: true }, 201);
@@ -59,10 +61,6 @@ app.post('/track', zValidator('json', trackSchema), async (c) => {
         console.error('Analytics tracking error:', error);
         return c.json({ error: 'Failed to track analytics' }, 500);
     }
-});
-
-const timeRangeSchema = z.object({
-    timeRange: z.enum(['7d', '30d', '90d', '1y']).default('30d'),
 });
 
 // GET /api/analytics - Secret analytics (admin only)
@@ -134,7 +132,7 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
         });
     } catch (error) {
         console.error('Failed to fetch analytics data:', error);
-        throw new HTTPException(500, { message: 'Failed to fetch analytics data' });
+        return c.json({ error: 'Failed to fetch analytics data' }, 500);
     }
 });
 
@@ -148,7 +146,7 @@ app.get('/visitors', authMiddleware, checkAdmin, async (c) => {
         return c.json(analytics);
     } catch (error) {
         console.error('Analytics retrieval error:', error);
-        throw new HTTPException(500, { message: 'Failed to retrieve analytics' });
+        return c.json({ error: 'Failed to retrieve analytics' }, 500);
     }
 });
 
@@ -163,25 +161,21 @@ app.get('/visitors/unique', authMiddleware, checkAdmin, async (c) => {
         return c.json(aggregatedData);
     } catch (error) {
         console.error('Aggregated analytics retrieval error:', error);
-        throw new HTTPException(500, { message: 'Failed to retrieve aggregated analytics' });
+        return c.json({ error: 'Failed to retrieve aggregated analytics' }, 500);
     }
 });
 
 // GET /api/analytics/visitors/daily - Daily visitor statistics (admin only)
 app.get('/visitors/daily', authMiddleware, checkAdmin, async (c) => {
     try {
-        // Get last 30 days of data using Prisma instead of raw SQL for better compatibility
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
         const visitors = await prisma.visitorAnalytics.findMany({
-            where: {
-                timestamp: { gte: thirtyDaysAgo },
-            },
+            where: { timestamp: { gte: thirtyDaysAgo } },
             orderBy: { timestamp: 'desc' },
         });
 
-        // Aggregate by date in JavaScript
         const dailyMap = new Map<string, { uniqueIds: Set<string>; total: number; paths: Set<string> }>();
 
         for (const visitor of visitors) {
@@ -207,7 +201,7 @@ app.get('/visitors/daily', authMiddleware, checkAdmin, async (c) => {
         return c.json(aggregatedData);
     } catch (error) {
         console.error('Daily analytics retrieval error:', error);
-        throw new HTTPException(500, { message: 'Failed to retrieve daily analytics' });
+        return c.json({ error: 'Failed to retrieve daily analytics' }, 500);
     }
 });
 

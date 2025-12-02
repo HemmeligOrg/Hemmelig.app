@@ -1,5 +1,5 @@
 import { Copy, Plus, Ticket, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { api } from '../../lib/api';
@@ -26,7 +26,7 @@ export function InvitesPage() {
     expiresInDays: 7,
   });
 
-  const fetchInvites = async () => {
+  const fetchInvites = useCallback(async () => {
     try {
       const res = await api.invites.$get();
       if (res.ok) {
@@ -39,11 +39,11 @@ export function InvitesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchInvites();
-  }, []);
+  }, [fetchInvites]);
 
   const createInvite = async () => {
     try {

@@ -11,6 +11,7 @@ import { Link, useLoaderData } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { Modal } from '../../components/Modal';
+import { formatDate, getTimeRemaining } from '../../utils/date';
 
 interface Secret {
   id: string;
@@ -22,25 +23,33 @@ interface Secret {
   ipRange?: string;
   isBurnable: boolean;
   fileCount: number;
+  isExpired?: boolean;
 }
 
-import { formatDate, getTimeRemaining } from '../../utils/date';
+interface SecretsLoaderData {
+  data: Secret[];
+}
 
 export function SecretsPage() {
-  const rawData = useLoaderData() as { data: Secret[] };
+  const rawData = useLoaderData() as SecretsLoaderData;
   const { t } = useTranslation();
   const [secrets, setSecrets] = useState<Secret[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [secretToDelete, setSecretToDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    if (rawData && rawData.data) {
-      setSecrets(rawData.data.map((secret: Secret) => ({
-        ...secret,
-        createdAt: new Date(secret.createdAt),
-        expiresAt: secret.expiresAt ? new Date(secret.expiresAt) : undefined,
-        url: `/secret/${secret.id}`,
-      })));
+    if (rawData?.data) {
+      const now = new Date();
+      setSecrets(rawData.data.map((secret) => {
+        const expiresAt = secret.expiresAt ? new Date(secret.expiresAt) : undefined;
+        return {
+          ...secret,
+          createdAt: new Date(secret.createdAt),
+          expiresAt,
+          url: `/secret/${secret.id}`,
+          isExpired: expiresAt ? expiresAt < now : false,
+        };
+      }));
     }
   }, [rawData]);
 

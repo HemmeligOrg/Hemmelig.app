@@ -1,7 +1,5 @@
 import { create } from 'zustand';
-import { createAuthClient } from 'better-auth/react';
-
-const auth = createAuthClient();
+import { authClient } from '../lib/auth';
 
 interface User {
     id: string;
@@ -10,18 +8,20 @@ interface User {
     isAdmin: boolean;
 }
 
-export const useUserStore = create<{
+interface UserState {
     user: User | null;
     isLoading: boolean;
     error: Error | null;
     fetchUser: () => Promise<void>;
-}>((set) => ({
-  user: null,
-  isLoading: true,
-  error: null,
-  fetchUser: async () => {
-    set({ isLoading: true, error: null });
-    const { data, error } = await auth.getSession();
-    set({ user: data?.user as User, isLoading: false, error: error as Error | null });
-  },
+}
+
+export const useUserStore = create<UserState>((set) => ({
+    user: null,
+    isLoading: true,
+    error: null,
+    fetchUser: async () => {
+        set({ isLoading: true, error: null });
+        const { data, error } = await authClient.getSession();
+        set({ user: data?.user as User | null, isLoading: false, error: error as Error | null });
+    },
 }));

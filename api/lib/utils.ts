@@ -9,29 +9,35 @@ import { type Context } from 'hono';
 export const handleNotFound = (error: Error & { code?: string }, c: Context) => {
     // Handle record not found error (Prisma P2025)
     if (error?.code === 'P2025') {
-        c.status(404);
-        return c.json({ error: 'Not found' });
+        return c.json({ error: 'Not found' }, 404);
     }
 
     // Handle other errors
-    c.status(500);
     return c.json({
         error: 'Failed to process the operation',
         details: error.message,
-    });
+    }, 500);
 };
 
 /**
  * Get client IP from request headers
- * @param headers Request headers object
+ * @param c Hono context
  * @returns Client IP address
  */
 export const getClientIp = (c: Context): string => {
-    const headers = c.req.header;
+    const forwardedFor = c.req.header('x-forwarded-for');
+    if (forwardedFor) {
+        return forwardedFor.split(',')[0].trim();
+    }
     return (
-        c.req.header('cf-connecting-ip') ||
         c.req.header('x-real-ip') ||
-        c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
+        c.req.header('cf-connecting-ip') ||
+        c.req.header('client-ip') ||
+        c.req.header('x-client-ip') ||
+        c.req.header('x-cluster-client-ip') ||
+        c.req.header('forwarded-for') ||
+        c.req.header('forwarded') ||
+        c.req.header('via') ||
         '127.0.0.1'
     );
 };

@@ -1,9 +1,9 @@
 import { Context, Next } from 'hono';
 import settings from '../instance-settings';
 import { rateLimiter } from 'hono-rate-limiter';
-import { getClientIp } from './ip-restriction';
+import { getClientIp } from '../lib/utils';
 
-let rateLimitInstance: any = null;
+let rateLimitInstance: ReturnType<typeof rateLimiter> | null = null;
 
 const ratelimit = async (c: Context, next: Next) => {
     const instanceSettings = settings.get('instanceSettings');

@@ -6,38 +6,30 @@ interface SecretState {
     password: string | null;
     secret: string;
     title: string;
-    expiresAt?: number;
+    expiresAt: number;
     views: number;
     isBurnable: boolean;
-    ipRange?: string | null;
+    ipRange: string | null;
     setSecretIdAndKeys: (secretId: string | null, decryptionKey: string | null, password: string | null) => void;
-    setSecretData: (data: Partial<Omit<SecretState, 'secretId' | 'decryptionKey' | 'password' | 'setSecretIdAndKeys' | 'setSecretData' | 'resetSecret'>>) => void;
+    setSecretData: (data: Partial<Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>>) => void;
     resetSecret: () => void;
 }
 
-export const useSecretStore = create<SecretState>((set) => ({
+const initialState = {
     secretId: null,
     decryptionKey: null,
     password: null,
     secret: '',
     title: '',
-    expiresAt: 14400, // Default to 4 hours
+    expiresAt: 14400,
     views: 1,
     isBurnable: false,
-    ipRange: undefined,
+    ipRange: null,
+};
+
+export const useSecretStore = create<SecretState>((set) => ({
+    ...initialState,
     setSecretIdAndKeys: (secretId, decryptionKey, password) => set({ secretId, decryptionKey, password }),
-    setSecretData: (data) => set((state) => {
-        return ({ ...state, ...data })
-    }),
-    resetSecret: () => set({
-        secretId: null,
-        decryptionKey: null,
-        password: null,
-        secret: '',
-        title: '',
-        expiresAt: 14400,
-        views: 1,
-        isBurnable: false,
-        ipRange: undefined,
-    }),
+    setSecretData: (data) => set((state) => ({ ...state, ...data })),
+    resetSecret: () => set(initialState),
 }));

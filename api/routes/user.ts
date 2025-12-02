@@ -1,65 +1,76 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import db from '../lib/db';
+import prisma from '../lib/db';
 import { checkAdmin } from '../middlewares/auth';
 import { updateUserSchema } from '../validations/user';
 
 export const userRoute = new Hono()
     .use(checkAdmin)
-    .put('/:id', zValidator('json', updateUserSchema), async (c) => {
-        const { id } = c.req.param();
+    .put('/:id', zValidator('param', z.object({ id: z.string() })), zValidator('json', updateUserSchema), async (c) => {
+        const { id } = c.req.valid('param');
         const { username, email } = c.req.valid('json');
 
-        const data: {
-            username?: string;
-            email?: string;
-        } = {};
-        if (username) data.username = username;
-        if (email) data.email = email;
+        try {
+            const data: { username?: string; email?: string } = {};
+            if (username) data.username = username;
+            if (email) data.email = email;
 
-        const user = await db.user.update({
-            where: { id },
-            data,
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                role: true,
-                banned: true,
-                approved: true,
-                createdAt: true,
-            }
-        });
+            const user = await prisma.user.update({
+                where: { id },
+                data,
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    banned: true,
+                    approved: true,
+                    createdAt: true,
+                }
+            });
 
-        return c.json(user);
+            return c.json(user);
+        } catch (error) {
+            console.error(`Failed to update user ${id}:`, error);
+            return c.json({ error: 'Failed to update user' }, 500);
+        }
     })
-    .post('/:id/approve', async (c) => {
-        const { id } = c.req.param();
+    .post('/:id/approve', zValidator('param', z.object({ id: z.string() })), async (c) => {
+        const { id } = c.req.valid('param');
 
-        const user = await db.user.update({
-            where: { id },
-            data: { approved: true },
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                role: true,
-                banned: true,
-                approved: true,
-                createdAt: true,
-            }
-        });
+        try {
+            const user = await prisma.user.update({
+                where: { id },
+                data: { approved: true },
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    banned: true,
+                    approved: true,
+                    createdAt: true,
+                }
+            });
 
-        return c.json(user);
+            return c.json(user);
+        } catch (error) {
+            console.error(`Failed to approve user ${id}:`, error);
+            return c.json({ error: 'Failed to approve user' }, 500);
+        }
     })
-    .post('/:id/reject', zValidator('json', z.object({ reason: z.string().optional() })), async (c) => {
-        const { id } = c.req.param();
+    .post('/:id/reject', zValidator('param', z.object({ id: z.string() })), zValidator('json', z.object({ reason: z.string().optional() })), async (c) => {
+        const { id } = c.req.valid('param');
         
-        // Delete the user if rejected
-        await db.user.delete({
-            where: { id },
-        });
+        try {
+            await prisma.user.delete({
+                where: { id },
+            });
 
-        return c.json({ success: true });
+            return c.json({ success: true });
+        } catch (error) {
+            console.error(`Failed to reject user ${id}:`, error);
+            return c.json({ error: 'Failed to reject user' }, 500);
+        }
     });

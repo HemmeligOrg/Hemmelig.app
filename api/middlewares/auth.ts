@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import { auth } from '../auth';
-import db from '../lib/db';
+import prisma from '../lib/db';
 
 type Env = {
     Variables: {
@@ -10,12 +10,12 @@ type Env = {
 }
 
 export const authMiddleware = createMiddleware<Env>(async (c, next) => {
-    const user = c.get('user')
+    const user = c.get('user');
     if (!user) {
-        return c.json({ error: 'Unauthorized' }, 401)
+        return c.json({ error: 'Unauthorized' }, 401);
     }
-    await next()
-})
+    await next();
+});
 
 export const checkAdmin = createMiddleware<Env>(async (c, next) => {
     const sessionUser = c.get('user');
@@ -23,7 +23,7 @@ export const checkAdmin = createMiddleware<Env>(async (c, next) => {
         return c.json({ error: 'Forbidden' }, 403);
     }
 
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: { id: sessionUser.id },
         select: { role: true }
     });

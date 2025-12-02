@@ -3,10 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Github, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
-
-import { createAuthClient } from "better-auth/react";
-
-const authClient = createAuthClient({ baseURL: window.location.origin });
+import { authClient } from '../lib/auth';
 
 export function LoginPage() {
   const { t } = useTranslation();

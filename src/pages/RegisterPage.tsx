@@ -5,10 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Modal } from '../components/Modal';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { apiRaw } from '../lib/api';
-
-import { createAuthClient } from "better-auth/react";
-
-const authClient = createAuthClient({ baseURL: window.location.origin });
+import { authClient } from '../lib/auth';
+import { getPasswordStrength } from '../utils/date';
 
 export function RegisterPage() {
   const { t } = useTranslation();
@@ -72,7 +70,7 @@ export function RegisterPage() {
       }, {
         onError: (ctx) => {
           // Access error details from the context
-          const errorDetails = ctx.error as any;
+          const errorDetails = ctx.error as { error?: { message?: string }; message?: string; body?: { message?: string } };
           console.log('Registration onError:', errorDetails);
           
           // Try to get error message from various locations
@@ -99,7 +97,13 @@ export function RegisterPage() {
           console.log('Registration error:', error);
           
           // Get error details from various possible locations
-          const errorObj = error as any;
+          const errorObj = error as { 
+            code?: string; 
+            message?: string; 
+            statusText?: string;
+            error?: { code?: string; message?: string; cause?: { message?: string } };
+            cause?: { message?: string };
+          };
           const errorCode = errorObj.code || errorObj.error?.code || '';
           const errorMsg = errorObj.message || errorObj.error?.message || '';
           const causeMsg = errorObj.cause?.message || errorObj.error?.cause?.message || '';
@@ -156,39 +160,6 @@ export function RegisterPage() {
   const handleGithubLogin = () => {
     console.log('GitHub OAuth registration');
     // Implement GitHub OAuth
-  };
-
-  // TODO: Consider to remove this
-  const getPasswordStrength = (password: string) => {
-    const length = password.length;
-    if (length === 0) return 0;
-
-    const hasUpper = /[A-Z]/.test(password);
-    const hasLower = /[a-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecial = /[^A-Za-z0-9]/.test(password);
-
-    const typesCount = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
-
-    if (length < 8) return 1; // All short passwords are weak
-
-    if (typesCount <= 1) return 1; // Passwords with only one type of character are weak
-
-    let strength = 1;
-    if (typesCount >= 2) {
-      strength = 2;
-    }
-    if (typesCount >= 3) {
-      strength = 3;
-    }
-    if (length >= 12 && typesCount >= 3) {
-      strength = 4;
-    }
-    if (length >= 12 && typesCount === 4) {
-      strength = 5;
-    }
-
-    return strength;
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
