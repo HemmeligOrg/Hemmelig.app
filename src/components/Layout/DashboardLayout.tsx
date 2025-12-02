@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import Logo from '../Logo';
 import { createAuthClient } from 'better-auth/react';
 import { useUserStore } from '../../store/userStore';
-import { ThemeToggle } from '../ThemeToggle';
 
 const authClient = createAuthClient({ baseURL: window.location.origin });
 
@@ -151,7 +150,6 @@ export function DashboardLayout() {
                       )}
                     </div>
                   </div>
-                  <ThemeToggle />
                 </div>
                 <button onClick={handleLogout} className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
                   <LogOut className="w-4 h-4" />
@@ -176,7 +174,6 @@ export function DashboardLayout() {
                 <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-gray-900 dark:fill-white" />
                 <span className="text-xl font-bold">Hemmelig</span>
               </Link>
-              <ThemeToggle />
             </div>
 
             {/* Page content */}

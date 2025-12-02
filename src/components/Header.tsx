@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/userStore.ts';
 import { useEffect } from 'react';
 import { useHemmeligStore } from '../store/hemmeligStore.ts';
-import { ThemeToggle } from './ThemeToggle.tsx';
 
 export function Header() {
   const { t } = useTranslation();
@@ -27,7 +26,6 @@ export function Header() {
           </Link>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <ThemeToggle />
             {user ? (
               <Link
                 to="/dashboard"
