@@ -52,23 +52,22 @@ export function ForgotPasswordPage() {
                     </Link>
 
                     {/* Success Message */}
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl text-center">
-                        <div className="flex items-center justify-center mb-6">
+                    <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-6 shadow-xl text-center">
+                        <div className="flex items-center justify-center mb-4">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-green-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-                                <div className="relative bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-2xl">
-                                    <CheckCircle className="w-6 h-6 text-white" />
+                                <div className="relative bg-gradient-to-br from-green-400 to-green-600 p-2">
+                                    <CheckCircle className="w-5 h-5 text-white" />
                                 </div>
                             </div>
                         </div>
 
-                        <h1 className="text-2xl font-bold text-white mb-4">{t('forgot_password_page.check_email_title')}</h1>
-                        <p className="text-slate-400 mb-6">
+                        <h1 className="text-xl font-bold text-white mb-3">{t('forgot_password_page.check_email_title')}</h1>
+                        <p className="text-slate-400 text-sm mb-4">
                             {t('forgot_password_page.check_email_description', { email: email })}
                         </p>
 
-                        <div className="space-y-4">
-                            <p className="text-sm text-slate-500">
+                        <div className="space-y-3">
+                            <p className="text-xs text-slate-500">
                                 {t('forgot_password_page.did_not_receive_email')}
                             </p>
 
@@ -98,35 +97,34 @@ export function ForgotPasswordPage() {
                 </Link>
 
                 {/* Header */}
-                <div className="text-center mb-8">
-                    <div className="flex items-center justify-center mb-6">
+                <div className="text-center mb-6">
+                    <div className="flex items-center justify-center mb-4">
                         <div className="relative">
-                            <div className="absolute inset-0 bg-teal-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-                            <Logo className="w-12 h-12 sm:w-12 sm:h-12 fill-white" />
+                            <Logo className="w-10 h-10 fill-white" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">{t('forgot_password_page.forgot_password_title')}</h1>
-                    <p className="text-slate-400">{t('forgot_password_page.forgot_password_description')}</p>
+                    <h1 className="text-2xl font-bold text-white mb-2">{t('forgot_password_page.forgot_password_title')}</h1>
+                    <p className="text-slate-400 text-sm">{t('forgot_password_page.forgot_password_description')}</p>
                 </div>
 
                 {/* Reset Form */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-6 shadow-xl">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Email Field */}
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <label className="block text-sm font-medium text-slate-300">
                                 {t('forgot_password_page.email_label')}
                             </label>
                             <div className="relative">
-                                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
-                                    <Mail className="w-5 h-5" />
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
+                                    <Mail className="w-4 h-4" />
                                 </div>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder={t('forgot_password_page.email_placeholder')}
-                                    className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    className="w-full pl-10 pr-4 py-2 bg-dark-700/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     required
                                 />
                             </div>
@@ -140,12 +138,12 @@ export function ForgotPasswordPage() {
                             type="submit"
                             disabled={isLoading}
                             className={`
-                w-full flex items-center justify-center space-x-3 py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform
+                w-full flex items-center justify-center space-x-3 py-2.5 px-4 font-semibold transition-all duration-300 transform
                 ${isLoading
-                                    ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                                    ? 'bg-dark-600 text-slate-400 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white hover:scale-105 hover:shadow-2xl shadow-teal-500/25'
                                 }
-                focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-slate-800
+                focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-dark-800
               `}
                         >
                             {isLoading ? (
@@ -160,7 +158,7 @@ export function ForgotPasswordPage() {
                     </form>
 
                     {/* Additional Help */}
-                    <div className="text-center mt-8 pt-6 border-t border-slate-700/50">
+                    <div className="text-center mt-6 pt-4 border-t border-dark-600">
                         <p className="text-slate-400 text-sm">
                             {t('forgot_password_page.remember_password')}{' '}
                             <Link

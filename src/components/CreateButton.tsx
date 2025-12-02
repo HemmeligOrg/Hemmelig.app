@@ -17,12 +17,12 @@ export function CreateButton({ onSubmit, isLoading, disabled }: CreateButtonProp
                 onClick={onSubmit}
                 disabled={disabled || isLoading}
                 className={`
-          flex items-center justify-center space-x-2 sm:space-x-3 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-300 transform w-full sm:w-auto min-w-[200px] touch-manipulation
+          flex items-center justify-center space-x-2 sm:space-x-3 px-6 sm:px-8 py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all duration-300 transform w-full sm:w-auto min-w-[200px] touch-manipulation
           ${disabled || isLoading
-                        ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                        ? 'bg-dark-600 text-slate-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white hover:scale-105 hover:shadow-2xl shadow-teal-500/25'
                     }
-          focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-slate-900
+          focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-dark-900
         `}
             >
                 {isLoading ? (

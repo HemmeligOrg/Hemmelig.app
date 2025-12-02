@@ -26,19 +26,19 @@ export const Modal: React.FC<ModalProps> = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div className="bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-md">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-white">{title}</h2>
+            <div className="bg-dark-800 shadow-xl p-5 w-full max-w-md">
+                <div className="flex justify-between items-center mb-3">
+                    <h2 className="text-lg font-bold text-white">{title}</h2>
                     <button onClick={onClose} className="text-slate-400 hover:text-white">
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
-                <div className="text-slate-300 mb-6">{children}</div>
-                <div className="flex justify-end space-x-4">
+                <div className="text-slate-300 text-sm mb-4">{children}</div>
+                <div className="flex justify-end space-x-3">
                     {cancelText && (
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 transition-colors"
+                            className="px-4 py-2 bg-dark-700 text-white hover:bg-dark-600 transition-colors"
                         >
                             {cancelText}
                         </button>
@@ -46,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
                     {onConfirm && confirmText && (
                         <button
                             onClick={onConfirm}
-                            className={`px-4 py-2 rounded-lg text-white transition-colors ${confirmButtonClass}`}
+                            className={`px-4 py-2 text-white transition-colors ${confirmButtonClass}`}
                         >
                             {confirmText}
                         </button>

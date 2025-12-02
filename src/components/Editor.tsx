@@ -66,9 +66,9 @@ const Tooltip: FC<TooltipProps> = ({ text, children }) => {
                 {children}
             </div>
             {isVisible && (
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-slate-800 rounded shadow-sm whitespace-nowrap z-10">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-dark-800 shadow-sm whitespace-nowrap z-10">
                     {text}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-dark-800"></div>
                 </div>
             )}
         </div>
@@ -106,7 +106,7 @@ const LinkModal: FC<LinkModalProps> = ({ isOpen, onClose, onSubmit, initialUrl =
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className="bg-dark-800  shadow-lg p-6 w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-slate-100">
                         {t('editor.link_modal.title')}
@@ -130,20 +130,20 @@ const LinkModal: FC<LinkModalProps> = ({ isOpen, onClose, onSubmit, initialUrl =
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder={t('editor.link_modal.url_placeholder')}
-                            className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            className="w-full px-3 py-2 bg-dark-700 border border-dark-500  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
                         />
                     </div>
                     <div className="flex justify-end space-x-2">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600"
+                            className="px-4 py-2 bg-dark-700 text-slate-200  hover:bg-dark-600"
                         >
                             {t('editor.link_modal.cancel')}
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-primary text-white rounded-md "
+                            className="px-4 py-2 bg-primary text-white  "
                         >
                             {initialUrl
                                 ? t('editor.link_modal.update')
@@ -196,7 +196,7 @@ const PasswordModal: FC<PasswordModalProps> = ({ isOpen, onClose, onSubmit }) =>
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className="bg-dark-800  shadow-lg p-6 w-full max-w-md">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-slate-100">
                         {t('editor.password_modal.title')}
@@ -290,12 +290,12 @@ const PasswordModal: FC<PasswordModalProps> = ({ isOpen, onClose, onSubmit }) =>
                                 type="text"
                                 value={password}
                                 readOnly
-                                className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-l-md text-slate-100"
+                                className="w-full px-3 py-2 bg-dark-900 border border-dark-500  text-slate-100"
                             />
                             <button
                                 type="button"
                                 onClick={regeneratePassword}
-                                className="px-3 py-2 bg-primary text-slate-200 rounded-r-md hover:opacity-90"
+                                className="px-3 py-2 bg-primary text-slate-200  hover:opacity-90"
                             >
                                 {t('editor.password_modal.refresh')}
                             </button>
@@ -305,13 +305,13 @@ const PasswordModal: FC<PasswordModalProps> = ({ isOpen, onClose, onSubmit }) =>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600"
+                            className="px-4 py-2 bg-dark-700 text-slate-200  hover:bg-dark-600"
                         >
                             {t('editor.password_modal.cancel')}
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-primary text-white rounded-md hover:opacity-90"
+                            className="px-4 py-2 bg-primary text-white  hover:opacity-90"
                         >
                             {t('editor.password_modal.insert')}
                         </button>
@@ -380,11 +380,11 @@ const ReadOnlyMenuBar: FC = () => {
     };
 
     const buttonClass =
-        'p-2 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105';
+        'p-2  bg-dark-600/50 hover:bg-dark-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105';
     const groupClass = 'flex items-center gap-1';
 
     return (
-        <div className="mb-4 flex w-full p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30">
+        <div className="mb-4 flex w-full p-3 sm:p-4 bg-dark-700/30  border border-dark-500/30">
             <div className="flex gap-2">
                 <div className={groupClass}>
                     <Tooltip text={t('editor.tooltips.copy_text')}>
@@ -450,9 +450,9 @@ const MenuBar: FC = () => {
     }
 
     const buttonClass =
-        'p-2 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105 min-w-[44px] touch-manipulation';
+        'p-2  bg-dark-600/50 hover:bg-dark-500/50 text-slate-300 hover:text-white transition-all duration-200 hover:scale-105 min-w-[44px] touch-manipulation';
     const activeButtonClass =
-        'p-2 rounded-lg bg-teal-500/50 text-white transition-all duration-200 min-w-[44px] touch-manipulation';
+        'p-2  bg-teal-500/50 text-white transition-all duration-200 min-w-[44px] touch-manipulation';
 
     const groupClass = 'flex flex-wrap gap-1 w-full sm:w-auto';
 
@@ -466,7 +466,7 @@ const MenuBar: FC = () => {
                 <div className="sm:hidden mb-2 flex justify-end">
                     <button
                         onClick={toggleMenu}
-                        className="flex items-center justify-between w-full p-3 bg-slate-700/30 rounded-xl border border-slate-600/30 text-slate-300 hover:text-white transition-all duration-200"
+                        className="flex items-center justify-between w-full p-3 bg-dark-700/30  border border-dark-500/30 text-slate-300 hover:text-white transition-all duration-200"
                     >
                         <span className="text-sm font-medium">{t('editor.formatting_tools')}</span>
                         <svg
@@ -487,7 +487,7 @@ const MenuBar: FC = () => {
                 </div>
 
                 <div
-                    className={`${menuOpen ? 'block' : 'hidden'} sm:block p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30`}
+                    className={`${menuOpen ? 'block' : 'hidden'} sm:block p-3 sm:p-4 bg-dark-700/30  border border-dark-500/30`}
                 >
                     <div className="flex flex-col justify-center sm:flex-row gap-2 sm:gap-0 sm:flex-wrap">
                         <div className={groupClass}>
@@ -568,8 +568,8 @@ const MenuBar: FC = () => {
                             </Tooltip>
                         </div>
 
-                        <div className="hidden sm:block w-px h-8 bg-slate-600 mx-2"></div>
-                        <div className="block sm:hidden w-full h-px bg-slate-600 my-1"></div>
+                        <div className="hidden sm:block w-px h-8 bg-dark-600 mx-2"></div>
+                        <div className="block sm:hidden w-full h-px bg-dark-600 my-1"></div>
 
                         <div className={groupClass}>
                             <Tooltip text={t('editor.tooltips.paragraph')}>
@@ -626,8 +626,8 @@ const MenuBar: FC = () => {
                             </Tooltip>
                         </div>
 
-                        <div className="hidden sm:block w-px h-8 bg-slate-600 mx-2"></div>
-                        <div className="block sm:hidden w-full h-px bg-slate-600 my-1"></div>
+                        <div className="hidden sm:block w-px h-8 bg-dark-600 mx-2"></div>
+                        <div className="block sm:hidden w-full h-px bg-dark-600 my-1"></div>
 
                         <div className={groupClass}>
                             <Tooltip text={t('editor.tooltips.bullet_list')}>
@@ -753,12 +753,12 @@ export default function Editor({
                 }}
                 editorProps={{
                     attributes: {
-                        class: 'w-full min-h-[12rem] sm:min-h-[16rem] p-4 sm:p-6 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-sm sm:text-base prose prose-sm max-w-none prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-slate-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-slate-200 prose-strong:text-slate-200 prose-strong:font-bold prose-em:text-slate-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-slate-200 prose-a:text-teal-400 prose-a:underline prose-a:font-medium hover:prose-a:text-teal-300 prose-code:bg-slate-800 prose-code:text-slate-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:bg-slate-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-slate-600 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-slate-300 prose-hr:my-6 prose-hr:border-slate-700',
+                        class: 'w-full min-h-[12rem] sm:min-h-[16rem] p-4 sm:p-6 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-sm sm:text-base prose prose-sm max-w-none prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-slate-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-slate-200 prose-strong:text-slate-200 prose-strong:font-bold prose-em:text-slate-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-slate-200 prose-a:text-teal-400 prose-a:underline prose-a:font-medium hover:prose-a:text-teal-300 prose-code:bg-dark-800 prose-code:text-slate-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:prose-code:text-sm prose-code:font-mono prose-pre:bg-dark-900 prose-pre:text-white prose-pre:p-4 prose-pre: prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-dark-500 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-slate-300 prose-hr:my-6 prose-hr:border-dark-600',
                     },
                 }}
                 {...props}
             >
-                <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-slate-400 bg-slate-800/80 px-2 py-1 rounded">
+                <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-slate-400 bg-dark-800/80 px-2 py-1 rounded">
                     {characterCount} characters
                 </div>
             </EditorProvider>

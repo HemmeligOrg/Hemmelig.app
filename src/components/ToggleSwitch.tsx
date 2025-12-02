@@ -12,8 +12,8 @@ export function ToggleSwitch({ checked, onChange, disabled = false }: ToggleSwit
             type="button"
             onClick={() => !disabled && onChange(!checked)}
             className={`
-        relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-slate-800 touch-manipulation
-        ${checked ? 'bg-teal-500' : 'bg-slate-600'}
+        relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-dark-800 touch-manipulation
+        ${checked ? 'bg-teal-500' : 'bg-dark-600'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
       `}
             disabled={disabled}

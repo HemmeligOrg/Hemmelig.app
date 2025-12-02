@@ -112,9 +112,9 @@ export function SecretForm() {
     const isFormValid = secret.trim().length > 0;
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-4">
             {/* Main editor card */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
+            <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-4 sm:p-6 shadow-xl">
                 <Editor
                     name="text"
                     content={secret}
@@ -123,14 +123,14 @@ export function SecretForm() {
                 //editable={!inputReadOnly}
                 />
 
-                <div className="mt-6">
+                <div className="mt-4">
                     <TitleField
                         value={title}
                         onChange={(value) => setSecretData({ title: value })}
                     />
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4">
                     <FileUpload onFileChange={handleFileChange} instanceSettings={instanceSettings} />
                 </div>
             </div>

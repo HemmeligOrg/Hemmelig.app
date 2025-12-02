@@ -16,10 +16,10 @@ export function Header() {
     }, [fetchUser]);
 
     return (
-        <header className="pt-6 sm:pt-12 pb-6 sm:pb-8">
+        <header className="pt-4 sm:pt-8 pb-4 sm:pb-6">
             <div className="container mx-auto px-4">
                 {/* Navigation */}
-                <div className="flex justify-between items-center mb-6 sm:mb-8">
+                <div className="flex justify-between items-center mb-4 sm:mb-6">
                     <Link to="/" className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors duration-300">
                         <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                         <span className="text-lg sm:text-xl font-bold">Hemmelig</span>
@@ -29,7 +29,7 @@ export function Header() {
                         {user ? (
                             <Link
                                 to="/dashboard"
-                                className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                                className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                             >
                                 <LayoutDashboard className="w-4 h-4" />
                                 <span className="hidden xs:inline">{t('header.dashboard')}</span>
@@ -45,7 +45,7 @@ export function Header() {
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                                    className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                                 >
                                     <UserPlus className="w-4 h-4" />
                                     <span className="hidden xs:inline">{t('header.sign_up')}</span>
@@ -57,29 +57,29 @@ export function Header() {
 
                 {/* Hero Section */}
                 <div className="text-center">
-                    <div className="flex items-center justify-center mb-4 sm:mb-6">
+                    <div className="flex items-center justify-center mb-3 sm:mb-4">
                         <div className="relative">
-                            <Logo className="w-16 h-16 sm:w-16 sm:h-16 fill-white" />
+                            <Logo className="w-12 h-12 sm:w-14 sm:h-14 fill-white" />
                         </div>
                     </div>
 
                     {settings.instanceName ? (
-                        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
                             {settings.instanceName}
                         </h1>
                     ) : (
-                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
+                        <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-3 tracking-tight">
                             Hemmelig
                             <span className="text-teal-400">.app</span>
                         </h1>
                     )}
 
                     {settings.instanceDescription ? (
-                        <p className="mt-6 text-lg leading-8 text-slate-300">
+                        <p className="mt-4 text-base leading-7 text-slate-300">
                             {settings.instanceDescription}
                         </p>
                     ) : (
-                        <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
+                        <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed px-4">
                             {t('header.hero_text_part1')}
                             <span className="text-teal-400 font-medium">{t('header.hero_text_part2')}</span>{t('header.hero_text_part3')}
                         </p>

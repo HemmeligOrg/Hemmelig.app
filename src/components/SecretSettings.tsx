@@ -37,15 +37,15 @@ export const SecretSettings = () => {
     };
 
     return (
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 shadow-2xl mt-8">
-            <h2 className="text-2xl font-bold text-white mb-4">{t('secret_settings.secret_created_title')}</h2>
-            <p className="text-slate-400 mb-6">{t('secret_settings.secret_created_description')}</p>
+        <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-4 sm:p-6 shadow-xl mt-4">
+            <h2 className="text-xl font-bold text-white mb-3">{t('secret_settings.secret_created_title')}</h2>
+            <p className="text-slate-400 mb-4">{t('secret_settings.secret_created_description')}</p>
 
-            <div className="flex justify-center mb-6">
-                <QRCodeCanvas value={secretUrl} size={256} bgColor="#1e293b" fgColor="#ffffff" />
+            <div className="flex justify-center mb-4">
+                <QRCodeCanvas value={secretUrl} size={200} bgColor="#1e293b" fgColor="#ffffff" />
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
                 <div>
                     <label className="block text-sm font-medium text-slate-300">{t('secret_settings.secret_url_label')}</label>
                     <div className="relative">
@@ -53,7 +53,7 @@ export const SecretSettings = () => {
                             type="text"
                             readOnly
                             value={secretUrl}
-                            className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                            className="w-full mt-1 pl-4 pr-10 py-2.5 bg-dark-700/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none"
                         />
                         <button onClick={() => copyToClipboard(secretUrl, 'url')} className="absolute inset-y-0 right-0 flex items-center pr-3">
                             {copied === 'url' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
@@ -68,7 +68,7 @@ export const SecretSettings = () => {
                                 type="text"
                                 readOnly
                                 value={decryptionKey}
-                                className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                                className="w-full mt-1 pl-4 pr-10 py-2.5 bg-dark-700/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none"
                             />
                             <button onClick={() => copyToClipboard(decryptionKey, 'key')} className="absolute inset-y-0 right-0 flex items-center pr-3">
                                 {copied === 'key' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
@@ -84,7 +84,7 @@ export const SecretSettings = () => {
                                 type="text"
                                 readOnly
                                 value={password}
-                                className="w-full mt-1 pl-4 pr-10 py-3 bg-slate-700/50 border border-slate-600/50 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none"
+                                className="w-full mt-1 pl-4 pr-10 py-2.5 bg-dark-700/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none"
                             />
                             <button onClick={() => copyToClipboard(password, 'password')} className="absolute inset-y-0 right-0 flex items-center pr-3">
                                 {copied === 'password' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-slate-400 hover:text-white" />}
@@ -94,21 +94,21 @@ export const SecretSettings = () => {
                 )}
             </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <button
                     onClick={resetSecret}
-                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                    <Plus className="h-5 w-5" />
+                    <Plus className="h-4 w-4" />
                     {t('secret_settings.create_new_secret_button')}
                 </button>
-                <div className="w-full sm:w-auto flex space-x-4">
-                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white rounded-lg">{t('secret_settings.copy_url_button')}</button>
-                    <button onClick={handleBurnSecret} className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg">{t('secret_settings.burn_secret_button')}</button>
+                <div className="w-full sm:w-auto flex space-x-3">
+                    <button onClick={() => copyToClipboard(secretUrl, 'url')} className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-white text-sm">{t('secret_settings.copy_url_button')}</button>
+                    <button onClick={handleBurnSecret} className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white text-sm">{t('secret_settings.burn_secret_button')}</button>
                 </div>
             </div>
             {instanceSettings?.maxSecretsPerUser && (
-                <p className="text-slate-400 text-xs mt-4 text-center">
+                <p className="text-slate-400 text-xs mt-3 text-center">
                     {t('secret_settings.max_secrets_per_user_info', { count: instanceSettings.maxSecretsPerUser })}
                 </p>
             )}

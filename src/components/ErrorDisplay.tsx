@@ -24,7 +24,7 @@ const ErrorDisplay = () => {
             {errors.map((error, index) => (
                 <div
                     key={index}
-                    className="bg-red-500 text-white p-3 rounded-lg shadow-lg flex justify-between items-center"
+                    className="bg-red-500 text-white p-3  shadow-lg flex justify-between items-center"
                     role="alert"
                 >
                     <span>{error}</span>

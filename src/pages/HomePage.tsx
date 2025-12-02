@@ -6,7 +6,7 @@ export function HomePage() {
     const { secretId } = useSecretStore();
 
     return (
-        <div className="mt-10">
+        <div className="mt-4">
             {!secretId && <SecretForm />}
             {secretId && <SecretSettings />}
         </div>

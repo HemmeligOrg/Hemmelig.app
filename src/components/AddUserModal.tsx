@@ -55,7 +55,7 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -69,7 +69,7 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -83,7 +83,7 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -110,7 +110,7 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
                         <select
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 appearance-none"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 appearance-none"
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>

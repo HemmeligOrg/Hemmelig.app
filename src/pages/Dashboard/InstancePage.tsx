@@ -65,9 +65,9 @@ export function InstancePage() {
             </div>
 
             {/* System Status */}
-            <div className="mb-8 bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+            <div className="mb-8 bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
+                    <div className="p-2 bg-green-500/20 ">
                         <CheckCircle className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
@@ -81,7 +81,7 @@ export function InstancePage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-slate-700/30 rounded-lg p-4">
+                    <div className="bg-dark-700/30  p-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-slate-400">
@@ -95,7 +95,7 @@ export function InstancePage() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-700/30 rounded-lg p-4">
+                    <div className="bg-dark-700/30  p-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-slate-400">
@@ -109,7 +109,7 @@ export function InstancePage() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-700/30 rounded-lg p-4">
+                    <div className="bg-dark-700/30  p-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-slate-400">
@@ -123,7 +123,7 @@ export function InstancePage() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-700/30 rounded-lg p-4">
+                    <div className="bg-dark-700/30  p-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-slate-400">
@@ -141,7 +141,7 @@ export function InstancePage() {
 
             {/* Tabs */}
             <div className="mb-8">
-                <div className="border-b border-slate-700/50">
+                <div className="border-b border-dark-600">
                     <nav className="flex space-x-8 overflow-x-auto">
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
@@ -161,7 +161,7 @@ export function InstancePage() {
                                     className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
                                         activeTab === tab.id
                                             ? 'border-teal-500 text-teal-400'
-                                            : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                                            : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-dark-500'
                                     }`}
                                 >
                                     <Icon className="w-4 h-4" />
@@ -176,9 +176,9 @@ export function InstancePage() {
             {/* Tab Content */}
             <div className="max-w-4xl">
                 {activeTab === 'general' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                    <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                         <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-blue-500/20 rounded-lg">
+                            <div className="p-2 bg-blue-500/20 ">
                                 <Settings className="w-5 h-5 text-blue-400" />
                             </div>
                             <div>
@@ -203,7 +203,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setGeneralSetting('instanceName', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
 
@@ -220,7 +220,7 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
 
@@ -237,7 +237,7 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
                             </div>
@@ -252,14 +252,14 @@ export function InstancePage() {
                                         setGeneralSetting('instanceDescription', e.target.value)
                                     }
                                     rows={3}
-                                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                 />
                             </div>
 
                             <button
                                 onClick={() => handleSaveSettings('general')}
                                 disabled={isLoading}
-                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white  transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
                                 <span>
@@ -273,9 +273,9 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'security' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                    <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                         <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-orange-500/20 rounded-lg">
+                            <div className="p-2 bg-orange-500/20 ">
                                 <Shield className="w-5 h-5 text-orange-400" />
                             </div>
                             <div>
@@ -290,7 +290,7 @@ export function InstancePage() {
 
                         <div className="space-y-6">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                <div className="flex items-center justify-between p-4 bg-dark-700/30 ">
                                     <div>
                                         <h3 className="font-medium text-white">Rate Limiting</h3>
                                         <p className="text-sm text-slate-400">
@@ -309,11 +309,11 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                <div className="flex items-center justify-between p-4 bg-dark-700/30 ">
                                     <div>
                                         <h3 className="font-medium text-white">
                                             Allow Password Protection
@@ -334,11 +334,11 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                <div className="flex items-center justify-between p-4 bg-dark-700/30 ">
                                     <div>
                                         <h3 className="font-medium text-white">
                                             Allow IP Restriction
@@ -359,7 +359,7 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
                             </div>
@@ -378,7 +378,7 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
 
@@ -395,7 +395,7 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                     />
                                 </div>
                             </div>
@@ -403,7 +403,7 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('security')}
                                 disabled={isLoading}
-                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white  transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
                                 <span>
@@ -417,9 +417,9 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'email' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 opacity-50 cursor-not-allowed">
+                    <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6 opacity-50 cursor-not-allowed">
                         <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-green-500/20 rounded-lg">
+                            <div className="p-2 bg-green-500/20 ">
                                 <Mail className="w-5 h-5 text-green-400" />
                             </div>
                             <div>
@@ -456,7 +456,7 @@ export function InstancePage() {
                                             className="sr-only peer"
                                             disabled
                                         />
-                                        <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
                             </div>
@@ -471,7 +471,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('smtpHost', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
@@ -486,7 +486,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('smtpPort', parseInt(e.target.value))
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
@@ -503,7 +503,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('smtpUsername', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
@@ -518,7 +518,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('smtpPassword', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
@@ -535,7 +535,7 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('fromEmail', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
@@ -550,13 +550,13 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setEmailSetting('fromName', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                                         disabled
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                            <div className="flex items-center justify-between p-4 bg-dark-700/30 ">
                                 <div>
                                     <h3 className="font-medium text-white">SMTP Secure</h3>
                                     <p className="text-sm text-slate-400">
@@ -573,14 +573,14 @@ export function InstancePage() {
                                         className="sr-only peer"
                                         disabled
                                     />
-                                    <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                                 </label>
                             </div>
 
                             <button
                                 onClick={() => handleSaveSettings('email')}
                                 disabled={isLoading}
-                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
                                 <span>
@@ -594,9 +594,9 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'database' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                    <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                         <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-purple-500/20 rounded-lg">
+                            <div className="p-2 bg-purple-500/20 ">
                                 <Database className="w-5 h-5 text-purple-400" />
                             </div>
                             <div>
@@ -610,7 +610,7 @@ export function InstancePage() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div className="bg-slate-700/30 rounded-lg p-4">
+                            <div className="bg-dark-700/30  p-4">
                                 <h3 className="font-medium text-white mb-3">Database Stats</h3>
                                 <div className="space-y-2">
                                     <div className="flex justify-between">
@@ -632,7 +632,7 @@ export function InstancePage() {
                                 </div>
                             </div>
 
-                            <div className="bg-slate-700/30 rounded-lg p-4">
+                            <div className="bg-dark-700/30  p-4">
                                 <h3 className="font-medium text-white mb-3">Connection Status</h3>
                                 <div className="flex items-center space-x-2">
                                     <CheckCircle className="w-5 h-5 text-green-400" />
@@ -647,9 +647,9 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'system' && (
-                    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                    <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                         <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-red-500/20 rounded-lg">
+                            <div className="p-2 bg-red-500/20 ">
                                 <Server className="w-5 h-5 text-red-400" />
                             </div>
                             <div>
@@ -664,7 +664,7 @@ export function InstancePage() {
 
                         <div className="space-y-6">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="bg-slate-700/30 rounded-lg p-4">
+                                <div className="bg-dark-700/30  p-4">
                                     <h3 className="font-medium text-white mb-3">System Info</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
@@ -684,7 +684,7 @@ export function InstancePage() {
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-700/30 rounded-lg p-4">
+                                <div className="bg-dark-700/30  p-4">
                                     <h3 className="font-medium text-white mb-3">Resource Usage</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">

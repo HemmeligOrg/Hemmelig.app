@@ -51,7 +51,7 @@ export function DashboardLayout() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen bg-dark-900">
             <div className="relative">
                 {/* Background pattern */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -59,9 +59,9 @@ export function DashboardLayout() {
                 {/* Mobile menu overlay */}
                 {isMobileMenuOpen && (
                     <div className="fixed inset-0 z-50 lg:hidden">
-                        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-                        <div className="fixed inset-y-0 left-0 w-64 bg-slate-800/95 backdrop-blur-sm border-r border-slate-700/50">
-                            <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+                        <div className="fixed inset-0 bg-dark-900/90 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+                        <div className="fixed inset-y-0 left-0 w-64 bg-dark-800 border-r border-dark-600">
+                            <div className="flex items-center justify-between p-4 border-b border-dark-600">
                                 <Link to="/" className="flex items-center space-x-2 text-white">
                                     <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                                     <span className="text-xl font-bold">{t('dashboard_layout.hemmelig')}</span>
@@ -81,9 +81,9 @@ export function DashboardLayout() {
                                             key={item.name}
                                             to={item.href}
                                             onClick={() => setIsMobileMenuOpen(false)}
-                                            className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${isActive(item.href)
+                                            className={`flex items-center space-x-3 px-3 py-2 transition-all duration-200 ${isActive(item.href)
                                                 ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                                                : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                                                : 'text-slate-300 hover:text-white hover:bg-dark-600'
                                                 }`}
                                         >
                                             <Icon className="w-5 h-5" />
@@ -91,7 +91,7 @@ export function DashboardLayout() {
                                         </Link>
                                     );
                                 })}
-                                <button onClick={handleLogout} className="flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/50 w-full">
+                                <button onClick={handleLogout} className="flex items-center space-x-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-dark-600 w-full">
                                     <LogOut className="w-5 h-5" />
                                     <span>{t('dashboard_layout.sign_out')}</span>
                                 </button>
@@ -103,9 +103,9 @@ export function DashboardLayout() {
                 <div className="flex">
                     {/* Desktop Sidebar */}
                     <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0">
-                        <div className="flex flex-col flex-1 bg-slate-800/50 backdrop-blur-sm border-r border-slate-700/50">
+                        <div className="flex flex-col flex-1 bg-dark-800 border-r border-dark-600">
                             {/* Logo */}
-                            <div className="flex items-center px-6 py-6 border-b border-slate-700/50">
+                            <div className="flex items-center px-6 py-6 border-b border-dark-600">
                                 <Link to="/" className="flex items-center space-x-2 text-white hover:text-teal-400 transition-colors duration-300">
                                     <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-white" />
                                     <span className="text-xl font-bold">Hemmelig</span>
@@ -120,9 +120,9 @@ export function DashboardLayout() {
                                         <Link
                                             key={item.name}
                                             to={item.href}
-                                            className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${isActive(item.href)
+                                            className={`flex items-center space-x-3 px-3 py-2 transition-all duration-200 ${isActive(item.href)
                                                 ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                                                : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                                                : 'text-slate-300 hover:text-white hover:bg-dark-600'
                                                 }`}
                                         >
                                             <Icon className="w-5 h-5" />
@@ -133,9 +133,9 @@ export function DashboardLayout() {
                             </nav>
 
                             {/* User info */}
-                            <div className="px-4 py-4 border-t border-slate-700/50">
+                            <div className="px-4 py-4 border-t border-dark-600">
                                 <div className="flex items-center space-x-3 px-3 py-2">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
                                         <User className="w-4 h-4 text-white" />
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -160,7 +160,7 @@ export function DashboardLayout() {
                     {/* Main content */}
                     <div className="flex-1 lg:pl-64">
                         {/* Mobile header */}
-                        <div className="lg:hidden flex items-center justify-between p-4 bg-slate-800/50 backdrop-blur-sm border-b border-slate-700/50">
+                        <div className="lg:hidden flex items-center justify-between p-4 bg-dark-800 border-b border-dark-600">
                             <button
                                 onClick={() => setIsMobileMenuOpen(true)}
                                 className="p-2 text-slate-400 hover:text-white transition-colors duration-200"

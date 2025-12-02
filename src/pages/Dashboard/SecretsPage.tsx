@@ -67,17 +67,17 @@ export function SecretsPage() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="p-4 sm:p-6">
             {/* Header */}
-            <div className="mb-8">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white">{t('secrets_page.title')}</h1>
-                        <p className="text-slate-400 mt-1">{t('secrets_page.description')}</p>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">{t('secrets_page.title')}</h1>
+                        <p className="text-slate-400 text-sm mt-1">{t('secrets_page.description')}</p>
                     </div>
                     <Link
                         to="/"
-                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105 w-fit"
+                        className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-sm transition-all duration-300 hover:scale-105 w-fit"
                     >
                         <Plus className="w-4 h-4" />
                         <span>{t('secrets_page.create_secret_button')}</span>
@@ -85,25 +85,25 @@ export function SecretsPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-3">
                     <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-teal-500/20 rounded-lg">
-                            <Shield className="w-5 h-5 text-teal-400" />
+                        <div className="p-2 bg-teal-500/20">
+                            <Shield className="w-4 h-4 text-teal-400" />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold text-white">{secrets.length}</p>
-                            <p className="text-sm text-slate-400">{t('secrets_page.total_secrets')}</p>
+                            <p className="text-xl font-bold text-white">{secrets.length}</p>
+                            <p className="text-xs text-slate-400">{t('secrets_page.total_secrets')}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Secrets List */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden">
+            <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-slate-700/30 border-b border-slate-600/50">
+                        <thead className="bg-dark-700/30 border-b border-dark-500/50">
                             <tr>
                                 <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('secrets_page.table.secret_header')}</th>
                                 <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300 hidden sm:table-cell">{t('secrets_page.table.created_header')}</th>
@@ -112,13 +112,13 @@ export function SecretsPage() {
                                 <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-slate-300">{t('secrets_page.table.actions_header')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-600/30">
+                        <tbody className="divide-y divide-dark-500/30">
                             {secrets.map((secret) => (
-                                <tr key={secret.id} className="hover:bg-slate-700/20 transition-colors duration-200">
-                                    <td className="px-4 sm:px-6 py-4">
+                                <tr key={secret.id} className="hover:bg-dark-700/20 transition-colors duration-200">
+                                    <td className="px-4 sm:px-6 py-3">
                                         <div className="flex items-start space-x-3">
-                                            <div className='p-2 rounded-lg flex-shrink-0 bg-teal-500/20'>
-                                                <Shield className='text-teal-400' />
+                                            <div className='p-2 flex-shrink-0 bg-teal-500/20'>
+                                                <Shield className='text-teal-400 w-4 h-4' />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p className="text-sm font-medium text-white truncate">

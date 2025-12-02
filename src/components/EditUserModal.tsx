@@ -70,7 +70,7 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -84,7 +84,7 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         />
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
                         <select
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 appearance-none"
+                            className="w-full pl-12 pr-4 py-3 bg-dark-700/50 border border-dark-500/50  text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 appearance-none"
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
@@ -110,7 +110,7 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
                             type="checkbox"
                             checked={banned}
                             onChange={(e) => setBanned(e.target.checked)}
-                            className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+                            className="h-4 w-4 border-gray-300 text-teal-600 focus:ring-teal-500"
                         />
                         <span className="ml-2 text-sm text-slate-300">
                             <Ban className="inline w-4 h-4 mr-2" />

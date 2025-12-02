@@ -57,7 +57,7 @@ export function UsersPage() {
                 </div>
                 <button
                     onClick={() => setIsAddUserModalOpen(true)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-lg transition-all duration-300 hover:scale-105"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white  transition-all duration-300 hover:scale-105"
                 >
                     <UserPlus className="w-4 h-4" />
                     <span>{t('users_page.add_user_button')}</span>
@@ -72,15 +72,15 @@ export function UsersPage() {
                         placeholder={t('users_page.search_placeholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full max-w-sm pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                        className="w-full max-w-sm pl-10 pr-4 py-2 bg-dark-700/50 border border-dark-500/50  text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                     />
                 </div>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden">
+            <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-700">
-                        <thead className="bg-slate-800">
+                    <table className="min-w-full divide-y divide-dark-600">
+                        <thead className="bg-dark-800">
                             <tr>
                                 <th
                                     scope="col"
@@ -113,7 +113,7 @@ export function UsersPage() {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800">
+                        <tbody className="divide-y divide-dark-700">
                             {filteredUsers.map((user) => (
                                 <tr key={user.id}>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">

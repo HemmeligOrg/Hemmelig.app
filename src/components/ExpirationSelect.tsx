@@ -44,16 +44,16 @@ export function ExpirationSelect({ value, onChange }: ExpirationSelectProps) {
             <select
                 value={getCurrentValue()}
                 onChange={(e) => handleChange(parseInt(e.target.value))}
-                className="w-full appearance-none bg-slate-700/50 border border-slate-600/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 cursor-pointer hover:border-slate-500/50"
+                className="w-full appearance-none bg-dark-700/50 border border-dark-500/50 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 cursor-pointer hover:border-dark-500/50"
             >
                 {options.map((option) => (
-                    <option key={option.value} value={option.value} className="bg-slate-700">
+                    <option key={option.value} value={option.value} className="bg-dark-700">
                         {option.label}
                     </option>
                 ))}
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <ChevronDown className="w-5 h-5 text-slate-400" />
+                <ChevronDown className="w-4 h-4 text-slate-400" />
             </div>
         </div>
     );

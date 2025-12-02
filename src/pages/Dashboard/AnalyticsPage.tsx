@@ -80,7 +80,7 @@ export function AnalyticsPage() {
                         <select
                             value={timeRange}
                             onChange={handleTimeRangeChange}
-                            className="bg-slate-700/50 border border-slate-600/50 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="bg-dark-700/50 border border-dark-500/50  px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
                         >
                             {timeRangeOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -94,9 +94,9 @@ export function AnalyticsPage() {
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-teal-500/20 rounded-lg">
+                        <div className="p-2 bg-teal-500/20 ">
                             <Shield className="w-6 h-6 text-teal-400" />
                         </div>
                         <div>
@@ -110,9 +110,9 @@ export function AnalyticsPage() {
                     </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-blue-500/20 rounded-lg">
+                        <div className="p-2 bg-blue-500/20 ">
                             <Eye className="w-6 h-6 text-blue-400" />
                         </div>
                         <div>
@@ -126,9 +126,9 @@ export function AnalyticsPage() {
                     </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-green-500/20 rounded-lg">
+                        <div className="p-2 bg-green-500/20 ">
                             <BarChart3 className="w-6 h-6 text-green-400" />
                         </div>
                         <div>
@@ -142,9 +142,9 @@ export function AnalyticsPage() {
                     </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-orange-500/20 rounded-lg">
+                        <div className="p-2 bg-orange-500/20 ">
                             <Clock className="w-6 h-6 text-orange-400" />
                         </div>
                         <div>
@@ -161,9 +161,9 @@ export function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
                 {/* Activity Chart */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3 mb-6">
-                        <div className="p-2 bg-purple-500/20 rounded-lg">
+                        <div className="p-2 bg-purple-500/20 ">
                             <BarChart3 className="w-5 h-5 text-purple-400" />
                         </div>
                         <div>
@@ -201,13 +201,13 @@ export function AnalyticsPage() {
                                     </div>
                                 </div>
                                 <div className="flex space-x-2">
-                                    <div className="flex-1 bg-slate-700 rounded-full h-2">
+                                    <div className="flex-1 bg-dark-700 rounded-full h-2">
                                         <div
                                             className="bg-teal-500 h-2 rounded-full transition-all duration-500"
                                             style={{ width: `${(day.secrets / 20) * 100}%` }}
                                         />
                                     </div>
-                                    <div className="flex-1 bg-slate-700 rounded-full h-2">
+                                    <div className="flex-1 bg-dark-700 rounded-full h-2">
                                         <div
                                             className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                                             style={{ width: `${(day.views / 150) * 100}%` }}
@@ -222,9 +222,9 @@ export function AnalyticsPage() {
 
             {/* Additional Stats */}
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3 mb-4">
-                        <div className="p-2 bg-yellow-500/20 rounded-lg">
+                        <div className="p-2 bg-yellow-500/20 ">
                             <Users className="w-5 h-5 text-yellow-400" />
                         </div>
                         <div>
@@ -242,7 +242,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.secret_types.password_protected')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-yellow-500 h-2 rounded-full"
                                         style={{
@@ -260,7 +260,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.secret_types.ip_restricted')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-yellow-500 h-2 rounded-full"
                                         style={{ width: `${analytics.secretTypes.ipRestricted}%` }}
@@ -276,7 +276,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.secret_types.burn_after_time')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-yellow-500 h-2 rounded-full"
                                         style={{ width: `${analytics.secretTypes.burnable}%` }}
@@ -290,9 +290,9 @@ export function AnalyticsPage() {
                     </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                <div className="bg-dark-800/80 backdrop-blur-sm  border border-dark-600 p-6">
                     <div className="flex items-center space-x-3 mb-4">
-                        <div className="p-2 bg-red-500/20 rounded-lg">
+                        <div className="p-2 bg-red-500/20 ">
                             <Clock className="w-5 h-5 text-red-400" />
                         </div>
                         <div>
@@ -310,7 +310,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.expiration_stats.one_hour')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-red-500 h-2 rounded-full"
                                         style={{ width: `${analytics.expirationStats.oneHour}%` }}
@@ -326,7 +326,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.expiration_stats.one_day')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-red-500 h-2 rounded-full"
                                         style={{ width: `${analytics.expirationStats.oneDay}%` }}
@@ -342,7 +342,7 @@ export function AnalyticsPage() {
                                 {t('analytics_page.expiration_stats.one_week_plus')}
                             </span>
                             <div className="flex items-center space-x-2">
-                                <div className="w-16 bg-slate-700 rounded-full h-2">
+                                <div className="w-16 bg-dark-700 rounded-full h-2">
                                     <div
                                         className="bg-red-500 h-2 rounded-full"
                                         style={{

@@ -34,9 +34,9 @@ export function SecuritySettings() {
     };
 
     return (
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-4 sm:p-6 lg:p-8 shadow-2xl">
-            <div className="flex items-start sm:items-center space-x-3 mb-6">
-                <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex-shrink-0">
+        <div className="bg-dark-800/80 backdrop-blur-sm border border-dark-600 p-4 sm:p-5 shadow-xl">
+            <div className="flex items-start sm:items-center space-x-3 mb-4">
+                <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 flex-shrink-0">
                     <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -45,10 +45,10 @@ export function SecuritySettings() {
                 </div>
             </div>
 
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-3">
                 {/* Privacy Level */}
-                <div className="flex items-start p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30">
-                    <div className="p-2 bg-teal-500/20 rounded-lg flex-shrink-0 mr-3">
+                <div className="flex items-start p-3 bg-dark-700/30 border border-dark-500/30">
+                    <div className="p-2 bg-teal-500/20 flex-shrink-0 mr-3">
                         <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-teal-400" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -60,7 +60,7 @@ export function SecuritySettings() {
                 </div>
 
                 {/* Expiration and Views - Mobile-first responsive grid */}
-                <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 lg:gap-6">
+                <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-3 lg:gap-4">
                     {/* Expiration - Always visible */}
                     <div className="space-y-2">
                         <div className="flex items-center space-x-2">
@@ -96,7 +96,7 @@ export function SecuritySettings() {
 
                 {/* Burn After Time Notice - Mobile optimized */}
                 {isBurnable && (
-                    <div className="p-3 sm:p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+                    <div className="p-3 bg-orange-500/10 border border-orange-500/30">
                         <div className="flex items-start space-x-3">
                             <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                             <div className="min-w-0 flex-1">
@@ -110,13 +110,13 @@ export function SecuritySettings() {
                 )}
 
                 {/* Additional Security Options - Mobile optimized */}
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-3">
                     {/* Password Protection */}
                     {instanceSettings.allowPasswordProtection && (
-                        <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
+                        <div className="p-3 sm:p-4 bg-dark-700/30 border border-dark-500/30 hover:border-dark-500/50 transition-all duration-300">
                             <div className="flex items-start justify-between mb-3 sm:mb-4">
                                 <div className="flex items-start space-x-3 min-w-0 flex-1">
-                                    <div className="p-2 bg-blue-500/20 rounded-lg flex-shrink-0">
+                                    <div className="p-2 bg-blue-500/20 flex-shrink-0">
                                         <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -147,7 +147,7 @@ export function SecuritySettings() {
                                         value={password || ''}
                                         onChange={(e) => setSecretData({ password: e.target.value })}
                                         placeholder={t('security_settings.password_placeholder')}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-dark-600/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
                                     />
                                     <p className="text-xs text-slate-400">
                                         {t('security_settings.password_hint')}
@@ -159,10 +159,10 @@ export function SecuritySettings() {
 
                     {/* IP Restriction */}
                     {instanceSettings.allowIpRestriction && (
-                        <div className="p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
+                        <div className="p-3 sm:p-4 bg-dark-700/30 border border-dark-500/30 hover:border-dark-500/50 transition-all duration-300">
                             <div className="flex items-start justify-between mb-3 sm:mb-4">
                                 <div className="flex items-start space-x-3 min-w-0 flex-1">
-                                    <div className="p-2 bg-purple-500/20 rounded-lg flex-shrink-0">
+                                    <div className="p-2 bg-purple-500/20 flex-shrink-0">
                                         <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -190,7 +190,7 @@ export function SecuritySettings() {
                                         value={ipRange || ''}
                                         onChange={(e) => setSecretData({ ipRange: e.target.value })}
                                         placeholder={t('security_settings.ip_address_cidr_placeholder')}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-600/50 border border-slate-500/50 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-dark-600/50 border border-dark-500/50 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
                                     />
                                     <p className="text-xs text-slate-400">
                                         {t('security_settings.ip_address_cidr_hint')}
@@ -201,9 +201,9 @@ export function SecuritySettings() {
                     )}
 
                     {/* Burn After Time */}
-                    <div className="flex items-start justify-between p-3 sm:p-4 bg-slate-700/30 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300">
+                    <div className="flex items-start justify-between p-3 sm:p-4 bg-dark-700/30 border border-dark-500/30 hover:border-dark-500/50 transition-all duration-300">
                         <div className="flex items-start space-x-3 min-w-0 flex-1">
-                            <div className="p-2 bg-orange-500/20 rounded-lg flex-shrink-0">
+                            <div className="p-2 bg-orange-500/20 flex-shrink-0">
                                 <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
                             </div>
                             <div className="min-w-0 flex-1">

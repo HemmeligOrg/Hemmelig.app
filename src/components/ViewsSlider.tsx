@@ -16,7 +16,7 @@ export function ViewsSlider({ value, onChange }: ViewsSliderProps) {
                     max="999"
                     value={value}
                     onChange={(e) => onChange(parseInt(e.target.value))}
-                    className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
+                    className="w-full h-2 bg-dark-600  appearance-none cursor-pointer slider touch-manipulation"
                     style={{
                         background: `linear-gradient(to right, #14b8a6 0%, #14b8a6 ${(value - 1) / 999 * 100}%, #475569 ${(value - 1) / 999 * 100}%, #475569 100%)`
                     }}
