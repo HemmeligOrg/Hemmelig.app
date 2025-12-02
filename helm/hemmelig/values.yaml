@@ -1,0 +1,114 @@
+# Default values for hemmelig
+
+replicaCount: 1
+
+image:
+  repository: hemmelig/hemmelig
+  tag: "v7"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Required configuration
+config:
+  # Generate with: openssl rand -base64 32
+  betterAuthSecret: ""
+  # Public URL of your instance (required for OAuth)
+  baseUrl: ""
+
+# Additional environment variables
+env: []
+  # - name: HEMMELIG_ANALYTICS_ENABLED
+  #   value: "true"
+
+# Use existing secret for sensitive values
+existingSecret: ""
+# Keys expected in the secret:
+#   BETTER_AUTH_SECRET
+#   HEMMELIG_ANALYTICS_HMAC_SECRET (optional)
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: hemmelig.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+    # - secretName: hemmelig-tls
+    #   hosts:
+    #     - hemmelig.local
+
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Persistence for SQLite database and uploads
+persistence:
+  data:
+    enabled: true
+    size: 1Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    # existingClaim: ""
+  uploads:
+    enabled: true
+    size: 5Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    # existingClaim: ""
+
+livenessProbe:
+  httpGet:
+    path: /api/healthz
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/healthz
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

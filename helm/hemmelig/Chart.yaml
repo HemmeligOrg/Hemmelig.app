@@ -1,0 +1,17 @@
+apiVersion: v2
+name: hemmelig
+description: A Helm chart for Hemmelig - Encrypted secret sharing application
+type: application
+version: 1.0.0
+appVersion: "7.0.0"
+keywords:
+  - secrets
+  - encryption
+  - security
+  - sharing
+home: https://hemmelig.app
+sources:
+  - https://github.com/HemmeligOrg/Hemmelig.app
+maintainers:
+  - name: HemmeligOrg
+    url: https://github.com/HemmeligOrg

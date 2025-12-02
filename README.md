@@ -65,6 +65,7 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 ## Documentation
 
 - [Docker Deployment](docs/docker.md) - Complete Docker setup guide
+- [Helm Chart](docs/helm.md) - Kubernetes deployment with Helm
 - [Environment Variables](docs/env.md) - All configuration options
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 

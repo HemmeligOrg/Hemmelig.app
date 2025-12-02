@@ -1,0 +1,32 @@
+Thank you for installing {{ .Chart.Name }}!
+
+{{- if .Values.ingress.enabled }}
+Your Hemmelig instance is available at:
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.type }}
+Get the application URL by running:
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "hemmelig.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+Get the application URL by running:
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+  kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "hemmelig.fullname" . }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+Get the application URL by running:
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "hemmelig.fullname" . }} 3000:{{ .Values.service.port }}
+  echo "Visit http://127.0.0.1:3000"
+{{- end }}
+
+{{- if not .Values.config.betterAuthSecret }}
+
+WARNING: You have not set config.betterAuthSecret!
+Please set this value or use existingSecret to provide authentication secrets.
+Generate a secret with: openssl rand -base64 32
+{{- end }}
+
+For more information, visit: https://github.com/HemmeligOrg/Hemmelig.app
