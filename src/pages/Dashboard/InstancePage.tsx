@@ -1,33 +1,26 @@
-import { CheckCircle, Database, Info, Mail, Save, Server, Settings, Shield } from 'lucide-react';
+import { Save, Settings, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInstanceStore } from '../../store/instanceStore';
 
 export function InstancePage() {
-  const [activeTab, setActiveTab] = useState<
-    'general' | 'security' | 'email' | 'database' | 'system'
-  >('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'security'>('general');
   const { t } = useTranslation();
 
   const {
-    systemInfo,
     generalSettings,
     securitySettings,
-    emailSettings,
     isLoading,
     error,
-    fetchStatus,
     fetchSettings,
     setGeneralSetting,
     setSecuritySetting,
-    setEmailSetting,
     saveSettings,
   } = useInstanceStore();
 
   useEffect(() => {
-    fetchStatus();
     fetchSettings();
-  }, [fetchStatus, fetchSettings]);
+  }, [fetchSettings]);
 
   const handleSaveSettings = (section: 'general' | 'security' | 'email') => {
     saveSettings(section);
@@ -49,9 +42,6 @@ export function InstancePage() {
   const tabs = [
     { id: 'general', name: 'General', icon: Settings },
     { id: 'security', name: 'Security', icon: Shield },
-    { id: 'email', name: 'Email', icon: Mail },
-    { id: 'database', name: 'Database', icon: Database },
-    { id: 'system', name: 'System', icon: Server },
   ];
 
   return (
@@ -64,85 +54,10 @@ export function InstancePage() {
         <p className="text-gray-500 dark:text-slate-400 mt-1">{t('instance_page.description')}</p>
       </div>
 
-      {/* System Status */}
-      <div className="mb-8 bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="p-2 bg-green-500/20 ">
-            <CheckCircle className="w-5 h-5 text-green-400" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {t('instance_page.system_status.title')}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-slate-400">
-              {t('instance_page.system_status.description')}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  {t('instance_page.system_status.version')}
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {systemInfo.version}
-                </p>
-              </div>
-              <Info className="w-5 h-5 text-blue-400" />
-            </div>
-          </div>
-
-          <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  {t('instance_page.system_status.uptime')}
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {systemInfo.uptime}
-                </p>
-              </div>
-              <Server className="w-5 h-5 text-green-400" />
-            </div>
-          </div>
-
-          <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  {t('instance_page.system_status.memory')}
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {systemInfo.memoryUsage}
-                </p>
-              </div>
-              <Database className="w-5 h-5 text-yellow-400" />
-            </div>
-          </div>
-
-          <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  {t('instance_page.system_status.cpu_usage')}
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {systemInfo.cpuUsage}
-                </p>
-              </div>
-              <Settings className="w-5 h-5 text-purple-400" />
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Tabs */}
       <div className="mb-8">
-        <div className="border-b border-gray-200 dark:border-dark-600">
-          <nav className="flex space-x-8 overflow-x-auto">
+        <div className="border-b border-gray-200 dark:border-dark-600 overflow-x-auto">
+          <nav className="flex space-x-4 sm:space-x-8 min-w-max px-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -153,15 +68,12 @@ export function InstancePage() {
                       tab.id as
                         | 'general'
                         | 'security'
-                        | 'email'
-                        | 'database'
-                        | 'system'
                     )
                   }
-                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
+                  className={`flex items-center space-x-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
                     activeTab === tab.id
-                      ? 'border-teal-500 text-teal-400'
-                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-600 dark:text-slate-300 hover:border-dark-500'
+                      ? 'border-teal-500 text-teal-500 dark:text-teal-400'
+                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-dark-500'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -174,9 +86,9 @@ export function InstancePage() {
       </div>
 
       {/* Tab Content */}
-      <div className="max-w-4xl">
+      <div className="w-full">
         {activeTab === 'general' && (
-          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
+          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
             <div className="flex items-center space-x-3 mb-6">
               <div className="p-2 bg-blue-500/20 ">
                 <Settings className="w-5 h-5 text-blue-400" />
@@ -192,7 +104,7 @@ export function InstancePage() {
             </div>
 
             <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
                     {t('instance_page.general_settings.instance_name_label')}
@@ -259,7 +171,7 @@ export function InstancePage() {
               <button
                 onClick={() => handleSaveSettings('general')}
                 disabled={isLoading}
-                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 <Save className="w-4 h-4" />
                 <span>
@@ -273,7 +185,7 @@ export function InstancePage() {
         )}
 
         {activeTab === 'security' && (
-          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
+          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
             <div className="flex items-center space-x-3 mb-6">
               <div className="p-2 bg-orange-500/20 ">
                 <Shield className="w-5 h-5 text-orange-400" />
@@ -289,15 +201,15 @@ export function InstancePage() {
             </div>
 
             <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                  <div>
+                  <div className="flex-1 min-w-0 mr-4">
                     <h3 className="font-medium text-gray-900 dark:text-white">Rate Limiting</h3>
                     <p className="text-sm text-gray-500 dark:text-slate-400">
                       Enable request rate limiting
                     </p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                     <input
                       type="checkbox"
                       checked={securitySettings.enableRateLimiting}
@@ -309,12 +221,12 @@ export function InstancePage() {
                       }
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                    <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                   </label>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                  <div>
+                  <div className="flex-1 min-w-0 mr-4">
                     <h3 className="font-medium text-gray-900 dark:text-white">
                       Allow Password Protection
                     </h3>
@@ -322,7 +234,7 @@ export function InstancePage() {
                       Allow users to password protect secrets
                     </p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                     <input
                       type="checkbox"
                       checked={securitySettings.allowPasswordProtection}
@@ -334,12 +246,12 @@ export function InstancePage() {
                       }
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                    <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                   </label>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                  <div>
+                  <div className="flex-1 min-w-0 mr-4">
                     <h3 className="font-medium text-gray-900 dark:text-white">
                       Allow IP Restriction
                     </h3>
@@ -347,7 +259,7 @@ export function InstancePage() {
                       Allow users to restrict secrets by IP
                     </p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                     <input
                       type="checkbox"
                       checked={securitySettings.allowIpRestriction}
@@ -359,12 +271,12 @@ export function InstancePage() {
                       }
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                    <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                   </label>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
                     Rate Limit Requests
@@ -403,7 +315,7 @@ export function InstancePage() {
               <button
                 onClick={() => handleSaveSettings('security')}
                 disabled={isLoading}
-                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 <Save className="w-4 h-4" />
                 <span>
@@ -412,302 +324,6 @@ export function InstancePage() {
                     : t('instance_page.save_settings_button')}
                 </span>
               </button>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'email' && (
-          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6 opacity-50 cursor-not-allowed">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-green-500/20 ">
-                <Mail className="w-5 h-5 text-green-400" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Email Settings{' '}
-                  <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                    Coming
-                  </span>
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  Configure SMTP and email notifications
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    {t(
-                      'instance_page.general_settings.email_verification_title'
-                    )}
-                  </label>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={generalSettings.requireEmailVerification}
-                      onChange={(e) =>
-                        setGeneralSetting(
-                          'requireEmailVerification',
-                          e.target.checked
-                        )
-                      }
-                      className="sr-only peer"
-                      disabled
-                    />
-                    <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
-                  </label>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    SMTP Host
-                  </label>
-                  <input
-                    type="text"
-                    value={emailSettings.smtpHost}
-                    onChange={(e) =>
-                      setEmailSetting('smtpHost', e.target.value)
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    SMTP Port
-                  </label>
-                  <input
-                    type="number"
-                    value={emailSettings.smtpPort}
-                    onChange={(e) =>
-                      setEmailSetting('smtpPort', parseInt(e.target.value))
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    value={emailSettings.smtpUsername}
-                    onChange={(e) =>
-                      setEmailSetting('smtpUsername', e.target.value)
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    value={emailSettings.smtpPassword}
-                    onChange={(e) =>
-                      setEmailSetting('smtpPassword', e.target.value)
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    From Email
-                  </label>
-                  <input
-                    type="email"
-                    value={emailSettings.fromEmail}
-                    onChange={(e) =>
-                      setEmailSetting('fromEmail', e.target.value)
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                    From Name
-                  </label>
-                  <input
-                    type="text"
-                    value={emailSettings.fromName}
-                    onChange={(e) =>
-                      setEmailSetting('fromName', e.target.value)
-                    }
-                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white">SMTP Secure</h3>
-                  <p className="text-sm text-gray-500 dark:text-slate-400">
-                    Use TLS for SMTP connection
-                  </p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={emailSettings.smtpSecure}
-                    onChange={(e) =>
-                      setEmailSetting('smtpSecure', e.target.checked)
-                    }
-                    className="sr-only peer"
-                    disabled
-                  />
-                  <div className="w-11 h-6 bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
-                </label>
-              </div>
-
-              <button
-                onClick={() => handleSaveSettings('email')}
-                disabled={isLoading}
-                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Save className="w-4 h-4" />
-                <span>
-                  {isLoading
-                    ? t('instance_page.saving_button')
-                    : t('instance_page.save_settings_button')}
-                </span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'database' && (
-          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-purple-500/20 ">
-                <Database className="w-5 h-5 text-purple-400" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Database Information
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  Database status and statistics
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Database Stats</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-slate-400">Total Secrets:</span>
-                    <span className="text-gray-900 dark:text-white">
-                      {systemInfo.totalSecrets}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-slate-400">Total Users:</span>
-                    <span className="text-gray-900 dark:text-white">{systemInfo.totalUsers}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-slate-400">
-                      {t('instance_page.database_info.disk_usage')}
-                    </span>
-                    <span className="text-gray-900 dark:text-white">{systemInfo.diskUsage}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-                <h3 className="font-medium text-gray-900 dark:text-white mb-3">Connection Status</h3>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span className="text-green-400">Connected</span>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-slate-400 mt-2">
-                  Database is healthy and responding normally
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'system' && (
-          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-red-500/20 ">
-                <Server className="w-5 h-5 text-red-400" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  System Information
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-slate-400">
-                  Server details and maintenance
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-3">System Info</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">Version:</span>
-                      <span className="text-gray-900 dark:text-white">{systemInfo.version}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">Uptime:</span>
-                      <span className="text-gray-900 dark:text-white">{systemInfo.uptime}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">Status:</span>
-                      <span className="text-green-400 capitalize">
-                        {systemInfo.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-dark-700/30 p-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-3">Resource Usage</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">Memory:</span>
-                      <span className="text-gray-900 dark:text-white">
-                        {systemInfo.memoryUsage}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">CPU:</span>
-                      <span className="text-gray-900 dark:text-white">
-                        {systemInfo.cpuUsage}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500 dark:text-slate-400">Disk:</span>
-                      <span className="text-gray-900 dark:text-white">
-                        {systemInfo.diskUsage}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}
