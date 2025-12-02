@@ -60,22 +60,6 @@ export const SecretSettings = () => {
             </button>
           </div>
         </div>
-        {!password && (
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">{t('secret_settings.decryption_key_label')}</label>
-            <div className="relative">
-              <input
-                type="text"
-                readOnly
-                value={decryptionKey}
-                className="w-full mt-1 pl-4 pr-10 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none"
-              />
-              <button onClick={() => copyToClipboard(decryptionKey, 'key')} className="absolute inset-y-0 right-0 flex items-center pr-3">
-                {copied === 'key' ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white" />}
-              </button>
-            </div>
-          </div>
-        )}
         {password && (
           <div>
             <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">{t('secret_settings.password_label')}</label>
