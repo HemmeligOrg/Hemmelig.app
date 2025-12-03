@@ -61,7 +61,7 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN bunx prisma generate --schema=./prisma/schema.prisma
 
 # Create data directories with proper permissions for database and uploads
-RUN mkdir -p /app/data /app/uploads && \
+RUN mkdir -p /app/database /app/uploads && \
     chown -R bun:bun /app
 
 # Switch to non-root user
