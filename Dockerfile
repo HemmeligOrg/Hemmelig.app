@@ -80,4 +80,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/healthz || exit 1
 
 # Start the application with Prisma migrations
-CMD ["sh", "-c", "bunx prisma migrate deploy && bun dist/server.js"]
+# Create database directory at runtime in case volume mount overwrites it
+CMD ["sh", "-c", "mkdir -p /app/database && bunx prisma migrate deploy && bun dist/server.js"]
