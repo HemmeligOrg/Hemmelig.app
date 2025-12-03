@@ -8,6 +8,19 @@ import config from '../config';
 
 const app = new Hono();
 
+// Public settings fields - safe for all users
+const publicSelectFields = {
+    instanceName: true,
+    instanceDescription: true,
+    allowRegistration: true,
+    defaultSecretExpiration: true,
+    maxSecretSize: true,
+    allowPasswordProtection: true,
+    allowIpRestriction: true,
+    requireRegisteredUser: true,
+};
+
+// All settings fields - admin only
 const selectFields = {
     instanceName: true,
     instanceDescription: true,
@@ -25,8 +38,45 @@ const selectFields = {
     requireRegisteredUser: true,
 };
 
-// GET /api/instance/settings
-app.get('/settings', async (c) => {
+// GET /api/instance/settings/public - public settings for all users
+app.get('/settings/public', async (c) => {
+    try {
+        let dbSettings = await prisma.instanceSettings.findFirst({ select: publicSelectFields });
+
+        if (!dbSettings) {
+            const initialData = {
+                ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
+                ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
+            };
+
+            dbSettings = await prisma.instanceSettings.create({
+                data: initialData,
+                select: publicSelectFields,
+            });
+        }
+
+        const configSettings = {
+            ...config.get('general'),
+            ...config.get('security'),
+        };
+        const filteredConfigSettings = Object.fromEntries(
+            Object.entries(configSettings).filter(([key, value]) => value !== undefined && key in publicSelectFields)
+        );
+
+        const finalSettings = {
+            ...dbSettings,
+            ...filteredConfigSettings,
+        };
+
+        return c.json(finalSettings);
+    } catch (error) {
+        console.error('Failed to fetch public instance settings:', error);
+        return c.json({ error: 'Failed to fetch instance settings' }, 500);
+    }
+});
+
+// GET /api/instance/settings - admin only
+app.get('/settings', authMiddleware, checkAdmin, async (c) => {
     try {
         let dbSettings = await prisma.instanceSettings.findFirst({ select: selectFields });
 

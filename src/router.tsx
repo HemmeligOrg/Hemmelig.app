@@ -42,7 +42,7 @@ const instanceSettingsLoader = async () => {
   }
 
   try {
-    const res = await api.instance.settings.$get();
+    const res = await api.instance.settings.public.$get();
     if (!res.ok) {
       console.error('Failed to fetch instance settings');
       return null;
