@@ -722,12 +722,14 @@ interface EditorProps {
   value?: string;
   onChange?: (content: string) => void;
   editable?: boolean;
+  onEditorReady?: (editor: { setContent: (content: string) => void }) => void;
 }
 
 export default function Editor({
   value = '',
   onChange,
   editable = true,
+  onEditorReady,
   ...props
 }: EditorProps) {
   const [characterCount, setCharacterCount] = useState(0);
@@ -750,6 +752,16 @@ export default function Editor({
         }}
         onCreate={({ editor }) => {
           setCharacterCount(editor.storage.characterCount.characters());
+          if (onEditorReady) {
+            onEditorReady({
+              setContent: (content: string) => {
+                editor.commands.setContent(content);
+                if (onChange) {
+                  onChange(content);
+                }
+              },
+            });
+          }
         }}
         editorProps={{
           attributes: {

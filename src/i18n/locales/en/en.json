@@ -1,4 +1,16 @@
 {
+  "template_selector": {
+    "button": "Templates",
+    "description": "Quick-start with a template",
+    "templates": {
+      "credentials": "Login Credentials",
+      "api_key": "API Key",
+      "database": "Database",
+      "server": "Server Access",
+      "credit_card": "Payment Card",
+      "email": "Email Account"
+    }
+  },
   "editor": {
     "tooltips": {
       "copy_text": "Copy as Plain Text",
