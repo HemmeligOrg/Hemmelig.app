@@ -14,13 +14,27 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
 
   const maxFileSizeInBytes = instanceSettings.maxSecretSize * 1024; // Convert KB to bytes
 
+  const onDropRejected = useCallback((fileRejections: { file: File; errors: { code: string }[] }[]) => {
+    const rejection = fileRejections[0];
+    if (rejection?.errors.some(e => e.code === 'file-too-large')) {
+      const fileSizeMB = (rejection.file.size / 1024 / 1024).toFixed(2);
+      const maxSizeMB = (instanceSettings.maxSecretSize / 1024).toFixed(2);
+      setFileError(t('file_upload.file_too_large', { 
+        fileName: rejection.file.name, 
+        fileSize: fileSizeMB,
+        maxSize: maxSizeMB 
+      }));
+    }
+  }, [instanceSettings.maxSecretSize, t]);
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFileError(null); // Clear previous errors
     const currentTotalSize = files.reduce((sum, file) => sum + file.size, 0);
     const newFilesTotalSize = acceptedFiles.reduce((sum, file) => sum + file.size, 0);
 
     if (currentTotalSize + newFilesTotalSize > maxFileSizeInBytes) {
-      setFileError(t('file_upload.max_size_exceeded', { maxSize: instanceSettings.maxSecretSize }));
+      const maxSizeMB = (instanceSettings.maxSecretSize / 1024).toFixed(2);
+      setFileError(t('file_upload.max_size_exceeded', { maxSize: maxSizeMB }));
       return;
     }
 
@@ -37,6 +51,7 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
 		
 		const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     maxSize: maxFileSizeInBytes, // Enforce max size per file as well
   });
 

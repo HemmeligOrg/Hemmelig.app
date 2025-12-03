@@ -60,7 +60,9 @@
     "drop_files_here": "Drop files here",
     "drag_and_drop": "Drag and drop a file, or click to select a file",
     "uploading": "Uploading...",
-    "upload_file": "Upload File"
+    "upload_file": "Upload File",
+    "file_too_large": "File \"{{fileName}}\" ({{fileSize}} MB) exceeds the maximum size of {{maxSize}} MB",
+    "max_size_exceeded": "Total file size exceeds the maximum of {{maxSize}} MB"
   },
   "footer": {
     "tagline": "Hemmelig, [heˈm(ɛ)li], means 'secret' in Norwegian"
