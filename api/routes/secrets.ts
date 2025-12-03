@@ -13,6 +13,7 @@ import {
 import { authMiddleware } from '../middlewares/auth';
 import { auth } from '../auth';
 import { ipRestriction } from '../middlewares/ip-restriction';
+import instanceSettings from '../instance-settings';
 
 interface SecretCreateData {
     salt: string;
@@ -185,6 +186,20 @@ const app = new Hono<{
     .post('/', zValidator('json', createSecretsSchema), async c => {
         try {
             const user = c.get('user');
+            
+            // Check if only registered users can create secrets
+            let settings = instanceSettings.get('instanceSettings');
+            if (!settings) {
+                // Fetch from database if not cached
+                settings = await prisma.instanceSettings.findFirst();
+                if (settings) {
+                    instanceSettings.set('instanceSettings', settings);
+                }
+            }
+            if (settings?.requireRegisteredUser && !user) {
+                return c.json({ error: 'Only registered users can create secrets' }, 401);
+            }
+            
             const validatedData = c.req.valid('json');
             const { expiresAt, password, fileIds, salt, ...rest } = validatedData;
 

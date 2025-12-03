@@ -22,6 +22,7 @@ const selectFields = {
     rateLimitWindow: true,
     requireInviteCode: true,
     allowedEmailDomains: true,
+    requireRegisteredUser: true,
 };
 
 // GET /api/instance/settings

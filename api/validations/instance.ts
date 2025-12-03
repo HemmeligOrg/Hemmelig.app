@@ -20,4 +20,5 @@ export const instanceSettingsSchema = z.object({
     // Organization features
     requireInviteCode: z.boolean().optional(),
     allowedEmailDomains: z.string().optional(),
+    requireRegisteredUser: z.boolean().optional(),
 });

@@ -120,6 +120,7 @@ model InstanceSettings {
     // Organization features
     requireInviteCode        Boolean? @default(false)
     allowedEmailDomains      String?  @default("") // comma-separated list of allowed email domains
+    requireRegisteredUser    Boolean? @default(false) // only registered users can create secrets
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 

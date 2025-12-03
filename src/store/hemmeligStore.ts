@@ -17,6 +17,7 @@ export type HemmeligSettings = {
     rateLimitRequests: number;
     rateLimitWindow: number;
     requireInviteCode: boolean;
+    requireRegisteredUser: boolean;
     logoUrl: string;
     primaryColor: string;
 };
@@ -32,6 +33,7 @@ export const useHemmeligStore = create<HemmeligState>((set) => ({
         instanceDescription: '',
         allowRegistration: true,
         requireInviteCode: false,
+        requireRegisteredUser: false,
     },
     setSettings: (settings) => {
         set({ settings });

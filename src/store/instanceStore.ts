@@ -26,6 +26,7 @@ type SecuritySettings = {
 type OrganizationSettings = {
     requireInviteCode: boolean;
     allowedEmailDomains: string;
+    requireRegisteredUser: boolean;
 };
 
 type InstanceState = {
@@ -70,6 +71,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
     organizationSettings: {
         requireInviteCode: false,
         allowedEmailDomains: '',
+        requireRegisteredUser: false,
     },
     isLoading: false,
     error: null,
@@ -108,6 +110,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 organizationSettings: {
                     requireInviteCode: settings.requireInviteCode ?? false,
                     allowedEmailDomains: settings.allowedEmailDomains ?? '',
+                    requireRegisteredUser: settings.requireRegisteredUser ?? false,
                 },
                 isLoading: false,
             });

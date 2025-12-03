@@ -372,6 +372,28 @@ export function InstancePage() {
                   </label>
                 </div>
 
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
+                  <div className="flex-1 min-w-0 mr-4">
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      {t('organization_page.registration_settings.require_registered_user_title')}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-slate-400">
+                      {t('organization_page.registration_settings.require_registered_user_description')}
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={organizationSettings.requireRegisteredUser}
+                      onChange={(e) =>
+                        setOrganizationSetting('requireRegisteredUser', e.target.checked)
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                  </label>
+                </div>
+
 
               </div>
 
