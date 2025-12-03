@@ -5,10 +5,20 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./lib/db";
 import config, { type SocialProviderConfig } from "./config";
 
+// Generate a unique username from email
+const generateUsernameFromEmail = (email: string): string => {
+    const localPart = email.split('@')[0] || 'user';
+    // Sanitize: only keep alphanumeric characters and underscores
+    const sanitized = localPart.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+    // Add random suffix to ensure uniqueness
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    return `${sanitized}_${randomSuffix}`;
+};
+
 // Build better-auth social providers configuration dynamically
 const buildBetterAuthSocialProviders = () => {
     const providers = config.getSocialProviders();
-    const betterAuthProviders: Record<string, { clientId: string; clientSecret: string; tenantId?: string }> = {};
+    const betterAuthProviders: Record<string, { clientId: string; clientSecret: string; tenantId?: string; mapProfileToUser?: (profile: { email?: string; name?: string }) => { username: string } }> = {};
 
     for (const [provider, providerConfig] of Object.entries(providers)) {
         const typedConfig = providerConfig as SocialProviderConfig;
@@ -16,6 +26,9 @@ const buildBetterAuthSocialProviders = () => {
             clientId: typedConfig.clientId,
             clientSecret: typedConfig.clientSecret,
             ...(typedConfig.tenantId && { tenantId: typedConfig.tenantId }),
+            mapProfileToUser: (profile) => ({
+                username: generateUsernameFromEmail(profile.email || profile.name || 'user'),
+            }),
         };
     }
 
