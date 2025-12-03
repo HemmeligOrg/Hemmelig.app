@@ -1,5 +1,5 @@
 import { Cron } from 'croner';
-import { deleteExpiredSecrets } from './expired';
+import { deleteExpiredSecrets, deleteOrphanedFiles } from './expired';
 
 
 // https://crontab.guru
@@ -8,7 +8,8 @@ export default function startJobs() {
     console.log('Job scheduler initialized.');
 
     // Running every minute 
-    new Cron('* * * * *', () => {
-        deleteExpiredSecrets();
+    new Cron('* * * * *', async () => {
+        await deleteExpiredSecrets();
+        await deleteOrphanedFiles();
     });
 }
