@@ -584,5 +584,26 @@
   "social_login": {
     "continue_with": "Continue with {{provider}}",
     "sign_up_with": "Sign up with {{provider}}"
+  },
+  "setup_page": {
+    "title": "Welcome to Hemmelig",
+    "description": "Create your admin account to get started",
+    "name_label": "Full Name",
+    "name_placeholder": "Enter your full name",
+    "username_label": "Username",
+    "username_placeholder": "Choose a username",
+    "email_label": "Email Address",
+    "email_placeholder": "Enter your email",
+    "password_label": "Password",
+    "password_placeholder": "Create a password (min 8 characters)",
+    "confirm_password_label": "Confirm Password",
+    "confirm_password_placeholder": "Confirm your password",
+    "create_admin": "Create Admin Account",
+    "creating": "Creating account...",
+    "success": "Admin account created successfully! Please log in.",
+    "error": "Failed to create admin account",
+    "passwords_mismatch": "Passwords do not match",
+    "password_too_short": "Password must be at least 8 characters",
+    "note": "This setup can only be completed once. The admin account will have full access to manage this instance."
   }
 }

@@ -6,6 +6,7 @@ import { userRoute } from './routes/user';
 import instanceRoute from './routes/instance';
 import analyticsRoute from './routes/analytics';
 import { inviteRoute, invitePublicRoute } from './routes/invites';
+import setupRoute from './routes/setup';
 import { getEnabledSocialProviders } from './auth';
 
 // Create a new router
@@ -18,6 +19,7 @@ const routes = new Hono()
   .route('/analytics', analyticsRoute)
   .route('/invites/public', invitePublicRoute)
   .route('/invites', inviteRoute)
+  .route('/setup', setupRoute)
   .get('/healthz', c => c.text('Health OK'))
   .get('/config/social-providers', c => {
     const providers = getEnabledSocialProviders();

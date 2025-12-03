@@ -14,12 +14,33 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
 import { SecretPage } from './pages/SecretPage';
+import { SetupPage } from './pages/SetupPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { useHemmeligStore } from './store/hemmeligStore';
 
+// Check if initial setup is needed
+const checkSetupStatus = async () => {
+  try {
+    const res = await api.setup.status.$get();
+    if (res.ok) {
+      const data = await res.json();
+      return data.needsSetup;
+    }
+  } catch (error) {
+    console.error('Failed to check setup status:', error);
+  }
+  return false;
+};
+
 // Loader to fetch instance settings
 const instanceSettingsLoader = async () => {
+  // Check if setup is needed first
+  const needsSetup = await checkSetupStatus();
+  if (needsSetup) {
+    return redirect('/setup');
+  }
+
   try {
     const res = await api.instance.settings.$get();
     if (!res.ok) {
@@ -36,6 +57,18 @@ const instanceSettingsLoader = async () => {
 };
 
 export const router = createBrowserRouter([
+  // Setup page - only accessible when no users exist
+  {
+    path: '/setup',
+    element: <SetupPage />,
+    loader: async () => {
+      const needsSetup = await checkSetupStatus();
+      if (!needsSetup) {
+        return redirect('/');
+      }
+      return null;
+    },
+  },
   // Auth pages without header/footer
   {
     path: '/login',
