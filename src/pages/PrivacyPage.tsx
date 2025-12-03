@@ -22,8 +22,8 @@ export function PrivacyPage() {
                 provide your own password)
               </li>
               <li>
-                A unique salt is generated per secret and used with <strong>PBKDF2</strong> (100,000
-                iterations, SHA-256) to derive a 256-bit AES key
+                A unique 32-character salt is generated per secret and used with{' '}
+                <strong>PBKDF2</strong> (100,000 iterations, SHA-256) to derive a 256-bit AES key
               </li>
               <li>
                 A random 96-bit IV (initialization vector) is generated for each encryption
@@ -50,17 +50,16 @@ export function PrivacyPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4">
               <li>
-                We use HMAC-based hashing to create anonymous visitor IDs - your actual IP address
+                We use HMAC-SHA256 hashing to create anonymous visitor IDs — your actual IP address
                 is never stored
               </li>
-              <li>We only track page visits and basic usage patterns</li>
+              <li>We only track page visits (the path you visited)</li>
               <li>Bot traffic is automatically filtered out</li>
               <li>No personal information or secret content is ever tracked</li>
-              <li>Analytics can be disabled completely via configuration</li>
+              <li>Analytics can be disabled entirely by the instance administrator</li>
             </ul>
             <p className="mt-4">
-              This minimal tracking helps us improve the service while maintaining your privacy. All
-              analytics data is aggregated and non-identifiable.
+              This minimal tracking helps us improve the service while respecting your privacy.
             </p>
           </section>
 
@@ -69,24 +68,38 @@ export function PrivacyPage() {
               I still don't trust this application.
             </h2>
             <p>
-              If that is being the case, Hemmelig offers a docker image to self-host the
-              application.
+              If that's the case, Hemmelig offers a Docker image so you can self-host the
+              application on your own infrastructure.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-              Data Collection
+              What data is stored?
             </h2>
             <p className="mb-4">
-              We only collect the minimum amount of data necessary to provide our service. This
-              includes:
+              We only store the minimum data necessary to provide the service:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>The encrypted content of your secrets</li>
-              <li>Expiration times for secrets</li>
-              <li>Basic usage statistics (non-personal)</li>
+              <li>
+                <strong>Secrets:</strong> Encrypted content (as binary data), salt, expiration time,
+                view count, and optional settings (password hash, IP restrictions)
+              </li>
+              <li>
+                <strong>Files:</strong> Encrypted file data and filename (if you attach files to a
+                secret)
+              </li>
+              <li>
+                <strong>User accounts:</strong> Email, username, and authentication data (only if
+                you create an account)
+              </li>
+              <li>
+                <strong>Analytics:</strong> Anonymous visitor ID (hashed), page path, and timestamp
+              </li>
             </ul>
+            <p className="mt-4">
+              We do not store your plaintext secrets, decryption keys, or your IP address.
+            </p>
           </section>
 
           <section>
@@ -94,8 +107,8 @@ export function PrivacyPage() {
               Contact Information
             </h2>
             <p>
-              If you have any questions about our privacy practices or this policy, please feel free
-              to contact us through our{' '}
+              If you have any questions about our privacy practices, please feel free to contact us
+              through our{' '}
               <a
                 href="https://github.com/HemmeligOrg/Hemmelig.app"
                 target="_blank"
