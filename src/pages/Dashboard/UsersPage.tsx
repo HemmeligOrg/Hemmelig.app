@@ -1,4 +1,4 @@
-import { Check, Edit, Search, Trash2, UserPlus, X } from 'lucide-react';
+import { Edit, Search, Trash2, UserPlus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AddUserModal } from '../../components/AddUserModal';
@@ -20,8 +20,6 @@ export function UsersPage() {
     addUser,
     editUser,
     deleteUser,
-    approveUser,
-    rejectUser,
     setUserToDelete,
     setUserToEdit,
     setIsAddUserModalOpen,
@@ -136,57 +134,32 @@ export function UsersPage() {
                       className={`px-2 inline-flex text-xs leading-5 font-semibold ${
                         user.banned 
                           ? 'bg-red-500/20 text-red-400' 
-                          : user.approved === false 
-                            ? 'bg-yellow-500/20 text-yellow-400'
-                            : 'bg-green-500/20 text-green-400'
+                          : 'bg-green-500/20 text-green-400'
                       }`}
                     >
                       {user.banned
                         ? t('users_page.status.banned')
-                        : user.approved === false
-                          ? 'Pending'
-                          : t('users_page.status.active')}
+                        : t('users_page.status.active')}
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400 hidden sm:table-cell">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    {user.approved === false ? (
-                      <>
-                        <button
-                          onClick={() => approveUser(user.id)}
-                          className="text-green-400 hover:text-green-300 mr-2"
-                          title="Approve user"
-                        >
-                          <Check className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => rejectUser(user.id)}
-                          className="text-red-400 hover:text-red-300"
-                          title="Reject user"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => setUserToEdit(user)}
-                          disabled={user.id === profileData.id}
-                          className="text-blue-400 hover:text-blue-300 disabled:opacity-50 mr-2"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => setUserToDelete(user)}
-                          disabled={user.id === profileData.id}
-                          className="text-red-400 hover:text-red-300 disabled:opacity-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </>
-                    )}
+                    <button
+                      onClick={() => setUserToEdit(user)}
+                      disabled={user.id === profileData.id}
+                      className="text-blue-400 hover:text-blue-300 disabled:opacity-50 mr-2"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setUserToDelete(user)}
+                      disabled={user.id === profileData.id}
+                      className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </td>
                 </tr>
               ))}

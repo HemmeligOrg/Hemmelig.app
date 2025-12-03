@@ -25,7 +25,6 @@ export const userRoute = new Hono()
                     email: true,
                     role: true,
                     banned: true,
-                    approved: true,
                     createdAt: true,
                 }
             });
@@ -34,43 +33,5 @@ export const userRoute = new Hono()
         } catch (error) {
             console.error(`Failed to update user ${id}:`, error);
             return c.json({ error: 'Failed to update user' }, 500);
-        }
-    })
-    .post('/:id/approve', zValidator('param', z.object({ id: z.string() })), async (c) => {
-        const { id } = c.req.valid('param');
-
-        try {
-            const user = await prisma.user.update({
-                where: { id },
-                data: { approved: true },
-                select: {
-                    id: true,
-                    username: true,
-                    email: true,
-                    role: true,
-                    banned: true,
-                    approved: true,
-                    createdAt: true,
-                }
-            });
-
-            return c.json(user);
-        } catch (error) {
-            console.error(`Failed to approve user ${id}:`, error);
-            return c.json({ error: 'Failed to approve user' }, 500);
-        }
-    })
-    .post('/:id/reject', zValidator('param', z.object({ id: z.string() })), zValidator('json', z.object({ reason: z.string().optional() })), async (c) => {
-        const { id } = c.req.valid('param');
-        
-        try {
-            await prisma.user.delete({
-                where: { id },
-            });
-
-            return c.json({ success: true });
-        } catch (error) {
-            console.error(`Failed to reject user ${id}:`, error);
-            return c.json({ error: 'Failed to reject user' }, 500);
         }
     });
