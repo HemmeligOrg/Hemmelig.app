@@ -64,8 +64,9 @@ RUN bunx prisma generate --schema=./prisma/schema.prisma
 RUN mkdir -p /app/database /app/uploads && \
     chown -R bun:bun /app
 
-# Switch to non-root user
-USER bun
+# Copy entrypoint script
+COPY scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 # Expose the port the app runs on
 EXPOSE 3000
@@ -79,6 +80,4 @@ ENV DATABASE_URL=file:/app/database/hemmelig.db
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/healthz || exit 1
 
-# Start the application with Prisma migrations
-# Create database directory at runtime in case volume mount overwrites it
-CMD ["sh", "-c", "mkdir -p /app/database && bunx prisma migrate deploy && bun dist/server.js"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
