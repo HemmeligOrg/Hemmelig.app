@@ -6,7 +6,7 @@ Complete reference for all environment variables supported by Hemmelig.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | - |
+| `DATABASE_URL` | SQLite connection string | `file:./data/hemmelig.db` |
 | `BETTER_AUTH_SECRET` | Secret key for authentication sessions | - |
 
 ## Server Configuration
@@ -115,7 +115,7 @@ See [Social Login Documentation](./social-login.md) for detailed setup instructi
 
 ```bash
 # Required
-DATABASE_URL=postgresql://user:password@localhost:5432/hemmelig
+DATABASE_URL=file:./data/hemmelig.db
 BETTER_AUTH_SECRET=your-secret-key-min-32-chars-long
 ```
 
@@ -123,7 +123,7 @@ BETTER_AUTH_SECRET=your-secret-key-min-32-chars-long
 
 ```bash
 # Required
-DATABASE_URL=postgresql://user:password@db:5432/hemmelig
+DATABASE_URL=file:./data/hemmelig.db
 BETTER_AUTH_SECRET=your-very-secure-secret-key-here
 
 # Server
@@ -163,27 +163,18 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://hemmelig:password@db:5432/hemmelig
+      - DATABASE_URL=file:/data/hemmelig.db
       - BETTER_AUTH_SECRET=change-this-to-a-secure-secret
       - NODE_ENV=production
       - HEMMELIG_PORT=3000
       - HEMMELIG_BASE_URL=https://secrets.example.com
       - HEMMELIG_MAX_FILE_SIZE_MB=25
       - HEMMELIG_ANALYTICS_ENABLED=true
-    depends_on:
-      - db
-
-  db:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=hemmelig
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=hemmelig
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - hemmelig_data:/data
 
 volumes:
-  postgres_data:
+  hemmelig_data:
 ```
 
 ## Notes
