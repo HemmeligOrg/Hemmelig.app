@@ -74,7 +74,6 @@ const app = new Hono()
                 console.error('Failed to complete setup:', error);
                 return c.json({ 
                     error: 'Failed to complete setup',
-                    details: error instanceof Error ? error.message : 'Unknown error',
                 }, 500);
             }
         }

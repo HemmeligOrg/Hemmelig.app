@@ -15,7 +15,6 @@ export const handleNotFound = (error: Error & { code?: string }, c: Context) => 
     // Handle other errors
     return c.json({
         error: 'Failed to process the operation',
-        details: error.message,
     }, 500);
 };
 

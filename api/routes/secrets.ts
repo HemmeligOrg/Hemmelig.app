@@ -91,7 +91,6 @@ const app = new Hono<{
             console.error('Failed to retrieve secrets:', error);
             return c.json({
                 error: 'Failed to retrieve secrets',
-                details: error instanceof Error ? error.message : 'Unknown internal error',
             }, 500);
         }
     })
@@ -148,7 +147,6 @@ const app = new Hono<{
             console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
             return c.json({
                 error: 'Failed to retrieve item',
-                details: error instanceof Error ? error.message : 'An unknown error occurred',
             }, 500);
         }
     })
@@ -179,7 +177,6 @@ const app = new Hono<{
             console.error(`Failed to check secret ${c.req.param('id')}:`, error);
             return c.json({
                 error: 'Failed to check secret',
-                details: error instanceof Error ? error.message : 'An unknown error occurred',
             }, 500);
         }
     })
@@ -232,8 +229,7 @@ const app = new Hono<{
             }
 
             return c.json({
-                error: 'Failed to create secrets',
-                details: error instanceof Error ? error.message : 'An unknown error occurred',
+                error: 'Failed to create secret',
             }, 500);
         }
     })
