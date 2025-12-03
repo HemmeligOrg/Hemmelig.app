@@ -73,6 +73,7 @@ EXPOSE 3000
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV DATABASE_URL=file:/app/database/hemmelig.db
 
 # Health check using wget (available in alpine)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
