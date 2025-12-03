@@ -35,6 +35,17 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
     }
 
     try {
+        // Check if username is taken by another user
+        if (username) {
+            const existingUser = await prisma.user.findUnique({
+                where: { username },
+                select: { id: true }
+            });
+            if (existingUser && existingUser.id !== user.id) {
+                return c.json({ error: 'Username is already taken' }, 409);
+            }
+        }
+
         const updatedUser = await prisma.user.update({
             where: { id: user.id },
             data: {

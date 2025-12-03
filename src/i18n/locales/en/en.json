@@ -160,6 +160,9 @@
       "saving_button": "Saving...",
       "save_changes_button": "Save Changes"
     },
+    "profile_settings": {
+      "username_taken": "Username is already taken"
+    },
     "security_settings": {
       "title": "Security Settings",
       "description": "Manage your password and security preferences",

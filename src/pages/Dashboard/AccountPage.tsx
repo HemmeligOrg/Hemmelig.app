@@ -35,6 +35,7 @@ export function AccountPage() {
     confirmPassword: ''
   });
   const [passwordErrors, setPasswordErrors] = useState<{ [key: string]: string }>({});
+  const [profileError, setProfileError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
@@ -48,11 +49,14 @@ export function AccountPage() {
 
   const handleProfileSave = async () => {
     setIsLoading(true);
+    setProfileError('');
     try {
       const res = await api.account.$put({ json: profileData });
       if (res.ok) {
         const updatedData = await res.json();
         setProfileData(updatedData);
+      } else if (res.status === 409) {
+        setProfileError(t('account_page.profile_settings.username_taken'));
       } else {
         console.error("Failed to update profile");
       }
@@ -199,6 +203,12 @@ export function AccountPage() {
                   />
                 </div>
               </div>
+
+              {profileError && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                  {profileError}
+                </div>
+              )}
 
               <div className="pt-3">
                 <button

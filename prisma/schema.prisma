@@ -38,7 +38,7 @@ model File {
 model User {
     id            String    @id
     name          String
-    username      String
+    username      String    @unique
     email         String
     emailVerified Boolean
     image         String?
