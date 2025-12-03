@@ -1,9 +1,56 @@
+# Dependencies
 node_modules
-.github
-example_request_do.log
-bin/
+
+# Git
 .git
+.gitignore
+
+# GitHub
+.github
+
+# Build artifacts
+dist
+*.tsbuildinfo
+
+# Logs and backups
+*.log
+example_request_do.log
 hemmelig.backup.db
+
+# Media and docs
 *.mp4
 desktop.gif
+desktop.png
+banner.png
+logo.png
+logo.svg
+logo_color.png
+docs/
+README.md
+LICENSE
+CLAUDE.md
+GEMINI.md
+
+# Dev files
+bin/
+.env*
+.eslintcache
+*.local
+helm/
+
+# Generated
 prisma/generated/*
+
+# Uploads (runtime data)
+uploads/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Test files
+api/tests/
+*.test.ts
+*.spec.ts

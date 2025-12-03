@@ -1,26 +1,48 @@
+# syntax=docker/dockerfile:1
+
+# Base stage with build tools - cached separately
+FROM oven/bun:1-alpine AS base-builder
+RUN apk add --no-cache python3 make g++ npm
+
 # Build stage
-FROM oven/bun:1-alpine AS builder
+FROM base-builder AS builder
 
 WORKDIR /app
-
-# Install build dependencies for better-sqlite3
-RUN apk add --no-cache python3 make g++
 
 # Copy package files first for better caching
 COPY package.json bun.lock ./
 
-# Install all dependencies (including devDependencies for build)
-RUN bun install --frozen-lockfile
+# Install all dependencies with cache mount for massive speedup
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
 
-# Copy source files
-COPY . .
+# Copy prisma schema separately (changes less often than source)
+COPY prisma ./prisma
 
 # Generate Prisma client
 RUN bunx prisma generate --schema=./prisma/schema.prisma
 
+# Copy source files needed for build
+COPY api ./api
+COPY src ./src
+COPY public ./public
+COPY index.html tsconfig*.json vite.config.ts postcss.config.js tailwind.config.js ./
+COPY server.ts ./
+
 # Build frontend with Vite and compile server with Bun
 RUN bunx --bun vite build && \
     bun build ./server.ts --outdir ./dist --target bun
+
+# Production dependencies stage - reuse base-builder
+FROM base-builder AS deps
+
+WORKDIR /app
+
+COPY package.json bun.lock ./
+
+# Install production dependencies only with cache mount
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile --production
 
 # Production stage - using alpine for smallest footprint
 FROM oven/bun:1-alpine AS production
@@ -31,10 +53,9 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/bun.lock ./
 
-# Copy pre-built node_modules with native bindings from builder
-COPY --from=builder /app/node_modules ./node_modules
+# Copy production-only node_modules (much smaller than full deps)
+COPY --from=deps /app/node_modules ./node_modules
 
 # Regenerate Prisma client for production
 RUN bunx prisma generate --schema=./prisma/schema.prisma
