@@ -5,16 +5,15 @@ import { secureHeaders } from 'hono/secure-headers';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-
-
-//import { csrf } from 'hono/csrf';
-//import { cors } from 'hono/cors';
+import { csrf } from 'hono/csrf';
+import { cors } from 'hono/cors';
 
 import { auth } from "./auth";
 import prisma from './lib/db';
 import routes from './routes';
 import startJobs from './jobs';
 import ratelimit from './middlewares/ratelimit';
+import config from './config';
 
 // Initialize Hono app
 const app = new Hono<{
@@ -47,13 +46,17 @@ app.use(
     }),
 );
 
-// ------ Configure these youself ------
-// Configure CORS: https://hono.dev/docs/middleware/builtin/cors
-//app.use(`/*`, cors())
+// Configure CORS with trusted origins
+const trustedOrigins = config.get<string[]>('trustedOrigins', []);
+app.use(`/*`, cors({
+    origin: trustedOrigins,
+    credentials: true,
+}));
 
-// Configure CSRF: https://hono.dev/docs/middleware/builtin/csrf
-//app.use(csrf())
-// -------------------------------------
+// Configure CSRF protection
+app.use(csrf({
+    origin: trustedOrigins,
+}));
 
 // Custom middlewares
 app.use("*", async (c, next) => {
