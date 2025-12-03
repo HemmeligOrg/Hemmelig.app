@@ -53,10 +53,16 @@ app.use(`/*`, cors({
     credentials: true,
 }));
 
-// Configure CSRF protection
-app.use(csrf({
-    origin: trustedOrigins,
-}));
+// Configure CSRF protection (exclude auth routes for OAuth callbacks)
+app.use('/*', async (c, next) => {
+    // Skip CSRF for auth routes (OAuth callbacks come from external origins)
+    if (c.req.path.startsWith('/auth/')) {
+        return next();
+    }
+    return csrf({
+        origin: trustedOrigins,
+    })(c, next);
+});
 
 // Custom middlewares
 app.use("*", async (c, next) => {
