@@ -32,7 +32,7 @@ export function ForgotPasswordPage() {
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      alert('An unexpected error occurred. Please try again.');
+      alert(t('forgot_password_page.unexpected_error'));
     } finally {
       setIsLoading(false);
     }

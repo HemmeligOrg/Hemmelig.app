@@ -72,9 +72,9 @@ export function AnalyticsPage() {
     try {
       const res = await api.analytics.$get({ query: { timeRange: range } });
       if (res.status === 403) {
-        toast.error("You don't have permission to view analytics.");
+        toast.error(t('analytics_page.no_permission'));
         setAnalytics(null);
-        setError("You don't have permission to view analytics.");
+        setError(t('analytics_page.no_permission'));
         return;
       }
       if (!res.ok) throw new Error('Failed to fetch');
@@ -82,8 +82,8 @@ export function AnalyticsPage() {
       setAnalytics(data as AnalyticsData);
       setError(null);
     } catch {
-      toast.error('Failed to fetch analytics data.');
-      setError('Failed to fetch analytics data.');
+      toast.error(t('analytics_page.failed_to_fetch'));
+      setError(t('analytics_page.failed_to_fetch'));
     } finally {
       setLoading(false);
     }

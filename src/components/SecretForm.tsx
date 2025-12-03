@@ -135,8 +135,8 @@ export function SecretForm() {
       <Modal
         isOpen={isErrorModalOpen}
         onClose={() => setIsErrorModalOpen(false)}
-        title="Error"
-        confirmText="OK"
+        title={t('common.error')}
+        confirmText={t('common.ok')}
         onConfirm={() => setIsErrorModalOpen(false)}
       >
         <p>{errorMessage}</p>

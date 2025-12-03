@@ -36,7 +36,7 @@ export function LoginPage() {
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      setErrorMessage(t('login_page.unexpected_error'));
       setIsErrorModalOpen(true);
     } finally {
       setIsLoading(false);
@@ -165,8 +165,8 @@ export function LoginPage() {
       <Modal
         isOpen={isErrorModalOpen}
         onClose={() => setIsErrorModalOpen(false)}
-        title="Login Error"
-        confirmText="OK"
+        title={t('common.error')}
+        confirmText={t('common.ok')}
         onConfirm={() => setIsErrorModalOpen(false)}
         confirmButtonClass="bg-blue-600 hover:bg-blue-700"
       >

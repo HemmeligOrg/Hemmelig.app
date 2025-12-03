@@ -80,6 +80,7 @@
     "account": "Account",
     "analytics": "Analytics",
     "users": "Users",
+    "invites": "Invites",
     "instance": "Instance",
     "sign_out": "Sign out",
     "hemmelig": "Hemmelig"
@@ -93,7 +94,8 @@
     "create_new_secret_button": "Create New Secret",
     "copy_url_button": "Copy URL",
     "burn_secret_button": "Burn Secret",
-    "max_secrets_per_user_info": "You can create up to {{count}} secrets."
+    "max_secrets_per_user_info": "You can create up to {{count}} secrets.",
+    "failed_to_burn": "Failed to burn secret. Please try again."
   },
   "security_settings": {
     "security_title": "Security",
@@ -215,11 +217,18 @@
       "one_hour": "1 Hour",
       "one_day": "1 Day",
       "one_week_plus": "1 Week+"
-    }
+    },
+    "no_permission": "You don't have permission to view analytics.",
+    "failed_to_fetch": "Failed to fetch analytics data."
   },
   "instance_page": {
     "title": "Instance Settings",
     "description": "Configure your Hemmelig instance",
+    "tabs": {
+      "general": "General",
+      "security": "Security",
+      "organization": "Organization"
+    },
     "system_status": {
       "title": "System Status",
       "description": "Instance health and performance metrics",
@@ -404,7 +413,8 @@
     "sending_button": "Sending...",
     "reset_password_button": "Reset Password",
     "remember_password": "Remember your password?",
-    "sign_in_link": "Sign in"
+    "sign_in_link": "Sign in",
+    "unexpected_error": "An unexpected error occurred. Please try again."
   },
   "login_page": {
     "back_to_hemmelig": "Back to Hemmelig",
@@ -421,7 +431,8 @@
     "or_continue_with": "Or continue with",
     "continue_with_github": "Continue with GitHub",
     "no_account_question": "Don't have an account?",
-    "sign_up_link": "Sign up"
+    "sign_up_link": "Sign up",
+    "unexpected_error": "An unexpected error occurred. Please try again."
   },
   "register_page": {
     "back_to_hemmelig": "Back to Hemmelig",
@@ -452,7 +463,15 @@
     "or_continue_with": "Or continue with",
     "continue_with_github": "Continue with GitHub",
     "already_have_account_question": "Already have an account?",
-    "sign_in_link": "Sign in"
+    "sign_in_link": "Sign in",
+    "invite_code_label": "Invite Code",
+    "invite_code_placeholder": "Enter your invite code",
+    "invite_code_required": "Invite code is required",
+    "invalid_invite_code": "Invalid invite code",
+    "failed_to_validate_invite": "Failed to validate invite code",
+    "unexpected_error": "An unexpected error occurred. Please try again.",
+    "email_domain_not_allowed": "Email domain not allowed",
+    "account_already_exists": "An account with this email already exists. Please sign in instead."
   },
   "secret_form": {
     "failed_to_create_secret": "Failed to create secret: {{errorMessage}}",
@@ -607,5 +626,15 @@
     "passwords_mismatch": "Passwords do not match",
     "password_too_short": "Password must be at least 8 characters",
     "note": "This setup can only be completed once. The admin account will have full access to manage this instance."
+  },
+  "theme_toggle": {
+    "switch_to_light": "Switch to light mode",
+    "switch_to_dark": "Switch to dark mode"
+  },
+  "common": {
+    "error": "Error",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "ok": "OK"
   }
 }

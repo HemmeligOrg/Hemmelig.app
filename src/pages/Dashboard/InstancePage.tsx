@@ -42,9 +42,9 @@ export function InstancePage() {
   }
 
   const tabs = [
-    { id: 'general', name: 'General', icon: Settings },
-    { id: 'security', name: 'Security', icon: Shield },
-    { id: 'organization', name: 'Organization', icon: Building2 },
+    { id: 'general', name: t('instance_page.tabs.general'), icon: Settings },
+    { id: 'security', name: t('instance_page.tabs.security'), icon: Shield },
+    { id: 'organization', name: t('instance_page.tabs.organization'), icon: Building2 },
   ];
 
   return (

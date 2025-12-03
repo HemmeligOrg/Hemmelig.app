@@ -39,7 +39,7 @@ export function RegisterPage() {
     // Validate invite code if required
     if (settings.requireInviteCode) {
       if (!formData.inviteCode) {
-        setInviteCodeError('Invite code is required');
+        setInviteCodeError(t('register_page.invite_code_required'));
         return;
       }
       try {
@@ -48,11 +48,11 @@ export function RegisterPage() {
         });
         const result = await res.json();
         if (!result.valid) {
-          setInviteCodeError('error' in result ? result.error : 'Invalid invite code');
+          setInviteCodeError('error' in result ? result.error : t('register_page.invalid_invite_code'));
           return;
         }
       } catch {
-        setInviteCodeError('Failed to validate invite code');
+        setInviteCodeError(t('register_page.failed_to_validate_invite'));
         return;
       }
     }
@@ -91,7 +91,7 @@ export function RegisterPage() {
 
       if (error || registrationError) {
         // Handle specific error codes with user-friendly messages
-        let userMessage = registrationError || 'An unexpected error occurred';
+        let userMessage = registrationError || t('register_page.unexpected_error');
         
         if (!registrationError && error) {
           // Debug: log the full error structure
@@ -119,9 +119,9 @@ export function RegisterPage() {
               allErrorText.includes('domain not allowed') ||
               allErrorText.includes('restricted to') ||
               allErrorText.includes('forbidden')) {
-            userMessage = 'Email domain not allowed';
+            userMessage = t('register_page.email_domain_not_allowed');
           } else if (allErrorText.includes('already exists') || errorCode === 'USER_ALREADY_EXISTS') {
-            userMessage = 'An account with this email already exists. Please sign in instead.';
+            userMessage = t('register_page.account_already_exists');
           } else if (causeMsg && causeMsg.length > 0) {
             userMessage = causeMsg;
           } else if (errorMsg && errorMsg.length > 0 && errorMsg !== 'Internal Server Error') {
@@ -151,7 +151,7 @@ export function RegisterPage() {
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      setErrorMessage(t('register_page.unexpected_error'));
       setIsErrorModalOpen(true);
     } finally {
       setIsLoading(false);
@@ -160,7 +160,13 @@ export function RegisterPage() {
 
   const passwordStrength = getPasswordStrength(formData.password);
   const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
-  const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+  const strengthLabels = [
+    t('register_page.password_strength_levels.very_weak'),
+    t('register_page.password_strength_levels.weak'),
+    t('register_page.password_strength_levels.fair'),
+    t('register_page.password_strength_levels.good'),
+    t('register_page.password_strength_levels.strong')
+  ];
 
   return (
     <div className="min-h-screen bg-light-800 dark:bg-dark-900 flex items-center justify-center px-4 py-12">
@@ -187,7 +193,7 @@ export function RegisterPage() {
             {settings.requireInviteCode && (
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                  Invite Code
+                  {t('register_page.invite_code_label')}
                 </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400">
@@ -200,7 +206,7 @@ export function RegisterPage() {
                       setFormData(prev => ({ ...prev, inviteCode: e.target.value.toUpperCase() }));
                       setInviteCodeError('');
                     }}
-                    placeholder="Enter your invite code"
+                    placeholder={t('register_page.invite_code_placeholder')}
                     className={`w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-dark-700/50 border ${inviteCodeError ? 'border-red-500' : 'border-gray-300 dark:border-dark-500/50'} text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300`}
                     required
                   />
@@ -381,8 +387,8 @@ export function RegisterPage() {
       <Modal
         isOpen={isErrorModalOpen}
         onClose={() => setIsErrorModalOpen(false)}
-        title="Registration Error"
-        confirmText="OK"
+        title={t('common.error')}
+        confirmText={t('common.ok')}
         onConfirm={() => setIsErrorModalOpen(false)}
         confirmButtonClass="bg-blue-600 hover:bg-blue-700"
       >

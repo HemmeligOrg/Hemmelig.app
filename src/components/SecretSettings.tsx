@@ -32,7 +32,7 @@ export const SecretSettings = () => {
       resetSecret();
     } catch (error) {
       console.error("Failed to burn secret:", error);
-      alert("Failed to burn secret. Please try again.");
+      alert(t('secret_settings.failed_to_burn'));
     }
   };
 

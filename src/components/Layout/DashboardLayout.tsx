@@ -35,13 +35,13 @@ export function DashboardLayout() {
   };
 
   const navigation = [
-    { name: 'Secrets', href: '/dashboard', icon: Shield },
-    { name: 'Account', href: '/dashboard/account', icon: User },
+    { name: t('dashboard_layout.secrets'), href: '/dashboard', icon: Shield },
+    { name: t('dashboard_layout.account'), href: '/dashboard/account', icon: User },
     //...(user?.isAdmin ? [
-    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-    { name: 'Users', href: '/dashboard/users', icon: Users },
-    { name: 'Invites', href: '/dashboard/invites', icon: Ticket },
-    { name: 'Instance', href: '/dashboard/instance', icon: Server },
+    { name: t('dashboard_layout.analytics'), href: '/dashboard/analytics', icon: BarChart3 },
+    { name: t('dashboard_layout.users'), href: '/dashboard/users', icon: Users },
+    { name: t('dashboard_layout.invites'), href: '/dashboard/invites', icon: Ticket },
+    { name: t('dashboard_layout.instance'), href: '/dashboard/instance', icon: Server },
     //] : []),
   ];
 
