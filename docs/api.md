@@ -11,7 +11,24 @@ The API is documented using OpenAPI 3.0 specification with an interactive Swagge
 
 ## Authentication
 
-Most API endpoints require authentication via session cookies. Authenticate through the `/auth` endpoints provided by better-auth.
+### Session Authentication
+For browser-based access, authenticate through the `/auth` endpoints provided by better-auth. Session cookies are automatically managed.
+
+### API Key Authentication
+For programmatic access, create an API key in your account settings under the **Developer** tab.
+
+Use the API key as a Bearer token in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer hemmelig_your_api_key_here" \
+  https://your-instance.com/api/secrets
+```
+
+**Important:**
+- API keys are shown only once upon creation - store them securely
+- Maximum 5 API keys per user
+- Keys can optionally expire after 30, 90, or 365 days
+- Revoke compromised keys immediately from your account settings
 
 For endpoints requiring admin access, the authenticated user must have the `admin` role.
 
@@ -41,6 +58,9 @@ For endpoints requiring admin access, the authenticated user must have the `admi
 | PUT | `/api/account` | Update account info |
 | PUT | `/api/account/password` | Update password |
 | DELETE | `/api/account` | Delete account |
+| GET | `/api/api-keys` | List API keys |
+| POST | `/api/api-keys` | Create API key |
+| DELETE | `/api/api-keys/:id` | Delete API key |
 
 ### Admin Endpoints
 

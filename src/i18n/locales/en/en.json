@@ -149,6 +149,7 @@
     "tabs": {
       "profile": "Profile",
       "security": "Security",
+      "developer": "Developer",
       "danger_zone": "Danger Zone"
     },
     "profile_info": {
@@ -192,6 +193,31 @@
       "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
       "delete_account_button": "Delete Account",
       "deleting_account_button": "Deleting Account..."
+    },
+    "developer": {
+      "title": "API Keys",
+      "description": "Manage API keys for programmatic access",
+      "create_key": "Create Key",
+      "create_key_title": "Create API Key",
+      "key_name": "Key Name",
+      "key_name_placeholder": "e.g., My Integration",
+      "expiration": "Expiration",
+      "never_expires": "Never expires",
+      "expires_30_days": "30 days",
+      "expires_90_days": "90 days",
+      "expires_1_year": "1 year",
+      "create_button": "Create",
+      "name_required": "Key name is required",
+      "create_error": "Failed to create API key",
+      "key_created": "API Key Created!",
+      "key_warning": "Copy this key now. You won't be able to see it again.",
+      "dismiss": "I've copied the key",
+      "no_keys": "No API keys yet. Create one to get started.",
+      "created": "Created",
+      "last_used": "Last used",
+      "expires": "Expires",
+      "docs_hint": "Learn how to use API keys in the",
+      "api_docs": "API Documentation"
     }
   },
   "analytics_page": {

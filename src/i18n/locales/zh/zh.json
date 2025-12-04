@@ -149,6 +149,7 @@
     "tabs": {
       "profile": "个人资料",
       "security": "安全",
+      "developer": "开发者",
       "danger_zone": "危险区域"
     },
     "profile_info": {
@@ -192,6 +193,31 @@
       "delete_account_confirm": "您确定要删除您的账户吗？此操作无法撤销。",
       "delete_account_button": "删除账户",
       "deleting_account_button": "正在删除账户..."
+    },
+    "developer": {
+      "title": "API 密钥",
+      "description": "管理用于程序化访问的 API 密钥",
+      "create_key": "创建密钥",
+      "create_key_title": "创建 API 密钥",
+      "key_name": "密钥名称",
+      "key_name_placeholder": "例如：我的集成",
+      "expiration": "过期时间",
+      "never_expires": "永不过期",
+      "expires_30_days": "30 天",
+      "expires_90_days": "90 天",
+      "expires_1_year": "1 年",
+      "create_button": "创建",
+      "name_required": "密钥名称为必填项",
+      "create_error": "创建 API 密钥失败",
+      "key_created": "API 密钥已创建！",
+      "key_warning": "请立即复制此密钥。您将无法再次查看它。",
+      "dismiss": "我已复制密钥",
+      "no_keys": "还没有 API 密钥。创建一个开始使用。",
+      "created": "创建时间",
+      "last_used": "最后使用",
+      "expires": "过期时间",
+      "docs_hint": "了解如何使用 API 密钥，请查看",
+      "api_docs": "API 文档"
     }
   },
   "analytics_page": {

@@ -24,6 +24,7 @@ const spec = {
         { name: 'Secrets', description: 'Secret management endpoints' },
         { name: 'Files', description: 'File upload/download endpoints' },
         { name: 'Account', description: 'User account management' },
+        { name: 'API Keys', description: 'API key management for programmatic access' },
         { name: 'Instance', description: 'Instance settings' },
         { name: 'Analytics', description: 'Analytics endpoints' },
         { name: 'Invites', description: 'Invite code management' },
@@ -345,6 +346,86 @@ const spec = {
                     '200': { description: 'Password updated' },
                     '400': { description: 'Invalid current password' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+        },
+        '/api-keys': {
+            get: {
+                tags: ['API Keys'],
+                summary: 'List API keys',
+                description: 'Get all API keys for the authenticated user',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': {
+                        description: 'List of API keys',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'array',
+                                    items: { $ref: '#/components/schemas/ApiKey' },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+            post: {
+                tags: ['API Keys'],
+                summary: 'Create API key',
+                description: 'Create a new API key. The full key is only shown once upon creation.',
+                security: [{ cookieAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['name'],
+                                properties: {
+                                    name: { type: 'string', minLength: 1, maxLength: 100 },
+                                    expiresInDays: { type: 'integer', minimum: 1, maximum: 365 },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'API key created',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    allOf: [
+                                        { $ref: '#/components/schemas/ApiKey' },
+                                        {
+                                            type: 'object',
+                                            properties: {
+                                                key: { type: 'string', description: 'The full API key (only shown once)' },
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    '400': { description: 'Maximum API key limit reached (5)' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+        },
+        '/api-keys/{id}': {
+            delete: {
+                tags: ['API Keys'],
+                summary: 'Delete API key',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': { description: 'API key deleted' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '404': { description: 'API key not found' },
                 },
             },
         },
@@ -695,8 +776,24 @@ const spec = {
                 name: 'better-auth.session_token',
                 description: 'Session cookie set after authentication via /auth endpoints',
             },
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                description: 'API key authentication. Use your API key as the bearer token.',
+            },
         },
         schemas: {
+            ApiKey: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    keyPrefix: { type: 'string', description: 'First 16 characters of the key' },
+                    lastUsedAt: { type: 'string', format: 'date-time', nullable: true },
+                    expiresAt: { type: 'string', format: 'date-time', nullable: true },
+                    createdAt: { type: 'string', format: 'date-time' },
+                },
+            },
             SecretListItem: {
                 type: 'object',
                 properties: {

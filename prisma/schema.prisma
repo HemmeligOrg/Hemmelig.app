@@ -54,6 +54,7 @@ model User {
     banExpires      DateTime?
     inviteCodeUsed  String?
     Secrets         Secrets[]
+    apiKeys         ApiKey[]
 
     @@unique([email])
     @@map("user")
@@ -153,4 +154,18 @@ model VisitorAnalytics {
     timestamp DateTime @default(now())
 
     @@map("visitor_analytics")
+}
+
+model ApiKey {
+    id          String    @id @default(uuid())
+    name        String
+    keyHash     String    @unique @map("key_hash")
+    keyPrefix   String    @map("key_prefix")
+    userId      String
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    lastUsedAt  DateTime? @map("last_used_at")
+    expiresAt   DateTime? @map("expires_at")
+    createdAt   DateTime  @default(now()) @map("created_at")
+
+    @@map("api_keys")
 }

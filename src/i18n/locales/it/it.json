@@ -149,6 +149,7 @@
     "tabs": {
       "profile": "Profilo",
       "security": "Sicurezza",
+      "developer": "Sviluppatore",
       "danger_zone": "Zona pericolosa"
     },
     "profile_info": {
@@ -192,6 +193,31 @@
       "delete_account_confirm": "Sei sicuro di voler eliminare il tuo account? Questa azione non può essere annullata.",
       "delete_account_button": "Elimina account",
       "deleting_account_button": "Eliminazione account..."
+    },
+    "developer": {
+      "title": "Chiavi API",
+      "description": "Gestisci le chiavi API per l'accesso programmatico",
+      "create_key": "Crea chiave",
+      "create_key_title": "Crea chiave API",
+      "key_name": "Nome chiave",
+      "key_name_placeholder": "es. La mia integrazione",
+      "expiration": "Scadenza",
+      "never_expires": "Non scade mai",
+      "expires_30_days": "30 giorni",
+      "expires_90_days": "90 giorni",
+      "expires_1_year": "1 anno",
+      "create_button": "Crea",
+      "name_required": "Il nome della chiave è obbligatorio",
+      "create_error": "Impossibile creare la chiave API",
+      "key_created": "Chiave API creata!",
+      "key_warning": "Copia questa chiave ora. Non potrai vederla di nuovo.",
+      "dismiss": "Ho copiato la chiave",
+      "no_keys": "Nessuna chiave API ancora. Creane una per iniziare.",
+      "created": "Creata",
+      "last_used": "Ultimo utilizzo",
+      "expires": "Scade",
+      "docs_hint": "Scopri come usare le chiavi API nella",
+      "api_docs": "Documentazione API"
     }
   },
   "analytics_page": {

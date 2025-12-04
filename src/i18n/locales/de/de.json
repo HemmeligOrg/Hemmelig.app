@@ -149,6 +149,7 @@
     "tabs": {
       "profile": "Profil",
       "security": "Sicherheit",
+      "developer": "Entwickler",
       "danger_zone": "Gefahrenzone"
     },
     "profile_info": {
@@ -192,6 +193,31 @@
       "delete_account_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
       "delete_account_button": "Konto löschen",
       "deleting_account_button": "Konto wird gelöscht..."
+    },
+    "developer": {
+      "title": "API-Schlüssel",
+      "description": "API-Schlüssel für programmatischen Zugriff verwalten",
+      "create_key": "Schlüssel erstellen",
+      "create_key_title": "API-Schlüssel erstellen",
+      "key_name": "Schlüsselname",
+      "key_name_placeholder": "z.B. Meine Integration",
+      "expiration": "Ablauf",
+      "never_expires": "Läuft nie ab",
+      "expires_30_days": "30 Tage",
+      "expires_90_days": "90 Tage",
+      "expires_1_year": "1 Jahr",
+      "create_button": "Erstellen",
+      "name_required": "Schlüsselname ist erforderlich",
+      "create_error": "API-Schlüssel konnte nicht erstellt werden",
+      "key_created": "API-Schlüssel erstellt!",
+      "key_warning": "Kopieren Sie diesen Schlüssel jetzt. Sie können ihn nicht erneut sehen.",
+      "dismiss": "Ich habe den Schlüssel kopiert",
+      "no_keys": "Noch keine API-Schlüssel. Erstellen Sie einen, um loszulegen.",
+      "created": "Erstellt",
+      "last_used": "Zuletzt verwendet",
+      "expires": "Läuft ab",
+      "docs_hint": "Erfahren Sie, wie Sie API-Schlüssel verwenden in der",
+      "api_docs": "API-Dokumentation"
     }
   },
   "analytics_page": {

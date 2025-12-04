@@ -11,7 +11,7 @@ import {
     secretsQuerySchema,
     processSecretsQueryParams,
 } from '../validations/secrets';
-import { authMiddleware } from '../middlewares/auth';
+import { authMiddleware, apiKeyOrAuthMiddleware } from '../middlewares/auth';
 import { auth } from '../auth';
 import { ipRestriction } from '../middlewares/ip-restriction';
 import instanceSettings from '../instance-settings';
@@ -34,7 +34,7 @@ const app = new Hono<{
         user: typeof auth.$Infer.Session.user | null;
     }
 }>()
-    .get('/', authMiddleware, zValidator('query', secretsQuerySchema), async c => {
+    .get('/', apiKeyOrAuthMiddleware, zValidator('query', secretsQuerySchema), async c => {
         try {
             const user = c.get('user');
             if (!user) {

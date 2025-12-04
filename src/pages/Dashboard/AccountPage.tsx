@@ -10,7 +10,11 @@ import {
   Eye,
   EyeOff,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Code,
+  Plus,
+  Copy,
+  Check
 } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAccountStore } from '../../store/accountStore';
@@ -22,12 +26,28 @@ export function AccountPage() {
   const { profileData, setProfileData } = useAccountStore();
   const initialData = useLoaderData() as { username: string, email: string };
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'danger'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'developer' | 'danger'>('profile');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // API Keys state
+  const [apiKeys, setApiKeys] = useState<Array<{
+    id: string;
+    name: string;
+    keyPrefix: string;
+    lastUsedAt: string | null;
+    expiresAt: string | null;
+    createdAt: string;
+  }>>([]);
+  const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyExpiry, setNewKeyExpiry] = useState<number | undefined>(undefined);
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
+  const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
+  const [apiKeyError, setApiKeyError] = useState('');
+  const [isCreateKeyModalOpen, setIsCreateKeyModalOpen] = useState(false);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -122,9 +142,79 @@ export function AccountPage() {
     }
   };
 
+  // API Keys handlers
+  const fetchApiKeys = async () => {
+    try {
+      const res = await api['api-keys'].$get();
+      if (res.ok) {
+        const data = await res.json();
+        setApiKeys(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch API keys:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'developer') {
+      fetchApiKeys();
+    }
+  }, [activeTab]);
+
+  const handleCreateApiKey = async () => {
+    setApiKeyError('');
+    if (!newKeyName.trim()) {
+      setApiKeyError(t('account_page.developer.name_required'));
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await api['api-keys'].$post({
+        json: {
+          name: newKeyName,
+          expiresInDays: newKeyExpiry,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNewlyCreatedKey(data.key);
+        setNewKeyName('');
+        setNewKeyExpiry(undefined);
+        fetchApiKeys();
+      } else {
+        const errorData = await res.json();
+        setApiKeyError(errorData.error || t('account_page.developer.create_error'));
+      }
+    } catch (error) {
+      console.error('Failed to create API key:', error);
+      setApiKeyError(t('account_page.developer.create_error'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteApiKey = async (id: string) => {
+    try {
+      const res = await api['api-keys'][':id'].$delete({ param: { id } });
+      if (res.ok) {
+        fetchApiKeys();
+      }
+    } catch (error) {
+      console.error('Failed to delete API key:', error);
+    }
+  };
+
+  const copyToClipboard = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedKeyId(id);
+    setTimeout(() => setCopiedKeyId(null), 2000);
+  };
+
   const tabs = [
     { id: 'profile', name: t('account_page.tabs.profile'), icon: User },
     { id: 'security', name: t('account_page.tabs.security'), icon: Shield },
+    { id: 'developer', name: t('account_page.tabs.developer'), icon: Code },
     { id: 'danger', name: t('account_page.tabs.danger_zone'), icon: AlertTriangle },
   ];
 
@@ -145,7 +235,7 @@ export function AccountPage() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as 'profile' | 'security' | 'danger')}
+                  onClick={() => setActiveTab(tab.id as 'profile' | 'security' | 'developer' | 'danger')}
                   className={`flex items-center space-x-2 py-3 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${activeTab === tab.id
                     ? 'border-teal-500 text-teal-400'
                     : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-600 dark:text-slate-300 hover:border-dark-500'
@@ -329,6 +419,102 @@ export function AccountPage() {
           </div>
         )}
 
+        {activeTab === 'developer' && (
+          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-purple-500/20">
+                  <Code className="w-4 h-4 text-purple-400" />
+                </div>
+                <div>
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-white">{t('account_page.developer.title')}</h2>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">{t('account_page.developer.description')}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsCreateKeyModalOpen(true)}
+                className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm transition-all duration-300 hover:scale-105"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{t('account_page.developer.create_key')}</span>
+              </button>
+            </div>
+
+            {/* Newly created key warning */}
+            {newlyCreatedKey && (
+              <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30">
+                <p className="text-sm font-medium text-yellow-300 mb-2">{t('account_page.developer.key_created')}</p>
+                <p className="text-xs text-yellow-200/80 mb-2">{t('account_page.developer.key_warning')}</p>
+                <div className="flex items-center space-x-2">
+                  <code className="flex-1 p-2 bg-dark-900/50 text-xs text-green-400 font-mono break-all">
+                    {newlyCreatedKey}
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard(newlyCreatedKey, 'new')}
+                    className="p-2 bg-dark-700 hover:bg-dark-600 transition-colors"
+                  >
+                    {copiedKeyId === 'new' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                  </button>
+                </div>
+                <button
+                  onClick={() => setNewlyCreatedKey(null)}
+                  className="mt-2 text-xs text-yellow-400 hover:text-yellow-300"
+                >
+                  {t('account_page.developer.dismiss')}
+                </button>
+              </div>
+            )}
+
+            {/* API Keys list */}
+            <div className="space-y-3">
+              {apiKeys.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+                  <Key className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">{t('account_page.developer.no_keys')}</p>
+                </div>
+              ) : (
+                apiKeys.map((apiKey) => (
+                  <div key={apiKey.id} className="p-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{apiKey.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 font-mono">{apiKey.keyPrefix}...</p>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteApiKey(apiKey.id)}
+                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500 dark:text-slate-400">
+                      <span>{t('account_page.developer.created')}: {new Date(apiKey.createdAt).toLocaleDateString()}</span>
+                      {apiKey.lastUsedAt && (
+                        <span>{t('account_page.developer.last_used')}: {new Date(apiKey.lastUsedAt).toLocaleDateString()}</span>
+                      )}
+                      {apiKey.expiresAt && (
+                        <span className={new Date(apiKey.expiresAt) < new Date() ? 'text-red-400' : ''}>
+                          {t('account_page.developer.expires')}: {new Date(apiKey.expiresAt).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* API Documentation link */}
+            <div className="mt-4 p-3 bg-gray-100 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30">
+              <p className="text-xs text-gray-500 dark:text-slate-400">
+                {t('account_page.developer.docs_hint')}{' '}
+                <a href="/api/docs" target="_blank" className="text-teal-400 hover:text-teal-300">
+                  {t('account_page.developer.api_docs')}
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'danger' && (
           <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-red-500/30 p-4">
             <div className="flex items-center space-x-3 mb-4">
@@ -379,6 +565,52 @@ export function AccountPage() {
         cancelText={t('secrets_page.table.delete_cancel_button')}
       >
         <p>{t('account_page.danger_zone.delete_account_confirm')}</p>
+      </Modal>
+      <Modal
+        isOpen={isCreateKeyModalOpen}
+        onClose={() => {
+          setIsCreateKeyModalOpen(false);
+          setNewKeyName('');
+          setNewKeyExpiry(undefined);
+          setApiKeyError('');
+        }}
+        onConfirm={handleCreateApiKey}
+        title={t('account_page.developer.create_key_title')}
+        confirmText={t('account_page.developer.create_button')}
+        cancelText={t('secrets_page.table.delete_cancel_button')}
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-1">
+              {t('account_page.developer.key_name')}
+            </label>
+            <input
+              type="text"
+              value={newKeyName}
+              onChange={(e) => setNewKeyName(e.target.value)}
+              placeholder={t('account_page.developer.key_name_placeholder')}
+              className="w-full px-3 py-2 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-1">
+              {t('account_page.developer.expiration')}
+            </label>
+            <select
+              value={newKeyExpiry || ''}
+              onChange={(e) => setNewKeyExpiry(e.target.value ? parseInt(e.target.value) : undefined)}
+              className="w-full px-3 py-2 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+            >
+              <option value="">{t('account_page.developer.never_expires')}</option>
+              <option value="30">{t('account_page.developer.expires_30_days')}</option>
+              <option value="90">{t('account_page.developer.expires_90_days')}</option>
+              <option value="365">{t('account_page.developer.expires_1_year')}</option>
+            </select>
+          </div>
+          {apiKeyError && (
+            <p className="text-xs text-red-400">{apiKeyError}</p>
+          )}
+        </div>
       </Modal>
     </div>
   );

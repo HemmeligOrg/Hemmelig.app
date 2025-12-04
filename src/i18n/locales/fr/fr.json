@@ -149,6 +149,7 @@
     "tabs": {
       "profile": "Profil",
       "security": "Sécurité",
+      "developer": "Développeur",
       "danger_zone": "Zone de danger"
     },
     "profile_info": {
@@ -192,6 +193,31 @@
       "delete_account_confirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
       "delete_account_button": "Supprimer le compte",
       "deleting_account_button": "Suppression du compte..."
+    },
+    "developer": {
+      "title": "Clés API",
+      "description": "Gérer les clés API pour l'accès programmatique",
+      "create_key": "Créer une clé",
+      "create_key_title": "Créer une clé API",
+      "key_name": "Nom de la clé",
+      "key_name_placeholder": "ex. Mon intégration",
+      "expiration": "Expiration",
+      "never_expires": "N'expire jamais",
+      "expires_30_days": "30 jours",
+      "expires_90_days": "90 jours",
+      "expires_1_year": "1 an",
+      "create_button": "Créer",
+      "name_required": "Le nom de la clé est requis",
+      "create_error": "Échec de la création de la clé API",
+      "key_created": "Clé API créée !",
+      "key_warning": "Copiez cette clé maintenant. Vous ne pourrez plus la voir.",
+      "dismiss": "J'ai copié la clé",
+      "no_keys": "Pas encore de clés API. Créez-en une pour commencer.",
+      "created": "Créée",
+      "last_used": "Dernière utilisation",
+      "expires": "Expire",
+      "docs_hint": "Apprenez à utiliser les clés API dans la",
+      "api_docs": "Documentation API"
     }
   },
   "analytics_page": {
