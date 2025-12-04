@@ -1,0 +1,670 @@
+{
+  "template_selector": {
+    "button": "模板",
+    "description": "使用模板快速开始",
+    "templates": {
+      "credentials": "登录凭据",
+      "api_key": "API 密钥",
+      "database": "数据库",
+      "server": "服务器访问",
+      "credit_card": "支付卡",
+      "email": "电子邮件账户"
+    }
+  },
+  "editor": {
+    "tooltips": {
+      "copy_text": "复制为纯文本",
+      "copy_html": "复制为 HTML",
+      "copy_base64": "复制为 Base64",
+      "bold": "粗体",
+      "italic": "斜体",
+      "strikethrough": "删除线",
+      "inline_code": "行内代码",
+      "link": "链接",
+      "remove_link": "移除链接",
+      "insert_password": "插入密码",
+      "paragraph": "段落",
+      "heading1": "标题 1",
+      "heading2": "标题 2",
+      "heading3": "标题 3",
+      "bullet_list": "无序列表",
+      "numbered_list": "有序列表",
+      "blockquote": "引用",
+      "code_block": "代码块",
+      "undo": "撤销",
+      "redo": "重做"
+    },
+    "copy_success": {
+      "html": "HTML 已复制！",
+      "text": "文本已复制！",
+      "base64": "Base64 已复制！"
+    },
+    "link_modal": {
+      "title": "添加链接",
+      "url_label": "URL",
+      "url_placeholder": "输入 URL",
+      "cancel": "取消",
+      "update": "更新",
+      "insert": "插入"
+    },
+    "password_modal": {
+      "title": "生成密码",
+      "length_label": "密码长度",
+      "options_label": "选项",
+      "include_numbers": "数字",
+      "include_symbols": "符号",
+      "include_uppercase": "大写字母",
+      "include_lowercase": "小写字母",
+      "generated_password": "生成的密码",
+      "refresh": "刷新",
+      "cancel": "取消",
+      "insert": "插入"
+    },
+    "formatting_tools": "格式化工具"
+  },
+  "create_button": {
+    "creating_secret": "正在创建秘密...",
+    "create": "创建"
+  },
+  "file_upload": {
+    "sign_in_to_upload": "登录以上传文件",
+    "sign_in": "登录",
+    "drop_files_here": "将文件拖放到此处",
+    "drag_and_drop": "拖放文件，或点击选择文件",
+    "uploading": "正在上传...",
+    "upload_file": "上传文件",
+    "file_too_large": "文件 \"{{fileName}}\"（{{fileSize}} MB）超过最大大小 {{maxSize}} MB",
+    "max_size_exceeded": "文件总大小超过最大限制 {{maxSize}} MB"
+  },
+  "footer": {
+    "tagline": "Hemmelig，[heˈm(ɛ)li]，在挪威语中意为"秘密""
+  },
+  "header": {
+    "sign_in": "登录",
+    "sign_up": "注册",
+    "dashboard": "仪表板",
+    "hero_text_part1": "安全分享加密消息，阅读后",
+    "hero_text_part2": "自动销毁",
+    "hero_text_part3": "。"
+  },
+  "dashboard_layout": {
+    "secrets": "秘密",
+    "account": "账户",
+    "analytics": "分析",
+    "users": "用户",
+    "invites": "邀请",
+    "instance": "实例",
+    "sign_out": "退出登录",
+    "hemmelig": "Hemmelig"
+  },
+  "secret_settings": {
+    "secret_created_title": "秘密已创建！",
+    "secret_created_description": "您的秘密现在可以通过以下 URL 访问。请妥善保管您的解密密钥，因为它无法恢复。",
+    "secret_url_label": "秘密 URL",
+    "decryption_key_label": "解密密钥",
+    "password_label": "密码",
+    "create_new_secret_button": "创建新秘密",
+    "copy_url_button": "复制 URL",
+    "burn_secret_button": "销毁秘密",
+    "max_secrets_per_user_info": "您最多可以创建 {{count}} 个秘密。",
+    "failed_to_burn": "销毁秘密失败。请重试。"
+  },
+  "security_settings": {
+    "security_title": "安全",
+    "security_description": "配置秘密的安全设置",
+    "private_title": "私密",
+    "private_description": "私密秘密已加密，只能使用解密密钥和/或密码查看。",
+    "expiration_title": "过期时间",
+    "expiration_burn_after_time_description": "设置秘密应该被销毁的时间",
+    "expiration_default_description": "设置秘密的可用时长",
+    "max_views_title": "最大查看次数",
+    "burn_after_time_mode_title": "定时销毁模式",
+    "burn_after_time_mode_description": "秘密将在时间到期后销毁，无论被查看了多少次。",
+    "password_protection_title": "密码保护",
+    "password_protection_description": "使用密码添加额外的安全层",
+    "enter_password_label": "输入密码",
+    "password_placeholder": "输入安全密码...",
+    "password_hint": "接收者需要此密码才能查看秘密",
+    "ip_restriction_title": "IP 或 CIDR 限制",
+    "ip_restriction_description": "CIDR 输入将允许用户指定可以访问秘密的 IP 地址范围。",
+    "ip_address_cidr_label": "IP 地址或 CIDR 范围",
+    "ip_address_cidr_placeholder": "192.168.1.0/24 或 203.0.113.5",
+    "ip_address_cidr_hint": "只有来自这些 IP 地址的请求才能访问秘密",
+    "burn_after_time_title": "过期后销毁",
+    "burn_after_time_description": "仅在时间到期后销毁秘密"
+  },
+  "title_field": {
+    "placeholder": "标题",
+    "hint": "为您的秘密起一个易记的标题（可选）"
+  },
+  "views_slider": {
+    "min_views": "1",
+    "max_views": "999",
+    "views_label": "次查看"
+  },
+  "account_page": {
+    "title": "账户设置",
+    "description": "管理您的账户偏好和安全设置",
+    "tabs": {
+      "profile": "个人资料",
+      "security": "安全",
+      "danger_zone": "危险区域"
+    },
+    "profile_info": {
+      "title": "个人资料信息",
+      "description": "更新您的个人信息",
+      "first_name_label": "名",
+      "last_name_label": "姓",
+      "username_label": "用户名",
+      "email_label": "电子邮件地址",
+      "saving_button": "正在保存...",
+      "save_changes_button": "保存更改"
+    },
+    "profile_settings": {
+      "username_taken": "用户名已被使用"
+    },
+    "security_settings": {
+      "title": "安全设置",
+      "description": "管理您的密码和安全偏好",
+      "change_password_title": "更改密码",
+      "current_password_label": "当前密码",
+      "current_password_placeholder": "输入当前密码",
+      "new_password_label": "新密码",
+      "new_password_placeholder": "输入新密码",
+      "confirm_new_password_label": "确认新密码",
+      "confirm_new_password_placeholder": "确认新密码",
+      "password_mismatch_alert": "新密码不匹配",
+      "changing_password_button": "正在更改...",
+      "change_password_button": "更改密码",
+      "password_change_success": "密码更改成功！",
+      "password_change_error": "密码更改失败。请重试。"
+    },
+    "danger_zone": {
+      "title": "危险区域",
+      "description": "不可逆的破坏性操作",
+      "delete_account_title": "删除账户",
+      "delete_account_description": "一旦删除您的账户，将无法恢复。这将永久删除您的账户、所有秘密和所有相关数据。此操作无法撤销。",
+      "delete_account_bullet1": "您的所有秘密将被永久删除",
+      "delete_account_bullet2": "您的账户数据将从我们的服务器中移除",
+      "delete_account_bullet3": "所有共享的秘密链接将失效",
+      "delete_account_bullet4": "此操作无法撤销",
+      "delete_account_confirm": "您确定要删除您的账户吗？此操作无法撤销。",
+      "delete_account_button": "删除账户",
+      "deleting_account_button": "正在删除账户..."
+    }
+  },
+  "analytics_page": {
+    "title": "分析",
+    "description": "跟踪您的秘密分享活动和洞察",
+    "time_range": {
+      "last_7_days": "最近 7 天",
+      "last_30_days": "最近 30 天",
+      "last_90_days": "最近 90 天",
+      "last_year": "最近一年"
+    },
+    "total_secrets": "秘密总数",
+    "from_last_period": "较上期 +{{percentage}}%",
+    "total_views": "总查看次数",
+    "avg_views_per_secret": "平均查看/秘密",
+    "active_secrets": "活跃秘密",
+    "daily_activity": {
+      "title": "每日活动",
+      "description": "随时间创建的秘密和查看次数",
+      "secrets": "秘密",
+      "views": "查看"
+    },
+    "locale": "zh-CN",
+    "top_countries": {
+      "title": "热门国家/地区",
+      "description": "您的秘密被查看的地区",
+      "views": "查看"
+    },
+    "secret_types": {
+      "title": "秘密类型",
+      "description": "按保护级别分布",
+      "password_protected": "密码保护",
+      "ip_restricted": "IP 限制",
+      "burn_after_time": "定时销毁"
+    },
+    "expiration_stats": {
+      "title": "过期统计",
+      "description": "秘密通常持续多长时间",
+      "one_hour": "1 小时",
+      "one_day": "1 天",
+      "one_week_plus": "1 周以上"
+    },
+    "no_permission": "您没有权限查看分析。",
+    "failed_to_fetch": "获取分析数据失败。"
+  },
+  "instance_page": {
+    "title": "实例设置",
+    "description": "配置您的 Hemmelig 实例",
+    "tabs": {
+      "general": "常规",
+      "security": "安全",
+      "organization": "组织",
+      "webhook": "Webhook"
+    },
+    "system_status": {
+      "title": "系统状态",
+      "description": "实例健康状况和性能指标",
+      "version": "版本",
+      "uptime": "运行时间",
+      "memory": "内存",
+      "cpu_usage": "CPU 使用率"
+    },
+    "general_settings": {
+      "title": "常规设置",
+      "description": "基本实例配置",
+      "instance_name_label": "实例名称",
+      "max_secrets_per_user_label": "每用户最大秘密数",
+      "instance_description_label": "实例描述",
+      "allow_registration_title": "允许注册",
+      "allow_registration_description": "允许新用户注册",
+      "email_verification_title": "邮箱验证",
+      "email_verification_description": "需要邮箱验证"
+    },
+    "saving_button": "正在保存...",
+    "save_settings_button": "保存设置",
+    "security_settings": {
+      "title": "安全设置",
+      "description": "配置安全和访问控制",
+      "rate_limiting_title": "速率限制",
+      "rate_limiting_description": "启用请求速率限制",
+      "max_password_attempts_label": "最大密码尝试次数",
+      "session_timeout_label": "会话超时（小时）"
+    },
+    "email_settings": {
+      "title": "邮件设置",
+      "description": "配置 SMTP 和邮件通知",
+      "smtp_host_label": "SMTP 主机",
+      "smtp_port_label": "SMTP 端口",
+      "username_label": "用户名",
+      "password_label": "密码"
+    },
+    "database_info": {
+      "title": "数据库信息",
+      "description": "数据库状态和统计",
+      "stats_title": "数据库统计",
+      "total_secrets": "秘密总数：",
+      "total_users": "用户总数：",
+      "disk_usage": "磁盘使用：",
+      "connection_status_title": "连接状态",
+      "connected": "已连接",
+      "connected_description": "数据库健康且响应正常"
+    },
+    "system_info": {
+      "title": "系统信息",
+      "description": "服务器详情和维护",
+      "system_info_title": "系统信息",
+      "version": "版本：",
+      "uptime": "运行时间：",
+      "status": "状态：",
+      "resource_usage_title": "资源使用",
+      "memory": "内存：",
+      "cpu": "CPU：",
+      "disk": "磁盘："
+    },
+    "maintenance_actions": {
+      "title": "维护操作",
+      "description": "这些操作可能影响系统可用性。请谨慎使用。",
+      "restart_service_button": "重启服务",
+      "clear_cache_button": "清除缓存",
+      "export_logs_button": "导出日志"
+    }
+  },
+  "secrets_page": {
+    "title": "您的秘密",
+    "description": "管理和监控您共享的秘密",
+    "create_secret_button": "创建秘密",
+    "search_placeholder": "搜索秘密...",
+    "filter": {
+      "all_secrets": "所有秘密",
+      "active": "活跃",
+      "expired": "已过期"
+    },
+    "total_secrets": "秘密总数",
+    "active_secrets": "活跃",
+    "expired_secrets": "已过期",
+    "no_secrets_found_title": "未找到秘密",
+    "no_secrets_found_description_filter": "尝试调整您的搜索或筛选条件。",
+    "no_secrets_found_description_empty": "创建您的第一个秘密以开始。",
+    "password_protected": "密码",
+    "files": "文件",
+    "table": {
+      "secret_header": "秘密",
+      "created_header": "创建时间",
+      "status_header": "状态",
+      "views_header": "查看次数",
+      "actions_header": "操作",
+      "untitled_secret": "无标题秘密",
+      "expired_status": "已过期",
+      "active_status": "活跃",
+      "never_expires": "永不过期",
+      "expired_time": "已过期",
+      "views_left": "剩余查看次数",
+      "copy_url_tooltip": "复制 URL",
+      "open_secret_tooltip": "打开秘密",
+      "delete_secret_tooltip": "删除秘密",
+      "delete_confirmation_title": "确定吗？",
+      "delete_confirmation_text": "此操作无法撤销。秘密将被永久删除。",
+      "delete_confirm_button": "是的，删除",
+      "delete_cancel_button": "取消"
+    }
+  },
+  "users_page": {
+    "title": "用户管理",
+    "description": "管理用户及其权限",
+    "add_user_button": "添加用户",
+    "search_placeholder": "搜索用户...",
+    "filter": {
+      "all_roles": "所有角色",
+      "admin": "管理员",
+      "user": "用户",
+      "all_status": "所有状态",
+      "active": "活跃",
+      "suspended": "已暂停",
+      "pending": "待处理"
+    },
+    "total_users": "用户总数",
+    "active_users": "活跃",
+    "admins": "管理员",
+    "pending_users": "待处理",
+    "no_users_found_title": "未找到用户",
+    "no_users_found_description_filter": "尝试调整您的搜索或筛选条件。",
+    "no_users_found_description_empty": "尚未添加任何用户。",
+    "table": {
+      "user_header": "用户",
+      "role_header": "角色",
+      "status_header": "状态",
+      "activity_header": "活动",
+      "last_login_header": "最后登录",
+      "actions_header": "操作",
+      "created_at": "创建时间"
+    },
+    "status": {
+      "active": "活跃",
+      "banned": "已封禁"
+    },
+    "delete_user_modal": {
+      "title": "删除用户",
+      "confirmation_message": "您确定要删除用户 {{username}} 吗？此操作无法撤销。",
+      "confirm_button": "删除",
+      "cancel_button": "取消"
+    },
+    "edit_user_modal": {
+      "title": "编辑用户：{{username}}",
+      "username_label": "用户名",
+      "email_label": "电子邮件",
+      "role_label": "角色",
+      "banned_label": "已封禁",
+      "save_button": "保存",
+      "cancel_button": "取消"
+    },
+    "add_user_modal": {
+      "title": "添加新用户",
+      "name_label": "姓名",
+      "username_label": "用户名",
+      "email_label": "电子邮件",
+      "password_label": "密码",
+      "role_label": "角色",
+      "save_button": "添加用户",
+      "cancel_button": "取消"
+    }
+  },
+  "forgot_password_page": {
+    "back_to_sign_in": "返回登录",
+    "check_email_title": "检查您的邮箱",
+    "check_email_description": "我们已向 {{email}} 发送了密码重置链接",
+    "did_not_receive_email": "没有收到邮件？请检查垃圾邮件文件夹或重试。",
+    "try_again_button": "重试",
+    "forgot_password_title": "忘记密码？",
+    "forgot_password_description": "别担心，我们会向您发送重置说明",
+    "email_label": "电子邮件",
+    "email_placeholder": "输入您的电子邮件",
+    "email_hint": "输入与您账户关联的电子邮件",
+    "sending_button": "正在发送...",
+    "reset_password_button": "重置密码",
+    "remember_password": "记得您的密码？",
+    "sign_in_link": "登录",
+    "unexpected_error": "发生意外错误。请重试。"
+  },
+  "login_page": {
+    "back_to_hemmelig": "返回 Hemmelig",
+    "welcome_back": "欢迎回到 Hemmelig",
+    "welcome_back_title": "欢迎回来",
+    "welcome_back_description": "登录您的 Hemmelig 账户",
+    "username_label": "用户名",
+    "username_placeholder": "输入您的用户名",
+    "password_label": "密码",
+    "password_placeholder": "输入您的密码",
+    "forgot_password_link": "忘记密码？",
+    "signing_in_button": "正在登录...",
+    "sign_in_button": "登录",
+    "or_continue_with": "或者继续使用",
+    "continue_with_github": "使用 GitHub 继续",
+    "no_account_question": "没有账户？",
+    "sign_up_link": "注册",
+    "unexpected_error": "发生意外错误。请重试。"
+  },
+  "register_page": {
+    "back_to_hemmelig": "返回 Hemmelig",
+    "join_hemmelig": "加入 Hemmelig 安全分享秘密",
+    "create_account_title": "创建账户",
+    "create_account_description": "加入 Hemmelig 安全分享秘密",
+    "username_label": "用户名",
+    "username_placeholder": "选择用户名",
+    "email_label": "电子邮件",
+    "email_placeholder": "输入您的电子邮件",
+    "password_label": "密码",
+    "password_placeholder": "创建密码",
+    "password_strength_label": "密码强度",
+    "password_strength_levels": {
+      "very_weak": "非常弱",
+      "weak": "弱",
+      "fair": "一般",
+      "good": "良好",
+      "strong": "强"
+    },
+    "confirm_password_label": "确认密码",
+    "confirm_password_placeholder": "确认您的密码",
+    "passwords_match": "密码匹配",
+    "passwords_do_not_match": "密码不匹配",
+    "password_mismatch_alert": "密码不匹配",
+    "creating_account_button": "正在创建账户...",
+    "create_account_button": "创建账户",
+    "or_continue_with": "或者继续使用",
+    "continue_with_github": "使用 GitHub 继续",
+    "already_have_account_question": "已有账户？",
+    "sign_in_link": "登录",
+    "invite_code_label": "邀请码",
+    "invite_code_placeholder": "输入您的邀请码",
+    "invite_code_required": "需要邀请码",
+    "invalid_invite_code": "邀请码无效",
+    "failed_to_validate_invite": "验证邀请码失败",
+    "unexpected_error": "发生意外错误。请重试。",
+    "email_domain_not_allowed": "不允许的邮箱域名",
+    "account_already_exists": "此邮箱已存在账户。请登录。"
+  },
+  "secret_form": {
+    "failed_to_create_secret": "创建秘密失败：{{errorMessage}}",
+    "failed_to_upload_file": "上传文件失败：{{fileName}}"
+  },
+  "secret_page": {
+    "password_label": "密码",
+    "password_placeholder": "输入密码以查看秘密",
+    "view_secret_button": "查看秘密",
+    "views_remaining_tooltip": "剩余查看次数：{{count}}",
+    "loading_message": "正在解密秘密...",
+    "files_title": "附件",
+    "secret_waiting_title": "有人与您分享了一个秘密",
+    "secret_waiting_description": "此秘密已加密，只有点击下方按钮才能查看。",
+    "one_view_remaining": "此秘密只能再查看 1 次",
+    "views_remaining": "此秘密还可以查看 {{count}} 次",
+    "view_warning": "一旦查看，此操作无法撤销",
+    "secret_revealed": "秘密",
+    "copy_secret": "复制到剪贴板",
+    "download": "下载",
+    "create_your_own": "创建您自己的秘密",
+    "encrypted_secret": "加密秘密",
+    "unlock_secret": "解锁秘密"
+  },
+  "expiration": {
+    "7_days": "7 天",
+    "3_days": "3 天",
+    "1_day": "1 天",
+    "12_hours": "12 小时",
+    "4_hours": "4 小时",
+    "1_hour": "1 小时",
+    "30_minutes": "30 分钟",
+    "5_minutes": "5 分钟"
+  },
+  "error_display": {
+    "clear_errors_button_title": "清除错误"
+  },
+  "secret_not_found_page": {
+    "title": "秘密未找到",
+    "message": "您查找的秘密不存在、已过期或已被销毁。",
+    "error_details": "错误详情：",
+    "go_home_button": "返回首页"
+  },
+  "organization_page": {
+    "title": "组织设置",
+    "description": "配置组织范围的设置和访问控制",
+    "registration_settings": {
+      "title": "注册设置",
+      "description": "控制用户如何加入您的组织",
+      "invite_only_title": "仅限邀请注册",
+      "invite_only_description": "用户只能使用有效的邀请码注册",
+      "require_registered_user_title": "仅限注册用户",
+      "require_registered_user_description": "只有注册用户才能创建秘密",
+      "allowed_domains_title": "允许的邮箱域名",
+      "allowed_domains_description": "仅允许特定邮箱域名注册（逗号分隔，如 company.com, org.net）",
+      "allowed_domains_placeholder": "company.com, org.net",
+      "allowed_domains_hint": "逗号分隔的邮箱域名列表。留空则允许所有域名。"
+    },
+    "invite_codes": {
+      "title": "邀请码",
+      "description": "创建和管理新用户的邀请码",
+      "create_invite_button": "创建邀请码",
+      "code_header": "代码",
+      "uses_header": "使用次数",
+      "expires_header": "过期时间",
+      "actions_header": "操作",
+      "unlimited": "无限制",
+      "never": "永不",
+      "expired": "已过期",
+      "no_invites": "暂无邀请码",
+      "no_invites_description": "创建邀请码以允许新用户注册",
+      "copy_tooltip": "复制代码",
+      "delete_tooltip": "删除代码"
+    },
+    "create_invite_modal": {
+      "title": "创建邀请码",
+      "max_uses_label": "最大使用次数",
+      "max_uses_placeholder": "留空表示无限制",
+      "expiration_label": "过期时间",
+      "expiration_options": {
+        "never": "永不",
+        "24_hours": "24 小时",
+        "7_days": "7 天",
+        "30_days": "30 天"
+      },
+      "cancel_button": "取消",
+      "create_button": "创建"
+    },
+    "saving_button": "正在保存...",
+    "save_settings_button": "保存设置"
+  },
+  "invites_page": {
+    "title": "邀请码",
+    "description": "管理新用户注册的邀请码",
+    "create_invite_button": "创建邀请",
+    "loading": "正在加载邀请码...",
+    "table": {
+      "code_header": "代码",
+      "uses_header": "使用次数",
+      "expires_header": "过期时间",
+      "status_header": "状态",
+      "never": "永不"
+    },
+    "status": {
+      "active": "活跃",
+      "expired": "已过期",
+      "used": "已使用",
+      "inactive": "未激活"
+    },
+    "no_invites": "暂无邀请码",
+    "create_modal": {
+      "title": "创建邀请码",
+      "max_uses_label": "最大使用次数",
+      "expires_in_label": "过期时间（天）"
+    },
+    "delete_modal": {
+      "title": "停用邀请码",
+      "confirm_text": "停用",
+      "cancel_text": "取消",
+      "message": "您确定要停用邀请码 {{code}} 吗？此操作无法撤销。"
+    },
+    "toast": {
+      "created": "邀请码已创建",
+      "deactivated": "邀请码已停用",
+      "copied": "邀请码已复制到剪贴板",
+      "fetch_error": "获取邀请码失败",
+      "create_error": "创建邀请码失败",
+      "delete_error": "停用邀请码失败"
+    }
+  },
+  "social_login": {
+    "continue_with": "使用 {{provider}} 继续",
+    "sign_up_with": "使用 {{provider}} 注册"
+  },
+  "setup_page": {
+    "title": "欢迎使用 Hemmelig",
+    "description": "创建您的管理员账户以开始使用",
+    "name_label": "全名",
+    "name_placeholder": "输入您的全名",
+    "username_label": "用户名",
+    "username_placeholder": "选择用户名",
+    "email_label": "电子邮件地址",
+    "email_placeholder": "输入您的电子邮件",
+    "password_label": "密码",
+    "password_placeholder": "创建密码（至少 8 个字符）",
+    "confirm_password_label": "确认密码",
+    "confirm_password_placeholder": "确认您的密码",
+    "create_admin": "创建管理员账户",
+    "creating": "正在创建账户...",
+    "success": "管理员账户创建成功！请登录。",
+    "error": "创建管理员账户失败",
+    "passwords_mismatch": "密码不匹配",
+    "password_too_short": "密码必须至少 8 个字符",
+    "note": "此设置只能完成一次。管理员账户将拥有完全访问权限来管理此实例。"
+  },
+  "theme_toggle": {
+    "switch_to_light": "切换到亮色模式",
+    "switch_to_dark": "切换到暗色模式"
+  },
+  "webhook_settings": {
+    "title": "Webhook 通知",
+    "description": "当秘密被查看或销毁时通知外部服务",
+    "enable_webhooks_title": "启用 Webhook",
+    "enable_webhooks_description": "当事件发生时向您的 Webhook URL 发送 HTTP POST 请求",
+    "webhook_url_label": "Webhook URL",
+    "webhook_url_placeholder": "https://example.com/webhook",
+    "webhook_url_hint": "Webhook 负载将发送到的 URL",
+    "webhook_secret_label": "Webhook 密钥",
+    "webhook_secret_placeholder": "输入用于 HMAC 签名的密钥",
+    "webhook_secret_hint": "用于使用 HMAC-SHA256 签名 Webhook 负载。签名在 X-Hemmelig-Signature 头中发送。",
+    "events_title": "Webhook 事件",
+    "on_view_title": "秘密已查看",
+    "on_view_description": "当秘密被查看时发送 Webhook",
+    "on_burn_title": "秘密已销毁",
+    "on_burn_description": "当秘密被销毁或删除时发送 Webhook"
+  },
+  "common": {
+    "error": "错误",
+    "cancel": "取消",
+    "confirm": "确认",
+    "ok": "确定"
+  }
+}

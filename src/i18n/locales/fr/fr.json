@@ -1,0 +1,670 @@
+{
+  "template_selector": {
+    "button": "Modèles",
+    "description": "Démarrage rapide avec un modèle",
+    "templates": {
+      "credentials": "Identifiants de connexion",
+      "api_key": "Clé API",
+      "database": "Base de données",
+      "server": "Accès serveur",
+      "credit_card": "Carte de paiement",
+      "email": "Compte e-mail"
+    }
+  },
+  "editor": {
+    "tooltips": {
+      "copy_text": "Copier en texte brut",
+      "copy_html": "Copier en HTML",
+      "copy_base64": "Copier en Base64",
+      "bold": "Gras",
+      "italic": "Italique",
+      "strikethrough": "Barré",
+      "inline_code": "Code en ligne",
+      "link": "Lien",
+      "remove_link": "Supprimer le lien",
+      "insert_password": "Insérer un mot de passe",
+      "paragraph": "Paragraphe",
+      "heading1": "Titre 1",
+      "heading2": "Titre 2",
+      "heading3": "Titre 3",
+      "bullet_list": "Liste à puces",
+      "numbered_list": "Liste numérotée",
+      "blockquote": "Citation",
+      "code_block": "Bloc de code",
+      "undo": "Annuler",
+      "redo": "Rétablir"
+    },
+    "copy_success": {
+      "html": "HTML copié !",
+      "text": "Texte copié !",
+      "base64": "Base64 copié !"
+    },
+    "link_modal": {
+      "title": "Ajouter un lien",
+      "url_label": "URL",
+      "url_placeholder": "Entrer l'URL",
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "insert": "Insérer"
+    },
+    "password_modal": {
+      "title": "Générer un mot de passe",
+      "length_label": "Longueur du mot de passe",
+      "options_label": "Options",
+      "include_numbers": "Chiffres",
+      "include_symbols": "Symboles",
+      "include_uppercase": "Majuscules",
+      "include_lowercase": "Minuscules",
+      "generated_password": "Mot de passe généré",
+      "refresh": "Actualiser",
+      "cancel": "Annuler",
+      "insert": "Insérer"
+    },
+    "formatting_tools": "Outils de formatage"
+  },
+  "create_button": {
+    "creating_secret": "Création du secret...",
+    "create": "Créer"
+  },
+  "file_upload": {
+    "sign_in_to_upload": "Connectez-vous pour téléverser des fichiers",
+    "sign_in": "Se connecter",
+    "drop_files_here": "Déposez les fichiers ici",
+    "drag_and_drop": "Glissez-déposez un fichier ou cliquez pour sélectionner",
+    "uploading": "Téléversement...",
+    "upload_file": "Téléverser un fichier",
+    "file_too_large": "Le fichier \"{{fileName}}\" ({{fileSize}} Mo) dépasse la taille maximale de {{maxSize}} Mo",
+    "max_size_exceeded": "La taille totale des fichiers dépasse le maximum de {{maxSize}} Mo"
+  },
+  "footer": {
+    "tagline": "Hemmelig, [heˈm(ɛ)li], signifie 'secret' en norvégien"
+  },
+  "header": {
+    "sign_in": "Se connecter",
+    "sign_up": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "hero_text_part1": "Partagez des secrets en toute sécurité avec des messages chiffrés qui",
+    "hero_text_part2": " s'autodétruisent",
+    "hero_text_part3": " automatiquement après lecture."
+  },
+  "dashboard_layout": {
+    "secrets": "Secrets",
+    "account": "Compte",
+    "analytics": "Analytiques",
+    "users": "Utilisateurs",
+    "invites": "Invitations",
+    "instance": "Instance",
+    "sign_out": "Se déconnecter",
+    "hemmelig": "Hemmelig"
+  },
+  "secret_settings": {
+    "secret_created_title": "Secret créé !",
+    "secret_created_description": "Votre secret est maintenant disponible à l'URL suivante. Conservez votre clé de déchiffrement en lieu sûr, car elle ne peut pas être récupérée.",
+    "secret_url_label": "URL du secret",
+    "decryption_key_label": "Clé de déchiffrement",
+    "password_label": "Mot de passe",
+    "create_new_secret_button": "Créer un nouveau secret",
+    "copy_url_button": "Copier l'URL",
+    "burn_secret_button": "Détruire le secret",
+    "max_secrets_per_user_info": "Vous pouvez créer jusqu'à {{count}} secrets.",
+    "failed_to_burn": "Échec de la destruction du secret. Veuillez réessayer."
+  },
+  "security_settings": {
+    "security_title": "Sécurité",
+    "security_description": "Configurez les paramètres de sécurité pour votre secret",
+    "private_title": "Privé",
+    "private_description": "Les secrets privés sont chiffrés et ne peuvent être consultés qu'avec la clé de déchiffrement et/ou le mot de passe.",
+    "expiration_title": "Expiration",
+    "expiration_burn_after_time_description": "Définissez quand le secret doit être détruit",
+    "expiration_default_description": "Définissez la durée de disponibilité du secret",
+    "max_views_title": "Vues maximales",
+    "burn_after_time_mode_title": "Mode destruction programmée",
+    "burn_after_time_mode_description": "Le secret sera détruit après l'expiration du délai, quel que soit le nombre de consultations.",
+    "password_protection_title": "Protection par mot de passe",
+    "password_protection_description": "Ajoutez une couche de sécurité supplémentaire avec un mot de passe",
+    "enter_password_label": "Entrer le mot de passe",
+    "password_placeholder": "Entrez un mot de passe sécurisé...",
+    "password_hint": "Les destinataires auront besoin de ce mot de passe pour voir le secret",
+    "ip_restriction_title": "Restriction par IP ou CIDR",
+    "ip_restriction_description": "L'entrée CIDR permettra aux utilisateurs de spécifier les plages d'adresses IP pouvant accéder au secret.",
+    "ip_address_cidr_label": "Adresse IP ou plage CIDR",
+    "ip_address_cidr_placeholder": "192.168.1.0/24 ou 203.0.113.5",
+    "ip_address_cidr_hint": "Seules les requêtes provenant de ces adresses IP pourront accéder au secret",
+    "burn_after_time_title": "Détruire après expiration",
+    "burn_after_time_description": "Détruire le secret uniquement après l'expiration du délai"
+  },
+  "title_field": {
+    "placeholder": "Titre",
+    "hint": "Donnez un titre mémorable à votre secret (optionnel)"
+  },
+  "views_slider": {
+    "min_views": "1",
+    "max_views": "999",
+    "views_label": "vues"
+  },
+  "account_page": {
+    "title": "Paramètres du compte",
+    "description": "Gérez vos préférences de compte et votre sécurité",
+    "tabs": {
+      "profile": "Profil",
+      "security": "Sécurité",
+      "danger_zone": "Zone de danger"
+    },
+    "profile_info": {
+      "title": "Informations du profil",
+      "description": "Mettez à jour vos informations personnelles",
+      "first_name_label": "Prénom",
+      "last_name_label": "Nom",
+      "username_label": "Nom d'utilisateur",
+      "email_label": "Adresse e-mail",
+      "saving_button": "Enregistrement...",
+      "save_changes_button": "Enregistrer les modifications"
+    },
+    "profile_settings": {
+      "username_taken": "Ce nom d'utilisateur est déjà pris"
+    },
+    "security_settings": {
+      "title": "Paramètres de sécurité",
+      "description": "Gérez votre mot de passe et vos préférences de sécurité",
+      "change_password_title": "Changer le mot de passe",
+      "current_password_label": "Mot de passe actuel",
+      "current_password_placeholder": "Entrez le mot de passe actuel",
+      "new_password_label": "Nouveau mot de passe",
+      "new_password_placeholder": "Entrez le nouveau mot de passe",
+      "confirm_new_password_label": "Confirmer le nouveau mot de passe",
+      "confirm_new_password_placeholder": "Confirmez le nouveau mot de passe",
+      "password_mismatch_alert": "Les nouveaux mots de passe ne correspondent pas",
+      "changing_password_button": "Modification...",
+      "change_password_button": "Changer le mot de passe",
+      "password_change_success": "Mot de passe modifié avec succès !",
+      "password_change_error": "Échec du changement de mot de passe. Veuillez réessayer."
+    },
+    "danger_zone": {
+      "title": "Zone de danger",
+      "description": "Actions irréversibles et destructrices",
+      "delete_account_title": "Supprimer le compte",
+      "delete_account_description": "Une fois votre compte supprimé, il n'y a pas de retour en arrière. Cela supprimera définitivement votre compte, tous vos secrets et toutes les données associées. Cette action est irréversible.",
+      "delete_account_bullet1": "Tous vos secrets seront définitivement supprimés",
+      "delete_account_bullet2": "Vos données de compte seront supprimées de nos serveurs",
+      "delete_account_bullet3": "Tous les liens de secrets partagés deviendront invalides",
+      "delete_account_bullet4": "Cette action est irréversible",
+      "delete_account_confirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      "delete_account_button": "Supprimer le compte",
+      "deleting_account_button": "Suppression du compte..."
+    }
+  },
+  "analytics_page": {
+    "title": "Analytiques",
+    "description": "Suivez l'activité et les statistiques de vos secrets partagés",
+    "time_range": {
+      "last_7_days": "7 derniers jours",
+      "last_30_days": "30 derniers jours",
+      "last_90_days": "90 derniers jours",
+      "last_year": "Dernière année"
+    },
+    "total_secrets": "Total des secrets",
+    "from_last_period": "+{{percentage}}% depuis la dernière période",
+    "total_views": "Total des vues",
+    "avg_views_per_secret": "Moy. vues/secret",
+    "active_secrets": "Secrets actifs",
+    "daily_activity": {
+      "title": "Activité quotidienne",
+      "description": "Secrets créés et vues au fil du temps",
+      "secrets": "secrets",
+      "views": "vues"
+    },
+    "locale": "fr-FR",
+    "top_countries": {
+      "title": "Principaux pays",
+      "description": "Où vos secrets sont consultés",
+      "views": "vues"
+    },
+    "secret_types": {
+      "title": "Types de secrets",
+      "description": "Distribution par niveau de protection",
+      "password_protected": "Protégé par mot de passe",
+      "ip_restricted": "Restriction IP",
+      "burn_after_time": "Destruction programmée"
+    },
+    "expiration_stats": {
+      "title": "Statistiques d'expiration",
+      "description": "Durée de vie typique des secrets",
+      "one_hour": "1 Heure",
+      "one_day": "1 Jour",
+      "one_week_plus": "1 Semaine+"
+    },
+    "no_permission": "Vous n'avez pas la permission de voir les analytiques.",
+    "failed_to_fetch": "Échec de la récupération des données analytiques."
+  },
+  "instance_page": {
+    "title": "Paramètres de l'instance",
+    "description": "Configurez votre instance Hemmelig",
+    "tabs": {
+      "general": "Général",
+      "security": "Sécurité",
+      "organization": "Organisation",
+      "webhook": "Webhooks"
+    },
+    "system_status": {
+      "title": "État du système",
+      "description": "Santé de l'instance et métriques de performance",
+      "version": "Version",
+      "uptime": "Temps de fonctionnement",
+      "memory": "Mémoire",
+      "cpu_usage": "Utilisation CPU"
+    },
+    "general_settings": {
+      "title": "Paramètres généraux",
+      "description": "Configuration de base de l'instance",
+      "instance_name_label": "Nom de l'instance",
+      "max_secrets_per_user_label": "Max secrets par utilisateur",
+      "instance_description_label": "Description de l'instance",
+      "allow_registration_title": "Autoriser l'inscription",
+      "allow_registration_description": "Permettre aux nouveaux utilisateurs de s'inscrire",
+      "email_verification_title": "Vérification e-mail",
+      "email_verification_description": "Exiger la vérification de l'e-mail"
+    },
+    "saving_button": "Enregistrement...",
+    "save_settings_button": "Enregistrer les paramètres",
+    "security_settings": {
+      "title": "Paramètres de sécurité",
+      "description": "Configurer la sécurité et les contrôles d'accès",
+      "rate_limiting_title": "Limitation de débit",
+      "rate_limiting_description": "Activer la limitation du débit des requêtes",
+      "max_password_attempts_label": "Max tentatives de mot de passe",
+      "session_timeout_label": "Délai d'expiration de session (heures)"
+    },
+    "email_settings": {
+      "title": "Paramètres e-mail",
+      "description": "Configurer SMTP et les notifications par e-mail",
+      "smtp_host_label": "Hôte SMTP",
+      "smtp_port_label": "Port SMTP",
+      "username_label": "Nom d'utilisateur",
+      "password_label": "Mot de passe"
+    },
+    "database_info": {
+      "title": "Informations de la base de données",
+      "description": "État et statistiques de la base de données",
+      "stats_title": "Statistiques de la base de données",
+      "total_secrets": "Total des secrets :",
+      "total_users": "Total des utilisateurs :",
+      "disk_usage": "Utilisation disque :",
+      "connection_status_title": "État de la connexion",
+      "connected": "Connecté",
+      "connected_description": "La base de données est saine et répond normalement"
+    },
+    "system_info": {
+      "title": "Informations système",
+      "description": "Détails du serveur et maintenance",
+      "system_info_title": "Info système",
+      "version": "Version :",
+      "uptime": "Temps de fonctionnement :",
+      "status": "État :",
+      "resource_usage_title": "Utilisation des ressources",
+      "memory": "Mémoire :",
+      "cpu": "CPU :",
+      "disk": "Disque :"
+    },
+    "maintenance_actions": {
+      "title": "Actions de maintenance",
+      "description": "Ces actions peuvent affecter la disponibilité du système. À utiliser avec précaution.",
+      "restart_service_button": "Redémarrer le service",
+      "clear_cache_button": "Vider le cache",
+      "export_logs_button": "Exporter les journaux"
+    }
+  },
+  "secrets_page": {
+    "title": "Vos secrets",
+    "description": "Gérez et surveillez vos secrets partagés",
+    "create_secret_button": "Créer un secret",
+    "search_placeholder": "Rechercher des secrets...",
+    "filter": {
+      "all_secrets": "Tous les secrets",
+      "active": "Actif",
+      "expired": "Expiré"
+    },
+    "total_secrets": "Total des secrets",
+    "active_secrets": "Actifs",
+    "expired_secrets": "Expirés",
+    "no_secrets_found_title": "Aucun secret trouvé",
+    "no_secrets_found_description_filter": "Essayez d'ajuster vos critères de recherche ou de filtre.",
+    "no_secrets_found_description_empty": "Créez votre premier secret pour commencer.",
+    "password_protected": "Mot de passe",
+    "files": "fichiers",
+    "table": {
+      "secret_header": "Secret",
+      "created_header": "Créé",
+      "status_header": "État",
+      "views_header": "Vues",
+      "actions_header": "Actions",
+      "untitled_secret": "Secret sans titre",
+      "expired_status": "Expiré",
+      "active_status": "Actif",
+      "never_expires": "N'expire jamais",
+      "expired_time": "Expiré",
+      "views_left": "vues restantes",
+      "copy_url_tooltip": "Copier l'URL",
+      "open_secret_tooltip": "Ouvrir le secret",
+      "delete_secret_tooltip": "Supprimer le secret",
+      "delete_confirmation_title": "Êtes-vous sûr ?",
+      "delete_confirmation_text": "Cette action est irréversible. Le secret sera définitivement supprimé.",
+      "delete_confirm_button": "Oui, supprimer",
+      "delete_cancel_button": "Annuler"
+    }
+  },
+  "users_page": {
+    "title": "Gestion des utilisateurs",
+    "description": "Gérez les utilisateurs et leurs permissions",
+    "add_user_button": "Ajouter un utilisateur",
+    "search_placeholder": "Rechercher des utilisateurs...",
+    "filter": {
+      "all_roles": "Tous les rôles",
+      "admin": "Administrateur",
+      "user": "Utilisateur",
+      "all_status": "Tous les états",
+      "active": "Actif",
+      "suspended": "Suspendu",
+      "pending": "En attente"
+    },
+    "total_users": "Total des utilisateurs",
+    "active_users": "Actifs",
+    "admins": "Administrateurs",
+    "pending_users": "En attente",
+    "no_users_found_title": "Aucun utilisateur trouvé",
+    "no_users_found_description_filter": "Essayez d'ajuster vos critères de recherche ou de filtre.",
+    "no_users_found_description_empty": "Aucun utilisateur n'a encore été ajouté.",
+    "table": {
+      "user_header": "Utilisateur",
+      "role_header": "Rôle",
+      "status_header": "État",
+      "activity_header": "Activité",
+      "last_login_header": "Dernière connexion",
+      "actions_header": "Actions",
+      "created_at": "Créé le"
+    },
+    "status": {
+      "active": "Actif",
+      "banned": "Banni"
+    },
+    "delete_user_modal": {
+      "title": "Supprimer l'utilisateur",
+      "confirmation_message": "Êtes-vous sûr de vouloir supprimer l'utilisateur {{username}} ? Cette action est irréversible.",
+      "confirm_button": "Supprimer",
+      "cancel_button": "Annuler"
+    },
+    "edit_user_modal": {
+      "title": "Modifier l'utilisateur : {{username}}",
+      "username_label": "Nom d'utilisateur",
+      "email_label": "E-mail",
+      "role_label": "Rôle",
+      "banned_label": "Banni",
+      "save_button": "Enregistrer",
+      "cancel_button": "Annuler"
+    },
+    "add_user_modal": {
+      "title": "Ajouter un nouvel utilisateur",
+      "name_label": "Nom",
+      "username_label": "Nom d'utilisateur",
+      "email_label": "E-mail",
+      "password_label": "Mot de passe",
+      "role_label": "Rôle",
+      "save_button": "Ajouter l'utilisateur",
+      "cancel_button": "Annuler"
+    }
+  },
+  "forgot_password_page": {
+    "back_to_sign_in": "Retour à la connexion",
+    "check_email_title": "Vérifiez votre e-mail",
+    "check_email_description": "Nous avons envoyé un lien de réinitialisation de mot de passe à {{email}}",
+    "did_not_receive_email": "Vous n'avez pas reçu l'e-mail ? Vérifiez votre dossier spam ou réessayez.",
+    "try_again_button": "Réessayer",
+    "forgot_password_title": "Mot de passe oublié ?",
+    "forgot_password_description": "Pas de souci, nous vous enverrons des instructions de réinitialisation",
+    "email_label": "E-mail",
+    "email_placeholder": "Entrez votre e-mail",
+    "email_hint": "Entrez l'e-mail associé à votre compte",
+    "sending_button": "Envoi...",
+    "reset_password_button": "Réinitialiser le mot de passe",
+    "remember_password": "Vous vous souvenez de votre mot de passe ?",
+    "sign_in_link": "Se connecter",
+    "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer."
+  },
+  "login_page": {
+    "back_to_hemmelig": "Retour à Hemmelig",
+    "welcome_back": "Bon retour sur Hemmelig",
+    "welcome_back_title": "Bon retour",
+    "welcome_back_description": "Connectez-vous à votre compte Hemmelig",
+    "username_label": "Nom d'utilisateur",
+    "username_placeholder": "Entrez votre nom d'utilisateur",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Entrez votre mot de passe",
+    "forgot_password_link": "Mot de passe oublié ?",
+    "signing_in_button": "Connexion...",
+    "sign_in_button": "Se connecter",
+    "or_continue_with": "Ou continuer avec",
+    "continue_with_github": "Continuer avec GitHub",
+    "no_account_question": "Vous n'avez pas de compte ?",
+    "sign_up_link": "S'inscrire",
+    "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer."
+  },
+  "register_page": {
+    "back_to_hemmelig": "Retour à Hemmelig",
+    "join_hemmelig": "Rejoignez Hemmelig pour partager des secrets en toute sécurité",
+    "create_account_title": "Créer un compte",
+    "create_account_description": "Rejoignez Hemmelig pour partager des secrets en toute sécurité",
+    "username_label": "Nom d'utilisateur",
+    "username_placeholder": "Choisissez un nom d'utilisateur",
+    "email_label": "E-mail",
+    "email_placeholder": "Entrez votre e-mail",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Créez un mot de passe",
+    "password_strength_label": "Force du mot de passe",
+    "password_strength_levels": {
+      "very_weak": "Très faible",
+      "weak": "Faible",
+      "fair": "Moyen",
+      "good": "Bon",
+      "strong": "Fort"
+    },
+    "confirm_password_label": "Confirmer le mot de passe",
+    "confirm_password_placeholder": "Confirmez votre mot de passe",
+    "passwords_match": "Les mots de passe correspondent",
+    "passwords_do_not_match": "Les mots de passe ne correspondent pas",
+    "password_mismatch_alert": "Les mots de passe ne correspondent pas",
+    "creating_account_button": "Création du compte...",
+    "create_account_button": "Créer un compte",
+    "or_continue_with": "Ou continuer avec",
+    "continue_with_github": "Continuer avec GitHub",
+    "already_have_account_question": "Vous avez déjà un compte ?",
+    "sign_in_link": "Se connecter",
+    "invite_code_label": "Code d'invitation",
+    "invite_code_placeholder": "Entrez votre code d'invitation",
+    "invite_code_required": "Le code d'invitation est requis",
+    "invalid_invite_code": "Code d'invitation invalide",
+    "failed_to_validate_invite": "Échec de la validation du code d'invitation",
+    "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "email_domain_not_allowed": "Domaine e-mail non autorisé",
+    "account_already_exists": "Un compte avec cet e-mail existe déjà. Veuillez vous connecter."
+  },
+  "secret_form": {
+    "failed_to_create_secret": "Échec de la création du secret : {{errorMessage}}",
+    "failed_to_upload_file": "Échec du téléversement du fichier : {{fileName}}"
+  },
+  "secret_page": {
+    "password_label": "Mot de passe",
+    "password_placeholder": "Entrez le mot de passe pour voir le secret",
+    "view_secret_button": "Voir le secret",
+    "views_remaining_tooltip": "Vues restantes : {{count}}",
+    "loading_message": "Déchiffrement du secret...",
+    "files_title": "Fichiers joints",
+    "secret_waiting_title": "Quelqu'un a partagé un secret avec vous",
+    "secret_waiting_description": "Ce secret est chiffré et ne peut être consulté qu'en cliquant sur le bouton ci-dessous.",
+    "one_view_remaining": "Ce secret ne peut être consulté qu'une seule fois de plus",
+    "views_remaining": "Ce secret peut être consulté {{count}} fois de plus",
+    "view_warning": "Une fois consulté, cette action est irréversible",
+    "secret_revealed": "Secret",
+    "copy_secret": "Copier dans le presse-papiers",
+    "download": "Télécharger",
+    "create_your_own": "Créez votre propre secret",
+    "encrypted_secret": "Secret chiffré",
+    "unlock_secret": "Déverrouiller le secret"
+  },
+  "expiration": {
+    "7_days": "7 Jours",
+    "3_days": "3 Jours",
+    "1_day": "1 Jour",
+    "12_hours": "12 Heures",
+    "4_hours": "4 Heures",
+    "1_hour": "1 Heure",
+    "30_minutes": "30 Minutes",
+    "5_minutes": "5 Minutes"
+  },
+  "error_display": {
+    "clear_errors_button_title": "Effacer les erreurs"
+  },
+  "secret_not_found_page": {
+    "title": "Secret non trouvé",
+    "message": "Le secret que vous recherchez n'existe pas, a expiré ou a été détruit.",
+    "error_details": "Détails de l'erreur :",
+    "go_home_button": "Aller à l'accueil"
+  },
+  "organization_page": {
+    "title": "Paramètres de l'organisation",
+    "description": "Configurez les paramètres et contrôles d'accès de l'organisation",
+    "registration_settings": {
+      "title": "Paramètres d'inscription",
+      "description": "Contrôlez comment les utilisateurs peuvent rejoindre votre organisation",
+      "invite_only_title": "Inscription sur invitation uniquement",
+      "invite_only_description": "Les utilisateurs ne peuvent s'inscrire qu'avec un code d'invitation valide",
+      "require_registered_user_title": "Utilisateurs enregistrés uniquement",
+      "require_registered_user_description": "Seuls les utilisateurs enregistrés peuvent créer des secrets",
+      "allowed_domains_title": "Domaines e-mail autorisés",
+      "allowed_domains_description": "Autoriser uniquement l'inscription depuis des domaines e-mail spécifiques (séparés par des virgules, ex. : entreprise.com, org.net)",
+      "allowed_domains_placeholder": "entreprise.com, org.net",
+      "allowed_domains_hint": "Liste de domaines e-mail séparés par des virgules. Laissez vide pour autoriser tous les domaines."
+    },
+    "invite_codes": {
+      "title": "Codes d'invitation",
+      "description": "Créez et gérez les codes d'invitation pour les nouveaux utilisateurs",
+      "create_invite_button": "Créer un code d'invitation",
+      "code_header": "Code",
+      "uses_header": "Utilisations",
+      "expires_header": "Expire",
+      "actions_header": "Actions",
+      "unlimited": "Illimité",
+      "never": "Jamais",
+      "expired": "Expiré",
+      "no_invites": "Aucun code d'invitation pour l'instant",
+      "no_invites_description": "Créez un code d'invitation pour permettre aux nouveaux utilisateurs de s'inscrire",
+      "copy_tooltip": "Copier le code",
+      "delete_tooltip": "Supprimer le code"
+    },
+    "create_invite_modal": {
+      "title": "Créer un code d'invitation",
+      "max_uses_label": "Utilisations maximales",
+      "max_uses_placeholder": "Laissez vide pour illimité",
+      "expiration_label": "Expiration",
+      "expiration_options": {
+        "never": "Jamais",
+        "24_hours": "24 Heures",
+        "7_days": "7 Jours",
+        "30_days": "30 Jours"
+      },
+      "cancel_button": "Annuler",
+      "create_button": "Créer"
+    },
+    "saving_button": "Enregistrement...",
+    "save_settings_button": "Enregistrer les paramètres"
+  },
+  "invites_page": {
+    "title": "Codes d'invitation",
+    "description": "Gérez les codes d'invitation pour l'inscription des nouveaux utilisateurs",
+    "create_invite_button": "Créer une invitation",
+    "loading": "Chargement des codes d'invitation...",
+    "table": {
+      "code_header": "Code",
+      "uses_header": "Utilisations",
+      "expires_header": "Expire",
+      "status_header": "État",
+      "never": "Jamais"
+    },
+    "status": {
+      "active": "Actif",
+      "expired": "Expiré",
+      "used": "Utilisé",
+      "inactive": "Inactif"
+    },
+    "no_invites": "Aucun code d'invitation pour l'instant",
+    "create_modal": {
+      "title": "Créer un code d'invitation",
+      "max_uses_label": "Utilisations maximales",
+      "expires_in_label": "Expire dans (jours)"
+    },
+    "delete_modal": {
+      "title": "Désactiver le code d'invitation",
+      "confirm_text": "Désactiver",
+      "cancel_text": "Annuler",
+      "message": "Êtes-vous sûr de vouloir désactiver le code d'invitation {{code}} ? Cette action est irréversible."
+    },
+    "toast": {
+      "created": "Code d'invitation créé",
+      "deactivated": "Code d'invitation désactivé",
+      "copied": "Code d'invitation copié dans le presse-papiers",
+      "fetch_error": "Échec de la récupération des codes d'invitation",
+      "create_error": "Échec de la création du code d'invitation",
+      "delete_error": "Échec de la désactivation du code d'invitation"
+    }
+  },
+  "social_login": {
+    "continue_with": "Continuer avec {{provider}}",
+    "sign_up_with": "S'inscrire avec {{provider}}"
+  },
+  "setup_page": {
+    "title": "Bienvenue sur Hemmelig",
+    "description": "Créez votre compte administrateur pour commencer",
+    "name_label": "Nom complet",
+    "name_placeholder": "Entrez votre nom complet",
+    "username_label": "Nom d'utilisateur",
+    "username_placeholder": "Choisissez un nom d'utilisateur",
+    "email_label": "Adresse e-mail",
+    "email_placeholder": "Entrez votre e-mail",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Créez un mot de passe (min. 8 caractères)",
+    "confirm_password_label": "Confirmer le mot de passe",
+    "confirm_password_placeholder": "Confirmez votre mot de passe",
+    "create_admin": "Créer le compte administrateur",
+    "creating": "Création du compte...",
+    "success": "Compte administrateur créé avec succès ! Veuillez vous connecter.",
+    "error": "Échec de la création du compte administrateur",
+    "passwords_mismatch": "Les mots de passe ne correspondent pas",
+    "password_too_short": "Le mot de passe doit contenir au moins 8 caractères",
+    "note": "Cette configuration ne peut être effectuée qu'une seule fois. Le compte administrateur aura un accès complet pour gérer cette instance."
+  },
+  "theme_toggle": {
+    "switch_to_light": "Passer en mode clair",
+    "switch_to_dark": "Passer en mode sombre"
+  },
+  "webhook_settings": {
+    "title": "Notifications webhook",
+    "description": "Notifier les services externes lorsque des secrets sont consultés ou détruits",
+    "enable_webhooks_title": "Activer les webhooks",
+    "enable_webhooks_description": "Envoyer des requêtes HTTP POST à votre URL webhook lors d'événements",
+    "webhook_url_label": "URL du webhook",
+    "webhook_url_placeholder": "https://exemple.com/webhook",
+    "webhook_url_hint": "L'URL où les charges webhook seront envoyées",
+    "webhook_secret_label": "Secret du webhook",
+    "webhook_secret_placeholder": "Entrez un secret pour la signature HMAC",
+    "webhook_secret_hint": "Utilisé pour signer les charges webhook avec HMAC-SHA256. La signature est envoyée dans l'en-tête X-Hemmelig-Signature.",
+    "events_title": "Événements webhook",
+    "on_view_title": "Secret consulté",
+    "on_view_description": "Envoyer un webhook lorsqu'un secret est consulté",
+    "on_burn_title": "Secret détruit",
+    "on_burn_description": "Envoyer un webhook lorsqu'un secret est détruit ou supprimé"
+  },
+  "common": {
+    "error": "Erreur",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "ok": "OK"
+  }
+}

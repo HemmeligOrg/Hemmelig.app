@@ -5,6 +5,9 @@ import { initReactI18next } from 'react-i18next';
 import deTranslations from './locales/de/de.json';
 import enTranslations from './locales/en/en.json';
 import esTranslations from './locales/es/es.json';
+import frTranslations from './locales/fr/fr.json';
+import itTranslations from './locales/it/it.json';
+import zhTranslations from './locales/zh/zh.json';
 
 i18n.use(LanguageDetector)
     .use(initReactI18next)
@@ -22,6 +25,9 @@ i18n.use(LanguageDetector)
             en: { translations: enTranslations },
             es: { translations: esTranslations },
             de: { translations: deTranslations },
+            fr: { translations: frTranslations },
+            it: { translations: itTranslations },
+            zh: { translations: zhTranslations },
         },
         defaultNS: 'translations',
     });
