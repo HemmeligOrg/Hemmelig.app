@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 interface ViewsSliderProps {
   value: number;
@@ -6,29 +6,28 @@ interface ViewsSliderProps {
 }
 
 export function ViewsSlider({ value, onChange }: ViewsSliderProps) {
-  const { t } = useTranslation();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === '') {
+      onChange(1);
+      return;
+    }
+    const num = parseInt(val, 10);
+    if (!isNaN(num)) {
+      onChange(Math.min(999, Math.max(1, num)));
+    }
+  };
   
   return (
-    <div className="space-y-3">
-      <div className="relative">
-        <input
-          type="range"
-          min="1"
-          max="999"
-          value={value}
-          onChange={(e) => onChange(parseInt(e.target.value))}
-          className="w-full h-2 bg-gray-200 dark:bg-dark-600 appearance-none cursor-pointer slider touch-manipulation"
-        />
-        <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mt-1 px-1">
-          <span>{t('views_slider.min_views')}</span>
-          <span>{t('views_slider.max_views')}</span>
-        </div>
-      </div>
-      <div className="text-center">
-        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-teal-500/20 text-teal-400 border border-teal-500/30">
-          {value} {t('views_slider.views_label')}
-        </span>
-      </div>
+    <div className="flex items-center justify-end">
+      <input
+        type="number"
+        min="1"
+        max="999"
+        value={value}
+        onChange={handleInputChange}
+        className="w-20 px-3 py-2 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 text-center focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+      />
     </div>
   );
 }
