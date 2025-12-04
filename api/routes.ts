@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { getEnabledSocialProviders } from './auth';
+import openapi from './openapi';
 import accountRoute from './routes/account';
 import analyticsRoute from './routes/analytics';
 import apiKeysRoute from './routes/api-keys';

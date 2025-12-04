@@ -23,6 +23,13 @@ export function Footer() {
                         >
                             Terms & Conditions
                         </Link>
+                        <span className="text-gray-400 dark:text-slate-500">|</span>
+                        <Link
+                            to="/api/docs"
+                            className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs transition-colors"
+                        >
+                            API Docs
+                        </Link>
                     </div>
 
                     {/* Right - GitHub, X and Theme Toggle */}
