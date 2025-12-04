@@ -122,6 +122,11 @@ const app = new Hono<{
                 return c.json({ error: 'Secret not found' }, 404);
             }
 
+            // Check if secret has no views remaining (already consumed)
+            if (item.views !== null && item.views <= 0) {
+                return c.json({ error: 'Secret not found' }, 404);
+            }
+
             if (item.password) {
                 const data = c.req.valid('json');
                 const isValidPassword = await compare(data.password!, item.password);
@@ -148,11 +153,26 @@ const app = new Hono<{
                 });
                 // Send webhook for secret view
                 sendWebhook('secret.viewed', webhookData);
-            } else if (!item.isBurnable && item.views === 1) {
-                await prisma.secrets.delete({ where: { id: item.id } });
-                // Send webhook for secret burned (last view, auto-deleted)
+            } else if (!item.isBurnable) {
+                // Last view for non-burnable secret
+                // Mark views as 0 but don't delete yet - allow file downloads
+                // The secret will be cleaned up by the expired secrets job
+                // Set expiresAt to now + 5 minutes to give time for file downloads
+                await prisma.secrets.update({
+                    where: { id: item.id },
+                    data: { 
+                        views: 0,
+                        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes grace period
+                    }
+                });
+                // Send webhook for secret burned (last view)
                 sendWebhook('secret.burned', { ...webhookData, viewsRemaining: 0 });
             } else {
+                // Burnable secret on last view - just decrement, don't delete
+                await prisma.secrets.update({
+                    where: { id: item.id },
+                    data: { views: 0 }
+                });
                 // Send webhook for secret view (burnable secret on last view)
                 sendWebhook('secret.viewed', { ...webhookData, viewsRemaining: 0 });
             }
@@ -180,6 +200,11 @@ const app = new Hono<{
             });
 
             if (!item) {
+                return c.json({ error: 'Secret not found' }, 404);
+            }
+
+            // Check if secret has no views remaining (already consumed)
+            if (item.views !== null && item.views <= 0) {
                 return c.json({ error: 'Secret not found' }, 404);
             }
 
