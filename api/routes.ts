@@ -22,7 +22,7 @@ const routes = new Hono()
     .route('/invites', inviteRoute)
     .route('/setup', setupRoute)
     .route('/api-keys', apiKeysRoute)
-    //  .route('/', openapi)
+    .route('/', openapi)
     .get('/healthz', (c) => c.text('Health OK'))
     .get('/config/social-providers', (c) => {
         const providers = getEnabledSocialProviders();
