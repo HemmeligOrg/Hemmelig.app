@@ -258,6 +258,7 @@
       "description": "Configuration de base de l'instance",
       "instance_name_label": "Nom de l'instance",
       "max_secrets_per_user_label": "Max secrets par utilisateur",
+      "max_secret_size_label": "Taille max du secret (Mo)",
       "instance_description_label": "Description de l'instance",
       "allow_registration_title": "Autoriser l'inscription",
       "allow_registration_description": "Permettre aux nouveaux utilisateurs de s'inscrire",

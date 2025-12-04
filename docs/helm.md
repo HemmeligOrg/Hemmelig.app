@@ -118,8 +118,6 @@ kubectl create secret generic my-hemmelig-secret \
 env:
   - name: HEMMELIG_ANALYTICS_ENABLED
     value: "true"
-  - name: HEMMELIG_MAX_FILE_SIZE_MB
-    value: "25"
 ```
 
 ## Ingress Examples

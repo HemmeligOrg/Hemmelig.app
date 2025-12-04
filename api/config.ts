@@ -92,9 +92,6 @@ const config = {
     server: {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
     },
-    file: {
-        maxSize: (Number(process.env.HEMMELIG_MAX_FILE_SIZE_MB) || 10) * 1024 * 1024, // Default 10MB
-    },
     trustedOrigins: [
         "https://hemmelig.app",
         ...(!isProduction ? ["http://localhost:5173"] : []),
@@ -107,7 +104,6 @@ const config = {
         requireEmailVerification: parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION),
         maxSecretsPerUser: parseNumber(process.env.HEMMELIG_MAX_SECRETS_PER_USER),
         defaultSecretExpiration: parseNumber(process.env.HEMMELIG_DEFAULT_SECRET_EXPIRATION),
-        maxSecretSize: parseNumber(process.env.HEMMELIG_MAX_SECRET_SIZE),
     },
     security: {
         allowPasswordProtection: parseBoolean(process.env.HEMMELIG_ALLOW_PASSWORD_PROTECTION),

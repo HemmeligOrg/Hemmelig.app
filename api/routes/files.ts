@@ -5,12 +5,19 @@ import { nanoid } from 'nanoid';
 import { writeFile, mkdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import prisma from '../lib/db';
-import config from '../config';
+import instanceSettings from '../instance-settings';
 
 const files = new Hono();
 
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
-const MAX_FILE_SIZE = config.get('file.maxSize') as number;
+
+// Get max file size from instance settings (in KB), convert to bytes
+// Default to 10MB (10240 KB) if not set
+const getMaxFileSize = (): number => {
+    const settings = instanceSettings.get('instanceSettings');
+    const maxSecretSizeKB = settings?.maxSecretSize ?? 10240;
+    return maxSecretSizeKB * 1024; // Convert KB to bytes
+};
 
 const fileIdParamSchema = z.object({
     id: z.string(),
@@ -54,8 +61,9 @@ files.post('/', async (c) => {
             return c.json({ error: 'File is required and must be a file.' }, 400);
         }
 
-        if (file.size > MAX_FILE_SIZE) {
-            return c.json({ error: `File size exceeds the limit of ${MAX_FILE_SIZE / 1024 / 1024}MB.` }, 413);
+        const maxFileSize = getMaxFileSize();
+        if (file.size > maxFileSize) {
+            return c.json({ error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` }, 413);
         }
 
         const id = nanoid();

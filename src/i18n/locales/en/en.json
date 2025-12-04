@@ -258,6 +258,7 @@
       "description": "Basic instance configuration",
       "instance_name_label": "Instance Name",
       "max_secrets_per_user_label": "Max Secrets per User",
+      "max_secret_size_label": "Max Secret Size (MB)",
       "instance_description_label": "Instance Description",
       "allow_registration_title": "Allow Registration",
       "allow_registration_description": "Allow new users to register",

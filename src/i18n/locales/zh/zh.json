@@ -258,6 +258,7 @@
       "description": "基本实例配置",
       "instance_name_label": "实例名称",
       "max_secrets_per_user_label": "每用户最大秘密数",
+      "max_secret_size_label": "最大秘密大小 (MB)",
       "instance_description_label": "实例描述",
       "allow_registration_title": "允许注册",
       "allow_registration_description": "允许新用户注册",

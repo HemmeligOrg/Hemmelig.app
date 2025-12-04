@@ -28,13 +28,6 @@ Complete reference for all environment variables supported by Hemmelig.
 | `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification for new accounts | `false` |
 | `HEMMELIG_MAX_SECRETS_PER_USER` | Maximum secrets a user can create | unlimited |
 | `HEMMELIG_DEFAULT_SECRET_EXPIRATION` | Default expiration time in seconds | `14400` (4 hours) |
-| `HEMMELIG_MAX_SECRET_SIZE` | Maximum secret size in bytes | - |
-
-## File Upload
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `HEMMELIG_MAX_FILE_SIZE_MB` | Maximum file upload size in megabytes | `10` |
 
 ## Security Settings
 
@@ -140,9 +133,6 @@ HEMMELIG_INSTANCE_DESCRIPTION=Secure secret sharing for our team
 HEMMELIG_ENABLE_RATE_LIMITING=true
 HEMMELIG_MAX_PASSWORD_ATTEMPTS=5
 
-# Files
-HEMMELIG_MAX_FILE_SIZE_MB=25
-
 # Analytics
 HEMMELIG_ANALYTICS_ENABLED=true
 HEMMELIG_ANALYTICS_HMAC_SECRET=your-analytics-hmac-secret
@@ -168,7 +158,6 @@ services:
       - NODE_ENV=production
       - HEMMELIG_PORT=3000
       - HEMMELIG_BASE_URL=https://secrets.example.com
-      - HEMMELIG_MAX_FILE_SIZE_MB=25
       - HEMMELIG_ANALYTICS_ENABLED=true
     volumes:
       - hemmelig_data:/data

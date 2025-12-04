@@ -258,6 +258,7 @@
       "description": "Grundlegende Instanzkonfiguration",
       "instance_name_label": "Instanzname",
       "max_secrets_per_user_label": "Max. Geheimnisse pro Benutzer",
+      "max_secret_size_label": "Max. Geheimisgröße (MB)",
       "instance_description_label": "Instanzbeschreibung",
       "allow_registration_title": "Registrierung erlauben",
       "allow_registration_description": "Neuen Benutzern die Registrierung erlauben",
