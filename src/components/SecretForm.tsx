@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { SecuritySettings } from './SecuritySettings';
 import { FileUpload } from './FileUpload';
 import { CreateButton } from './CreateButton';
 import { TitleField } from './TitleField';
-import { TemplateSelector } from './TemplateSelector';
 import Editor from './Editor';
 import { Modal } from './Modal';
 import { api } from '../lib/api';
@@ -21,16 +20,9 @@ export function SecretForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const editorRef = useRef<{ setContent: (content: string) => void } | null>(null);
 
   const handleFileChange = (files: File[]) => {
     setFiles(files);
-  };
-
-  const handleTemplateSelect = (content: string) => {
-    if (editorRef.current) {
-      editorRef.current.setContent(content);
-    }
   };
 
   const handleSubmit = async () => {
@@ -111,17 +103,9 @@ export function SecretForm() {
     <div className="space-y-4">
       {/* Main editor card */}
       <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6 shadow-xl">
-        <div className="flex items-center justify-end mb-3">
-          <TemplateSelector 
-            onSelect={handleTemplateSelect}
-            disabled={secret.trim().length > 0}
-          />
-        </div>
-        
         <Editor
           value={secret}
           onChange={(value) => setSecretData({ secret: value })}
-          onEditorReady={(editor) => { editorRef.current = editor; }}
         />
 
         <div className="mt-4">

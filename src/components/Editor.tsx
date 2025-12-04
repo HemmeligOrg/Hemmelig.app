@@ -18,6 +18,13 @@ import {
   IconSourceCode,
   IconStrikethrough,
   IconX,
+  IconFileText,
+  IconChevronDown,
+  IconPassword,
+  IconDatabase,
+  IconServer,
+  IconCreditCard,
+  IconMail,
 } from '@tabler/icons-react';
 import { Color } from '@tiptap/extension-color';
 import CharacterCount from '@tiptap/extension-character-count';
@@ -27,8 +34,11 @@ import TextStyle from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
-import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+// Context for passing onChange to MenuBar
+const EditorOnChangeContext = createContext<((content: string) => void) | undefined>(undefined);
 
 interface PasswordOptions {
   numbers: boolean;
@@ -322,6 +332,147 @@ const PasswordModal: FC<PasswordModalProps> = ({ isOpen, onClose, onSubmit }) =>
   );
 };
 
+// Template definitions
+interface Template {
+  id: string;
+  nameKey: string;
+  icon: ReactNode;
+  content: string;
+}
+
+const templates: Template[] = [
+  {
+    id: 'credentials',
+    nameKey: 'template_selector.templates.credentials',
+    icon: <IconPassword size={16} />,
+    content: `<p><strong>Login Credentials</strong></p>
+<p>Username: </p>
+<p>Password: </p>
+<p>URL: </p>
+<p>Notes: </p>`,
+  },
+  {
+    id: 'api_key',
+    nameKey: 'template_selector.templates.api_key',
+    icon: <IconKey size={16} />,
+    content: `<p><strong>API Key</strong></p>
+<p>Service: </p>
+<p>API Key: </p>
+<p>API Secret: </p>
+<p>Environment: </p>
+<p>Expires: </p>`,
+  },
+  {
+    id: 'database',
+    nameKey: 'template_selector.templates.database',
+    icon: <IconDatabase size={16} />,
+    content: `<p><strong>Database Credentials</strong></p>
+<p>Host: </p>
+<p>Port: </p>
+<p>Database: </p>
+<p>Username: </p>
+<p>Password: </p>
+<p>SSL: </p>`,
+  },
+  {
+    id: 'server',
+    nameKey: 'template_selector.templates.server',
+    icon: <IconServer size={16} />,
+    content: `<p><strong>Server Access</strong></p>
+<p>Hostname: </p>
+<p>IP Address: </p>
+<p>SSH Port: </p>
+<p>Username: </p>
+<p>Password / Key: </p>
+<p>Notes: </p>`,
+  },
+  {
+    id: 'credit_card',
+    nameKey: 'template_selector.templates.credit_card',
+    icon: <IconCreditCard size={16} />,
+    content: `<p><strong>Payment Card</strong></p>
+<p>Cardholder Name: </p>
+<p>Card Number: </p>
+<p>Expiry Date: </p>
+<p>CVV: </p>
+<p>Billing Address: </p>`,
+  },
+  {
+    id: 'email',
+    nameKey: 'template_selector.templates.email',
+    icon: <IconMail size={16} />,
+    content: `<p><strong>Email Account</strong></p>
+<p>Email: </p>
+<p>Password: </p>
+<p>IMAP Server: </p>
+<p>SMTP Server: </p>
+<p>Recovery Email: </p>`,
+  },
+];
+
+// Template Dropdown Component for toolbar
+interface TemplateDropdownProps {
+  onSelect: (content: string) => void;
+  disabled?: boolean;
+  buttonClass: string;
+}
+
+const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled, buttonClass }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const handleSelect = (template: Template) => {
+    onSelect(template.content);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <Tooltip text={t('template_selector.button')}>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          disabled={disabled}
+          className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
+        >
+          <IconFileText size={18} stroke={1.5} className="text-gray-600 dark:text-slate-300 mx-auto" />
+        </button>
+      </Tooltip>
+
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-10" 
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute left-0 top-full mt-1 z-20 w-56 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
+            <div className="p-2 border-b border-gray-200 dark:border-dark-600">
+              <p className="text-xs text-gray-500 dark:text-slate-400">
+                {t('template_selector.description')}
+              </p>
+            </div>
+            <div className="py-1">
+              {templates.map((template) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => handleSelect(template)}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors text-left"
+                >
+                  <span className="text-gray-500 dark:text-slate-400">
+                    {template.icon}
+                  </span>
+                  <span>{t(template.nameKey)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 // ReadOnlyMenuBar component for non-editable mode
 const ReadOnlyMenuBar: FC = () => {
   const { editor } = useCurrentEditor();
@@ -413,6 +564,7 @@ const ReadOnlyMenuBar: FC = () => {
 
 const MenuBar: FC = () => {
   const { editor } = useCurrentEditor();
+  const onChange = useContext(EditorOnChangeContext);
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -445,16 +597,30 @@ const MenuBar: FC = () => {
     [editor]
   );
 
+  const handleTemplateSubmit = useCallback(
+    (content: string) => {
+      if (!editor) return;
+      editor.commands.setContent(content);
+      if (onChange) {
+        onChange(content);
+      }
+    },
+    [editor, onChange]
+  );
+
   if (!editor) {
     return null;
   }
 
-  const buttonClass =
-    'p-2 bg-gray-200 dark:bg-dark-600/50 hover:bg-gray-300 dark:hover:bg-dark-500/50 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:scale-105 min-w-[44px] touch-manipulation';
-  const activeButtonClass =
-    'p-2 bg-teal-500 text-white transition-all duration-200 min-w-[44px] touch-manipulation';
+  // Check if editor has content (templates disabled when there's existing content)
+  const editorHasContent = !editor.isEmpty;
 
-  const groupClass = 'flex flex-wrap gap-1 w-full sm:w-auto';
+  const buttonClass =
+    'p-1.5 bg-gray-200 dark:bg-dark-600/50 hover:bg-gray-300 dark:hover:bg-dark-500/50 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:scale-105 min-w-[32px] touch-manipulation';
+  const activeButtonClass =
+    'p-1.5 bg-teal-500 text-white transition-all duration-200 min-w-[32px] touch-manipulation';
+
+  const groupClass = 'flex items-center gap-0.5';
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -487,9 +653,9 @@ const MenuBar: FC = () => {
         </div>
 
         <div
-          className={`${menuOpen ? 'block' : 'hidden'} sm:block p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30`}
+          className={`${menuOpen ? 'block' : 'hidden'} sm:block p-2 sm:p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30`}
         >
-          <div className="flex flex-col justify-center sm:flex-row gap-2 sm:gap-0 sm:flex-wrap">
+          <div className="flex flex-col sm:flex-row sm:flex-nowrap gap-2 sm:gap-1 sm:items-center">
             <div className={groupClass}>
               <Tooltip text={t('editor.tooltips.bold')}>
                 <button
@@ -566,9 +732,14 @@ const MenuBar: FC = () => {
                   <IconKey size={18} stroke={1.5} className="text-gray-600 dark:text-slate-300 mx-auto" />
                 </button>
               </Tooltip>
+              <TemplateDropdown
+                onSelect={handleTemplateSubmit}
+                disabled={editorHasContent}
+                buttonClass={buttonClass}
+              />
             </div>
 
-            <div className="hidden sm:block w-px h-8 bg-gray-300 dark:bg-dark-600 mx-2"></div>
+            <div className="hidden sm:block w-px h-6 bg-gray-300 dark:bg-dark-600 mx-1"></div>
             <div className="block sm:hidden w-full h-px bg-gray-300 dark:bg-dark-600 my-1"></div>
 
             <div className={groupClass}>
@@ -626,7 +797,7 @@ const MenuBar: FC = () => {
               </Tooltip>
             </div>
 
-            <div className="hidden sm:block w-px h-8 bg-gray-300 dark:bg-dark-600 mx-2"></div>
+            <div className="hidden sm:block w-px h-6 bg-gray-300 dark:bg-dark-600 mx-1"></div>
             <div className="block sm:hidden w-full h-px bg-gray-300 dark:bg-dark-600 my-1"></div>
 
             <div className={groupClass}>
@@ -734,46 +905,48 @@ export default function Editor({
 }: EditorProps) {
   const [characterCount, setCharacterCount] = useState(0);
   return (
-    <div className="space-y-3 sm:space-y-4 relative">
-      <EditorProvider
-        slotBefore={editable ? <MenuBar /> : <ReadOnlyMenuBar />}
-        extensions={extensions}
-        editable={editable}
-        content={value}
-        onUpdate={({ editor }) => {
-          if (onChange) {
-            if (editor.isEmpty) {
-              onChange('');
-            } else {
-              onChange(editor.getHTML());
+    <EditorOnChangeContext.Provider value={onChange}>
+      <div className="space-y-3 sm:space-y-4 relative">
+        <EditorProvider
+          slotBefore={editable ? <MenuBar /> : <ReadOnlyMenuBar />}
+          extensions={extensions}
+          editable={editable}
+          content={value}
+          onUpdate={({ editor }) => {
+            if (onChange) {
+              if (editor.isEmpty) {
+                onChange('');
+              } else {
+                onChange(editor.getHTML());
+              }
             }
-          }
-          setCharacterCount(editor.storage.characterCount.characters());
-        }}
-        onCreate={({ editor }) => {
-          setCharacterCount(editor.storage.characterCount.characters());
-          if (onEditorReady) {
-            onEditorReady({
-              setContent: (content: string) => {
-                editor.commands.setContent(content);
-                if (onChange) {
-                  onChange(content);
-                }
-              },
-            });
-          }
-        }}
-        editorProps={{
-          attributes: {
-            class: 'w-full min-h-[12rem] sm:min-h-[16rem] p-4 sm:p-6 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-sm sm:text-base prose prose-sm max-w-none prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-900 dark:prose-headings:text-slate-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-800 dark:prose-p:text-slate-200 prose-strong:text-gray-900 dark:prose-strong:text-slate-200 prose-strong:font-bold prose-em:text-gray-800 dark:prose-em:text-slate-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-800 dark:prose-li:text-slate-200 prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:underline prose-a:font-medium hover:prose-a:text-teal-500 dark:hover:prose-a:text-teal-300 prose-code:bg-gray-200 dark:prose-code:bg-dark-800 prose-code:text-gray-800 dark:prose-code:text-slate-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-200 dark:prose-pre:bg-dark-900 prose-pre:text-gray-900 dark:prose-pre:text-white prose-pre:p-4 prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-dark-500 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-600 dark:prose-blockquote:text-slate-300 prose-hr:my-6 prose-hr:border-gray-300 dark:prose-hr:border-dark-600',
-          },
-        }}
-        {...props}
-      >
-        <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-gray-500 dark:text-slate-400 bg-white dark:bg-dark-800/80 px-2 py-1 rounded">
-          {characterCount} characters
-        </div>
-      </EditorProvider>
-    </div>
+            setCharacterCount(editor.storage.characterCount.characters());
+          }}
+          onCreate={({ editor }) => {
+            setCharacterCount(editor.storage.characterCount.characters());
+            if (onEditorReady) {
+              onEditorReady({
+                setContent: (content: string) => {
+                  editor.commands.setContent(content);
+                  if (onChange) {
+                    onChange(content);
+                  }
+                },
+              });
+            }
+          }}
+          editorProps={{
+            attributes: {
+              class: 'w-full min-h-[12rem] sm:min-h-[16rem] p-4 sm:p-6 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-sm sm:text-base prose prose-sm max-w-none prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-900 dark:prose-headings:text-slate-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-800 dark:prose-p:text-slate-200 prose-strong:text-gray-900 dark:prose-strong:text-slate-200 prose-strong:font-bold prose-em:text-gray-800 dark:prose-em:text-slate-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-800 dark:prose-li:text-slate-200 prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:underline prose-a:font-medium hover:prose-a:text-teal-500 dark:hover:prose-a:text-teal-300 prose-code:bg-gray-200 dark:prose-code:bg-dark-800 prose-code:text-gray-800 dark:prose-code:text-slate-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-200 dark:prose-pre:bg-dark-900 prose-pre:text-gray-900 dark:prose-pre:text-white prose-pre:p-4 prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-dark-500 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-600 dark:prose-blockquote:text-slate-300 prose-hr:my-6 prose-hr:border-gray-300 dark:prose-hr:border-dark-600',
+            },
+          }}
+          {...props}
+        >
+          <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-gray-500 dark:text-slate-400 bg-white dark:bg-dark-800/80 px-2 py-1 rounded">
+            {characterCount} characters
+          </div>
+        </EditorProvider>
+      </div>
+    </EditorOnChangeContext.Provider>
   );
 }
