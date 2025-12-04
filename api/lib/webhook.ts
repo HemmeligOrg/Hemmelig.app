@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
-import prisma from './db';
 import instanceSettings from '../instance-settings';
+import prisma from './db';
 
 export type WebhookEvent = 'secret.viewed' | 'secret.burned' | 'apikey.created';
 
@@ -28,7 +28,10 @@ function signPayload(payload: string, secret: string): string {
     return createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-export async function sendWebhook(event: WebhookEvent, data: WebhookPayload['data']): Promise<void> {
+export async function sendWebhook(
+    event: WebhookEvent,
+    data: WebhookPayload['data']
+): Promise<void> {
     try {
         let settings = instanceSettings.get('instanceSettings');
         if (!settings) {

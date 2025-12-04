@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
 import { swaggerUI } from '@hono/swagger-ui';
+import { Hono } from 'hono';
 
 const openapi = new Hono();
 
@@ -7,7 +7,8 @@ const spec = {
     openapi: '3.0.3',
     info: {
         title: 'Hemmelig API',
-        description: 'API for Hemmelig - a secure secret sharing application. All encryption/decryption happens client-side.',
+        description:
+            'API for Hemmelig - a secure secret sharing application. All encryption/decryption happens client-side.',
         version: '1.0.0',
         contact: {
             name: 'Hemmelig',
@@ -41,7 +42,9 @@ const spec = {
                 responses: {
                     '200': {
                         description: 'Service is healthy',
-                        content: { 'text/plain': { schema: { type: 'string', example: 'Health OK' } } },
+                        content: {
+                            'text/plain': { schema: { type: 'string', example: 'Health OK' } },
+                        },
                     },
                 },
             },
@@ -102,7 +105,8 @@ const spec = {
             post: {
                 tags: ['Secrets'],
                 summary: 'Create a new secret',
-                description: 'Create a new encrypted secret. The secret content should be encrypted client-side before sending.',
+                description:
+                    'Create a new encrypted secret. The secret content should be encrypted client-side before sending.',
                 requestBody: {
                     required: true,
                     content: {
@@ -132,7 +136,8 @@ const spec = {
             post: {
                 tags: ['Secrets'],
                 summary: 'Get a secret',
-                description: 'Retrieve an encrypted secret by ID. Password required if secret is password-protected.',
+                description:
+                    'Retrieve an encrypted secret by ID. Password required if secret is password-protected.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -401,7 +406,11 @@ const spec = {
                                         {
                                             type: 'object',
                                             properties: {
-                                                key: { type: 'string', description: 'The full API key (only shown once)' },
+                                                key: {
+                                                    type: 'string',
+                                                    description:
+                                                        'The full API key (only shown once)',
+                                                },
                                             },
                                         },
                                     ],
@@ -491,7 +500,11 @@ const spec = {
                     {
                         name: 'timeRange',
                         in: 'query',
-                        schema: { type: 'string', enum: ['7d', '30d', '90d', '1y'], default: '30d' },
+                        schema: {
+                            type: 'string',
+                            enum: ['7d', '30d', '90d', '1y'],
+                            default: '30d',
+                        },
                     },
                 ],
                 responses: {
@@ -591,7 +604,12 @@ const spec = {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    maxUses: { type: 'integer', minimum: 1, maximum: 100, default: 1 },
+                                    maxUses: {
+                                        type: 'integer',
+                                        minimum: 1,
+                                        maximum: 100,
+                                        default: 1,
+                                    },
                                     expiresInDays: { type: 'integer', minimum: 1, maximum: 365 },
                                 },
                             },
@@ -839,11 +857,22 @@ const spec = {
                     title: { type: 'string', nullable: true },
                     salt: { type: 'string', description: 'Salt used for encryption' },
                     password: { type: 'string', description: 'Optional password protection' },
-                    expiresAt: { type: 'integer', description: 'Expiration time in seconds from now' },
+                    expiresAt: {
+                        type: 'integer',
+                        description: 'Expiration time in seconds from now',
+                    },
                     views: { type: 'integer', default: 1, description: 'Number of allowed views' },
                     isBurnable: { type: 'boolean', default: false },
-                    ipRange: { type: 'string', nullable: true, description: 'IP range restriction (CIDR notation)' },
-                    fileIds: { type: 'array', items: { type: 'string' }, description: 'IDs of uploaded files to attach' },
+                    ipRange: {
+                        type: 'string',
+                        nullable: true,
+                        description: 'IP range restriction (CIDR notation)',
+                    },
+                    fileIds: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'IDs of uploaded files to attach',
+                    },
                 },
             },
             PaginationMeta: {

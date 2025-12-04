@@ -38,64 +38,64 @@ helm install hemmelig ./helm/hemmelig -f my-values.yaml
 ```yaml
 # my-values.yaml
 config:
-  betterAuthSecret: "your-secret-key-min-32-chars"
-  baseUrl: "https://hemmelig.example.com"
+    betterAuthSecret: 'your-secret-key-min-32-chars'
+    baseUrl: 'https://hemmelig.example.com'
 
 ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  hosts:
-    - host: hemmelig.example.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: hemmelig-tls
-      hosts:
-        - hemmelig.example.com
+    enabled: true
+    className: nginx
+    annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+        - host: hemmelig.example.com
+          paths:
+              - path: /
+                pathType: Prefix
+    tls:
+        - secretName: hemmelig-tls
+          hosts:
+              - hemmelig.example.com
 
 persistence:
-  data:
-    enabled: true
-    size: 1Gi
-  uploads:
-    enabled: true
-    size: 10Gi
+    data:
+        enabled: true
+        size: 1Gi
+    uploads:
+        enabled: true
+        size: 10Gi
 
 resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+    limits:
+        cpu: 500m
+        memory: 512Mi
+    requests:
+        cpu: 100m
+        memory: 128Mi
 ```
 
 ## Configuration
 
 ### Required Values
 
-| Parameter | Description |
-|-----------|-------------|
+| Parameter                 | Description                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
 | `config.betterAuthSecret` | Authentication secret (min 32 characters). Generate with `openssl rand -base64 32` |
-| `config.baseUrl` | Public URL of your instance (required for OAuth) |
+| `config.baseUrl`          | Public URL of your instance (required for OAuth)                                   |
 
 ### Common Values
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `replicaCount` | Number of replicas | `1` |
-| `image.repository` | Image repository | `hemmelig/hemmelig` |
-| `image.tag` | Image tag | `v7` |
-| `service.type` | Kubernetes service type | `ClusterIP` |
-| `service.port` | Service port | `3000` |
-| `ingress.enabled` | Enable ingress | `false` |
-| `persistence.data.enabled` | Enable persistence for database | `true` |
-| `persistence.data.size` | Database PVC size | `1Gi` |
-| `persistence.uploads.enabled` | Enable persistence for uploads | `true` |
-| `persistence.uploads.size` | Uploads PVC size | `5Gi` |
+| Parameter                     | Description                     | Default             |
+| ----------------------------- | ------------------------------- | ------------------- |
+| `replicaCount`                | Number of replicas              | `1`                 |
+| `image.repository`            | Image repository                | `hemmelig/hemmelig` |
+| `image.tag`                   | Image tag                       | `v7`                |
+| `service.type`                | Kubernetes service type         | `ClusterIP`         |
+| `service.port`                | Service port                    | `3000`              |
+| `ingress.enabled`             | Enable ingress                  | `false`             |
+| `persistence.data.enabled`    | Enable persistence for database | `true`              |
+| `persistence.data.size`       | Database PVC size               | `1Gi`               |
+| `persistence.uploads.enabled` | Enable persistence for uploads  | `true`              |
+| `persistence.uploads.size`    | Uploads PVC size                | `5Gi`               |
 
 ### Using Existing Secrets
 
@@ -116,8 +116,8 @@ kubectl create secret generic my-hemmelig-secret \
 
 ```yaml
 env:
-  - name: HEMMELIG_ANALYTICS_ENABLED
-    value: "true"
+    - name: HEMMELIG_ANALYTICS_ENABLED
+      value: 'true'
 ```
 
 ## Ingress Examples
@@ -126,30 +126,30 @@ env:
 
 ```yaml
 ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-  hosts:
-    - host: hemmelig.example.com
-      paths:
-        - path: /
-          pathType: Prefix
+    enabled: true
+    className: nginx
+    annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: '50m'
+    hosts:
+        - host: hemmelig.example.com
+          paths:
+              - path: /
+                pathType: Prefix
 ```
 
 ### Traefik Ingress
 
 ```yaml
 ingress:
-  enabled: true
-  className: traefik
-  annotations:
-    traefik.ingress.kubernetes.io/router.tls: "true"
-  hosts:
-    - host: hemmelig.example.com
-      paths:
-        - path: /
-          pathType: Prefix
+    enabled: true
+    className: traefik
+    annotations:
+        traefik.ingress.kubernetes.io/router.tls: 'true'
+    hosts:
+        - host: hemmelig.example.com
+          paths:
+              - path: /
+                pathType: Prefix
 ```
 
 ## Upgrading

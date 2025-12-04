@@ -1,20 +1,20 @@
-import { Hono } from 'hono';
-import { hash, compare } from '../lib/password'
 import { zValidator } from '@hono/zod-validator';
+import { Hono } from 'hono';
+import { auth } from '../auth';
+import instanceSettings from '../instance-settings';
 import prisma from '../lib/db';
+import { compare, hash } from '../lib/password';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
+import { apiKeyOrAuthMiddleware } from '../middlewares/auth';
+import { ipRestriction } from '../middlewares/ip-restriction';
 import {
     createSecretsSchema,
     getSecretSchema,
+    processSecretsQueryParams,
     secretsIdParamSchema,
     secretsQuerySchema,
-    processSecretsQueryParams,
 } from '../validations/secrets';
-import { authMiddleware, apiKeyOrAuthMiddleware } from '../middlewares/auth';
-import { auth } from '../auth';
-import { ipRestriction } from '../middlewares/ip-restriction';
-import instanceSettings from '../instance-settings';
 
 interface SecretCreateData {
     salt: string;
@@ -32,9 +32,9 @@ interface SecretCreateData {
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
-    }
+    };
 }>()
-    .get('/', apiKeyOrAuthMiddleware, zValidator('query', secretsQuerySchema), async c => {
+    .get('/', apiKeyOrAuthMiddleware, zValidator('query', secretsQuerySchema), async (c) => {
         try {
             const user = c.get('user');
             if (!user) {
@@ -60,14 +60,14 @@ const app = new Hono<{
                         ipRange: true,
                         isBurnable: true,
                         _count: {
-                            select: { files: true }
-                        }
-                    }
+                            select: { files: true },
+                        },
+                    },
                 }),
                 prisma.secrets.count({ where: whereClause }),
             ]);
 
-            const formattedItems = items.map(item => ({
+            const formattedItems = items.map((item) => ({
                 id: item.id,
                 createdAt: item.createdAt,
                 expiresAt: item.expiresAt,
@@ -90,12 +90,114 @@ const app = new Hono<{
             });
         } catch (error) {
             console.error('Failed to retrieve secrets:', error);
-            return c.json({
-                error: 'Failed to retrieve secrets',
-            }, 500);
+            return c.json(
+                {
+                    error: 'Failed to retrieve secrets',
+                },
+                500
+            );
         }
     })
-    .post('/:id', zValidator('param', secretsIdParamSchema), zValidator('json', getSecretSchema), ipRestriction, async c => {
+    .post(
+        '/:id',
+        zValidator('param', secretsIdParamSchema),
+        zValidator('json', getSecretSchema),
+        ipRestriction,
+        async (c) => {
+            try {
+                const { id } = c.req.valid('param');
+
+                const item = await prisma.secrets.findUnique({
+                    where: { id },
+                    select: {
+                        id: true,
+                        secret: true,
+                        title: true,
+                        ipRange: true,
+                        views: true,
+                        expiresAt: true,
+                        createdAt: true,
+                        isBurnable: true,
+                        password: true,
+                        salt: true,
+                        files: {
+                            select: { id: true, filename: true },
+                        },
+                    },
+                });
+
+                if (!item) {
+                    return c.json({ error: 'Secret not found' }, 404);
+                }
+
+                // Check if secret has no views remaining (already consumed)
+                if (item.views !== null && item.views <= 0) {
+                    return c.json({ error: 'Secret not found' }, 404);
+                }
+
+                if (item.password) {
+                    const data = c.req.valid('json');
+                    const isValidPassword = await compare(data.password!, item.password);
+
+                    if (!isValidPassword) {
+                        return c.json({ error: 'Invalid password' }, 401);
+                    }
+                }
+
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { password: _password, ...itemWithoutPassword } = item;
+
+                const webhookData = {
+                    secretId: item.id,
+                    hasPassword: !!item.password,
+                    hasIpRestriction: !!item.ipRange,
+                    viewsRemaining: item.views! - 1,
+                };
+
+                if (item.views! > 1) {
+                    await prisma.secrets.update({
+                        where: { id: item.id },
+                        data: { views: { decrement: 1 } },
+                    });
+                    // Send webhook for secret view
+                    sendWebhook('secret.viewed', webhookData);
+                } else if (!item.isBurnable) {
+                    // Last view for non-burnable secret
+                    // Mark views as 0 but don't delete yet - allow file downloads
+                    // The secret will be cleaned up by the expired secrets job
+                    // Set expiresAt to now + 5 minutes to give time for file downloads
+                    await prisma.secrets.update({
+                        where: { id: item.id },
+                        data: {
+                            views: 0,
+                            expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes grace period
+                        },
+                    });
+                    // Send webhook for secret burned (last view)
+                    sendWebhook('secret.burned', { ...webhookData, viewsRemaining: 0 });
+                } else {
+                    // Burnable secret on last view - just decrement, don't delete
+                    await prisma.secrets.update({
+                        where: { id: item.id },
+                        data: { views: 0 },
+                    });
+                    // Send webhook for secret view (burnable secret on last view)
+                    sendWebhook('secret.viewed', { ...webhookData, viewsRemaining: 0 });
+                }
+
+                return c.json(itemWithoutPassword);
+            } catch (error) {
+                console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
+                return c.json(
+                    {
+                        error: 'Failed to retrieve item',
+                    },
+                    500
+                );
+            }
+        }
+    )
+    .get('/:id/check', zValidator('param', secretsIdParamSchema), ipRestriction, async (c) => {
         try {
             const { id } = c.req.valid('param');
 
@@ -103,100 +205,10 @@ const app = new Hono<{
                 where: { id },
                 select: {
                     id: true,
-                    secret: true,
-                    title: true,
-                    ipRange: true,
-                    views: true,
-                    expiresAt: true,
-                    createdAt: true,
-                    isBurnable: true,
-                    password: true,
-                    salt: true,
-                    files: {
-                        select: { id: true, filename: true }
-                    }
-                }
-            });
-
-            if (!item) {
-                return c.json({ error: 'Secret not found' }, 404);
-            }
-
-            // Check if secret has no views remaining (already consumed)
-            if (item.views !== null && item.views <= 0) {
-                return c.json({ error: 'Secret not found' }, 404);
-            }
-
-            if (item.password) {
-                const data = c.req.valid('json');
-                const isValidPassword = await compare(data.password!, item.password);
-
-                if (!isValidPassword) {
-                    return c.json({ error: 'Invalid password' }, 401);
-                }
-            }
-
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { password: _password, ...itemWithoutPassword } = item;
-
-            const webhookData = {
-                secretId: item.id,
-                hasPassword: !!item.password,
-                hasIpRestriction: !!item.ipRange,
-                viewsRemaining: item.views! - 1,
-            };
-
-            if (item.views! > 1) {
-                await prisma.secrets.update({
-                    where: { id: item.id },
-                    data: { views: { decrement: 1 } }
-                });
-                // Send webhook for secret view
-                sendWebhook('secret.viewed', webhookData);
-            } else if (!item.isBurnable) {
-                // Last view for non-burnable secret
-                // Mark views as 0 but don't delete yet - allow file downloads
-                // The secret will be cleaned up by the expired secrets job
-                // Set expiresAt to now + 5 minutes to give time for file downloads
-                await prisma.secrets.update({
-                    where: { id: item.id },
-                    data: { 
-                        views: 0,
-                        expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes grace period
-                    }
-                });
-                // Send webhook for secret burned (last view)
-                sendWebhook('secret.burned', { ...webhookData, viewsRemaining: 0 });
-            } else {
-                // Burnable secret on last view - just decrement, don't delete
-                await prisma.secrets.update({
-                    where: { id: item.id },
-                    data: { views: 0 }
-                });
-                // Send webhook for secret view (burnable secret on last view)
-                sendWebhook('secret.viewed', { ...webhookData, viewsRemaining: 0 });
-            }
-
-            return c.json(itemWithoutPassword);
-        } catch (error) {
-            console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
-            return c.json({
-                error: 'Failed to retrieve item',
-            }, 500);
-        }
-    })
-    .get('/:id/check', zValidator('param', secretsIdParamSchema), ipRestriction, async c => {
-        try {
-            const { id } = c.req.valid('param');
-
-            const item = await prisma.secrets.findUnique({
-                where: { id },
-                select: {
-                    id: true,
                     views: true,
                     title: true,
                     password: true,
-                }
+                },
             });
 
             if (!item) {
@@ -215,15 +227,18 @@ const app = new Hono<{
             });
         } catch (error) {
             console.error(`Failed to check secret ${c.req.param('id')}:`, error);
-            return c.json({
-                error: 'Failed to check secret',
-            }, 500);
+            return c.json(
+                {
+                    error: 'Failed to check secret',
+                },
+                500
+            );
         }
     })
-    .post('/', zValidator('json', createSecretsSchema), async c => {
+    .post('/', zValidator('json', createSecretsSchema), async (c) => {
         try {
             const user = c.get('user');
-            
+
             // Check if only registered users can create secrets
             let settings = instanceSettings.get('instanceSettings');
             if (!settings) {
@@ -236,7 +251,7 @@ const app = new Hono<{
             if (settings?.requireRegisteredUser && !user) {
                 return c.json({ error: 'Only registered users can create secrets' }, 401);
             }
-            
+
             const validatedData = c.req.valid('json');
             const { expiresAt, password, fileIds, salt, ...rest } = validatedData;
 
@@ -262,25 +277,31 @@ const app = new Hono<{
 
             if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
                 const prismaError = error as { meta?: { target?: string } };
-                return c.json({
-                    error: 'Could not create secrets',
-                    details: prismaError.meta?.target,
-                }, 409);
+                return c.json(
+                    {
+                        error: 'Could not create secrets',
+                        details: prismaError.meta?.target,
+                    },
+                    409
+                );
             }
 
-            return c.json({
-                error: 'Failed to create secret',
-            }, 500);
+            return c.json(
+                {
+                    error: 'Failed to create secret',
+                },
+                500
+            );
         }
     })
-    .delete('/:id', zValidator('param', secretsIdParamSchema), async c => {
+    .delete('/:id', zValidator('param', secretsIdParamSchema), async (c) => {
         try {
             const { id } = c.req.valid('param');
 
             // Get secret info before deleting for webhook
             const secret = await prisma.secrets.findUnique({
                 where: { id },
-                select: { id: true, password: true, ipRange: true }
+                select: { id: true, password: true, ipRange: true },
             });
 
             await prisma.secrets.delete({ where: { id } });

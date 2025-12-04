@@ -1,12 +1,11 @@
-import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
-import { nanoid } from 'nanoid';
 import { createHash, randomBytes } from 'crypto';
-import prisma from '../lib/db';
-import { authMiddleware } from '../middlewares/auth';
+import { Hono } from 'hono';
+import { z } from 'zod';
 import { auth } from '../auth';
+import prisma from '../lib/db';
 import { sendWebhook } from '../lib/webhook';
+import { authMiddleware } from '../middlewares/auth';
 
 const createApiKeySchema = z.object({
     name: z.string().min(1).max(100),
@@ -30,7 +29,7 @@ function generateApiKey(): string {
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
-    }
+    };
 }>()
     .use(authMiddleware)
     .get('/', async (c) => {
@@ -111,10 +110,13 @@ const app = new Hono<{
             });
 
             // Return the raw key only once - it cannot be retrieved again
-            return c.json({
-                ...apiKey,
-                key: rawKey,
-            }, 201);
+            return c.json(
+                {
+                    ...apiKey,
+                    key: rawKey,
+                },
+                201
+            );
         } catch (error) {
             console.error('Failed to create API key:', error);
             return c.json({ error: 'Failed to create API key' }, 500);

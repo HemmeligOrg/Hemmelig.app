@@ -1,14 +1,14 @@
-import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
+import { Hono } from 'hono';
+import { auth } from '../auth';
+import prisma from '../lib/db';
 import { authMiddleware } from '../middlewares/auth';
 import { updateAccountSchema, updatePasswordSchema } from '../validations/account';
-import prisma from '../lib/db';
-import { auth } from '../auth';
 
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
-    }
+    };
 }>();
 
 // Get user account information
@@ -39,7 +39,7 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
         if (username) {
             const existingUser = await prisma.user.findUnique({
                 where: { username },
-                select: { id: true }
+                select: { id: true },
             });
             if (existingUser && existingUser.id !== user.id) {
                 return c.json({ error: 'Username is already taken' }, 409);
@@ -78,8 +78,8 @@ app.put('/password', authMiddleware, zValidator('json', updatePasswordSchema), a
         const existingUser = await prisma.user.findUnique({
             where: { id: user.id },
             include: {
-                accounts: true
-            }
+                accounts: true,
+            },
         });
 
         const currentPasswordHash = existingUser?.accounts?.[0]?.password;
@@ -87,7 +87,10 @@ app.put('/password', authMiddleware, zValidator('json', updatePasswordSchema), a
             return c.json({ error: 'User not found or no password set' }, 404);
         }
 
-        const isCurrentPasswordValid = await ctx.password.verify({ hash: currentPasswordHash, password: currentPassword });
+        const isCurrentPasswordValid = await ctx.password.verify({
+            hash: currentPasswordHash,
+            password: currentPassword,
+        });
 
         if (!isCurrentPasswordValid) {
             return c.json({ error: 'Invalid current password' }, 400);

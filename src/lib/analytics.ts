@@ -2,7 +2,7 @@ const TRACKED_PATHS = ['/', '/secret'];
 
 export async function trackPageView(path: string): Promise<void> {
     // Only track specific paths
-    const shouldTrack = TRACKED_PATHS.some(trackedPath => {
+    const shouldTrack = TRACKED_PATHS.some((trackedPath) => {
         if (trackedPath === '/') {
             return path === '/';
         }

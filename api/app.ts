@@ -1,28 +1,27 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { csrf } from 'hono/csrf';
+import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
-import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
-import { csrf } from 'hono/csrf';
-import { cors } from 'hono/cors';
 
-import { auth } from "./auth";
-import prisma from './lib/db';
-import routes from './routes';
-import startJobs from './jobs';
-import ratelimit from './middlewares/ratelimit';
+import { auth } from './auth';
 import config from './config';
+import startJobs from './jobs';
+import prisma from './lib/db';
+import ratelimit from './middlewares/ratelimit';
+import routes from './routes';
 
 // Initialize Hono app
 const app = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null;
-    }
+    };
 }>();
-
 
 // Start the background jobs
 startJobs();
@@ -37,21 +36,23 @@ app.use(`/*`, requestId());
 app.use(`/*`, timeout(15 * 1000)); // 15 seconds timeout to the API calls
 app.use(ratelimit);
 
-
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag
 app.use(
     `/*`,
     etag({
         retainedHeaders: ['x-message', ...RETAINED_304_HEADERS],
-    }),
+    })
 );
 
 // Configure CORS with trusted origins
 const trustedOrigins = config.get<string[]>('trustedOrigins', []);
-app.use(`/*`, cors({
-    origin: trustedOrigins,
-    credentials: true,
-}));
+app.use(
+    `/*`,
+    cors({
+        origin: trustedOrigins,
+        credentials: true,
+    })
+);
 
 // Configure CSRF protection (exclude auth routes for OAuth callbacks)
 app.use('/*', async (c, next) => {
@@ -65,29 +66,27 @@ app.use('/*', async (c, next) => {
 });
 
 // Custom middlewares
-app.use("*", async (c, next) => {
+app.use('*', async (c, next) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
     if (!session) {
-        c.set("user", null);
-        c.set("session", null);
+        c.set('user', null);
+        c.set('session', null);
         return next();
     }
 
-    c.set("user", session.user);
-    c.set("session", session.session);
+    c.set('user', session.user);
+    c.set('session', session.session);
     return next();
 });
 
 // Add the routes
-app.on(["POST", "GET"], `/auth/*`, (c) => {
+app.on(['POST', 'GET'], `/auth/*`, (c) => {
     return auth.handler(c.req.raw);
 });
 
-// Add the application routes 
-app.route("/", routes);
-
-
+// Add the application routes
+app.route('/', routes);
 
 // https://hono.dev/docs/guides/rpc#rpc
 export type AppType = typeof routes;

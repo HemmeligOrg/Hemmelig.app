@@ -1,10 +1,10 @@
-import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
+import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
+import { z } from 'zod';
+import { auth } from '../auth';
 import prisma from '../lib/db';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
-import { auth } from '../auth';
 
 const createInviteSchema = z.object({
     maxUses: z.number().int().min(1).max(100).optional().default(1),
@@ -41,49 +41,56 @@ export const invitePublicRoute = new Hono()
             return c.json({ valid: false, error: 'Failed to validate invite code' }, 500);
         }
     })
-    .post('/use', zValidator('json', z.object({ code: z.string(), userId: z.string() })), async (c) => {
-        const { code, userId } = c.req.valid('json');
+    .post(
+        '/use',
+        zValidator('json', z.object({ code: z.string(), userId: z.string() })),
+        async (c) => {
+            const { code, userId } = c.req.valid('json');
 
-        try {
-            const invite = await prisma.inviteCode.findUnique({
-                where: { code: code.toUpperCase() },
-            });
+            try {
+                const invite = await prisma.inviteCode.findUnique({
+                    where: { code: code.toUpperCase() },
+                });
 
-            if (!invite || !invite.isActive) {
-                return c.json({ success: false, error: 'Invalid invite code' }, 400);
+                if (!invite || !invite.isActive) {
+                    return c.json({ success: false, error: 'Invalid invite code' }, 400);
+                }
+
+                if (invite.expiresAt && new Date() > invite.expiresAt) {
+                    return c.json({ success: false, error: 'Invite code has expired' }, 400);
+                }
+
+                if (invite.maxUses && invite.uses >= invite.maxUses) {
+                    return c.json(
+                        { success: false, error: 'Invite code has reached maximum uses' },
+                        400
+                    );
+                }
+
+                await prisma.$transaction([
+                    prisma.inviteCode.update({
+                        where: { id: invite.id },
+                        data: { uses: { increment: 1 } },
+                    }),
+                    prisma.user.update({
+                        where: { id: userId },
+                        data: { inviteCodeUsed: code.toUpperCase() },
+                    }),
+                ]);
+
+                return c.json({ success: true });
+            } catch (error) {
+                console.error('Failed to use invite code:', error);
+                return c.json({ success: false, error: 'Failed to use invite code' }, 500);
             }
-
-            if (invite.expiresAt && new Date() > invite.expiresAt) {
-                return c.json({ success: false, error: 'Invite code has expired' }, 400);
-            }
-
-            if (invite.maxUses && invite.uses >= invite.maxUses) {
-                return c.json({ success: false, error: 'Invite code has reached maximum uses' }, 400);
-            }
-
-            await prisma.$transaction([
-                prisma.inviteCode.update({
-                    where: { id: invite.id },
-                    data: { uses: { increment: 1 } },
-                }),
-                prisma.user.update({
-                    where: { id: userId },
-                    data: { inviteCodeUsed: code.toUpperCase() },
-                }),
-            ]);
-
-            return c.json({ success: true });
-        } catch (error) {
-            console.error('Failed to use invite code:', error);
-            return c.json({ success: false, error: 'Failed to use invite code' }, 500);
         }
-    });
+    );
 
 // Protected routes for admin invite management
 export const inviteRoute = new Hono<{
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
-    }
+    };
 }>()
     .use(authMiddleware)
     .use(checkAdmin)

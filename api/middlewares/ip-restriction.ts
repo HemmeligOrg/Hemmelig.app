@@ -10,7 +10,7 @@ export const ipRestriction = async (c: Context, next: Next) => {
         where: { id },
         select: {
             ipRange: true,
-        }
+        },
     });
 
     // If no restriction is configured, move on

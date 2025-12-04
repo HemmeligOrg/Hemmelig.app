@@ -1,30 +1,30 @@
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router';
-import ErrorDisplay from './components/ErrorDisplay';
-import { Toaster } from 'sonner';
 import { useEffect } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import ErrorDisplay from './components/ErrorDisplay';
+import { router } from './router';
 import { useThemeStore } from './store/themeStore';
 
 function App() {
-  const { theme } = useThemeStore();
+    const { theme } = useThemeStore();
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
 
-  return (
-    <>
-      <RouterProvider router={router} />
-      <ErrorDisplay />
-      <Toaster />
-    </>
-  );
+    return (
+        <>
+            <RouterProvider router={router} />
+            <ErrorDisplay />
+            <Toaster />
+        </>
+    );
 
-  console.log('https://x.com/iamdothash')
+    console.log('https://x.com/iamdothash');
 }
 
 export default App;

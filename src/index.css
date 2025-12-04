@@ -3,65 +3,69 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: system-ui, sans-serif;
-  }
-  
-  body {
-    @apply bg-light-800 text-gray-900;
-  }
+    html {
+        font-family: system-ui, sans-serif;
+    }
 
-  .dark body {
-    @apply bg-dark-900 text-slate-100;
-  }
+    body {
+        @apply bg-light-800 text-gray-900;
+    }
+
+    .dark body {
+        @apply bg-dark-900 text-slate-100;
+    }
 }
 
 @layer components {
-  .bg-grid-pattern {
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
-    background-size: 20px 20px;
-  }
+    .bg-grid-pattern {
+        background-image: radial-gradient(
+            circle at 1px 1px,
+            rgba(255, 255, 255, 0.15) 1px,
+            transparent 0
+        );
+        background-size: 20px 20px;
+    }
 
-  .bg-grid-pattern-light {
-    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.1) 1px, transparent 0);
-    background-size: 20px 20px;
-  }
-  
-  .slider::-webkit-slider-thumb {
-    appearance: none;
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    background: #14b8a6;
-    cursor: pointer;
-    border: 2px solid #e2e8f0;
-    transition: all 0.3s ease;
-  }
+    .bg-grid-pattern-light {
+        background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.1) 1px, transparent 0);
+        background-size: 20px 20px;
+    }
 
-  .dark .slider::-webkit-slider-thumb {
-    border: 2px solid #0f172a;
-  }
-  
-  .slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-  }
-  
-  .slider::-moz-range-thumb {
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    background: #14b8a6;
-    cursor: pointer;
-    border: 2px solid #e2e8f0;
-  }
+    .slider::-webkit-slider-thumb {
+        appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #14b8a6;
+        cursor: pointer;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
 
-  .dark .slider::-moz-range-thumb {
-    border: 2px solid #0f172a;
-  }
+    .dark .slider::-webkit-slider-thumb {
+        border: 2px solid #0f172a;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+    }
+
+    .slider::-moz-range-thumb {
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #14b8a6;
+        cursor: pointer;
+        border: 2px solid #e2e8f0;
+    }
+
+    .dark .slider::-moz-range-thumb {
+        border: 2px solid #0f172a;
+    }
 }
 
 @layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
+    .text-shadow {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
 }

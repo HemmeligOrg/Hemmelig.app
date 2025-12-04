@@ -1,6 +1,6 @@
 import { Context, Next } from 'hono';
-import settings from '../instance-settings';
 import { rateLimiter } from 'hono-rate-limiter';
+import settings from '../instance-settings';
 import { getClientIp } from '../lib/utils';
 
 let rateLimitInstance: ReturnType<typeof rateLimiter> | null = null;
@@ -9,9 +9,7 @@ const ratelimit = async (c: Context, next: Next) => {
     const instanceSettings = settings.get('instanceSettings');
 
     if (instanceSettings?.enableRateLimiting) {
-        if (
-            rateLimitInstance === null
-        ) {
+        if (rateLimitInstance === null) {
             rateLimitInstance = rateLimiter({
                 windowMs: instanceSettings.rateLimitWindow * 1000, // Convert seconds to milliseconds
                 limit: instanceSettings.rateLimitRequests,

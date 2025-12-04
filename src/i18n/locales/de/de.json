@@ -1,703 +1,703 @@
 {
-  "template_selector": {
-    "button": "Vorlagen",
-    "description": "Schnellstart mit einer Vorlage",
-    "templates": {
-      "credentials": "Anmeldedaten",
-      "api_key": "API-Schlüssel",
-      "database": "Datenbank",
-      "server": "Serverzugang",
-      "credit_card": "Zahlungskarte",
-      "email": "E-Mail-Konto"
-    }
-  },
-  "editor": {
-    "tooltips": {
-      "copy_text": "Als Klartext kopieren",
-      "copy_html": "Als HTML kopieren",
-      "copy_base64": "Als Base64 kopieren",
-      "bold": "Fett",
-      "italic": "Kursiv",
-      "strikethrough": "Durchgestrichen",
-      "inline_code": "Inline-Code",
-      "link": "Link",
-      "remove_link": "Link entfernen",
-      "insert_password": "Passwort einfügen",
-      "paragraph": "Absatz",
-      "heading1": "Überschrift 1",
-      "heading2": "Überschrift 2",
-      "heading3": "Überschrift 3",
-      "bullet_list": "Aufzählungsliste",
-      "numbered_list": "Nummerierte Liste",
-      "blockquote": "Zitat",
-      "code_block": "Codeblock",
-      "undo": "Rückgängig",
-      "redo": "Wiederherstellen"
+    "template_selector": {
+        "button": "Vorlagen",
+        "description": "Schnellstart mit einer Vorlage",
+        "templates": {
+            "credentials": "Anmeldedaten",
+            "api_key": "API-Schlüssel",
+            "database": "Datenbank",
+            "server": "Serverzugang",
+            "credit_card": "Zahlungskarte",
+            "email": "E-Mail-Konto"
+        }
     },
-    "copy_success": {
-      "html": "HTML kopiert!",
-      "text": "Text kopiert!",
-      "base64": "Base64 kopiert!"
+    "editor": {
+        "tooltips": {
+            "copy_text": "Als Klartext kopieren",
+            "copy_html": "Als HTML kopieren",
+            "copy_base64": "Als Base64 kopieren",
+            "bold": "Fett",
+            "italic": "Kursiv",
+            "strikethrough": "Durchgestrichen",
+            "inline_code": "Inline-Code",
+            "link": "Link",
+            "remove_link": "Link entfernen",
+            "insert_password": "Passwort einfügen",
+            "paragraph": "Absatz",
+            "heading1": "Überschrift 1",
+            "heading2": "Überschrift 2",
+            "heading3": "Überschrift 3",
+            "bullet_list": "Aufzählungsliste",
+            "numbered_list": "Nummerierte Liste",
+            "blockquote": "Zitat",
+            "code_block": "Codeblock",
+            "undo": "Rückgängig",
+            "redo": "Wiederherstellen"
+        },
+        "copy_success": {
+            "html": "HTML kopiert!",
+            "text": "Text kopiert!",
+            "base64": "Base64 kopiert!"
+        },
+        "link_modal": {
+            "title": "Link hinzufügen",
+            "url_label": "URL",
+            "url_placeholder": "URL eingeben",
+            "cancel": "Abbrechen",
+            "update": "Aktualisieren",
+            "insert": "Einfügen"
+        },
+        "password_modal": {
+            "title": "Passwort generieren",
+            "length_label": "Passwortlänge",
+            "options_label": "Optionen",
+            "include_numbers": "Zahlen",
+            "include_symbols": "Symbole",
+            "include_uppercase": "Großbuchstaben",
+            "include_lowercase": "Kleinbuchstaben",
+            "generated_password": "Generiertes Passwort",
+            "refresh": "Aktualisieren",
+            "cancel": "Abbrechen",
+            "insert": "Einfügen"
+        },
+        "formatting_tools": "Formatierungswerkzeuge"
     },
-    "link_modal": {
-      "title": "Link hinzufügen",
-      "url_label": "URL",
-      "url_placeholder": "URL eingeben",
-      "cancel": "Abbrechen",
-      "update": "Aktualisieren",
-      "insert": "Einfügen"
+    "create_button": {
+        "creating_secret": "Geheimnis wird erstellt...",
+        "create": "Erstellen"
     },
-    "password_modal": {
-      "title": "Passwort generieren",
-      "length_label": "Passwortlänge",
-      "options_label": "Optionen",
-      "include_numbers": "Zahlen",
-      "include_symbols": "Symbole",
-      "include_uppercase": "Großbuchstaben",
-      "include_lowercase": "Kleinbuchstaben",
-      "generated_password": "Generiertes Passwort",
-      "refresh": "Aktualisieren",
-      "cancel": "Abbrechen",
-      "insert": "Einfügen"
+    "file_upload": {
+        "sign_in_to_upload": "Anmelden, um Dateien hochzuladen",
+        "sign_in": "Anmelden",
+        "drop_files_here": "Dateien hier ablegen",
+        "drag_and_drop": "Datei hierher ziehen oder klicken, um eine Datei auszuwählen",
+        "uploading": "Wird hochgeladen...",
+        "upload_file": "Datei hochladen",
+        "file_too_large": "Datei \"{{fileName}}\" ({{fileSize}} MB) überschreitet die maximale Größe von {{maxSize}} MB",
+        "max_size_exceeded": "Gesamtdateigröße überschreitet das Maximum von {{maxSize}} MB"
     },
-    "formatting_tools": "Formatierungswerkzeuge"
-  },
-  "create_button": {
-    "creating_secret": "Geheimnis wird erstellt...",
-    "create": "Erstellen"
-  },
-  "file_upload": {
-    "sign_in_to_upload": "Anmelden, um Dateien hochzuladen",
-    "sign_in": "Anmelden",
-    "drop_files_here": "Dateien hier ablegen",
-    "drag_and_drop": "Datei hierher ziehen oder klicken, um eine Datei auszuwählen",
-    "uploading": "Wird hochgeladen...",
-    "upload_file": "Datei hochladen",
-    "file_too_large": "Datei \"{{fileName}}\" ({{fileSize}} MB) überschreitet die maximale Größe von {{maxSize}} MB",
-    "max_size_exceeded": "Gesamtdateigröße überschreitet das Maximum von {{maxSize}} MB"
-  },
-  "footer": {
-    "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch"
-  },
-  "header": {
-    "sign_in": "Anmelden",
-    "sign_up": "Registrieren",
-    "dashboard": "Dashboard",
-    "hero_text_part1": "Teilen Sie Geheimnisse sicher mit verschlüsselten Nachrichten, die sich automatisch",
-    "hero_text_part2": " selbst zerstören",
-    "hero_text_part3": " nachdem sie gelesen wurden."
-  },
-  "dashboard_layout": {
-    "secrets": "Geheimnisse",
-    "account": "Konto",
-    "analytics": "Analysen",
-    "users": "Benutzer",
-    "invites": "Einladungen",
-    "instance": "Instanz",
-    "sign_out": "Abmelden",
-    "hemmelig": "Hemmelig"
-  },
-  "secret_settings": {
-    "secret_created_title": "Geheimnis erstellt!",
-    "secret_created_description": "Ihr Geheimnis ist jetzt unter der folgenden URL verfügbar. Bewahren Sie Ihren Entschlüsselungsschlüssel sicher auf, da er nicht wiederhergestellt werden kann.",
-    "secret_url_label": "Geheimnis-URL",
-    "decryption_key_label": "Entschlüsselungsschlüssel",
-    "password_label": "Passwort",
-    "create_new_secret_button": "Neues Geheimnis erstellen",
-    "copy_url_button": "URL kopieren",
-    "burn_secret_button": "Geheimnis vernichten",
-    "max_secrets_per_user_info": "Sie können bis zu {{count}} Geheimnisse erstellen.",
-    "failed_to_burn": "Geheimnis konnte nicht vernichtet werden. Bitte versuchen Sie es erneut."
-  },
-  "security_settings": {
-    "security_title": "Sicherheit",
-    "security_description": "Sicherheitseinstellungen für Ihr Geheimnis konfigurieren",
-    "remember_settings": "Merken",
-    "private_title": "Privat",
-    "private_description": "Private Geheimnisse sind verschlüsselt und können nur mit dem Entschlüsselungsschlüssel und/oder Passwort angezeigt werden.",
-    "expiration_title": "Ablauf",
-    "expiration_burn_after_time_description": "Legen Sie fest, wann das Geheimnis zerstört werden soll",
-    "expiration_default_description": "Legen Sie fest, wie lange das Geheimnis verfügbar sein soll",
-    "max_views_title": "Maximale Aufrufe",
-    "burn_after_time_mode_title": "Zeitgesteuerte Vernichtung",
-    "burn_after_time_mode_description": "Das Geheimnis wird nach Ablauf der Zeit zerstört, unabhängig davon, wie oft es angesehen wurde.",
-    "password_protection_title": "Passwortschutz",
-    "password_protection_description": "Fügen Sie eine zusätzliche Sicherheitsebene mit einem Passwort hinzu",
-    "enter_password_label": "Passwort eingeben",
-    "password_placeholder": "Geben Sie ein sicheres Passwort ein...",
-    "password_hint": "Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
-    "ip_restriction_title": "Nach IP oder CIDR einschränken",
-    "ip_restriction_description": "Die CIDR-Eingabe ermöglicht es Benutzern, IP-Adressbereiche anzugeben, die auf das Geheimnis zugreifen können.",
-    "ip_address_cidr_label": "IP-Adresse oder CIDR-Bereich",
-    "ip_address_cidr_placeholder": "192.168.1.0/24 oder 203.0.113.5",
-    "ip_address_cidr_hint": "Nur Anfragen von diesen IP-Adressen können auf das Geheimnis zugreifen",
-    "burn_after_time_title": "Nach Zeitablauf vernichten",
-    "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten"
-  },
-  "title_field": {
-    "placeholder": "Titel",
-    "hint": "Geben Sie Ihrem Geheimnis einen einprägsamen Titel (optional)"
-  },
-  "views_slider": {
-    "min_views": "1",
-    "max_views": "999",
-    "views_label": "Aufrufe"
-  },
-  "account_page": {
-    "title": "Kontoeinstellungen",
-    "description": "Verwalten Sie Ihre Kontoeinstellungen und Sicherheit",
-    "tabs": {
-      "profile": "Profil",
-      "security": "Sicherheit",
-      "developer": "Entwickler",
-      "danger_zone": "Gefahrenzone"
+    "footer": {
+        "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch"
     },
-    "profile_info": {
-      "title": "Profilinformationen",
-      "description": "Aktualisieren Sie Ihre persönlichen Informationen",
-      "first_name_label": "Vorname",
-      "last_name_label": "Nachname",
-      "username_label": "Benutzername",
-      "email_label": "E-Mail-Adresse",
-      "saving_button": "Wird gespeichert...",
-      "save_changes_button": "Änderungen speichern"
+    "header": {
+        "sign_in": "Anmelden",
+        "sign_up": "Registrieren",
+        "dashboard": "Dashboard",
+        "hero_text_part1": "Teilen Sie Geheimnisse sicher mit verschlüsselten Nachrichten, die sich automatisch",
+        "hero_text_part2": " selbst zerstören",
+        "hero_text_part3": " nachdem sie gelesen wurden."
     },
-    "profile_settings": {
-      "username_taken": "Benutzername ist bereits vergeben"
+    "dashboard_layout": {
+        "secrets": "Geheimnisse",
+        "account": "Konto",
+        "analytics": "Analysen",
+        "users": "Benutzer",
+        "invites": "Einladungen",
+        "instance": "Instanz",
+        "sign_out": "Abmelden",
+        "hemmelig": "Hemmelig"
+    },
+    "secret_settings": {
+        "secret_created_title": "Geheimnis erstellt!",
+        "secret_created_description": "Ihr Geheimnis ist jetzt unter der folgenden URL verfügbar. Bewahren Sie Ihren Entschlüsselungsschlüssel sicher auf, da er nicht wiederhergestellt werden kann.",
+        "secret_url_label": "Geheimnis-URL",
+        "decryption_key_label": "Entschlüsselungsschlüssel",
+        "password_label": "Passwort",
+        "create_new_secret_button": "Neues Geheimnis erstellen",
+        "copy_url_button": "URL kopieren",
+        "burn_secret_button": "Geheimnis vernichten",
+        "max_secrets_per_user_info": "Sie können bis zu {{count}} Geheimnisse erstellen.",
+        "failed_to_burn": "Geheimnis konnte nicht vernichtet werden. Bitte versuchen Sie es erneut."
     },
     "security_settings": {
-      "title": "Sicherheitseinstellungen",
-      "description": "Verwalten Sie Ihr Passwort und Sicherheitseinstellungen",
-      "change_password_title": "Passwort ändern",
-      "current_password_label": "Aktuelles Passwort",
-      "current_password_placeholder": "Aktuelles Passwort eingeben",
-      "new_password_label": "Neues Passwort",
-      "new_password_placeholder": "Neues Passwort eingeben",
-      "confirm_new_password_label": "Neues Passwort bestätigen",
-      "confirm_new_password_placeholder": "Neues Passwort bestätigen",
-      "password_mismatch_alert": "Die neuen Passwörter stimmen nicht überein",
-      "changing_password_button": "Wird geändert...",
-      "change_password_button": "Passwort ändern",
-      "password_change_success": "Passwort erfolgreich geändert!",
-      "password_change_error": "Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+        "security_title": "Sicherheit",
+        "security_description": "Sicherheitseinstellungen für Ihr Geheimnis konfigurieren",
+        "remember_settings": "Merken",
+        "private_title": "Privat",
+        "private_description": "Private Geheimnisse sind verschlüsselt und können nur mit dem Entschlüsselungsschlüssel und/oder Passwort angezeigt werden.",
+        "expiration_title": "Ablauf",
+        "expiration_burn_after_time_description": "Legen Sie fest, wann das Geheimnis zerstört werden soll",
+        "expiration_default_description": "Legen Sie fest, wie lange das Geheimnis verfügbar sein soll",
+        "max_views_title": "Maximale Aufrufe",
+        "burn_after_time_mode_title": "Zeitgesteuerte Vernichtung",
+        "burn_after_time_mode_description": "Das Geheimnis wird nach Ablauf der Zeit zerstört, unabhängig davon, wie oft es angesehen wurde.",
+        "password_protection_title": "Passwortschutz",
+        "password_protection_description": "Fügen Sie eine zusätzliche Sicherheitsebene mit einem Passwort hinzu",
+        "enter_password_label": "Passwort eingeben",
+        "password_placeholder": "Geben Sie ein sicheres Passwort ein...",
+        "password_hint": "Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
+        "ip_restriction_title": "Nach IP oder CIDR einschränken",
+        "ip_restriction_description": "Die CIDR-Eingabe ermöglicht es Benutzern, IP-Adressbereiche anzugeben, die auf das Geheimnis zugreifen können.",
+        "ip_address_cidr_label": "IP-Adresse oder CIDR-Bereich",
+        "ip_address_cidr_placeholder": "192.168.1.0/24 oder 203.0.113.5",
+        "ip_address_cidr_hint": "Nur Anfragen von diesen IP-Adressen können auf das Geheimnis zugreifen",
+        "burn_after_time_title": "Nach Zeitablauf vernichten",
+        "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten"
     },
-    "danger_zone": {
-      "title": "Gefahrenzone",
-      "description": "Irreversible und destruktive Aktionen",
-      "delete_account_title": "Konto löschen",
-      "delete_account_description": "Sobald Sie Ihr Konto löschen, gibt es kein Zurück. Dies löscht dauerhaft Ihr Konto, alle Ihre Geheimnisse und entfernt alle zugehörigen Daten. Diese Aktion kann nicht rückgängig gemacht werden.",
-      "delete_account_bullet1": "Alle Ihre Geheimnisse werden dauerhaft gelöscht",
-      "delete_account_bullet2": "Ihre Kontodaten werden von unseren Servern entfernt",
-      "delete_account_bullet3": "Alle geteilten Geheimnis-Links werden ungültig",
-      "delete_account_bullet4": "Diese Aktion kann nicht rückgängig gemacht werden",
-      "delete_account_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "delete_account_button": "Konto löschen",
-      "deleting_account_button": "Konto wird gelöscht..."
+    "title_field": {
+        "placeholder": "Titel",
+        "hint": "Geben Sie Ihrem Geheimnis einen einprägsamen Titel (optional)"
     },
-    "developer": {
-      "title": "API-Schlüssel",
-      "description": "API-Schlüssel für programmatischen Zugriff verwalten",
-      "create_key": "Schlüssel erstellen",
-      "create_key_title": "API-Schlüssel erstellen",
-      "key_name": "Schlüsselname",
-      "key_name_placeholder": "z.B. Meine Integration",
-      "expiration": "Ablauf",
-      "never_expires": "Läuft nie ab",
-      "expires_30_days": "30 Tage",
-      "expires_90_days": "90 Tage",
-      "expires_1_year": "1 Jahr",
-      "create_button": "Erstellen",
-      "name_required": "Schlüsselname ist erforderlich",
-      "create_error": "API-Schlüssel konnte nicht erstellt werden",
-      "key_created": "API-Schlüssel erstellt!",
-      "key_warning": "Kopieren Sie diesen Schlüssel jetzt. Sie können ihn nicht erneut sehen.",
-      "dismiss": "Ich habe den Schlüssel kopiert",
-      "no_keys": "Noch keine API-Schlüssel. Erstellen Sie einen, um loszulegen.",
-      "created": "Erstellt",
-      "last_used": "Zuletzt verwendet",
-      "expires": "Läuft ab",
-      "docs_hint": "Erfahren Sie, wie Sie API-Schlüssel verwenden in der",
-      "api_docs": "API-Dokumentation"
-    }
-  },
-  "analytics_page": {
-    "title": "Analysen",
-    "description": "Verfolgen Sie Ihre Geheimnis-Sharing-Aktivitäten und Einblicke",
-    "time_range": {
-      "last_7_days": "Letzte 7 Tage",
-      "last_30_days": "Letzte 30 Tage",
-      "last_90_days": "Letzte 90 Tage",
-      "last_year": "Letztes Jahr"
+    "views_slider": {
+        "min_views": "1",
+        "max_views": "999",
+        "views_label": "Aufrufe"
     },
-    "total_secrets": "Geheimnisse gesamt",
-    "from_last_period": "+{{percentage}}% seit letztem Zeitraum",
-    "total_views": "Aufrufe gesamt",
-    "avg_views_per_secret": "Durchschn. Aufrufe/Geheimnis",
-    "active_secrets": "Aktive Geheimnisse",
-    "daily_activity": {
-      "title": "Tägliche Aktivität",
-      "description": "Erstellte Geheimnisse und Aufrufe im Zeitverlauf",
-      "secrets": "Geheimnisse",
-      "views": "Aufrufe"
+    "account_page": {
+        "title": "Kontoeinstellungen",
+        "description": "Verwalten Sie Ihre Kontoeinstellungen und Sicherheit",
+        "tabs": {
+            "profile": "Profil",
+            "security": "Sicherheit",
+            "developer": "Entwickler",
+            "danger_zone": "Gefahrenzone"
+        },
+        "profile_info": {
+            "title": "Profilinformationen",
+            "description": "Aktualisieren Sie Ihre persönlichen Informationen",
+            "first_name_label": "Vorname",
+            "last_name_label": "Nachname",
+            "username_label": "Benutzername",
+            "email_label": "E-Mail-Adresse",
+            "saving_button": "Wird gespeichert...",
+            "save_changes_button": "Änderungen speichern"
+        },
+        "profile_settings": {
+            "username_taken": "Benutzername ist bereits vergeben"
+        },
+        "security_settings": {
+            "title": "Sicherheitseinstellungen",
+            "description": "Verwalten Sie Ihr Passwort und Sicherheitseinstellungen",
+            "change_password_title": "Passwort ändern",
+            "current_password_label": "Aktuelles Passwort",
+            "current_password_placeholder": "Aktuelles Passwort eingeben",
+            "new_password_label": "Neues Passwort",
+            "new_password_placeholder": "Neues Passwort eingeben",
+            "confirm_new_password_label": "Neues Passwort bestätigen",
+            "confirm_new_password_placeholder": "Neues Passwort bestätigen",
+            "password_mismatch_alert": "Die neuen Passwörter stimmen nicht überein",
+            "changing_password_button": "Wird geändert...",
+            "change_password_button": "Passwort ändern",
+            "password_change_success": "Passwort erfolgreich geändert!",
+            "password_change_error": "Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+        },
+        "danger_zone": {
+            "title": "Gefahrenzone",
+            "description": "Irreversible und destruktive Aktionen",
+            "delete_account_title": "Konto löschen",
+            "delete_account_description": "Sobald Sie Ihr Konto löschen, gibt es kein Zurück. Dies löscht dauerhaft Ihr Konto, alle Ihre Geheimnisse und entfernt alle zugehörigen Daten. Diese Aktion kann nicht rückgängig gemacht werden.",
+            "delete_account_bullet1": "Alle Ihre Geheimnisse werden dauerhaft gelöscht",
+            "delete_account_bullet2": "Ihre Kontodaten werden von unseren Servern entfernt",
+            "delete_account_bullet3": "Alle geteilten Geheimnis-Links werden ungültig",
+            "delete_account_bullet4": "Diese Aktion kann nicht rückgängig gemacht werden",
+            "delete_account_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "delete_account_button": "Konto löschen",
+            "deleting_account_button": "Konto wird gelöscht..."
+        },
+        "developer": {
+            "title": "API-Schlüssel",
+            "description": "API-Schlüssel für programmatischen Zugriff verwalten",
+            "create_key": "Schlüssel erstellen",
+            "create_key_title": "API-Schlüssel erstellen",
+            "key_name": "Schlüsselname",
+            "key_name_placeholder": "z.B. Meine Integration",
+            "expiration": "Ablauf",
+            "never_expires": "Läuft nie ab",
+            "expires_30_days": "30 Tage",
+            "expires_90_days": "90 Tage",
+            "expires_1_year": "1 Jahr",
+            "create_button": "Erstellen",
+            "name_required": "Schlüsselname ist erforderlich",
+            "create_error": "API-Schlüssel konnte nicht erstellt werden",
+            "key_created": "API-Schlüssel erstellt!",
+            "key_warning": "Kopieren Sie diesen Schlüssel jetzt. Sie können ihn nicht erneut sehen.",
+            "dismiss": "Ich habe den Schlüssel kopiert",
+            "no_keys": "Noch keine API-Schlüssel. Erstellen Sie einen, um loszulegen.",
+            "created": "Erstellt",
+            "last_used": "Zuletzt verwendet",
+            "expires": "Läuft ab",
+            "docs_hint": "Erfahren Sie, wie Sie API-Schlüssel verwenden in der",
+            "api_docs": "API-Dokumentation"
+        }
     },
-    "locale": "de-DE",
-    "top_countries": {
-      "title": "Top-Länder",
-      "description": "Wo Ihre Geheimnisse angesehen werden",
-      "views": "Aufrufe"
+    "analytics_page": {
+        "title": "Analysen",
+        "description": "Verfolgen Sie Ihre Geheimnis-Sharing-Aktivitäten und Einblicke",
+        "time_range": {
+            "last_7_days": "Letzte 7 Tage",
+            "last_30_days": "Letzte 30 Tage",
+            "last_90_days": "Letzte 90 Tage",
+            "last_year": "Letztes Jahr"
+        },
+        "total_secrets": "Geheimnisse gesamt",
+        "from_last_period": "+{{percentage}}% seit letztem Zeitraum",
+        "total_views": "Aufrufe gesamt",
+        "avg_views_per_secret": "Durchschn. Aufrufe/Geheimnis",
+        "active_secrets": "Aktive Geheimnisse",
+        "daily_activity": {
+            "title": "Tägliche Aktivität",
+            "description": "Erstellte Geheimnisse und Aufrufe im Zeitverlauf",
+            "secrets": "Geheimnisse",
+            "views": "Aufrufe"
+        },
+        "locale": "de-DE",
+        "top_countries": {
+            "title": "Top-Länder",
+            "description": "Wo Ihre Geheimnisse angesehen werden",
+            "views": "Aufrufe"
+        },
+        "secret_types": {
+            "title": "Geheimnis-Typen",
+            "description": "Verteilung nach Schutzstufe",
+            "password_protected": "Passwortgeschützt",
+            "ip_restricted": "IP-beschränkt",
+            "burn_after_time": "Zeitgesteuerte Vernichtung"
+        },
+        "expiration_stats": {
+            "title": "Ablaufstatistiken",
+            "description": "Wie lange Geheimnisse typischerweise bestehen",
+            "one_hour": "1 Stunde",
+            "one_day": "1 Tag",
+            "one_week_plus": "1 Woche+"
+        },
+        "no_permission": "Sie haben keine Berechtigung, Analysen anzuzeigen.",
+        "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden."
     },
-    "secret_types": {
-      "title": "Geheimnis-Typen",
-      "description": "Verteilung nach Schutzstufe",
-      "password_protected": "Passwortgeschützt",
-      "ip_restricted": "IP-beschränkt",
-      "burn_after_time": "Zeitgesteuerte Vernichtung"
+    "instance_page": {
+        "title": "Instanzeinstellungen",
+        "description": "Konfigurieren Sie Ihre Hemmelig-Instanz",
+        "tabs": {
+            "general": "Allgemein",
+            "security": "Sicherheit",
+            "organization": "Organisation",
+            "webhook": "Webhooks"
+        },
+        "system_status": {
+            "title": "Systemstatus",
+            "description": "Instanzgesundheit und Leistungsmetriken",
+            "version": "Version",
+            "uptime": "Betriebszeit",
+            "memory": "Speicher",
+            "cpu_usage": "CPU-Auslastung"
+        },
+        "general_settings": {
+            "title": "Allgemeine Einstellungen",
+            "description": "Grundlegende Instanzkonfiguration",
+            "instance_name_label": "Instanzname",
+            "max_secrets_per_user_label": "Max. Geheimnisse pro Benutzer",
+            "max_secret_size_label": "Max. Geheimisgröße (MB)",
+            "instance_description_label": "Instanzbeschreibung",
+            "allow_registration_title": "Registrierung erlauben",
+            "allow_registration_description": "Neuen Benutzern die Registrierung erlauben",
+            "email_verification_title": "E-Mail-Verifizierung",
+            "email_verification_description": "E-Mail-Verifizierung erforderlich"
+        },
+        "saving_button": "Wird gespeichert...",
+        "save_settings_button": "Einstellungen speichern",
+        "security_settings": {
+            "title": "Sicherheitseinstellungen",
+            "description": "Sicherheits- und Zugriffskontrollen konfigurieren",
+            "rate_limiting_title": "Ratenbegrenzung",
+            "rate_limiting_description": "Anfragenratenbegrenzung aktivieren",
+            "max_password_attempts_label": "Max. Passwortversuche",
+            "session_timeout_label": "Sitzungstimeout (Stunden)"
+        },
+        "email_settings": {
+            "title": "E-Mail-Einstellungen",
+            "description": "SMTP und E-Mail-Benachrichtigungen konfigurieren",
+            "smtp_host_label": "SMTP-Host",
+            "smtp_port_label": "SMTP-Port",
+            "username_label": "Benutzername",
+            "password_label": "Passwort"
+        },
+        "database_info": {
+            "title": "Datenbankinformationen",
+            "description": "Datenbankstatus und Statistiken",
+            "stats_title": "Datenbankstatistiken",
+            "total_secrets": "Geheimnisse gesamt:",
+            "total_users": "Benutzer gesamt:",
+            "disk_usage": "Speichernutzung:",
+            "connection_status_title": "Verbindungsstatus",
+            "connected": "Verbunden",
+            "connected_description": "Datenbank ist gesund und antwortet normal"
+        },
+        "system_info": {
+            "title": "Systeminformationen",
+            "description": "Serverdetails und Wartung",
+            "system_info_title": "Systeminfo",
+            "version": "Version:",
+            "uptime": "Betriebszeit:",
+            "status": "Status:",
+            "resource_usage_title": "Ressourcennutzung",
+            "memory": "Speicher:",
+            "cpu": "CPU:",
+            "disk": "Festplatte:"
+        },
+        "maintenance_actions": {
+            "title": "Wartungsaktionen",
+            "description": "Diese Aktionen können die Systemverfügbarkeit beeinträchtigen. Mit Vorsicht verwenden.",
+            "restart_service_button": "Dienst neu starten",
+            "clear_cache_button": "Cache leeren",
+            "export_logs_button": "Protokolle exportieren"
+        }
     },
-    "expiration_stats": {
-      "title": "Ablaufstatistiken",
-      "description": "Wie lange Geheimnisse typischerweise bestehen",
-      "one_hour": "1 Stunde",
-      "one_day": "1 Tag",
-      "one_week_plus": "1 Woche+"
+    "secrets_page": {
+        "title": "Ihre Geheimnisse",
+        "description": "Verwalten und überwachen Sie Ihre geteilten Geheimnisse",
+        "create_secret_button": "Geheimnis erstellen",
+        "search_placeholder": "Geheimnisse suchen...",
+        "filter": {
+            "all_secrets": "Alle Geheimnisse",
+            "active": "Aktiv",
+            "expired": "Abgelaufen"
+        },
+        "total_secrets": "Geheimnisse gesamt",
+        "active_secrets": "Aktiv",
+        "expired_secrets": "Abgelaufen",
+        "no_secrets_found_title": "Keine Geheimnisse gefunden",
+        "no_secrets_found_description_filter": "Versuchen Sie, Ihre Such- oder Filterkriterien anzupassen.",
+        "no_secrets_found_description_empty": "Erstellen Sie Ihr erstes Geheimnis, um zu beginnen.",
+        "password_protected": "Passwort",
+        "files": "Dateien",
+        "table": {
+            "secret_header": "Geheimnis",
+            "created_header": "Erstellt",
+            "status_header": "Status",
+            "views_header": "Aufrufe",
+            "actions_header": "Aktionen",
+            "untitled_secret": "Unbenanntes Geheimnis",
+            "expired_status": "Abgelaufen",
+            "active_status": "Aktiv",
+            "never_expires": "Läuft nie ab",
+            "expired_time": "Abgelaufen",
+            "views_left": "Aufrufe übrig",
+            "copy_url_tooltip": "URL kopieren",
+            "open_secret_tooltip": "Geheimnis öffnen",
+            "delete_secret_tooltip": "Geheimnis löschen",
+            "delete_confirmation_title": "Sind Sie sicher?",
+            "delete_confirmation_text": "Diese Aktion kann nicht rückgängig gemacht werden. Das Geheimnis wird dauerhaft gelöscht.",
+            "delete_confirm_button": "Ja, löschen",
+            "delete_cancel_button": "Abbrechen"
+        }
     },
-    "no_permission": "Sie haben keine Berechtigung, Analysen anzuzeigen.",
-    "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden."
-  },
-  "instance_page": {
-    "title": "Instanzeinstellungen",
-    "description": "Konfigurieren Sie Ihre Hemmelig-Instanz",
-    "tabs": {
-      "general": "Allgemein",
-      "security": "Sicherheit",
-      "organization": "Organisation",
-      "webhook": "Webhooks"
+    "users_page": {
+        "title": "Benutzerverwaltung",
+        "description": "Benutzer und deren Berechtigungen verwalten",
+        "add_user_button": "Benutzer hinzufügen",
+        "search_placeholder": "Benutzer suchen...",
+        "filter": {
+            "all_roles": "Alle Rollen",
+            "admin": "Administrator",
+            "user": "Benutzer",
+            "all_status": "Alle Status",
+            "active": "Aktiv",
+            "suspended": "Gesperrt",
+            "pending": "Ausstehend"
+        },
+        "total_users": "Benutzer gesamt",
+        "active_users": "Aktiv",
+        "admins": "Administratoren",
+        "pending_users": "Ausstehend",
+        "no_users_found_title": "Keine Benutzer gefunden",
+        "no_users_found_description_filter": "Versuchen Sie, Ihre Such- oder Filterkriterien anzupassen.",
+        "no_users_found_description_empty": "Es wurden noch keine Benutzer hinzugefügt.",
+        "table": {
+            "user_header": "Benutzer",
+            "role_header": "Rolle",
+            "status_header": "Status",
+            "activity_header": "Aktivität",
+            "last_login_header": "Letzte Anmeldung",
+            "actions_header": "Aktionen",
+            "created_at": "Erstellt am"
+        },
+        "status": {
+            "active": "Aktiv",
+            "banned": "Gesperrt"
+        },
+        "delete_user_modal": {
+            "title": "Benutzer löschen",
+            "confirmation_message": "Sind Sie sicher, dass Sie den Benutzer {{username}} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "confirm_button": "Löschen",
+            "cancel_button": "Abbrechen"
+        },
+        "edit_user_modal": {
+            "title": "Benutzer bearbeiten: {{username}}",
+            "username_label": "Benutzername",
+            "email_label": "E-Mail",
+            "role_label": "Rolle",
+            "banned_label": "Gesperrt",
+            "save_button": "Speichern",
+            "cancel_button": "Abbrechen"
+        },
+        "add_user_modal": {
+            "title": "Neuen Benutzer hinzufügen",
+            "name_label": "Name",
+            "username_label": "Benutzername",
+            "email_label": "E-Mail",
+            "password_label": "Passwort",
+            "role_label": "Rolle",
+            "save_button": "Benutzer hinzufügen",
+            "cancel_button": "Abbrechen"
+        }
     },
-    "system_status": {
-      "title": "Systemstatus",
-      "description": "Instanzgesundheit und Leistungsmetriken",
-      "version": "Version",
-      "uptime": "Betriebszeit",
-      "memory": "Speicher",
-      "cpu_usage": "CPU-Auslastung"
+    "forgot_password_page": {
+        "back_to_sign_in": "Zurück zur Anmeldung",
+        "check_email_title": "Überprüfen Sie Ihre E-Mail",
+        "check_email_description": "Wir haben einen Link zum Zurücksetzen des Passworts an {{email}} gesendet",
+        "did_not_receive_email": "E-Mail nicht erhalten? Überprüfen Sie Ihren Spam-Ordner oder versuchen Sie es erneut.",
+        "try_again_button": "Erneut versuchen",
+        "forgot_password_title": "Passwort vergessen?",
+        "forgot_password_description": "Keine Sorge, wir senden Ihnen Anweisungen zum Zurücksetzen",
+        "email_label": "E-Mail",
+        "email_placeholder": "Geben Sie Ihre E-Mail ein",
+        "email_hint": "Geben Sie die E-Mail ein, die mit Ihrem Konto verknüpft ist",
+        "sending_button": "Wird gesendet...",
+        "reset_password_button": "Passwort zurücksetzen",
+        "remember_password": "Erinnern Sie sich an Ihr Passwort?",
+        "sign_in_link": "Anmelden",
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
     },
-    "general_settings": {
-      "title": "Allgemeine Einstellungen",
-      "description": "Grundlegende Instanzkonfiguration",
-      "instance_name_label": "Instanzname",
-      "max_secrets_per_user_label": "Max. Geheimnisse pro Benutzer",
-      "max_secret_size_label": "Max. Geheimisgröße (MB)",
-      "instance_description_label": "Instanzbeschreibung",
-      "allow_registration_title": "Registrierung erlauben",
-      "allow_registration_description": "Neuen Benutzern die Registrierung erlauben",
-      "email_verification_title": "E-Mail-Verifizierung",
-      "email_verification_description": "E-Mail-Verifizierung erforderlich"
+    "login_page": {
+        "back_to_hemmelig": "Zurück zu Hemmelig",
+        "welcome_back": "Willkommen zurück bei Hemmelig",
+        "welcome_back_title": "Willkommen zurück",
+        "welcome_back_description": "Melden Sie sich bei Ihrem Hemmelig-Konto an",
+        "username_label": "Benutzername",
+        "username_placeholder": "Geben Sie Ihren Benutzernamen ein",
+        "password_label": "Passwort",
+        "password_placeholder": "Geben Sie Ihr Passwort ein",
+        "forgot_password_link": "Passwort vergessen?",
+        "signing_in_button": "Wird angemeldet...",
+        "sign_in_button": "Anmelden",
+        "or_continue_with": "Oder fortfahren mit",
+        "continue_with_github": "Mit GitHub fortfahren",
+        "no_account_question": "Noch kein Konto?",
+        "sign_up_link": "Registrieren",
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
     },
-    "saving_button": "Wird gespeichert...",
-    "save_settings_button": "Einstellungen speichern",
-    "security_settings": {
-      "title": "Sicherheitseinstellungen",
-      "description": "Sicherheits- und Zugriffskontrollen konfigurieren",
-      "rate_limiting_title": "Ratenbegrenzung",
-      "rate_limiting_description": "Anfragenratenbegrenzung aktivieren",
-      "max_password_attempts_label": "Max. Passwortversuche",
-      "session_timeout_label": "Sitzungstimeout (Stunden)"
+    "register_page": {
+        "back_to_hemmelig": "Zurück zu Hemmelig",
+        "join_hemmelig": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
+        "create_account_title": "Konto erstellen",
+        "create_account_description": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
+        "username_label": "Benutzername",
+        "username_placeholder": "Wählen Sie einen Benutzernamen",
+        "email_label": "E-Mail",
+        "email_placeholder": "Geben Sie Ihre E-Mail ein",
+        "password_label": "Passwort",
+        "password_placeholder": "Erstellen Sie ein Passwort",
+        "password_strength_label": "Passwortstärke",
+        "password_strength_levels": {
+            "very_weak": "Sehr schwach",
+            "weak": "Schwach",
+            "fair": "Mittel",
+            "good": "Gut",
+            "strong": "Stark"
+        },
+        "confirm_password_label": "Passwort bestätigen",
+        "confirm_password_placeholder": "Bestätigen Sie Ihr Passwort",
+        "passwords_match": "Passwörter stimmen überein",
+        "passwords_do_not_match": "Passwörter stimmen nicht überein",
+        "password_mismatch_alert": "Passwörter stimmen nicht überein",
+        "creating_account_button": "Konto wird erstellt...",
+        "create_account_button": "Konto erstellen",
+        "or_continue_with": "Oder fortfahren mit",
+        "continue_with_github": "Mit GitHub fortfahren",
+        "already_have_account_question": "Bereits ein Konto?",
+        "sign_in_link": "Anmelden",
+        "invite_code_label": "Einladungscode",
+        "invite_code_placeholder": "Geben Sie Ihren Einladungscode ein",
+        "invite_code_required": "Einladungscode ist erforderlich",
+        "invalid_invite_code": "Ungültiger Einladungscode",
+        "failed_to_validate_invite": "Einladungscode konnte nicht validiert werden",
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+        "email_domain_not_allowed": "E-Mail-Domain nicht erlaubt",
+        "account_already_exists": "Ein Konto mit dieser E-Mail existiert bereits. Bitte melden Sie sich stattdessen an."
     },
-    "email_settings": {
-      "title": "E-Mail-Einstellungen",
-      "description": "SMTP und E-Mail-Benachrichtigungen konfigurieren",
-      "smtp_host_label": "SMTP-Host",
-      "smtp_port_label": "SMTP-Port",
-      "username_label": "Benutzername",
-      "password_label": "Passwort"
+    "secret_form": {
+        "failed_to_create_secret": "Geheimnis konnte nicht erstellt werden: {{errorMessage}}",
+        "failed_to_upload_file": "Datei konnte nicht hochgeladen werden: {{fileName}}"
     },
-    "database_info": {
-      "title": "Datenbankinformationen",
-      "description": "Datenbankstatus und Statistiken",
-      "stats_title": "Datenbankstatistiken",
-      "total_secrets": "Geheimnisse gesamt:",
-      "total_users": "Benutzer gesamt:",
-      "disk_usage": "Speichernutzung:",
-      "connection_status_title": "Verbindungsstatus",
-      "connected": "Verbunden",
-      "connected_description": "Datenbank ist gesund und antwortet normal"
+    "secret_page": {
+        "password_label": "Passwort",
+        "password_placeholder": "Passwort eingeben, um das Geheimnis anzuzeigen",
+        "view_secret_button": "Geheimnis anzeigen",
+        "views_remaining_tooltip": "Verbleibende Aufrufe: {{count}}",
+        "loading_message": "Geheimnis wird entschlüsselt...",
+        "files_title": "Angehängte Dateien",
+        "secret_waiting_title": "Jemand hat ein Geheimnis mit Ihnen geteilt",
+        "secret_waiting_description": "Dieses Geheimnis ist verschlüsselt und kann erst angezeigt werden, wenn Sie auf die Schaltfläche unten klicken.",
+        "one_view_remaining": "Dieses Geheimnis kann nur noch 1 Mal angezeigt werden",
+        "views_remaining": "Dieses Geheimnis kann noch {{count}} Mal angezeigt werden",
+        "view_warning": "Einmal angezeigt, kann diese Aktion nicht rückgängig gemacht werden",
+        "secret_revealed": "Geheimnis",
+        "copy_secret": "In Zwischenablage kopieren",
+        "download": "Herunterladen",
+        "create_your_own": "Erstellen Sie Ihr eigenes Geheimnis",
+        "encrypted_secret": "Verschlüsseltes Geheimnis",
+        "unlock_secret": "Geheimnis entsperren",
+        "delete_secret": "Geheimnis löschen",
+        "delete_modal_title": "Geheimnis löschen",
+        "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
     },
-    "system_info": {
-      "title": "Systeminformationen",
-      "description": "Serverdetails und Wartung",
-      "system_info_title": "Systeminfo",
-      "version": "Version:",
-      "uptime": "Betriebszeit:",
-      "status": "Status:",
-      "resource_usage_title": "Ressourcennutzung",
-      "memory": "Speicher:",
-      "cpu": "CPU:",
-      "disk": "Festplatte:"
-    },
-    "maintenance_actions": {
-      "title": "Wartungsaktionen",
-      "description": "Diese Aktionen können die Systemverfügbarkeit beeinträchtigen. Mit Vorsicht verwenden.",
-      "restart_service_button": "Dienst neu starten",
-      "clear_cache_button": "Cache leeren",
-      "export_logs_button": "Protokolle exportieren"
-    }
-  },
-  "secrets_page": {
-    "title": "Ihre Geheimnisse",
-    "description": "Verwalten und überwachen Sie Ihre geteilten Geheimnisse",
-    "create_secret_button": "Geheimnis erstellen",
-    "search_placeholder": "Geheimnisse suchen...",
-    "filter": {
-      "all_secrets": "Alle Geheimnisse",
-      "active": "Aktiv",
-      "expired": "Abgelaufen"
-    },
-    "total_secrets": "Geheimnisse gesamt",
-    "active_secrets": "Aktiv",
-    "expired_secrets": "Abgelaufen",
-    "no_secrets_found_title": "Keine Geheimnisse gefunden",
-    "no_secrets_found_description_filter": "Versuchen Sie, Ihre Such- oder Filterkriterien anzupassen.",
-    "no_secrets_found_description_empty": "Erstellen Sie Ihr erstes Geheimnis, um zu beginnen.",
-    "password_protected": "Passwort",
-    "files": "Dateien",
-    "table": {
-      "secret_header": "Geheimnis",
-      "created_header": "Erstellt",
-      "status_header": "Status",
-      "views_header": "Aufrufe",
-      "actions_header": "Aktionen",
-      "untitled_secret": "Unbenanntes Geheimnis",
-      "expired_status": "Abgelaufen",
-      "active_status": "Aktiv",
-      "never_expires": "Läuft nie ab",
-      "expired_time": "Abgelaufen",
-      "views_left": "Aufrufe übrig",
-      "copy_url_tooltip": "URL kopieren",
-      "open_secret_tooltip": "Geheimnis öffnen",
-      "delete_secret_tooltip": "Geheimnis löschen",
-      "delete_confirmation_title": "Sind Sie sicher?",
-      "delete_confirmation_text": "Diese Aktion kann nicht rückgängig gemacht werden. Das Geheimnis wird dauerhaft gelöscht.",
-      "delete_confirm_button": "Ja, löschen",
-      "delete_cancel_button": "Abbrechen"
-    }
-  },
-  "users_page": {
-    "title": "Benutzerverwaltung",
-    "description": "Benutzer und deren Berechtigungen verwalten",
-    "add_user_button": "Benutzer hinzufügen",
-    "search_placeholder": "Benutzer suchen...",
-    "filter": {
-      "all_roles": "Alle Rollen",
-      "admin": "Administrator",
-      "user": "Benutzer",
-      "all_status": "Alle Status",
-      "active": "Aktiv",
-      "suspended": "Gesperrt",
-      "pending": "Ausstehend"
-    },
-    "total_users": "Benutzer gesamt",
-    "active_users": "Aktiv",
-    "admins": "Administratoren",
-    "pending_users": "Ausstehend",
-    "no_users_found_title": "Keine Benutzer gefunden",
-    "no_users_found_description_filter": "Versuchen Sie, Ihre Such- oder Filterkriterien anzupassen.",
-    "no_users_found_description_empty": "Es wurden noch keine Benutzer hinzugefügt.",
-    "table": {
-      "user_header": "Benutzer",
-      "role_header": "Rolle",
-      "status_header": "Status",
-      "activity_header": "Aktivität",
-      "last_login_header": "Letzte Anmeldung",
-      "actions_header": "Aktionen",
-      "created_at": "Erstellt am"
-    },
-    "status": {
-      "active": "Aktiv",
-      "banned": "Gesperrt"
-    },
-    "delete_user_modal": {
-      "title": "Benutzer löschen",
-      "confirmation_message": "Sind Sie sicher, dass Sie den Benutzer {{username}} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "confirm_button": "Löschen",
-      "cancel_button": "Abbrechen"
-    },
-    "edit_user_modal": {
-      "title": "Benutzer bearbeiten: {{username}}",
-      "username_label": "Benutzername",
-      "email_label": "E-Mail",
-      "role_label": "Rolle",
-      "banned_label": "Gesperrt",
-      "save_button": "Speichern",
-      "cancel_button": "Abbrechen"
-    },
-    "add_user_modal": {
-      "title": "Neuen Benutzer hinzufügen",
-      "name_label": "Name",
-      "username_label": "Benutzername",
-      "email_label": "E-Mail",
-      "password_label": "Passwort",
-      "role_label": "Rolle",
-      "save_button": "Benutzer hinzufügen",
-      "cancel_button": "Abbrechen"
-    }
-  },
-  "forgot_password_page": {
-    "back_to_sign_in": "Zurück zur Anmeldung",
-    "check_email_title": "Überprüfen Sie Ihre E-Mail",
-    "check_email_description": "Wir haben einen Link zum Zurücksetzen des Passworts an {{email}} gesendet",
-    "did_not_receive_email": "E-Mail nicht erhalten? Überprüfen Sie Ihren Spam-Ordner oder versuchen Sie es erneut.",
-    "try_again_button": "Erneut versuchen",
-    "forgot_password_title": "Passwort vergessen?",
-    "forgot_password_description": "Keine Sorge, wir senden Ihnen Anweisungen zum Zurücksetzen",
-    "email_label": "E-Mail",
-    "email_placeholder": "Geben Sie Ihre E-Mail ein",
-    "email_hint": "Geben Sie die E-Mail ein, die mit Ihrem Konto verknüpft ist",
-    "sending_button": "Wird gesendet...",
-    "reset_password_button": "Passwort zurücksetzen",
-    "remember_password": "Erinnern Sie sich an Ihr Passwort?",
-    "sign_in_link": "Anmelden",
-    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-  },
-  "login_page": {
-    "back_to_hemmelig": "Zurück zu Hemmelig",
-    "welcome_back": "Willkommen zurück bei Hemmelig",
-    "welcome_back_title": "Willkommen zurück",
-    "welcome_back_description": "Melden Sie sich bei Ihrem Hemmelig-Konto an",
-    "username_label": "Benutzername",
-    "username_placeholder": "Geben Sie Ihren Benutzernamen ein",
-    "password_label": "Passwort",
-    "password_placeholder": "Geben Sie Ihr Passwort ein",
-    "forgot_password_link": "Passwort vergessen?",
-    "signing_in_button": "Wird angemeldet...",
-    "sign_in_button": "Anmelden",
-    "or_continue_with": "Oder fortfahren mit",
-    "continue_with_github": "Mit GitHub fortfahren",
-    "no_account_question": "Noch kein Konto?",
-    "sign_up_link": "Registrieren",
-    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-  },
-  "register_page": {
-    "back_to_hemmelig": "Zurück zu Hemmelig",
-    "join_hemmelig": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
-    "create_account_title": "Konto erstellen",
-    "create_account_description": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
-    "username_label": "Benutzername",
-    "username_placeholder": "Wählen Sie einen Benutzernamen",
-    "email_label": "E-Mail",
-    "email_placeholder": "Geben Sie Ihre E-Mail ein",
-    "password_label": "Passwort",
-    "password_placeholder": "Erstellen Sie ein Passwort",
-    "password_strength_label": "Passwortstärke",
-    "password_strength_levels": {
-      "very_weak": "Sehr schwach",
-      "weak": "Schwach",
-      "fair": "Mittel",
-      "good": "Gut",
-      "strong": "Stark"
-    },
-    "confirm_password_label": "Passwort bestätigen",
-    "confirm_password_placeholder": "Bestätigen Sie Ihr Passwort",
-    "passwords_match": "Passwörter stimmen überein",
-    "passwords_do_not_match": "Passwörter stimmen nicht überein",
-    "password_mismatch_alert": "Passwörter stimmen nicht überein",
-    "creating_account_button": "Konto wird erstellt...",
-    "create_account_button": "Konto erstellen",
-    "or_continue_with": "Oder fortfahren mit",
-    "continue_with_github": "Mit GitHub fortfahren",
-    "already_have_account_question": "Bereits ein Konto?",
-    "sign_in_link": "Anmelden",
-    "invite_code_label": "Einladungscode",
-    "invite_code_placeholder": "Geben Sie Ihren Einladungscode ein",
-    "invite_code_required": "Einladungscode ist erforderlich",
-    "invalid_invite_code": "Ungültiger Einladungscode",
-    "failed_to_validate_invite": "Einladungscode konnte nicht validiert werden",
-    "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
-    "email_domain_not_allowed": "E-Mail-Domain nicht erlaubt",
-    "account_already_exists": "Ein Konto mit dieser E-Mail existiert bereits. Bitte melden Sie sich stattdessen an."
-  },
-  "secret_form": {
-    "failed_to_create_secret": "Geheimnis konnte nicht erstellt werden: {{errorMessage}}",
-    "failed_to_upload_file": "Datei konnte nicht hochgeladen werden: {{fileName}}"
-  },
-  "secret_page": {
-    "password_label": "Passwort",
-    "password_placeholder": "Passwort eingeben, um das Geheimnis anzuzeigen",
-    "view_secret_button": "Geheimnis anzeigen",
-    "views_remaining_tooltip": "Verbleibende Aufrufe: {{count}}",
-    "loading_message": "Geheimnis wird entschlüsselt...",
-    "files_title": "Angehängte Dateien",
-    "secret_waiting_title": "Jemand hat ein Geheimnis mit Ihnen geteilt",
-    "secret_waiting_description": "Dieses Geheimnis ist verschlüsselt und kann erst angezeigt werden, wenn Sie auf die Schaltfläche unten klicken.",
-    "one_view_remaining": "Dieses Geheimnis kann nur noch 1 Mal angezeigt werden",
-    "views_remaining": "Dieses Geheimnis kann noch {{count}} Mal angezeigt werden",
-    "view_warning": "Einmal angezeigt, kann diese Aktion nicht rückgängig gemacht werden",
-    "secret_revealed": "Geheimnis",
-    "copy_secret": "In Zwischenablage kopieren",
-    "download": "Herunterladen",
-    "create_your_own": "Erstellen Sie Ihr eigenes Geheimnis",
-    "encrypted_secret": "Verschlüsseltes Geheimnis",
-    "unlock_secret": "Geheimnis entsperren",
-    "delete_secret": "Geheimnis löschen",
-    "delete_modal_title": "Geheimnis löschen",
-    "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
-  },
-  "expiration": {
-    "7_days": "7 Tage",
-    "3_days": "3 Tage",
-    "1_day": "1 Tag",
-    "12_hours": "12 Stunden",
-    "4_hours": "4 Stunden",
-    "1_hour": "1 Stunde",
-    "30_minutes": "30 Minuten",
-    "5_minutes": "5 Minuten"
-  },
-  "error_display": {
-    "clear_errors_button_title": "Fehler löschen"
-  },
-  "secret_not_found_page": {
-    "title": "Geheimnis nicht gefunden",
-    "message": "Das Geheimnis, das Sie suchen, existiert nicht, ist abgelaufen oder wurde vernichtet.",
-    "error_details": "Fehlerdetails:",
-    "go_home_button": "Zur Startseite"
-  },
-  "organization_page": {
-    "title": "Organisationseinstellungen",
-    "description": "Organisationsweite Einstellungen und Zugriffskontrollen konfigurieren",
-    "registration_settings": {
-      "title": "Registrierungseinstellungen",
-      "description": "Steuern Sie, wie Benutzer Ihrer Organisation beitreten können",
-      "invite_only_title": "Nur mit Einladung",
-      "invite_only_description": "Benutzer können sich nur mit einem gültigen Einladungscode registrieren",
-      "require_registered_user_title": "Nur registrierte Benutzer",
-      "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen",
-      "allowed_domains_title": "Erlaubte E-Mail-Domains",
-      "allowed_domains_description": "Nur Registrierung von bestimmten E-Mail-Domains erlauben (kommagetrennt, z.B. firma.de, org.net)",
-      "allowed_domains_placeholder": "firma.de, org.net",
-      "allowed_domains_hint": "Kommagetrennte Liste von E-Mail-Domains. Leer lassen, um alle Domains zu erlauben."
-    },
-    "invite_codes": {
-      "title": "Einladungscodes",
-      "description": "Einladungscodes für neue Benutzer erstellen und verwalten",
-      "create_invite_button": "Einladungscode erstellen",
-      "code_header": "Code",
-      "uses_header": "Verwendungen",
-      "expires_header": "Läuft ab",
-      "actions_header": "Aktionen",
-      "unlimited": "Unbegrenzt",
-      "never": "Nie",
-      "expired": "Abgelaufen",
-      "no_invites": "Noch keine Einladungscodes",
-      "no_invites_description": "Erstellen Sie einen Einladungscode, um neuen Benutzern die Registrierung zu ermöglichen",
-      "copy_tooltip": "Code kopieren",
-      "delete_tooltip": "Code löschen"
-    },
-    "create_invite_modal": {
-      "title": "Einladungscode erstellen",
-      "max_uses_label": "Maximale Verwendungen",
-      "max_uses_placeholder": "Leer lassen für unbegrenzt",
-      "expiration_label": "Ablauf",
-      "expiration_options": {
-        "never": "Nie",
-        "24_hours": "24 Stunden",
+    "expiration": {
         "7_days": "7 Tage",
-        "30_days": "30 Tage"
-      },
-      "cancel_button": "Abbrechen",
-      "create_button": "Erstellen"
+        "3_days": "3 Tage",
+        "1_day": "1 Tag",
+        "12_hours": "12 Stunden",
+        "4_hours": "4 Stunden",
+        "1_hour": "1 Stunde",
+        "30_minutes": "30 Minuten",
+        "5_minutes": "5 Minuten"
     },
-    "saving_button": "Wird gespeichert...",
-    "save_settings_button": "Einstellungen speichern"
-  },
-  "invites_page": {
-    "title": "Einladungscodes",
-    "description": "Einladungscodes für die Registrierung neuer Benutzer verwalten",
-    "create_invite_button": "Einladung erstellen",
-    "loading": "Einladungscodes werden geladen...",
-    "table": {
-      "code_header": "Code",
-      "uses_header": "Verwendungen",
-      "expires_header": "Läuft ab",
-      "status_header": "Status",
-      "never": "Nie"
+    "error_display": {
+        "clear_errors_button_title": "Fehler löschen"
     },
-    "status": {
-      "active": "Aktiv",
-      "expired": "Abgelaufen",
-      "used": "Verwendet",
-      "inactive": "Inaktiv"
+    "secret_not_found_page": {
+        "title": "Geheimnis nicht gefunden",
+        "message": "Das Geheimnis, das Sie suchen, existiert nicht, ist abgelaufen oder wurde vernichtet.",
+        "error_details": "Fehlerdetails:",
+        "go_home_button": "Zur Startseite"
     },
-    "no_invites": "Noch keine Einladungscodes",
-    "create_modal": {
-      "title": "Einladungscode erstellen",
-      "max_uses_label": "Maximale Verwendungen",
-      "expires_in_label": "Läuft ab in (Tage)"
+    "organization_page": {
+        "title": "Organisationseinstellungen",
+        "description": "Organisationsweite Einstellungen und Zugriffskontrollen konfigurieren",
+        "registration_settings": {
+            "title": "Registrierungseinstellungen",
+            "description": "Steuern Sie, wie Benutzer Ihrer Organisation beitreten können",
+            "invite_only_title": "Nur mit Einladung",
+            "invite_only_description": "Benutzer können sich nur mit einem gültigen Einladungscode registrieren",
+            "require_registered_user_title": "Nur registrierte Benutzer",
+            "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen",
+            "allowed_domains_title": "Erlaubte E-Mail-Domains",
+            "allowed_domains_description": "Nur Registrierung von bestimmten E-Mail-Domains erlauben (kommagetrennt, z.B. firma.de, org.net)",
+            "allowed_domains_placeholder": "firma.de, org.net",
+            "allowed_domains_hint": "Kommagetrennte Liste von E-Mail-Domains. Leer lassen, um alle Domains zu erlauben."
+        },
+        "invite_codes": {
+            "title": "Einladungscodes",
+            "description": "Einladungscodes für neue Benutzer erstellen und verwalten",
+            "create_invite_button": "Einladungscode erstellen",
+            "code_header": "Code",
+            "uses_header": "Verwendungen",
+            "expires_header": "Läuft ab",
+            "actions_header": "Aktionen",
+            "unlimited": "Unbegrenzt",
+            "never": "Nie",
+            "expired": "Abgelaufen",
+            "no_invites": "Noch keine Einladungscodes",
+            "no_invites_description": "Erstellen Sie einen Einladungscode, um neuen Benutzern die Registrierung zu ermöglichen",
+            "copy_tooltip": "Code kopieren",
+            "delete_tooltip": "Code löschen"
+        },
+        "create_invite_modal": {
+            "title": "Einladungscode erstellen",
+            "max_uses_label": "Maximale Verwendungen",
+            "max_uses_placeholder": "Leer lassen für unbegrenzt",
+            "expiration_label": "Ablauf",
+            "expiration_options": {
+                "never": "Nie",
+                "24_hours": "24 Stunden",
+                "7_days": "7 Tage",
+                "30_days": "30 Tage"
+            },
+            "cancel_button": "Abbrechen",
+            "create_button": "Erstellen"
+        },
+        "saving_button": "Wird gespeichert...",
+        "save_settings_button": "Einstellungen speichern"
     },
-    "delete_modal": {
-      "title": "Einladungscode deaktivieren",
-      "confirm_text": "Deaktivieren",
-      "cancel_text": "Abbrechen",
-      "message": "Sind Sie sicher, dass Sie den Einladungscode {{code}} deaktivieren möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    "invites_page": {
+        "title": "Einladungscodes",
+        "description": "Einladungscodes für die Registrierung neuer Benutzer verwalten",
+        "create_invite_button": "Einladung erstellen",
+        "loading": "Einladungscodes werden geladen...",
+        "table": {
+            "code_header": "Code",
+            "uses_header": "Verwendungen",
+            "expires_header": "Läuft ab",
+            "status_header": "Status",
+            "never": "Nie"
+        },
+        "status": {
+            "active": "Aktiv",
+            "expired": "Abgelaufen",
+            "used": "Verwendet",
+            "inactive": "Inaktiv"
+        },
+        "no_invites": "Noch keine Einladungscodes",
+        "create_modal": {
+            "title": "Einladungscode erstellen",
+            "max_uses_label": "Maximale Verwendungen",
+            "expires_in_label": "Läuft ab in (Tage)"
+        },
+        "delete_modal": {
+            "title": "Einladungscode deaktivieren",
+            "confirm_text": "Deaktivieren",
+            "cancel_text": "Abbrechen",
+            "message": "Sind Sie sicher, dass Sie den Einladungscode {{code}} deaktivieren möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+        },
+        "toast": {
+            "created": "Einladungscode erstellt",
+            "deactivated": "Einladungscode deaktiviert",
+            "copied": "Einladungscode in Zwischenablage kopiert",
+            "fetch_error": "Einladungscodes konnten nicht abgerufen werden",
+            "create_error": "Einladungscode konnte nicht erstellt werden",
+            "delete_error": "Einladungscode konnte nicht deaktiviert werden"
+        }
     },
-    "toast": {
-      "created": "Einladungscode erstellt",
-      "deactivated": "Einladungscode deaktiviert",
-      "copied": "Einladungscode in Zwischenablage kopiert",
-      "fetch_error": "Einladungscodes konnten nicht abgerufen werden",
-      "create_error": "Einladungscode konnte nicht erstellt werden",
-      "delete_error": "Einladungscode konnte nicht deaktiviert werden"
+    "social_login": {
+        "continue_with": "Fortfahren mit {{provider}}",
+        "sign_up_with": "Registrieren mit {{provider}}"
+    },
+    "setup_page": {
+        "title": "Willkommen bei Hemmelig",
+        "description": "Erstellen Sie Ihr Administratorkonto, um zu beginnen",
+        "name_label": "Vollständiger Name",
+        "name_placeholder": "Geben Sie Ihren vollständigen Namen ein",
+        "username_label": "Benutzername",
+        "username_placeholder": "Wählen Sie einen Benutzernamen",
+        "email_label": "E-Mail-Adresse",
+        "email_placeholder": "Geben Sie Ihre E-Mail ein",
+        "password_label": "Passwort",
+        "password_placeholder": "Erstellen Sie ein Passwort (mind. 8 Zeichen)",
+        "confirm_password_label": "Passwort bestätigen",
+        "confirm_password_placeholder": "Bestätigen Sie Ihr Passwort",
+        "create_admin": "Administratorkonto erstellen",
+        "creating": "Konto wird erstellt...",
+        "success": "Administratorkonto erfolgreich erstellt! Bitte melden Sie sich an.",
+        "error": "Administratorkonto konnte nicht erstellt werden",
+        "passwords_mismatch": "Passwörter stimmen nicht überein",
+        "password_too_short": "Passwort muss mindestens 8 Zeichen lang sein",
+        "note": "Diese Einrichtung kann nur einmal durchgeführt werden. Das Administratorkonto hat vollen Zugriff, um diese Instanz zu verwalten."
+    },
+    "theme_toggle": {
+        "switch_to_light": "Zum hellen Modus wechseln",
+        "switch_to_dark": "Zum dunklen Modus wechseln"
+    },
+    "webhook_settings": {
+        "title": "Webhook-Benachrichtigungen",
+        "description": "Externe Dienste benachrichtigen, wenn Geheimnisse angesehen oder vernichtet werden",
+        "enable_webhooks_title": "Webhooks aktivieren",
+        "enable_webhooks_description": "HTTP-POST-Anfragen an Ihre Webhook-URL senden, wenn Ereignisse auftreten",
+        "webhook_url_label": "Webhook-URL",
+        "webhook_url_placeholder": "https://beispiel.de/webhook",
+        "webhook_url_hint": "Die URL, an die Webhook-Payloads gesendet werden",
+        "webhook_secret_label": "Webhook-Geheimnis",
+        "webhook_secret_placeholder": "Geben Sie ein Geheimnis für die HMAC-Signierung ein",
+        "webhook_secret_hint": "Wird verwendet, um Webhook-Payloads mit HMAC-SHA256 zu signieren. Die Signatur wird im X-Hemmelig-Signature-Header gesendet.",
+        "events_title": "Webhook-Ereignisse",
+        "on_view_title": "Geheimnis angesehen",
+        "on_view_description": "Webhook senden, wenn ein Geheimnis angesehen wird",
+        "on_burn_title": "Geheimnis vernichtet",
+        "on_burn_description": "Webhook senden, wenn ein Geheimnis vernichtet oder gelöscht wird"
+    },
+    "common": {
+        "error": "Fehler",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "ok": "OK",
+        "delete": "Löschen",
+        "deleting": "Wird gelöscht..."
     }
-  },
-  "social_login": {
-    "continue_with": "Fortfahren mit {{provider}}",
-    "sign_up_with": "Registrieren mit {{provider}}"
-  },
-  "setup_page": {
-    "title": "Willkommen bei Hemmelig",
-    "description": "Erstellen Sie Ihr Administratorkonto, um zu beginnen",
-    "name_label": "Vollständiger Name",
-    "name_placeholder": "Geben Sie Ihren vollständigen Namen ein",
-    "username_label": "Benutzername",
-    "username_placeholder": "Wählen Sie einen Benutzernamen",
-    "email_label": "E-Mail-Adresse",
-    "email_placeholder": "Geben Sie Ihre E-Mail ein",
-    "password_label": "Passwort",
-    "password_placeholder": "Erstellen Sie ein Passwort (mind. 8 Zeichen)",
-    "confirm_password_label": "Passwort bestätigen",
-    "confirm_password_placeholder": "Bestätigen Sie Ihr Passwort",
-    "create_admin": "Administratorkonto erstellen",
-    "creating": "Konto wird erstellt...",
-    "success": "Administratorkonto erfolgreich erstellt! Bitte melden Sie sich an.",
-    "error": "Administratorkonto konnte nicht erstellt werden",
-    "passwords_mismatch": "Passwörter stimmen nicht überein",
-    "password_too_short": "Passwort muss mindestens 8 Zeichen lang sein",
-    "note": "Diese Einrichtung kann nur einmal durchgeführt werden. Das Administratorkonto hat vollen Zugriff, um diese Instanz zu verwalten."
-  },
-  "theme_toggle": {
-    "switch_to_light": "Zum hellen Modus wechseln",
-    "switch_to_dark": "Zum dunklen Modus wechseln"
-  },
-  "webhook_settings": {
-    "title": "Webhook-Benachrichtigungen",
-    "description": "Externe Dienste benachrichtigen, wenn Geheimnisse angesehen oder vernichtet werden",
-    "enable_webhooks_title": "Webhooks aktivieren",
-    "enable_webhooks_description": "HTTP-POST-Anfragen an Ihre Webhook-URL senden, wenn Ereignisse auftreten",
-    "webhook_url_label": "Webhook-URL",
-    "webhook_url_placeholder": "https://beispiel.de/webhook",
-    "webhook_url_hint": "Die URL, an die Webhook-Payloads gesendet werden",
-    "webhook_secret_label": "Webhook-Geheimnis",
-    "webhook_secret_placeholder": "Geben Sie ein Geheimnis für die HMAC-Signierung ein",
-    "webhook_secret_hint": "Wird verwendet, um Webhook-Payloads mit HMAC-SHA256 zu signieren. Die Signatur wird im X-Hemmelig-Signature-Header gesendet.",
-    "events_title": "Webhook-Ereignisse",
-    "on_view_title": "Geheimnis angesehen",
-    "on_view_description": "Webhook senden, wenn ein Geheimnis angesehen wird",
-    "on_burn_title": "Geheimnis vernichtet",
-    "on_burn_description": "Webhook senden, wenn ein Geheimnis vernichtet oder gelöscht wird"
-  },
-  "common": {
-    "error": "Fehler",
-    "cancel": "Abbrechen",
-    "confirm": "Bestätigen",
-    "ok": "OK",
-    "delete": "Löschen",
-    "deleting": "Wird gelöscht..."
-  }
 }

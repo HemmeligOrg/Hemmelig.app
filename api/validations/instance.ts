@@ -8,7 +8,7 @@ export const instanceSettingsSchema = z.object({
     maxSecretsPerUser: z.number().int().min(1).optional(),
     defaultSecretExpiration: z.number().int().min(1).optional(),
     maxSecretSize: z.number().int().min(1).optional(),
-    
+
     allowPasswordProtection: z.boolean().optional(),
     allowIpRestriction: z.boolean().optional(),
     maxPasswordAttempts: z.number().int().min(1).optional(),
@@ -16,7 +16,7 @@ export const instanceSettingsSchema = z.object({
     enableRateLimiting: z.boolean().optional(),
     rateLimitRequests: z.number().int().min(1).optional(),
     rateLimitWindow: z.number().int().min(1).optional(),
-    
+
     // Organization features
     requireInviteCode: z.boolean().optional(),
     allowedEmailDomains: z.string().optional(),

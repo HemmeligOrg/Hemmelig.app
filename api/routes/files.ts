@@ -1,11 +1,11 @@
-import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
+import { mkdir, readFile, writeFile } from 'fs/promises';
+import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
-import { writeFile, mkdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import prisma from '../lib/db';
+import { z } from 'zod';
 import instanceSettings from '../instance-settings';
+import prisma from '../lib/db';
 
 const files = new Hono();
 
@@ -63,7 +63,10 @@ files.post('/', async (c) => {
 
         const maxFileSize = getMaxFileSize();
         if (file.size > maxFileSize) {
-            return c.json({ error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` }, 413);
+            return c.json(
+                { error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` },
+                413
+            );
         }
 
         const id = nanoid();

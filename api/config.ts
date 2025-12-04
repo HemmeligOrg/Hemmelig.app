@@ -93,9 +93,9 @@ const config = {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
     },
     trustedOrigins: [
-        "https://hemmelig.app",
-        ...(!isProduction ? ["http://localhost:5173"] : []),
-        process.env.HEMMELIG_TRUSTED_ORIGIN || "",
+        'https://hemmelig.app',
+        ...(!isProduction ? ['http://localhost:5173'] : []),
+        process.env.HEMMELIG_TRUSTED_ORIGIN || '',
     ].filter(Boolean),
     general: {
         instanceName: process.env.HEMMELIG_INSTANCE_NAME,
@@ -116,7 +116,8 @@ const config = {
     },
     analytics: {
         enabled: parseBoolean(process.env.HEMMELIG_ANALYTICS_ENABLED) ?? true,
-        hmacSecret: process.env.HEMMELIG_ANALYTICS_HMAC_SECRET || 'default-analytics-secret-change-me',
+        hmacSecret:
+            process.env.HEMMELIG_ANALYTICS_HMAC_SECRET || 'default-analytics-secret-change-me',
     },
     socialProviders,
 };
@@ -137,4 +138,3 @@ export default {
     get,
     getSocialProviders: () => config.socialProviders,
 };
-

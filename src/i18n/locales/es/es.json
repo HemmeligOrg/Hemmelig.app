@@ -555,153 +555,153 @@
         "5_minutes": "5 Minutos"
     },
     "error_display": {
-    "clear_errors_button_title": "Borrar errores"
-  },
-  "secret_not_found_page": {
-    "title": "Secreto no encontrado",
-    "message": "El secreto que estás buscando no existe, ha caducado o ha sido quemado.",
-    "error_details": "Detalles del error:",
-    "go_home_button": "Ir a la página de inicio"
-  },
-  "organization_page": {
-    "title": "Configuración de la organización",
-    "description": "Configura los ajustes y controles de acceso de toda la organización",
-    "registration_settings": {
-      "title": "Configuración de registro",
-      "description": "Controla cómo los usuarios pueden unirse a tu organización",
-      "invite_only_title": "Registro solo con invitación",
-      "invite_only_description": "Los usuarios solo pueden registrarse con un código de invitación válido",
-      "require_registered_user_title": "Solo usuarios registrados",
-      "require_registered_user_description": "Solo los usuarios registrados pueden crear secretos",
-      "allowed_domains_title": "Dominios de correo permitidos",
-      "allowed_domains_description": "Solo permitir registro desde dominios de correo específicos (separados por comas, ej., empresa.com, org.net)",
-      "allowed_domains_placeholder": "empresa.com, org.net",
-      "allowed_domains_hint": "Lista de dominios de correo separados por comas. Deja vacío para permitir todos los dominios."
+        "clear_errors_button_title": "Borrar errores"
     },
-    "invite_codes": {
-      "title": "Códigos de invitación",
-      "description": "Crear y gestionar códigos de invitación para nuevos usuarios",
-      "create_invite_button": "Crear código de invitación",
-      "code_header": "Código",
-      "uses_header": "Usos",
-      "expires_header": "Expira",
-      "actions_header": "Acciones",
-      "unlimited": "Ilimitado",
-      "never": "Nunca",
-      "expired": "Expirado",
-      "no_invites": "Aún no hay códigos de invitación",
-      "no_invites_description": "Crea un código de invitación para permitir que nuevos usuarios se registren",
-      "copy_tooltip": "Copiar código",
-      "delete_tooltip": "Eliminar código"
+    "secret_not_found_page": {
+        "title": "Secreto no encontrado",
+        "message": "El secreto que estás buscando no existe, ha caducado o ha sido quemado.",
+        "error_details": "Detalles del error:",
+        "go_home_button": "Ir a la página de inicio"
     },
-    "create_invite_modal": {
-      "title": "Crear código de invitación",
-      "max_uses_label": "Usos máximos",
-      "max_uses_placeholder": "Deja vacío para ilimitado",
-      "expiration_label": "Expiración",
-      "expiration_options": {
-        "never": "Nunca",
-        "24_hours": "24 Horas",
-        "7_days": "7 Días",
-        "30_days": "30 Días"
-      },
-      "cancel_button": "Cancelar",
-      "create_button": "Crear"
+    "organization_page": {
+        "title": "Configuración de la organización",
+        "description": "Configura los ajustes y controles de acceso de toda la organización",
+        "registration_settings": {
+            "title": "Configuración de registro",
+            "description": "Controla cómo los usuarios pueden unirse a tu organización",
+            "invite_only_title": "Registro solo con invitación",
+            "invite_only_description": "Los usuarios solo pueden registrarse con un código de invitación válido",
+            "require_registered_user_title": "Solo usuarios registrados",
+            "require_registered_user_description": "Solo los usuarios registrados pueden crear secretos",
+            "allowed_domains_title": "Dominios de correo permitidos",
+            "allowed_domains_description": "Solo permitir registro desde dominios de correo específicos (separados por comas, ej., empresa.com, org.net)",
+            "allowed_domains_placeholder": "empresa.com, org.net",
+            "allowed_domains_hint": "Lista de dominios de correo separados por comas. Deja vacío para permitir todos los dominios."
+        },
+        "invite_codes": {
+            "title": "Códigos de invitación",
+            "description": "Crear y gestionar códigos de invitación para nuevos usuarios",
+            "create_invite_button": "Crear código de invitación",
+            "code_header": "Código",
+            "uses_header": "Usos",
+            "expires_header": "Expira",
+            "actions_header": "Acciones",
+            "unlimited": "Ilimitado",
+            "never": "Nunca",
+            "expired": "Expirado",
+            "no_invites": "Aún no hay códigos de invitación",
+            "no_invites_description": "Crea un código de invitación para permitir que nuevos usuarios se registren",
+            "copy_tooltip": "Copiar código",
+            "delete_tooltip": "Eliminar código"
+        },
+        "create_invite_modal": {
+            "title": "Crear código de invitación",
+            "max_uses_label": "Usos máximos",
+            "max_uses_placeholder": "Deja vacío para ilimitado",
+            "expiration_label": "Expiración",
+            "expiration_options": {
+                "never": "Nunca",
+                "24_hours": "24 Horas",
+                "7_days": "7 Días",
+                "30_days": "30 Días"
+            },
+            "cancel_button": "Cancelar",
+            "create_button": "Crear"
+        },
+        "saving_button": "Guardando...",
+        "save_settings_button": "Guardar configuración"
     },
-    "saving_button": "Guardando...",
-    "save_settings_button": "Guardar configuración"
-  },
-  "invites_page": {
-    "title": "Códigos de invitación",
-    "description": "Gestiona los códigos de invitación para el registro de nuevos usuarios",
-    "create_invite_button": "Crear invitación",
-    "loading": "Cargando códigos de invitación...",
-    "table": {
-      "code_header": "Código",
-      "uses_header": "Usos",
-      "expires_header": "Expira",
-      "status_header": "Estado",
-      "never": "Nunca"
+    "invites_page": {
+        "title": "Códigos de invitación",
+        "description": "Gestiona los códigos de invitación para el registro de nuevos usuarios",
+        "create_invite_button": "Crear invitación",
+        "loading": "Cargando códigos de invitación...",
+        "table": {
+            "code_header": "Código",
+            "uses_header": "Usos",
+            "expires_header": "Expira",
+            "status_header": "Estado",
+            "never": "Nunca"
+        },
+        "status": {
+            "active": "Activo",
+            "expired": "Expirado",
+            "used": "Usado",
+            "inactive": "Inactivo"
+        },
+        "no_invites": "Aún no hay códigos de invitación",
+        "create_modal": {
+            "title": "Crear código de invitación",
+            "max_uses_label": "Usos máximos",
+            "expires_in_label": "Expira en (días)"
+        },
+        "delete_modal": {
+            "title": "Desactivar código de invitación",
+            "confirm_text": "Desactivar",
+            "cancel_text": "Cancelar",
+            "message": "¿Estás seguro de que quieres desactivar el código de invitación {{code}}? Esta acción no se puede deshacer."
+        },
+        "toast": {
+            "created": "Código de invitación creado",
+            "deactivated": "Código de invitación desactivado",
+            "copied": "Código de invitación copiado al portapapeles",
+            "fetch_error": "Error al obtener los códigos de invitación",
+            "create_error": "Error al crear el código de invitación",
+            "delete_error": "Error al desactivar el código de invitación"
+        }
     },
-    "status": {
-      "active": "Activo",
-      "expired": "Expirado",
-      "used": "Usado",
-      "inactive": "Inactivo"
+    "social_login": {
+        "continue_with": "Continuar con {{provider}}",
+        "sign_up_with": "Registrarse con {{provider}}"
     },
-    "no_invites": "Aún no hay códigos de invitación",
-    "create_modal": {
-      "title": "Crear código de invitación",
-      "max_uses_label": "Usos máximos",
-      "expires_in_label": "Expira en (días)"
+    "setup_page": {
+        "title": "Bienvenido a Hemmelig",
+        "description": "Crea tu cuenta de administrador para comenzar",
+        "name_label": "Nombre completo",
+        "name_placeholder": "Introduce tu nombre completo",
+        "username_label": "Nombre de usuario",
+        "username_placeholder": "Elige un nombre de usuario",
+        "email_label": "Dirección de correo electrónico",
+        "email_placeholder": "Introduce tu correo electrónico",
+        "password_label": "Contraseña",
+        "password_placeholder": "Crea una contraseña (mín. 8 caracteres)",
+        "confirm_password_label": "Confirmar contraseña",
+        "confirm_password_placeholder": "Confirma tu contraseña",
+        "create_admin": "Crear cuenta de administrador",
+        "creating": "Creando cuenta...",
+        "success": "¡Cuenta de administrador creada con éxito! Por favor, inicia sesión.",
+        "error": "Error al crear la cuenta de administrador",
+        "passwords_mismatch": "Las contraseñas no coinciden",
+        "password_too_short": "La contraseña debe tener al menos 8 caracteres",
+        "note": "Esta configuración solo se puede completar una vez. La cuenta de administrador tendrá acceso completo para gestionar esta instancia."
     },
-    "delete_modal": {
-      "title": "Desactivar código de invitación",
-      "confirm_text": "Desactivar",
-      "cancel_text": "Cancelar",
-      "message": "¿Estás seguro de que quieres desactivar el código de invitación {{code}}? Esta acción no se puede deshacer."
+    "theme_toggle": {
+        "switch_to_light": "Cambiar a modo claro",
+        "switch_to_dark": "Cambiar a modo oscuro"
     },
-    "toast": {
-      "created": "Código de invitación creado",
-      "deactivated": "Código de invitación desactivado",
-      "copied": "Código de invitación copiado al portapapeles",
-      "fetch_error": "Error al obtener los códigos de invitación",
-      "create_error": "Error al crear el código de invitación",
-      "delete_error": "Error al desactivar el código de invitación"
+    "webhook_settings": {
+        "title": "Notificaciones de webhook",
+        "description": "Notificar a servicios externos cuando los secretos son vistos o quemados",
+        "enable_webhooks_title": "Habilitar webhooks",
+        "enable_webhooks_description": "Enviar solicitudes HTTP POST a tu URL de webhook cuando ocurran eventos",
+        "webhook_url_label": "URL del webhook",
+        "webhook_url_placeholder": "https://ejemplo.com/webhook",
+        "webhook_url_hint": "La URL donde se enviarán las cargas del webhook",
+        "webhook_secret_label": "Secreto del webhook",
+        "webhook_secret_placeholder": "Introduce un secreto para la firma HMAC",
+        "webhook_secret_hint": "Se usa para firmar las cargas del webhook con HMAC-SHA256. La firma se envía en el encabezado X-Hemmelig-Signature.",
+        "events_title": "Eventos del webhook",
+        "on_view_title": "Secreto visto",
+        "on_view_description": "Enviar un webhook cuando se ve un secreto",
+        "on_burn_title": "Secreto quemado",
+        "on_burn_description": "Enviar un webhook cuando se quema o elimina un secreto"
+    },
+    "common": {
+        "error": "Error",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "ok": "OK",
+        "delete": "Eliminar",
+        "deleting": "Eliminando..."
     }
-  },
-  "social_login": {
-    "continue_with": "Continuar con {{provider}}",
-    "sign_up_with": "Registrarse con {{provider}}"
-  },
-  "setup_page": {
-    "title": "Bienvenido a Hemmelig",
-    "description": "Crea tu cuenta de administrador para comenzar",
-    "name_label": "Nombre completo",
-    "name_placeholder": "Introduce tu nombre completo",
-    "username_label": "Nombre de usuario",
-    "username_placeholder": "Elige un nombre de usuario",
-    "email_label": "Dirección de correo electrónico",
-    "email_placeholder": "Introduce tu correo electrónico",
-    "password_label": "Contraseña",
-    "password_placeholder": "Crea una contraseña (mín. 8 caracteres)",
-    "confirm_password_label": "Confirmar contraseña",
-    "confirm_password_placeholder": "Confirma tu contraseña",
-    "create_admin": "Crear cuenta de administrador",
-    "creating": "Creando cuenta...",
-    "success": "¡Cuenta de administrador creada con éxito! Por favor, inicia sesión.",
-    "error": "Error al crear la cuenta de administrador",
-    "passwords_mismatch": "Las contraseñas no coinciden",
-    "password_too_short": "La contraseña debe tener al menos 8 caracteres",
-    "note": "Esta configuración solo se puede completar una vez. La cuenta de administrador tendrá acceso completo para gestionar esta instancia."
-  },
-  "theme_toggle": {
-    "switch_to_light": "Cambiar a modo claro",
-    "switch_to_dark": "Cambiar a modo oscuro"
-  },
-  "webhook_settings": {
-    "title": "Notificaciones de webhook",
-    "description": "Notificar a servicios externos cuando los secretos son vistos o quemados",
-    "enable_webhooks_title": "Habilitar webhooks",
-    "enable_webhooks_description": "Enviar solicitudes HTTP POST a tu URL de webhook cuando ocurran eventos",
-    "webhook_url_label": "URL del webhook",
-    "webhook_url_placeholder": "https://ejemplo.com/webhook",
-    "webhook_url_hint": "La URL donde se enviarán las cargas del webhook",
-    "webhook_secret_label": "Secreto del webhook",
-    "webhook_secret_placeholder": "Introduce un secreto para la firma HMAC",
-    "webhook_secret_hint": "Se usa para firmar las cargas del webhook con HMAC-SHA256. La firma se envía en el encabezado X-Hemmelig-Signature.",
-    "events_title": "Eventos del webhook",
-    "on_view_title": "Secreto visto",
-    "on_view_description": "Enviar un webhook cuando se ve un secreto",
-    "on_burn_title": "Secreto quemado",
-    "on_burn_description": "Enviar un webhook cuando se quema o elimina un secreto"
-  },
-  "common": {
-    "error": "Error",
-    "cancel": "Cancelar",
-    "confirm": "Confirmar",
-    "ok": "OK",
-    "delete": "Eliminar",
-    "deleting": "Eliminando..."
-  }
 }

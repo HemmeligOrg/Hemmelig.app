@@ -25,7 +25,7 @@ let applySettingsCallback: ((settings: SecretSettings) => void) | null = null;
 
 export const setApplySettingsCallback = (callback: (settings: SecretSettings) => void) => {
     applySettingsCallback = callback;
-    
+
     // If already hydrated and saveSettings is true, apply immediately
     const state = useSecretSettingsStore.getState();
     if (state.saveSettings) {

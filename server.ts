@@ -1,6 +1,5 @@
-
-import { Hono } from 'hono';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { Hono } from 'hono';
 import api from './api/app';
 import config from './api/config';
 

@@ -1,10 +1,10 @@
-import { Hono } from 'hono';
-import prisma from '../lib/db';
 import { zValidator } from '@hono/zod-validator';
+import { Hono } from 'hono';
+import config from '../config';
+import instanceSettings from '../instance-settings';
+import prisma from '../lib/db';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
-import instanceSettings from '../instance-settings';
-import config from '../config';
 
 const app = new Hono();
 
@@ -50,8 +50,12 @@ app.get('/settings/public', async (c) => {
 
         if (!dbSettings) {
             const initialData = {
-                ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
-                ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
+                ...Object.fromEntries(
+                    Object.entries(config.get('general')).filter(([, v]) => v !== undefined)
+                ),
+                ...Object.fromEntries(
+                    Object.entries(config.get('security')).filter(([, v]) => v !== undefined)
+                ),
             };
 
             dbSettings = await prisma.instanceSettings.create({
@@ -65,7 +69,9 @@ app.get('/settings/public', async (c) => {
             ...config.get('security'),
         };
         const filteredConfigSettings = Object.fromEntries(
-            Object.entries(configSettings).filter(([key, value]) => value !== undefined && key in publicSelectFields)
+            Object.entries(configSettings).filter(
+                ([key, value]) => value !== undefined && key in publicSelectFields
+            )
         );
 
         const finalSettings = {
@@ -87,8 +93,12 @@ app.get('/settings', authMiddleware, checkAdmin, async (c) => {
 
         if (!dbSettings) {
             const initialData = {
-                ...Object.fromEntries(Object.entries(config.get('general')).filter(([, v]) => v !== undefined)),
-                ...Object.fromEntries(Object.entries(config.get('security')).filter(([, v]) => v !== undefined)),
+                ...Object.fromEntries(
+                    Object.entries(config.get('general')).filter(([, v]) => v !== undefined)
+                ),
+                ...Object.fromEntries(
+                    Object.entries(config.get('security')).filter(([, v]) => v !== undefined)
+                ),
             };
 
             dbSettings = await prisma.instanceSettings.create({
@@ -117,7 +127,6 @@ app.get('/settings', authMiddleware, checkAdmin, async (c) => {
     }
 });
 
-
 // PUT /api/instance/settings
 app.put(
     '/settings',
@@ -129,7 +138,7 @@ app.put(
 
         try {
             const settings = await prisma.instanceSettings.findFirst();
-            
+
             if (!settings) {
                 return c.json({ error: 'Instance settings not found' }, 404);
             }

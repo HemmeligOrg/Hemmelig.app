@@ -13,9 +13,12 @@ export const handleNotFound = (error: Error & { code?: string }, c: Context) => 
     }
 
     // Handle other errors
-    return c.json({
-        error: 'Failed to process the operation',
-    }, 500);
+    return c.json(
+        {
+            error: 'Failed to process the operation',
+        },
+        500
+    );
 };
 
 /**
@@ -40,4 +43,3 @@ export const getClientIp = (c: Context): string => {
         '127.0.0.1'
     );
 };
-

@@ -54,10 +54,7 @@ type InstanceState = {
         key: K,
         value: OrganizationSettings[K]
     ) => void;
-    setWebhookSetting: <K extends keyof WebhookSettings>(
-        key: K,
-        value: WebhookSettings[K]
-    ) => void;
+    setWebhookSetting: <K extends keyof WebhookSettings>(key: K, value: WebhookSettings[K]) => void;
     saveSettings: (section: 'general' | 'security' | 'organization' | 'webhook') => Promise<void>;
 };
 
@@ -176,7 +173,8 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
     saveSettings: async (section) => {
         set({ isLoading: true });
         try {
-            const { generalSettings, securitySettings, organizationSettings, webhookSettings } = get();
+            const { generalSettings, securitySettings, organizationSettings, webhookSettings } =
+                get();
             let settingsToSave = {};
             if (section === 'general') {
                 settingsToSave = generalSettings;

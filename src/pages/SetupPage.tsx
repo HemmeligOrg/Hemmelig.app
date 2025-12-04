@@ -1,10 +1,10 @@
+import { Lock, Mail, User } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Lock, User, Mail } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { api } from '../lib/api';
 import Logo from '../components/Logo';
+import { api } from '../lib/api';
 
 export function SetupPage() {
     const { t } = useTranslation();
@@ -19,7 +19,7 @@ export function SetupPage() {
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
             [e.target.name]: e.target.value,
         }));

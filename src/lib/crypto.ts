@@ -57,7 +57,11 @@ async function getDerivedKey(userKeyString: string, salt: string): Promise<Crypt
  * @param {string} salt - The salt to use for key derivation.
  * @returns {Promise<Uint8Array>} - A promise that resolves to the encrypted data (IV + ciphertext).
  */
-export const encrypt = async (text: string, userEncryptionKey: string, salt: string): Promise<Uint8Array> => {
+export const encrypt = async (
+    text: string,
+    userEncryptionKey: string,
+    salt: string
+): Promise<Uint8Array> => {
     const key = await getDerivedKey(userEncryptionKey, salt);
     const iv = window.crypto.getRandomValues(new Uint8Array(12)); // 96-bit IV
     const plaintext = new TextEncoder().encode(text);
@@ -85,7 +89,11 @@ export const encrypt = async (text: string, userEncryptionKey: string, salt: str
  * @param {string} salt - The salt to use for key derivation.
  * @returns {Promise<Uint8Array>} - A promise that resolves to the encrypted data (IV + ciphertext).
  */
-export const encryptFile = async (fileBuffer: ArrayBuffer, userEncryptionKey: string, salt: string): Promise<Uint8Array> => {
+export const encryptFile = async (
+    fileBuffer: ArrayBuffer,
+    userEncryptionKey: string,
+    salt: string
+): Promise<Uint8Array> => {
     const key = await getDerivedKey(userEncryptionKey, salt);
     const iv = window.crypto.getRandomValues(new Uint8Array(12)); // 96-bit IV
     const plaintext = new Uint8Array(fileBuffer);
@@ -113,7 +121,11 @@ export const encryptFile = async (fileBuffer: ArrayBuffer, userEncryptionKey: st
  * @param {string} salt - The salt to use for key derivation.
  * @returns {Promise<string>} - A promise that resolves to the decrypted string data.
  */
-export const decrypt = async (fullMessage: Uint8Array, userEncryptionKey: string, salt: string): Promise<string> => {
+export const decrypt = async (
+    fullMessage: Uint8Array,
+    userEncryptionKey: string,
+    salt: string
+): Promise<string> => {
     const key = await getDerivedKey(userEncryptionKey, salt);
     const iv = fullMessage.slice(0, 12);
     const ciphertext = fullMessage.slice(12);
@@ -142,7 +154,11 @@ export const decrypt = async (fullMessage: Uint8Array, userEncryptionKey: string
  * @param {string} salt - The salt to use for key derivation.
  * @returns {Promise<Uint8Array>} - A promise that resolves to the decrypted file data.
  */
-export const decryptFile = async (fullMessage: Uint8Array, userEncryptionKey: string, salt: string): Promise<Uint8Array> => {
+export const decryptFile = async (
+    fullMessage: Uint8Array,
+    userEncryptionKey: string,
+    salt: string
+): Promise<Uint8Array> => {
     const key = await getDerivedKey(userEncryptionKey, salt);
     const iv = fullMessage.slice(0, 12);
     const ciphertext = fullMessage.slice(12);

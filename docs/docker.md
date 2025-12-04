@@ -37,38 +37,47 @@ The included `docker-compose.yml` uses SQLite:
 
 ```yaml
 services:
-  hemmelig:
-    image: hemmelig/hemmelig:v7
-    container_name: hemmelig
-    restart: unless-stopped
-    volumes:
-      - ./database:/app/database
-      - ./uploads:/app/uploads
-    environment:
-      - DATABASE_URL=file:/app/database/hemmelig.db
-      - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
-      - NODE_ENV=production
-      - HEMMELIG_BASE_URL=https://secrets.example.com
-    ports:
-      - '3000:3000'
-    healthcheck:
-      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/api/healthz']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    hemmelig:
+        image: hemmelig/hemmelig:v7
+        container_name: hemmelig
+        restart: unless-stopped
+        volumes:
+            - ./database:/app/database
+            - ./uploads:/app/uploads
+        environment:
+            - DATABASE_URL=file:/app/database/hemmelig.db
+            - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+            - NODE_ENV=production
+            - HEMMELIG_BASE_URL=https://secrets.example.com
+        ports:
+            - '3000:3000'
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'wget',
+                    '--no-verbose',
+                    '--tries=1',
+                    '--spider',
+                    'http://localhost:3000/api/healthz',
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
 ```
 
 **Important:** Before starting, update the following:
+
 - `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32`
 - `HEMMELIG_BASE_URL` - Your public domain URL
 
 ## Volume Mounts
 
-| Container Path | Purpose | Required |
-|----------------|---------|----------|
-| `/app/database` | SQLite database storage | Yes |
-| `/app/uploads` | File upload storage | Yes |
+| Container Path  | Purpose                 | Required |
+| --------------- | ----------------------- | -------- |
+| `/app/database` | SQLite database storage | Yes      |
+| `/app/uploads`  | File upload storage     | Yes      |
 
 ## Environment Variables
 
@@ -76,18 +85,18 @@ See [Environment Variables](./env.md) for a complete reference.
 
 ### Required Variables
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | Database connection string |
+| Variable             | Description                               |
+| -------------------- | ----------------------------------------- |
+| `DATABASE_URL`       | Database connection string                |
 | `BETTER_AUTH_SECRET` | Authentication secret (min 32 characters) |
 
 ### Common Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NODE_ENV` | Set to `production` for production deployments | `development` |
-| `HEMMELIG_BASE_URL` | Public URL of your instance | - |
-| `HEMMELIG_PORT` | Internal port (usually leave as default) | `3000` |
+| Variable            | Description                                    | Default       |
+| ------------------- | ---------------------------------------------- | ------------- |
+| `NODE_ENV`          | Set to `production` for production deployments | `development` |
+| `HEMMELIG_BASE_URL` | Public URL of your instance                    | -             |
+| `HEMMELIG_PORT`     | Internal port (usually leave as default)       | `3000`        |
 
 ## Troubleshooting
 
@@ -116,8 +125,8 @@ Or use Docker named volumes instead of bind mounts:
 
 ```yaml
 volumes:
-  - hemmelig-data:/app/database
-  - hemmelig-uploads:/app/uploads
+    - hemmelig-data:/app/database
+    - hemmelig-uploads:/app/uploads
 ```
 
 ### File Upload Permission Errors
@@ -173,15 +182,15 @@ server {
 
 ```yaml
 services:
-  hemmelig:
-    image: hemmelig/hemmelig:v7
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.hemmelig.rule=Host(`secrets.example.com`)"
-      - "traefik.http.routers.hemmelig.tls=true"
-      - "traefik.http.routers.hemmelig.tls.certresolver=letsencrypt"
-      - "traefik.http.services.hemmelig.loadbalancer.server.port=3000"
-    # ... rest of configuration
+    hemmelig:
+        image: hemmelig/hemmelig:v7
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.hemmelig.rule=Host(`secrets.example.com`)'
+            - 'traefik.http.routers.hemmelig.tls=true'
+            - 'traefik.http.routers.hemmelig.tls.certresolver=letsencrypt'
+            - 'traefik.http.services.hemmelig.loadbalancer.server.port=3000'
+        # ... rest of configuration
 ```
 
 ### Caddy

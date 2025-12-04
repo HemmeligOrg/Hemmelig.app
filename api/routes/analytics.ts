@@ -1,12 +1,12 @@
-import { Hono } from 'hono';
-import { authMiddleware, checkAdmin } from '../middlewares/auth';
-import prisma from '../lib/db';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
 import { createHmac } from 'crypto';
+import { Hono } from 'hono';
 import { isbot } from 'isbot';
+import { z } from 'zod';
 import config from '../config';
+import prisma from '../lib/db';
 import { getClientIp } from '../lib/utils';
+import { authMiddleware, checkAdmin } from '../middlewares/auth';
 
 const app = new Hono();
 
@@ -38,7 +38,7 @@ app.post('/track', zValidator('json', trackSchema), async (c) => {
     }
 
     const userAgent = c.req.header('user-agent') || '';
-    
+
     if (isbot(userAgent)) {
         return c.json({ success: false }, 403);
     }
@@ -89,28 +89,33 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
 
         const totalSecrets = secrets.length;
         const totalViews = secrets.reduce((acc, s) => acc + (s.views || 0), 0);
-        const activeSecrets = secrets.filter(s => s.expiresAt > now).length;
+        const activeSecrets = secrets.filter((s) => s.expiresAt > now).length;
         const expiredSecrets = totalSecrets - activeSecrets;
         const averageViews = totalSecrets > 0 ? totalViews / totalSecrets : 0;
 
-        const dailyStats = secrets.reduce((acc, secret) => {
-            const date = secret.createdAt.toISOString().split('T')[0];
-            if (!acc[date]) {
-                acc[date] = { date, secrets: 0, views: 0 };
-            }
-            acc[date].secrets++;
-            acc[date].views += secret.views || 0;
-            return acc;
-        }, {} as Record<string, { date: string; secrets: number; views: number }>);
+        const dailyStats = secrets.reduce(
+            (acc, secret) => {
+                const date = secret.createdAt.toISOString().split('T')[0];
+                if (!acc[date]) {
+                    acc[date] = { date, secrets: 0, views: 0 };
+                }
+                acc[date].secrets++;
+                acc[date].views += secret.views || 0;
+                return acc;
+            },
+            {} as Record<string, { date: string; secrets: number; views: number }>
+        );
 
-        const passwordProtected = secrets.filter(s => s.password).length;
-        const ipRestricted = secrets.filter(s => s.ipRange).length;
-        const burnable = secrets.filter(s => s.isBurnable).length;
+        const passwordProtected = secrets.filter((s) => s.password).length;
+        const ipRestricted = secrets.filter((s) => s.ipRange).length;
+        const burnable = secrets.filter((s) => s.isBurnable).length;
 
-        const expirationDurations = secrets.map(s => (s.expiresAt.getTime() - s.createdAt.getTime()) / (1000 * 60 * 60));
-        const oneHour = expirationDurations.filter(d => d <= 1).length;
-        const oneDay = expirationDurations.filter(d => d > 1 && d <= 24).length;
-        const oneWeekPlus = expirationDurations.filter(d => d > 24).length;
+        const expirationDurations = secrets.map(
+            (s) => (s.expiresAt.getTime() - s.createdAt.getTime()) / (1000 * 60 * 60)
+        );
+        const oneHour = expirationDurations.filter((d) => d <= 1).length;
+        const oneDay = expirationDurations.filter((d) => d > 1 && d <= 24).length;
+        const oneWeekPlus = expirationDurations.filter((d) => d > 24).length;
 
         return c.json({
             totalSecrets,
@@ -120,15 +125,27 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
             averageViews: parseFloat(averageViews.toFixed(2)),
             dailyStats: Object.values(dailyStats),
             secretTypes: {
-                passwordProtected: totalSecrets > 0 ? parseFloat(((passwordProtected / totalSecrets) * 100).toFixed(2)) : 0,
-                ipRestricted: totalSecrets > 0 ? parseFloat(((ipRestricted / totalSecrets) * 100).toFixed(2)) : 0,
-                burnable: totalSecrets > 0 ? parseFloat(((burnable / totalSecrets) * 100).toFixed(2)) : 0,
+                passwordProtected:
+                    totalSecrets > 0
+                        ? parseFloat(((passwordProtected / totalSecrets) * 100).toFixed(2))
+                        : 0,
+                ipRestricted:
+                    totalSecrets > 0
+                        ? parseFloat(((ipRestricted / totalSecrets) * 100).toFixed(2))
+                        : 0,
+                burnable:
+                    totalSecrets > 0 ? parseFloat(((burnable / totalSecrets) * 100).toFixed(2)) : 0,
             },
             expirationStats: {
-                oneHour: totalSecrets > 0 ? parseFloat(((oneHour / totalSecrets) * 100).toFixed(2)) : 0,
-                oneDay: totalSecrets > 0 ? parseFloat(((oneDay / totalSecrets) * 100).toFixed(2)) : 0,
-                oneWeekPlus: totalSecrets > 0 ? parseFloat(((oneWeekPlus / totalSecrets) * 100).toFixed(2)) : 0,
-            }
+                oneHour:
+                    totalSecrets > 0 ? parseFloat(((oneHour / totalSecrets) * 100).toFixed(2)) : 0,
+                oneDay:
+                    totalSecrets > 0 ? parseFloat(((oneDay / totalSecrets) * 100).toFixed(2)) : 0,
+                oneWeekPlus:
+                    totalSecrets > 0
+                        ? parseFloat(((oneWeekPlus / totalSecrets) * 100).toFixed(2))
+                        : 0,
+            },
         });
     } catch (error) {
         console.error('Failed to fetch analytics data:', error);
@@ -176,7 +193,10 @@ app.get('/visitors/daily', authMiddleware, checkAdmin, async (c) => {
             orderBy: { timestamp: 'desc' },
         });
 
-        const dailyMap = new Map<string, { uniqueIds: Set<string>; total: number; paths: Set<string> }>();
+        const dailyMap = new Map<
+            string,
+            { uniqueIds: Set<string>; total: number; paths: Set<string> }
+        >();
 
         for (const visitor of visitors) {
             const date = visitor.timestamp.toISOString().split('T')[0];

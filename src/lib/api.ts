@@ -11,9 +11,12 @@ const client = hc<AppType>('/api', {
         return fetch(input, init).then(async (res) => {
             if (!res.ok) {
                 const errorData: ApiError = await res.json();
-                const errorMessage = typeof errorData.error === 'string' 
-                    ? errorData.error 
-                    : errorData.error?.issues?.[0]?.message || errorData.error?.message || 'Unknown error';
+                const errorMessage =
+                    typeof errorData.error === 'string'
+                        ? errorData.error
+                        : errorData.error?.issues?.[0]?.message ||
+                          errorData.error?.message ||
+                          'Unknown error';
                 useErrorStore.getState().addError(errorMessage);
                 throw new Error(errorMessage);
             }

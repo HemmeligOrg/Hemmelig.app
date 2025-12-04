@@ -9,12 +9,14 @@ Hemmelig.app is a secure secret-sharing application that enables users to share 
 ### Core Security Model
 
 **CRITICAL: Zero-Knowledge Architecture**
+
 - All encryption/decryption happens **client-side only** using the Web Crypto API
 - The server **never** sees plaintext secrets—only encrypted blobs
 - Decryption keys are passed via URL fragments (`#decryptionKey=...`), which are **never sent to the server**
 - This is the fundamental security guarantee of the application—**do not compromise this**
 
 ### Encryption Details
+
 - **Algorithm:** AES-256-GCM (authenticated encryption)
 - **Key Derivation:** PBKDF2 with SHA-256, 100,000 iterations
 - **IV:** 96-bit random initialization vector per encryption
@@ -23,16 +25,16 @@ Hemmelig.app is a secure secret-sharing application that enables users to share 
 
 ## Technology Stack
 
-| Layer | Technology | Notes |
-|-------|------------|-------|
-| **Runtime** | Bun | Fast JavaScript runtime, used for both dev and production |
-| **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx` |
-| **Backend** | Hono (RPC mode) | Type-safe API client generation |
-| **Database** | PostgreSQL + Prisma ORM | Schema in `prisma/schema.prisma` |
-| **Styling** | Tailwind CSS | Class-based, supports light/dark mode |
-| **State** | Zustand | Lightweight state management |
-| **Auth** | better-auth | Session-based authentication |
-| **i18n** | react-i18next | All user-facing strings must be translated |
+| Layer        | Technology                   | Notes                                                     |
+| ------------ | ---------------------------- | --------------------------------------------------------- |
+| **Runtime**  | Bun                          | Fast JavaScript runtime, used for both dev and production |
+| **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx`                                  |
+| **Backend**  | Hono (RPC mode)              | Type-safe API client generation                           |
+| **Database** | PostgreSQL + Prisma ORM      | Schema in `prisma/schema.prisma`                          |
+| **Styling**  | Tailwind CSS                 | Class-based, supports light/dark mode                     |
+| **State**    | Zustand                      | Lightweight state management                              |
+| **Auth**     | better-auth                  | Session-based authentication                              |
+| **i18n**     | react-i18next                | All user-facing strings must be translated                |
 
 ## Project Structure
 
@@ -126,47 +128,50 @@ bun run test
 ### Frontend Guidelines
 
 #### Component Structure
+
 ```tsx
 // Use functional components with hooks
 export function MyComponent({ prop1, prop2 }: MyComponentProps) {
-    const { t } = useTranslation();  // Always use i18n
+    const { t } = useTranslation(); // Always use i18n
     const [state, setState] = useState<Type>(initialValue);
-    
+
     // Event handlers
-    const handleAction = () => { /* ... */ };
-    
-    return (
-        <div className="bg-white dark:bg-dark-800">
-            {/* Always support light/dark mode */}
-        </div>
-    );
+    const handleAction = () => {
+        /* ... */
+    };
+
+    return <div className="bg-white dark:bg-dark-800">{/* Always support light/dark mode */}</div>;
 }
 ```
 
 #### Design System
 
 **UI Principles:**
+
 - Compact design with minimal padding
 - Sharp corners (no `rounded-*` classes)
 - All components must support both light and dark modes
 - Mobile-first responsive design
 
 #### Styling with Tailwind
+
 ```tsx
 // ✅ Correct: Light mode first, then dark variant, sharp corners
-className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600"
+className =
+    'bg-white dark:bg-dark-800 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600';
 
 // ❌ Wrong: Missing light mode variant
-className="dark:bg-dark-800"
+className = 'dark:bg-dark-800';
 
 // ❌ Wrong: Using rounded corners
-className="rounded-lg"
+className = 'rounded-lg';
 
 // ❌ Wrong: Using arbitrary values when design tokens exist
-className="bg-[#111111]"  // Use bg-dark-800 instead
+className = 'bg-[#111111]'; // Use bg-dark-800 instead
 ```
 
 #### Custom Color Palette
+
 ```javascript
 // tailwind.config.js defines these colors:
 dark: {
@@ -186,6 +191,7 @@ light: {
 ```
 
 #### State Management with Zustand
+
 ```typescript
 // src/store/exampleStore.ts
 import { create } from 'zustand';
@@ -202,18 +208,20 @@ export const useExampleStore = create<ExampleState>((set) => ({
 ```
 
 #### API Calls
+
 ```typescript
 // Always use the typed Hono RPC client
 import { api } from '../lib/api';
 
 // The client is fully typed based on backend routes
 const response = await api.secrets.$post({
-    json: { secret: encryptedData, expiresAt: timestamp }
+    json: { secret: encryptedData, expiresAt: timestamp },
 });
 const data = await response.json();
 ```
 
 #### Internationalization
+
 ```tsx
 // All user-facing strings must use translations
 const { t } = useTranslation();
@@ -226,35 +234,40 @@ const { t } = useTranslation();
 ```
 
 When adding new strings:
+
 1. Add to `src/i18n/locales/en/en.json` (required)
 2. Add to other locale files as appropriate
 
 ### Backend Guidelines
 
 #### Route Structure
+
 ```typescript
 // api/routes/example.ts
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 
-const exampleRoute = new Hono()
-    .post(
-        '/',
-        zValidator('json', z.object({
+const exampleRoute = new Hono().post(
+    '/',
+    zValidator(
+        'json',
+        z.object({
             field: z.string().min(1).max(1000),
-        })),
-        async (c) => {
-            const { field } = c.req.valid('json');
-            // ... handler logic
-            return c.json({ success: true });
-        }
-    );
+        })
+    ),
+    async (c) => {
+        const { field } = c.req.valid('json');
+        // ... handler logic
+        return c.json({ success: true });
+    }
+);
 
 export default exampleRoute;
 ```
 
 #### Database Operations
+
 ```typescript
 // Always use the Prisma client from api/lib/db.ts
 import { prisma } from '../lib/db';
@@ -267,11 +280,13 @@ await prisma.$transaction([
 ```
 
 #### Input Validation
+
 - **Always** validate input using Zod schemas
 - Place reusable schemas in `api/validations/`
 - Validate at the route level using `zValidator`
 
 #### Error Handling
+
 ```typescript
 // Return consistent error responses
 return c.json({ error: 'Descriptive error message' }, 400);
@@ -307,18 +322,21 @@ When modifying security-sensitive code, verify:
 ## Common Patterns
 
 ### Creating a New Page
+
 1. Create component in `src/pages/`
 2. Add route in `src/router.tsx`
 3. Add translations in locale files
 4. Ensure light/dark mode support
 
 ### Creating a New API Endpoint
+
 1. Add route handler in `api/routes/`
 2. Register in `api/routes.ts`
 3. Add Zod validation schema
 4. Update frontend API types (automatic via Hono RPC)
 
 ### Adding a New Store
+
 1. Create store in `src/store/`
 2. Follow existing store patterns (Zustand)
 3. Export from store file
@@ -338,6 +356,7 @@ When modifying security-sensitive code, verify:
 ## Quick Reference
 
 ### File Locations
+
 - Frontend components: `src/components/`
 - Page components: `src/pages/`
 - API routes: `api/routes/`
@@ -346,12 +365,14 @@ When modifying security-sensitive code, verify:
 - Stores: `src/store/`
 
 ### Key Files
+
 - `src/lib/crypto.ts` - Client-side encryption
 - `src/lib/api.ts` - API client
 - `api/app.ts` - Backend setup
 - `tailwind.config.js` - Design tokens
 
 ### Environment Variables
+
 ```bash
 DATABASE_URL=          # PostgreSQL connection string
 BETTER_AUTH_SECRET=    # Auth secret key
@@ -364,16 +385,19 @@ ANALYTICS_HMAC_SECRET= # HMAC secret for anonymizing visitor IDs
 Hemmelig supports organization-level configuration for enterprise deployments:
 
 ### Invite-Only Registration
+
 - Admins can enable invite-only mode via Instance Settings
 - Generate invite codes with configurable max uses
 - Track invite code usage and creation
 
 ### Email Domain Restrictions
+
 - Restrict registration to specific email domains (e.g., `company.com`)
 - Multiple domains supported (comma-separated)
 - Works independently or alongside invite codes
 
 ### Configuration (Instance Settings)
+
 - `allowRegistration`: Enable/disable public registration
 - `requireInvite`: Require invite code to register
 - `allowedEmailDomains`: Comma-separated list of allowed email domains
@@ -383,17 +407,20 @@ Hemmelig supports organization-level configuration for enterprise deployments:
 Privacy-focused analytics for tracking usage:
 
 ### How It Works
+
 - HMAC-SHA256 hashing creates anonymous visitor IDs (IP never stored)
 - Tracks page visits on landing page and secret view page
 - Bot traffic automatically filtered using `isbot`
 - Configurable via environment variables
 
 ### Dashboard
+
 - Admins can view analytics at `/dashboard/analytics`
 - Shows daily visitor counts with a bar chart
 - Displays unique visitors vs total visits
 
 ### Frontend Integration
+
 ```typescript
 // Analytics tracking is automatic via useAnalytics hook
 // Tracks: HomePage, SecretPage (on view)
@@ -406,6 +433,7 @@ useAnalytics('/path-to-track');
 ## Authentication (better-auth)
 
 ### Custom Hooks
+
 The auth system uses better-auth with custom hooks:
 
 ```typescript
@@ -425,10 +453,11 @@ emailAndPassword: {
 ```
 
 ### Error Handling
-- Custom errors thrown with `BetterAuthError` 
+
+- Custom errors thrown with `BetterAuthError`
 - Error codes: `EMAIL_DOMAIN_NOT_ALLOWED`, `INVALID_INVITE_CODE`, etc.
 - Frontend catches and displays user-friendly messages
 
 ---
 
-*This document should be treated as the source of truth for development practices in this repository. When in doubt, ask for clarification rather than making assumptions.*
+_This document should be treated as the source of truth for development practices in this repository. When in doubt, ask for clarification rather than making assumptions._

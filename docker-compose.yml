@@ -1,21 +1,29 @@
 services:
-  hemmelig:
-    image: hemmelig/hemmelig:v7
-    container_name: hemmelig
-    restart: unless-stopped
-    volumes:
-      - ./database:/app/database
-      - ./uploads:/app/uploads
-    environment:
-      - DATABASE_URL=file:/app/database/hemmelig.db
-      - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
-      - NODE_ENV=production
-      - HEMMELIG_BASE_URL=https://secrets.example.com
-    ports:
-      - '3000:3000'
-    healthcheck:
-      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/api/healthz']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    hemmelig:
+        image: hemmelig/hemmelig:v7
+        container_name: hemmelig
+        restart: unless-stopped
+        volumes:
+            - ./database:/app/database
+            - ./uploads:/app/uploads
+        environment:
+            - DATABASE_URL=file:/app/database/hemmelig.db
+            - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+            - NODE_ENV=production
+            - HEMMELIG_BASE_URL=https://secrets.example.com
+        ports:
+            - '3000:3000'
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'wget',
+                    '--no-verbose',
+                    '--tries=1',
+                    '--spider',
+                    'http://localhost:3000/api/healthz',
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s

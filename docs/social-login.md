@@ -14,29 +14,29 @@ This is used to generate the correct OAuth callback URLs.
 
 ## Supported Providers
 
-| Provider | Environment Variables |
-|----------|----------------------|
-| GitHub | `HEMMELIG_AUTH_GITHUB_ID`, `HEMMELIG_AUTH_GITHUB_SECRET` |
-| Google | `HEMMELIG_AUTH_GOOGLE_ID`, `HEMMELIG_AUTH_GOOGLE_SECRET` |
+| Provider  | Environment Variables                                                                                          |
+| --------- | -------------------------------------------------------------------------------------------------------------- |
+| GitHub    | `HEMMELIG_AUTH_GITHUB_ID`, `HEMMELIG_AUTH_GITHUB_SECRET`                                                       |
+| Google    | `HEMMELIG_AUTH_GOOGLE_ID`, `HEMMELIG_AUTH_GOOGLE_SECRET`                                                       |
 | Microsoft | `HEMMELIG_AUTH_MICROSOFT_ID`, `HEMMELIG_AUTH_MICROSOFT_SECRET`, `HEMMELIG_AUTH_MICROSOFT_TENANT_ID` (optional) |
-| Discord | `HEMMELIG_AUTH_DISCORD_ID`, `HEMMELIG_AUTH_DISCORD_SECRET` |
-| GitLab | `HEMMELIG_AUTH_GITLAB_ID`, `HEMMELIG_AUTH_GITLAB_SECRET` |
-| Apple | `HEMMELIG_AUTH_APPLE_ID`, `HEMMELIG_AUTH_APPLE_SECRET` |
-| Twitter/X | `HEMMELIG_AUTH_TWITTER_ID`, `HEMMELIG_AUTH_TWITTER_SECRET` |
+| Discord   | `HEMMELIG_AUTH_DISCORD_ID`, `HEMMELIG_AUTH_DISCORD_SECRET`                                                     |
+| GitLab    | `HEMMELIG_AUTH_GITLAB_ID`, `HEMMELIG_AUTH_GITLAB_SECRET`                                                       |
+| Apple     | `HEMMELIG_AUTH_APPLE_ID`, `HEMMELIG_AUTH_APPLE_SECRET`                                                         |
+| Twitter/X | `HEMMELIG_AUTH_TWITTER_ID`, `HEMMELIG_AUTH_TWITTER_SECRET`                                                     |
 
 ## Callback URLs
 
 When configuring your OAuth applications, use these callback URLs:
 
-| Provider | Callback URL |
-|----------|-------------|
-| GitHub | `https://your-domain.com/api/auth/callback/github` |
-| Google | `https://your-domain.com/api/auth/callback/google` |
+| Provider  | Callback URL                                          |
+| --------- | ----------------------------------------------------- |
+| GitHub    | `https://your-domain.com/api/auth/callback/github`    |
+| Google    | `https://your-domain.com/api/auth/callback/google`    |
 | Microsoft | `https://your-domain.com/api/auth/callback/microsoft` |
-| Discord | `https://your-domain.com/api/auth/callback/discord` |
-| GitLab | `https://your-domain.com/api/auth/callback/gitlab` |
-| Apple | `https://your-domain.com/api/auth/callback/apple` |
-| Twitter/X | `https://your-domain.com/api/auth/callback/twitter` |
+| Discord   | `https://your-domain.com/api/auth/callback/discord`   |
+| GitLab    | `https://your-domain.com/api/auth/callback/gitlab`    |
+| Apple     | `https://your-domain.com/api/auth/callback/apple`     |
+| Twitter/X | `https://your-domain.com/api/auth/callback/twitter`   |
 
 Replace `your-domain.com` with your actual domain.
 
@@ -48,19 +48,19 @@ Add the environment variables for the providers you want to enable. Both `_ID` a
 
 ```yaml
 services:
-  hemmelig:
-    image: hemmelig/hemmelig:latest
-    environment:
-      # Required: Base URL for OAuth callbacks
-      - HEMMELIG_BASE_URL=https://your-domain.com
-      
-      # GitHub OAuth
-      - HEMMELIG_AUTH_GITHUB_ID=your-github-client-id
-      - HEMMELIG_AUTH_GITHUB_SECRET=your-github-client-secret
-      
-      # Google OAuth
-      - HEMMELIG_AUTH_GOOGLE_ID=your-google-client-id
-      - HEMMELIG_AUTH_GOOGLE_SECRET=your-google-client-secret
+    hemmelig:
+        image: hemmelig/hemmelig:latest
+        environment:
+            # Required: Base URL for OAuth callbacks
+            - HEMMELIG_BASE_URL=https://your-domain.com
+
+            # GitHub OAuth
+            - HEMMELIG_AUTH_GITHUB_ID=your-github-client-id
+            - HEMMELIG_AUTH_GITHUB_SECRET=your-github-client-secret
+
+            # Google OAuth
+            - HEMMELIG_AUTH_GOOGLE_ID=your-google-client-id
+            - HEMMELIG_AUTH_GOOGLE_SECRET=your-google-client-secret
 ```
 
 ### Example: Environment File (.env)

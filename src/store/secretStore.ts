@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { useSecretSettingsStore, setApplySettingsCallback } from './secretSettingsStore';
+import { setApplySettingsCallback, useSecretSettingsStore } from './secretSettingsStore';
 
 interface SecretState {
     secretId: string | null;
@@ -11,8 +11,16 @@ interface SecretState {
     views: number;
     isBurnable: boolean;
     ipRange: string | null;
-    setSecretIdAndKeys: (secretId: string | null, decryptionKey: string | null, password: string | null) => void;
-    setSecretData: (data: Partial<Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>>) => void;
+    setSecretIdAndKeys: (
+        secretId: string | null,
+        decryptionKey: string | null,
+        password: string | null
+    ) => void;
+    setSecretData: (
+        data: Partial<
+            Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>
+        >
+    ) => void;
     resetSecret: () => void;
 }
 
@@ -30,7 +38,8 @@ const defaultState = {
 
 export const useSecretStore = create<SecretState>((set) => ({
     ...defaultState,
-    setSecretIdAndKeys: (secretId, decryptionKey, password) => set({ secretId, decryptionKey, password }),
+    setSecretIdAndKeys: (secretId, decryptionKey, password) =>
+        set({ secretId, decryptionKey, password }),
     setSecretData: (data) => set((state) => ({ ...state, ...data })),
     resetSecret: () => {
         const settingsStore = useSecretSettingsStore.getState();
