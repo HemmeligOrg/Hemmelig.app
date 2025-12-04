@@ -87,7 +87,7 @@ export function SecuritySettings() {
           {/* Max Views - Only show when burn after time is NOT enabled */}
           {!isBurnable && (
             <div className="space-y-2">
-              <div className="flex items-center justify-end space-x-2">
+              <div className="flex items-center space-x-2">
                 <Eye className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                 <span className="text-sm font-medium text-gray-600 dark:text-slate-300">{t('security_settings.max_views_title')}</span>
               </div>
