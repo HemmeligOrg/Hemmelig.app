@@ -70,6 +70,7 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 - [Environment Variables](docs/env.md) - All configuration options
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 - [Webhooks](docs/webhook.md) - Webhook notifications for secret events
+- [API Documentation](docs/api.md) - REST API reference and OpenAPI spec
 
 ## Development
 
