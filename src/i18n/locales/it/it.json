@@ -77,7 +77,10 @@
         "max_size_exceeded": "La dimensione totale dei file supera il massimo di {{maxSize}} MB"
     },
     "footer": {
-        "tagline": "Hemmelig, [heˈm(ɛ)li], significa 'segreto' in norvegese"
+        "tagline": "Hemmelig, [heˈm(ɛ)li], significa 'segreto' in norvegese",
+        "privacy": "Privacy",
+        "terms": "Termini",
+        "api": "API"
     },
     "header": {
         "sign_in": "Accedi",

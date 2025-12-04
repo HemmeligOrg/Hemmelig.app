@@ -77,7 +77,10 @@
         "max_size_exceeded": "Gesamtdateigröße überschreitet das Maximum von {{maxSize}} MB"
     },
     "footer": {
-        "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch"
+        "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch",
+        "privacy": "Datenschutz",
+        "terms": "AGB",
+        "api": "API"
     },
     "header": {
         "sign_in": "Anmelden",
