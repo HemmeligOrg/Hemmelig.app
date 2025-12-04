@@ -36,6 +36,11 @@ const selectFields = {
     requireInviteCode: true,
     allowedEmailDomains: true,
     requireRegisteredUser: true,
+    webhookEnabled: true,
+    webhookUrl: true,
+    webhookSecret: true,
+    webhookOnView: true,
+    webhookOnBurn: true,
 };
 
 // GET /api/instance/settings/public - public settings for all users

@@ -3,6 +3,7 @@ import { hash, compare } from '../lib/password'
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
+import { sendWebhook } from '../lib/webhook';
 import {
     createSecretsSchema,
     getSecretSchema,
@@ -133,13 +134,27 @@ const app = new Hono<{
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password: _password, ...itemWithoutPassword } = item;
 
+            const webhookData = {
+                secretId: item.id,
+                hasPassword: !!item.password,
+                hasIpRestriction: !!item.ipRange,
+                viewsRemaining: item.views! - 1,
+            };
+
             if (item.views! > 1) {
                 await prisma.secrets.update({
                     where: { id: item.id },
                     data: { views: { decrement: 1 } }
                 });
+                // Send webhook for secret view
+                sendWebhook('secret.viewed', webhookData);
             } else if (!item.isBurnable && item.views === 1) {
                 await prisma.secrets.delete({ where: { id: item.id } });
+                // Send webhook for secret burned (last view, auto-deleted)
+                sendWebhook('secret.burned', { ...webhookData, viewsRemaining: 0 });
+            } else {
+                // Send webhook for secret view (burnable secret on last view)
+                sendWebhook('secret.viewed', { ...webhookData, viewsRemaining: 0 });
             }
 
             return c.json(itemWithoutPassword);
@@ -237,7 +252,22 @@ const app = new Hono<{
         try {
             const { id } = c.req.valid('param');
 
+            // Get secret info before deleting for webhook
+            const secret = await prisma.secrets.findUnique({
+                where: { id },
+                select: { id: true, password: true, ipRange: true }
+            });
+
             await prisma.secrets.delete({ where: { id } });
+
+            // Send webhook for manually burned secret
+            if (secret) {
+                sendWebhook('secret.burned', {
+                    secretId: id,
+                    hasPassword: !!secret.password,
+                    hasIpRestriction: !!secret.ipRange,
+                });
+            }
 
             return c.json({
                 success: true,

@@ -29,10 +29,19 @@ type OrganizationSettings = {
     requireRegisteredUser: boolean;
 };
 
+type WebhookSettings = {
+    webhookEnabled: boolean;
+    webhookUrl: string;
+    webhookSecret: string;
+    webhookOnView: boolean;
+    webhookOnBurn: boolean;
+};
+
 type InstanceState = {
     generalSettings: GeneralSettings;
     securitySettings: SecuritySettings;
     organizationSettings: OrganizationSettings;
+    webhookSettings: WebhookSettings;
     isLoading: boolean;
     error: string | null;
     fetchSettings: () => Promise<void>;
@@ -45,7 +54,11 @@ type InstanceState = {
         key: K,
         value: OrganizationSettings[K]
     ) => void;
-    saveSettings: (section: 'general' | 'security' | 'organization') => Promise<void>;
+    setWebhookSetting: <K extends keyof WebhookSettings>(
+        key: K,
+        value: WebhookSettings[K]
+    ) => void;
+    saveSettings: (section: 'general' | 'security' | 'organization' | 'webhook') => Promise<void>;
 };
 
 export const useInstanceStore = create<InstanceState>((set, get) => ({
@@ -72,6 +85,13 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         requireInviteCode: false,
         allowedEmailDomains: '',
         requireRegisteredUser: false,
+    },
+    webhookSettings: {
+        webhookEnabled: false,
+        webhookUrl: '',
+        webhookSecret: '',
+        webhookOnView: true,
+        webhookOnBurn: true,
     },
     isLoading: false,
     error: null,
@@ -112,6 +132,13 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     allowedEmailDomains: settings.allowedEmailDomains ?? '',
                     requireRegisteredUser: settings.requireRegisteredUser ?? false,
                 },
+                webhookSettings: {
+                    webhookEnabled: settings.webhookEnabled ?? false,
+                    webhookUrl: settings.webhookUrl ?? '',
+                    webhookSecret: settings.webhookSecret ?? '',
+                    webhookOnView: settings.webhookOnView ?? true,
+                    webhookOnBurn: settings.webhookOnBurn ?? true,
+                },
                 isLoading: false,
             });
         } catch (error) {
@@ -140,10 +167,16 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         }));
     },
 
+    setWebhookSetting: (key, value) => {
+        set((state) => ({
+            webhookSettings: { ...state.webhookSettings, [key]: value },
+        }));
+    },
+
     saveSettings: async (section) => {
         set({ isLoading: true });
         try {
-            const { generalSettings, securitySettings, organizationSettings } = get();
+            const { generalSettings, securitySettings, organizationSettings, webhookSettings } = get();
             let settingsToSave = {};
             if (section === 'general') {
                 settingsToSave = generalSettings;
@@ -151,6 +184,8 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 settingsToSave = securitySettings;
             } else if (section === 'organization') {
                 settingsToSave = organizationSettings;
+            } else if (section === 'webhook') {
+                settingsToSave = webhookSettings;
             }
 
             await api.instance.settings.$put({ json: settingsToSave });

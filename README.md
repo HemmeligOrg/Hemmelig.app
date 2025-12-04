@@ -34,6 +34,7 @@
 - **Rich text editor** - Format your secrets with inline images
 - **QR codes** - Easy mobile sharing
 - **Multi-language support** - Available in multiple languages
+- **Webhook notifications** - Get notified when secrets are viewed or burned ([docs](docs/webhook.md))
 
 ## Quick Start
 
@@ -68,6 +69,7 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 - [Helm Chart](docs/helm.md) - Kubernetes deployment with Helm
 - [Environment Variables](docs/env.md) - All configuration options
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
+- [Webhooks](docs/webhook.md) - Webhook notifications for secret events
 
 ## Development
 

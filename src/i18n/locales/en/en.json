@@ -242,7 +242,8 @@
     "tabs": {
       "general": "General",
       "security": "Security",
-      "organization": "Organization"
+      "organization": "Organization",
+      "webhook": "Webhooks"
     },
     "system_status": {
       "title": "System Status",
@@ -645,6 +646,23 @@
   "theme_toggle": {
     "switch_to_light": "Switch to light mode",
     "switch_to_dark": "Switch to dark mode"
+  },
+  "webhook_settings": {
+    "title": "Webhook Notifications",
+    "description": "Notify external services when secrets are viewed or burned",
+    "enable_webhooks_title": "Enable Webhooks",
+    "enable_webhooks_description": "Send HTTP POST requests to your webhook URL when events occur",
+    "webhook_url_label": "Webhook URL",
+    "webhook_url_placeholder": "https://example.com/webhook",
+    "webhook_url_hint": "The URL where webhook payloads will be sent",
+    "webhook_secret_label": "Webhook Secret",
+    "webhook_secret_placeholder": "Enter a secret for HMAC signing",
+    "webhook_secret_hint": "Used to sign webhook payloads with HMAC-SHA256. The signature is sent in the X-Hemmelig-Signature header.",
+    "events_title": "Webhook Events",
+    "on_view_title": "Secret Viewed",
+    "on_view_description": "Send a webhook when a secret is viewed",
+    "on_burn_title": "Secret Burned",
+    "on_burn_description": "Send a webhook when a secret is burned or deleted"
   },
   "common": {
     "error": "Error",

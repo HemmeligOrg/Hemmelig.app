@@ -1,22 +1,24 @@
-import { Building2, Save, Settings, Shield } from 'lucide-react';
+import { Building2, Save, Settings, Shield, Webhook } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInstanceStore } from '../../store/instanceStore';
 
 export function InstancePage() {
-  const [activeTab, setActiveTab] = useState<'general' | 'security' | 'organization'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'security' | 'organization' | 'webhook'>('general');
   const { t } = useTranslation();
 
   const {
     generalSettings,
     securitySettings,
     organizationSettings,
+    webhookSettings,
     isLoading,
     error,
     fetchSettings,
     setGeneralSetting,
     setSecuritySetting,
     setOrganizationSetting,
+    setWebhookSetting,
     saveSettings,
   } = useInstanceStore();
 
@@ -45,6 +47,7 @@ export function InstancePage() {
     { id: 'general', name: t('instance_page.tabs.general'), icon: Settings },
     { id: 'security', name: t('instance_page.tabs.security'), icon: Shield },
     { id: 'organization', name: t('instance_page.tabs.organization'), icon: Building2 },
+    { id: 'webhook', name: t('instance_page.tabs.webhook'), icon: Webhook },
   ];
 
   return (
@@ -72,6 +75,7 @@ export function InstancePage() {
                         | 'general'
                         | 'security'
                         | 'organization'
+                        | 'webhook'
                     )
                   }
                   className={`flex items-center space-x-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
@@ -425,6 +429,146 @@ export function InstancePage() {
                   {isLoading
                     ? t('organization_page.saving_button')
                     : t('organization_page.save_settings_button')}
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'webhook' && (
+          <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="p-2 bg-green-500/20 ">
+                <Webhook className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {t('webhook_settings.title')}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-slate-400">
+                  {t('webhook_settings.description')}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-4">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
+                  <div className="flex-1 min-w-0 mr-4">
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      {t('webhook_settings.enable_webhooks_title')}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-slate-400">
+                      {t('webhook_settings.enable_webhooks_description')}
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={webhookSettings.webhookEnabled}
+                      onChange={(e) =>
+                        setWebhookSetting('webhookEnabled', e.target.checked)
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    {t('webhook_settings.webhook_url_label')}
+                  </label>
+                  <input
+                    type="url"
+                    value={webhookSettings.webhookUrl}
+                    onChange={(e) => setWebhookSetting('webhookUrl', e.target.value)}
+                    placeholder={t('webhook_settings.webhook_url_placeholder')}
+                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                    {t('webhook_settings.webhook_url_hint')}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    {t('webhook_settings.webhook_secret_label')}
+                  </label>
+                  <input
+                    type="password"
+                    value={webhookSettings.webhookSecret}
+                    onChange={(e) => setWebhookSetting('webhookSecret', e.target.value)}
+                    placeholder={t('webhook_settings.webhook_secret_placeholder')}
+                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                    {t('webhook_settings.webhook_secret_hint')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 dark:border-dark-600 pt-4">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                  {t('webhook_settings.events_title')}
+                </h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
+                    <div className="flex-1 min-w-0 mr-4">
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        {t('webhook_settings.on_view_title')}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-slate-400">
+                        {t('webhook_settings.on_view_description')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={webhookSettings.webhookOnView}
+                        onChange={(e) =>
+                          setWebhookSetting('webhookOnView', e.target.checked)
+                        }
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
+                    <div className="flex-1 min-w-0 mr-4">
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        {t('webhook_settings.on_burn_title')}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-slate-400">
+                        {t('webhook_settings.on_burn_description')}
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={webhookSettings.webhookOnBurn}
+                        onChange={(e) =>
+                          setWebhookSetting('webhookOnBurn', e.target.checked)
+                        }
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleSaveSettings('webhook')}
+                disabled={isLoading}
+                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+              >
+                <Save className="w-4 h-4" />
+                <span>
+                  {isLoading
+                    ? t('instance_page.saving_button')
+                    : t('instance_page.save_settings_button')}
                 </span>
               </button>
             </div>
