@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/userStore';
 import { useHemmeligStore } from '../store/hemmeligStore';
 
-export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => void }) {
+export function FileUpload({ onFileChange, compact = false }: { onFileChange: (files: File[]) => void; compact?: boolean }) {
   const { t } = useTranslation();
   const { user } = useUserStore();
   const { settings: instanceSettings } = useHemmeligStore();
@@ -57,9 +57,9 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
 
   if (!user) {
     return (
-      <div className="border-2 border-dashed border-gray-300 dark:border-dark-500/50 p-4 text-center bg-gray-50 dark:bg-dark-700/20 hover:border-teal-500/50 transition-all duration-300 group">
+      <div className={`border-2 border-dashed border-gray-300 dark:border-dark-500/50 ${compact ? 'px-4 py-2.5' : 'p-4'} text-center bg-gray-50 dark:bg-dark-700/20 hover:border-teal-500/50 transition-all duration-300 group`}>
         <div className="flex items-center justify-center space-x-3">
-          <div className="p-2 bg-gray-200 dark:bg-dark-600/50 group-hover:bg-teal-500/20 transition-all duration-300">
+          <div className={`${compact ? 'p-1.5' : 'p-2'} bg-gray-200 dark:bg-dark-600/50 group-hover:bg-teal-500/20 transition-all duration-300`}>
             <Lock className="w-4 h-4 text-gray-500 dark:text-slate-400 group-hover:text-teal-400 transition-colors duration-300" />
           </div>
           <span className="text-gray-500 dark:text-slate-400 text-sm group-hover:text-gray-600 dark:text-slate-300 transition-colors duration-300">
@@ -77,11 +77,11 @@ export function FileUpload({ onFileChange }: { onFileChange: (files: File[]) => 
     <div>
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed p-4 text-center transition-all duration-300 group ${isDragActive ? 'border-teal-500/80 bg-dark-700/40' : 'border-gray-300 dark:border-dark-500/50 bg-gray-50 dark:bg-dark-700/20 hover:border-teal-500/50'}`}
+        className={`border-2 border-dashed ${compact ? 'px-4 py-2.5' : 'p-4'} text-center transition-all duration-300 group ${isDragActive ? 'border-teal-500/80 bg-dark-700/40' : 'border-gray-300 dark:border-dark-500/50 bg-gray-50 dark:bg-dark-700/20 hover:border-teal-500/50'}`}
       >
         <input {...getInputProps()} />
-        <div className="flex flex-col items-center justify-center space-y-2">
-          <UploadCloud className="w-8 h-8 text-gray-500 dark:text-slate-400 group-hover:text-teal-400 transition-colors duration-300" />
+        <div className={`flex ${compact ? 'flex-row space-x-3' : 'flex-col space-y-2'} items-center justify-center`}>
+          <UploadCloud className={`${compact ? 'w-5 h-5' : 'w-8 h-8'} text-gray-500 dark:text-slate-400 group-hover:text-teal-400 transition-colors duration-300`} />
           {isDragActive ? (
             <p className="text-gray-600 dark:text-slate-300 text-sm">{t('file_upload.drop_files_here')}</p>
           ) : (

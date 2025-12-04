@@ -115,8 +115,18 @@ export function SecretForm() {
           />
         </div>
 
-        <div className="mt-4">
-          <FileUpload onFileChange={handleFileChange} instanceSettings={instanceSettings} />
+        {/* File upload and quick create button */}
+        <div className="mt-4 flex flex-col sm:flex-row gap-4 sm:items-start">
+          <div className="flex-1">
+            <FileUpload onFileChange={handleFileChange} instanceSettings={instanceSettings} compact />
+          </div>
+          <div className="sm:flex-shrink-0">
+            <CreateButton
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              disabled={!isFormValid}
+            />
+          </div>
         </div>
       </div>
 
