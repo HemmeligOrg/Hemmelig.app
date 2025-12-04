@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useLocation, useLoaderData, Link } from 'react-router-dom';
+import { useParams, useLocation, useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { decrypt, generateEncryptionKey, decryptFile } from '../lib/crypto';
-import { Loader2, Eye, Lock, LockOpen, File as FileIcon, Download, Copy, Check, Plus, ShieldCheck } from 'lucide-react';
+import { Loader2, Eye, Lock, LockOpen, File as FileIcon, Download, Copy, Check, Plus, ShieldCheck, Trash2 } from 'lucide-react';
 import Editor from '../components/Editor';
 import { useTranslation } from 'react-i18next';
+import { Modal } from '../components/Modal';
 
 interface SecretFile {
   id: string;
@@ -21,6 +22,7 @@ export function SecretPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const initialData = useLoaderData() as SecretLoaderData;
   const [secretContent, setSecretContent] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
@@ -32,6 +34,8 @@ export function SecretPage() {
   const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
   const [salt, setSalt] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const decryptionKey = location.hash.startsWith('#decryptionKey=') 
     ? location.hash.substring('#decryptionKey='.length) 
@@ -90,6 +94,21 @@ export function SecretPage() {
     navigator.clipboard.writeText(secretContent || '');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDeleteSecret = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await api.secrets[':id'].$delete({ param: { id: id! } });
+      if (response.ok) {
+        navigate('/');
+      }
+    } catch (err) {
+      console.error('Error deleting secret:', err);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
   };
 
   // Loading state
@@ -243,7 +262,7 @@ export function SecretPage() {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-700/30">
+        <div className="p-4 border-t border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-700/30 flex items-center justify-between">
           <Link
             to="/"
             className="inline-flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-colors"
@@ -251,8 +270,26 @@ export function SecretPage() {
             <Plus className="w-4 h-4" />
             {t('secret_page.create_your_own')}
           </Link>
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+            {t('secret_page.delete_secret')}
+          </button>
         </div>
       </div>
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title={t('secret_page.delete_modal_title')}
+        confirmText={isDeleting ? t('common.deleting') : t('common.delete')}
+        cancelText={t('common.cancel')}
+        onConfirm={handleDeleteSecret}
+      >
+        <p>{t('secret_page.delete_modal_message')}</p>
+      </Modal>
     </main>
   );
 }

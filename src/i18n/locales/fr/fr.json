@@ -509,7 +509,10 @@
     "download": "Télécharger",
     "create_your_own": "Créez votre propre secret",
     "encrypted_secret": "Secret chiffré",
-    "unlock_secret": "Déverrouiller le secret"
+    "unlock_secret": "Déverrouiller le secret",
+    "delete_secret": "Supprimer le secret",
+    "delete_modal_title": "Supprimer le secret",
+    "delete_modal_message": "Êtes-vous sûr de vouloir supprimer ce secret ? Cette action est irréversible."
   },
   "expiration": {
     "7_days": "7 Jours",
@@ -667,6 +670,8 @@
     "error": "Erreur",
     "cancel": "Annuler",
     "confirm": "Confirmer",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Supprimer",
+    "deleting": "Suppression..."
   }
 }

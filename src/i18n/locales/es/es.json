@@ -513,7 +513,10 @@
         "download": "Descargar",
         "create_your_own": "Crea tu propio secreto",
         "encrypted_secret": "Secreto cifrado",
-        "unlock_secret": "Desbloquear secreto"
+        "unlock_secret": "Desbloquear secreto",
+        "delete_secret": "Eliminar secreto",
+        "delete_modal_title": "Eliminar secreto",
+        "delete_modal_message": "¿Estás seguro de que quieres eliminar este secreto? Esta acción no se puede deshacer."
     },
     "expiration": {
         "7_days": "7 Días",
@@ -671,6 +674,8 @@
     "error": "Error",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Eliminar",
+    "deleting": "Eliminando..."
   }
 }

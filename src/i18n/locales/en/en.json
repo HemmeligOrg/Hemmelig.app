@@ -512,7 +512,10 @@
     "download": "Download",
     "create_your_own": "Create your own secret",
     "encrypted_secret": "Encrypted Secret",
-    "unlock_secret": "Unlock Secret"
+    "unlock_secret": "Unlock Secret",
+    "delete_secret": "Delete Secret",
+    "delete_modal_title": "Delete Secret",
+    "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone."
   },
   "expiration": {
     "7_days": "7 Days",
@@ -670,6 +673,8 @@
     "error": "Error",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Delete",
+    "deleting": "Deleting..."
   }
 }
