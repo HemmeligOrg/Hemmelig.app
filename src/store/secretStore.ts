@@ -21,7 +21,7 @@ const initialState = {
     password: null,
     secret: '',
     title: '',
-    expiresAt: 14400,
+    expiresAt: 43200,
     views: 1,
     isBurnable: false,
     ipRange: null,
