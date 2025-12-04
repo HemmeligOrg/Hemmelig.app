@@ -17,22 +17,14 @@ export function Header() {
 
     return (
         <header className="pt-4 sm:pt-8 pb-4 sm:pb-6">
-            <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4">
                 {/* Navigation */}
-                <div className="flex justify-between items-center mb-4 sm:mb-6">
-                    <Link
-                        to="/"
-                        className="flex items-center space-x-2 text-gray-900 dark:text-white hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-300"
-                    >
-                        <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-gray-900 dark:fill-white" />
-                        <span className="text-lg sm:text-xl font-bold">Hemmelig</span>
-                    </Link>
-
+                <div className="flex justify-end items-center mb-4 sm:mb-6">
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         {user ? (
                             <Link
                                 to="/dashboard"
-                                className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
                             >
                                 <CircleUser className="w-4 h-4" />
                                 <span className="hidden xs:inline">{t('header.dashboard')}</span>
@@ -41,14 +33,14 @@ export function Header() {
                             <>
                                 <Link
                                     to="/login"
-                                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-sm sm:text-base"
+                                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-xs sm:text-sm"
                                 >
                                     <LogIn className="w-4 h-4" />
                                     <span className="hidden xs:inline">{t('header.sign_in')}</span>
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
                                 >
                                     <UserPlus className="w-4 h-4" />
                                     <span className="hidden xs:inline">{t('header.sign_up')}</span>
