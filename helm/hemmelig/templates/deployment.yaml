@@ -42,7 +42,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: DATABASE_URL
-              value: "file:/app/data/hemmelig.db"
+              value: "file:/app/database/hemmelig.db"
             {{- if .Values.config.baseUrl }}
             - name: HEMMELIG_BASE_URL
               value: {{ .Values.config.baseUrl | quote }}
@@ -65,7 +65,7 @@ spec:
             {{- end }}
           volumeMounts:
             - name: data
-              mountPath: /app/data
+              mountPath: /app/database
             - name: uploads
               mountPath: /app/uploads
           livenessProbe:

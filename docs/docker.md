@@ -8,9 +8,9 @@ Complete guide for deploying Hemmelig using Docker.
 docker run -d \
   --name hemmelig \
   -p 3000:3000 \
-  -v hemmelig-data:/app/data \
+  -v hemmelig-data:/app/database \
   -v hemmelig-uploads:/app/uploads \
-  -e DATABASE_URL="file:/app/data/hemmelig.db" \
+  -e DATABASE_URL="file:/app/database/hemmelig.db" \
   -e BETTER_AUTH_SECRET="your-secret-key-min-32-chars" \
   hemmelig/hemmelig:v7
 ```
@@ -42,10 +42,10 @@ services:
     container_name: hemmelig
     restart: unless-stopped
     volumes:
-      - ./data:/app/data
+      - ./database:/app/database
       - ./uploads:/app/uploads
     environment:
-      - DATABASE_URL=file:/app/data/hemmelig.db
+      - DATABASE_URL=file:/app/database/hemmelig.db
       - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
       - NODE_ENV=production
       - HEMMELIG_BASE_URL=https://secrets.example.com
@@ -67,7 +67,7 @@ services:
 
 | Container Path | Purpose | Required |
 |----------------|---------|----------|
-| `/app/data` | SQLite database storage | Yes |
+| `/app/database` | SQLite database storage | Yes |
 | `/app/uploads` | File upload storage | Yes |
 
 ## Environment Variables
@@ -98,7 +98,7 @@ If you see errors like:
 ```
 Error: Migration engine error:
 SQLite database error
-unable to open database file: /app/data/hemmelig.db
+unable to open database file: /app/database/hemmelig.db
 ```
 
 This means the container cannot write to the mounted volume. Fix by setting correct ownership on the host:
@@ -108,15 +108,15 @@ This means the container cannot write to the mounted volume. Fix by setting corr
 id -u
 
 # Create directories and set ownership
-sudo mkdir -p ./data ./uploads
-sudo chown -R $(id -u):$(id -g) ./data ./uploads
+sudo mkdir -p ./database ./uploads
+sudo chown -R $(id -u):$(id -g) ./database ./uploads
 ```
 
 Or use Docker named volumes instead of bind mounts:
 
 ```yaml
 volumes:
-  - hemmelig-data:/app/data
+  - hemmelig-data:/app/database
   - hemmelig-uploads:/app/uploads
 ```
 

@@ -44,9 +44,9 @@
 docker run -d \
   --name hemmelig \
   -p 3000:3000 \
-  -v hemmelig-data:/app/data \
+  -v hemmelig-data:/app/database \
   -v hemmelig-uploads:/app/uploads \
-  -e DATABASE_URL="file:/app/data/hemmelig.db" \
+  -e DATABASE_URL="file:/app/database/hemmelig.db" \
   -e BETTER_AUTH_SECRET="$(openssl rand -base64 32)" \
   hemmelig/hemmelig:v7
 ```
@@ -93,4 +93,6 @@ Hemmelig is proudly hosted on [Hetzner Cloud](https://hetzner.cloud/?ref=Id028Kb
 
 ## License
 
-MIT
+O'Saasy License Agreement - Copyright © 2025, Bjarne Øverli.
+
+This project is licensed under a modified MIT license that prohibits using the software to compete with the original licensor as a hosted SaaS product. See [LICENSE](LICENSE) for details.
