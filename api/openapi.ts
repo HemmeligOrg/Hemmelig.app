@@ -1,0 +1,862 @@
+import { Hono } from 'hono';
+import { swaggerUI } from '@hono/swagger-ui';
+
+const openapi = new Hono();
+
+const spec = {
+    openapi: '3.0.3',
+    info: {
+        title: 'Hemmelig API',
+        description: 'API for Hemmelig - a secure secret sharing application. All encryption/decryption happens client-side.',
+        version: '1.0.0',
+        contact: {
+            name: 'Hemmelig',
+            url: 'https://github.com/HemmeligOrg/Hemmelig.app',
+        },
+    },
+    servers: [
+        {
+            url: '/api',
+            description: 'API server',
+        },
+    ],
+    tags: [
+        { name: 'Secrets', description: 'Secret management endpoints' },
+        { name: 'Files', description: 'File upload/download endpoints' },
+        { name: 'Account', description: 'User account management' },
+        { name: 'Instance', description: 'Instance settings' },
+        { name: 'Analytics', description: 'Analytics endpoints' },
+        { name: 'Invites', description: 'Invite code management' },
+        { name: 'Users', description: 'User management (admin)' },
+        { name: 'Setup', description: 'Initial setup' },
+        { name: 'Health', description: 'Health check' },
+        { name: 'Config', description: 'Configuration endpoints' },
+    ],
+    paths: {
+        '/healthz': {
+            get: {
+                tags: ['Health'],
+                summary: 'Health check',
+                responses: {
+                    '200': {
+                        description: 'Service is healthy',
+                        content: { 'text/plain': { schema: { type: 'string', example: 'Health OK' } } },
+                    },
+                },
+            },
+        },
+        '/config/social-providers': {
+            get: {
+                tags: ['Config'],
+                summary: 'Get enabled social authentication providers',
+                responses: {
+                    '200': {
+                        description: 'List of enabled providers',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        providers: { type: 'array', items: { type: 'string' } },
+                                        callbackBaseUrl: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/secrets': {
+            get: {
+                tags: ['Secrets'],
+                summary: 'List user secrets',
+                description: 'Get paginated list of secrets created by the authenticated user',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    { name: 'skip', in: 'query', schema: { type: 'integer', default: 0 } },
+                    { name: 'take', in: 'query', schema: { type: 'integer', default: 10 } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'List of secrets',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        data: {
+                                            type: 'array',
+                                            items: { $ref: '#/components/schemas/SecretListItem' },
+                                        },
+                                        meta: { $ref: '#/components/schemas/PaginationMeta' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+            post: {
+                tags: ['Secrets'],
+                summary: 'Create a new secret',
+                description: 'Create a new encrypted secret. The secret content should be encrypted client-side before sending.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: { $ref: '#/components/schemas/CreateSecretRequest' },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'Secret created',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { id: { type: 'string' } },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '409': { description: 'Conflict - could not create secret' },
+                },
+            },
+        },
+        '/secrets/{id}': {
+            post: {
+                tags: ['Secrets'],
+                summary: 'Get a secret',
+                description: 'Retrieve an encrypted secret by ID. Password required if secret is password-protected.',
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: { password: { type: 'string' } },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': {
+                        description: 'Secret data',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/Secret' },
+                            },
+                        },
+                    },
+                    '401': { description: 'Invalid password' },
+                    '404': { description: 'Secret not found' },
+                },
+            },
+            delete: {
+                tags: ['Secrets'],
+                summary: 'Delete a secret',
+                description: 'Manually burn/delete a secret',
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Secret deleted',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean' },
+                                        message: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '404': { description: 'Secret not found' },
+                },
+            },
+        },
+        '/secrets/{id}/check': {
+            get: {
+                tags: ['Secrets'],
+                summary: 'Check secret status',
+                description: 'Check if a secret exists and whether it requires a password',
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Secret status',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        views: { type: 'integer' },
+                                        title: { type: 'string', nullable: true },
+                                        isPasswordProtected: { type: 'boolean' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '404': { description: 'Secret not found' },
+                },
+            },
+        },
+        '/files': {
+            post: {
+                tags: ['Files'],
+                summary: 'Upload a file',
+                description: 'Upload an encrypted file to attach to a secret',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'multipart/form-data': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    file: { type: 'string', format: 'binary' },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'File uploaded',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { id: { type: 'string' } },
+                                },
+                            },
+                        },
+                    },
+                    '400': { description: 'Invalid file' },
+                    '413': { description: 'File too large' },
+                },
+            },
+        },
+        '/files/{id}': {
+            get: {
+                tags: ['Files'],
+                summary: 'Download a file',
+                description: 'Download an encrypted file by ID',
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'File content',
+                        content: { 'application/octet-stream': {} },
+                    },
+                    '404': { description: 'File not found' },
+                },
+            },
+        },
+        '/account': {
+            get: {
+                tags: ['Account'],
+                summary: 'Get account info',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': {
+                        description: 'Account information',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        username: { type: 'string' },
+                                        email: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+            put: {
+                tags: ['Account'],
+                summary: 'Update account info',
+                security: [{ cookieAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    username: { type: 'string' },
+                                    email: { type: 'string', format: 'email' },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Account updated' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '409': { description: 'Username already taken' },
+                },
+            },
+            delete: {
+                tags: ['Account'],
+                summary: 'Delete account',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': { description: 'Account deleted' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+        },
+        '/account/password': {
+            put: {
+                tags: ['Account'],
+                summary: 'Update password',
+                security: [{ cookieAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['currentPassword', 'newPassword'],
+                                properties: {
+                                    currentPassword: { type: 'string' },
+                                    newPassword: { type: 'string', minLength: 8 },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Password updated' },
+                    '400': { description: 'Invalid current password' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+        },
+        '/instance/settings/public': {
+            get: {
+                tags: ['Instance'],
+                summary: 'Get public instance settings',
+                responses: {
+                    '200': {
+                        description: 'Public settings',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/PublicInstanceSettings' },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/instance/settings': {
+            get: {
+                tags: ['Instance'],
+                summary: 'Get all instance settings (admin)',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': {
+                        description: 'Instance settings',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/InstanceSettings' },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+            put: {
+                tags: ['Instance'],
+                summary: 'Update instance settings (admin)',
+                security: [{ cookieAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: { $ref: '#/components/schemas/InstanceSettings' },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Settings updated' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/analytics': {
+            get: {
+                tags: ['Analytics'],
+                summary: 'Get secret analytics (admin)',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    {
+                        name: 'timeRange',
+                        in: 'query',
+                        schema: { type: 'string', enum: ['7d', '30d', '90d', '1y'], default: '30d' },
+                    },
+                ],
+                responses: {
+                    '200': { description: 'Analytics data' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/analytics/track': {
+            post: {
+                tags: ['Analytics'],
+                summary: 'Track page visit',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['path'],
+                                properties: { path: { type: 'string', maxLength: 255 } },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': { description: 'Tracked' },
+                    '403': { description: 'Analytics disabled or bot detected' },
+                },
+            },
+        },
+        '/analytics/visitors': {
+            get: {
+                tags: ['Analytics'],
+                summary: 'Get visitor analytics (admin)',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': { description: 'Visitor data' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/analytics/visitors/unique': {
+            get: {
+                tags: ['Analytics'],
+                summary: 'Get unique visitor analytics (admin)',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': { description: 'Unique visitor data' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/analytics/visitors/daily': {
+            get: {
+                tags: ['Analytics'],
+                summary: 'Get daily visitor stats (admin)',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': { description: 'Daily visitor statistics' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/invites': {
+            get: {
+                tags: ['Invites'],
+                summary: 'List invite codes (admin)',
+                security: [{ cookieAuth: [] }],
+                responses: {
+                    '200': {
+                        description: 'List of invite codes',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'array',
+                                    items: { $ref: '#/components/schemas/InviteCode' },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+            post: {
+                tags: ['Invites'],
+                summary: 'Create invite code (admin)',
+                security: [{ cookieAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    maxUses: { type: 'integer', minimum: 1, maximum: 100, default: 1 },
+                                    expiresInDays: { type: 'integer', minimum: 1, maximum: 365 },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'Invite code created',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/InviteCode' },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/invites/{id}': {
+            delete: {
+                tags: ['Invites'],
+                summary: 'Deactivate invite code (admin)',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': { description: 'Invite code deactivated' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/invites/public/validate': {
+            post: {
+                tags: ['Invites'],
+                summary: 'Validate invite code',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['code'],
+                                properties: { code: { type: 'string' } },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': {
+                        description: 'Validation result',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { valid: { type: 'boolean' } },
+                                },
+                            },
+                        },
+                    },
+                    '400': { description: 'Invalid invite code' },
+                },
+            },
+        },
+        '/invites/public/use': {
+            post: {
+                tags: ['Invites'],
+                summary: 'Use invite code',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['code', 'userId'],
+                                properties: {
+                                    code: { type: 'string' },
+                                    userId: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Invite code used' },
+                    '400': { description: 'Invalid invite code' },
+                },
+            },
+        },
+        '/user/{id}': {
+            put: {
+                tags: ['Users'],
+                summary: 'Update user (admin)',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    username: { type: 'string' },
+                                    email: { type: 'string', format: 'email' },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': {
+                        description: 'User updated',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/User' },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
+        '/setup/status': {
+            get: {
+                tags: ['Setup'],
+                summary: 'Check if setup is needed',
+                responses: {
+                    '200': {
+                        description: 'Setup status',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { needsSetup: { type: 'boolean' } },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/setup/complete': {
+            post: {
+                tags: ['Setup'],
+                summary: 'Complete initial setup',
+                description: 'Create the first admin user. Only works when no users exist.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['email', 'password', 'username', 'name'],
+                                properties: {
+                                    email: { type: 'string', format: 'email' },
+                                    password: { type: 'string', minLength: 8 },
+                                    username: { type: 'string', minLength: 3, maxLength: 32 },
+                                    name: { type: 'string', minLength: 1, maxLength: 100 },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Setup completed' },
+                    '403': { description: 'Setup already completed' },
+                },
+            },
+        },
+    },
+    components: {
+        securitySchemes: {
+            cookieAuth: {
+                type: 'apiKey',
+                in: 'cookie',
+                name: 'better-auth.session_token',
+                description: 'Session cookie set after authentication via /auth endpoints',
+            },
+        },
+        schemas: {
+            SecretListItem: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    expiresAt: { type: 'string', format: 'date-time' },
+                    views: { type: 'integer' },
+                    isPasswordProtected: { type: 'boolean' },
+                    ipRange: { type: 'string', nullable: true },
+                    isBurnable: { type: 'boolean' },
+                    fileCount: { type: 'integer' },
+                },
+            },
+            Secret: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    secret: { type: 'string', description: 'Encrypted secret content (base64)' },
+                    title: { type: 'string', nullable: true },
+                    salt: { type: 'string' },
+                    views: { type: 'integer' },
+                    expiresAt: { type: 'string', format: 'date-time' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    isBurnable: { type: 'boolean' },
+                    ipRange: { type: 'string', nullable: true },
+                    files: {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'string' },
+                                filename: { type: 'string' },
+                            },
+                        },
+                    },
+                },
+            },
+            CreateSecretRequest: {
+                type: 'object',
+                required: ['secret', 'salt', 'expiresAt'],
+                properties: {
+                    secret: { type: 'string', description: 'Encrypted secret content' },
+                    title: { type: 'string', nullable: true },
+                    salt: { type: 'string', description: 'Salt used for encryption' },
+                    password: { type: 'string', description: 'Optional password protection' },
+                    expiresAt: { type: 'integer', description: 'Expiration time in seconds from now' },
+                    views: { type: 'integer', default: 1, description: 'Number of allowed views' },
+                    isBurnable: { type: 'boolean', default: false },
+                    ipRange: { type: 'string', nullable: true, description: 'IP range restriction (CIDR notation)' },
+                    fileIds: { type: 'array', items: { type: 'string' }, description: 'IDs of uploaded files to attach' },
+                },
+            },
+            PaginationMeta: {
+                type: 'object',
+                properties: {
+                    total: { type: 'integer' },
+                    skip: { type: 'integer' },
+                    take: { type: 'integer' },
+                    page: { type: 'integer' },
+                    totalPages: { type: 'integer' },
+                },
+            },
+            PublicInstanceSettings: {
+                type: 'object',
+                properties: {
+                    instanceName: { type: 'string' },
+                    instanceDescription: { type: 'string' },
+                    allowRegistration: { type: 'boolean' },
+                    defaultSecretExpiration: { type: 'integer' },
+                    maxSecretSize: { type: 'integer' },
+                    allowPasswordProtection: { type: 'boolean' },
+                    allowIpRestriction: { type: 'boolean' },
+                    requireRegisteredUser: { type: 'boolean' },
+                },
+            },
+            InstanceSettings: {
+                type: 'object',
+                properties: {
+                    instanceName: { type: 'string' },
+                    instanceDescription: { type: 'string' },
+                    allowRegistration: { type: 'boolean' },
+                    requireEmailVerification: { type: 'boolean' },
+                    defaultSecretExpiration: { type: 'integer' },
+                    maxSecretSize: { type: 'integer' },
+                    allowPasswordProtection: { type: 'boolean' },
+                    allowIpRestriction: { type: 'boolean' },
+                    enableRateLimiting: { type: 'boolean' },
+                    rateLimitRequests: { type: 'integer' },
+                    rateLimitWindow: { type: 'integer' },
+                    requireInviteCode: { type: 'boolean' },
+                    allowedEmailDomains: { type: 'string' },
+                    requireRegisteredUser: { type: 'boolean' },
+                    webhookEnabled: { type: 'boolean' },
+                    webhookUrl: { type: 'string' },
+                    webhookSecret: { type: 'string' },
+                    webhookOnView: { type: 'boolean' },
+                    webhookOnBurn: { type: 'boolean' },
+                },
+            },
+            InviteCode: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    code: { type: 'string' },
+                    maxUses: { type: 'integer' },
+                    uses: { type: 'integer' },
+                    expiresAt: { type: 'string', format: 'date-time', nullable: true },
+                    isActive: { type: 'boolean' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    createdBy: { type: 'string' },
+                },
+            },
+            User: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    username: { type: 'string' },
+                    email: { type: 'string' },
+                    role: { type: 'string' },
+                    banned: { type: 'boolean' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                },
+            },
+        },
+        responses: {
+            Unauthorized: {
+                description: 'Unauthorized - authentication required',
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: { error: { type: 'string' } },
+                        },
+                    },
+                },
+            },
+            Forbidden: {
+                description: 'Forbidden - admin access required',
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: { error: { type: 'string' } },
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
+// OpenAPI JSON spec endpoint
+openapi.get('/openapi.json', (c) => c.json(spec));
+
+// Swagger UI
+openapi.get(
+    '/docs',
+    swaggerUI({
+        url: '/api/openapi.json',
+    })
+);
+
+export default openapi;
