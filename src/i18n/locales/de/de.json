@@ -568,6 +568,8 @@
         "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
     },
     "expiration": {
+        "28_days": "28 Tage",
+        "14_days": "14 Tage",
         "7_days": "7 Tage",
         "3_days": "3 Tage",
         "1_day": "1 Tag",

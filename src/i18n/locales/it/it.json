@@ -568,6 +568,8 @@
         "delete_modal_message": "Sei sicuro di voler eliminare questo segreto? Questa azione non può essere annullata."
     },
     "expiration": {
+        "28_days": "28 Giorni",
+        "14_days": "14 Giorni",
         "7_days": "7 Giorni",
         "3_days": "3 Giorni",
         "1_day": "1 Giorno",

@@ -568,6 +568,8 @@
         "delete_modal_message": "您确定要删除此秘密吗？此操作无法撤消。"
     },
     "expiration": {
+        "28_days": "28 天",
+        "14_days": "14 天",
         "7_days": "7 天",
         "3_days": "3 天",
         "1_day": "1 天",

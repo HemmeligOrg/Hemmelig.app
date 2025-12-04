@@ -568,6 +568,8 @@
         "delete_modal_message": "Êtes-vous sûr de vouloir supprimer ce secret ? Cette action est irréversible."
     },
     "expiration": {
+        "28_days": "28 Jours",
+        "14_days": "14 Jours",
         "7_days": "7 Jours",
         "3_days": "3 Jours",
         "1_day": "1 Jour",

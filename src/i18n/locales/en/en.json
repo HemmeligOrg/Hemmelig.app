@@ -571,6 +571,8 @@
         "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone."
     },
     "expiration": {
+        "28_days": "28 Days",
+        "14_days": "14 Days",
         "7_days": "7 Days",
         "3_days": "3 Days",
         "1_day": "1 Day",
