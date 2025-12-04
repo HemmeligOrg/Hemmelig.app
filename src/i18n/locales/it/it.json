@@ -112,6 +112,7 @@
   "security_settings": {
     "security_title": "Sicurezza",
     "security_description": "Configura le impostazioni di sicurezza per il tuo segreto",
+    "remember_settings": "Ricorda",
     "private_title": "Privato",
     "private_description": "I segreti privati sono crittografati e possono essere visualizzati solo con la chiave di decrittazione e/o la password.",
     "expiration_title": "Scadenza",

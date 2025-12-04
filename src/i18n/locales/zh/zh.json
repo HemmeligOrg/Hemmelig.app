@@ -112,6 +112,7 @@
   "security_settings": {
     "security_title": "安全",
     "security_description": "配置秘密的安全设置",
+    "remember_settings": "记住",
     "private_title": "私密",
     "private_description": "私密秘密已加密，只能使用解密密钥和/或密码查看。",
     "expiration_title": "过期时间",

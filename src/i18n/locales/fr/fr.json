@@ -112,6 +112,7 @@
   "security_settings": {
     "security_title": "Sécurité",
     "security_description": "Configurez les paramètres de sécurité pour votre secret",
+    "remember_settings": "Mémoriser",
     "private_title": "Privé",
     "private_description": "Les secrets privés sont chiffrés et ne peuvent être consultés qu'avec la clé de déchiffrement et/ou le mot de passe.",
     "expiration_title": "Expiration",

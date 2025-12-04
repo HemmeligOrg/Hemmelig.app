@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useSecretSettingsStore, setApplySettingsCallback } from './secretSettingsStore';
 
 interface SecretState {
     secretId: string | null;
@@ -15,7 +16,7 @@ interface SecretState {
     resetSecret: () => void;
 }
 
-const initialState = {
+const defaultState = {
     secretId: null,
     decryptionKey: null,
     password: null,
@@ -28,8 +29,29 @@ const initialState = {
 };
 
 export const useSecretStore = create<SecretState>((set) => ({
-    ...initialState,
+    ...defaultState,
     setSecretIdAndKeys: (secretId, decryptionKey, password) => set({ secretId, decryptionKey, password }),
     setSecretData: (data) => set((state) => ({ ...state, ...data })),
-    resetSecret: () => set(initialState),
+    resetSecret: () => {
+        const settingsStore = useSecretSettingsStore.getState();
+        if (settingsStore.saveSettings) {
+            set({
+                ...defaultState,
+                expiresAt: settingsStore.settings.expiresAt,
+                views: settingsStore.settings.views,
+                isBurnable: settingsStore.settings.isBurnable,
+            });
+        } else {
+            set(defaultState);
+        }
+    },
 }));
+
+// Register callback to apply saved settings on hydration
+setApplySettingsCallback((settings) => {
+    useSecretStore.getState().setSecretData({
+        expiresAt: settings.expiresAt,
+        views: settings.views,
+        isBurnable: settings.isBurnable,
+    });
+});

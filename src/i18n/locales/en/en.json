@@ -112,6 +112,7 @@
   "security_settings": {
     "security_title": "Security",
     "security_description": "Configure security settings for your secret",
+    "remember_settings": "Remember",
     "private_title": "Private",
     "private_description": "Private secrets are encrypted and can only be viewed with the decryption key, and/or password.",
     "expiration_title": "Expiration",

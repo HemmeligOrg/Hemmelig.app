@@ -112,6 +112,7 @@
     "security_settings": {
         "security_title": "Seguridad",
         "security_description": "Configura los ajustes de seguridad para tu secreto",
+        "remember_settings": "Recordar",
         "private_title": "Privado",
         "private_description": "Los secretos privados están cifrados y solo se pueden ver con la clave de descifrado y/o la contraseña.",
         "expiration_title": "Caducidad",

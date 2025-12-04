@@ -112,6 +112,7 @@
   "security_settings": {
     "security_title": "Sicherheit",
     "security_description": "Sicherheitseinstellungen für Ihr Geheimnis konfigurieren",
+    "remember_settings": "Merken",
     "private_title": "Privat",
     "private_description": "Private Geheimnisse sind verschlüsselt und können nur mit dem Entschlüsselungsschlüssel und/oder Passwort angezeigt werden.",
     "expiration_title": "Ablauf",

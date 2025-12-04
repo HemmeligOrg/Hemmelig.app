@@ -1,25 +1,36 @@
-import { useState } from 'react';
-import { Clock, Eye, Key, Globe, Flame } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Clock, Eye, Key, Globe, Flame, Save } from 'lucide-react';
 import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
 import { ExpirationSelect } from './ExpirationSelect';
 import { useSecretStore } from '../store/secretStore';
+import { useSecretSettingsStore } from '../store/secretSettingsStore';
+import { useUserStore } from '../store/userStore';
 import { useTranslation } from 'react-i18next';
 
 import { useHemmeligStore } from '../store/hemmeligStore';
 
 export function SecuritySettings() {
   const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
+  const { saveSettings, setSaveSettings, updateSettings } = useSecretSettingsStore();
+  const { user } = useUserStore();
   const { settings: instanceSettings } = useHemmeligStore();
   const { t } = useTranslation();
 
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!password);
 
+  // Sync settings to localStorage when saveSettings is enabled
+  useEffect(() => {
+    if (saveSettings) {
+      updateSettings({ expiresAt, views, isBurnable });
+    }
+  }, [expiresAt, views, isBurnable, saveSettings, updateSettings]);
+
   const handleIpRangeToggle = (enabled: boolean) => {
     if (enabled) {
       setSecretData({ ipRange: '' });
     } else {
-      setSecretData({ ipRange: undefined });
+      setSecretData({ ipRange: null });
     }
   };
 
@@ -35,9 +46,21 @@ export function SecuritySettings() {
 
   return (
     <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-5 shadow-xl">
-      <div className="mb-4">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{t('security_settings.security_title')}</h2>
-        <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">{t('security_settings.security_description')}</p>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{t('security_settings.security_title')}</h2>
+          <p className="text-gray-500 dark:text-slate-400 text-xs sm:text-sm">{t('security_settings.security_description')}</p>
+        </div>
+        {user && (
+          <div className="flex items-center space-x-2">
+            <Save className="w-4 h-4 text-gray-500 dark:text-slate-400" />
+            <span className="text-xs text-gray-500 dark:text-slate-400 hidden sm:inline">{t('security_settings.remember_settings')}</span>
+            <ToggleSwitch
+              checked={saveSettings}
+              onChange={setSaveSettings}
+            />
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -156,13 +179,13 @@ export function SecuritySettings() {
                 </div>
                 <div className="flex-shrink-0 ml-3">
                   <ToggleSwitch
-                    checked={ipRange !== undefined}
+                    checked={ipRange !== null && ipRange !== undefined}
                     onChange={handleIpRangeToggle}
                   />
                 </div>
               </div>
 
-              {ipRange !== undefined && (
+              {ipRange !== null && ipRange !== undefined && (
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
                     {t('security_settings.ip_address_cidr_label')}
