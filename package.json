@@ -19,7 +19,7 @@
         "test": "hurl api/tests",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "prepare": "husky"
+        "prepare": "husky || true"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
