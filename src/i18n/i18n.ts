@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
+import deTranslations from './locales/de/de.json';
 import enTranslations from './locales/en/en.json';
 import esTranslations from './locales/es/es.json';
 
@@ -20,6 +21,7 @@ i18n.use(LanguageDetector)
         resources: {
             en: { translations: enTranslations },
             es: { translations: esTranslations },
+            de: { translations: deTranslations },
         },
         defaultNS: 'translations',
     });
