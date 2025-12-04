@@ -1,3 +1,9 @@
-/node_modules/**
-package*.json
-README.md
+node_modules
+dist
+build
+.husky
+bun.lock
+package-lock.json
+*.min.js
+*.min.css
+prisma/migrations
