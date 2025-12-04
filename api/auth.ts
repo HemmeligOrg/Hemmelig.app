@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
-import { admin, username } from 'better-auth/plugins';
+import { admin, twoFactor, username } from 'better-auth/plugins';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
 
@@ -44,6 +44,7 @@ const buildBetterAuthSocialProviders = () => {
 };
 
 export const auth = betterAuth({
+    appName: 'Hemmelig',
     database: prismaAdapter(prisma, {
         provider: 'sqlite',
     }),
@@ -51,7 +52,7 @@ export const auth = betterAuth({
         enabled: true,
     },
     socialProviders: buildBetterAuthSocialProviders(),
-    plugins: [username(), admin()],
+    plugins: [username(), admin(), twoFactor()],
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
         before: async (context) => {

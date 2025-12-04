@@ -181,6 +181,33 @@
             "password_change_success": "Passwort erfolgreich geändert!",
             "password_change_error": "Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut."
         },
+        "two_factor": {
+            "title": "Zwei-Faktor-Authentifizierung",
+            "description": "Fügen Sie Ihrem Konto eine zusätzliche Sicherheitsebene hinzu",
+            "enabled": "Aktiviert",
+            "disabled": "Nicht aktiviert",
+            "setup_button": "2FA einrichten",
+            "disable_button": "2FA deaktivieren",
+            "enter_password_to_enable": "Geben Sie Ihr Passwort ein, um die Zwei-Faktor-Authentifizierung zu aktivieren.",
+            "continue": "Weiter",
+            "scan_qr_code": "Scannen Sie diesen QR-Code mit Ihrer Authenticator-App (Google Authenticator, Authy, etc.).",
+            "manual_entry_hint": "Oder geben Sie diesen Code manuell in Ihre Authenticator-App ein:",
+            "enter_verification_code": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein, um die Einrichtung zu bestätigen.",
+            "verification_code": "Bestätigungscode",
+            "verify_and_enable": "Bestätigen & Aktivieren",
+            "back": "Zurück",
+            "disable_title": "Zwei-Faktor-Authentifizierung deaktivieren",
+            "disable_warning": "Das Deaktivieren von 2FA macht Ihr Konto weniger sicher. Sie müssen Ihr Passwort eingeben, um zu bestätigen.",
+            "invalid_password": "Ungültiges Passwort. Bitte versuchen Sie es erneut.",
+            "invalid_code": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
+            "enable_error": "2FA konnte nicht aktiviert werden. Bitte versuchen Sie es erneut.",
+            "verify_error": "2FA-Code konnte nicht verifiziert werden. Bitte versuchen Sie es erneut.",
+            "disable_error": "2FA konnte nicht deaktiviert werden. Bitte versuchen Sie es erneut.",
+            "backup_codes_title": "Backup-Codes",
+            "backup_codes_description": "Speichern Sie diese Backup-Codes an einem sicheren Ort. Sie können sie verwenden, um auf Ihr Konto zuzugreifen, wenn Sie den Zugang zu Ihrer Authenticator-App verlieren.",
+            "backup_codes_warning": "Jeder Code kann nur einmal verwendet werden. Bewahren Sie sie sicher auf!",
+            "backup_codes_saved": "Ich habe meine Backup-Codes gespeichert"
+        },
         "danger_zone": {
             "title": "Gefahrenzone",
             "description": "Irreversible und destruktive Aktionen",
@@ -692,12 +719,23 @@
         "on_burn_title": "Geheimnis vernichtet",
         "on_burn_description": "Webhook senden, wenn ein Geheimnis vernichtet oder gelöscht wird"
     },
+    "verify_2fa_page": {
+        "back_to_login": "Zurück zur Anmeldung",
+        "title": "Zwei-Faktor-Authentifizierung",
+        "description": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein",
+        "enter_code_hint": "Geben Sie den Code aus Ihrer Authenticator-App ein",
+        "verifying": "Wird überprüft...",
+        "verify_button": "Bestätigen",
+        "invalid_code": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
     "common": {
         "error": "Fehler",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "ok": "OK",
         "delete": "Löschen",
-        "deleting": "Wird gelöscht..."
+        "deleting": "Wird gelöscht...",
+        "loading": "Wird geladen..."
     }
 }

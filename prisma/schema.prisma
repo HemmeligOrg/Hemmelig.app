@@ -47,17 +47,29 @@ model User {
     sessions      Session[]
     accounts      Account[]
 
-    displayUsername String?
-    role            String?   @default("user")
-    banned          Boolean?  @default(false)
-    banReason       String?
-    banExpires      DateTime?
-    inviteCodeUsed  String?
-    Secrets         Secrets[]
-    apiKeys         ApiKey[]
+    displayUsername    String?
+    role               String?   @default("user")
+    banned             Boolean?  @default(false)
+    banReason          String?
+    banExpires         DateTime?
+    inviteCodeUsed     String?
+    twoFactorEnabled   Boolean?  @default(false)
+    Secrets            Secrets[]
+    apiKeys            ApiKey[]
+    twoFactor          TwoFactor[]
 
     @@unique([email])
     @@map("user")
+}
+
+model TwoFactor {
+    id          String @id @default(uuid())
+    secret      String
+    backupCodes String
+    userId      String
+    user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("twoFactor")
 }
 
 model Session {

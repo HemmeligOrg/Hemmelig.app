@@ -17,6 +17,7 @@ import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
 import { SecretPage } from './pages/SecretPage';
 import { SetupPage } from './pages/SetupPage';
 import { TermsPage } from './pages/TermsPage';
+import { Verify2FAPage } from './pages/Verify2FAPage';
 import { useHemmeligStore } from './store/hemmeligStore';
 
 // Check if initial setup is needed
@@ -90,6 +91,11 @@ export const router = createBrowserRouter([
     {
         path: '/forgot-password',
         element: <ForgotPasswordPage />,
+        loader: instanceSettingsLoader,
+    },
+    {
+        path: '/verify-2fa',
+        element: <Verify2FAPage />,
         loader: instanceSettingsLoader,
     },
     // Pages with header/footer

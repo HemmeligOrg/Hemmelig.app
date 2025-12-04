@@ -181,6 +181,33 @@
             "password_change_success": "密码更改成功！",
             "password_change_error": "密码更改失败。请重试。"
         },
+        "two_factor": {
+            "title": "双因素身份验证",
+            "description": "为您的账户添加额外的安全层",
+            "enabled": "已启用",
+            "disabled": "未启用",
+            "setup_button": "设置 2FA",
+            "disable_button": "禁用 2FA",
+            "enter_password_to_enable": "输入您的密码以启用双因素身份验证。",
+            "continue": "继续",
+            "scan_qr_code": "使用您的身份验证应用扫描此二维码（Google Authenticator、Authy 等）。",
+            "manual_entry_hint": "或在您的身份验证应用中手动输入此代码：",
+            "enter_verification_code": "输入身份验证应用中的 6 位数代码以验证设置。",
+            "verification_code": "验证码",
+            "verify_and_enable": "验证并启用",
+            "back": "返回",
+            "disable_title": "禁用双因素身份验证",
+            "disable_warning": "禁用 2FA 将使您的账户安全性降低。您需要输入密码进行确认。",
+            "invalid_password": "密码无效。请重试。",
+            "invalid_code": "验证码无效。请重试。",
+            "enable_error": "启用 2FA 失败。请重试。",
+            "verify_error": "验证 2FA 代码失败。请重试。",
+            "disable_error": "禁用 2FA 失败。请重试。",
+            "backup_codes_title": "备用码",
+            "backup_codes_description": "将这些备用码保存在安全的地方。如果您无法访问身份验证应用，可以使用它们访问您的账户。",
+            "backup_codes_warning": "每个代码只能使用一次。请妥善保管！",
+            "backup_codes_saved": "我已保存我的备用码"
+        },
         "danger_zone": {
             "title": "危险区域",
             "description": "不可逆的破坏性操作",
@@ -692,12 +719,23 @@
         "on_burn_title": "秘密已销毁",
         "on_burn_description": "当秘密被销毁或删除时发送 Webhook"
     },
+    "verify_2fa_page": {
+        "back_to_login": "返回登录",
+        "title": "双因素身份验证",
+        "description": "输入身份验证应用中的 6 位数代码",
+        "enter_code_hint": "输入身份验证应用中的代码",
+        "verifying": "正在验证...",
+        "verify_button": "验证",
+        "invalid_code": "验证码无效。请重试。",
+        "unexpected_error": "发生意外错误。请重试。"
+    },
     "common": {
         "error": "错误",
         "cancel": "取消",
         "confirm": "确认",
         "ok": "确定",
         "delete": "删除",
-        "deleting": "删除中..."
+        "deleting": "删除中...",
+        "loading": "加载中..."
     }
 }

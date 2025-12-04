@@ -181,6 +181,33 @@
             "password_change_success": "Password cambiata con successo!",
             "password_change_error": "Impossibile cambiare la password. Riprova."
         },
+        "two_factor": {
+            "title": "Autenticazione a due fattori",
+            "description": "Aggiungi un ulteriore livello di sicurezza al tuo account",
+            "enabled": "Attivata",
+            "disabled": "Non attivata",
+            "setup_button": "Configura 2FA",
+            "disable_button": "Disattiva 2FA",
+            "enter_password_to_enable": "Inserisci la tua password per attivare l'autenticazione a due fattori.",
+            "continue": "Continua",
+            "scan_qr_code": "Scansiona questo codice QR con la tua app di autenticazione (Google Authenticator, Authy, ecc.).",
+            "manual_entry_hint": "Oppure inserisci manualmente questo codice nella tua app di autenticazione:",
+            "enter_verification_code": "Inserisci il codice a 6 cifre dalla tua app di autenticazione per verificare la configurazione.",
+            "verification_code": "Codice di verifica",
+            "verify_and_enable": "Verifica e attiva",
+            "back": "Indietro",
+            "disable_title": "Disattiva autenticazione a due fattori",
+            "disable_warning": "Disattivare 2FA renderà il tuo account meno sicuro. Dovrai inserire la tua password per confermare.",
+            "invalid_password": "Password non valida. Riprova.",
+            "invalid_code": "Codice di verifica non valido. Riprova.",
+            "enable_error": "Impossibile attivare 2FA. Riprova.",
+            "verify_error": "Impossibile verificare il codice 2FA. Riprova.",
+            "disable_error": "Impossibile disattivare 2FA. Riprova.",
+            "backup_codes_title": "Codici di backup",
+            "backup_codes_description": "Salva questi codici di backup in un luogo sicuro. Puoi usarli per accedere al tuo account se perdi l'accesso alla tua app di autenticazione.",
+            "backup_codes_warning": "Ogni codice può essere usato solo una volta. Conservali in modo sicuro!",
+            "backup_codes_saved": "Ho salvato i miei codici di backup"
+        },
         "danger_zone": {
             "title": "Zona pericolosa",
             "description": "Azioni irreversibili e distruttive",
@@ -692,12 +719,23 @@
         "on_burn_title": "Segreto distrutto",
         "on_burn_description": "Invia un webhook quando un segreto viene distrutto o eliminato"
     },
+    "verify_2fa_page": {
+        "back_to_login": "Torna al login",
+        "title": "Autenticazione a due fattori",
+        "description": "Inserisci il codice a 6 cifre dalla tua app di autenticazione",
+        "enter_code_hint": "Inserisci il codice dalla tua app di autenticazione",
+        "verifying": "Verifica in corso...",
+        "verify_button": "Verifica",
+        "invalid_code": "Codice di verifica non valido. Riprova.",
+        "unexpected_error": "Si è verificato un errore imprevisto. Riprova."
+    },
     "common": {
         "error": "Errore",
         "cancel": "Annulla",
         "confirm": "Conferma",
         "ok": "OK",
         "delete": "Elimina",
-        "deleting": "Eliminazione..."
+        "deleting": "Eliminazione...",
+        "loading": "Caricamento..."
     }
 }

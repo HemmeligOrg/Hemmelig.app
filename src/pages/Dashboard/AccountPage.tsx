@@ -10,14 +10,17 @@ import {
     Plus,
     Save,
     Shield,
+    Smartphone,
     Trash2,
     User,
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Modal } from '../../components/Modal';
 import { api } from '../../lib/api';
+import { authClient } from '../../lib/auth';
 import { useAccountStore } from '../../store/accountStore';
 
 export function AccountPage() {
@@ -62,9 +65,37 @@ export function AccountPage() {
     const [profileError, setProfileError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
+    // 2FA state
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+    const [totpUri, setTotpUri] = useState<string | null>(null);
+    const [backupCodes, setBackupCodes] = useState<string[]>([]);
+    const [show2FASetup, setShow2FASetup] = useState(false);
+    const [twoFAPassword, setTwoFAPassword] = useState('');
+    const [twoFAVerifyCode, setTwoFAVerifyCode] = useState('');
+    const [twoFAError, setTwoFAError] = useState('');
+    const [twoFAStep, setTwoFAStep] = useState<'password' | 'qr' | 'verify'>('password');
+    const [isDisable2FAModalOpen, setIsDisable2FAModalOpen] = useState(false);
+    const [disable2FAPassword, setDisable2FAPassword] = useState('');
+    const [showBackupCodesModal, setShowBackupCodesModal] = useState(false);
+
     useEffect(() => {
         setProfileData(initialData);
     }, [initialData, setProfileData]);
+
+    // Fetch 2FA status on mount
+    useEffect(() => {
+        const fetch2FAStatus = async () => {
+            try {
+                const session = await authClient.getSession();
+                if (session.data?.user) {
+                    setTwoFactorEnabled(session.data.user.twoFactorEnabled || false);
+                }
+            } catch (error) {
+                console.error('Failed to fetch 2FA status:', error);
+            }
+        };
+        fetch2FAStatus();
+    }, []);
 
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -221,6 +252,91 @@ export function AccountPage() {
         await navigator.clipboard.writeText(text);
         setCopiedKeyId(id);
         setTimeout(() => setCopiedKeyId(null), 2000);
+    };
+
+    // 2FA handlers
+    const handleEnable2FA = async () => {
+        setTwoFAError('');
+        setIsLoading(true);
+        try {
+            const { data, error } = await authClient.twoFactor.enable({
+                password: twoFAPassword,
+            });
+
+            if (error) {
+                console.error('2FA enable error:', error);
+                setTwoFAError(error.message || t('account_page.two_factor.invalid_password'));
+                return;
+            }
+
+            if (data?.totpURI) {
+                setTotpUri(data.totpURI);
+                setBackupCodes(data.backupCodes || []);
+                setTwoFAStep('qr');
+            }
+        } catch (error) {
+            console.error('Failed to enable 2FA:', error);
+            setTwoFAError(t('account_page.two_factor.enable_error'));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleVerify2FA = async () => {
+        setTwoFAError('');
+        setIsLoading(true);
+        try {
+            const { error } = await authClient.twoFactor.verifyTotp({
+                code: twoFAVerifyCode,
+            });
+
+            if (error) {
+                setTwoFAError(t('account_page.two_factor.invalid_code'));
+                return;
+            }
+
+            setTwoFactorEnabled(true);
+            setShow2FASetup(false);
+            setShowBackupCodesModal(true);
+            reset2FAState();
+        } catch (error) {
+            console.error('Failed to verify 2FA:', error);
+            setTwoFAError(t('account_page.two_factor.verify_error'));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDisable2FA = async () => {
+        setTwoFAError('');
+        setIsLoading(true);
+        try {
+            const { error } = await authClient.twoFactor.disable({
+                password: disable2FAPassword,
+            });
+
+            if (error) {
+                setTwoFAError(t('account_page.two_factor.invalid_password'));
+                return;
+            }
+
+            setTwoFactorEnabled(false);
+            setIsDisable2FAModalOpen(false);
+            setDisable2FAPassword('');
+        } catch (error) {
+            console.error('Failed to disable 2FA:', error);
+            setTwoFAError(t('account_page.two_factor.disable_error'));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const reset2FAState = () => {
+        setTwoFAPassword('');
+        setTwoFAVerifyCode('');
+        setTotpUri(null);
+        setTwoFAStep('password');
+        setTwoFAError('');
     };
 
     const tabs = [
@@ -529,6 +645,203 @@ export function AccountPage() {
                                     </button>
                                 </div>
                             </div>
+
+                            {/* Two-Factor Authentication Section */}
+                            <div className="border-t border-gray-200 dark:border-dark-600 pt-4 mt-4">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div>
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                                            {t('account_page.two_factor.title')}
+                                        </h3>
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
+                                            {t('account_page.two_factor.description')}
+                                        </p>
+                                    </div>
+                                    {twoFactorEnabled ? (
+                                        <span className="flex items-center space-x-1 text-xs text-green-400">
+                                            <Check className="w-4 h-4" />
+                                            <span>{t('account_page.two_factor.enabled')}</span>
+                                        </span>
+                                    ) : (
+                                        <span className="text-xs text-gray-500 dark:text-slate-400">
+                                            {t('account_page.two_factor.disabled')}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {!show2FASetup ? (
+                                    <div className="flex space-x-2">
+                                        {!twoFactorEnabled ? (
+                                            <button
+                                                onClick={() => setShow2FASetup(true)}
+                                                className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105"
+                                            >
+                                                <Smartphone className="w-4 h-4" />
+                                                <span>
+                                                    {t('account_page.two_factor.setup_button')}
+                                                </span>
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => setIsDisable2FAModalOpen(true)}
+                                                className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm transition-all duration-300 hover:scale-105"
+                                            >
+                                                <Shield className="w-4 h-4" />
+                                                <span>
+                                                    {t('account_page.two_factor.disable_button')}
+                                                </span>
+                                            </button>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="p-4 bg-gray-100 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50">
+                                        {twoFAStep === 'password' && (
+                                            <div className="space-y-4">
+                                                <p className="text-sm text-gray-600 dark:text-slate-300">
+                                                    {t(
+                                                        'account_page.two_factor.enter_password_to_enable'
+                                                    )}
+                                                </p>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-1">
+                                                        {t(
+                                                            'account_page.security_settings.current_password_label'
+                                                        )}
+                                                    </label>
+                                                    <div className="relative">
+                                                        <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400 w-4 h-4" />
+                                                        <input
+                                                            type="password"
+                                                            value={twoFAPassword}
+                                                            onChange={(e) =>
+                                                                setTwoFAPassword(e.target.value)
+                                                            }
+                                                            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-dark-800 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                                            placeholder={t(
+                                                                'account_page.security_settings.current_password_placeholder'
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {twoFAError && (
+                                                    <p className="text-xs text-red-400">
+                                                        {twoFAError}
+                                                    </p>
+                                                )}
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={handleEnable2FA}
+                                                        disabled={isLoading || !twoFAPassword}
+                                                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        <span>
+                                                            {isLoading
+                                                                ? t('common.loading')
+                                                                : t(
+                                                                      'account_page.two_factor.continue'
+                                                                  )}
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setShow2FASetup(false);
+                                                            reset2FAState();
+                                                        }}
+                                                        className="px-4 py-2 bg-gray-300 dark:bg-dark-600 text-gray-700 dark:text-slate-300 text-sm transition-all duration-300 hover:bg-gray-400 dark:hover:bg-dark-500"
+                                                    >
+                                                        {t('common.cancel')}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {twoFAStep === 'qr' && totpUri && (
+                                            <div className="space-y-4">
+                                                <p className="text-sm text-gray-600 dark:text-slate-300">
+                                                    {t('account_page.two_factor.scan_qr_code')}
+                                                </p>
+                                                <div className="flex justify-center p-4 bg-white">
+                                                    <QRCodeSVG value={totpUri} size={200} />
+                                                </div>
+                                                <p className="text-xs text-gray-500 dark:text-slate-400 text-center">
+                                                    {t('account_page.two_factor.manual_entry_hint')}
+                                                </p>
+                                                <div className="p-2 bg-gray-200 dark:bg-dark-800 text-xs font-mono text-gray-700 dark:text-slate-300 break-all text-center">
+                                                    {totpUri}
+                                                </div>
+                                                <button
+                                                    onClick={() => setTwoFAStep('verify')}
+                                                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105"
+                                                >
+                                                    <span>
+                                                        {t('account_page.two_factor.continue')}
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {twoFAStep === 'verify' && (
+                                            <div className="space-y-4">
+                                                <p className="text-sm text-gray-600 dark:text-slate-300">
+                                                    {t(
+                                                        'account_page.two_factor.enter_verification_code'
+                                                    )}
+                                                </p>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-1">
+                                                        {t(
+                                                            'account_page.two_factor.verification_code'
+                                                        )}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={twoFAVerifyCode}
+                                                        onChange={(e) =>
+                                                            setTwoFAVerifyCode(
+                                                                e.target.value
+                                                                    .replace(/\D/g, '')
+                                                                    .slice(0, 6)
+                                                            )
+                                                        }
+                                                        className="w-full px-4 py-2 bg-white dark:bg-dark-800 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-center text-xl tracking-widest"
+                                                        placeholder="000000"
+                                                        maxLength={6}
+                                                    />
+                                                </div>
+                                                {twoFAError && (
+                                                    <p className="text-xs text-red-400">
+                                                        {twoFAError}
+                                                    </p>
+                                                )}
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={handleVerify2FA}
+                                                        disabled={
+                                                            isLoading ||
+                                                            twoFAVerifyCode.length !== 6
+                                                        }
+                                                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        <span>
+                                                            {isLoading
+                                                                ? t('common.loading')
+                                                                : t(
+                                                                      'account_page.two_factor.verify_and_enable'
+                                                                  )}
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setTwoFAStep('qr')}
+                                                        className="px-4 py-2 bg-gray-300 dark:bg-dark-600 text-gray-700 dark:text-slate-300 text-sm transition-all duration-300 hover:bg-gray-400 dark:hover:bg-dark-500"
+                                                    >
+                                                        {t('account_page.two_factor.back')}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -804,6 +1117,68 @@ export function AccountPage() {
                         </select>
                     </div>
                     {apiKeyError && <p className="text-xs text-red-400">{apiKeyError}</p>}
+                </div>
+            </Modal>
+            {/* Disable 2FA Modal */}
+            <Modal
+                isOpen={isDisable2FAModalOpen}
+                onClose={() => {
+                    setIsDisable2FAModalOpen(false);
+                    setDisable2FAPassword('');
+                    setTwoFAError('');
+                }}
+                onConfirm={handleDisable2FA}
+                title={t('account_page.two_factor.disable_title')}
+                confirmText={t('account_page.two_factor.disable_button')}
+                cancelText={t('common.cancel')}
+                confirmButtonClass="bg-red-600 hover:bg-red-700"
+            >
+                <div className="space-y-4">
+                    <p className="text-sm text-gray-600 dark:text-slate-300">
+                        {t('account_page.two_factor.disable_warning')}
+                    </p>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-1">
+                            {t('account_page.security_settings.current_password_label')}
+                        </label>
+                        <input
+                            type="password"
+                            value={disable2FAPassword}
+                            onChange={(e) => setDisable2FAPassword(e.target.value)}
+                            className="w-full px-3 py-2 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            placeholder={t(
+                                'account_page.security_settings.current_password_placeholder'
+                            )}
+                        />
+                    </div>
+                    {twoFAError && <p className="text-xs text-red-400">{twoFAError}</p>}
+                </div>
+            </Modal>
+            {/* Backup Codes Modal */}
+            <Modal
+                isOpen={showBackupCodesModal}
+                onClose={() => setShowBackupCodesModal(false)}
+                onConfirm={() => setShowBackupCodesModal(false)}
+                title={t('account_page.two_factor.backup_codes_title')}
+                confirmText={t('account_page.two_factor.backup_codes_saved')}
+            >
+                <div className="space-y-4">
+                    <p className="text-sm text-gray-600 dark:text-slate-300">
+                        {t('account_page.two_factor.backup_codes_description')}
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 p-4 bg-gray-100 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50">
+                        {backupCodes.map((code, index) => (
+                            <code
+                                key={index}
+                                className="text-sm font-mono text-gray-900 dark:text-slate-100"
+                            >
+                                {code}
+                            </code>
+                        ))}
+                    </div>
+                    <p className="text-xs text-yellow-500">
+                        {t('account_page.two_factor.backup_codes_warning')}
+                    </p>
                 </div>
             </Modal>
         </div>

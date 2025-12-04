@@ -23,15 +23,26 @@ export function LoginPage() {
         setIsLoading(true);
 
         try {
-            const { error } = await authClient.signIn.username({
-                username: formData.username,
-                password: formData.password,
-            });
+            const { error, data } = await authClient.signIn.username(
+                {
+                    username: formData.username,
+                    password: formData.password,
+                },
+                {
+                    onSuccess(context) {
+                        if (context.data.twoFactorRedirect) {
+                            navigate('/verify-2fa');
+                        } else {
+                            navigate('/dashboard');
+                        }
+                    },
+                }
+            );
 
             if (error) {
                 setErrorMessage(`Login failed: ${error.message}`);
                 setIsErrorModalOpen(true);
-            } else {
+            } else if (data && !('twoFactorRedirect' in data)) {
                 navigate('/dashboard');
             }
         } catch (error) {

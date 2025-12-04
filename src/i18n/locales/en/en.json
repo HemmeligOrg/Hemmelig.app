@@ -181,6 +181,33 @@
             "password_change_success": "Password changed successfully!",
             "password_change_error": "Failed to change password. Please try again."
         },
+        "two_factor": {
+            "title": "Two-Factor Authentication",
+            "description": "Add an extra layer of security to your account",
+            "enabled": "Enabled",
+            "disabled": "Not enabled",
+            "setup_button": "Set Up 2FA",
+            "disable_button": "Disable 2FA",
+            "enter_password_to_enable": "Enter your password to enable two-factor authentication.",
+            "continue": "Continue",
+            "scan_qr_code": "Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.).",
+            "manual_entry_hint": "Or manually enter this code in your authenticator app:",
+            "enter_verification_code": "Enter the 6-digit code from your authenticator app to verify setup.",
+            "verification_code": "Verification Code",
+            "verify_and_enable": "Verify & Enable",
+            "back": "Back",
+            "disable_title": "Disable Two-Factor Authentication",
+            "disable_warning": "Disabling 2FA will make your account less secure. You'll need to enter your password to confirm.",
+            "invalid_password": "Invalid password. Please try again.",
+            "invalid_code": "Invalid verification code. Please try again.",
+            "enable_error": "Failed to enable 2FA. Please try again.",
+            "verify_error": "Failed to verify 2FA code. Please try again.",
+            "disable_error": "Failed to disable 2FA. Please try again.",
+            "backup_codes_title": "Backup Codes",
+            "backup_codes_description": "Save these backup codes in a safe place. You can use them to access your account if you lose access to your authenticator app.",
+            "backup_codes_warning": "Each code can only be used once. Store them securely!",
+            "backup_codes_saved": "I've saved my backup codes"
+        },
         "danger_zone": {
             "title": "Danger Zone",
             "description": "Irreversible and destructive actions",
@@ -695,12 +722,23 @@
         "on_burn_title": "Secret Burned",
         "on_burn_description": "Send a webhook when a secret is burned or deleted"
     },
+    "verify_2fa_page": {
+        "back_to_login": "Back to Login",
+        "title": "Two-Factor Authentication",
+        "description": "Enter the 6-digit code from your authenticator app",
+        "enter_code_hint": "Enter the code from your authenticator app",
+        "verifying": "Verifying...",
+        "verify_button": "Verify",
+        "invalid_code": "Invalid verification code. Please try again.",
+        "unexpected_error": "An unexpected error occurred. Please try again."
+    },
     "common": {
         "error": "Error",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "ok": "OK",
         "delete": "Delete",
-        "deleting": "Deleting..."
+        "deleting": "Deleting...",
+        "loading": "Loading..."
     }
 }

@@ -181,6 +181,33 @@
             "password_change_success": "Mot de passe modifié avec succès !",
             "password_change_error": "Échec du changement de mot de passe. Veuillez réessayer."
         },
+        "two_factor": {
+            "title": "Authentification à deux facteurs",
+            "description": "Ajoutez une couche de sécurité supplémentaire à votre compte",
+            "enabled": "Activée",
+            "disabled": "Non activée",
+            "setup_button": "Configurer 2FA",
+            "disable_button": "Désactiver 2FA",
+            "enter_password_to_enable": "Entrez votre mot de passe pour activer l'authentification à deux facteurs.",
+            "continue": "Continuer",
+            "scan_qr_code": "Scannez ce code QR avec votre application d'authentification (Google Authenticator, Authy, etc.).",
+            "manual_entry_hint": "Ou entrez manuellement ce code dans votre application d'authentification :",
+            "enter_verification_code": "Entrez le code à 6 chiffres de votre application d'authentification pour vérifier la configuration.",
+            "verification_code": "Code de vérification",
+            "verify_and_enable": "Vérifier et activer",
+            "back": "Retour",
+            "disable_title": "Désactiver l'authentification à deux facteurs",
+            "disable_warning": "Désactiver 2FA rendra votre compte moins sécurisé. Vous devrez entrer votre mot de passe pour confirmer.",
+            "invalid_password": "Mot de passe invalide. Veuillez réessayer.",
+            "invalid_code": "Code de vérification invalide. Veuillez réessayer.",
+            "enable_error": "Échec de l'activation de 2FA. Veuillez réessayer.",
+            "verify_error": "Échec de la vérification du code 2FA. Veuillez réessayer.",
+            "disable_error": "Échec de la désactivation de 2FA. Veuillez réessayer.",
+            "backup_codes_title": "Codes de secours",
+            "backup_codes_description": "Sauvegardez ces codes de secours dans un endroit sûr. Vous pouvez les utiliser pour accéder à votre compte si vous perdez l'accès à votre application d'authentification.",
+            "backup_codes_warning": "Chaque code ne peut être utilisé qu'une seule fois. Conservez-les en sécurité !",
+            "backup_codes_saved": "J'ai sauvegardé mes codes de secours"
+        },
         "danger_zone": {
             "title": "Zone de danger",
             "description": "Actions irréversibles et destructrices",
@@ -692,12 +719,23 @@
         "on_burn_title": "Secret détruit",
         "on_burn_description": "Envoyer un webhook lorsqu'un secret est détruit ou supprimé"
     },
+    "verify_2fa_page": {
+        "back_to_login": "Retour à la connexion",
+        "title": "Authentification à deux facteurs",
+        "description": "Entrez le code à 6 chiffres de votre application d'authentification",
+        "enter_code_hint": "Entrez le code de votre application d'authentification",
+        "verifying": "Vérification...",
+        "verify_button": "Vérifier",
+        "invalid_code": "Code de vérification invalide. Veuillez réessayer.",
+        "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer."
+    },
     "common": {
         "error": "Erreur",
         "cancel": "Annuler",
         "confirm": "Confirmer",
         "ok": "OK",
         "delete": "Supprimer",
-        "deleting": "Suppression..."
+        "deleting": "Suppression...",
+        "loading": "Chargement..."
     }
 }
