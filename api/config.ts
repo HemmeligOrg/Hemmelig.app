@@ -2,13 +2,6 @@ import dlv from 'dlv';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Helper to parse number from env, returns undefined if not set or invalid
-const parseNumber = (value: string | undefined): number | undefined => {
-    if (value === undefined || value === null || value === '') return undefined;
-    const num = parseInt(value, 10);
-    return isNaN(num) ? undefined : num;
-};
-
 // Helper to parse boolean from env, returns undefined if not set
 const parseBoolean = (value: string | undefined): boolean | undefined => {
     if (value === undefined || value === null || value === '') return undefined;
@@ -101,18 +94,10 @@ const config = {
         instanceName: process.env.HEMMELIG_INSTANCE_NAME,
         instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION,
         allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION),
-        requireEmailVerification: parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION),
-        maxSecretsPerUser: parseNumber(process.env.HEMMELIG_MAX_SECRETS_PER_USER),
-        defaultSecretExpiration: parseNumber(process.env.HEMMELIG_DEFAULT_SECRET_EXPIRATION),
     },
     security: {
         allowPasswordProtection: parseBoolean(process.env.HEMMELIG_ALLOW_PASSWORD_PROTECTION),
         allowIpRestriction: parseBoolean(process.env.HEMMELIG_ALLOW_IP_RESTRICTION),
-        maxPasswordAttempts: parseNumber(process.env.HEMMELIG_MAX_PASSWORD_ATTEMPTS),
-        sessionTimeout: parseNumber(process.env.HEMMELIG_SESSION_TIMEOUT),
-        enableRateLimiting: parseBoolean(process.env.HEMMELIG_ENABLE_RATE_LIMITING),
-        rateLimitRequests: parseNumber(process.env.HEMMELIG_RATE_LIMIT_REQUESTS),
-        rateLimitWindow: parseNumber(process.env.HEMMELIG_RATE_LIMIT_WINDOW),
     },
     analytics: {
         enabled: parseBoolean(process.env.HEMMELIG_ANALYTICS_ENABLED) ?? true,

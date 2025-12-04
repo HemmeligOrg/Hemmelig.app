@@ -20,14 +20,11 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## General Settings
 
-| Variable                              | Description                                   | Default           |
-| ------------------------------------- | --------------------------------------------- | ----------------- |
-| `HEMMELIG_INSTANCE_NAME`              | Custom name for your instance                 | -                 |
-| `HEMMELIG_INSTANCE_DESCRIPTION`       | Custom description for your instance          | -                 |
-| `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user registrations (`true`/`false`) | `true`            |
-| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification for new accounts   | `false`           |
-| `HEMMELIG_MAX_SECRETS_PER_USER`       | Maximum secrets a user can create             | unlimited         |
-| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration time in seconds            | `14400` (4 hours) |
+| Variable                        | Description                                   | Default |
+| ------------------------------- | --------------------------------------------- | ------- |
+| `HEMMELIG_INSTANCE_NAME`        | Custom name for your instance                 | -       |
+| `HEMMELIG_INSTANCE_DESCRIPTION` | Custom description for your instance          | -       |
+| `HEMMELIG_ALLOW_REGISTRATION`   | Allow new user registrations (`true`/`false`) | `true`  |
 
 ## Security Settings
 
@@ -35,11 +32,6 @@ Complete reference for all environment variables supported by Hemmelig.
 | ------------------------------------ | -------------------------------------- | ------- |
 | `HEMMELIG_ALLOW_PASSWORD_PROTECTION` | Allow password-protected secrets       | `true`  |
 | `HEMMELIG_ALLOW_IP_RESTRICTION`      | Allow IP range restrictions on secrets | `true`  |
-| `HEMMELIG_MAX_PASSWORD_ATTEMPTS`     | Max password attempts before lockout   | -       |
-| `HEMMELIG_SESSION_TIMEOUT`           | Session timeout in seconds             | -       |
-| `HEMMELIG_ENABLE_RATE_LIMITING`      | Enable rate limiting                   | `true`  |
-| `HEMMELIG_RATE_LIMIT_REQUESTS`       | Number of requests allowed per window  | -       |
-| `HEMMELIG_RATE_LIMIT_WINDOW`         | Rate limit window in seconds           | -       |
 
 ## Analytics
 
