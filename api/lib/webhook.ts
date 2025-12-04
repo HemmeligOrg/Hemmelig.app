@@ -2,17 +2,26 @@ import { createHmac } from 'crypto';
 import prisma from './db';
 import instanceSettings from '../instance-settings';
 
-export type WebhookEvent = 'secret.viewed' | 'secret.burned';
+export type WebhookEvent = 'secret.viewed' | 'secret.burned' | 'apikey.created';
+
+interface SecretWebhookData {
+    secretId: string;
+    hasPassword: boolean;
+    hasIpRestriction: boolean;
+    viewsRemaining?: number;
+}
+
+interface ApiKeyWebhookData {
+    apiKeyId: string;
+    name: string;
+    expiresAt: string | null;
+    userId: string;
+}
 
 interface WebhookPayload {
     event: WebhookEvent;
     timestamp: string;
-    data: {
-        secretId: string;
-        hasPassword: boolean;
-        hasIpRestriction: boolean;
-        viewsRemaining?: number;
-    };
+    data: SecretWebhookData | ApiKeyWebhookData;
 }
 
 function signPayload(payload: string, secret: string): string {

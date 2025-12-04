@@ -6,6 +6,7 @@ import { createHash, randomBytes } from 'crypto';
 import prisma from '../lib/db';
 import { authMiddleware } from '../middlewares/auth';
 import { auth } from '../auth';
+import { sendWebhook } from '../lib/webhook';
 
 const createApiKeySchema = z.object({
     name: z.string().min(1).max(100),
@@ -99,6 +100,14 @@ const app = new Hono<{
                     expiresAt: true,
                     createdAt: true,
                 },
+            });
+
+            // Send webhook for API key creation
+            sendWebhook('apikey.created', {
+                apiKeyId: apiKey.id,
+                name: apiKey.name,
+                expiresAt: apiKey.expiresAt?.toISOString() || null,
+                userId: user.id,
             });
 
             // Return the raw key only once - it cannot be retrieved again

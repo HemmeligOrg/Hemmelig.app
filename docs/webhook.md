@@ -18,6 +18,8 @@ Configure webhooks in the admin dashboard under **Instance Settings → Webhooks
 
 Webhooks are sent as HTTP POST requests with a JSON body:
 
+### Secret Events
+
 ```json
 {
   "event": "secret.viewed",
@@ -31,19 +33,35 @@ Webhooks are sent as HTTP POST requests with a JSON body:
 }
 ```
 
+### API Key Events
+
+```json
+{
+  "event": "apikey.created",
+  "timestamp": "2024-12-04T10:30:00.000Z",
+  "data": {
+    "apiKeyId": "key-uuid-here",
+    "name": "My Integration",
+    "expiresAt": "2025-12-04T10:30:00.000Z",
+    "userId": "user-uuid-here"
+  }
+}
+```
+
 ### Event Types
 
 | Event | Description |
 |-------|-------------|
 | `secret.viewed` | A secret was successfully viewed |
 | `secret.burned` | A secret was deleted (manually or after last view) |
+| `apikey.created` | A new API key was created |
 
 ### Headers
 
 | Header | Description |
 |--------|-------------|
 | `Content-Type` | `application/json` |
-| `X-Hemmelig-Event` | Event type (`secret.viewed` or `secret.burned`) |
+| `X-Hemmelig-Event` | Event type (`secret.viewed`, `secret.burned`, or `apikey.created`) |
 | `X-Hemmelig-Signature` | HMAC-SHA256 signature (if secret configured) |
 
 ## Verifying Webhook Signatures
