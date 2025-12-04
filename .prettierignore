@@ -7,3 +7,5 @@ package-lock.json
 *.min.js
 *.min.css
 prisma/migrations
+.github
+helm/
