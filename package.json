@@ -52,6 +52,7 @@
     "hono": "^4.7.9",
     "hono-rate-limiter": "^0.4.2",
     "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.2.0",
     "ip-address": "^10.0.1",
     "ip-range-check": "^0.2.0",
     "is-cidr": "^5.1.1",
