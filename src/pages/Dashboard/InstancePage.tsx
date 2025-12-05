@@ -182,6 +182,26 @@ export function InstancePage() {
                                 />
                             </div>
 
+                            <div>
+                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    {t('instance_page.general_settings.important_message_label')}
+                                </label>
+                                <textarea
+                                    value={generalSettings.importantMessage}
+                                    onChange={(e) =>
+                                        setGeneralSetting('importantMessage', e.target.value)
+                                    }
+                                    rows={2}
+                                    placeholder={t(
+                                        'instance_page.general_settings.important_message_placeholder'
+                                    )}
+                                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                />
+                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                    {t('instance_page.general_settings.important_message_hint')}
+                                </p>
+                            </div>
+
                             <button
                                 onClick={() => handleSaveSettings('general')}
                                 disabled={isLoading}

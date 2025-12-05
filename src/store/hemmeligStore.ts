@@ -20,6 +20,7 @@ export type HemmeligSettings = {
     requireRegisteredUser: boolean;
     logoUrl: string;
     primaryColor: string;
+    importantMessage: string;
 };
 
 type HemmeligState = {
@@ -34,6 +35,7 @@ export const useHemmeligStore = create<HemmeligState>((set) => ({
         allowRegistration: true,
         requireInviteCode: false,
         requireRegisteredUser: false,
+        importantMessage: '',
     },
     setSettings: (settings) => {
         set({ settings });

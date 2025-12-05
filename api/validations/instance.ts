@@ -28,4 +28,7 @@ export const instanceSettingsSchema = z.object({
     webhookSecret: z.string().optional(),
     webhookOnView: z.boolean().optional(),
     webhookOnBurn: z.boolean().optional(),
+
+    // Important message alert
+    importantMessage: z.string().optional(),
 });

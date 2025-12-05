@@ -10,6 +10,7 @@ type GeneralSettings = {
     maxSecretsPerUser: number;
     defaultSecretExpiration: number;
     maxSecretSize: number;
+    importantMessage: string;
 };
 
 type SecuritySettings = {
@@ -67,6 +68,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         maxSecretsPerUser: 1000,
         defaultSecretExpiration: 72,
         maxSecretSize: 1024,
+        importantMessage: '',
     },
     securitySettings: {
         enforceHttps: true,
@@ -113,6 +115,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     maxSecretsPerUser: settings.maxSecretsPerUser,
                     defaultSecretExpiration: settings.defaultSecretExpiration,
                     maxSecretSize: settings.maxSecretSize,
+                    importantMessage: settings.importantMessage ?? '',
                 },
                 securitySettings: {
                     enforceHttps: settings.enforceHttps,

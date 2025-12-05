@@ -56,6 +56,7 @@ export const PUBLIC_SETTINGS_FIELDS = {
     allowPasswordProtection: true,
     allowIpRestriction: true,
     requireRegisteredUser: true,
+    importantMessage: true,
 } as const;
 
 /**
@@ -74,4 +75,5 @@ export const ADMIN_SETTINGS_FIELDS = {
     webhookSecret: true,
     webhookOnView: true,
     webhookOnBurn: true,
+    importantMessage: true,
 } as const;

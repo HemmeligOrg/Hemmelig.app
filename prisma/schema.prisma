@@ -140,6 +140,8 @@ model InstanceSettings {
     webhookSecret            String?  @default("") // HMAC secret for signing webhook payloads
     webhookOnView            Boolean? @default(true) // send webhook when secret is viewed
     webhookOnBurn            Boolean? @default(true) // send webhook when secret is burned/deleted
+    // Important message alert
+    importantMessage         String?  @default("") // Message to display to all users
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 
