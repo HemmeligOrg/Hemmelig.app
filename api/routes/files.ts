@@ -56,11 +56,34 @@ files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
     const { id } = c.req.valid('param');
 
     try {
+        // Fetch file with its associated secrets to verify access
         const file = await prisma.file.findUnique({
             where: { id },
+            include: {
+                secrets: {
+                    select: {
+                        id: true,
+                        views: true,
+                        expiresAt: true,
+                    },
+                },
+            },
         });
 
         if (!file) {
+            return c.json({ error: 'File not found' }, 404);
+        }
+
+        // Security: Verify the file is associated with at least one valid (non-expired, has views) secret
+        // This prevents direct file access without going through the secret viewing flow
+        const hasValidSecret = file.secrets.some((secret) => {
+            const now = new Date();
+            const hasViewsRemaining = secret.views === null || secret.views >= 0;
+            const notExpired = secret.expiresAt > now;
+            return hasViewsRemaining && notExpired;
+        });
+
+        if (!hasValidSecret) {
             return c.json({ error: 'File not found' }, 404);
         }
 
