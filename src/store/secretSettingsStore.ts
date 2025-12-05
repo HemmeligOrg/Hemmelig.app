@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+/** Default secret expiration: 12 hours in seconds */
+const DEFAULT_EXPIRATION_SECONDS = 43200;
+
 interface SecretSettings {
     expiresAt: number;
     views: number;
@@ -15,7 +18,7 @@ interface SecretSettingsState {
 }
 
 const defaultSettings: SecretSettings = {
-    expiresAt: 43200,
+    expiresAt: DEFAULT_EXPIRATION_SECONDS,
     views: 1,
     isBurnable: false,
 };

@@ -18,6 +18,7 @@ import Editor from '../components/Editor';
 import { Modal } from '../components/Modal';
 import { api } from '../lib/api';
 import { decrypt, decryptFile, generateEncryptionKey } from '../lib/crypto';
+import { copyToClipboard as copyText } from '../utils/clipboard';
 
 interface SecretFile {
     id: string;
@@ -133,10 +134,12 @@ export function SecretPage() {
         URL.revokeObjectURL(link.href);
     };
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(secretContent || '');
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const handleCopyToClipboard = async () => {
+        const success = await copyText(secretContent || '');
+        if (success) {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
 
     const handleDeleteSecret = async () => {
@@ -269,7 +272,7 @@ export function SecretPage() {
                             </span>
                         )}
                         <button
-                            onClick={copyToClipboard}
+                            onClick={handleCopyToClipboard}
                             className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                             title={t('secret_page.copy_secret')}
                         >

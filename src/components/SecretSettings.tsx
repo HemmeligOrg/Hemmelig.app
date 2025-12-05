@@ -2,8 +2,10 @@ import { Check, Copy, Eye, EyeOff, Plus } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { api } from '../lib/api';
 import { useSecretStore } from '../store/secretStore';
+import { copyToClipboard as copyText } from '../utils/clipboard';
 
 import { useHemmeligStore } from '../store/hemmeligStore';
 
@@ -22,9 +24,11 @@ export const SecretSettings = () => {
         }
     }, [copied]);
 
-    const copyToClipboard = (text: string, field: string) => {
-        navigator.clipboard.writeText(text);
-        setCopied(field);
+    const handleCopyToClipboard = async (text: string, field: string) => {
+        const success = await copyText(text);
+        if (success) {
+            setCopied(field);
+        }
     };
 
     const handleBurnSecret = async () => {
@@ -33,7 +37,7 @@ export const SecretSettings = () => {
             resetSecret();
         } catch (error) {
             console.error('Failed to burn secret:', error);
-            alert(t('secret_settings.failed_to_burn'));
+            toast.error(t('secret_settings.failed_to_burn'));
         }
     };
 
@@ -63,7 +67,7 @@ export const SecretSettings = () => {
                             className="w-full mt-1 pl-4 pr-10 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none"
                         />
                         <button
-                            onClick={() => copyToClipboard(secretUrl, 'url')}
+                            onClick={() => handleCopyToClipboard(secretUrl, 'url')}
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
                         >
                             {copied === 'url' ? (
@@ -98,7 +102,7 @@ export const SecretSettings = () => {
                                         <Eye className="h-5 w-5" />
                                     )}
                                 </button>
-                                <button onClick={() => copyToClipboard(password, 'password')}>
+                                <button onClick={() => handleCopyToClipboard(password, 'password')}>
                                     {copied === 'password' ? (
                                         <Check className="h-5 w-5 text-green-500" />
                                     ) : (
@@ -121,7 +125,7 @@ export const SecretSettings = () => {
                 </button>
                 <div className="w-full sm:w-auto flex space-x-3">
                     <button
-                        onClick={() => copyToClipboard(secretUrl, 'url')}
+                        onClick={() => handleCopyToClipboard(secretUrl, 'url')}
                         className="w-full sm:w-auto px-4 py-2 bg-teal-500 text-gray-900 dark:text-white text-sm"
                     >
                         {t('secret_settings.copy_url_button')}

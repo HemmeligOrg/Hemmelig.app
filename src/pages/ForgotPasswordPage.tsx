@@ -2,6 +2,7 @@ import { ArrowLeft, CheckCircle, Mail } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import Logo from '../components/Logo.tsx';
 
 import { createAuthClient } from 'better-auth/react';
@@ -25,14 +26,14 @@ export function ForgotPasswordPage() {
             });
 
             if (error) {
-                alert(`Password reset request failed: ${error.message}`);
+                toast.error(`Password reset request failed: ${error.message}`);
             } else {
                 console.log('Password reset request successful', data);
                 setIsSubmitted(true);
             }
         } catch (error) {
             console.error('An error occurred:', error);
-            alert(t('forgot_password_page.unexpected_error'));
+            toast.error(t('forgot_password_page.unexpected_error'));
         } finally {
             setIsLoading(false);
         }

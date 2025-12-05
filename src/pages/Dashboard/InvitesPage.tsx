@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Modal } from '../../components/Modal';
 import { api } from '../../lib/api';
+import { copyToClipboard as copyText } from '../../utils/clipboard';
 
 type InviteCode = {
     id: string;
@@ -79,9 +80,11 @@ export function InvitesPage() {
         }
     };
 
-    const copyToClipboard = (code: string) => {
-        navigator.clipboard.writeText(code);
-        toast.success(t('invites_page.toast.copied'));
+    const handleCopyToClipboard = async (code: string) => {
+        const success = await copyText(code);
+        if (success) {
+            toast.success(t('invites_page.toast.copied'));
+        }
     };
 
     if (isLoading) {
@@ -169,7 +172,9 @@ export function InvitesPage() {
                                                         {invite.code}
                                                     </code>
                                                     <button
-                                                        onClick={() => copyToClipboard(invite.code)}
+                                                        onClick={() =>
+                                                            handleCopyToClipboard(invite.code)
+                                                        }
                                                         className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                                     >
                                                         <Copy className="w-4 h-4" />

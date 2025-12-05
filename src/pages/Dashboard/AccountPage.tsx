@@ -22,6 +22,7 @@ import { Modal } from '../../components/Modal';
 import { api } from '../../lib/api';
 import { authClient } from '../../lib/auth';
 import { useAccountStore } from '../../store/accountStore';
+import { copyToClipboard as copyText } from '../../utils/clipboard';
 
 export function AccountPage() {
     const { t } = useTranslation();
@@ -248,10 +249,12 @@ export function AccountPage() {
         }
     };
 
-    const copyToClipboard = async (text: string, id: string) => {
-        await navigator.clipboard.writeText(text);
-        setCopiedKeyId(id);
-        setTimeout(() => setCopiedKeyId(null), 2000);
+    const handleCopyToClipboard = async (text: string, id: string) => {
+        const success = await copyText(text);
+        if (success) {
+            setCopiedKeyId(id);
+            setTimeout(() => setCopiedKeyId(null), 2000);
+        }
     };
 
     // 2FA handlers
@@ -885,7 +888,9 @@ export function AccountPage() {
                                         {newlyCreatedKey}
                                     </code>
                                     <button
-                                        onClick={() => copyToClipboard(newlyCreatedKey, 'new')}
+                                        onClick={() =>
+                                            handleCopyToClipboard(newlyCreatedKey, 'new')
+                                        }
                                         className="p-2 bg-dark-700 hover:bg-dark-600 transition-colors"
                                     >
                                         {copiedKeyId === 'new' ? (
