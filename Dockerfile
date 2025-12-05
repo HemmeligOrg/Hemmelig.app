@@ -48,7 +48,6 @@ RUN mkdir -p /app/database /app/uploads && chown -R app:app /app
 COPY --chown=app:app scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
-USER app
 EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
