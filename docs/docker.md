@@ -12,7 +12,7 @@ docker run -d \
   -v hemmelig-uploads:/app/uploads \
   -e DATABASE_URL="file:/app/database/hemmelig.db" \
   -e BETTER_AUTH_SECRET="your-secret-key-min-32-chars" \
-  hemmelig/hemmelig:v7
+  hemmeligapp/hemmelig:v7
 ```
 
 ## Docker Compose
@@ -38,7 +38,7 @@ The included `docker-compose.yml` uses SQLite:
 ```yaml
 services:
     hemmelig:
-        image: hemmelig/hemmelig:v7
+        image: hemmeligapp/hemmelig:v7
         container_name: hemmelig
         restart: unless-stopped
         volumes:
@@ -183,7 +183,7 @@ server {
 ```yaml
 services:
     hemmelig:
-        image: hemmelig/hemmelig:v7
+        image: hemmeligapp/hemmelig:v7
         labels:
             - 'traefik.enable=true'
             - 'traefik.http.routers.hemmelig.rule=Host(`secrets.example.com`)'
@@ -216,7 +216,7 @@ curl http://localhost:3000/api/healthz
 
 ```bash
 # Pull latest image
-docker pull hemmelig/hemmelig:v7
+docker pull hemmeligapp/hemmelig:v7
 
 # Recreate container
 docker compose down

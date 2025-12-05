@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: hemmelig/hemmelig
+  repository: hemmeligapp/hemmelig
   tag: "v7"
   pullPolicy: IfNotPresent
 

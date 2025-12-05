@@ -1,6 +1,6 @@
 services:
     hemmelig:
-        image: hemmelig/hemmelig:v7
+        image: hemmeligapp/hemmelig:v7
         container_name: hemmelig
         restart: unless-stopped
         volumes:
