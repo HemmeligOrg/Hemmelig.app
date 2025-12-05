@@ -12,7 +12,7 @@ export function Footer() {
                     {/* Left - Logo and tagline */}
                     <div className="flex items-center space-x-3">
                         <Link to="/" className="flex items-center space-x-2 group">
-                            <Logo className="w-5 h-5 fill-gray-500 dark:fill-slate-400 group-hover:fill-teal-500 dark:group-hover:fill-teal-400 transition-colors" />
+                            <Logo className="w-4 h-4 fill-gray-500 dark:fill-slate-400 group-hover:fill-teal-500 dark:group-hover:fill-teal-400 transition-colors" />
                             <span className="text-gray-500 dark:text-slate-400 text-xs group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors">
                                 {t('footer.tagline')}
                             </span>
