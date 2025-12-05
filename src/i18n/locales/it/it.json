@@ -314,6 +314,7 @@
             "title": "Impostazioni generali",
             "description": "Configurazione base dell'istanza",
             "instance_name_label": "Nome istanza",
+            "default_expiration_label": "Scadenza predefinita",
             "max_secrets_per_user_label": "Max segreti per utente",
             "max_secret_size_label": "Dimensione max segreto (MB)",
             "instance_description_label": "Descrizione istanza",

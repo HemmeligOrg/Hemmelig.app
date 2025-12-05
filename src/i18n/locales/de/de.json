@@ -314,6 +314,7 @@
             "title": "Allgemeine Einstellungen",
             "description": "Grundlegende Instanzkonfiguration",
             "instance_name_label": "Instanzname",
+            "default_expiration_label": "Standard-Ablaufzeit",
             "max_secrets_per_user_label": "Max. Geheimnisse pro Benutzer",
             "max_secret_size_label": "Max. Geheimisgröße (MB)",
             "instance_description_label": "Instanzbeschreibung",

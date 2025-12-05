@@ -1,7 +1,20 @@
-import { Building2, Save, Settings, Shield, Webhook } from 'lucide-react';
+import { Building2, ChevronDown, Save, Settings, Shield, Webhook } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInstanceStore } from '../../store/instanceStore';
+
+const EXPIRATION_OPTIONS = [
+    { seconds: 2419200, hours: 672, labelKey: 'expiration.28_days' },
+    { seconds: 1209600, hours: 336, labelKey: 'expiration.14_days' },
+    { seconds: 604800, hours: 168, labelKey: 'expiration.7_days' },
+    { seconds: 259200, hours: 72, labelKey: 'expiration.3_days' },
+    { seconds: 86400, hours: 24, labelKey: 'expiration.1_day' },
+    { seconds: 43200, hours: 12, labelKey: 'expiration.12_hours' },
+    { seconds: 14400, hours: 4, labelKey: 'expiration.4_hours' },
+    { seconds: 3600, hours: 1, labelKey: 'expiration.1_hour' },
+    { seconds: 1800, hours: 0.5, labelKey: 'expiration.30_minutes' },
+    { seconds: 300, hours: 5 / 60, labelKey: 'expiration.5_minutes' },
+];
 
 export function InstancePage() {
     const [activeTab, setActiveTab] = useState<'general' | 'security' | 'organization' | 'webhook'>(
@@ -133,19 +146,35 @@ export function InstancePage() {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                        Default Secret Expiration (hours)
+                                        {t(
+                                            'instance_page.general_settings.default_expiration_label'
+                                        )}
                                     </label>
-                                    <input
-                                        type="number"
-                                        value={generalSettings.defaultSecretExpiration}
-                                        onChange={(e) =>
-                                            setGeneralSetting(
-                                                'defaultSecretExpiration',
-                                                parseInt(e.target.value)
-                                            )
-                                        }
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                                    />
+                                    <div className="relative">
+                                        <select
+                                            value={generalSettings.defaultSecretExpiration}
+                                            onChange={(e) =>
+                                                setGeneralSetting(
+                                                    'defaultSecretExpiration',
+                                                    parseFloat(e.target.value)
+                                                )
+                                            }
+                                            className="w-full appearance-none px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 cursor-pointer"
+                                        >
+                                            {EXPIRATION_OPTIONS.map((option) => (
+                                                <option
+                                                    key={option.seconds}
+                                                    value={option.hours}
+                                                    className="bg-gray-100 dark:bg-dark-700"
+                                                >
+                                                    {t(option.labelKey)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-slate-400" />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>

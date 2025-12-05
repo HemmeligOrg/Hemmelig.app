@@ -314,6 +314,7 @@
             "title": "Configuración general",
             "description": "Configuración básica de la instancia",
             "instance_name_label": "Nombre de la instancia",
+            "default_expiration_label": "Expiración predeterminada",
             "max_secrets_per_user_label": "Máximo de secretos por usuario",
             "max_secret_size_label": "Tamaño máximo del secreto (MB)",
             "instance_description_label": "Descripción de la instancia",

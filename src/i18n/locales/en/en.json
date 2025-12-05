@@ -314,6 +314,7 @@
             "title": "General Settings",
             "description": "Basic instance configuration",
             "instance_name_label": "Instance Name",
+            "default_expiration_label": "Default Secret Expiration",
             "max_secrets_per_user_label": "Max Secrets per User",
             "max_secret_size_label": "Max Secret Size (MB)",
             "instance_description_label": "Instance Description",
