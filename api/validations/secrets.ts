@@ -1,6 +1,7 @@
 import isCidr from 'is-cidr';
 import { isIP } from 'is-ip';
 import { z } from 'zod';
+import { EXPIRATION_TIMES_SECONDS } from '../lib/constants';
 
 // Schema for URL parameters (expecting string from URL)
 export const secretsIdParamSchema = z.object({
@@ -40,22 +41,15 @@ const secretSchema = {
     secret: jsonToUint8ArraySchema,
     title: jsonToUint8ArraySchema.optional().nullable(),
     password: z.string().optional(),
-    expiresAt: z.number().refine(
-        (val) =>
-            [
-                2419200, // 28 days
-                1209600, // 14 days
-                604800, // 7 days
-                259200, // 3 days
-                86400, // 1 day
-                43200, // 12 hours
-                14400, // 4 hours
-                3600, // 1 hour
-                1800, // 30 minutes
-                300, // 5 minutes
-            ].indexOf(val) > -1,
-        { message: 'Invalid expiration time' }
-    ),
+    expiresAt: z
+        .number()
+        .refine(
+            (val) =>
+                EXPIRATION_TIMES_SECONDS.includes(val as (typeof EXPIRATION_TIMES_SECONDS)[number]),
+            {
+                message: 'Invalid expiration time',
+            }
+        ),
     views: z.number().int().min(1).max(9999).optional(),
     isBurnable: z.boolean().default(true).optional(),
     ipRange: z

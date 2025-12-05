@@ -1,6 +1,5 @@
 import { createHmac } from 'crypto';
-import instanceSettings from '../instance-settings';
-import prisma from './db';
+import { getInstanceSettings } from './settings';
 
 export type WebhookEvent = 'secret.viewed' | 'secret.burned' | 'apikey.created';
 
@@ -33,13 +32,7 @@ export async function sendWebhook(
     data: WebhookPayload['data']
 ): Promise<void> {
     try {
-        let settings = instanceSettings.get('instanceSettings');
-        if (!settings) {
-            settings = await prisma.instanceSettings.findFirst();
-            if (settings) {
-                instanceSettings.set('instanceSettings', settings);
-            }
-        }
+        const settings = await getInstanceSettings();
 
         if (!settings?.webhookEnabled || !settings.webhookUrl) {
             return;

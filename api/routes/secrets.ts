@@ -1,9 +1,10 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
-import instanceSettings from '../instance-settings';
+import { SECRET } from '../lib/constants';
 import prisma from '../lib/db';
 import { compare, hash } from '../lib/password';
+import { getInstanceSettings } from '../lib/settings';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { apiKeyOrAuthMiddleware } from '../middlewares/auth';
@@ -159,13 +160,13 @@ const app = new Hono<{
                     } else if (!item.isBurnable) {
                         // Last view for non-burnable secret
                         // Mark views as 0 but don't delete yet - allow file downloads
-                        // Set expiresAt to now + 5 minutes to give time for file downloads
-                        const FILE_DOWNLOAD_GRACE_PERIOD_MS = 5 * 60 * 1000;
                         await tx.secrets.update({
                             where: { id: item.id },
                             data: {
                                 views: 0,
-                                expiresAt: new Date(Date.now() + FILE_DOWNLOAD_GRACE_PERIOD_MS),
+                                expiresAt: new Date(
+                                    Date.now() + SECRET.FILE_DOWNLOAD_GRACE_PERIOD_MS
+                                ),
                             },
                         });
                     } else {
@@ -260,14 +261,7 @@ const app = new Hono<{
             const user = c.get('user');
 
             // Check if only registered users can create secrets
-            let settings = instanceSettings.get('instanceSettings');
-            if (!settings) {
-                // Fetch from database if not cached
-                settings = await prisma.instanceSettings.findFirst();
-                if (settings) {
-                    instanceSettings.set('instanceSettings', settings);
-                }
-            }
+            const settings = await getInstanceSettings();
             if (settings?.requireRegisteredUser && !user) {
                 return c.json({ error: 'Only registered users can create secrets' }, 401);
             }

@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import { auth } from '../auth';
+import { TIME } from '../lib/constants';
 import prisma from '../lib/db';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 
@@ -24,21 +25,21 @@ export const invitePublicRoute = new Hono()
             });
 
             if (!invite || !invite.isActive) {
-                return c.json({ valid: false, error: 'Invalid invite code' }, 400);
+                return c.json({ error: 'Invalid invite code' }, 400);
             }
 
             if (invite.expiresAt && new Date() > invite.expiresAt) {
-                return c.json({ valid: false, error: 'Invite code has expired' }, 400);
+                return c.json({ error: 'Invite code has expired' }, 400);
             }
 
             if (invite.maxUses && invite.uses >= invite.maxUses) {
-                return c.json({ valid: false, error: 'Invite code has reached maximum uses' }, 400);
+                return c.json({ error: 'Invite code has reached maximum uses' }, 400);
             }
 
             return c.json({ valid: true });
         } catch (error) {
             console.error('Failed to validate invite code:', error);
-            return c.json({ valid: false, error: 'Failed to validate invite code' }, 500);
+            return c.json({ error: 'Failed to validate invite code' }, 500);
         }
     })
     .post(
@@ -53,18 +54,15 @@ export const invitePublicRoute = new Hono()
                 });
 
                 if (!invite || !invite.isActive) {
-                    return c.json({ success: false, error: 'Invalid invite code' }, 400);
+                    return c.json({ error: 'Invalid invite code' }, 400);
                 }
 
                 if (invite.expiresAt && new Date() > invite.expiresAt) {
-                    return c.json({ success: false, error: 'Invite code has expired' }, 400);
+                    return c.json({ error: 'Invite code has expired' }, 400);
                 }
 
                 if (invite.maxUses && invite.uses >= invite.maxUses) {
-                    return c.json(
-                        { success: false, error: 'Invite code has reached maximum uses' },
-                        400
-                    );
+                    return c.json({ error: 'Invite code has reached maximum uses' }, 400);
                 }
 
                 await prisma.$transaction([
@@ -81,7 +79,7 @@ export const invitePublicRoute = new Hono()
                 return c.json({ success: true });
             } catch (error) {
                 console.error('Failed to use invite code:', error);
-                return c.json({ success: false, error: 'Failed to use invite code' }, 500);
+                return c.json({ error: 'Failed to use invite code' }, 500);
             }
         }
     );
@@ -116,7 +114,7 @@ export const inviteRoute = new Hono<{
         try {
             const code = nanoid(12).toUpperCase();
             const expiresAt = expiresInDays
-                ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
+                ? new Date(Date.now() + expiresInDays * TIME.DAY_MS)
                 : null;
 
             const invite = await prisma.inviteCode.create({

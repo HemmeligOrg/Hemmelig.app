@@ -31,15 +31,20 @@ export const deleteOrphanedFiles = async () => {
             return;
         }
 
-        // Delete files from disk
-        for (const file of orphanedFiles) {
-            try {
-                await unlink(file.path);
-            } catch (error) {
-                // File may already be deleted or inaccessible
-                console.error(`Failed to delete file from disk: ${file.path}`, error);
+        // Delete files from disk in parallel for better performance
+        const deleteResults = await Promise.allSettled(
+            orphanedFiles.map((file) => unlink(file.path))
+        );
+
+        // Log any failures (file may already be deleted or inaccessible)
+        deleteResults.forEach((result, index) => {
+            if (result.status === 'rejected') {
+                console.error(
+                    `Failed to delete file from disk: ${orphanedFiles[index].path}`,
+                    result.reason
+                );
             }
-        }
+        });
 
         // Delete orphaned file records from database
         await prisma.file.deleteMany({

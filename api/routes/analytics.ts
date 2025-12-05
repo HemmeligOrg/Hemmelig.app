@@ -1,27 +1,19 @@
 import { zValidator } from '@hono/zod-validator';
-import { createHmac } from 'crypto';
 import { Hono } from 'hono';
 import { isbot } from 'isbot';
 import { z } from 'zod';
-import config from '../config';
+import {
+    calculatePercentage,
+    createVisitorId,
+    getStartDateForTimeRange,
+    isAnalyticsEnabled,
+    isValidAnalyticsPath,
+} from '../lib/analytics';
 import prisma from '../lib/db';
 import { getClientIp } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 
 const app = new Hono();
-
-const analyticsConfig = config.get('analytics') as { enabled: boolean; hmacSecret: string };
-
-function createUniqueId(ip: string, userAgent: string): string {
-    return createHmac('sha256', analyticsConfig.hmacSecret)
-        .update(ip + userAgent)
-        .digest('hex');
-}
-
-function isValidPath(path: string): boolean {
-    const pathRegex = /^\/[a-zA-Z0-9\-?=&/#]*$/;
-    return pathRegex.test(path) && path.length <= 255;
-}
 
 const trackSchema = z.object({
     path: z.string().max(255),
@@ -33,7 +25,7 @@ const timeRangeSchema = z.object({
 
 // POST /api/analytics/track - Public endpoint for visitor tracking
 app.post('/track', zValidator('json', trackSchema), async (c) => {
-    if (!analyticsConfig.enabled) {
+    if (!isAnalyticsEnabled()) {
         return c.json({ success: false }, 403);
     }
 
@@ -46,11 +38,11 @@ app.post('/track', zValidator('json', trackSchema), async (c) => {
     try {
         const { path } = c.req.valid('json');
 
-        if (!isValidPath(path)) {
+        if (!isValidAnalyticsPath(path)) {
             return c.json({ error: 'Invalid path format' }, 400);
         }
 
-        const uniqueId = createUniqueId(getClientIp(c), userAgent);
+        const uniqueId = createVisitorId(getClientIp(c), userAgent);
 
         await prisma.visitorAnalytics.create({
             data: { path, uniqueId },
@@ -67,33 +59,61 @@ app.post('/track', zValidator('json', trackSchema), async (c) => {
 app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), async (c) => {
     const { timeRange } = c.req.valid('query');
     const now = new Date();
-    const startDate = new Date();
-
-    switch (timeRange) {
-        case '7d':
-            startDate.setDate(now.getDate() - 7);
-            break;
-        case '30d':
-            startDate.setMonth(now.getMonth() - 1);
-            break;
-        case '90d':
-            startDate.setMonth(now.getMonth() - 3);
-            break;
-        case '1y':
-            startDate.setFullYear(now.getFullYear() - 1);
-            break;
-    }
+    const startDate = getStartDateForTimeRange(timeRange);
 
     try {
-        const secrets = await prisma.secrets.findMany({ where: { createdAt: { gte: startDate } } });
+        // Use aggregations for basic counts - much more efficient than loading all records
+        const [aggregates, activeCount, typesCounts, dailyStats] = await Promise.all([
+            // Get total count and sum of views
+            prisma.secrets.aggregate({
+                where: { createdAt: { gte: startDate } },
+                _count: true,
+                _sum: { views: true },
+            }),
+            // Count active (non-expired) secrets
+            prisma.secrets.count({
+                where: {
+                    createdAt: { gte: startDate },
+                    expiresAt: { gt: now },
+                },
+            }),
+            // Get counts for secret types in parallel
+            Promise.all([
+                prisma.secrets.count({
+                    where: { createdAt: { gte: startDate }, password: { not: null } },
+                }),
+                prisma.secrets.count({
+                    where: {
+                        createdAt: { gte: startDate },
+                        ipRange: { not: null },
+                        NOT: { ipRange: '' },
+                    },
+                }),
+                prisma.secrets.count({
+                    where: { createdAt: { gte: startDate }, isBurnable: true },
+                }),
+            ]),
+            // For daily stats, we still need individual records but only select minimal fields
+            prisma.secrets.findMany({
+                where: { createdAt: { gte: startDate } },
+                select: {
+                    createdAt: true,
+                    views: true,
+                    expiresAt: true,
+                },
+            }),
+        ]);
 
-        const totalSecrets = secrets.length;
-        const totalViews = secrets.reduce((acc, s) => acc + (s.views || 0), 0);
-        const activeSecrets = secrets.filter((s) => s.expiresAt > now).length;
+        const totalSecrets = aggregates._count;
+        const totalViews = aggregates._sum.views || 0;
+        const activeSecrets = activeCount;
         const expiredSecrets = totalSecrets - activeSecrets;
         const averageViews = totalSecrets > 0 ? totalViews / totalSecrets : 0;
 
-        const dailyStats = secrets.reduce(
+        const [passwordProtected, ipRestricted, burnable] = typesCounts;
+
+        // Process daily stats from minimal data
+        const dailyStatsMap = dailyStats.reduce(
             (acc, secret) => {
                 const date = secret.createdAt.toISOString().split('T')[0];
                 if (!acc[date]) {
@@ -106,11 +126,8 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
             {} as Record<string, { date: string; secrets: number; views: number }>
         );
 
-        const passwordProtected = secrets.filter((s) => s.password).length;
-        const ipRestricted = secrets.filter((s) => s.ipRange).length;
-        const burnable = secrets.filter((s) => s.isBurnable).length;
-
-        const expirationDurations = secrets.map(
+        // Calculate expiration stats from minimal data
+        const expirationDurations = dailyStats.map(
             (s) => (s.expiresAt.getTime() - s.createdAt.getTime()) / (1000 * 60 * 60)
         );
         const oneHour = expirationDurations.filter((d) => d <= 1).length;
@@ -123,28 +140,16 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
             activeSecrets,
             expiredSecrets,
             averageViews: parseFloat(averageViews.toFixed(2)),
-            dailyStats: Object.values(dailyStats),
+            dailyStats: Object.values(dailyStatsMap),
             secretTypes: {
-                passwordProtected:
-                    totalSecrets > 0
-                        ? parseFloat(((passwordProtected / totalSecrets) * 100).toFixed(2))
-                        : 0,
-                ipRestricted:
-                    totalSecrets > 0
-                        ? parseFloat(((ipRestricted / totalSecrets) * 100).toFixed(2))
-                        : 0,
-                burnable:
-                    totalSecrets > 0 ? parseFloat(((burnable / totalSecrets) * 100).toFixed(2)) : 0,
+                passwordProtected: calculatePercentage(passwordProtected, totalSecrets),
+                ipRestricted: calculatePercentage(ipRestricted, totalSecrets),
+                burnable: calculatePercentage(burnable, totalSecrets),
             },
             expirationStats: {
-                oneHour:
-                    totalSecrets > 0 ? parseFloat(((oneHour / totalSecrets) * 100).toFixed(2)) : 0,
-                oneDay:
-                    totalSecrets > 0 ? parseFloat(((oneDay / totalSecrets) * 100).toFixed(2)) : 0,
-                oneWeekPlus:
-                    totalSecrets > 0
-                        ? parseFloat(((oneWeekPlus / totalSecrets) * 100).toFixed(2))
-                        : 0,
+                oneHour: calculatePercentage(oneHour, totalSecrets),
+                oneDay: calculatePercentage(oneDay, totalSecrets),
+                oneWeekPlus: calculatePercentage(oneWeekPlus, totalSecrets),
             },
         });
     } catch (error) {

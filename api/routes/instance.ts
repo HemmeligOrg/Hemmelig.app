@@ -1,52 +1,20 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import config from '../config';
-import instanceSettings from '../instance-settings';
+import { ADMIN_SETTINGS_FIELDS, PUBLIC_SETTINGS_FIELDS } from '../lib/constants';
 import prisma from '../lib/db';
+import settingsCache, { setCachedInstanceSettings } from '../lib/settings';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
 
 const app = new Hono();
 
-// Public settings fields - safe for all users
-const publicSelectFields = {
-    instanceName: true,
-    instanceDescription: true,
-    allowRegistration: true,
-    defaultSecretExpiration: true,
-    maxSecretSize: true,
-    allowPasswordProtection: true,
-    allowIpRestriction: true,
-    requireRegisteredUser: true,
-};
-
-// All settings fields - admin only
-const selectFields = {
-    instanceName: true,
-    instanceDescription: true,
-    allowRegistration: true,
-    requireEmailVerification: true,
-    defaultSecretExpiration: true,
-    maxSecretSize: true,
-    allowPasswordProtection: true,
-    allowIpRestriction: true,
-    enableRateLimiting: true,
-    rateLimitRequests: true,
-    rateLimitWindow: true,
-    requireInviteCode: true,
-    allowedEmailDomains: true,
-    requireRegisteredUser: true,
-    webhookEnabled: true,
-    webhookUrl: true,
-    webhookSecret: true,
-    webhookOnView: true,
-    webhookOnBurn: true,
-};
-
 // GET /api/instance/settings/public - public settings for all users
 app.get('/settings/public', async (c) => {
     try {
-        let dbSettings = await prisma.instanceSettings.findFirst({ select: publicSelectFields });
+        let dbSettings = await prisma.instanceSettings.findFirst({
+            select: PUBLIC_SETTINGS_FIELDS,
+        });
 
         if (!dbSettings) {
             const initialData = {
@@ -60,7 +28,7 @@ app.get('/settings/public', async (c) => {
 
             dbSettings = await prisma.instanceSettings.create({
                 data: initialData,
-                select: publicSelectFields,
+                select: PUBLIC_SETTINGS_FIELDS,
             });
         }
 
@@ -70,7 +38,7 @@ app.get('/settings/public', async (c) => {
         };
         const filteredConfigSettings = Object.fromEntries(
             Object.entries(configSettings).filter(
-                ([key, value]) => value !== undefined && key in publicSelectFields
+                ([key, value]) => value !== undefined && key in PUBLIC_SETTINGS_FIELDS
             )
         );
 
@@ -89,7 +57,7 @@ app.get('/settings/public', async (c) => {
 // GET /api/instance/settings - admin only
 app.get('/settings', authMiddleware, checkAdmin, async (c) => {
     try {
-        let dbSettings = await prisma.instanceSettings.findFirst({ select: selectFields });
+        let dbSettings = await prisma.instanceSettings.findFirst({ select: ADMIN_SETTINGS_FIELDS });
 
         if (!dbSettings) {
             const initialData = {
@@ -103,7 +71,7 @@ app.get('/settings', authMiddleware, checkAdmin, async (c) => {
 
             dbSettings = await prisma.instanceSettings.create({
                 data: initialData,
-                select: selectFields,
+                select: ADMIN_SETTINGS_FIELDS,
             });
         }
 
@@ -146,11 +114,11 @@ app.put(
             const updatedSettings = await prisma.instanceSettings.update({
                 where: { id: settings.id },
                 data: body,
-                select: selectFields,
+                select: ADMIN_SETTINGS_FIELDS,
             });
 
-            const currentSettings = instanceSettings.get('instanceSettings');
-            instanceSettings.set('instanceSettings', {
+            const currentSettings = settingsCache.get('instanceSettings');
+            setCachedInstanceSettings({
                 ...currentSettings,
                 ...updatedSettings,
             });
