@@ -8,7 +8,6 @@ import { InstancePage } from './pages/Dashboard/InstancePage';
 import { InvitesPage } from './pages/Dashboard/InvitesPage';
 import { SecretsPage } from './pages/Dashboard/SecretsPage';
 import { UsersPage } from './pages/Dashboard/UsersPage';
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { PrivacyPage } from './pages/PrivacyPage';
@@ -87,11 +86,6 @@ export const router = createBrowserRouter([
             }
             return null;
         },
-    },
-    {
-        path: '/forgot-password',
-        element: <ForgotPasswordPage />,
-        loader: instanceSettingsLoader,
     },
     {
         path: '/verify-2fa',

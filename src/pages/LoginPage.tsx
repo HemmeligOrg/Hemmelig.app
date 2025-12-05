@@ -140,16 +140,6 @@ export function LoginPage() {
                             </div>
                         </div>
 
-                        {/* Forgot Password Link */}
-                        <div className="text-right">
-                            <Link
-                                to="/forgot-password"
-                                className="text-sm text-teal-400 hover:text-teal-300 transition-colors duration-300"
-                            >
-                                {t('login_page.forgot_password_link')}
-                            </Link>
-                        </div>
-
                         {/* Submit Button */}
                         <button
                             type="submit"
