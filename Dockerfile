@@ -25,7 +25,7 @@ COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
 ENV NODE_ENV=production
-RUN npm ci --omit=dev --legacy-peer-deps && \
+RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
     npx prisma generate && \
     npm cache clean --force && \
     rm -rf /root/.npm /tmp/*
