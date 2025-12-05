@@ -37,16 +37,6 @@ jobs:
               run: |
                   echo "version=$(echo ${{ steps.latest_tag.outputs.tag }} | cut -d'.' -f1,2)" >> $GITHUB_OUTPUT
 
-            - name: Push to Docker Hub (latest)
-              uses: docker/build-push-action@v4
-              with:
-                  platforms: linux/amd64
-                  push: true
-                  tags: hemmeligapp/hemmelig:latest
-                  build-args: |
-                      GIT_SHA=${{ steps.short_sha.outputs.sha }}
-                      GIT_TAG=${{ steps.latest_tag.outputs.tag }}
-
             - name: Push to Docker Hub (full version)
               uses: docker/build-push-action@v4
               with:
