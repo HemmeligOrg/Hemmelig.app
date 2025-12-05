@@ -15,6 +15,10 @@
   <a href="docs/env.md">Configuration</a>
 </p>
 
+<p align="center">
+  <a href="https://hub.docker.com/r/hemmeligapp/hemmelig"><img src="https://img.shields.io/docker/pulls/hemmeligapp/hemmelig" alt="Docker pulls" /></a>
+</p>
+
 ## How It Works
 
 1. Enter your secret on [hemmelig.app](https://hemmelig.app) or your self-hosted instance
