@@ -40,7 +40,7 @@ jobs:
             - name: Push to Docker Hub (latest)
               uses: docker/build-push-action@v4
               with:
-                  platforms: linux/amd64, linux/arm64
+                  platforms: linux/amd64
                   push: true
                   tags: hemmeligapp/hemmelig:latest
                   build-args: |
@@ -50,7 +50,7 @@ jobs:
             - name: Push to Docker Hub (full version)
               uses: docker/build-push-action@v4
               with:
-                  platforms: linux/amd64, linux/arm64
+                  platforms: linux/amd64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.latest_tag.outputs.tag }}
                   build-args: |
@@ -60,7 +60,7 @@ jobs:
             - name: Push to Docker Hub (minor version)
               uses: docker/build-push-action@v4
               with:
-                  platforms: linux/amd64, linux/arm64
+                  platforms: linux/amd64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.minor_version.outputs.version }}
                   build-args: |
@@ -70,7 +70,7 @@ jobs:
             - name: Push to Docker Hub (major version)
               uses: docker/build-push-action@v4
               with:
-                  platforms: linux/amd64, linux/arm64
+                  platforms: linux/amd64
                   push: true
                   tags: hemmeligapp/hemmelig:${{ steps.major_version.outputs.version }}
                   build-args: |
