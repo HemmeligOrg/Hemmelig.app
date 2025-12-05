@@ -74,35 +74,24 @@ app.put('/password', authMiddleware, zValidator('json', updatePasswordSchema), a
     }
 
     try {
-        const ctx = await auth.$context;
-        const existingUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            include: {
-                accounts: true,
+        // Use better-auth's changePassword API
+        const result = await auth.api.changePassword({
+            body: {
+                currentPassword,
+                newPassword,
             },
+            headers: c.req.raw.headers,
         });
 
-        const currentPasswordHash = existingUser?.accounts?.[0]?.password;
-        if (!existingUser || !currentPasswordHash) {
-            return c.json({ error: 'User not found or no password set' }, 404);
+        if (!result) {
+            return c.json({ error: 'Failed to change password' }, 500);
         }
-
-        const isCurrentPasswordValid = await ctx.password.verify({
-            hash: currentPasswordHash,
-            password: currentPassword,
-        });
-
-        if (!isCurrentPasswordValid) {
-            return c.json({ error: 'Invalid current password' }, 400);
-        }
-
-        const newPasswordHash = await ctx.password.hash(newPassword);
-        await ctx.internalAdapter.updatePassword(user.id, newPasswordHash);
 
         return c.json({ message: 'Password updated successfully' });
     } catch (error) {
         console.error('Failed to update password:', error);
-        return c.json({ error: 'Failed to update password' }, 500);
+        const message = error instanceof Error ? error.message : 'Failed to update password';
+        return c.json({ error: message }, 500);
     }
 });
 
