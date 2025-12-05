@@ -26,6 +26,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
 ENV NODE_ENV=production
 RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
+    npm rebuild better-sqlite3 && \
     npx prisma generate && \
     npm cache clean --force && \
     rm -rf /root/.npm /tmp/*
