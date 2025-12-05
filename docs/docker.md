@@ -156,50 +156,53 @@ docker build -t hemmelig .
 
 ### Nginx
 
+1. Create the Nginx configuration file:
+
+```bash
+sudo nano /etc/nginx/sites-available/hemmelig
+```
+
+2. Add the following configuration (HTTP only, for initial setup):
+
 ```nginx
 server {
-    listen 443 ssl http2;
-    server_name secrets.example.com;
-
-    ssl_certificate /path/to/cert.pem;
-    ssl_certificate_key /path/to/key.pem;
+    listen 80;
+    server_name your_domain.com; # Replace with your domain or IP
 
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
+        proxy_set_header Connection "upgrade";
+
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
         proxy_cache_bypass $http_upgrade;
     }
 }
 ```
 
-### Traefik
+3. Enable the site:
 
-```yaml
-services:
-    hemmelig:
-        image: hemmeligapp/hemmelig:v7
-        labels:
-            - 'traefik.enable=true'
-            - 'traefik.http.routers.hemmelig.rule=Host(`secrets.example.com`)'
-            - 'traefik.http.routers.hemmelig.tls=true'
-            - 'traefik.http.routers.hemmelig.tls.certresolver=letsencrypt'
-            - 'traefik.http.services.hemmelig.loadbalancer.server.port=3000'
-        # ... rest of configuration
+```bash
+sudo ln -s /etc/nginx/sites-available/hemmelig /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
-### Caddy
+4. Install Certbot and obtain SSL certificate:
 
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d your_domain.com
 ```
-secrets.example.com {
-    reverse_proxy hemmelig:3000
-}
-```
+
+Certbot will automatically modify your Nginx configuration to use HTTPS.
+
+````
 
 ## Health Checks
 
@@ -210,7 +213,7 @@ To manually check:
 ```bash
 curl http://localhost:3000/api/healthz
 # Returns: Health OK
-```
+````
 
 ## Updating
 
