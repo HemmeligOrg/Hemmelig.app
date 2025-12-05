@@ -571,7 +571,9 @@
         "unlock_secret": "Unlock Secret",
         "delete_secret": "Delete Secret",
         "delete_modal_title": "Delete Secret",
-        "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone."
+        "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone.",
+        "decryption_failed": "Failed to decrypt the secret. Please check your password or decryption key.",
+        "fetch_error": "An error occurred while fetching the secret. Please try again."
     },
     "expiration": {
         "28_days": "28 Days",

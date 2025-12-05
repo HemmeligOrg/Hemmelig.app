@@ -48,6 +48,7 @@ export function SecretPage() {
     const [copied, setCopied] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [decryptionError, setDecryptionError] = useState<string | null>(null);
 
     const decryptionKey = location.hash.startsWith('#decryptionKey=')
         ? location.hash.substring('#decryptionKey='.length)
@@ -56,6 +57,7 @@ export function SecretPage() {
     const fetchSecretContent = useCallback(
         async (password: string) => {
             setIsLoading(true);
+            setDecryptionError(null);
             try {
                 const finalDecryptionKey = password
                     ? generateEncryptionKey(password)
@@ -88,11 +90,16 @@ export function SecretPage() {
                 }
             } catch (err: unknown) {
                 console.error('Error fetching secret:', err);
+                if (err instanceof Error && err.message.includes('decrypt')) {
+                    setDecryptionError(t('secret_page.decryption_failed'));
+                } else {
+                    setDecryptionError(t('secret_page.fetch_error'));
+                }
             } finally {
                 setIsLoading(false);
             }
         },
-        [decryptionKey, id]
+        [decryptionKey, id, t]
     );
 
     useEffect(() => {
@@ -223,6 +230,12 @@ export function SecretPage() {
                                 <LockOpen className="w-5 h-5" />
                                 {t('secret_page.unlock_secret')}
                             </button>
+
+                            {decryptionError && (
+                                <p className="text-sm text-red-500 mt-4 text-center">
+                                    {decryptionError}
+                                </p>
+                            )}
 
                             <p className="text-xs text-gray-500 dark:text-slate-400 mt-4 text-center">
                                 {viewsRemaining === 1

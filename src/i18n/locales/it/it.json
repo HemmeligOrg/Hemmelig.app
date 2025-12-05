@@ -568,7 +568,9 @@
         "unlock_secret": "Sblocca segreto",
         "delete_secret": "Elimina segreto",
         "delete_modal_title": "Elimina segreto",
-        "delete_modal_message": "Sei sicuro di voler eliminare questo segreto? Questa azione non può essere annullata."
+        "delete_modal_message": "Sei sicuro di voler eliminare questo segreto? Questa azione non può essere annullata.",
+        "decryption_failed": "Impossibile decifrare il segreto. Verifica la tua password o la chiave di decrittazione.",
+        "fetch_error": "Si è verificato un errore durante il recupero del segreto. Riprova."
     },
     "expiration": {
         "28_days": "28 Giorni",

@@ -568,7 +568,9 @@
         "unlock_secret": "Geheimnis entsperren",
         "delete_secret": "Geheimnis löschen",
         "delete_modal_title": "Geheimnis löschen",
-        "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+        "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "decryption_failed": "Das Geheimnis konnte nicht entschlüsselt werden. Bitte überprüfen Sie Ihr Passwort oder den Entschlüsselungsschlüssel.",
+        "fetch_error": "Beim Abrufen des Geheimnisses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
     },
     "expiration": {
         "28_days": "28 Tage",

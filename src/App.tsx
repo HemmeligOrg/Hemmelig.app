@@ -23,8 +23,6 @@ function App() {
             <Toaster />
         </>
     );
-
-    console.log('https://x.com/iamdothash');
 }
 
 export default App;

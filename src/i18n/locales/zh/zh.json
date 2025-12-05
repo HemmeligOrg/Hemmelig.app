@@ -568,7 +568,9 @@
         "unlock_secret": "解锁秘密",
         "delete_secret": "删除秘密",
         "delete_modal_title": "删除秘密",
-        "delete_modal_message": "您确定要删除此秘密吗？此操作无法撤消。"
+        "delete_modal_message": "您确定要删除此秘密吗？此操作无法撤消。",
+        "decryption_failed": "解密秘密失败。请检查您的密码或解密密钥。",
+        "fetch_error": "获取秘密时发生错误。请重试。"
     },
     "expiration": {
         "28_days": "28 天",

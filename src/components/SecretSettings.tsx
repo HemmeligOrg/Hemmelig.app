@@ -1,4 +1,4 @@
-import { Check, Copy, Plus } from 'lucide-react';
+import { Check, Copy, Eye, EyeOff, Plus } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ export const SecretSettings = () => {
     const { settings: instanceSettings } = useHemmeligStore();
     const secretUrl = `${window.location.origin}/secret/${secretId}${!password ? `#decryptionKey=${decryptionKey}` : ''}`;
     const [copied, setCopied] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         if (copied) {
@@ -80,21 +81,31 @@ export const SecretSettings = () => {
                         </label>
                         <div className="relative">
                             <input
-                                type="text"
+                                type={showPassword ? 'text' : 'password'}
                                 readOnly
                                 value={password}
-                                className="w-full mt-1 pl-4 pr-10 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none"
+                                className="w-full mt-1 pl-4 pr-20 py-2.5 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none"
                             />
-                            <button
-                                onClick={() => copyToClipboard(password, 'password')}
-                                className="absolute inset-y-0 right-0 flex items-center pr-3"
-                            >
-                                {copied === 'password' ? (
-                                    <Check className="h-5 w-5 text-green-500" />
-                                ) : (
-                                    <Copy className="h-5 w-5 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white" />
-                                )}
-                            </button>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-5 w-5" />
+                                    ) : (
+                                        <Eye className="h-5 w-5" />
+                                    )}
+                                </button>
+                                <button onClick={() => copyToClipboard(password, 'password')}>
+                                    {copied === 'password' ? (
+                                        <Check className="h-5 w-5 text-green-500" />
+                                    ) : (
+                                        <Copy className="h-5 w-5 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
