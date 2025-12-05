@@ -5,17 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { useUserStore } from '../store/userStore';
 
-export function FileUpload({
-    onFileChange,
-    compact = false,
-}: {
+interface FileUploadProps {
     onFileChange: (files: File[]) => void;
     compact?: boolean;
-}) {
+}
+
+export function FileUpload({ onFileChange, compact = false }: FileUploadProps) {
     const { t } = useTranslation();
     const { user } = useUserStore();
     const { settings: instanceSettings } = useHemmeligStore();
     const [files, setFiles] = useState<File[]>([]);
+    const [totalSize, setTotalSize] = useState(0);
     const [fileError, setFileError] = useState<string | null>(null);
 
     const maxFileSizeInBytes = instanceSettings.maxSecretSize * 1024; // Convert KB to bytes
@@ -40,11 +40,10 @@ export function FileUpload({
 
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
-            setFileError(null); // Clear previous errors
-            const currentTotalSize = files.reduce((sum, file) => sum + file.size, 0);
+            setFileError(null);
             const newFilesTotalSize = acceptedFiles.reduce((sum, file) => sum + file.size, 0);
 
-            if (currentTotalSize + newFilesTotalSize > maxFileSizeInBytes) {
+            if (totalSize + newFilesTotalSize > maxFileSizeInBytes) {
                 const maxSizeMB = (instanceSettings.maxSecretSize / 1024).toFixed(2);
                 setFileError(t('file_upload.max_size_exceeded', { maxSize: maxSizeMB }));
                 return;
@@ -52,14 +51,16 @@ export function FileUpload({
 
             const newFiles = [...files, ...acceptedFiles];
             setFiles(newFiles);
+            setTotalSize(totalSize + newFilesTotalSize);
             onFileChange(newFiles);
         },
-        [files, onFileChange, maxFileSizeInBytes, instanceSettings.maxSecretSize, t]
+        [files, totalSize, onFileChange, maxFileSizeInBytes, instanceSettings.maxSecretSize, t]
     );
 
     const removeFile = (fileToRemove: File) => {
         const newFiles = files.filter((file) => file !== fileToRemove);
         setFiles(newFiles);
+        setTotalSize(totalSize - fileToRemove.size);
         onFileChange(newFiles);
     };
 
