@@ -5,6 +5,7 @@ FROM node:25-alpine AS builder
 RUN apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json ./
+ENV NODE_ENV=development
 RUN npm ci --legacy-peer-deps
 COPY prisma ./prisma
 COPY prisma.config.ts ./
@@ -23,6 +24,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
+ENV NODE_ENV=production
 RUN npm ci --omit=dev --legacy-peer-deps && \
     npx prisma generate && \
     npm cache clean --force && \
