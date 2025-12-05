@@ -2,7 +2,7 @@
 
 # Build stage
 FROM node:25-alpine AS builder
-RUN apk add --no-cache python3 make g++
+RUN apk update && apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
@@ -19,7 +19,7 @@ RUN npm run build
 
 # Production dependencies
 FROM node:25-alpine AS deps
-RUN apk add --no-cache python3 make g++
+RUN apk update && apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
