@@ -25,16 +25,16 @@ Hemmelig.app is a secure secret-sharing application that enables users to share 
 
 ## Technology Stack
 
-| Layer        | Technology                   | Notes                                                     |
-| ------------ | ---------------------------- | --------------------------------------------------------- |
-| **Runtime**  | Bun                          | Fast JavaScript runtime, used for both dev and production |
-| **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx`                                  |
-| **Backend**  | Hono (RPC mode)              | Type-safe API client generation                           |
-| **Database** | PostgreSQL + Prisma ORM      | Schema in `prisma/schema.prisma`                          |
-| **Styling**  | Tailwind CSS                 | Class-based, supports light/dark mode                     |
-| **State**    | Zustand                      | Lightweight state management                              |
-| **Auth**     | better-auth                  | Session-based authentication                              |
-| **i18n**     | react-i18next                | All user-facing strings must be translated                |
+| Layer        | Technology                   | Notes                                                |
+| ------------ | ---------------------------- | ---------------------------------------------------- |
+| **Runtime**  | Node.js 25                   | JavaScript runtime, used for both dev and production |
+| **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx`                             |
+| **Backend**  | Hono (RPC mode)              | Type-safe API client generation                      |
+| **Database** | SQLite + Prisma ORM          | Schema in `prisma/schema.prisma`                     |
+| **Styling**  | Tailwind CSS                 | Class-based, supports light/dark mode                |
+| **State**    | Zustand                      | Lightweight state management                         |
+| **Auth**     | better-auth                  | Session-based authentication                         |
+| **i18n**     | react-i18next                | All user-facing strings must be translated           |
 
 ## Project Structure
 
@@ -90,27 +90,27 @@ hemmelig.app/
 
 ```bash
 # Install dependencies
-bun install
+npm install
 
 # Development (frontend only, hot reload)
-bun run dev
+npm run dev
 
 # Development (API server with database migrations)
-bun run dev:api
+npm run dev:api
 
 # Build for production
-bun run build
+npm run build
 
 # Run production server
-bun run start
+npm run start
 
 # Database migrations
-bun run migrate:dev      # Create and apply migrations
-bun run migrate:deploy   # Apply pending migrations
-bun run migrate:reset    # Reset database (destructive!)
+npm run migrate:dev      # Create and apply migrations
+npm run migrate:deploy   # Apply pending migrations
+npm run migrate:reset    # Reset database (destructive!)
 
 # Run tests
-bun run test
+npm run test
 ```
 
 ## Coding Guidelines
@@ -297,7 +297,7 @@ return c.json({ error: 'Descriptive error message' }, 400);
 ### Database Schema Changes
 
 1. Modify `prisma/schema.prisma`
-2. Run `bun run migrate:dev --name descriptive_name`
+2. Run `npm run migrate:dev --name descriptive_name`
 3. Test the migration locally
 4. Commit both schema and migration files
 
@@ -316,7 +316,7 @@ When modifying security-sensitive code, verify:
 ## Testing
 
 - API tests use Hurl (`api/tests/`)
-- Run with `bun run test`
+- Run with `npm run test`
 - When adding new endpoints, add corresponding test files
 
 ## Common Patterns

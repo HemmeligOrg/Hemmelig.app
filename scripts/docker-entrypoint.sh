@@ -2,7 +2,7 @@
 set -e
 
 # Fix permissions on mounted volumes
-chown -R bun:bun /app/database /app/uploads
+chown -R app:app /app/database /app/uploads
 
-# Run migrations and start app as bun user
-exec su -s /bin/sh bun -c 'bunx prisma migrate deploy && bun run server.ts'
+# Run migrations and start app as app user
+exec su -s /bin/sh app -c 'npx prisma migrate deploy && npx tsx server.ts'
