@@ -106,83 +106,103 @@ const app = new Hono<{
         async (c) => {
             try {
                 const { id } = c.req.valid('param');
+                const data = c.req.valid('json');
 
-                const item = await prisma.secrets.findUnique({
-                    where: { id },
-                    select: {
-                        id: true,
-                        secret: true,
-                        title: true,
-                        ipRange: true,
-                        views: true,
-                        expiresAt: true,
-                        createdAt: true,
-                        isBurnable: true,
-                        password: true,
-                        salt: true,
-                        files: {
-                            select: { id: true, filename: true },
+                // Use a transaction to atomically check and decrement views
+                // This prevents race conditions where concurrent requests could bypass view limits
+                const result = await prisma.$transaction(async (tx) => {
+                    const item = await tx.secrets.findUnique({
+                        where: { id },
+                        select: {
+                            id: true,
+                            secret: true,
+                            title: true,
+                            ipRange: true,
+                            views: true,
+                            expiresAt: true,
+                            createdAt: true,
+                            isBurnable: true,
+                            password: true,
+                            salt: true,
+                            files: {
+                                select: { id: true, filename: true },
+                            },
                         },
-                    },
+                    });
+
+                    if (!item) {
+                        return { error: 'Secret not found', status: 404 };
+                    }
+
+                    // Check if secret has no views remaining (already consumed)
+                    if (item.views !== null && item.views <= 0) {
+                        return { error: 'Secret not found', status: 404 };
+                    }
+
+                    // Verify password if required
+                    if (item.password) {
+                        const isValidPassword = await compare(data.password!, item.password);
+                        if (!isValidPassword) {
+                            return { error: 'Invalid password', status: 401 };
+                        }
+                    }
+
+                    // Atomically decrement views and get the new count
+                    const currentViews = item.views!;
+                    const newViews = currentViews - 1;
+
+                    if (newViews > 0) {
+                        await tx.secrets.update({
+                            where: { id: item.id },
+                            data: { views: { decrement: 1 } },
+                        });
+                    } else if (!item.isBurnable) {
+                        // Last view for non-burnable secret
+                        // Mark views as 0 but don't delete yet - allow file downloads
+                        // Set expiresAt to now + 5 minutes to give time for file downloads
+                        const FILE_DOWNLOAD_GRACE_PERIOD_MS = 5 * 60 * 1000;
+                        await tx.secrets.update({
+                            where: { id: item.id },
+                            data: {
+                                views: 0,
+                                expiresAt: new Date(Date.now() + FILE_DOWNLOAD_GRACE_PERIOD_MS),
+                            },
+                        });
+                    } else {
+                        // Burnable secret on last view - just set to 0
+                        await tx.secrets.update({
+                            where: { id: item.id },
+                            data: { views: 0 },
+                        });
+                    }
+
+                    return { item, newViews };
                 });
 
-                if (!item) {
-                    return c.json({ error: 'Secret not found' }, 404);
+                // Handle error responses from transaction
+                if ('error' in result) {
+                    return c.json({ error: result.error }, result.status as 404 | 401);
                 }
 
-                // Check if secret has no views remaining (already consumed)
-                if (item.views !== null && item.views <= 0) {
-                    return c.json({ error: 'Secret not found' }, 404);
-                }
-
-                if (item.password) {
-                    const data = c.req.valid('json');
-                    const isValidPassword = await compare(data.password!, item.password);
-
-                    if (!isValidPassword) {
-                        return c.json({ error: 'Invalid password' }, 401);
-                    }
-                }
+                const { item, newViews } = result;
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { password: _password, ...itemWithoutPassword } = item;
 
+                // Send webhooks outside the transaction (fire and forget)
                 const webhookData = {
                     secretId: item.id,
                     hasPassword: !!item.password,
                     hasIpRestriction: !!item.ipRange,
-                    viewsRemaining: item.views! - 1,
+                    viewsRemaining: newViews,
                 };
 
-                if (item.views! > 1) {
-                    await prisma.secrets.update({
-                        where: { id: item.id },
-                        data: { views: { decrement: 1 } },
-                    });
-                    // Send webhook for secret view
+                if (newViews > 0) {
                     sendWebhook('secret.viewed', webhookData);
                 } else if (!item.isBurnable) {
-                    // Last view for non-burnable secret
-                    // Mark views as 0 but don't delete yet - allow file downloads
-                    // The secret will be cleaned up by the expired secrets job
-                    // Set expiresAt to now + 5 minutes to give time for file downloads
-                    await prisma.secrets.update({
-                        where: { id: item.id },
-                        data: {
-                            views: 0,
-                            expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes grace period
-                        },
-                    });
-                    // Send webhook for secret burned (last view)
-                    sendWebhook('secret.burned', { ...webhookData, viewsRemaining: 0 });
+                    sendWebhook('secret.burned', webhookData);
                 } else {
-                    // Burnable secret on last view - just decrement, don't delete
-                    await prisma.secrets.update({
-                        where: { id: item.id },
-                        data: { views: 0 },
-                    });
-                    // Send webhook for secret view (burnable secret on last view)
-                    sendWebhook('secret.viewed', { ...webhookData, viewsRemaining: 0 });
+                    sendWebhook('secret.viewed', webhookData);
                 }
 
                 return c.json(itemWithoutPassword);
