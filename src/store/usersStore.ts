@@ -1,12 +1,7 @@
-import { createAuthClient } from 'better-auth/client';
-import { adminClient } from 'better-auth/client/plugins';
 import { toast } from 'sonner';
 import { create } from 'zustand';
 import { api } from '../lib/api';
-
-const auth = createAuthClient({
-    plugins: [adminClient()],
-});
+import { authClient } from '../lib/auth';
 
 interface User {
     id: string;
@@ -59,7 +54,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     fetchUsers: async () => {
         set({ error: null });
         try {
-            const response = await auth.admin.listUsers();
+            const response = await authClient.admin.listUsers();
             if (response.status === 403) {
                 const errorMsg = "You don't have permission to view users.";
                 toast.error(errorMsg);
@@ -76,7 +71,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     },
     addUser: async (newUser) => {
         try {
-            await auth.admin.createUser({
+            await authClient.admin.createUser({
                 name: newUser.name,
                 email: newUser.email,
                 password: newUser.password,
@@ -98,11 +93,11 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
                 param: { id: user.id },
                 json: { username: user.username, email: user.email },
             });
-            await auth.admin.setRole({ userId: user.id, role: user.role });
+            await authClient.admin.setRole({ userId: user.id, role: user.role });
             if (user.banned) {
-                await auth.admin.banUser({ userId: user.id });
+                await authClient.admin.banUser({ userId: user.id });
             } else {
-                await auth.admin.unbanUser({ userId: user.id });
+                await authClient.admin.unbanUser({ userId: user.id });
             }
             await get().fetchUsers();
             set({ userToEdit: null });
@@ -114,7 +109,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
         const { userToDelete } = get();
         if (!userToDelete) return;
         try {
-            await auth.admin.removeUser({ userId: userToDelete.id });
+            await authClient.admin.removeUser({ userId: userToDelete.id });
             await get().fetchUsers();
             set({ userToDelete: null });
         } catch (error) {

@@ -1,12 +1,10 @@
-import { createAuthClient } from 'better-auth/react';
 import { BarChart3, LogOut, Menu, Server, Shield, Ticket, User, Users, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { authClient } from '../../lib/auth';
 import { useUserStore } from '../../store/userStore';
 import Logo from '../Logo';
-
-const authClient = createAuthClient({ baseURL: window.location.origin });
 
 export function DashboardLayout() {
     const { t } = useTranslation();
