@@ -86,7 +86,6 @@ const config = {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
     },
     trustedOrigins: [
-        'https://hemmelig.app',
         ...(!isProduction ? ['http://localhost:5173'] : []),
         process.env.HEMMELIG_TRUSTED_ORIGIN || '',
     ].filter(Boolean),

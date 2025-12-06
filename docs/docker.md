@@ -12,6 +12,7 @@ docker run -d \
   -v hemmelig-uploads:/app/uploads \
   -e DATABASE_URL="file:/app/database/hemmelig.db" \
   -e BETTER_AUTH_SECRET="your-secret-key-min-32-chars" \
+  -e BETTER_AUTH_URL="https://your-domain.com" \
   hemmeligapp/hemmelig:v7
 ```
 
@@ -47,6 +48,7 @@ services:
         environment:
             - DATABASE_URL=file:/app/database/hemmelig.db
             - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+            - BETTER_AUTH_URL=https://secrets.example.com
             - NODE_ENV=production
             - HEMMELIG_BASE_URL=https://secrets.example.com
         ports:
@@ -85,10 +87,11 @@ See [Environment Variables](./env.md) for a complete reference.
 
 ### Required Variables
 
-| Variable             | Description                               |
-| -------------------- | ----------------------------------------- |
-| `DATABASE_URL`       | Database connection string                |
-| `BETTER_AUTH_SECRET` | Authentication secret (min 32 characters) |
+| Variable             | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `DATABASE_URL`       | Database connection string                               |
+| `BETTER_AUTH_SECRET` | Authentication secret (min 32 characters)                |
+| `BETTER_AUTH_URL`    | Public URL of your instance (for proper cookie handling) |
 
 ### Common Variables
 

@@ -45,6 +45,7 @@ const buildBetterAuthSocialProviders = () => {
 
 export const auth = betterAuth({
     appName: 'Hemmelig',
+    baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
     database: prismaAdapter(prisma, {
         provider: 'sqlite',
     }),

@@ -52,6 +52,7 @@ docker run -d \
   -v hemmelig-uploads:/app/uploads \
   -e DATABASE_URL="file:/app/database/hemmelig.db" \
   -e BETTER_AUTH_SECRET="$(openssl rand -base64 32)" \
+  -e BETTER_AUTH_URL="https://your-domain.com" \
   hemmelig/hemmelig:v7
 ```
 
