@@ -81,18 +81,10 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 ## Development
 
 ```bash
-bun install
-bun run dev        # Frontend only
-bun run dev:api    # Full stack with database
+npm install
+npm run dev
+npm run dev:api
 ```
-
-## Contributing
-
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-<a href="https://github.com/HemmeligOrg/Hemmelig.app/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=HemmeligOrg/Hemmelig.app" />
-</a>
 
 ## Hetzner Cloud Referral
 
