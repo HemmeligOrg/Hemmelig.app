@@ -1,14 +1,18 @@
 import { AlertTriangle, X } from 'lucide-react';
 import { useState } from 'react';
+import { hashString } from '../lib/hash';
 import { useHemmeligStore } from '../store/hemmeligStore';
 
-const DISMISS_KEY = 'importantAlertDismissedUntil';
+const DISMISS_KEY_PREFIX = 'importantAlertDismissed_';
 
 export function ImportantAlert() {
     const { settings } = useHemmeligStore();
 
+    const getDismissKey = () => DISMISS_KEY_PREFIX + hashString(settings.importantMessage || '');
+
     const isDismissedInStorage = () => {
-        const dismissedUntil = localStorage.getItem(DISMISS_KEY);
+        if (!settings.importantMessage) return false;
+        const dismissedUntil = localStorage.getItem(getDismissKey());
         if (!dismissedUntil) return false;
         return Date.now() < parseInt(dismissedUntil, 10);
     };
@@ -17,7 +21,7 @@ export function ImportantAlert() {
 
     const handleDismiss = () => {
         const sevenDaysFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000;
-        localStorage.setItem(DISMISS_KEY, sevenDaysFromNow.toString());
+        localStorage.setItem(getDismissKey(), sevenDaysFromNow.toString());
         setDismissed(true);
     };
 
