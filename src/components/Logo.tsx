@@ -1,7 +1,7 @@
 const Logo = ({ className, ...rest }) => (
     <svg
         version="1.0"
-        className={`w-[45px] h-auto ${className}`}
+        className={className}
         viewBox="0 0 2919.000000 2793.000000"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
