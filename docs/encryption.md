@@ -117,4 +117,7 @@ Files are encrypted using the same AES-256-GCM scheme. The file buffer is encryp
 - [MDN PBKDF2](https://developer.mozilla.org/en-US/docs/Web/API/Pbkdf2Params) - PBKDF2 key derivation parameters
 - [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) - Best practices for cryptographic storage
 - [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) - Key derivation recommendations
+- [NIST SP 800-132](https://csrc.nist.gov/pubs/sp/800/132/final) - Password-Based Key Derivation (current version)
+- [NIST SP 800-132 Revision Proposal](https://csrc.nist.gov/News/2023/proposal-to-revise-nist-sp-800-132-pbkdf) - Upcoming revision with memory-hard functions
 - [NIST AES Specification](https://csrc.nist.gov/publications/detail/fips/197/final) - Official AES standard (FIPS 197)
+- [Crypto 101](https://www.crypto101.io/) - Free introductory course on cryptography
