@@ -156,11 +156,21 @@ export function SecuritySettings() {
                                         }
                                         placeholder={t('security_settings.password_placeholder')}
                                         minLength={5}
-                                        className="w-full px-2.5 py-1.5 bg-white dark:bg-dark-600 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500/50 text-sm"
+                                        className={`w-full px-2.5 py-1.5 bg-white dark:bg-dark-600 border text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 text-sm ${
+                                            password && password.length > 0 && password.length < 5
+                                                ? 'border-red-500 dark:border-red-500 focus:ring-red-500/50'
+                                                : 'border-gray-300 dark:border-dark-500 focus:ring-blue-500/50'
+                                        }`}
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">
-                                        {t('security_settings.password_hint')}
-                                    </p>
+                                    {password && password.length > 0 && password.length < 5 ? (
+                                        <p className="text-xs text-red-500 mt-1.5">
+                                            {t('security_settings.password_error')}
+                                        </p>
+                                    ) : (
+                                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">
+                                            {t('security_settings.password_hint')}
+                                        </p>
+                                    )}
                                 </div>
                             )}
                         </div>

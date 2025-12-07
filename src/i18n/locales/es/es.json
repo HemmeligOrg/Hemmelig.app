@@ -130,6 +130,7 @@
         "enter_password_label": "Introduce la contraseña",
         "password_placeholder": "Introduce una contraseña segura...",
         "password_hint": "Mínimo 5 caracteres. Los destinatarios necesitarán esta contraseña para ver el secreto",
+        "password_error": "La contraseña debe tener al menos 5 caracteres",
         "ip_restriction_title": "Restringir por IP o CIDR",
         "ip_restriction_description": "La entrada CIDR permitirá a los usuarios especificar rangos de direcciones IP que pueden acceder al secreto.",
         "ip_address_cidr_label": "Dirección IP o rango CIDR",
