@@ -2,9 +2,24 @@ import { AlertTriangle, X } from 'lucide-react';
 import { useState } from 'react';
 import { useHemmeligStore } from '../store/hemmeligStore';
 
+const DISMISS_KEY = 'importantAlertDismissedUntil';
+
 export function ImportantAlert() {
     const { settings } = useHemmeligStore();
-    const [dismissed, setDismissed] = useState(false);
+
+    const isDismissedInStorage = () => {
+        const dismissedUntil = localStorage.getItem(DISMISS_KEY);
+        if (!dismissedUntil) return false;
+        return Date.now() < parseInt(dismissedUntil, 10);
+    };
+
+    const [dismissed, setDismissed] = useState(isDismissedInStorage);
+
+    const handleDismiss = () => {
+        const sevenDaysFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        localStorage.setItem(DISMISS_KEY, sevenDaysFromNow.toString());
+        setDismissed(true);
+    };
 
     if (!settings.importantMessage || dismissed) {
         return null;
@@ -18,7 +33,7 @@ export function ImportantAlert() {
                     {settings.importantMessage}
                 </div>
                 <button
-                    onClick={() => setDismissed(true)}
+                    onClick={handleDismiss}
                     className="flex-shrink-0 text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200"
                     aria-label="Dismiss"
                 >
