@@ -109,3 +109,12 @@ Files are encrypted using the same AES-256-GCM scheme. The file buffer is encryp
 - Plaintext secrets
 - Encryption keys or passwords
 - Decryption keys (passed via URL fragment)
+
+## References
+
+- [MDN Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) - Browser-native cryptography documentation
+- [MDN AES-GCM](https://developer.mozilla.org/en-US/docs/Web/API/AesGcmParams) - AES-GCM algorithm parameters
+- [MDN PBKDF2](https://developer.mozilla.org/en-US/docs/Web/API/Pbkdf2Params) - PBKDF2 key derivation parameters
+- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) - Best practices for cryptographic storage
+- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) - Key derivation recommendations
+- [NIST AES Specification](https://csrc.nist.gov/publications/detail/fips/197/final) - Official AES standard (FIPS 197)
