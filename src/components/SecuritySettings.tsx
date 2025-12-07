@@ -127,8 +127,8 @@ export function SecuritySettings() {
                     {/* Password Protection */}
                     {instanceSettings.allowPasswordProtection && (
                         <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                            <div className="flex items-start justify-between mb-3 sm:mb-4">
-                                <div className="flex items-start space-x-3 min-w-0 flex-1">
+                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                <div className="flex items-center space-x-3 min-w-0 flex-1">
                                     <div className="p-2 bg-blue-500/20 flex-shrink-0">
                                         <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                                     </div>
@@ -178,8 +178,8 @@ export function SecuritySettings() {
                     {/* IP Restriction */}
                     {instanceSettings.allowIpRestriction && (
                         <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                            <div className="flex items-start justify-between mb-3 sm:mb-4">
-                                <div className="flex items-start space-x-3 min-w-0 flex-1">
+                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                <div className="flex items-center space-x-3 min-w-0 flex-1">
                                     <div className="p-2 bg-purple-500/20 flex-shrink-0">
                                         <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                                     </div>
@@ -223,8 +223,8 @@ export function SecuritySettings() {
                     )}
 
                     {/* Burn After Time */}
-                    <div className="flex items-start justify-between p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                        <div className="flex items-start space-x-3 min-w-0 flex-1">
+                    <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
+                        <div className="flex items-center space-x-3 min-w-0 flex-1">
                             <div className="p-2 bg-orange-500/20 flex-shrink-0">
                                 <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
                             </div>
