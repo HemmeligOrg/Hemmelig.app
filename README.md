@@ -35,7 +35,7 @@
 - **Password protection** - Optional additional security layer
 - **IP restrictions** - Limit access to specific IP ranges
 - **File uploads** - Share encrypted files (authenticated users)
-- **Rich text editor** - Format your secrets with inline images
+- **Rich text editor** - Format your secrets with styling
 - **QR codes** - Easy mobile sharing
 - **Multi-language support** - Available in multiple languages
 - **Webhook notifications** - Get notified when secrets are viewed or burned ([docs](docs/webhook.md))
@@ -73,6 +73,7 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 - [Docker Deployment](docs/docker.md) - Complete Docker setup guide
 - [Helm Chart](docs/helm.md) - Kubernetes deployment with Helm
 - [Environment Variables](docs/env.md) - All configuration options
+- [Encryption](docs/encryption.md) - How client-side encryption works
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 - [Webhooks](docs/webhook.md) - Webhook notifications for secret events
 - [API Documentation](docs/api.md) - REST API reference and OpenAPI spec
