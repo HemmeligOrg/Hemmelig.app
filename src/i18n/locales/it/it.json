@@ -128,7 +128,7 @@
         "password_protection_description": "Aggiungi un ulteriore livello di sicurezza con una password",
         "enter_password_label": "Inserisci password",
         "password_placeholder": "Inserisci una password sicura...",
-        "password_hint": "I destinatari avranno bisogno di questa password per vedere il segreto",
+        "password_hint": "Minimo 5 caratteri. I destinatari avranno bisogno di questa password per vedere il segreto",
         "ip_restriction_title": "Restrizione per IP o CIDR",
         "ip_restriction_description": "L'input CIDR permetterà agli utenti di specificare gli intervalli di indirizzi IP che possono accedere al segreto.",
         "ip_address_cidr_label": "Indirizzo IP o intervallo CIDR",

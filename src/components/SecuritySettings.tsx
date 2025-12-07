@@ -164,6 +164,7 @@ export function SecuritySettings() {
                                             setSecretData({ password: e.target.value })
                                         }
                                         placeholder={t('security_settings.password_placeholder')}
+                                        minLength={5}
                                         className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-200 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
                                     />
                                     <p className="text-xs text-gray-500 dark:text-slate-400">

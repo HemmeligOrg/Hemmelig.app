@@ -128,7 +128,7 @@
         "password_protection_description": "使用密码添加额外的安全层",
         "enter_password_label": "输入密码",
         "password_placeholder": "输入安全密码...",
-        "password_hint": "接收者需要此密码才能查看秘密",
+        "password_hint": "最少5个字符。接收者需要此密码才能查看秘密",
         "ip_restriction_title": "IP 或 CIDR 限制",
         "ip_restriction_description": "CIDR 输入将允许用户指定可以访问秘密的 IP 地址范围。",
         "ip_address_cidr_label": "IP 地址或 CIDR 范围",

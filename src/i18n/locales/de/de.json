@@ -128,7 +128,7 @@
         "password_protection_description": "Fügen Sie eine zusätzliche Sicherheitsebene mit einem Passwort hinzu",
         "enter_password_label": "Passwort eingeben",
         "password_placeholder": "Geben Sie ein sicheres Passwort ein...",
-        "password_hint": "Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
+        "password_hint": "Mindestens 5 Zeichen. Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
         "ip_restriction_title": "Nach IP oder CIDR einschränken",
         "ip_restriction_description": "Die CIDR-Eingabe ermöglicht es Benutzern, IP-Adressbereiche anzugeben, die auf das Geheimnis zugreifen können.",
         "ip_address_cidr_label": "IP-Adresse oder CIDR-Bereich",
