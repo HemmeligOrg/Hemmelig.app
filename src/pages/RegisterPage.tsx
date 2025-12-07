@@ -27,37 +27,94 @@ export function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [inviteCodeError, setInviteCodeError] = useState('');
 
+    const showError = (message: string) => {
+        setErrorMessage(message);
+        setIsErrorModalOpen(true);
+    };
+
+    const validateInviteCode = async (): Promise<boolean> => {
+        if (!settings.requireInviteCode) return true;
+
+        if (!formData.inviteCode) {
+            setInviteCodeError(t('register_page.invite_code_required'));
+            return false;
+        }
+
+        try {
+            const res = await apiRaw.invites.public.validate.$post({
+                json: { code: formData.inviteCode },
+            });
+            const result = await res.json();
+            if (!result.valid) {
+                setInviteCodeError(
+                    'error' in result ? result.error : t('register_page.invalid_invite_code')
+                );
+                return false;
+            }
+            return true;
+        } catch {
+            setInviteCodeError(t('register_page.failed_to_validate_invite'));
+            return false;
+        }
+    };
+
+    const parseRegistrationError = (error: unknown): string => {
+        const errorObj = error as {
+            code?: string;
+            message?: string;
+            statusText?: string;
+            error?: { code?: string; message?: string; cause?: { message?: string } };
+            cause?: { message?: string };
+        };
+
+        const errorCode = errorObj.code || errorObj.error?.code || '';
+        const errorMsg = errorObj.message || errorObj.error?.message || '';
+        const causeMsg = errorObj.cause?.message || errorObj.error?.cause?.message || '';
+        const statusText = errorObj.statusText || '';
+        const allErrorText = `${errorCode} ${errorMsg} ${causeMsg} ${statusText}`.toLowerCase();
+
+        if (
+            allErrorText.includes('email_domain_not_allowed') ||
+            allErrorText.includes('email domain') ||
+            allErrorText.includes('domain not allowed') ||
+            allErrorText.includes('restricted to') ||
+            allErrorText.includes('forbidden')
+        ) {
+            return t('register_page.email_domain_not_allowed');
+        }
+
+        if (allErrorText.includes('already exists') || errorCode === 'USER_ALREADY_EXISTS') {
+            return t('register_page.account_already_exists');
+        }
+
+        if (causeMsg) return causeMsg;
+        if (errorMsg && errorMsg !== 'Internal Server Error') return errorMsg;
+        if (statusText && statusText !== 'Internal Server Error') return statusText;
+
+        return t('register_page.unexpected_error');
+    };
+
+    const markInviteCodeUsed = async (userId: string) => {
+        if (!formData.inviteCode) return;
+
+        try {
+            await apiRaw.invites.public.use.$post({
+                json: { code: formData.inviteCode, userId },
+            });
+        } catch (e) {
+            console.error('Failed to mark invite code as used:', e);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            setErrorMessage(t('register_page.password_mismatch_alert'));
-            setIsErrorModalOpen(true);
+            showError(t('register_page.password_mismatch_alert'));
             return;
         }
 
-        // Validate invite code if required
-        if (settings.requireInviteCode) {
-            if (!formData.inviteCode) {
-                setInviteCodeError(t('register_page.invite_code_required'));
-                return;
-            }
-            try {
-                const res = await apiRaw.invites.public.validate.$post({
-                    json: { code: formData.inviteCode },
-                });
-                const result = await res.json();
-                if (!result.valid) {
-                    setInviteCodeError(
-                        'error' in result ? result.error : t('register_page.invalid_invite_code')
-                    );
-                    return;
-                }
-            } catch {
-                setInviteCodeError(t('register_page.failed_to_validate_invite'));
-                return;
-            }
-        }
+        if (!(await validateInviteCode())) return;
 
         setIsLoading(true);
         setInviteCodeError('');
@@ -74,109 +131,32 @@ export function RegisterPage() {
                 },
                 {
                     onError: (ctx) => {
-                        // Access error details from the context
                         const errorDetails = ctx.error as {
                             error?: { message?: string };
                             message?: string;
                             body?: { message?: string };
                         };
-                        console.log('Registration onError:', errorDetails);
-
-                        // Try to get error message from various locations
-                        const errorMessage =
+                        registrationError =
                             errorDetails?.error?.message ||
                             errorDetails?.message ||
                             errorDetails?.body?.message ||
-                            '';
-
-                        if (errorMessage && errorMessage.includes('restricted to')) {
-                            registrationError = errorMessage;
-                        } else if (errorMessage) {
-                            registrationError = errorMessage;
-                        }
+                            null;
                     },
                 }
             );
 
             if (error || registrationError) {
-                // Handle specific error codes with user-friendly messages
-                let userMessage = registrationError || t('register_page.unexpected_error');
+                const userMessage = registrationError || parseRegistrationError(error);
+                showError(userMessage);
+                return;
+            }
 
-                if (!registrationError && error) {
-                    // Debug: log the full error structure
-                    console.log('Registration error:', error);
-
-                    // Get error details from various possible locations
-                    const errorObj = error as {
-                        code?: string;
-                        message?: string;
-                        statusText?: string;
-                        error?: { code?: string; message?: string; cause?: { message?: string } };
-                        cause?: { message?: string };
-                    };
-                    const errorCode = errorObj.code || errorObj.error?.code || '';
-                    const errorMsg = errorObj.message || errorObj.error?.message || '';
-                    const causeMsg =
-                        errorObj.cause?.message || errorObj.error?.cause?.message || '';
-                    const statusText = errorObj.statusText || '';
-
-                    // Combine all error info for checking
-                    const allErrorText =
-                        `${errorCode} ${errorMsg} ${causeMsg} ${statusText}`.toLowerCase();
-
-                    // Check for email domain restriction
-                    if (
-                        allErrorText.includes('email_domain_not_allowed') ||
-                        allErrorText.includes('email domain') ||
-                        allErrorText.includes('domain not allowed') ||
-                        allErrorText.includes('restricted to') ||
-                        allErrorText.includes('forbidden')
-                    ) {
-                        userMessage = t('register_page.email_domain_not_allowed');
-                    } else if (
-                        allErrorText.includes('already exists') ||
-                        errorCode === 'USER_ALREADY_EXISTS'
-                    ) {
-                        userMessage = t('register_page.account_already_exists');
-                    } else if (causeMsg && causeMsg.length > 0) {
-                        userMessage = causeMsg;
-                    } else if (
-                        errorMsg &&
-                        errorMsg.length > 0 &&
-                        errorMsg !== 'Internal Server Error'
-                    ) {
-                        userMessage = errorMsg;
-                    } else if (
-                        statusText &&
-                        statusText.length > 0 &&
-                        statusText !== 'Internal Server Error'
-                    ) {
-                        userMessage = statusText;
-                    }
-                }
-
-                setErrorMessage(userMessage);
-                setIsErrorModalOpen(true);
-            } else if (data) {
-                console.log('Registration successful', data);
-
-                // If invite code was used, mark it as used and link to user
-                if (formData.inviteCode && data?.user?.id) {
-                    try {
-                        await apiRaw.invites.public.use.$post({
-                            json: { code: formData.inviteCode, userId: data.user.id },
-                        });
-                    } catch (e) {
-                        console.error('Failed to mark invite code as used:', e);
-                    }
-                }
-
+            if (data?.user?.id) {
+                await markInviteCodeUsed(data.user.id);
                 navigate('/dashboard');
             }
-        } catch (error) {
-            console.error('An error occurred:', error);
-            setErrorMessage(t('register_page.unexpected_error'));
-            setIsErrorModalOpen(true);
+        } catch {
+            showError(t('register_page.unexpected_error'));
         } finally {
             setIsLoading(false);
         }
