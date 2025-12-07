@@ -7,7 +7,7 @@ import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { apiRaw } from '../lib/api';
 import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
-import { getPasswordStrength } from '../utils/date';
+import { getPasswordStrength } from '../utils/password';
 
 export function RegisterPage() {
     const { t } = useTranslation();
