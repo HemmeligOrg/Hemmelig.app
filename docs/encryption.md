@@ -42,11 +42,11 @@ This is defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#sect
 
 Hemmelig uses **AES-256-GCM** via the **Web Crypto API** for several important reasons:
 
-- **Browser-native**: The Web Crypto API is built into all modern browsers—no external libraries required
-- **Hardware-accelerated**: AES is supported by dedicated instructions (AES-NI) in most modern CPUs (Intel, AMD, ARM), making encryption and decryption extremely fast
-- **Battle-tested**: AES-256 is a NIST-approved standard used by governments and enterprises worldwide
-- **Authenticated encryption**: GCM mode provides both confidentiality and integrity, detecting any tampering with the ciphertext
-- **No dependencies**: By using native browser APIs, we avoid supply chain risks from third-party cryptography libraries
+- **Browser-native**: The Web Crypto API is built into all modern browsers. No external libraries required.
+- **Hardware-accelerated**: AES is supported by dedicated instructions (AES-NI) in most modern CPUs (Intel, AMD, ARM), making encryption and decryption fast.
+- **Battle-tested**: AES-256 is a NIST-approved standard.
+- **Authenticated encryption**: GCM mode provides both confidentiality and integrity, detecting any tampering with the ciphertext.
+- **No dependencies**: By using native browser APIs, we avoid supply chain risks from third-party cryptography libraries.
 
 ### Algorithm
 
