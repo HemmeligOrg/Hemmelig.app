@@ -123,40 +123,31 @@ export function SecuritySettings() {
                 )}
 
                 {/* Additional Security Options - Mobile optimized */}
-                <div className="space-y-3">
+                <div className="space-y-2">
                     {/* Password Protection */}
                     {instanceSettings.allowPasswordProtection && (
-                        <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600">
+                            <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3 min-w-0 flex-1">
-                                    <div className="p-2 bg-blue-500/20 flex-shrink-0">
-                                        <Key className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
-                                            {t('security_settings.password_protection_title')}
-                                        </h3>
-                                        <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
-                                            {t('security_settings.password_protection_description')}
-                                        </p>
-                                    </div>
+                                    <Key className="w-4 h-4 text-blue-500 dark:text-blue-400 flex-shrink-0" />
+                                    <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
+                                        {t('security_settings.password_protection_title')}
+                                    </span>
                                 </div>
-                                <div className="flex-shrink-0 ml-3">
-                                    <ToggleSwitch
-                                        checked={isPasswordEnabled}
-                                        onChange={(val) => {
-                                            setIsPasswordEnabled(val);
-                                            if (!val) setSecretData({ password: null });
-                                        }}
-                                    />
-                                </div>
+                                <ToggleSwitch
+                                    checked={isPasswordEnabled}
+                                    onChange={(val) => {
+                                        setIsPasswordEnabled(val);
+                                        if (!val) setSecretData({ password: null });
+                                    }}
+                                />
                             </div>
 
                             {isPasswordEnabled && (
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                        {t('security_settings.enter_password_label')}
-                                    </label>
+                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-dark-500">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">
+                                        {t('security_settings.password_protection_description')}
+                                    </p>
                                     <input
                                         type="text"
                                         value={password || ''}
@@ -165,9 +156,9 @@ export function SecuritySettings() {
                                         }
                                         placeholder={t('security_settings.password_placeholder')}
                                         minLength={5}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-200 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
+                                        className="w-full px-2.5 py-1.5 bg-white dark:bg-dark-600 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500/50 text-sm"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">
                                         {t('security_settings.password_hint')}
                                     </p>
                                 </div>
@@ -177,34 +168,25 @@ export function SecuritySettings() {
 
                     {/* IP Restriction */}
                     {instanceSettings.allowIpRestriction && (
-                        <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600">
+                            <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3 min-w-0 flex-1">
-                                    <div className="p-2 bg-purple-500/20 flex-shrink-0">
-                                        <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
-                                            {t('security_settings.ip_restriction_title')}
-                                        </h3>
-                                        <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
-                                            {t('security_settings.ip_restriction_description')}
-                                        </p>
-                                    </div>
+                                    <Globe className="w-4 h-4 text-purple-500 dark:text-purple-400 flex-shrink-0" />
+                                    <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
+                                        {t('security_settings.ip_restriction_title')}
+                                    </span>
                                 </div>
-                                <div className="flex-shrink-0 ml-3">
-                                    <ToggleSwitch
-                                        checked={ipRange !== null && ipRange !== undefined}
-                                        onChange={handleIpRangeToggle}
-                                    />
-                                </div>
+                                <ToggleSwitch
+                                    checked={ipRange !== null && ipRange !== undefined}
+                                    onChange={handleIpRangeToggle}
+                                />
                             </div>
 
                             {ipRange !== null && ipRange !== undefined && (
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                        {t('security_settings.ip_address_cidr_label')}
-                                    </label>
+                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-dark-500">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">
+                                        {t('security_settings.ip_restriction_description')}
+                                    </p>
                                     <input
                                         type="text"
                                         value={ipRange || ''}
@@ -212,32 +194,22 @@ export function SecuritySettings() {
                                         placeholder={t(
                                             'security_settings.ip_address_cidr_placeholder'
                                         )}
-                                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-200 dark:bg-dark-600/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 text-sm sm:text-base"
+                                        className="w-full px-2.5 py-1.5 bg-white dark:bg-dark-600 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-500/50 text-sm"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400">
-                                        {t('security_settings.ip_address_cidr_hint')}
-                                    </p>
                                 </div>
                             )}
                         </div>
                     )}
 
                     {/* Burn After Time */}
-                    <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 hover:border-gray-300 dark:border-dark-500/50 transition-all duration-300">
-                        <div className="flex items-center space-x-3 min-w-0 flex-1">
-                            <div className="p-2 bg-orange-500/20 flex-shrink-0">
-                                <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <h3 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
+                    <div className="p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3 min-w-0 flex-1">
+                                <Flame className="w-4 h-4 text-orange-500 dark:text-orange-400 flex-shrink-0" />
+                                <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
                                     {t('security_settings.burn_after_time_title')}
-                                </h3>
-                                <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">
-                                    {t('security_settings.burn_after_time_description')}
-                                </p>
+                                </span>
                             </div>
-                        </div>
-                        <div className="flex-shrink-0 ml-3">
                             <ToggleSwitch
                                 checked={isBurnable}
                                 onChange={handleBurnAfterTimeToggle}
