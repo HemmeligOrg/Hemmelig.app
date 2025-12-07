@@ -83,6 +83,7 @@
         "api": "API"
     },
     "header": {
+        "home": "Home",
         "sign_in": "Accedi",
         "sign_up": "Registrati",
         "dashboard": "Dashboard",

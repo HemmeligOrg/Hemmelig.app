@@ -1,4 +1,4 @@
-import { CircleUser, LogIn, UserPlus } from 'lucide-react';
+import { CircleUser, Home, LogIn, UserPlus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -19,7 +19,14 @@ export function Header() {
         <header className="pt-4 sm:pt-8 pb-4 sm:pb-6">
             <div className="max-w-4xl mx-auto px-4">
                 {/* Navigation */}
-                <div className="flex justify-end items-center mb-4 sm:mb-6">
+                <div className="flex justify-between items-center mb-4 sm:mb-6">
+                    <Link
+                        to="/"
+                        className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-xs sm:text-sm"
+                    >
+                        <Home className="w-4 h-4" />
+                        <span className="hidden xs:inline">{t('header.home')}</span>
+                    </Link>
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         {user ? (
                             <Link

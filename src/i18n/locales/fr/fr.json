@@ -83,6 +83,7 @@
         "api": "API"
     },
     "header": {
+        "home": "Accueil",
         "sign_in": "Se connecter",
         "sign_up": "S'inscrire",
         "dashboard": "Tableau de bord",

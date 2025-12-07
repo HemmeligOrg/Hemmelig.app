@@ -83,6 +83,7 @@
         "api": "API"
     },
     "header": {
+        "home": "首页",
         "sign_in": "登录",
         "sign_up": "注册",
         "dashboard": "仪表板",
