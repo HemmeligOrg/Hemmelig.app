@@ -6,6 +6,8 @@ metadata:
     {{- include "hemmelig.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "hemmelig.selectorLabels" . | nindent 6 }}

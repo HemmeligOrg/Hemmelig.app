@@ -15,7 +15,6 @@ spec:
     requests:
       storage: {{ .Values.persistence.data.size }}
 {{- end }}
----
 {{- if and .Values.persistence.uploads.enabled (not .Values.persistence.uploads.existingClaim) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
