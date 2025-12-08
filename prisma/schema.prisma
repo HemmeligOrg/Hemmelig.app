@@ -3,8 +3,9 @@ datasource db {
 }
 
 generator client {
-    provider = "prisma-client"
-    output   = "./generated/prisma"
+    provider   = "prisma-client"
+    output     = "./generated/prisma"
+    engineType = "binary"
 }
 
 model Secrets {
