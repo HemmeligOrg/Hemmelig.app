@@ -1,14 +1,16 @@
 # syntax=docker/dockerfile:1
 
 # Build stage
-FROM node:25-alpine AS builder
-RUN apk update && apk add --no-cache python3 make g++
+FROM node:25-slim AS builder
+RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
 RUN npm ci --legacy-peer-deps
 COPY prisma ./prisma
 COPY prisma.config.ts ./
+# Workaround for node:25-alpine ARM64 environment variable issue with Prisma
+ENV DATABASE_URL="file:/app/database/hemmelig.db"
 RUN npx prisma generate
 COPY api ./api
 COPY src ./src
@@ -18,13 +20,15 @@ COPY server.ts ./
 RUN npm run build
 
 # Production dependencies
-FROM node:25-alpine AS deps
-RUN apk update && apk add --no-cache python3 make g++
+FROM node:25-slim AS deps
+RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
 ENV NODE_ENV=production
+# Workaround for node:25-alpine ARM64 environment variable issue with Prisma
+ENV DATABASE_URL="file:/app/database/hemmelig.db"
 RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
     npm rebuild better-sqlite3 && \
     npx prisma generate && \
@@ -32,8 +36,9 @@ RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
     rm -rf /root/.npm /tmp/*
 
 # Final image
-FROM node:25-alpine
-RUN addgroup -S app && adduser -S app -G app
+FROM node:25-slim
+RUN apt-get update && apt-get install -y wget openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.ts ./
