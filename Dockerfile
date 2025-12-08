@@ -37,7 +37,7 @@ RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
 
 # Final image
 FROM node:25-slim
-RUN apt-get update && apt-get install -y wget openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget openssl ca-certificates gosu && rm -rf /var/lib/apt/lists/*
 RUN groupadd -r app && useradd -r -g app app
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
