@@ -4,10 +4,11 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Required Variables
 
-| Variable             | Description                            | Default                   |
-| -------------------- | -------------------------------------- | ------------------------- |
-| `DATABASE_URL`       | SQLite connection string               | `file:./data/hemmelig.db` |
-| `BETTER_AUTH_SECRET` | Secret key for authentication sessions | -                         |
+| Variable             | Description                                              | Default                   |
+| -------------------- | -------------------------------------------------------- | ------------------------- |
+| `DATABASE_URL`       | SQLite connection string                                 | `file:./data/hemmelig.db` |
+| `BETTER_AUTH_SECRET` | Secret key for authentication sessions                   | -                         |
+| `BETTER_AUTH_URL`    | Public URL of your instance (for proper cookie handling) | -                         |
 
 ## Server Configuration
 
@@ -102,6 +103,7 @@ See [Social Login Documentation](./social-login.md) for detailed setup instructi
 # Required
 DATABASE_URL=file:./data/hemmelig.db
 BETTER_AUTH_SECRET=your-secret-key-min-32-chars-long
+BETTER_AUTH_URL=https://secrets.example.com
 ```
 
 ### Production Setup
@@ -110,11 +112,11 @@ BETTER_AUTH_SECRET=your-secret-key-min-32-chars-long
 # Required
 DATABASE_URL=file:./data/hemmelig.db
 BETTER_AUTH_SECRET=your-very-secure-secret-key-here
+BETTER_AUTH_URL=https://secrets.example.com
 
 # Server
 NODE_ENV=production
 HEMMELIG_PORT=3000
-HEMMELIG_BASE_URL=https://secrets.example.com
 HEMMELIG_TRUSTED_ORIGIN=https://secrets.example.com
 
 # Instance
@@ -147,9 +149,9 @@ services:
         environment:
             - DATABASE_URL=file:/data/hemmelig.db
             - BETTER_AUTH_SECRET=change-this-to-a-secure-secret
+            - BETTER_AUTH_URL=https://secrets.example.com
             - NODE_ENV=production
             - HEMMELIG_PORT=3000
-            - HEMMELIG_BASE_URL=https://secrets.example.com
             - HEMMELIG_ANALYTICS_ENABLED=true
         volumes:
             - hemmelig_data:/data
@@ -162,5 +164,5 @@ volumes:
 
 - Boolean values accept `true` or `false` (case-insensitive)
 - All `HEMMELIG_AUTH_*` variables require both `_ID` and `_SECRET` to enable a provider
-- `HEMMELIG_BASE_URL` is required when using social login providers
+- `BETTER_AUTH_URL` is required when using social login providers
 - Generate secure secrets using: `openssl rand -base64 32`

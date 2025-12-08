@@ -15,8 +15,8 @@ fullnameOverride: ""
 config:
   # Generate with: openssl rand -base64 32
   betterAuthSecret: ""
-  # Public URL of your instance (required for OAuth)
-  baseUrl: ""
+  # Public URL of your instance (required for OAuth and cookie handling)
+  betterAuthUrl: ""
 
 # Additional environment variables
 env: []

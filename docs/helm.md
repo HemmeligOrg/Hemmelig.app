@@ -17,7 +17,7 @@ cd Hemmelig.app
 # Install with default values
 helm install hemmelig ./helm/hemmelig \
   --set config.betterAuthSecret="$(openssl rand -base64 32)" \
-  --set config.baseUrl="https://hemmelig.example.com"
+  --set config.betterAuthUrl="https://hemmelig.example.com"
 ```
 
 ## Installation
@@ -39,7 +39,7 @@ helm install hemmelig ./helm/hemmelig -f my-values.yaml
 # my-values.yaml
 config:
     betterAuthSecret: 'your-secret-key-min-32-chars'
-    baseUrl: 'https://hemmelig.example.com'
+    betterAuthUrl: 'https://hemmelig.example.com'
 
 ingress:
     enabled: true
@@ -80,7 +80,7 @@ resources:
 | Parameter                 | Description                                                                        |
 | ------------------------- | ---------------------------------------------------------------------------------- |
 | `config.betterAuthSecret` | Authentication secret (min 32 characters). Generate with `openssl rand -base64 32` |
-| `config.baseUrl`          | Public URL of your instance (required for OAuth)                                   |
+| `config.betterAuthUrl`    | Public URL of your instance (required for OAuth and cookie handling)               |
 
 ### Common Values
 

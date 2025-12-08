@@ -45,9 +45,9 @@ spec:
               value: "production"
             - name: DATABASE_URL
               value: "file:/app/database/hemmelig.db"
-            {{- if .Values.config.baseUrl }}
-            - name: HEMMELIG_BASE_URL
-              value: {{ .Values.config.baseUrl | quote }}
+            {{- if .Values.config.betterAuthUrl }}
+            - name: BETTER_AUTH_URL
+              value: {{ .Values.config.betterAuthUrl | quote }}
             {{- end }}
             {{- if .Values.existingSecret }}
             - name: BETTER_AUTH_SECRET

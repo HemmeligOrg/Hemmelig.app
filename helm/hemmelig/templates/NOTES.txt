@@ -29,10 +29,10 @@ Please set this value or use existingSecret to provide authentication secrets.
 Generate a secret with: openssl rand -base64 32
 {{- end }}
 
-{{- if not .Values.config.baseUrl }}
+{{- if not .Values.config.betterAuthUrl }}
 
-WARNING: You have not set config.baseUrl!
-This is required for OAuth authentication to work properly.
+WARNING: You have not set config.betterAuthUrl!
+This is required for OAuth authentication and proper cookie handling.
 {{- end }}
 
 For more information, visit: https://github.com/HemmeligOrg/Hemmelig.app
