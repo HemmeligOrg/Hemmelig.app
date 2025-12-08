@@ -1,3 +1,5 @@
+import { api } from './api';
+
 const TRACKED_PATHS = ['/', '/secret'];
 
 export async function trackPageView(path: string): Promise<void> {
@@ -17,11 +19,7 @@ export async function trackPageView(path: string): Promise<void> {
     const normalizedPath = path.startsWith('/secret/') ? '/secret' : path;
 
     try {
-        await fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: normalizedPath }),
-        });
+        await api.analytics.track.$post({ json: { path: normalizedPath } });
     } catch {
         // Silently fail - analytics should not affect user experience
     }
