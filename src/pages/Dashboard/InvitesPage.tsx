@@ -1,6 +1,7 @@
 import { Copy, Plus, Ticket, Trash2 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Modal } from '../../components/Modal';
 import { api } from '../../lib/api';
@@ -18,33 +19,14 @@ type InviteCode = {
 
 export function InvitesPage() {
     const { t } = useTranslation();
-    const [invites, setInvites] = useState<InviteCode[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const initialInvites = useLoaderData() as InviteCode[];
+    const [invites, setInvites] = useState<InviteCode[]>(initialInvites || []);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [inviteToDelete, setInviteToDelete] = useState<InviteCode | null>(null);
     const [newInviteSettings, setNewInviteSettings] = useState({
         maxUses: 1,
         expiresInDays: 7,
     });
-
-    const fetchInvites = useCallback(async () => {
-        try {
-            const res = await api.invites.$get();
-            if (res.ok) {
-                const data = await res.json();
-                setInvites(data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch invites:', error);
-            toast.error(t('invites_page.toast.fetch_error'));
-        } finally {
-            setIsLoading(false);
-        }
-    }, [t]);
-
-    useEffect(() => {
-        fetchInvites();
-    }, [fetchInvites]);
 
     const createInvite = async () => {
         try {
@@ -86,10 +68,6 @@ export function InvitesPage() {
             toast.success(t('invites_page.toast.copied'));
         }
     };
-
-    if (isLoading) {
-        return <div className="p-8 text-center">{t('invites_page.loading')}</div>;
-    }
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">

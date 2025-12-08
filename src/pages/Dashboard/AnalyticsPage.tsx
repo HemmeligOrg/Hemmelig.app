@@ -1,5 +1,5 @@
 import { BarChart3, Calendar, Clock, Eye, Globe, Shield, TrendingUp, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -51,6 +51,7 @@ interface AnalyticsLoaderData {
     dailyStats?: DailyStat[];
     secretTypes?: SecretTypes;
     expirationStats?: ExpirationStats;
+    visitorStats?: DailyVisitor[];
 }
 
 type TimeRange = '7d' | '30d' | '90d' | '1y';
@@ -64,8 +65,7 @@ export function AnalyticsPage() {
     );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(initialAnalytics.error || null);
-    const [visitorStats, setVisitorStats] = useState<DailyVisitor[]>([]);
-    const [visitorLoading, setVisitorLoading] = useState(false);
+    const [visitorStats] = useState<DailyVisitor[]>(initialAnalytics.visitorStats || []);
 
     const fetchAnalytics = async (range: TimeRange) => {
         setLoading(true);
@@ -88,24 +88,6 @@ export function AnalyticsPage() {
             setLoading(false);
         }
     };
-
-    const fetchVisitorStats = async () => {
-        setVisitorLoading(true);
-        try {
-            const res = await api.analytics.visitors.daily.$get();
-            if (!res.ok) throw new Error('Failed to fetch visitor stats');
-            const data = await res.json();
-            setVisitorStats(data as DailyVisitor[]);
-        } catch (err) {
-            console.error('Failed to fetch visitor stats:', err);
-        } finally {
-            setVisitorLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchVisitorStats();
-    }, []);
 
     const handleTimeRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newTimeRange = e.target.value as TimeRange;
@@ -476,11 +458,7 @@ export function AnalyticsPage() {
                         </div>
                     </div>
 
-                    {visitorLoading ? (
-                        <div className="text-center py-8 text-gray-500 dark:text-slate-400">
-                            Loading visitor data...
-                        </div>
-                    ) : visitorStats.length === 0 ? (
+                    {visitorStats.length === 0 ? (
                         <div className="text-center py-8 text-gray-500 dark:text-slate-400">
                             No visitor data available yet.
                         </div>

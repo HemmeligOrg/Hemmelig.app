@@ -2,9 +2,6 @@ import prisma from './db';
 
 const settingsCache = new Map();
 
-// Initialize cache on module load
-settingsCache.set('instanceSettings', await prisma.instanceSettings.findFirst());
-
 /**
  * Gets instance settings, fetching from database if not cached.
  * Use this utility to avoid duplicating the cache-check pattern.
@@ -12,9 +9,14 @@ settingsCache.set('instanceSettings', await prisma.instanceSettings.findFirst())
 export async function getInstanceSettings() {
     let cachedSettings = settingsCache.get('instanceSettings');
     if (!cachedSettings) {
-        cachedSettings = await prisma.instanceSettings.findFirst();
-        if (cachedSettings) {
-            settingsCache.set('instanceSettings', cachedSettings);
+        try {
+            cachedSettings = await prisma.instanceSettings.findFirst();
+            if (cachedSettings) {
+                settingsCache.set('instanceSettings', cachedSettings);
+            }
+        } catch {
+            // Table may not exist yet (fresh database)
+            return null;
         }
     }
     return cachedSettings;

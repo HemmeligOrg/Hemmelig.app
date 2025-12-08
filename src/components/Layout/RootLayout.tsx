@@ -1,16 +1,8 @@
-import { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { trackPageView } from '../../lib/analytics';
+import { Outlet } from 'react-router-dom';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
 
 export function RootLayout() {
-    const location = useLocation();
-
-    useEffect(() => {
-        trackPageView(location.pathname);
-    }, [location.pathname]);
-
     return (
         <div className="flex flex-col min-h-screen bg-light-800 dark:bg-dark-900 text-gray-900 dark:text-white">
             <Header />

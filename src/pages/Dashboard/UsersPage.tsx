@@ -1,14 +1,37 @@
 import { Edit, Search, Trash2, UserPlus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import { AddUserModal } from '../../components/AddUserModal';
 import { EditUserModal } from '../../components/EditUserModal';
 import { Modal } from '../../components/Modal';
 import { useAccountStore } from '../../store/accountStore';
 import { useUsersStore } from '../../store/usersStore';
 
+type User = {
+    id: string;
+    name: string;
+    username: string;
+    displayUsername: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    role: string;
+    banned: boolean;
+    banReason: string | null;
+    banExpires: string | null;
+    createdAt: string;
+    updatedAt: string;
+};
+
+type LoaderData = {
+    users: User[];
+    error: string | null;
+};
+
 export function UsersPage() {
     const { t } = useTranslation();
+    const loaderData = useLoaderData() as LoaderData;
     const {
         users,
         userToDelete,
@@ -16,7 +39,7 @@ export function UsersPage() {
         isAddUserModalOpen,
         searchTerm,
         error,
-        fetchUsers,
+        setUsers,
         addUser,
         editUser,
         deleteUser,
@@ -24,14 +47,21 @@ export function UsersPage() {
         setUserToEdit,
         setIsAddUserModalOpen,
         setSearchTerm,
+        setError,
     } = useUsersStore();
     const { profileData } = useAccountStore();
 
+    // Initialize store with loader data
     useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
+        if (loaderData.users) {
+            setUsers(loaderData.users);
+        }
+        if (loaderData.error) {
+            setError(loaderData.error);
+        }
+    }, [loaderData, setUsers, setError]);
 
-    if (error) {
+    if (error || loaderData.error) {
         return (
             <div className="p-8 text-center">
                 <h2 className="text-2xl font-bold text-red-500">Error</h2>

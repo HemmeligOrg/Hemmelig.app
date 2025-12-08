@@ -34,6 +34,8 @@ interface UsersStore {
     isAddUserModalOpen: boolean;
     searchTerm: string;
     error: string | null;
+    setUsers: (users: User[]) => void;
+    setError: (error: string | null) => void;
     fetchUsers: () => Promise<void>;
     addUser: (newUser: NewUser) => Promise<void>;
     editUser: (user: User & { password?: string }) => Promise<void>;
@@ -51,6 +53,8 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
     isAddUserModalOpen: false,
     searchTerm: '',
     error: null,
+    setUsers: (users) => set({ users }),
+    setError: (error) => set({ error }),
     fetchUsers: async () => {
         set({ error: null });
         try {

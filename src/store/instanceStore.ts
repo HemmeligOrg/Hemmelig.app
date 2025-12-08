@@ -38,6 +38,8 @@ type WebhookSettings = {
     webhookOnBurn: boolean;
 };
 
+type AllSettings = GeneralSettings & SecuritySettings & OrganizationSettings & WebhookSettings;
+
 type InstanceState = {
     generalSettings: GeneralSettings;
     securitySettings: SecuritySettings;
@@ -45,6 +47,7 @@ type InstanceState = {
     webhookSettings: WebhookSettings;
     isLoading: boolean;
     error: string | null;
+    initializeSettings: (settings: AllSettings) => void;
     fetchSettings: () => Promise<void>;
     setGeneralSetting: <K extends keyof GeneralSettings>(key: K, value: GeneralSettings[K]) => void;
     setSecuritySetting: <K extends keyof SecuritySettings>(
@@ -94,6 +97,44 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
     },
     isLoading: false,
     error: null,
+
+    initializeSettings: (settings) => {
+        set({
+            generalSettings: {
+                instanceName: settings.instanceName,
+                instanceDescription: settings.instanceDescription,
+                allowRegistration: settings.allowRegistration,
+                requireEmailVerification: settings.requireEmailVerification,
+                maxSecretsPerUser: settings.maxSecretsPerUser,
+                defaultSecretExpiration: settings.defaultSecretExpiration,
+                maxSecretSize: settings.maxSecretSize,
+                importantMessage: settings.importantMessage ?? '',
+            },
+            securitySettings: {
+                enforceHttps: settings.enforceHttps,
+                allowPasswordProtection: settings.allowPasswordProtection,
+                allowIpRestriction: settings.allowIpRestriction,
+                maxPasswordAttempts: settings.maxPasswordAttempts,
+                sessionTimeout: settings.sessionTimeout,
+                enableRateLimiting: settings.enableRateLimiting,
+                rateLimitRequests: settings.rateLimitRequests,
+                rateLimitWindow: settings.rateLimitWindow,
+            },
+            organizationSettings: {
+                requireInviteCode: settings.requireInviteCode ?? false,
+                allowedEmailDomains: settings.allowedEmailDomains ?? '',
+                requireRegisteredUser: settings.requireRegisteredUser ?? false,
+            },
+            webhookSettings: {
+                webhookEnabled: settings.webhookEnabled ?? false,
+                webhookUrl: settings.webhookUrl ?? '',
+                webhookSecret: settings.webhookSecret ?? '',
+                webhookOnView: settings.webhookOnView ?? true,
+                webhookOnBurn: settings.webhookOnBurn ?? true,
+            },
+            isLoading: false,
+        });
+    },
 
     fetchSettings: async () => {
         set({ isLoading: true, error: null });

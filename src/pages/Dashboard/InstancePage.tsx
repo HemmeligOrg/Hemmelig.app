@@ -1,7 +1,36 @@
 import { Building2, ChevronDown, Save, Settings, Shield, Webhook } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoaderData } from 'react-router-dom';
 import { useInstanceStore } from '../../store/instanceStore';
+
+type InstanceSettings = {
+    instanceName: string;
+    instanceDescription: string;
+    allowRegistration: boolean;
+    requireEmailVerification: boolean;
+    maxSecretsPerUser: number;
+    defaultSecretExpiration: number;
+    maxSecretSize: number;
+    importantMessage: string;
+    enforceHttps: boolean;
+    allowPasswordProtection: boolean;
+    allowIpRestriction: boolean;
+    maxPasswordAttempts: number;
+    sessionTimeout: number;
+    enableRateLimiting: boolean;
+    rateLimitRequests: number;
+    rateLimitWindow: number;
+    requireInviteCode: boolean;
+    allowedEmailDomains: string;
+    requireRegisteredUser: boolean;
+    webhookEnabled: boolean;
+    webhookUrl: string;
+    webhookSecret: string;
+    webhookOnView: boolean;
+    webhookOnBurn: boolean;
+    error?: string;
+};
 
 const EXPIRATION_OPTIONS = [
     { seconds: 2419200, hours: 672, labelKey: 'expiration.28_days' },
@@ -21,6 +50,7 @@ export function InstancePage() {
         'general'
     );
     const { t } = useTranslation();
+    const loaderData = useLoaderData() as InstanceSettings;
 
     const {
         generalSettings,
@@ -29,7 +59,7 @@ export function InstancePage() {
         webhookSettings,
         isLoading,
         error,
-        fetchSettings,
+        initializeSettings,
         setGeneralSetting,
         setSecuritySetting,
         setOrganizationSetting,
@@ -37,23 +67,24 @@ export function InstancePage() {
         saveSettings,
     } = useInstanceStore();
 
+    // Initialize store with loader data
     useEffect(() => {
-        fetchSettings();
-    }, [fetchSettings]);
+        if (loaderData && !loaderData.error) {
+            initializeSettings(loaderData);
+        }
+    }, [loaderData, initializeSettings]);
 
-    const handleSaveSettings = (section: 'general' | 'security' | 'organization') => {
+    const handleSaveSettings = (section: 'general' | 'security' | 'organization' | 'webhook') => {
         saveSettings(section);
     };
 
-    if (isLoading) {
-        return <div className="p-8 text-center">Loading instance settings...</div>;
-    }
-
-    if (error) {
+    if (error || loaderData?.error) {
         return (
             <div className="p-8 text-center">
                 <h2 className="text-2xl font-bold text-red-500">Error</h2>
-                <p className="text-gray-500 dark:text-slate-400 mt-2">{error}</p>
+                <p className="text-gray-500 dark:text-slate-400 mt-2">
+                    {error || loaderData?.error}
+                </p>
             </div>
         );
     }

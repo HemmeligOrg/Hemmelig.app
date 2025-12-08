@@ -1,7 +1,9 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { RootLayout } from './components/Layout/RootLayout';
+import { trackPageView } from './lib/analytics';
 import { api } from './lib/api';
+import { authClient } from './lib/auth';
 import { AccountPage } from './pages/Dashboard/AccountPage';
 import { AnalyticsPage } from './pages/Dashboard/AnalyticsPage';
 import { InstancePage } from './pages/Dashboard/InstancePage';
@@ -18,6 +20,7 @@ import { SetupPage } from './pages/SetupPage';
 import { TermsPage } from './pages/TermsPage';
 import { Verify2FAPage } from './pages/Verify2FAPage';
 import { useHemmeligStore } from './store/hemmeligStore';
+import { useUserStore } from './store/userStore';
 
 // Check if initial setup is needed
 const checkSetupStatus = async () => {
@@ -54,6 +57,24 @@ const instanceSettingsLoader = async () => {
         console.error('Error fetching instance settings:', error);
         return null;
     }
+};
+
+// Loader to fetch user session and update store
+const userSessionLoader = async () => {
+    const { data, error } = await authClient.getSession();
+    const user = data?.user ?? null;
+    useUserStore.getState().setUser(user);
+    return { user, error };
+};
+
+// Combined loader for dashboard layout
+const dashboardLoader = async () => {
+    const { data, error } = await authClient.getSession();
+    if (!data?.user) {
+        return redirect('/login');
+    }
+    useUserStore.getState().setUser(data.user);
+    return { user: data.user, error };
 };
 
 export const router = createBrowserRouter([
@@ -95,11 +116,39 @@ export const router = createBrowserRouter([
     // Pages with header/footer
     {
         element: <RootLayout />,
-        loader: instanceSettingsLoader,
+        loader: async () => {
+            // First check setup status
+            const needsSetup = await checkSetupStatus();
+            if (needsSetup) {
+                return redirect('/setup');
+            }
+
+            // Fetch instance settings
+            try {
+                const res = await api.instance.settings.public.$get();
+                if (res.ok) {
+                    const settings = await res.json();
+                    useHemmeligStore.getState().setSettings(settings);
+                }
+            } catch (error) {
+                console.error('Error fetching instance settings:', error);
+            }
+
+            // Fetch user session
+            const { data } = await authClient.getSession();
+            const user = data?.user ?? null;
+            useUserStore.getState().setUser(user);
+
+            return { user };
+        },
         children: [
             {
                 path: '/',
                 element: <HomePage />,
+                loader: async () => {
+                    trackPageView('/');
+                    return null;
+                },
             },
             {
                 path: '/secret/:id',
@@ -109,6 +158,7 @@ export const router = createBrowserRouter([
                     if (!params.id) {
                         throw new Response('Not Found', { status: 404 });
                     }
+                    trackPageView('/secret');
                     const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
                     return res.json();
                 },
@@ -126,6 +176,7 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: <DashboardLayout />,
+        loader: dashboardLoader,
         children: [
             {
                 index: true,
@@ -144,7 +195,13 @@ export const router = createBrowserRouter([
                         if (res.status === 401) {
                             return redirect('/login');
                         }
-                        return res.json();
+                        const accountData = await res.json();
+                        // Get 2FA status from the user store (already loaded by dashboardLoader)
+                        const user = useUserStore.getState().user;
+                        return {
+                            ...accountData,
+                            twoFactorEnabled: user?.twoFactorEnabled || false,
+                        };
                     } catch {
                         return redirect('/login');
                     }
@@ -155,14 +212,23 @@ export const router = createBrowserRouter([
                 element: <AnalyticsPage />,
                 loader: async () => {
                     try {
-                        const res = await api.analytics.$get({ query: { timeRange: '30d' } });
-                        if (res.status === 403) {
+                        // Fetch both analytics and visitor stats in parallel
+                        const [analyticsRes, visitorsRes] = await Promise.all([
+                            api.analytics.$get({ query: { timeRange: '30d' } }),
+                            api.analytics.visitors.daily.$get(),
+                        ]);
+
+                        if (analyticsRes.status === 403) {
                             return { error: "You don't have permission to view analytics." };
                         }
-                        if (!res.ok) {
+                        if (!analyticsRes.ok) {
                             return { error: 'Failed to fetch analytics data.' };
                         }
-                        return await res.json();
+
+                        const analytics = await analyticsRes.json();
+                        const visitors = visitorsRes.ok ? await visitorsRes.json() : [];
+
+                        return { ...analytics, visitorStats: visitors };
                     } catch (error) {
                         console.error('Failed to fetch analytics data:', error);
                         return { error: 'Failed to fetch analytics data.' };
@@ -172,14 +238,50 @@ export const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
+                loader: async () => {
+                    try {
+                        const response = await authClient.admin.listUsers();
+                        if (response.status === 403) {
+                            return { error: "You don't have permission to view users.", users: [] };
+                        }
+                        return { users: response?.data?.users || [], error: null };
+                    } catch (error) {
+                        console.error('Failed to fetch users:', error);
+                        return { error: 'Failed to fetch users', users: [] };
+                    }
+                },
             },
             {
                 path: 'instance',
                 element: <InstancePage />,
+                loader: async () => {
+                    try {
+                        const res = await api.instance.settings.$get();
+                        if (res.status === 403) {
+                            return { error: "You don't have permission to view settings." };
+                        }
+                        return await res.json();
+                    } catch (error) {
+                        console.error('Failed to fetch instance settings:', error);
+                        return { error: 'Failed to fetch settings.' };
+                    }
+                },
             },
             {
                 path: 'invites',
                 element: <InvitesPage />,
+                loader: async () => {
+                    try {
+                        const res = await api.invites.$get();
+                        if (res.ok) {
+                            return await res.json();
+                        }
+                        return [];
+                    } catch (error) {
+                        console.error('Failed to fetch invites:', error);
+                        return [];
+                    }
+                },
             },
         ],
     },

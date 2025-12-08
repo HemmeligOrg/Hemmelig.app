@@ -12,13 +12,15 @@ interface UserState {
     user: User | null;
     isLoading: boolean;
     error: Error | null;
+    setUser: (user: User | null) => void;
     fetchUser: () => Promise<void>;
 }
 
 export const useUserStore = create<UserState>((set) => ({
     user: null,
-    isLoading: true,
+    isLoading: false,
     error: null,
+    setUser: (user) => set({ user, isLoading: false }),
     fetchUser: async () => {
         set({ isLoading: true, error: null });
         const { data, error } = await authClient.getSession();

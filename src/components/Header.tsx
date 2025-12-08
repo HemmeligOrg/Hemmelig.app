@@ -1,5 +1,4 @@
 import { CircleUser, Home, LogIn, UserPlus } from 'lucide-react';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useHemmeligStore } from '../store/hemmeligStore.ts';
@@ -8,12 +7,8 @@ import Logo from './Logo.tsx';
 
 export function Header() {
     const { t } = useTranslation();
-    const { user, fetchUser } = useUserStore();
+    const { user } = useUserStore();
     const { settings } = useHemmeligStore();
-
-    useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
 
     return (
         <header className="pt-4 sm:pt-8 pb-4 sm:pb-6">

@@ -1,5 +1,5 @@
 import { BarChart3, LogOut, Menu, Server, Shield, Ticket, User, Users, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { authClient } from '../../lib/auth';
@@ -10,11 +10,7 @@ export function DashboardLayout() {
     const { t } = useTranslation();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { user, isLoading, fetchUser } = useUserStore();
-
-    useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
+    const { user, isLoading } = useUserStore();
 
     const handleLogout = async () => {
         await authClient.signOut();

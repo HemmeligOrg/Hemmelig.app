@@ -28,7 +28,11 @@ export function AccountPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { profileData, setProfileData } = useAccountStore();
-    const initialData = useLoaderData() as { username: string; email: string };
+    const initialData = useLoaderData() as {
+        username: string;
+        email: string;
+        twoFactorEnabled: boolean;
+    };
 
     const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'developer' | 'danger'>(
         'profile'
@@ -67,7 +71,7 @@ export function AccountPage() {
     const [successMessage, setSuccessMessage] = useState('');
 
     // 2FA state
-    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(initialData.twoFactorEnabled);
     const [totpUri, setTotpUri] = useState<string | null>(null);
     const [backupCodes, setBackupCodes] = useState<string[]>([]);
     const [show2FASetup, setShow2FASetup] = useState(false);
@@ -80,23 +84,8 @@ export function AccountPage() {
     const [showBackupCodesModal, setShowBackupCodesModal] = useState(false);
 
     useEffect(() => {
-        setProfileData(initialData);
+        setProfileData({ username: initialData.username, email: initialData.email });
     }, [initialData, setProfileData]);
-
-    // Fetch 2FA status on mount
-    useEffect(() => {
-        const fetch2FAStatus = async () => {
-            try {
-                const session = await authClient.getSession();
-                if (session.data?.user) {
-                    setTwoFactorEnabled(session.data.user.twoFactorEnabled || false);
-                }
-            } catch (error) {
-                console.error('Failed to fetch 2FA status:', error);
-            }
-        };
-        fetch2FAStatus();
-    }, []);
 
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
