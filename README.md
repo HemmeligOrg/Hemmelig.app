@@ -68,11 +68,32 @@ docker compose up -d
 
 See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 
+### CLI
+
+Create secrets directly from the command line:
+
+```bash
+# Install globally
+npm install -g hemmelig
+
+# Or use with npx
+npx hemmelig "my secret message"
+
+# With options
+hemmelig "API key: sk-1234" -t "Production API Key" -e 7d -v 3
+
+# Pipe from stdin
+cat config.json | hemmelig -t "Config file"
+```
+
+See [CLI Documentation](docs/cli.md) for CI/CD integration and automation examples.
+
 ## Documentation
 
 - [Docker Deployment](docs/docker.md) - Complete Docker setup guide
 - [Helm Chart](docs/helm.md) - Kubernetes deployment with Helm
 - [Environment Variables](docs/env.md) - All configuration options
+- [CLI](docs/cli.md) - Command-line interface for automation and CI/CD
 - [Encryption](docs/encryption.md) - How client-side encryption works
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 - [Webhooks](docs/webhook.md) - Webhook notifications for secret events

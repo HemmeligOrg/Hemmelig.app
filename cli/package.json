@@ -1,0 +1,54 @@
+{
+    "name": "hemmelig",
+    "version": "7.0.0",
+    "description": "CLI for creating encrypted, self-destructing secrets via Hemmelig",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "hemmelig": "dist/bin.js"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "hemmelig",
+        "secret",
+        "secrets",
+        "encryption",
+        "cli",
+        "security",
+        "privacy",
+        "self-destruct",
+        "one-time",
+        "share"
+    ],
+    "author": "Hemmelig",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/HemmeligOrg/Hemmelig.app.git",
+        "directory": "cli"
+    },
+    "bugs": {
+        "url": "https://github.com/HemmeligOrg/Hemmelig.app/issues"
+    },
+    "homepage": "https://hemmelig.app",
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.8.3"
+    }
+}

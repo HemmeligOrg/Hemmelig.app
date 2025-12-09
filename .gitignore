@@ -1,4 +1,6 @@
 .env
+cli/node_modules
+cli/dist
 # Logs
 logs
 *.log
