@@ -1,3 +1,4 @@
 [tools]
+go = "latest"
 helm = "latest"
 node = "latest"

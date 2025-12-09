@@ -13,6 +13,58 @@ The Hemmelig CLI allows you to create encrypted secrets directly from the comman
 
 ## Installation
 
+### Binary (Recommended for CI/CD)
+
+Download the pre-built binary for your platform:
+
+#### Linux (amd64)
+
+```bash
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-linux-amd64 -o hemmelig
+chmod +x hemmelig
+sudo mv hemmelig /usr/local/bin/
+```
+
+#### Linux (arm64)
+
+```bash
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-linux-arm64 -o hemmelig
+chmod +x hemmelig
+sudo mv hemmelig /usr/local/bin/
+```
+
+#### macOS (Apple Silicon)
+
+```bash
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-darwin-arm64 -o hemmelig
+chmod +x hemmelig
+sudo mv hemmelig /usr/local/bin/
+```
+
+#### macOS (Intel)
+
+```bash
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-darwin-amd64 -o hemmelig
+chmod +x hemmelig
+sudo mv hemmelig /usr/local/bin/
+```
+
+#### Windows
+
+Download `hemmelig-windows-amd64.exe` from the [releases page](https://github.com/HemmeligOrg/Hemmelig.app/releases) and add it to your PATH.
+
+#### Verify Download
+
+```bash
+# Download checksums
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/checksums.txt -o checksums.txt
+
+# Verify integrity
+sha256sum -c checksums.txt --ignore-missing
+```
+
+### npm
+
 ```bash
 # Install globally
 npm install -g hemmelig
@@ -311,5 +363,5 @@ When piping content, the CLI preserves all internal newlines and formatting. Onl
 
 ```bash
 # This preserves the JSON formatting
-cat config.json | npx tsx cli/hemmelig.ts -t "Config"
+cat config.json | hemmelig -t "Config"
 ```

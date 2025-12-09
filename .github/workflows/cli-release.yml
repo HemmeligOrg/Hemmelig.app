@@ -1,0 +1,168 @@
+name: CLI Release
+
+on:
+  push:
+    tags:
+      - 'cli-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build CLI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            suffix: linux-amd64
+          - goos: linux
+            goarch: arm64
+            suffix: linux-arm64
+          - goos: darwin
+            goarch: amd64
+            suffix: darwin-amd64
+          - goos: darwin
+            goarch: arm64
+            suffix: darwin-arm64
+          - goos: windows
+            goarch: amd64
+            suffix: windows-amd64.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build binary
+        working-directory: cli-go
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          go build -ldflags="-s -w" -o hemmelig-${{ matrix.suffix }} .
+
+      - name: Generate SHA256
+        working-directory: cli-go
+        run: |
+          sha256sum hemmelig-${{ matrix.suffix }} > hemmelig-${{ matrix.suffix }}.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hemmelig-${{ matrix.suffix }}
+          path: |
+            cli-go/hemmelig-${{ matrix.suffix }}
+            cli-go/hemmelig-${{ matrix.suffix }}.sha256
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          find artifacts -type f -exec cp {} release/ \;
+          ls -la release/
+
+      - name: Generate checksums file
+        working-directory: release
+        run: |
+          cat *.sha256 > checksums.txt
+          cat checksums.txt
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/cli-v}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: cli-v${{ steps.version.outputs.version }}
+          name: Hemmelig CLI v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            release/hemmelig-*
+            release/checksums.txt
+          body: |
+            ## Hemmelig CLI v${{ steps.version.outputs.version }}
+
+            Create encrypted, self-destructing secrets from the command line.
+
+            ### Installation
+
+            #### Linux (amd64)
+            ```bash
+            curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${{ steps.version.outputs.version }}/hemmelig-linux-amd64 -o hemmelig
+            chmod +x hemmelig
+            sudo mv hemmelig /usr/local/bin/
+            ```
+
+            #### Linux (arm64)
+            ```bash
+            curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${{ steps.version.outputs.version }}/hemmelig-linux-arm64 -o hemmelig
+            chmod +x hemmelig
+            sudo mv hemmelig /usr/local/bin/
+            ```
+
+            #### macOS (Apple Silicon)
+            ```bash
+            curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${{ steps.version.outputs.version }}/hemmelig-darwin-arm64 -o hemmelig
+            chmod +x hemmelig
+            sudo mv hemmelig /usr/local/bin/
+            ```
+
+            #### macOS (Intel)
+            ```bash
+            curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${{ steps.version.outputs.version }}/hemmelig-darwin-amd64 -o hemmelig
+            chmod +x hemmelig
+            sudo mv hemmelig /usr/local/bin/
+            ```
+
+            #### Windows
+            Download `hemmelig-windows-amd64.exe` and add it to your PATH.
+
+            ### Verify Download
+
+            ```bash
+            # Download checksums
+            curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${{ steps.version.outputs.version }}/checksums.txt -o checksums.txt
+
+            # Verify (Linux/macOS)
+            sha256sum -c checksums.txt --ignore-missing
+            ```
+
+            ### Usage
+
+            ```bash
+            hemmelig "my secret message"
+            hemmelig "my secret" -t "Title" -e 7d -v 3
+            cat file.txt | hemmelig
+            ```
+
+            See the [CLI documentation](https://github.com/HemmeligOrg/Hemmelig.app/blob/main/docs/cli.md) for more options.
