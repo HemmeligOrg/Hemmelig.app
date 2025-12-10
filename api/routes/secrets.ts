@@ -267,11 +267,13 @@ const app = new Hono<{
             }
 
             const validatedData = c.req.valid('json');
-            const { expiresAt, password, fileIds, salt, ...rest } = validatedData;
+            const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
 
             const data: SecretCreateData = {
                 ...rest,
                 salt,
+                // Title is required by the database, default to empty Uint8Array if not provided
+                title: title ?? new Uint8Array(0),
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
                 ...(fileIds && {
