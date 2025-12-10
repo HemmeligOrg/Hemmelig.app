@@ -292,6 +292,14 @@
             "one_day": "1 天",
             "one_week_plus": "1 周以上"
         },
+        "visitor_analytics": {
+            "title": "访客分析",
+            "description": "页面浏览量和独立访客",
+            "unique": "独立",
+            "views": "浏览",
+            "no_data": "暂无访客数据。"
+        },
+        "loading": "正在加载分析...",
         "no_permission": "您没有权限查看分析。",
         "failed_to_fetch": "获取分析数据失败。"
     },

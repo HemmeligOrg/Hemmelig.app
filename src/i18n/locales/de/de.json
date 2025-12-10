@@ -292,6 +292,14 @@
             "one_day": "1 Tag",
             "one_week_plus": "1 Woche+"
         },
+        "visitor_analytics": {
+            "title": "Besucheranalysen",
+            "description": "Seitenaufrufe und eindeutige Besucher",
+            "unique": "eindeutig",
+            "views": "Aufrufe",
+            "no_data": "Noch keine Besucherdaten verfügbar."
+        },
+        "loading": "Analysen werden geladen...",
         "no_permission": "Sie haben keine Berechtigung, Analysen anzuzeigen.",
         "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden."
     },

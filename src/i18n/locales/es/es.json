@@ -292,6 +292,14 @@
             "one_day": "1 Día",
             "one_week_plus": "1 Semana+"
         },
+        "visitor_analytics": {
+            "title": "Analíticas de visitantes",
+            "description": "Visitas de página y visitantes únicos",
+            "unique": "únicos",
+            "views": "visitas",
+            "no_data": "Aún no hay datos de visitantes disponibles."
+        },
+        "loading": "Cargando analíticas...",
         "no_permission": "No tienes permiso para ver las analíticas.",
         "failed_to_fetch": "Error al obtener los datos de analíticas."
     },

@@ -167,6 +167,7 @@ model VisitorAnalytics {
     uniqueId  String
     timestamp DateTime @default(now())
 
+    @@index([timestamp])
     @@map("visitor_analytics")
 }
 

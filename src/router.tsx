@@ -215,7 +215,7 @@ export const router = createBrowserRouter([
                         // Fetch both analytics and visitor stats in parallel
                         const [analyticsRes, visitorsRes] = await Promise.all([
                             api.analytics.$get({ query: { timeRange: '30d' } }),
-                            api.analytics.visitors.daily.$get(),
+                            api.analytics.visitors.daily.$get({ query: { timeRange: '30d' } }),
                         ]);
 
                         if (analyticsRes.status === 403) {

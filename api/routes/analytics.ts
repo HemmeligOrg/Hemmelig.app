@@ -188,46 +188,51 @@ app.get('/visitors/unique', authMiddleware, checkAdmin, async (c) => {
 });
 
 // GET /api/analytics/visitors/daily - Daily visitor statistics (admin only)
-app.get('/visitors/daily', authMiddleware, checkAdmin, async (c) => {
-    try {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+app.get(
+    '/visitors/daily',
+    authMiddleware,
+    checkAdmin,
+    zValidator('query', timeRangeSchema),
+    async (c) => {
+        try {
+            const { timeRange } = c.req.valid('query');
+            const startDate = getStartDateForTimeRange(timeRange);
 
-        const visitors = await prisma.visitorAnalytics.findMany({
-            where: { timestamp: { gte: thirtyDaysAgo } },
-            orderBy: { timestamp: 'desc' },
-        });
+            // Use raw SQL for efficient database-level aggregation
+            // This avoids loading all records into memory for high-traffic instances
+            const aggregatedData = await prisma.$queryRaw<
+                Array<{
+                    date: string;
+                    unique_visitors: bigint;
+                    total_visits: bigint;
+                    paths: string;
+                }>
+            >`
+            SELECT
+                DATE(timestamp) as date,
+                COUNT(DISTINCT uniqueId) as unique_visitors,
+                COUNT(*) as total_visits,
+                GROUP_CONCAT(DISTINCT path) as paths
+            FROM visitor_analytics
+            WHERE timestamp >= ${startDate}
+            GROUP BY DATE(timestamp)
+            ORDER BY date ASC
+        `;
 
-        const dailyMap = new Map<
-            string,
-            { uniqueIds: Set<string>; total: number; paths: Set<string> }
-        >();
+            // Convert BigInt to number for JSON serialization
+            const result = aggregatedData.map((row) => ({
+                date: row.date,
+                unique_visitors: Number(row.unique_visitors),
+                total_visits: Number(row.total_visits),
+                paths: row.paths || '',
+            }));
 
-        for (const visitor of visitors) {
-            const date = visitor.timestamp.toISOString().split('T')[0];
-            if (!dailyMap.has(date)) {
-                dailyMap.set(date, { uniqueIds: new Set(), total: 0, paths: new Set() });
-            }
-            const day = dailyMap.get(date)!;
-            day.uniqueIds.add(visitor.uniqueId);
-            day.total++;
-            day.paths.add(visitor.path);
+            return c.json(result);
+        } catch (error) {
+            console.error('Daily analytics retrieval error:', error);
+            return c.json({ error: 'Failed to retrieve daily analytics' }, 500);
         }
-
-        const aggregatedData = Array.from(dailyMap.entries())
-            .map(([date, data]) => ({
-                date,
-                unique_visitors: data.uniqueIds.size,
-                total_visits: data.total,
-                paths: Array.from(data.paths).join(','),
-            }))
-            .sort((a, b) => a.date.localeCompare(b.date));
-
-        return c.json(aggregatedData);
-    } catch (error) {
-        console.error('Daily analytics retrieval error:', error);
-        return c.json({ error: 'Failed to retrieve daily analytics' }, 500);
     }
-});
+);
 
 export default app;

@@ -65,21 +65,32 @@ export function AnalyticsPage() {
     );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(initialAnalytics.error || null);
-    const [visitorStats] = useState<DailyVisitor[]>(initialAnalytics.visitorStats || []);
+    const [visitorStats, setVisitorStats] = useState<DailyVisitor[]>(
+        initialAnalytics.visitorStats || []
+    );
 
     const fetchAnalytics = async (range: TimeRange) => {
         setLoading(true);
         try {
-            const res = await api.analytics.$get({ query: { timeRange: range } });
-            if (res.status === 403) {
+            const [analyticsRes, visitorRes] = await Promise.all([
+                api.analytics.$get({ query: { timeRange: range } }),
+                api.analytics.visitors.daily.$get({ query: { timeRange: range } }),
+            ]);
+            if (analyticsRes.status === 403) {
                 toast.error(t('analytics_page.no_permission'));
                 setAnalytics(null);
                 setError(t('analytics_page.no_permission'));
                 return;
             }
-            if (!res.ok) throw new Error('Failed to fetch');
-            const data = await res.json();
+            if (!analyticsRes.ok) throw new Error('Failed to fetch');
+            const data = await analyticsRes.json();
             setAnalytics(data as AnalyticsData);
+
+            if (visitorRes.ok) {
+                const visitorData = await visitorRes.json();
+                setVisitorStats(visitorData as DailyVisitor[]);
+            }
+
             setError(null);
         } catch {
             toast.error(t('analytics_page.failed_to_fetch'));
@@ -100,6 +111,9 @@ export function AnalyticsPage() {
     const maxVisitors = Math.max(...visitorStats.map((d) => d.unique_visitors), 1);
     const maxViews = Math.max(...visitorStats.map((d) => d.total_visits), 1);
 
+    const maxSecrets = Math.max(...(analytics?.dailyStats?.map((d) => d.secrets) || []), 1);
+    const maxDailyViews = Math.max(...(analytics?.dailyStats?.map((d) => d.views) || []), 1);
+
     const timeRangeOptions = [
         { value: '7d', label: t('analytics_page.time_range.last_7_days') },
         { value: '30d', label: t('analytics_page.time_range.last_30_days') },
@@ -117,7 +131,7 @@ export function AnalyticsPage() {
     }
 
     if (loading) {
-        return <div className="p-8 text-center">Loading analytics...</div>;
+        return <div className="p-8 text-center">{t('analytics_page.loading')}</div>;
     }
 
     if (!analytics) {
@@ -267,7 +281,7 @@ export function AnalyticsPage() {
                                         <div
                                             className="bg-teal-500 h-2 transition-all duration-500"
                                             style={{
-                                                width: `${Math.min((day.secrets / 20) * 100, 100)}%`,
+                                                width: `${Math.min((day.secrets / maxSecrets) * 100, 100)}%`,
                                             }}
                                         />
                                     </div>
@@ -275,7 +289,7 @@ export function AnalyticsPage() {
                                         <div
                                             className="bg-blue-500 h-2 transition-all duration-500"
                                             style={{
-                                                width: `${Math.min((day.views / 150) * 100, 100)}%`,
+                                                width: `${Math.min((day.views / maxDailyViews) * 100, 100)}%`,
                                             }}
                                         />
                                     </div>
@@ -435,10 +449,10 @@ export function AnalyticsPage() {
                             </div>
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                    Visitor Analytics
+                                    {t('analytics_page.visitor_analytics.title')}
                                 </h2>
                                 <p className="text-sm text-gray-500 dark:text-slate-400">
-                                    Page views and unique visitors (last 30 days)
+                                    {t('analytics_page.visitor_analytics.description')}
                                 </p>
                             </div>
                         </div>
@@ -446,13 +460,15 @@ export function AnalyticsPage() {
                             <div className="flex items-center space-x-2">
                                 <Users className="w-4 h-4 text-indigo-400" />
                                 <span className="text-gray-600 dark:text-slate-300">
-                                    {totalUniqueVisitors.toLocaleString()} unique
+                                    {totalUniqueVisitors.toLocaleString()}{' '}
+                                    {t('analytics_page.visitor_analytics.unique')}
                                 </span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <TrendingUp className="w-4 h-4 text-emerald-400" />
                                 <span className="text-gray-600 dark:text-slate-300">
-                                    {totalPageViews.toLocaleString()} views
+                                    {totalPageViews.toLocaleString()}{' '}
+                                    {t('analytics_page.visitor_analytics.views')}
                                 </span>
                             </div>
                         </div>
@@ -460,7 +476,7 @@ export function AnalyticsPage() {
 
                     {visitorStats.length === 0 ? (
                         <div className="text-center py-8 text-gray-500 dark:text-slate-400">
-                            No visitor data available yet.
+                            {t('analytics_page.visitor_analytics.no_data')}
                         </div>
                     ) : (
                         <div className="space-y-3">
@@ -478,10 +494,12 @@ export function AnalyticsPage() {
                                         </span>
                                         <div className="flex space-x-4">
                                             <span className="text-indigo-400">
-                                                {day.unique_visitors} unique
+                                                {day.unique_visitors}{' '}
+                                                {t('analytics_page.visitor_analytics.unique')}
                                             </span>
                                             <span className="text-emerald-400">
-                                                {day.total_visits} views
+                                                {day.total_visits}{' '}
+                                                {t('analytics_page.visitor_analytics.views')}
                                             </span>
                                         </div>
                                     </div>
