@@ -1,0 +1,57 @@
+name: Generate Release Notes
+
+on:
+    release:
+        types: [created]
+
+jobs:
+    update-release-notes:
+        name: Update Release with Commit Notes
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Check out the repo
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Get previous tag
+              id: prev_tag
+              run: |
+                  PREV_TAG=$(git describe --tags --abbrev=0 ${{ github.event.release.tag_name }}^ 2>/dev/null || echo "")
+                  echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+            - name: Generate commit list
+              id: commits
+              run: |
+                  REPO_URL="https://github.com/${{ github.repository }}"
+                  
+                  if [ -n "${{ steps.prev_tag.outputs.tag }}" ]; then
+                    RANGE="${{ steps.prev_tag.outputs.tag }}..${{ github.event.release.tag_name }}"
+                  else
+                    RANGE="${{ github.event.release.tag_name }}"
+                  fi
+                  
+                  # Generate commit list with format: title - @nickname - sha with link
+                  COMMITS=$(git log $RANGE --pretty=format:"- %s - @%an - [\`%h\`](${REPO_URL}/commit/%H)" --no-merges)
+                  
+                  # Handle multiline output
+                  {
+                    echo "list<<EOF"
+                    echo "$COMMITS"
+                    echo "EOF"
+                  } >> $GITHUB_OUTPUT
+
+            - name: Update Release Notes
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ github.event.release.tag_name }}
+                  body: |
+                      ## What's Changed
+                      
+                      ${{ steps.commits.outputs.list }}
+                      
+                      **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.prev_tag.outputs.tag }}...${{ github.event.release.tag_name }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
