@@ -24,6 +24,7 @@ const buildBetterAuthSocialProviders = () => {
             clientId: string;
             clientSecret: string;
             tenantId?: string;
+            issuer?: string;
             mapProfileToUser?: (profile: { email?: string; name?: string }) => { username: string };
         }
     > = {};
@@ -34,6 +35,7 @@ const buildBetterAuthSocialProviders = () => {
             clientId: typedConfig.clientId,
             clientSecret: typedConfig.clientSecret,
             ...(typedConfig.tenantId && { tenantId: typedConfig.tenantId }),
+            ...(typedConfig.issuer && { issuer: typedConfig.issuer }),
             mapProfileToUser: (profile) => ({
                 username: generateUsernameFromEmail(profile.email || profile.name || 'user'),
             }),

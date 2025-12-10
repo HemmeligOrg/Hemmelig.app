@@ -13,6 +13,7 @@ export interface SocialProviderConfig {
     clientId: string;
     clientSecret: string;
     tenantId?: string; // For Microsoft/Azure AD
+    issuer?: string; // For self-hosted instances (e.g., GitLab)
 }
 
 // Build social providers config dynamically from env vars
@@ -57,6 +58,7 @@ const buildSocialProviders = () => {
         providers.gitlab = {
             clientId: process.env.HEMMELIG_AUTH_GITLAB_ID,
             clientSecret: process.env.HEMMELIG_AUTH_GITLAB_SECRET,
+            issuer: process.env.HEMMELIG_AUTH_GITLAB_ISSUER,
         };
     }
 

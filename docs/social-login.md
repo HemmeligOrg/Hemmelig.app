@@ -20,7 +20,7 @@ This is used to generate the correct OAuth callback URLs.
 | Google    | `HEMMELIG_AUTH_GOOGLE_ID`, `HEMMELIG_AUTH_GOOGLE_SECRET`                                                       |
 | Microsoft | `HEMMELIG_AUTH_MICROSOFT_ID`, `HEMMELIG_AUTH_MICROSOFT_SECRET`, `HEMMELIG_AUTH_MICROSOFT_TENANT_ID` (optional) |
 | Discord   | `HEMMELIG_AUTH_DISCORD_ID`, `HEMMELIG_AUTH_DISCORD_SECRET`                                                     |
-| GitLab    | `HEMMELIG_AUTH_GITLAB_ID`, `HEMMELIG_AUTH_GITLAB_SECRET`                                                       |
+| GitLab    | `HEMMELIG_AUTH_GITLAB_ID`, `HEMMELIG_AUTH_GITLAB_SECRET`, `HEMMELIG_AUTH_GITLAB_ISSUER` (optional)             |
 | Apple     | `HEMMELIG_AUTH_APPLE_ID`, `HEMMELIG_AUTH_APPLE_SECRET`                                                         |
 | Twitter/X | `HEMMELIG_AUTH_TWITTER_ID`, `HEMMELIG_AUTH_TWITTER_SECRET`                                                     |
 
