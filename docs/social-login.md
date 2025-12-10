@@ -89,6 +89,7 @@ HEMMELIG_AUTH_DISCORD_SECRET=your-discord-client-secret
 # GitLab OAuth
 HEMMELIG_AUTH_GITLAB_ID=your-gitlab-client-id
 HEMMELIG_AUTH_GITLAB_SECRET=your-gitlab-client-secret
+HEMMELIG_AUTH_GITLAB_ISSUER=https://gitlab.example.com  # Optional, for self-hosted GitLab
 
 # Apple OAuth
 HEMMELIG_AUTH_APPLE_ID=your-apple-client-id
@@ -139,6 +140,8 @@ HEMMELIG_AUTH_TWITTER_SECRET=your-twitter-client-secret
 3. Set the redirect URI to: `https://your-domain.com/api/auth/callback/gitlab`
 4. Select the `read_user` scope
 5. Copy the Application ID and Secret
+
+**Self-hosted GitLab:** If you're using a self-hosted GitLab instance, set the `HEMMELIG_AUTH_GITLAB_ISSUER` environment variable to your GitLab instance URL (e.g., `https://gitlab.example.com`). Without this, GitLab.com is used by default.
 
 ### Apple
 
@@ -191,6 +194,7 @@ HEMMELIG_AUTH_DISCORD_SECRET=
 # GitLab
 HEMMELIG_AUTH_GITLAB_ID=
 HEMMELIG_AUTH_GITLAB_SECRET=
+HEMMELIG_AUTH_GITLAB_ISSUER=  # Optional, for self-hosted GitLab (e.g., https://gitlab.example.com)
 
 # Apple
 HEMMELIG_AUTH_APPLE_ID=
