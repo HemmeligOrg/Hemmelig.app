@@ -758,5 +758,21 @@
         "delete": "Elimina",
         "deleting": "Eliminazione...",
         "loading": "Caricamento..."
+    },
+    "not_found_page": {
+        "title": "Pagina non trovata",
+        "message": "Questa pagina è svanita nel nulla, proprio come fanno i nostri segreti.",
+        "hint": "La pagina che stai cercando non esiste o è stata spostata.",
+        "go_home_button": "Torna alla home",
+        "create_secret_button": "Crea segreto"
+    },
+    "error_boundary": {
+        "title": "Qualcosa è andato storto",
+        "message": "Si è verificato un errore imprevisto durante l'elaborazione della tua richiesta.",
+        "hint": "Non preoccuparti, i tuoi segreti sono ancora al sicuro. Prova ad aggiornare la pagina.",
+        "error_details": "Dettagli errore:",
+        "unknown_error": "Si è verificato un errore sconosciuto",
+        "try_again_button": "Riprova",
+        "go_home_button": "Torna alla home"
     }
 }

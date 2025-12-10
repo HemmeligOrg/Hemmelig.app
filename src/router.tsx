@@ -1,4 +1,5 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { RootLayout } from './components/Layout/RootLayout';
 import { trackPageView } from './lib/analytics';
@@ -12,6 +13,7 @@ import { SecretsPage } from './pages/Dashboard/SecretsPage';
 import { UsersPage } from './pages/Dashboard/UsersPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
@@ -82,6 +84,7 @@ export const router = createBrowserRouter([
     {
         path: '/setup',
         element: <SetupPage />,
+        errorElement: <ErrorBoundary />,
         loader: async () => {
             const needsSetup = await checkSetupStatus();
             if (!needsSetup) {
@@ -94,11 +97,13 @@ export const router = createBrowserRouter([
     {
         path: '/login',
         element: <LoginPage />,
+        errorElement: <ErrorBoundary />,
         loader: instanceSettingsLoader,
     },
     {
         path: '/register',
         element: <RegisterPage />,
+        errorElement: <ErrorBoundary />,
         loader: async () => {
             await instanceSettingsLoader();
             const { settings } = useHemmeligStore.getState();
@@ -111,11 +116,13 @@ export const router = createBrowserRouter([
     {
         path: '/verify-2fa',
         element: <Verify2FAPage />,
+        errorElement: <ErrorBoundary />,
         loader: instanceSettingsLoader,
     },
     // Pages with header/footer
     {
         element: <RootLayout />,
+        errorElement: <ErrorBoundary />,
         loader: async () => {
             // First check setup status
             const needsSetup = await checkSetupStatus();
@@ -171,11 +178,16 @@ export const router = createBrowserRouter([
                 path: '/privacy',
                 element: <PrivacyPage />,
             },
+            {
+                path: '*',
+                element: <NotFoundPage />,
+            },
         ],
     },
     {
         path: '/dashboard',
         element: <DashboardLayout />,
+        errorElement: <ErrorBoundary />,
         loader: dashboardLoader,
         children: [
             {

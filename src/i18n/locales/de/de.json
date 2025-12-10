@@ -758,5 +758,21 @@
         "delete": "Löschen",
         "deleting": "Wird gelöscht...",
         "loading": "Wird geladen..."
+    },
+    "not_found_page": {
+        "title": "Seite nicht gefunden",
+        "message": "Diese Seite ist verschwunden, genau wie unsere Geheimnisse es tun.",
+        "hint": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+        "go_home_button": "Zur Startseite",
+        "create_secret_button": "Geheimnis erstellen"
+    },
+    "error_boundary": {
+        "title": "Etwas ist schiefgelaufen",
+        "message": "Bei der Verarbeitung Ihrer Anfrage ist ein unerwarteter Fehler aufgetreten.",
+        "hint": "Keine Sorge, Ihre Geheimnisse sind noch sicher. Versuchen Sie, die Seite zu aktualisieren.",
+        "error_details": "Fehlerdetails:",
+        "unknown_error": "Ein unbekannter Fehler ist aufgetreten",
+        "try_again_button": "Erneut versuchen",
+        "go_home_button": "Zur Startseite"
     }
 }

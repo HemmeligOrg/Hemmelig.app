@@ -761,5 +761,21 @@
         "delete": "Delete",
         "deleting": "Deleting...",
         "loading": "Loading..."
+    },
+    "not_found_page": {
+        "title": "Page Not Found",
+        "message": "This page has vanished into thin air, just like our secrets do.",
+        "hint": "The page you're looking for doesn't exist or has been moved.",
+        "go_home_button": "Go Home",
+        "create_secret_button": "Create Secret"
+    },
+    "error_boundary": {
+        "title": "Something Went Wrong",
+        "message": "An unexpected error occurred while processing your request.",
+        "hint": "Don't worry, your secrets are still safe. Try refreshing the page.",
+        "error_details": "Error details:",
+        "unknown_error": "An unknown error occurred",
+        "try_again_button": "Try Again",
+        "go_home_button": "Go Home"
     }
 }

@@ -758,5 +758,21 @@
         "delete": "Supprimer",
         "deleting": "Suppression...",
         "loading": "Chargement..."
+    },
+    "not_found_page": {
+        "title": "Page introuvable",
+        "message": "Cette page s'est volatilisée, tout comme nos secrets.",
+        "hint": "La page que vous recherchez n'existe pas ou a été déplacée.",
+        "go_home_button": "Retour à l'accueil",
+        "create_secret_button": "Créer un secret"
+    },
+    "error_boundary": {
+        "title": "Une erreur s'est produite",
+        "message": "Une erreur inattendue s'est produite lors du traitement de votre demande.",
+        "hint": "Ne vous inquiétez pas, vos secrets sont toujours en sécurité. Essayez de rafraîchir la page.",
+        "error_details": "Détails de l'erreur :",
+        "unknown_error": "Une erreur inconnue s'est produite",
+        "try_again_button": "Réessayer",
+        "go_home_button": "Retour à l'accueil"
     }
 }

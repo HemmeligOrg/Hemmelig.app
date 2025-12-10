@@ -758,5 +758,21 @@
         "delete": "删除",
         "deleting": "删除中...",
         "loading": "加载中..."
+    },
+    "not_found_page": {
+        "title": "页面未找到",
+        "message": "这个页面已经消失了，就像我们的秘密一样。",
+        "hint": "您要查找的页面不存在或已被移动。",
+        "go_home_button": "返回首页",
+        "create_secret_button": "创建秘密"
+    },
+    "error_boundary": {
+        "title": "出错了",
+        "message": "处理您的请求时发生了意外错误。",
+        "hint": "别担心，您的秘密仍然安全。请尝试刷新页面。",
+        "error_details": "错误详情：",
+        "unknown_error": "发生了未知错误",
+        "try_again_button": "重试",
+        "go_home_button": "返回首页"
     }
 }
