@@ -24,6 +24,8 @@ jobs:
 
             - name: Generate commit list
               id: commits
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   REPO_URL="https://github.com/${{ github.repository }}"
                   
@@ -34,7 +36,17 @@ jobs:
                   fi
                   
                   # Generate commit list with format: title - @nickname - sha with link
-                  COMMITS=$(git log $RANGE --pretty=format:"- %s - @%an - [\`%h\`](${REPO_URL}/commit/%H)" --no-merges)
+                  COMMITS=""
+                  while IFS= read -r line; do
+                    SHA=$(echo "$line" | cut -d'|' -f1)
+                    SHORT_SHA=$(echo "$line" | cut -d'|' -f2)
+                    TITLE=$(echo "$line" | cut -d'|' -f3)
+                    
+                    # Get GitHub username from commit API
+                    USERNAME=$(gh api repos/${{ github.repository }}/commits/$SHA --jq '.author.login // .commit.author.name' 2>/dev/null || echo "unknown")
+                    
+                    COMMITS="${COMMITS}- ${TITLE} - @${USERNAME} - [\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA})"$'\n'
+                  done < <(git log $RANGE --pretty=format:"%H|%h|%s" --no-merges)
                   
                   # Handle multiline output
                   {
