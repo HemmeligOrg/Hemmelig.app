@@ -55,6 +55,20 @@ export const auth = betterAuth({
         enabled: true,
     },
     socialProviders: buildBetterAuthSocialProviders(),
+    account: {
+        accountLinking: {
+            enabled: true,
+            trustedProviders: [
+                'gitlab',
+                'github',
+                'google',
+                'microsoft',
+                'discord',
+                'apple',
+                'twitter',
+            ],
+        },
+    },
     plugins: [username(), admin(), twoFactor()],
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
