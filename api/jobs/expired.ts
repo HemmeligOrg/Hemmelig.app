@@ -6,9 +6,16 @@ export const deleteExpiredSecrets = async () => {
         const now = new Date();
         await prisma.secrets.deleteMany({
             where: {
-                expiresAt: {
-                    lte: now,
-                },
+                OR: [
+                    {
+                        expiresAt: {
+                            lte: now,
+                        },
+                    },
+                    {
+                        views: 0,
+                    },
+                ],
             },
         });
     } catch (error) {
