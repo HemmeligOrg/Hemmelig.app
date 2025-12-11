@@ -1,7 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
-import { SECRET } from '../lib/constants';
 import prisma from '../lib/db';
 import { compare, hash } from '../lib/password';
 import { getInstanceSettings } from '../lib/settings';
@@ -109,103 +108,46 @@ const app = new Hono<{
                 const { id } = c.req.valid('param');
                 const data = c.req.valid('json');
 
-                // Use a transaction to atomically check and decrement views
-                // This prevents race conditions where concurrent requests could bypass view limits
-                const result = await prisma.$transaction(async (tx) => {
-                    const item = await tx.secrets.findUnique({
-                        where: { id },
-                        select: {
-                            id: true,
-                            secret: true,
-                            title: true,
-                            ipRange: true,
-                            views: true,
-                            expiresAt: true,
-                            createdAt: true,
-                            isBurnable: true,
-                            password: true,
-                            salt: true,
-                            files: {
-                                select: { id: true, filename: true },
-                            },
+                const item = await prisma.secrets.findUnique({
+                    where: { id },
+                    select: {
+                        id: true,
+                        secret: true,
+                        title: true,
+                        ipRange: true,
+                        views: true,
+                        expiresAt: true,
+                        createdAt: true,
+                        isBurnable: true,
+                        password: true,
+                        salt: true,
+                        files: {
+                            select: { id: true, filename: true },
                         },
-                    });
-
-                    if (!item) {
-                        return { error: 'Secret not found', status: 404 };
-                    }
-
-                    // Check if secret has no views remaining (already consumed)
-                    if (item.views !== null && item.views <= 0) {
-                        return { error: 'Secret not found', status: 404 };
-                    }
-
-                    // Verify password if required
-                    if (item.password) {
-                        const isValidPassword = await compare(data.password!, item.password);
-                        if (!isValidPassword) {
-                            return { error: 'Invalid password', status: 401 };
-                        }
-                    }
-
-                    // Atomically decrement views and get the new count
-                    const currentViews = item.views!;
-                    const newViews = currentViews - 1;
-
-                    if (newViews > 0) {
-                        await tx.secrets.update({
-                            where: { id: item.id },
-                            data: { views: { decrement: 1 } },
-                        });
-                    } else if (!item.isBurnable) {
-                        // Last view for non-burnable secret
-                        // Mark views as 0 but don't delete yet - allow file downloads
-                        await tx.secrets.update({
-                            where: { id: item.id },
-                            data: {
-                                views: 0,
-                                expiresAt: new Date(
-                                    Date.now() + SECRET.FILE_DOWNLOAD_GRACE_PERIOD_MS
-                                ),
-                            },
-                        });
-                    } else {
-                        // Burnable secret on last view - just set to 0
-                        await tx.secrets.update({
-                            where: { id: item.id },
-                            data: { views: 0 },
-                        });
-                    }
-
-                    return { item, newViews };
+                    },
                 });
 
-                // Handle error responses from transaction
-                if ('error' in result) {
-                    return c.json({ error: result.error }, result.status as 404 | 401);
+                if (!item) {
+                    return c.json({ error: 'Secret not found' }, 404);
                 }
 
-                const { item, newViews } = result;
+                // Check if secret has no views remaining (already consumed)
+                if (item.views !== null && item.views <= 0) {
+                    return c.json({ error: 'Secret not found' }, 404);
+                }
+
+                // Verify password if required
+                if (item.password) {
+                    const isValidPassword = await compare(data.password!, item.password);
+                    if (!isValidPassword) {
+                        return c.json({ error: 'Invalid password' }, 401);
+                    }
+                }
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { password: _password, ...itemWithoutPassword } = item;
 
-                // Send webhooks outside the transaction (fire and forget)
-                const webhookData = {
-                    secretId: item.id,
-                    hasPassword: !!item.password,
-                    hasIpRestriction: !!item.ipRange,
-                    viewsRemaining: newViews,
-                };
-
-                if (newViews > 0) {
-                    sendWebhook('secret.viewed', webhookData);
-                } else if (!item.isBurnable) {
-                    sendWebhook('secret.burned', webhookData);
-                } else {
-                    sendWebhook('secret.viewed', webhookData);
-                }
-
+                // Don't decrement views here - client will call /consume after successful decryption
                 return c.json(itemWithoutPassword);
             } catch (error) {
                 console.error(`Failed to retrieve item ${c.req.param('id')}:`, error);
@@ -218,6 +160,75 @@ const app = new Hono<{
             }
         }
     )
+    .post('/:id/consume', zValidator('param', secretsIdParamSchema), ipRestriction, async (c) => {
+        try {
+            const { id } = c.req.valid('param');
+
+            // Atomically decrement views and optionally delete if burnable
+            const result = await prisma.$transaction(async (tx) => {
+                const item = await tx.secrets.findUnique({
+                    where: { id },
+                    select: {
+                        id: true,
+                        views: true,
+                        isBurnable: true,
+                        password: true,
+                        ipRange: true,
+                    },
+                });
+
+                if (!item) {
+                    return { error: 'Secret not found', status: 404 };
+                }
+
+                // Check if secret has no views remaining
+                if (item.views !== null && item.views <= 0) {
+                    return { error: 'Secret already consumed', status: 410 };
+                }
+
+                const newViews = item.views! - 1;
+
+                // If burnable and last view, delete the secret
+                if (item.isBurnable && newViews <= 0) {
+                    await tx.secrets.delete({ where: { id } });
+
+                    // Send webhook for burned secret
+                    sendWebhook('secret.burned', {
+                        secretId: id,
+                        hasPassword: !!item.password,
+                        hasIpRestriction: !!item.ipRange,
+                    });
+
+                    return { burned: true, views: 0 };
+                }
+
+                // Otherwise just decrement views
+                await tx.secrets.update({
+                    where: { id },
+                    data: { views: newViews },
+                });
+
+                // Send webhook for viewed secret
+                sendWebhook('secret.viewed', {
+                    secretId: id,
+                    hasPassword: !!item.password,
+                    hasIpRestriction: !!item.ipRange,
+                    viewsRemaining: newViews,
+                });
+
+                return { burned: false, views: newViews };
+            });
+
+            if ('error' in result) {
+                return c.json({ error: result.error }, result.status as 404 | 410);
+            }
+
+            return c.json(result);
+        } catch (error) {
+            console.error(`Failed to consume secret ${c.req.param('id')}:`, error);
+            return c.json({ error: 'Failed to consume secret' }, 500);
+        }
+    })
     .get('/:id/check', zValidator('param', secretsIdParamSchema), ipRestriction, async (c) => {
         try {
             const { id } = c.req.valid('param');

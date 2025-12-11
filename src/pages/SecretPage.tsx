@@ -50,6 +50,7 @@ export function SecretPage() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
+    const [isBurnable, setIsBurnable] = useState(false);
 
     const decryptionKey = location.hash.startsWith('#decryptionKey=')
         ? location.hash.substring('#decryptionKey='.length)
@@ -87,7 +88,21 @@ export function SecretPage() {
                     setFiles(data.files);
                     setSalt(data.salt);
                     setShowSecretContent(true);
-                    setViewsRemaining((prev) => (prev !== null ? prev - 1 : null));
+                    setIsBurnable(data.isBurnable ?? false);
+
+                    // Consume the view after successful decryption
+                    // This decrements views and burns if burnable + last view
+                    try {
+                        const consumeResponse = await api.secrets[':id'].consume.$post({
+                            param: { id: id! },
+                        });
+                        const consumeData = await consumeResponse.json();
+                        if ('views' in consumeData) {
+                            setViewsRemaining(consumeData.views);
+                        }
+                    } catch (err) {
+                        console.error('Failed to consume secret:', err);
+                    }
                 }
             } catch (err: unknown) {
                 console.error('Error fetching secret:', err);

@@ -190,6 +190,41 @@ const spec = {
                 },
             },
         },
+        '/secrets/{id}/consume': {
+            post: {
+                tags: ['Secrets'],
+                summary: 'Consume a secret view',
+                description:
+                    'Consume a view after successful client-side decryption. Decrements views and burns the secret if burnable and last view.',
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'View consumed',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        burned: {
+                                            type: 'boolean',
+                                            description: 'Whether the secret was burned',
+                                        },
+                                        views: {
+                                            type: 'integer',
+                                            description: 'Remaining views',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '404': { description: 'Secret not found' },
+                    '410': { description: 'Secret already consumed (no views remaining)' },
+                },
+            },
+        },
         '/secrets/{id}/check': {
             get: {
                 tags: ['Secrets'],
