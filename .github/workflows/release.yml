@@ -19,15 +19,17 @@ jobs:
             - name: Get previous tag
               id: prev_tag
               run: |
-                  # Get all tags sorted by version, find the one before current
+                  # Get all tags sorted by version, exclude the current tag, take the first result
                   CURRENT_TAG="${{ github.event.release.tag_name }}"
-                  PREV_TAG=$(git tag --sort=-v:refname | grep -A1 "^${CURRENT_TAG}$" | tail -1)
-                  
-                  # If prev_tag equals current_tag, there's no previous tag
-                  if [ "$PREV_TAG" = "$CURRENT_TAG" ]; then
-                    PREV_TAG=""
+                  PREV_TAG=$(git tag --sort=-version:refname | grep -v "^${CURRENT_TAG}$" | head -n 1)
+
+                  if [ -z "$PREV_TAG" ]; then
+                    echo "No previous tag found, will use initial commit"
+                    # Use the initial commit as the starting point
+                    PREV_TAG=$(git rev-list --max-parents=0 HEAD)
                   fi
-                  
+
+                  echo "Previous tag/commit: $PREV_TAG"
                   echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
             - name: Generate commit list
@@ -38,26 +40,29 @@ jobs:
                   REPO_URL="https://github.com/${{ github.repository }}"
                   CURRENT_TAG="${{ github.event.release.tag_name }}"
                   PREV_TAG="${{ steps.prev_tag.outputs.tag }}"
-                  
-                  if [ -n "$PREV_TAG" ]; then
-                    RANGE="${PREV_TAG}..${CURRENT_TAG}"
-                  else
-                    RANGE="${CURRENT_TAG}"
-                  fi
-                  
+
+                  # Always use range format - PREV_TAG is guaranteed to be set (either previous tag or initial commit)
+                  RANGE="${PREV_TAG}..${CURRENT_TAG}"
+
                   echo "Generating commits for range: $RANGE"
-                  
+
                   # Generate commit list with format: title - @nickname - sha with link
                   COMMITS=""
-                  while IFS='|' read -r SHA SHORT_SHA TITLE; do
+                  while IFS='|' read -r SHA SHORT_SHA TITLE AUTHOR; do
                     [ -z "$SHA" ] && continue
-                    
-                    # Get GitHub username from commit API
-                    USERNAME=$(gh api "repos/${{ github.repository }}/commits/${SHA}" --jq '.author.login // .commit.author.name' 2>/dev/null || echo "unknown")
-                    
-                    COMMITS="${COMMITS}- ${TITLE} - @${USERNAME} - [\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA})"$'\n'
-                  done < <(git log "${RANGE}" --pretty=format:"%H|%h|%s" --no-merges 2>/dev/null)
-                  
+
+                    # Try to get GitHub username from commit API
+                    USERNAME=$(gh api "repos/${{ github.repository }}/commits/${SHA}" --jq '.author.login' 2>/dev/null || echo "")
+
+                    if [ -n "$USERNAME" ]; then
+                      AUTHOR_INFO="@${USERNAME}"
+                    else
+                      AUTHOR_INFO="${AUTHOR}"
+                    fi
+
+                    COMMITS="${COMMITS}- ${TITLE} by ${AUTHOR_INFO} ([\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA}))"$'\n'
+                  done < <(git log "${RANGE}" --pretty=format:"%H|%h|%s|%an")
+
                   # Handle multiline output
                   {
                     echo "list<<EOF"
