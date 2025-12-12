@@ -1,0 +1,787 @@
+{
+    "template_selector": {
+        "button": "Sjablonen",
+        "description": "Snel aan de slag met een sjabloon",
+        "templates": {
+            "credentials": "Inloggegevens",
+            "api_key": "API-sleutel",
+            "database": "Database",
+            "server": "Servertoegang",
+            "credit_card": "Betaalkaart",
+            "email": "E-mailaccount"
+        }
+    },
+    "editor": {
+        "tooltips": {
+            "copy_text": "Kopiëren als platte tekst",
+            "copy_html": "Kopiëren als HTML",
+            "copy_base64": "Kopiëren als Base64",
+            "bold": "Vet",
+            "italic": "Cursief",
+            "strikethrough": "Doorhalen",
+            "inline_code": "Code",
+            "link": "Link",
+            "remove_link": "Link verwijderen",
+            "insert_password": "Wachtwoord invoegen",
+            "paragraph": "Alinea",
+            "heading1": "Kop 1",
+            "heading2": "Kop 2",
+            "heading3": "Kop 3",
+            "bullet_list": "Opsommingstekenslijst",
+            "numbered_list": "Genummerde lijst",
+            "blockquote": "Blokcitaat",
+            "code_block": "Codeblok",
+            "undo": "Ongedaan maken",
+            "redo": "Opnieuw uitvoeren"
+        },
+        "copy_success": {
+            "html": "HTML gekopieerd naar klembord",
+            "text": "Tekst gekopieerd naar klembord",
+            "base64": "Base64 gekopieerd naar klembord"
+        },
+        "link_modal": {
+            "title": "Link toevoegen",
+            "url_label": "URL",
+            "url_placeholder": "URL invoeren",
+            "cancel": "Annuleren",
+            "update": "Bijwerken",
+            "insert": "Invoegen"
+        },
+        "password_modal": {
+            "title": "Wachtwoord invoegen",
+            "length_label": "Wachtwoordlengte",
+            "options_label": "Opties",
+            "include_numbers": "Cijfers",
+            "include_symbols": "Symbolen",
+            "include_uppercase": "Hoofdletters",
+            "include_lowercase": "Kleine letters",
+            "generated_password": "Gegenereerd wachtwoord",
+            "refresh": "Vernieuwen",
+            "cancel": "Annuleren",
+            "insert": "Invoegen"
+        },
+        "formatting_tools": "Stijlen"
+    },
+    "create_button": {
+        "creating_secret": "Geheim wordt aangemaakt...",
+        "create": "Geheim delen"
+    },
+    "file_upload": {
+        "sign_in_to_upload": "Meld je aan om bestanden te uploaden",
+        "sign_in": "Aanmelden",
+        "drop_files_here": "Sleep je bestanden hierheen",
+        "drag_and_drop": "Sleep een bestand hierheen of klik om een bestand te kiezen",
+        "uploading": "Bezig met uploaden... ",
+        "upload_file": "Bestand uploaden",
+        "file_too_large": "Bestand \"{{fileName}}\" ({{fileSize}} MB) overschrijdt de maximale grootte van {{maxSize}} MB",
+        "max_size_exceeded": "De totale bestandsgrootte overschrijdt het maximum van {{maxSize}} MB"
+    },
+    "footer": {
+        "tagline": "Hemmelig, [heˈm(ɛ)li], betekent ‘geheim’ in het Noors",
+        "privacy": "Privacy",
+        "terms": "Voorwaarden",
+        "api": "API"
+    },
+    "header": {
+        "home": "Home",
+        "sign_in": "Aanmelden",
+        "sign_up": "Registreren",
+        "dashboard": "Dashboard",
+        "hero_text_part1": "Deel geheimen veilig via versleutelde berichten die zichzelf",
+        "hero_text_part2": " automatisch vernietigen",
+        "hero_text_part3": " nadat ze zijn gelezen."
+    },
+    "dashboard_layout": {
+        "secrets": "Geheimen",
+        "account": "Account",
+        "analytics": "Statistieken",
+        "users": "Gebruikers",
+        "invites": "Uitnodigingen",
+        "instance": "Server",
+        "sign_out": "Uitloggen",
+        "hemmelig": "Hemmelig"
+    },
+    "secret_settings": {
+        "secret_created_title": "Geheim is aangemaakt",
+        "secret_created_description": "Je geheim is nu beschikbaar via de volgende URL. Bewaar je decoderingssleutel zorgvuldig, want deze kan niet worden hersteld.",
+        "secret_url_label": "Geheime URL",
+        "decryption_key_label": "Decoderingssleutel",
+        "password_label": "Wachtwoord",
+        "create_new_secret_button": "Nieuw geheim delen",
+        "copy_url_button": "URL kopiëren",
+        "burn_secret_button": "Geheim vernietigen",
+        "max_secrets_per_user_info": "Je kunt maximaal {{count}} geheimen aanmaken.",
+        "failed_to_burn": "Het vernietigen van het geheim is mislukt. Probeer het opnieuw."
+    },
+    "security_settings": {
+        "security_title": "Beveiliging",
+        "security_description": "Configureer beveiligingsinstellingen voor je geheim",
+        "remember_settings": "Onthouden",
+        "private_title": "Privé",
+        "private_description": "Privégeheimen zijn versleuteld en kunnen alleen worden bekeken met de decoderingssleutel en/of het wachtwoord.",
+        "expiration_title": "Vervaldatum",
+        "expiration_burn_after_time_description": "Stel in wanneer het geheim moet worden vernietigd",
+        "expiration_default_description": "Stel in hoe lang het geheim beschikbaar moet zijn",
+        "max_views_title": "Maximaal aantal weergaven",
+        "burn_after_time_mode_title": "Vernietigen na tijdmodus",
+        "burn_after_time_mode_description": "Het geheim wordt vernietigd nadat de tijd is verstreken, ongeacht hoe vaak het is bekeken.",
+        "password_protection_title": "Wachtwoordbeveiliging",
+        "password_protection_description": "Voeg een extra beveiligingslaag toe met een wachtwoord",
+        "enter_password_label": "Wachtwoord invoeren",
+        "password_placeholder": "Voer een veilig wachtwoord in...",
+        "password_hint": "Minimaal 5 tekens. Ontvangers hebben dit wachtwoord nodig om het geheim te bekijken",
+        "password_error": "Wachtwoord moet minimaal 5 tekens bevatten",
+        "ip_restriction_title": "Beperken op IP of CIDR",
+        "ip_restriction_description": "Met een CIDR kun je een bereik opgeven van IP-adressen die toegang hebben tot het geheim.",
+        "ip_address_cidr_label": "IP-adres of CIDR-bereik",
+        "ip_address_cidr_placeholder": "192.168.1.0/24 of 203.0.113.5",
+        "ip_address_cidr_hint": "Alleen verzoeken van deze IP-adressen hebben toegang tot het geheim",
+        "burn_after_time_title": "Vernietigen na het verlopen van de tijd",
+        "burn_after_time_description": "Vernietig het geheim pas nadat de tijd is verstreken"
+    },
+    "title_field": {
+        "placeholder": "Titel",
+        "hint": "Geef je geheim een gemakkelijk te onthouden titel (optioneel)"
+    },
+    "views_slider": {
+        "min_views": "1",
+        "max_views": "999",
+        "views_label": "weergave(n)"
+    },
+    "account_page": {
+        "title": "Accountinstellingen",
+        "description": "Beheer je accountvoorkeuren en beveiliging",
+        "tabs": {
+            "profile": "Profiel",
+            "security": "Beveiliging",
+            "developer": "Ontwikkelaar",
+            "danger_zone": "Gevarenzone"
+        },
+        "profile_info": {
+            "title": "Profielinformatie",
+            "description": "Werk je persoonlijke gegevens bij",
+            "first_name_label": "Voornaam",
+            "last_name_label": "Achternaam",
+            "username_label": "Gebruikersnaam",
+            "email_label": "E-mailadres",
+            "saving_button": "Opslaan...",
+            "save_changes_button": "Wijzigingen opslaan"
+        },
+        "profile_settings": {
+            "username_taken": "Gebruikersnaam is al in gebruik"
+        },
+        "security_settings": {
+            "title": "Beveiligingsinstellingen",
+            "description": "Beheer je wachtwoord en beveiligingsvoorkeuren",
+            "change_password_title": "Wachtwoord wijzigen",
+            "current_password_label": "Huidig wachtwoord",
+            "current_password_placeholder": "Huidig wachtwoord invoeren",
+            "new_password_label": "Nieuw wachtwoord",
+            "new_password_placeholder": "Voer nieuw wachtwoord in",
+            "confirm_new_password_label": "Bevestig nieuw wachtwoord",
+            "confirm_new_password_placeholder": "Bevestig nieuw wachtwoord",
+            "password_mismatch_alert": "Nieuwe wachtwoorden komen niet overeen",
+            "changing_password_button": "Bezig met wijzigen...",
+            "change_password_button": "Wachtwoord wijzigen",
+            "password_change_success": "Wachtwoord succesvol gewijzigd!",
+            "password_change_error": "Kan wachtwoord niet wijzigen. Probeer het opnieuw."
+        },
+        "two_factor": {
+            "title": "Tweefactorauthenticatie",
+            "description": "Voeg een extra beveiligingslaag toe aan je account",
+            "enabled": "Ingeschakeld",
+            "disabled": "Niet ingeschakeld",
+            "setup_button": "2FA instellen",
+            "disable_button": "2FA uitschakelen",
+            "enter_password_to_enable": "Voer je wachtwoord in om tweefactorauthenticatie in te schakelen.",
+            "continue": "Doorgaan",
+            "scan_qr_code": "Scan deze QR-code met je authenticator-app (Google Authenticator, Authy, enz.).",
+            "manual_entry_hint": "Of voer deze code handmatig in je authenticator-app in:",
+            "enter_verification_code": "Voer de 6-cijferige code uit je authenticator-app in om de installatie te verifiëren.",
+            "verification_code": "Verificatiecode",
+            "verify_and_enable": "Verifiëren en inschakelen",
+            "back": "Terug",
+            "disable_title": "Tweefactorauthenticatie uitschakelen",
+            "disable_warning": "Als je 2FA uitschakelt, wordt je account minder veilig. Je moet je wachtwoord invoeren om te bevestigen.",
+            "invalid_password": "Ongeldig wachtwoord. Probeer het opnieuw.",
+            "invalid_code": "Ongeldige verificatiecode. Probeer het opnieuw.",
+            "enable_error": "Kan 2FA niet inschakelen. Probeer het opnieuw.",
+            "verify_error": "Kan 2FA-code niet verifiëren. Probeer het opnieuw.",
+            "disable_error": "Kan 2FA niet uitschakelen. Probeer het opnieuw.",
+            "backup_codes_title": "Back-upcodes",
+            "backup_codes_description": "Bewaar deze back-upcodes op een veilige plaats. Je kunt ze gebruiken om toegang te krijgen tot je account als je de toegang tot je authenticator-app kwijt bent.",
+            "backup_codes_warning": "Elke code kan slechts één keer worden gebruikt. Bewaar ze op een veilige plaats!",
+            "backup_codes_saved": "Ik heb mijn back-upcodes opgeslagen"
+        },
+        "danger_zone": {
+            "title": "Gevarenzone",
+            "description": "Onomkeerbare en destructieve acties",
+            "delete_account_title": "Account verwijderen",
+            "delete_account_description": "Zodra je je account verwijdert, is er geen weg terug. Hierdoor worden je account, al je geheimen en alle bijbehorende gegevens permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+            "delete_account_bullet1": "Al je geheimen worden permanent verwijderd",
+            "delete_account_bullet2": "Je accountgegevens worden van onze servers verwijderd",
+            "delete_account_bullet3": "Alle gedeelde geheime links worden ongeldig",
+            "delete_account_bullet4": "Deze actie kan niet ongedaan worden gemaakt",
+            "delete_account_confirm": "Weet je zeker dat je deze account wilt verwijderen? De actie kan niet ongedaan worden gemaakt.",
+            "delete_account_button": "Account verwijderen",
+            "deleting_account_button": "Account verwijderen..."
+        },
+        "developer": {
+            "title": "API-sleutels",
+            "description": "Beheer API-sleutels voor programmatische toegang",
+            "create_key": "Sleutel aanmaken",
+            "create_key_title": "API-sleutel aanmaken",
+            "key_name": "Sleutelnaam",
+            "key_name_placeholder": "bijv. Mijn integratie",
+            "expiration": "Vervaldatum",
+            "never_expires": "Vervalt nooit",
+            "expires_30_days": "30 dagen",
+            "expires_90_days": "90 dagen",
+            "expires_1_year": "1 jaar",
+            "create_button": "Aanmaken",
+            "name_required": "Sleutelnaam is vereist",
+            "create_error": "Kan API-sleutel niet aanmaken",
+            "key_created": "API-sleutel aangemaakt!",
+            "key_warning": "Kopieer deze sleutel nu. Je kunt deze niet opnieuw bekijken.",
+            "dismiss": "Ik heb de sleutel gekopieerd",
+            "no_keys": "Nog geen API-sleutels. Maak er een aan om te beginnen.",
+            "created": "Aangemaakt",
+            "last_used": "Laatst gebruikt",
+            "expires": "Verloopt",
+            "docs_hint": "Lees hoe je API-sleutels kunt gebruiken in de",
+            "api_docs": "API-documentatie"
+        }
+    },
+    "analytics_page": {
+        "title": "Statistieken",
+        "description": "Volg je activiteiten en inzichten op het gebied van het delen van geheimen",
+        "time_range": {
+            "last_7_days": "Laatste 7 dagen",
+            "last_14_days": "Laatste 14 dagen",
+            "last_30_days": "Laatste 30 dagen"
+        },
+        "total_secrets": "Totaal aantal geheimen",
+        "from_last_period": "+{{percentage}}% ten opzichte van vorige periode",
+        "total_views": "Totaal aantal weergaven",
+        "avg_views_per_secret": "Gem. weergaven/geheim",
+        "active_secrets": "Actieve geheimen",
+        "daily_activity": {
+            "title": "Dagelijkse activiteit",
+            "description": "Aangemaakte geheimen en weergaven in de loop van de tijd",
+            "secrets": "Geheimen",
+            "views": "Weergaven",
+            "secrets_created": "Geheimen aangemaakt",
+            "secret_views": "Geheimen weergeven",
+            "date": "Datum",
+            "trend": "Verandering",
+            "vs_previous": "t.o.v. vorige dag",
+            "no_data": "Er zijn nog geen gegevens beschikbaar."
+        },
+        "locale": "nl-NL",
+        "top_countries": {
+            "title": "Toplanden",
+            "description": "Waar je geheimen worden bekeken",
+            "views": "weergave(n)"
+        },
+        "secret_types": {
+            "title": "Soorten geheimen",
+            "description": "Verdeling naar beschermingsniveau",
+            "password_protected": "Beveiligd met wachtwoord",
+            "ip_restricted": "Beperkt tot IP",
+            "burn_after_time": "Vernietigen als tijd is verlopen"
+        },
+        "expiration_stats": {
+            "title": "Vervaldatums",
+            "description": "Hoe lang geheimen doorgaans blijven bestaan",
+            "one_hour": "1 uur",
+            "one_day": "1 dag",
+            "one_week_plus": ">1 week"
+        },
+        "visitor_analytics": {
+            "title": "Bezoekers",
+            "description": "Paginaweergaven en unieke bezoekers",
+            "unique": "Uniek",
+            "views": "Weergaven",
+            "date": "Datum",
+            "trend": "Verandering",
+            "vs_previous": "vs vorige dag",
+            "no_data": "Er zijn nog geen bezoekersgegevens beschikbaar."
+        },
+        "loading": "Analyses worden geladen...",
+        "no_permission": "Je hebt geen toestemming om analyses te bekijken.",
+        "failed_to_fetch": "Kan analysegegevens niet ophalen."
+    },
+    "instance_page": {
+        "title": "Serverinstellingen",
+        "description": "Configureer jouw Hemmelig-server",
+        "tabs": {
+            "general": "Algemeen",
+            "security": "Beveiliging",
+            "organization": "Organisatie",
+            "webhook": "Webhooks"
+        },
+        "system_status": {
+            "title": "Systeemstatus",
+            "description": "Serverstatus en prestatiestatistieken",
+            "version": "Versie",
+            "uptime": "Uptime",
+            "memory": "Geheugen",
+            "cpu_usage": "CPU-gebruik"
+        },
+        "general_settings": {
+            "title": "Algemene instellingen",
+            "description": "Basisconfiguratie van de instantie",
+            "instance_name_label": "Naam van de server",
+            "default_expiration_label": "Standaard vervaldatum geheim",
+            "max_secrets_per_user_label": "Max. aantal geheimen per gebruiker",
+            "max_secret_size_label": "Max. grootte geheim (MB)",
+            "instance_description_label": "Beschrijving server",
+            "important_message_label": "Belangrijk bericht",
+            "important_message_placeholder": "Voer een belangrijk bericht in dat aan alle gebruikers moet worden getoond..." ,
+            "important_message_hint": "Dit bericht wordt weergegeven als een waarschuwingsbanner op de startpagina. Laat leeg om te verbergen.",
+            "allow_registration_title": "Registratie toestaan",
+            "allow_registration_description": "Nieuwe gebruikers toestaan zich te registreren",
+            "email_verification_title": "E-mailverificatie",
+            "email_verification_description": "E-mailverificatie vereist"
+        },
+        "saving_button": "Opslaan...",
+        "save_settings_button": "Instellingen opslaan",
+        "security_settings": {
+            "title": "Beveiligingsinstellingen",
+            "description": "Beveiliging en toegangscontroles configureren",
+
+            "rate_limiting_title": "Snelheidsbeperking",
+            "rate_limiting_description": "Beperking van het aantal verzoeken inschakelen",
+            "max_password_attempts_label": "Maximaal aantal wachtwoordpogingen",
+            "session_timeout_label": "Time-out sessie (uren)"
+        },
+        "email_settings": {
+            "title": "E-mailinstellingen",
+            "description": "SMTP en e-mailmeldingen configureren",
+            "smtp_host_label": "SMTP-host",
+            "smtp_port_label": "SMTP-poort",
+            "username_label": "Gebruikersnaam",
+            "password_label": "Wachtwoord"
+        },
+        "database_info": {
+            "title": "Database-informatie",
+            "description": "Databasestatus en statistieken",
+            "stats_title": "Databasestatistieken",
+            "total_secrets": "Totaal aantal geheimen:",
+            "total_users": "Totaal aantal gebruikers:",
+            "disk_usage": "Schijfgebruik:",
+            "connection_status_title": "Verbindingsstatus",
+            "connected": "Verbonden",
+            "connected_description": "Database is gezond en reageert normaal"
+        },
+        "system_info": {
+            "title": "Systeeminformatie",
+            "description": "Servergegevens en onderhoud",
+            "system_info_title": "Systeeminformatie",
+            "version": "Versie:",
+            "uptime": "Uptime:",
+            "status": "Status:",
+            "resource_usage_title": "Resourcegebruik",
+            "memory": "Geheugen:",
+            "cpu": "CPU:",
+            "disk": "Schijf:"
+        },
+        "maintenance_actions": {
+            "title": "Onderhoudsacties",
+            "description": "Deze acties kunnen de beschikbaarheid van het systeem beïnvloeden. Wees voorzichtig bij het gebruik ervan.",
+            "restart_service_button": "Service opnieuw starten",
+            "clear_cache_button": "Cache wissen",
+            "export_logs_button": "Logs exporteren"
+        }
+    },
+    "secrets_page": {
+        "title": "Je geheimen",
+        "description": "Beheer en controleer je gedeelde geheimen",
+        "create_secret_button": "Geheim aanmaken",
+        "search_placeholder": "Geheimen zoeken...",
+        "filter": {
+            "all_secrets": "Alle geheimen",
+            "active": "Actief",
+            "expired": "Verlopen"
+        },
+        "total_secrets": "Totaal aantal geheimen",
+        "active_secrets": "Actief",
+        "expired_secrets": "Verlopen",
+        "no_secrets_found_title": "Geen geheimen gevonden",
+        "no_secrets_found_description_filter": "Probeer je zoek- of filtercriteria aan te passen.",
+        "no_secrets_found_description_empty": "Maak je eerste geheim aan om te beginnen.",
+        "password_protected": "Wachtwoord",
+        "files": "bestanden",
+        "table": {
+            "secret_header": "Geheim",
+            "created_header": "Aangemaakt",
+            "status_header": "Status",
+            "views_header": "Weergaven",
+            "actions_header": "Acties",
+            "untitled_secret": "Geheim zonder titel",
+            "expired_status": "Verlopen",
+            "active_status": "Actief",
+            "never_expires": "Verloopt nooit",
+            "expired_time": "Verlopen",
+            "views_left": "resterende weergaven",
+            "copy_url_tooltip": "URL kopiëren",
+            "open_secret_tooltip": "Geheim openen",
+            "delete_secret_tooltip": "Geheim verwijderen",
+            "delete_confirmation_title": "Weet je het zeker?",
+            "delete_confirmation_text": "Deze actie kan niet ongedaan worden gemaakt. Hiermee wordt het geheim definitief verwijderd.",
+            "delete_confirm_button": "Ja, verwijderen",
+            "delete_cancel_button": "Annuleren"
+        }
+    },
+    "users_page": {
+        "title": "Gebruikersbeheer",
+        "description": "Beheer gebruikers en hun rechten",
+        "add_user_button": "Gebruiker toevoegen",
+        "search_placeholder": "Gebruikers zoeken...",
+        "filter": {
+            "all_roles": "Alle rollen",
+            "admin": "Beheerder",
+            "user": "Gebruiker",
+            "all_status": "Alle statussen",
+            "active": "Actief",
+            "suspended": "Opgeschort",
+            "pending": "In behandeling"
+        },
+        "total_users": "Totaal aantal gebruikers",
+        "active_users": "Actief",
+        "admins": "Beheerders",
+        "pending_users": "In afwachting",
+        "no_users_found_title": "Geen gebruikers gevonden",
+        "no_users_found_description_filter": "Probeer je zoek- of filtercriteria aan te passen.",
+        "no_users_found_description_empty": "Er zijn nog geen gebruikers toegevoegd.",
+        "table": {
+            "user_header": "Gebruiker",
+            "role_header": "Rol",
+            "status_header": "Status",
+            "activity_header": "Activiteit",
+            "last_login_header": "Laatst aangemeld",
+            "actions_header": "Acties",
+            "created_at": "Aangemaakt op"
+        },
+        "status": {
+            "active": "Actief",
+            "banned": "Geblokkeerd"
+        },
+        "delete_user_modal": {
+            "title": "Gebruiker verwijderen",
+            "confirmation_message": "Weet je zeker dat je de gebruiker {{username}} wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt." ,
+            "confirm_button": "Verwijderen",
+            "cancel_button": "Annuleren"
+        },
+        "edit_user_modal": {
+            "title": "Gebruiker bewerken: {{username}}",
+            "username_label": "Gebruikersnaam",
+            "email_label": "E-mail",
+            "role_label": "Rol",
+            "banned_label": "Geblokkeerd",
+            "save_button": "Opslaan",
+            "cancel_button": "Annuleren"
+        },
+        "add_user_modal": {
+            "title": "Nieuwe gebruiker toevoegen",
+            "name_label": "Naam",
+            "username_label": "Gebruikersnaam",
+            "email_label": "E-mail",
+            "password_label": "Wachtwoord",
+            "role_label": "Rol",
+            "save_button": "Gebruiker toevoegen",
+            "cancel_button": "Annuleren"
+        }
+    },
+    "forgot_password_page": {
+        "back_to_sign_in": "Terug naar aanmelden",
+        "check_email_title": "Controleer je e-mail",
+        "check_email_description": "We hebben een link voor het opnieuw instellen van je wachtwoord verzonden naar {{email}}",
+        "did_not_receive_email": "Heb je de e-mail niet ontvangen? Controleer je spamfolder of probeer het opnieuw.",
+        "try_again_button": "Probeer het opnieuw",
+        "forgot_password_title": "Wachtwoord vergeten?",
+        "forgot_password_description": "Geen zorgen, we sturen je instructies om je wachtwoord opnieuw in te stellen",
+        "email_label": "E-mail",
+        "email_placeholder": "Voer je e-mailadres in",
+        "email_hint": "Voer het e-mailadres in dat aan je account is gekoppeld",
+        "sending_button": "Verzenden..." ,
+        "reset_password_button": "Wachtwoord opnieuw instellen",
+        "remember_password": "Wachtwoord onthouden?",
+        "sign_in_link": "Aanmelden",
+        "unexpected_error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "login_page": {
+        "back_to_hemmelig": "Terug naar Hemmelig",
+        "welcome_back": "Welkom terug bij Hemmelig",
+        "welcome_back_title": "Welkom terug",
+        "welcome_back_description": "Meld je aan met je Hemmelig-account",
+        "username_label": "Gebruikersnaam",
+        "username_placeholder": "Voer je gebruikersnaam in",
+        "password_label": "Wachtwoord",
+        "password_placeholder": "Voer je wachtwoord in",
+        "forgot_password_link": "Wachtwoord vergeten?",
+        "signing_in_button": "Aanmelden..." ,
+        "sign_in_button": "Aanmelden",
+        "or_continue_with": "Of doorgaan met",
+        "continue_with_github": "Doorgaan met GitHub",
+        "no_account_question": "Heb je nog geen account?",
+        "sign_up_link": "Registreren",
+        "unexpected_error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "register_page": {
+        "back_to_hemmelig": "Terug naar Hemmelig",
+        "join_hemmelig": "Word lid van Hemmelig om veilig geheimen te delen",
+        "create_account_title": "Account aanmaken",
+        "create_account_description": "Word lid van Hemmelig om veilig geheimen te delen",
+        "username_label": "Gebruikersnaam",
+        "username_placeholder": "Kies een gebruikersnaam",
+        "email_label": "E-mail",
+        "email_placeholder": "Voer je e-mailadres in",
+        "password_label": "Wachtwoord",
+        "password_placeholder": "Maak een wachtwoord aan",
+        "password_strength_label": "Wachtwoordsterkte",
+        "password_strength_levels": {
+            "very_weak": "Zeer zwak",
+            "weak": "Zwak",
+            "fair": "Redelijk",
+            "good": "Goed",
+            "strong": "Sterk"
+        },
+        "confirm_password_label": "Bevestig wachtwoord",
+        "confirm_password_placeholder": "Bevestig je wachtwoord",
+        "passwords_match": "Wachtwoorden komen overeen",
+        "passwords_do_not_match": "Wachtwoorden komen niet overeen",
+        "password_mismatch_alert": "Wachtwoorden komen niet overeen",
+        "creating_account_button": "Account aanmaken...",
+        "create_account_button": "Account aanmaken",
+        "or_continue_with": "Of doorgaan met",
+        "continue_with_github": "Doorgaan met GitHub",
+        "already_have_account_question": "Heb je al een account?",
+        "sign_in_link": "Aanmelden",
+        "invite_code_label": "Uitnodigingscode",
+        "invite_code_placeholder": "Voer je uitnodigingscode in",
+        "invite_code_required": "Uitnodigingscode is vereist",
+        "invalid_invite_code": "Ongeldige uitnodigingscode",
+        "failed_to_validate_invite": "Kan uitnodigingscode niet valideren",
+        "unexpected_error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw.",
+        "email_domain_not_allowed": "E-maildomein niet toegestaan",
+        "account_already_exists": "Er bestaat al een account met dit e-mailadres. Log in."
+    },
+    "secret_form": {
+        "failed_to_create_secret": "Kan geheim niet aanmaken: {{errorMessage}}",
+        "failed_to_upload_file": "Kan bestand niet uploaden: {{fileName}}"
+    },
+    "secret_page": {
+        "password_label": "Wachtwoord",
+        "password_placeholder": "Voer wachtwoord in om geheim te bekijken",
+        "view_secret_button": "Geheim bekijken",
+        "views_remaining_tooltip": "Resterende weergaven: {{count}}",
+        "loading_message": "Geheim wordt ontsleuteld...",
+        "files_title": "Bijgevoegde bestanden",
+        "secret_waiting_title": "Iemand heeft een geheim met je gedeeld",
+        "secret_waiting_description": "Dit geheim is versleuteld en kan alleen worden bekeken als je op de onderstaande knop klikt." ,
+        "one_view_remaining": "Dit geheim kan nog maar 1 keer worden bekeken",
+        "views_remaining": "Dit geheim kan nog {{count}} keer worden bekeken",
+        "view_warning": "Zodra je dit hebt bekeken, kan deze actie niet ongedaan worden gemaakt",
+        "secret_revealed": "Geheim",
+        "copy_secret": "Kopiëren naar klembord",
+        "download": "Downloaden",
+        "create_your_own": "Maak je eigen geheim",
+        "encrypted_secret": "Versleuteld geheim",
+        "unlock_secret": "Geheim ontgrendelen",
+        "delete_secret": "Geheim verwijderen",
+        "delete_modal_title": "Geheim verwijderen",
+        "delete_modal_message": "Weet je zeker dat je dit geheim wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+        "decryption_failed": "Het ontcijferen van het geheim is mislukt. Controleer je wachtwoord of ontcijferingssleutel.",
+        "fetch_error": "Er is een fout opgetreden tijdens het ophalen van het geheim. Probeer het opnieuw."
+    },
+    "expiration": {
+        "28_days": "28 dagen",
+        "14_days": "14 dagen",
+        "7_days": "7 dagen",
+        "3_days": "3 dagen",
+        "1_day": "1 dag",
+        "12_hours": "12 uur",
+        "4_hours": "4 uur",
+        "1_hour": "1 uur",
+        "30_minutes": "30 minuten",
+        "5_minutes": "5 minuten"
+    },
+    "error_display": {
+        "clear_errors_button_title": "Fouten wissen"
+    },
+    "secret_not_found_page": {
+        "title": "Geheim niet gevonden",
+        "message": "Het geheim dat je zoekt bestaat niet, is verlopen of is vernietigd.",
+        "error_details": "Foutdetails:",
+        "go_home_button": "Ga naar startpagina"
+    },
+    "organization_page": {
+        "title": "Organisatie-instellingen",
+        "description": "Configureer instellingen en toegangscontroles voor de hele organisatie",
+        "registration_settings": {
+            "title": "Registratie-instellingen",
+            "description": "Bepaal hoe gebruikers lid kunnen worden van je organisatie",
+            "invite_only_title": "Registratie alleen op uitnodiging",
+            "invite_only_description": "Gebruikers kunnen zich alleen registreren met een geldige uitnodigingscode",
+            "require_registered_user_title": "Alleen geregistreerde gebruikers",
+            "require_registered_user_description": "Alleen geregistreerde gebruikers kunnen geheimen aanmaken",
+            "allowed_domains_title": "Toegestane e-maildomeinen",
+            "allowed_domains_description": "Registratie alleen toestaan van specifieke e-maildomeinen (gescheiden door komma's, bijv. bedrijf.com, org.net)",
+            "allowed_domains_placeholder": "bedrijf.com, org.net",
+            "allowed_domains_hint": "Door komma's gescheiden lijst met e-maildomeinen. Laat leeg om alle domeinen toe te staan."
+        },
+        "invite_codes": {
+            "title": "Uitnodigingscodes",
+            "description": "Maak en beheer uitnodigingscodes voor nieuwe gebruikers",
+            "create_invite_button": "Uitnodigingscode maken",
+            "code_header": "Code",
+            "uses_header": "Gebruikt",
+            "expires_header": "Verloopt",
+            "actions_header": "Acties",
+            "unlimited": "Onbeperkt",
+            "never": "Nooit",
+            "expired": "Verlopen",
+            "no_invites": "Nog geen uitnodigingscodes",
+            "no_invites_description": "Maak een uitnodigingscode aan om nieuwe gebruikers te laten registreren",
+            "copy_tooltip": "Code kopiëren",
+            "delete_tooltip": "Code verwijderen"
+        },
+        "create_invite_modal": {
+            "title": "Uitnodigingscode aanmaken",
+            "max_uses_label": "Maximaal aantal keren gebruiken",
+            "max_uses_placeholder": "Laat leeg voor onbeperkt",
+            "expiration_label": "Vervaldatum",
+            "expiration_options": {
+                "never": "Nooit",
+                "24_hours": "24 uur",
+                "7_days": "7 dagen",
+                "30_days": "30 dagen"
+            },
+            "cancel_button": "Annuleren",
+            "create_button": "Aanmaken"
+        },
+        "saving_button": "Bezig met opslaan...",
+        "save_settings_button": "Instellingen opslaan"
+    },
+    "invites_page": {
+        "title": "Uitnodigingscodes",
+        "description": "Beheer uitnodigingscodes voor nieuwe gebruikersregistraties",
+        "create_invite_button": "Uitnodiging aanmaken",
+        "loading": "Uitnodigingscodes laden...",
+        "table": {
+            "code_header": "Code",
+            "uses_header": "Gebruikt",
+            "expires_header": "Verloopt",
+            "status_header": "Status",
+            "never": "Nooit"
+        },
+        "status": {
+            "active": "Actief",
+            "expired": "Verlopen",
+            "used": "Gebruikt",
+            "inactive": "Inactief"
+        },
+        "no_invites": "Nog geen uitnodigingscodes",
+        "create_modal": {
+            "title": "Uitnodigingscode aanmaken",
+            "max_uses_label": "Maximaal aantal keren te gebruiken",
+            "expires_in_label": "Verloopt over (dagen)"
+        },
+        "delete_modal": {
+            "title": "Uitnodigingscode deactiveren",
+            "confirm_text": "Deactiveren",
+            "cancel_text": "Annuleren",
+            "message": "Weet je zeker dat je uitnodigingscode {{code}} wilt deactiveren? Deze actie kan niet ongedaan worden gemaakt."
+        },
+        "toast": {
+            "created": "Uitnodigingscode aangemaakt",
+            "deactivated": "Uitnodigingscode gedeactiveerd",
+            "copied": "Uitnodigingscode gekopieerd naar klembord",
+            "fetch_error": "Kan uitnodigingscodes niet ophalen",
+            "create_error": "Kan uitnodigingscode niet aanmaken",
+            "delete_error": "Kan uitnodigingscode niet deactiveren"
+        }
+    },
+    "social_login": {
+        "continue_with": "Doorgaan met {{provider}}",
+        "sign_up_with": "Registreren met {{provider}}"
+    },
+    "setup_page": {
+        "title": "Welkom bij Hemmelig",
+        "description": "Maak je beheerdersaccount aan om te beginnen",
+        "name_label": "Volledige naam",
+        "name_placeholder": "Voer je volledige naam in",
+        "username_label": "Gebruikersnaam",
+        "username_placeholder": "Kies een gebruikersnaam",
+        "email_label": "E-mailadres",
+        "email_placeholder": "Voer je e-mailadres in",
+        "password_label": "Wachtwoord",
+        "password_placeholder": "Maak een wachtwoord aan (minimaal 8 tekens)",
+        "confirm_password_label": "Bevestig wachtwoord",
+        "confirm_password_placeholder": "Bevestig je wachtwoord",
+        "create_admin": "Beheerdersaccount aanmaken",
+        "creating": "Account aanmaken... ",
+        "success": "Beheerdersaccount succesvol aangemaakt! Log in.",
+        "error": "Kan beheerdersaccount niet aanmaken",
+        "passwords_mismatch": "Wachtwoorden komen niet overeen",
+        "password_too_short": "Wachtwoord moet minimaal 8 tekens bevatten",
+        "note": "Deze instelling kan slechts één keer worden voltooid. Het beheerdersaccount heeft volledige toegang om deze instantie te beheren."
+    },
+    "theme_toggle": {
+        "switch_to_light": "Overschakelen naar lichte modus",
+        "switch_to_dark": "Overschakelen naar donkere modus"
+    },
+    "webhook_settings": {
+        "title": "Webhook-meldingen",
+        "description": "Externe services op de hoogte stellen wanneer geheimen worden bekeken of vernietigd",
+        "enable_webhooks_title": "Webhooks inschakelen",
+        "enable_webhooks_description": "Verstuur HTTP POST-verzoeken naar je webhook-URL wanneer er gebeurtenissen plaatsvinden",
+        "webhook_url_label": "Webhook-URL",
+        "webhook_url_placeholder": "https://example.com/webhook",
+        "webhook_url_hint": "De URL waarnaar webhook-payloads worden verzonden",
+        "webhook_secret_label": "Webhook-geheim",
+        "webhook_secret_placeholder": "Voer een geheim in voor HMAC-ondertekening",
+        "webhook_secret_hint": "Wordt gebruikt om webhook-payloads te ondertekenen met HMAC-SHA256. De handtekening wordt verzonden in de X-Hemmelig-Signature-header.",
+        "events_title": "Webhook-gebeurtenissen",
+        "on_view_title": "Geheim bekeken",
+        "on_view_description": "Stuur een webhook wanneer een geheim wordt bekeken",
+        "on_burn_title": "Geheim vernietigd",
+        "on_burn_description": "Stuur een webhook wanneer een geheim wordt vernietigd of verwijderd"
+    },
+    "verify_2fa_page": {
+        "back_to_login": "Terug naar aanmelden",
+        "title": "Tweefactorauthenticatie",
+        "description": "Voer de 6-cijferige code uit je authenticator-app in",
+        "enter_code_hint": "Voer de code uit je authenticator-app in",
+        "verifying": "Verifiëren...",
+        "verify_button": "Verifiëren",
+        "invalid_code": "Ongeldige verificatiecode. Probeer het opnieuw.",
+        "unexpected_error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "common": {
+        "error": "Fout",
+        "cancel": "Annuleren",
+        "confirm": "Bevestigen",
+        "ok": "OK",
+        "delete": "Verwijderen",
+        "deleting": "Bezig met verwijderen...",
+        "loading": "Bezig met laden..."
+    },
+    "not_found_page": {
+        "title": "Pagina niet gevonden",
+        "message": "Deze pagina is in rook opgegaan, net als onze geheimen.",
+        "hint": "De pagina die je zoekt bestaat niet of is verplaatst.",
+        "go_home_button": "Naar startpagina",
+        "create_secret_button": "Geheim aanmaken"
+    },
+    "error_boundary": {
+        "title": "Er is iets misgegaan",
+        "message": "Er is een onverwachte fout opgetreden tijdens het verwerken van je verzoek.",
+        "hint": "Maak je geen zorgen, je geheimen zijn nog steeds veilig. Probeer de pagina te verversen.",
+        "error_details": "Foutdetails:",
+        "unknown_error": "Er is een onbekende fout opgetreden",
+        "try_again_button": "Opnieuw proberen",
+        "go_home_button": "Naar startpagina"
+    }
+}
