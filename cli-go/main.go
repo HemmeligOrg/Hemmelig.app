@@ -18,7 +18,7 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const version = "1.0.0"
+const version = "1.0.1"
 
 var expirationTimes = map[string]int{
 	"5m":  300,
@@ -201,7 +201,7 @@ Options:
   -b, --burnable           Burn after first view (default: true)
   --no-burnable            Don't burn after first view
   -u, --url <url>          Base URL (default: https://hemmelig.app)
-  -h, --help               Show this help message
+  -h, --help, /?           Show this help message
   --version                Show version number
 
 Examples:
@@ -254,7 +254,7 @@ func parseArgs(args []string) (Options, bool, bool) {
 		arg := args[i]
 
 		switch arg {
-		case "-h", "--help":
+		case "-h", "--help", "/?":
 			showHelp = true
 		case "--version":
 			showVersion = true

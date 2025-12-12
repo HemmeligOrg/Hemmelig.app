@@ -22,7 +22,7 @@ Replace `VERSION` below with the desired version (e.g., `1.0.0`):
 #### Linux (amd64)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -31,7 +31,7 @@ sudo mv hemmelig /usr/local/bin/
 #### Linux (arm64)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -40,7 +40,7 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Apple Silicon)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -49,16 +49,25 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Intel)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
 ```
 
+#### Windows (PowerShell)
+
+```powershell
+$VERSION = "1.0.1"
+Invoke-WebRequest -Uri "https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v$VERSION/hemmelig-windows-amd64.exe" -OutFile "hemmelig.exe"
+# Move to a directory in your PATH, e.g.:
+Move-Item hemmelig.exe "$env:LOCALAPPDATA\Microsoft\WindowsApps\hemmelig.exe"
+```
+
 #### Verify Download
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/checksums.txt -o checksums.txt
 sha256sum -c checksums.txt --ignore-missing
 ```
@@ -102,7 +111,7 @@ hemmelig "internal secret" -u https://secrets.company.com
 | `-b, --burnable`        | Burn after first view (default)                        |
 | `--no-burnable`         | Don't burn until all views used                        |
 | `-u, --url <url>`       | Base URL (default: https://hemmelig.app)               |
-| `-h, --help`            | Show help                                              |
+| `-h, --help, /?`        | Show help                                              |
 | `--version`             | Show version                                           |
 
 ## Security

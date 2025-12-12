@@ -22,7 +22,7 @@ Replace `VERSION` below with the desired version (e.g., `1.0.0`):
 #### Linux (amd64)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -31,7 +31,7 @@ sudo mv hemmelig /usr/local/bin/
 #### Linux (arm64)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -40,7 +40,7 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Apple Silicon)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -49,7 +49,7 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Intel)
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
@@ -62,7 +62,7 @@ Download `hemmelig-windows-amd64.exe` from the [CLI releases](https://github.com
 #### Verify Download
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 # Download checksums
 curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/checksums.txt -o checksums.txt
 
@@ -104,7 +104,7 @@ cat file.txt | hemmelig [options]
 | `-b, --burnable`        | Burn after first view (default: true)               |
 | `--no-burnable`         | Don't burn after first view                         |
 | `-u, --url <url>`       | Base URL (default: https://hemmelig.app)            |
-| `-h, --help`            | Show help message                                   |
+| `-h, --help, /?`        | Show help message                                   |
 
 ### Expiration Times
 
