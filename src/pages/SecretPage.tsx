@@ -76,7 +76,9 @@ export function SecretPage() {
                         finalDecryptionKey,
                         data.salt
                     );
-                    const decryptedTitle = data.title
+                    // Check if title has actual encrypted data (not just an empty object from empty Uint8Array)
+                    const titleHasData = data.title && Object.keys(data.title).length > 0;
+                    const decryptedTitle = titleHasData
                         ? await decrypt(
                               new Uint8Array(Object.values(data.title)),
                               finalDecryptionKey,
