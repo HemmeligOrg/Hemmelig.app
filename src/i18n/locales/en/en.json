@@ -257,9 +257,8 @@
         "description": "Track your secret sharing activity and insights",
         "time_range": {
             "last_7_days": "Last 7 days",
-            "last_30_days": "Last 30 days",
-            "last_90_days": "Last 90 days",
-            "last_year": "Last year"
+            "last_14_days": "Last 14 days",
+            "last_30_days": "Last 30 days"
         },
         "total_secrets": "Total Secrets",
         "from_last_period": "+{{percentage}}% from last period",
@@ -269,8 +268,14 @@
         "daily_activity": {
             "title": "Daily Activity",
             "description": "Secrets created and views over time",
-            "secrets": "secrets",
-            "views": "views"
+            "secrets": "Secrets",
+            "views": "Views",
+            "secrets_created": "Secrets Created",
+            "secret_views": "Secret Views",
+            "date": "Date",
+            "trend": "Change",
+            "vs_previous": "vs previous day",
+            "no_data": "No activity data available yet."
         },
         "locale": "en-US",
         "top_countries": {
@@ -295,8 +300,11 @@
         "visitor_analytics": {
             "title": "Visitor Analytics",
             "description": "Page views and unique visitors",
-            "unique": "unique",
-            "views": "views",
+            "unique": "Unique",
+            "views": "Views",
+            "date": "Date",
+            "trend": "Change",
+            "vs_previous": "vs previous day",
             "no_data": "No visitor data available yet."
         },
         "loading": "Loading analytics...",

@@ -257,9 +257,8 @@
         "description": "Monitora l'attività e le statistiche dei tuoi segreti condivisi",
         "time_range": {
             "last_7_days": "Ultimi 7 giorni",
-            "last_30_days": "Ultimi 30 giorni",
-            "last_90_days": "Ultimi 90 giorni",
-            "last_year": "Ultimo anno"
+            "last_14_days": "Ultimi 14 giorni",
+            "last_30_days": "Ultimi 30 giorni"
         },
         "total_secrets": "Segreti totali",
         "from_last_period": "+{{percentage}}% dal periodo precedente",
@@ -269,8 +268,14 @@
         "daily_activity": {
             "title": "Attività giornaliera",
             "description": "Segreti creati e visualizzazioni nel tempo",
-            "secrets": "segreti",
-            "views": "visualizzazioni"
+            "secrets": "Segreti",
+            "views": "Visualizzazioni",
+            "secrets_created": "Segreti Creati",
+            "secret_views": "Visualizzazioni Segreti",
+            "date": "Data",
+            "trend": "Variazione",
+            "vs_previous": "vs giorno precedente",
+            "no_data": "Nessun dato di attività disponibile ancora."
         },
         "locale": "it-IT",
         "top_countries": {
@@ -295,8 +300,11 @@
         "visitor_analytics": {
             "title": "Analisi dei visitatori",
             "description": "Visualizzazioni di pagina e visitatori unici",
-            "unique": "unici",
-            "views": "visite",
+            "unique": "Unici",
+            "views": "Visite",
+            "date": "Data",
+            "trend": "Variazione",
+            "vs_previous": "vs giorno precedente",
             "no_data": "Nessun dato sui visitatori disponibile ancora."
         },
         "loading": "Caricamento analisi...",

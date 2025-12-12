@@ -20,7 +20,7 @@ const trackSchema = z.object({
 });
 
 const timeRangeSchema = z.object({
-    timeRange: z.enum(['7d', '30d', '90d', '1y']).default('30d'),
+    timeRange: z.enum(['7d', '14d', '30d']).default('30d'),
 });
 
 // POST /api/analytics/track - Public endpoint for visitor tracking

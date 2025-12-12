@@ -31,10 +31,10 @@ export function isAnalyticsEnabled(): boolean {
 
 /**
  * Calculates the start date for a given time range.
- * @param timeRange - Time range string (7d, 30d, 90d, 1y)
+ * @param timeRange - Time range string (7d, 14d, 30d)
  * @returns Start date for the query
  */
-export function getStartDateForTimeRange(timeRange: '7d' | '30d' | '90d' | '1y'): Date {
+export function getStartDateForTimeRange(timeRange: '7d' | '14d' | '30d'): Date {
     const now = new Date();
     const startDate = new Date();
 
@@ -42,14 +42,11 @@ export function getStartDateForTimeRange(timeRange: '7d' | '30d' | '90d' | '1y')
         case '7d':
             startDate.setDate(now.getDate() - 7);
             break;
+        case '14d':
+            startDate.setDate(now.getDate() - 14);
+            break;
         case '30d':
-            startDate.setMonth(now.getMonth() - 1);
-            break;
-        case '90d':
-            startDate.setMonth(now.getMonth() - 3);
-            break;
-        case '1y':
-            startDate.setFullYear(now.getFullYear() - 1);
+            startDate.setDate(now.getDate() - 30);
             break;
     }
 

@@ -1,8 +1,19 @@
-import { BarChart3, Calendar, Clock, Eye, Globe, Shield, TrendingUp, Users } from 'lucide-react';
+import {
+    BarChart3,
+    Calendar,
+    Clock,
+    Eye,
+    Globe,
+    Shield,
+    TrendingDown,
+    TrendingUp,
+    Users,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Sparkline } from '../../components/Sparkline';
 import { api } from '../../lib/api';
 
 interface DailyVisitor {
@@ -54,7 +65,7 @@ interface AnalyticsLoaderData {
     visitorStats?: DailyVisitor[];
 }
 
-type TimeRange = '7d' | '30d' | '90d' | '1y';
+type TimeRange = '7d' | '14d' | '30d';
 
 export function AnalyticsPage() {
     const initialAnalytics = useLoaderData() as AnalyticsLoaderData;
@@ -108,17 +119,11 @@ export function AnalyticsPage() {
 
     const totalUniqueVisitors = visitorStats.reduce((acc, day) => acc + day.unique_visitors, 0);
     const totalPageViews = visitorStats.reduce((acc, day) => acc + day.total_visits, 0);
-    const maxVisitors = Math.max(...visitorStats.map((d) => d.unique_visitors), 1);
-    const maxViews = Math.max(...visitorStats.map((d) => d.total_visits), 1);
-
-    const maxSecrets = Math.max(...(analytics?.dailyStats?.map((d) => d.secrets) || []), 1);
-    const maxDailyViews = Math.max(...(analytics?.dailyStats?.map((d) => d.views) || []), 1);
 
     const timeRangeOptions = [
         { value: '7d', label: t('analytics_page.time_range.last_7_days') },
+        { value: '14d', label: t('analytics_page.time_range.last_14_days') },
         { value: '30d', label: t('analytics_page.time_range.last_30_days') },
-        { value: '90d', label: t('analytics_page.time_range.last_90_days') },
-        { value: '1y', label: t('analytics_page.time_range.last_year') },
     ];
 
     if (error) {
@@ -235,69 +240,188 @@ export function AnalyticsPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-                {/* Activity Chart */}
-                <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
-                    <div className="flex items-center space-x-3 mb-6">
-                        <div className="p-2 bg-purple-500/20 ">
-                            <BarChart3 className="w-5 h-5 text-purple-400" />
-                        </div>
-                        <div>
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                {t('analytics_page.daily_activity.title')}
-                            </h2>
-                            <p className="text-sm text-gray-500 dark:text-slate-400">
-                                {t('analytics_page.daily_activity.description')}
-                            </p>
-                        </div>
+            {/* Activity Chart */}
+            <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                    <div className="p-2 bg-purple-500/20">
+                        <BarChart3 className="w-5 h-5 text-purple-400" />
                     </div>
-
-                    {/* Simple bar chart representation */}
-                    <div className="space-y-4">
-                        {analytics.dailyStats.map((day) => (
-                            <div key={day.date} className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-500 dark:text-slate-400">
-                                        {new Date(day.date).toLocaleDateString(
-                                            t('analytics_page.locale'),
-                                            {
-                                                month: 'short',
-                                                day: 'numeric',
-                                            }
-                                        )}
-                                    </span>
-                                    <div className="flex space-x-4">
-                                        <span className="text-teal-400">
-                                            {day.secrets}{' '}
-                                            {t('analytics_page.daily_activity.secrets')}
-                                        </span>
-                                        <span className="text-blue-400">
-                                            {day.views} {t('analytics_page.daily_activity.views')}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="flex space-x-2">
-                                    <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
-                                        <div
-                                            className="bg-teal-500 h-2 transition-all duration-500"
-                                            style={{
-                                                width: `${Math.min((day.secrets / maxSecrets) * 100, 100)}%`,
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
-                                        <div
-                                            className="bg-blue-500 h-2 transition-all duration-500"
-                                            style={{
-                                                width: `${Math.min((day.views / maxDailyViews) * 100, 100)}%`,
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {t('analytics_page.daily_activity.title')}
+                        </h2>
+                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                            {t('analytics_page.daily_activity.description')}
+                        </p>
                     </div>
                 </div>
+
+                {analytics.dailyStats.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+                        {t('analytics_page.daily_activity.no_data')}
+                    </div>
+                ) : (
+                    <>
+                        {/* Summary Cards with Sparklines */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            {t('analytics_page.daily_activity.secrets_created')}
+                                        </p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                            {analytics.dailyStats
+                                                .reduce((acc, d) => acc + d.secrets, 0)
+                                                .toLocaleString()}
+                                        </p>
+                                        {analytics.dailyStats.length >= 2 && (
+                                            <div className="flex items-center mt-1 text-xs">
+                                                {analytics.dailyStats[
+                                                    analytics.dailyStats.length - 1
+                                                ].secrets >=
+                                                analytics.dailyStats[
+                                                    analytics.dailyStats.length - 2
+                                                ].secrets ? (
+                                                    <TrendingUp className="w-3 h-3 text-emerald-500 mr-1" />
+                                                ) : (
+                                                    <TrendingDown className="w-3 h-3 text-red-500 mr-1" />
+                                                )}
+                                                <span className="text-gray-500 dark:text-slate-400">
+                                                    {t('analytics_page.daily_activity.vs_previous')}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Sparkline
+                                        data={analytics.dailyStats.map((d) => d.secrets)}
+                                        width={100}
+                                        height={40}
+                                        color="#14b8a6"
+                                        className="text-teal-500"
+                                    />
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            {t('analytics_page.daily_activity.secret_views')}
+                                        </p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                            {analytics.dailyStats
+                                                .reduce((acc, d) => acc + d.views, 0)
+                                                .toLocaleString()}
+                                        </p>
+                                        {analytics.dailyStats.length >= 2 && (
+                                            <div className="flex items-center mt-1 text-xs">
+                                                {analytics.dailyStats[
+                                                    analytics.dailyStats.length - 1
+                                                ].views >=
+                                                analytics.dailyStats[
+                                                    analytics.dailyStats.length - 2
+                                                ].views ? (
+                                                    <TrendingUp className="w-3 h-3 text-emerald-500 mr-1" />
+                                                ) : (
+                                                    <TrendingDown className="w-3 h-3 text-red-500 mr-1" />
+                                                )}
+                                                <span className="text-gray-500 dark:text-slate-400">
+                                                    {t('analytics_page.daily_activity.vs_previous')}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Sparkline
+                                        data={analytics.dailyStats.map((d) => d.views)}
+                                        width={100}
+                                        height={40}
+                                        color="#3b82f6"
+                                        className="text-blue-500"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Compact Table */}
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-dark-600">
+                                        <th className="text-left py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                            {t('analytics_page.daily_activity.date')}
+                                        </th>
+                                        <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                            <div className="flex items-center justify-end space-x-1">
+                                                <Shield className="w-3 h-3" />
+                                                <span>
+                                                    {t('analytics_page.daily_activity.secrets')}
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                            <div className="flex items-center justify-end space-x-1">
+                                                <Eye className="w-3 h-3" />
+                                                <span>
+                                                    {t('analytics_page.daily_activity.views')}
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400 hidden sm:table-cell">
+                                            {t('analytics_page.daily_activity.trend')}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-dark-700">
+                                    {[...analytics.dailyStats].reverse().map((day, index, arr) => {
+                                        const prevDay = arr[index + 1];
+                                        const secretsChange = prevDay
+                                            ? day.secrets - prevDay.secrets
+                                            : 0;
+                                        return (
+                                            <tr
+                                                key={day.date}
+                                                className="hover:bg-gray-50 dark:hover:bg-dark-700/50 transition-colors"
+                                            >
+                                                <td className="py-2 px-3 text-gray-900 dark:text-white">
+                                                    {new Date(day.date).toLocaleDateString(
+                                                        t('analytics_page.locale'),
+                                                        {
+                                                            weekday: 'short',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-3 text-right font-medium text-teal-600 dark:text-teal-400">
+                                                    {day.secrets.toLocaleString()}
+                                                </td>
+                                                <td className="py-2 px-3 text-right font-medium text-blue-600 dark:text-blue-400">
+                                                    {day.views.toLocaleString()}
+                                                </td>
+                                                <td className="py-2 px-3 text-right hidden sm:table-cell">
+                                                    {prevDay && (
+                                                        <span
+                                                            className={`inline-flex items-center text-xs ${
+                                                                secretsChange > 0
+                                                                    ? 'text-emerald-600 dark:text-emerald-400'
+                                                                    : secretsChange < 0
+                                                                      ? 'text-red-600 dark:text-red-400'
+                                                                      : 'text-gray-400 dark:text-slate-500'
+                                                            }`}
+                                                        >
+                                                            {secretsChange > 0 ? '+' : ''}
+                                                            {secretsChange}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* Additional Stats */}
@@ -456,22 +580,6 @@ export function AnalyticsPage() {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4 text-sm">
-                            <div className="flex items-center space-x-2">
-                                <Users className="w-4 h-4 text-indigo-400" />
-                                <span className="text-gray-600 dark:text-slate-300">
-                                    {totalUniqueVisitors.toLocaleString()}{' '}
-                                    {t('analytics_page.visitor_analytics.unique')}
-                                </span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <TrendingUp className="w-4 h-4 text-emerald-400" />
-                                <span className="text-gray-600 dark:text-slate-300">
-                                    {totalPageViews.toLocaleString()}{' '}
-                                    {t('analytics_page.visitor_analytics.views')}
-                                </span>
-                            </div>
-                        </div>
                     </div>
 
                     {visitorStats.length === 0 ? (
@@ -479,51 +587,166 @@ export function AnalyticsPage() {
                             {t('analytics_page.visitor_analytics.no_data')}
                         </div>
                     ) : (
-                        <div className="space-y-3">
-                            {visitorStats.map((day) => (
-                                <div key={day.date} className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 dark:text-slate-400">
-                                            {new Date(day.date).toLocaleDateString(
-                                                t('analytics_page.locale'),
-                                                {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                }
-                                            )}
-                                        </span>
-                                        <div className="flex space-x-4">
-                                            <span className="text-indigo-400">
-                                                {day.unique_visitors}{' '}
+                        <>
+                            {/* Summary Cards with Sparklines */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm text-gray-500 dark:text-slate-400">
                                                 {t('analytics_page.visitor_analytics.unique')}
-                                            </span>
-                                            <span className="text-emerald-400">
-                                                {day.total_visits}{' '}
-                                                {t('analytics_page.visitor_analytics.views')}
-                                            </span>
+                                            </p>
+                                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                                {totalUniqueVisitors.toLocaleString()}
+                                            </p>
+                                            {visitorStats.length >= 2 && (
+                                                <div className="flex items-center mt-1 text-xs">
+                                                    {visitorStats[visitorStats.length - 1]
+                                                        .unique_visitors >=
+                                                    visitorStats[visitorStats.length - 2]
+                                                        .unique_visitors ? (
+                                                        <TrendingUp className="w-3 h-3 text-emerald-500 mr-1" />
+                                                    ) : (
+                                                        <TrendingDown className="w-3 h-3 text-red-500 mr-1" />
+                                                    )}
+                                                    <span className="text-gray-500 dark:text-slate-400">
+                                                        {t(
+                                                            'analytics_page.visitor_analytics.vs_previous'
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
-                                    <div className="flex space-x-2">
-                                        <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
-                                            <div
-                                                className="bg-indigo-500 h-2 transition-all duration-500"
-                                                style={{
-                                                    width: `${Math.min((day.unique_visitors / maxVisitors) * 100, 100)}%`,
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="flex-1 bg-gray-200 dark:bg-dark-700 h-2 overflow-hidden">
-                                            <div
-                                                className="bg-emerald-500 h-2 transition-all duration-500"
-                                                style={{
-                                                    width: `${Math.min((day.total_visits / maxViews) * 100, 100)}%`,
-                                                }}
-                                            />
-                                        </div>
+                                        <Sparkline
+                                            data={visitorStats.map((d) => d.unique_visitors)}
+                                            width={100}
+                                            height={40}
+                                            color="#6366f1"
+                                            className="text-indigo-500"
+                                        />
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm text-gray-500 dark:text-slate-400">
+                                                {t('analytics_page.visitor_analytics.views')}
+                                            </p>
+                                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                                {totalPageViews.toLocaleString()}
+                                            </p>
+                                            {visitorStats.length >= 2 && (
+                                                <div className="flex items-center mt-1 text-xs">
+                                                    {visitorStats[visitorStats.length - 1]
+                                                        .total_visits >=
+                                                    visitorStats[visitorStats.length - 2]
+                                                        .total_visits ? (
+                                                        <TrendingUp className="w-3 h-3 text-emerald-500 mr-1" />
+                                                    ) : (
+                                                        <TrendingDown className="w-3 h-3 text-red-500 mr-1" />
+                                                    )}
+                                                    <span className="text-gray-500 dark:text-slate-400">
+                                                        {t(
+                                                            'analytics_page.visitor_analytics.vs_previous'
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <Sparkline
+                                            data={visitorStats.map((d) => d.total_visits)}
+                                            width={100}
+                                            height={40}
+                                            color="#10b981"
+                                            className="text-emerald-500"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Compact Table */}
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead>
+                                        <tr className="border-b border-gray-200 dark:border-dark-600">
+                                            <th className="text-left py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                                {t('analytics_page.visitor_analytics.date')}
+                                            </th>
+                                            <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                                <div className="flex items-center justify-end space-x-1">
+                                                    <Users className="w-3 h-3" />
+                                                    <span>
+                                                        {t(
+                                                            'analytics_page.visitor_analytics.unique'
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </th>
+                                            <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400">
+                                                <div className="flex items-center justify-end space-x-1">
+                                                    <Eye className="w-3 h-3" />
+                                                    <span>
+                                                        {t(
+                                                            'analytics_page.visitor_analytics.views'
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </th>
+                                            <th className="text-right py-2 px-3 font-medium text-gray-500 dark:text-slate-400 hidden sm:table-cell">
+                                                {t('analytics_page.visitor_analytics.trend')}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 dark:divide-dark-700">
+                                        {[...visitorStats].reverse().map((day, index, arr) => {
+                                            const prevDay = arr[index + 1];
+                                            const change = prevDay
+                                                ? day.unique_visitors - prevDay.unique_visitors
+                                                : 0;
+                                            return (
+                                                <tr
+                                                    key={day.date}
+                                                    className="hover:bg-gray-50 dark:hover:bg-dark-700/50 transition-colors"
+                                                >
+                                                    <td className="py-2 px-3 text-gray-900 dark:text-white">
+                                                        {new Date(day.date).toLocaleDateString(
+                                                            t('analytics_page.locale'),
+                                                            {
+                                                                weekday: 'short',
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                            }
+                                                        )}
+                                                    </td>
+                                                    <td className="py-2 px-3 text-right font-medium text-indigo-600 dark:text-indigo-400">
+                                                        {day.unique_visitors.toLocaleString()}
+                                                    </td>
+                                                    <td className="py-2 px-3 text-right font-medium text-emerald-600 dark:text-emerald-400">
+                                                        {day.total_visits.toLocaleString()}
+                                                    </td>
+                                                    <td className="py-2 px-3 text-right hidden sm:table-cell">
+                                                        {prevDay && (
+                                                            <span
+                                                                className={`inline-flex items-center text-xs ${
+                                                                    change > 0
+                                                                        ? 'text-emerald-600 dark:text-emerald-400'
+                                                                        : change < 0
+                                                                          ? 'text-red-600 dark:text-red-400'
+                                                                          : 'text-gray-400 dark:text-slate-500'
+                                                                }`}
+                                                            >
+                                                                {change > 0 ? '+' : ''}
+                                                                {change}
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

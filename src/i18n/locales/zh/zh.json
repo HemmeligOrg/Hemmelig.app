@@ -257,9 +257,8 @@
         "description": "跟踪您的秘密分享活动和洞察",
         "time_range": {
             "last_7_days": "最近 7 天",
-            "last_30_days": "最近 30 天",
-            "last_90_days": "最近 90 天",
-            "last_year": "最近一年"
+            "last_14_days": "最近 14 天",
+            "last_30_days": "最近 30 天"
         },
         "total_secrets": "秘密总数",
         "from_last_period": "较上期 +{{percentage}}%",
@@ -270,7 +269,13 @@
             "title": "每日活动",
             "description": "随时间创建的秘密和查看次数",
             "secrets": "秘密",
-            "views": "查看"
+            "views": "查看",
+            "secrets_created": "创建的秘密",
+            "secret_views": "秘密浏览量",
+            "date": "日期",
+            "trend": "变化",
+            "vs_previous": "对比前一天",
+            "no_data": "暂无活动数据。"
         },
         "locale": "zh-CN",
         "top_countries": {
@@ -295,8 +300,11 @@
         "visitor_analytics": {
             "title": "访客分析",
             "description": "页面浏览量和独立访客",
-            "unique": "独立",
-            "views": "浏览",
+            "unique": "独立访客",
+            "views": "浏览量",
+            "date": "日期",
+            "trend": "变化",
+            "vs_previous": "对比前一天",
             "no_data": "暂无访客数据。"
         },
         "loading": "正在加载分析...",

@@ -257,9 +257,8 @@
         "description": "Verfolgen Sie Ihre Geheimnis-Sharing-Aktivitäten und Einblicke",
         "time_range": {
             "last_7_days": "Letzte 7 Tage",
-            "last_30_days": "Letzte 30 Tage",
-            "last_90_days": "Letzte 90 Tage",
-            "last_year": "Letztes Jahr"
+            "last_14_days": "Letzte 14 Tage",
+            "last_30_days": "Letzte 30 Tage"
         },
         "total_secrets": "Geheimnisse gesamt",
         "from_last_period": "+{{percentage}}% seit letztem Zeitraum",
@@ -270,7 +269,13 @@
             "title": "Tägliche Aktivität",
             "description": "Erstellte Geheimnisse und Aufrufe im Zeitverlauf",
             "secrets": "Geheimnisse",
-            "views": "Aufrufe"
+            "views": "Aufrufe",
+            "secrets_created": "Erstellte Geheimnisse",
+            "secret_views": "Geheimnis-Aufrufe",
+            "date": "Datum",
+            "trend": "Änderung",
+            "vs_previous": "ggü. Vortag",
+            "no_data": "Noch keine Aktivitätsdaten verfügbar."
         },
         "locale": "de-DE",
         "top_countries": {
@@ -295,8 +300,11 @@
         "visitor_analytics": {
             "title": "Besucheranalysen",
             "description": "Seitenaufrufe und eindeutige Besucher",
-            "unique": "eindeutig",
+            "unique": "Eindeutig",
             "views": "Aufrufe",
+            "date": "Datum",
+            "trend": "Änderung",
+            "vs_previous": "ggü. Vortag",
             "no_data": "Noch keine Besucherdaten verfügbar."
         },
         "loading": "Analysen werden geladen...",

@@ -15,6 +15,7 @@
         "migrate:reset": "npx prisma migrate reset",
         "migrate:status": "npx prisma migrate status",
         "set:admin": "npx tsx scripts/admin.ts",
+        "seed:demo": "npx tsx scripts/seed-demo.ts",
         "deploy": "npm run build && npm run migrate:deploy && npm run start",
         "test": "hurl api/tests",
         "format": "prettier --write .",
