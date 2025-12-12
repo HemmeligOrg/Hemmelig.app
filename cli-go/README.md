@@ -15,12 +15,15 @@ A standalone Go binary for creating encrypted, self-destructing secrets via [Hem
 
 ### Download Binary
 
-Download the pre-built binary for your platform from the [releases page](https://github.com/HemmeligOrg/Hemmelig.app/releases).
+Download the pre-built binary for your platform from the [CLI releases](https://github.com/HemmeligOrg/Hemmelig.app/releases?q=cli-v&expanded=true).
+
+Replace `VERSION` below with the desired version (e.g., `1.0.0`):
 
 #### Linux (amd64)
 
 ```bash
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-linux-amd64 -o hemmelig
+VERSION=1.0.0
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
 ```
@@ -28,7 +31,8 @@ sudo mv hemmelig /usr/local/bin/
 #### Linux (arm64)
 
 ```bash
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-linux-arm64 -o hemmelig
+VERSION=1.0.0
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
 ```
@@ -36,7 +40,8 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Apple Silicon)
 
 ```bash
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-darwin-arm64 -o hemmelig
+VERSION=1.0.0
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-arm64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
 ```
@@ -44,7 +49,8 @@ sudo mv hemmelig /usr/local/bin/
 #### macOS (Intel)
 
 ```bash
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/hemmelig-darwin-amd64 -o hemmelig
+VERSION=1.0.0
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-amd64 -o hemmelig
 chmod +x hemmelig
 sudo mv hemmelig /usr/local/bin/
 ```
@@ -52,7 +58,8 @@ sudo mv hemmelig /usr/local/bin/
 #### Verify Download
 
 ```bash
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/latest/download/checksums.txt -o checksums.txt
+VERSION=1.0.0
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/checksums.txt -o checksums.txt
 sha256sum -c checksums.txt --ignore-missing
 ```
 
