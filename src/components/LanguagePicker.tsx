@@ -2,11 +2,14 @@ import { useTranslation } from 'react-i18next';
 
 const LANGUAGES = [
     { code: 'en', label: 'EN' },
+    { code: 'da', label: 'DA' },
     { code: 'de', label: 'DE' },
     { code: 'es', label: 'ES' },
     { code: 'fr', label: 'FR' },
     { code: 'it', label: 'IT' },
     { code: 'nl', label: 'NL' },
+    { code: 'no', label: 'NO' },
+    { code: 'sv', label: 'SV' },
     { code: 'zh', label: '中文' },
 ] as const;
 
