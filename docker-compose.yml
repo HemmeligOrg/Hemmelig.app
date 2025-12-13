@@ -22,7 +22,7 @@ services:
                     '--no-verbose',
                     '--tries=1',
                     '--spider',
-                    'http://localhost:3000/api/healthz',
+                    'http://localhost:3000/api/health/ready',
                 ]
             interval: 30s
             timeout: 10s

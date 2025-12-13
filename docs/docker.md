@@ -61,7 +61,7 @@ services:
                     '--no-verbose',
                     '--tries=1',
                     '--spider',
-                    'http://localhost:3000/api/healthz',
+                    'http://localhost:3000/api/health/ready',
                 ]
             interval: 30s
             timeout: 10s
@@ -209,13 +209,13 @@ Certbot will automatically modify your Nginx configuration to use HTTPS.
 
 ## Health Checks
 
-The container exposes a health endpoint at `/api/healthz`. The built-in healthcheck uses `wget` to verify the application is responding.
+The container exposes a health endpoint at `/api/health/ready`. The built-in healthcheck uses `wget` to verify the application is responding and all dependencies (database, storage) are healthy.
 
 To manually check:
 
 ```bash
-curl http://localhost:3000/api/healthz
-# Returns: Health OK
+curl http://localhost:3000/api/health/ready
+# Returns: JSON with status and component health details
 ````
 
 ## Updating
