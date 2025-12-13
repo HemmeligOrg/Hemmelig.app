@@ -16,8 +16,9 @@ i18n.use(LanguageDetector)
         fallbackLng: 'en',
         debug: true,
         detection: {
-            order: ['navigator', 'htmlTag'],
-            caches: [],
+            order: ['localStorage', 'navigator', 'htmlTag'],
+            caches: ['localStorage'],
+            lookupLocalStorage: 'hemmelig-language',
         },
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default

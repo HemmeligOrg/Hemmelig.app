@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { LanguagePicker } from './LanguagePicker';
 import Logo from './Logo.tsx';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -71,6 +72,7 @@ export function Footer() {
                             >
                                 <Logo className="w-4 h-4 fill-current" />
                             </a>
+                            <LanguagePicker />
                             <ThemeToggle />
                         </div>
                     </div>
