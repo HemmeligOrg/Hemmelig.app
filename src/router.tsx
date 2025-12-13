@@ -146,6 +146,12 @@ export const router = createBrowserRouter([
             const user = data?.user ?? null;
             useUserStore.getState().setUser(user);
 
+            // Redirect to login if registered users only and not signed in
+            const { settings } = useHemmeligStore.getState();
+            if (settings.requireRegisteredUser && !user) {
+                return redirect('/login');
+            }
+
             return { user };
         },
         children: [
