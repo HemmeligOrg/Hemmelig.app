@@ -139,8 +139,16 @@ const spec = {
                 description: 'Get paginated list of secrets created by the authenticated user',
                 security: [{ cookieAuth: [] }],
                 parameters: [
-                    { name: 'skip', in: 'query', schema: { type: 'integer', default: 0 } },
-                    { name: 'take', in: 'query', schema: { type: 'integer', default: 10 } },
+                    {
+                        name: 'page',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, default: 1 },
+                    },
+                    {
+                        name: 'limit',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
+                    },
                 ],
                 responses: {
                     '200': {

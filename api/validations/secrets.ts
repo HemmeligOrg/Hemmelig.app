@@ -22,8 +22,6 @@ export const secretsQuerySchema = z.object({
         .refine((val) => val === undefined || /^\d+$/.test(val), {
             message: 'Limit must be a positive integer string',
         }),
-    name: z.string().optional(),
-    description: z.string().optional(),
 });
 
 const jsonToUint8ArraySchema = z.preprocess((arg) => {
@@ -73,15 +71,9 @@ const internalQueryParamsSchema = z.object({
     take: z.number().int().min(1).max(100).optional(),
     page: z.number().int().min(1).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    name: z.string().optional(),
-    description: z.string().optional(),
 });
 
 interface ProcessedSecretsQueryParams {
-    where: {
-        name?: { contains: string; mode: 'insensitive' };
-        description?: { contains: string; mode: 'insensitive' };
-    };
     skip: number;
     take: number;
 }
@@ -100,26 +92,13 @@ export const processSecretsQueryParams = (
         take,
         page,
         limit,
-        name: query.name,
-        description: query.description,
     });
 
     if (!parseResult.success) {
-        // Log error but return defaults for pagination, potentially empty where clause
+        // Log error but return defaults for pagination
         console.error('secrets query parameter processing error:', parseResult.error);
-        return { where: {}, skip: 0, take: 10 };
+        return { skip: 0, take: 10 };
     }
 
-    // Use validated name/description for the where clause
-    const { name, description } = parseResult.data;
-    const where: ProcessedSecretsQueryParams['where'] = {};
-    if (name) {
-        where.name = { contains: name, mode: 'insensitive' };
-    }
-    if (description) {
-        where.description = { contains: description, mode: 'insensitive' };
-    }
-
-    // Return the determined where clause and the guaranteed numeric skip/take values
-    return { where, skip, take };
+    return { skip, take };
 };

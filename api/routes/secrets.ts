@@ -43,7 +43,7 @@ const app = new Hono<{
 
             const validatedQuery = c.req.valid('query');
             const options = processSecretsQueryParams(validatedQuery);
-            const whereClause = { ...options.where, userId: user.id };
+            const whereClause = { userId: user.id };
 
             const [items, total] = await Promise.all([
                 prisma.secrets.findMany({
