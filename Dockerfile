@@ -15,7 +15,7 @@ RUN npx prisma generate
 COPY api ./api
 COPY src ./src
 COPY public ./public
-COPY index.html tsconfig*.json vite.config.ts postcss.config.js tailwind.config.js ./
+COPY index.html tsconfig*.json vite.config.ts tailwind.config.js ./
 COPY server.ts ./
 RUN npm run build
 

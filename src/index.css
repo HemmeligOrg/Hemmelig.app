@@ -1,6 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-dark-900: #0a0a0a;
+    --color-dark-800: #111111;
+    --color-dark-700: #1a1a1a;
+    --color-dark-600: #222222;
+    --color-dark-500: #2a2a2a;
+
+    --color-light-900: #ffffff;
+    --color-light-800: #f8fafc;
+    --color-light-700: #f1f5f9;
+    --color-light-600: #e2e8f0;
+    --color-light-500: #cbd5e1;
+
+    --breakpoint-xs: 475px;
+
+    --animate-pulse: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
 @layer base {
     html {

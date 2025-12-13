@@ -1,4 +1,5 @@
 import devServer from '@hono/vite-dev-server';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
@@ -8,6 +9,7 @@ export default defineConfig({
         external: ['@prisma/client'],
     },
     plugins: [
+        tailwindcss(),
         react(),
         devServer({
             entry: 'server.ts',
