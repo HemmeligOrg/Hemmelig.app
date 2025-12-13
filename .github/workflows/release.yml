@@ -60,7 +60,15 @@ jobs:
                       AUTHOR_INFO="${AUTHOR}"
                     fi
 
-                    COMMITS="${COMMITS}- ${TITLE} by ${AUTHOR_INFO} ([\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA}))"$'\n'
+                    # Check if this is a PR merge commit
+                    if [[ "$TITLE" =~ ^Merge\ pull\ request\ \#([0-9]+) ]]; then
+                      PR_NUMBER="${BASH_REMATCH[1]}"
+                      # Get PR title
+                      PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title' 2>/dev/null || echo "$TITLE")
+                      COMMITS="${COMMITS}- ${PR_TITLE} (#${PR_NUMBER}) by ${AUTHOR_INFO} ([\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA}))"$'\n'
+                    else
+                      COMMITS="${COMMITS}- ${TITLE} by ${AUTHOR_INFO} ([\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA}))"$'\n'
+                    fi
                   done < <(git log "${RANGE}" --pretty=format:"%H|%h|%s|%an")
 
                   # Handle multiline output
