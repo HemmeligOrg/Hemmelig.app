@@ -10,10 +10,21 @@ export function Footer() {
         <footer className="mt-16 py-8 border-t border-gray-200 dark:border-dark-600">
             <div className="max-w-4xl mx-auto px-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    {/* Left - Logo and tagline */}
+                    {/* Left - Norwegian flag and tagline */}
                     <div className="flex items-center space-x-3">
                         <Link to="/" className="flex items-center space-x-2 group">
-                            <Logo className="w-4 h-4 fill-gray-500 dark:fill-slate-400 group-hover:fill-teal-500 dark:group-hover:fill-teal-400 transition-colors" />
+                            <svg
+                                className="w-5 h-3.5"
+                                viewBox="0 0 22 16"
+                                fill="none"
+                                aria-label="Norwegian flag"
+                            >
+                                <rect width="22" height="16" fill="#BA0C2F" />
+                                <rect x="6" width="4" height="16" fill="#FFFFFF" />
+                                <rect y="6" width="22" height="4" fill="#FFFFFF" />
+                                <rect x="7" width="2" height="16" fill="#00205B" />
+                                <rect y="7" width="22" height="2" fill="#00205B" />
+                            </svg>
                             <span className="text-gray-500 dark:text-slate-400 text-xs group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors">
                                 {t('footer.tagline')}
                             </span>
