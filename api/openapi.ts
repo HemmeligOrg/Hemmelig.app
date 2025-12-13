@@ -39,12 +39,72 @@ const spec = {
         '/healthz': {
             get: {
                 tags: ['Health'],
-                summary: 'Health check',
+                summary: 'Legacy liveness check',
+                description:
+                    'Simple liveness check. Kept for backwards compatibility. Consider using /health/live instead.',
                 responses: {
                     '200': {
-                        description: 'Service is healthy',
+                        description: 'Service is running',
                         content: {
-                            'text/plain': { schema: { type: 'string', example: 'Health OK' } },
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        status: { type: 'string', example: 'healthy' },
+                                        timestamp: { type: 'string', format: 'date-time' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/health/live': {
+            get: {
+                tags: ['Health'],
+                summary: 'Liveness probe',
+                description:
+                    'Simple check to verify the process is running. Use for Kubernetes liveness probes.',
+                responses: {
+                    '200': {
+                        description: 'Process is alive',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        status: { type: 'string', example: 'healthy' },
+                                        timestamp: { type: 'string', format: 'date-time' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        '/health/ready': {
+            get: {
+                tags: ['Health'],
+                summary: 'Readiness probe',
+                description:
+                    'Comprehensive health check verifying database connectivity, file storage, and memory usage. Use for Kubernetes readiness probes.',
+                responses: {
+                    '200': {
+                        description: 'Service is ready to accept traffic',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/HealthCheckResponse' },
+                            },
+                        },
+                    },
+                    '503': {
+                        description: 'Service is not ready - one or more checks failed',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/HealthCheckResponse' },
+                            },
                         },
                     },
                 },
@@ -1039,6 +1099,62 @@ const spec = {
                     role: { type: 'string' },
                     banned: { type: 'boolean' },
                     createdAt: { type: 'string', format: 'date-time' },
+                },
+            },
+            HealthCheckResponse: {
+                type: 'object',
+                properties: {
+                    status: {
+                        type: 'string',
+                        enum: ['healthy', 'unhealthy'],
+                        description: 'Overall health status',
+                    },
+                    timestamp: { type: 'string', format: 'date-time' },
+                    checks: {
+                        type: 'object',
+                        properties: {
+                            database: {
+                                type: 'object',
+                                properties: {
+                                    status: { type: 'string', enum: ['healthy', 'unhealthy'] },
+                                    latency_ms: { type: 'integer' },
+                                    error: { type: 'string' },
+                                },
+                            },
+                            storage: {
+                                type: 'object',
+                                properties: {
+                                    status: { type: 'string', enum: ['healthy', 'unhealthy'] },
+                                    error: { type: 'string' },
+                                },
+                            },
+                            memory: {
+                                type: 'object',
+                                properties: {
+                                    status: { type: 'string', enum: ['healthy', 'unhealthy'] },
+                                    heap_used_mb: { type: 'integer' },
+                                    heap_total_mb: { type: 'integer' },
+                                    rss_mb: { type: 'integer' },
+                                    heap_usage_percent: { type: 'integer' },
+                                },
+                            },
+                        },
+                    },
+                },
+                example: {
+                    status: 'healthy',
+                    timestamp: '2024-01-15T10:30:00.000Z',
+                    checks: {
+                        database: { status: 'healthy', latency_ms: 2 },
+                        storage: { status: 'healthy' },
+                        memory: {
+                            status: 'healthy',
+                            heap_used_mb: 128,
+                            heap_total_mb: 256,
+                            rss_mb: 312,
+                            heap_usage_percent: 50,
+                        },
+                    },
                 },
             },
         },

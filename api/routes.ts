@@ -5,6 +5,7 @@ import accountRoute from './routes/account';
 import analyticsRoute from './routes/analytics';
 import apiKeysRoute from './routes/api-keys';
 import filesRoute from './routes/files';
+import healthRoute from './routes/health';
 import instanceRoute from './routes/instance';
 import { invitePublicRoute, inviteRoute } from './routes/invites';
 import metricsRoute from './routes/metrics';
@@ -25,8 +26,10 @@ const routes = new Hono()
     .route('/setup', setupRoute)
     .route('/api-keys', apiKeysRoute)
     .route('/metrics', metricsRoute)
+    .route('/health', healthRoute)
     .route('/', openapi)
-    .get('/healthz', (c) => c.text('Health OK'))
+    // Legacy liveness endpoint (kept for backwards compatibility)
+    .get('/healthz', (c) => c.json({ status: 'healthy', timestamp: new Date().toISOString() }))
     .get('/config/social-providers', (c) => {
         const providers = getEnabledSocialProviders();
         const baseUrl = process.env.HEMMELIG_BASE_URL || c.req.header('origin') || '';

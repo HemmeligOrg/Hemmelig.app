@@ -98,6 +98,8 @@ See [CLI Documentation](docs/cli.md) for all platforms and CI/CD integration exa
 - [Encryption](docs/encryption.md) - How client-side encryption works
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 - [Webhooks](docs/webhook.md) - Webhook notifications for secret events
+- [Health Checks](docs/health.md) - Liveness and readiness probes for container orchestration
+- [Prometheus Metrics](docs/metrics.md) - Monitor your instance with Prometheus
 - [API Documentation](docs/api.md) - REST API reference and OpenAPI spec
 - [SDK Generation](docs/sdk.md) - Generate client SDKs from OpenAPI spec
 - [Upgrading from v6](docs/upgrade.md) - Migration guide for v6 to v7
