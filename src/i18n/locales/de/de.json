@@ -318,7 +318,8 @@
             "general": "Allgemein",
             "security": "Sicherheit",
             "organization": "Organisation",
-            "webhook": "Webhooks"
+            "webhook": "Webhooks",
+            "metrics": "Metriken"
         },
         "system_status": {
             "title": "Systemstatus",
@@ -747,6 +748,18 @@
         "on_view_description": "Webhook senden, wenn ein Geheimnis angesehen wird",
         "on_burn_title": "Geheimnis vernichtet",
         "on_burn_description": "Webhook senden, wenn ein Geheimnis vernichtet oder gelöscht wird"
+    },
+    "metrics_settings": {
+        "title": "Prometheus-Metriken",
+        "description": "Metriken für die Überwachung mit Prometheus bereitstellen",
+        "enable_metrics_title": "Prometheus-Metriken aktivieren",
+        "enable_metrics_description": "Einen /api/metrics-Endpunkt für Prometheus-Scraping bereitstellen",
+        "metrics_secret_label": "Metriken-Geheimnis",
+        "metrics_secret_placeholder": "Geben Sie ein Geheimnis für die Authentifizierung ein",
+        "metrics_secret_hint": "Wird als Bearer-Token verwendet, um Anfragen an den Metriken-Endpunkt zu authentifizieren. Leer lassen für keine Authentifizierung (nicht empfohlen).",
+        "endpoint_info_title": "Endpunkt-Informationen",
+        "endpoint_info_description": "Nach der Aktivierung sind Metriken verfügbar unter:",
+        "endpoint_auth_hint": "Fügen Sie das Geheimnis als Bearer-Token im Authorization-Header hinzu, wenn Sie Metriken abrufen."
     },
     "verify_2fa_page": {
         "back_to_login": "Zurück zur Anmeldung",

@@ -318,7 +318,8 @@
             "general": "Algemeen",
             "security": "Beveiliging",
             "organization": "Organisatie",
-            "webhook": "Webhooks"
+            "webhook": "Webhooks",
+            "metrics": "Metriek"
         },
         "system_status": {
             "title": "Systeemstatus",
@@ -748,6 +749,18 @@
         "on_view_description": "Stuur een webhook wanneer een geheim wordt bekeken",
         "on_burn_title": "Geheim vernietigd",
         "on_burn_description": "Stuur een webhook wanneer een geheim wordt vernietigd of verwijderd"
+    },
+    "metrics_settings": {
+        "title": "Prometheus-metriek",
+        "description": "Metrieken beschikbaar maken voor monitoring met Prometheus",
+        "enable_metrics_title": "Prometheus-metriek inschakelen",
+        "enable_metrics_description": "Een /api/metrics-eindpunt beschikbaar maken voor Prometheus-scraping",
+        "metrics_secret_label": "Metriek-geheim",
+        "metrics_secret_placeholder": "Voer een geheim in voor authenticatie",
+        "metrics_secret_hint": "Wordt gebruikt als Bearer-token om verzoeken aan het metriek-eindpunt te authenticeren. Laat leeg voor geen authenticatie (niet aanbevolen).",
+        "endpoint_info_title": "Eindpuntinformatie",
+        "endpoint_info_description": "Na inschakeling zijn metrieken beschikbaar op:",
+        "endpoint_auth_hint": "Voeg het geheim toe als Bearer-token in de Authorization-header bij het ophalen van metrieken."
     },
     "verify_2fa_page": {
         "back_to_login": "Terug naar aanmelden",

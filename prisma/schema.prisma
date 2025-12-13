@@ -142,6 +142,9 @@ model InstanceSettings {
     webhookOnBurn            Boolean? @default(true) // send webhook when secret is burned/deleted
     // Important message alert
     importantMessage         String?  @default("") // Message to display to all users
+    // Prometheus metrics
+    metricsEnabled           Boolean? @default(false)
+    metricsSecret            String?  @default("") // Bearer token for /metrics endpoint
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 

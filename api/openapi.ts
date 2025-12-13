@@ -33,6 +33,7 @@ const spec = {
         { name: 'Setup', description: 'Initial setup' },
         { name: 'Health', description: 'Health check' },
         { name: 'Config', description: 'Configuration endpoints' },
+        { name: 'Metrics', description: 'Prometheus metrics endpoint' },
     ],
     paths: {
         '/healthz': {
@@ -820,6 +821,51 @@ const spec = {
                 },
             },
         },
+        '/metrics': {
+            get: {
+                tags: ['Metrics'],
+                summary: 'Get Prometheus metrics',
+                description:
+                    'Returns metrics in Prometheus exposition format. Requires metrics to be enabled in instance settings. If a metrics secret is configured, Bearer token authentication is required.',
+                security: [{ metricsAuth: [] }],
+                responses: {
+                    '200': {
+                        description: 'Prometheus metrics',
+                        content: {
+                            'text/plain': {
+                                schema: {
+                                    type: 'string',
+                                    example:
+                                        '# HELP hemmelig_secrets_created_total Total number of secrets created\n# TYPE hemmelig_secrets_created_total counter\nhemmelig_secrets_created_total 42',
+                                },
+                            },
+                        },
+                    },
+                    '401': {
+                        description: 'Unauthorized - invalid or missing Bearer token',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { error: { type: 'string' } },
+                                },
+                            },
+                        },
+                    },
+                    '404': {
+                        description: 'Metrics endpoint is disabled',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: { error: { type: 'string' } },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
     components: {
         securitySchemes: {
@@ -833,6 +879,12 @@ const spec = {
                 type: 'http',
                 scheme: 'bearer',
                 description: 'API key authentication. Use your API key as the bearer token.',
+            },
+            metricsAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                description:
+                    'Metrics endpoint authentication. Use the configured metrics secret as the bearer token.',
             },
         },
         schemas: {
@@ -955,6 +1007,14 @@ const spec = {
                     webhookSecret: { type: 'string' },
                     webhookOnView: { type: 'boolean' },
                     webhookOnBurn: { type: 'boolean' },
+                    metricsEnabled: {
+                        type: 'boolean',
+                        description: 'Enable Prometheus metrics endpoint',
+                    },
+                    metricsSecret: {
+                        type: 'string',
+                        description: 'Bearer token for authenticating metrics endpoint requests',
+                    },
                 },
             },
             InviteCode: {

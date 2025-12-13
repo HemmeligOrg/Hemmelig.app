@@ -1,4 +1,4 @@
-import { Building2, ChevronDown, Save, Settings, Shield, Webhook } from 'lucide-react';
+import { Activity, Building2, ChevronDown, Save, Settings, Shield, Webhook } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
@@ -29,6 +29,8 @@ type InstanceSettings = {
     webhookSecret: string;
     webhookOnView: boolean;
     webhookOnBurn: boolean;
+    metricsEnabled: boolean;
+    metricsSecret: string;
     error?: string;
 };
 
@@ -46,9 +48,9 @@ const EXPIRATION_OPTIONS = [
 ];
 
 export function InstancePage() {
-    const [activeTab, setActiveTab] = useState<'general' | 'security' | 'organization' | 'webhook'>(
-        'general'
-    );
+    const [activeTab, setActiveTab] = useState<
+        'general' | 'security' | 'organization' | 'webhook' | 'metrics'
+    >('general');
     const { t } = useTranslation();
     const loaderData = useLoaderData() as InstanceSettings;
 
@@ -57,6 +59,7 @@ export function InstancePage() {
         securitySettings,
         organizationSettings,
         webhookSettings,
+        metricsSettings,
         isLoading,
         error,
         initializeSettings,
@@ -64,6 +67,7 @@ export function InstancePage() {
         setSecuritySetting,
         setOrganizationSetting,
         setWebhookSetting,
+        setMetricsSetting,
         saveSettings,
     } = useInstanceStore();
 
@@ -74,7 +78,9 @@ export function InstancePage() {
         }
     }, [loaderData, initializeSettings]);
 
-    const handleSaveSettings = (section: 'general' | 'security' | 'organization' | 'webhook') => {
+    const handleSaveSettings = (
+        section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
+    ) => {
         saveSettings(section);
     };
 
@@ -94,6 +100,7 @@ export function InstancePage() {
         { id: 'security', name: t('instance_page.tabs.security'), icon: Shield },
         { id: 'organization', name: t('instance_page.tabs.organization'), icon: Building2 },
         { id: 'webhook', name: t('instance_page.tabs.webhook'), icon: Webhook },
+        { id: 'metrics', name: t('instance_page.tabs.metrics'), icon: Activity },
     ];
 
     return (
@@ -124,6 +131,7 @@ export function InstancePage() {
                                                 | 'security'
                                                 | 'organization'
                                                 | 'webhook'
+                                                | 'metrics'
                                         )
                                     }
                                     className={`flex items-center space-x-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
@@ -687,6 +695,103 @@ export function InstancePage() {
 
                             <button
                                 onClick={() => handleSaveSettings('webhook')}
+                                disabled={isLoading}
+                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                            >
+                                <Save className="w-4 h-4" />
+                                <span>
+                                    {isLoading
+                                        ? t('instance_page.saving_button')
+                                        : t('instance_page.save_settings_button')}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'metrics' && (
+                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
+                        <div className="flex items-center space-x-3 mb-6">
+                            <div className="p-2 bg-cyan-500/20 ">
+                                <Activity className="w-5 h-5 text-cyan-400" />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {t('metrics_settings.title')}
+                                </h2>
+                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                    {t('metrics_settings.description')}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="grid grid-cols-1 gap-4">
+                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
+                                    <div className="flex-1 min-w-0 mr-4">
+                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                                            {t('metrics_settings.enable_metrics_title')}
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            {t('metrics_settings.enable_metrics_description')}
+                                        </p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                        <input
+                                            type="checkbox"
+                                            checked={metricsSettings.metricsEnabled}
+                                            onChange={(e) =>
+                                                setMetricsSetting(
+                                                    'metricsEnabled',
+                                                    e.target.checked
+                                                )
+                                            }
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                        {t('metrics_settings.metrics_secret_label')}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        value={metricsSettings.metricsSecret}
+                                        onChange={(e) =>
+                                            setMetricsSetting('metricsSecret', e.target.value)
+                                        }
+                                        placeholder={t(
+                                            'metrics_settings.metrics_secret_placeholder'
+                                        )}
+                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    />
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                        {t('metrics_settings.metrics_secret_hint')}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border-t border-gray-200 dark:border-dark-600 pt-4">
+                                <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                                    {t('metrics_settings.endpoint_info_title')}
+                                </h3>
+                                <div className="p-4 bg-gray-50 dark:bg-dark-700/30">
+                                    <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">
+                                        {t('metrics_settings.endpoint_info_description')}
+                                    </p>
+                                    <code className="block p-2 bg-gray-200 dark:bg-dark-600 text-sm font-mono text-gray-800 dark:text-slate-200">
+                                        GET /api/metrics
+                                    </code>
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
+                                        {t('metrics_settings.endpoint_auth_hint')}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => handleSaveSettings('metrics')}
                                 disabled={isLoading}
                                 className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                             >

@@ -318,7 +318,8 @@
             "general": "常规",
             "security": "安全",
             "organization": "组织",
-            "webhook": "Webhook"
+            "webhook": "Webhook",
+            "metrics": "指标"
         },
         "system_status": {
             "title": "系统状态",
@@ -747,6 +748,18 @@
         "on_view_description": "当秘密被查看时发送 Webhook",
         "on_burn_title": "秘密已销毁",
         "on_burn_description": "当秘密被销毁或删除时发送 Webhook"
+    },
+    "metrics_settings": {
+        "title": "Prometheus 指标",
+        "description": "暴露用于 Prometheus 监控的指标",
+        "enable_metrics_title": "启用 Prometheus 指标",
+        "enable_metrics_description": "暴露一个 /api/metrics 端点供 Prometheus 抓取",
+        "metrics_secret_label": "指标密钥",
+        "metrics_secret_placeholder": "输入用于身份验证的密钥",
+        "metrics_secret_hint": "用作 Bearer 令牌来验证对指标端点的请求。留空表示不进行身份验证（不推荐）。",
+        "endpoint_info_title": "端点信息",
+        "endpoint_info_description": "启用后，指标将在以下位置可用：",
+        "endpoint_auth_hint": "获取指标时，请在 Authorization 头中包含密钥作为 Bearer 令牌。"
     },
     "verify_2fa_page": {
         "back_to_login": "返回登录",

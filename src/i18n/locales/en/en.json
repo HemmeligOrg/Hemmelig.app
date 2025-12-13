@@ -318,7 +318,8 @@
             "general": "General",
             "security": "Security",
             "organization": "Organization",
-            "webhook": "Webhooks"
+            "webhook": "Webhooks",
+            "metrics": "Metrics"
         },
         "system_status": {
             "title": "System Status",
@@ -748,6 +749,18 @@
         "on_view_description": "Send a webhook when a secret is viewed",
         "on_burn_title": "Secret Burned",
         "on_burn_description": "Send a webhook when a secret is burned or deleted"
+    },
+    "metrics_settings": {
+        "title": "Prometheus Metrics",
+        "description": "Expose metrics for monitoring with Prometheus",
+        "enable_metrics_title": "Enable Prometheus Metrics",
+        "enable_metrics_description": "Expose a /api/metrics endpoint for Prometheus scraping",
+        "metrics_secret_label": "Metrics Secret",
+        "metrics_secret_placeholder": "Enter a secret for authentication",
+        "metrics_secret_hint": "Used as a Bearer token to authenticate requests to the metrics endpoint. Leave empty for no authentication (not recommended).",
+        "endpoint_info_title": "Endpoint Information",
+        "endpoint_info_description": "Once enabled, metrics will be available at:",
+        "endpoint_auth_hint": "Include the secret as a Bearer token in the Authorization header when fetching metrics."
     },
     "verify_2fa_page": {
         "back_to_login": "Back to Login",

@@ -7,6 +7,7 @@ import apiKeysRoute from './routes/api-keys';
 import filesRoute from './routes/files';
 import instanceRoute from './routes/instance';
 import { invitePublicRoute, inviteRoute } from './routes/invites';
+import metricsRoute from './routes/metrics';
 import secretsRoute from './routes/secrets';
 import setupRoute from './routes/setup';
 import { userRoute } from './routes/user';
@@ -23,6 +24,7 @@ const routes = new Hono()
     .route('/invites', inviteRoute)
     .route('/setup', setupRoute)
     .route('/api-keys', apiKeysRoute)
+    .route('/metrics', metricsRoute)
     .route('/', openapi)
     .get('/healthz', (c) => c.text('Health OK'))
     .get('/config/social-providers', (c) => {

@@ -31,4 +31,8 @@ export const instanceSettingsSchema = z.object({
 
     // Important message alert
     importantMessage: z.string().optional(),
+
+    // Prometheus metrics
+    metricsEnabled: z.boolean().optional(),
+    metricsSecret: z.string().optional(),
 });

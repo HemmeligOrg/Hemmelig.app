@@ -38,13 +38,23 @@ type WebhookSettings = {
     webhookOnBurn: boolean;
 };
 
-type AllSettings = GeneralSettings & SecuritySettings & OrganizationSettings & WebhookSettings;
+type MetricsSettings = {
+    metricsEnabled: boolean;
+    metricsSecret: string;
+};
+
+type AllSettings = GeneralSettings &
+    SecuritySettings &
+    OrganizationSettings &
+    WebhookSettings &
+    MetricsSettings;
 
 type InstanceState = {
     generalSettings: GeneralSettings;
     securitySettings: SecuritySettings;
     organizationSettings: OrganizationSettings;
     webhookSettings: WebhookSettings;
+    metricsSettings: MetricsSettings;
     isLoading: boolean;
     error: string | null;
     initializeSettings: (settings: AllSettings) => void;
@@ -59,7 +69,10 @@ type InstanceState = {
         value: OrganizationSettings[K]
     ) => void;
     setWebhookSetting: <K extends keyof WebhookSettings>(key: K, value: WebhookSettings[K]) => void;
-    saveSettings: (section: 'general' | 'security' | 'organization' | 'webhook') => Promise<void>;
+    setMetricsSetting: <K extends keyof MetricsSettings>(key: K, value: MetricsSettings[K]) => void;
+    saveSettings: (
+        section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
+    ) => Promise<void>;
 };
 
 export const useInstanceStore = create<InstanceState>((set, get) => ({
@@ -94,6 +107,10 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         webhookSecret: '',
         webhookOnView: true,
         webhookOnBurn: true,
+    },
+    metricsSettings: {
+        metricsEnabled: false,
+        metricsSecret: '',
     },
     isLoading: false,
     error: null,
@@ -131,6 +148,10 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 webhookSecret: settings.webhookSecret ?? '',
                 webhookOnView: settings.webhookOnView ?? true,
                 webhookOnBurn: settings.webhookOnBurn ?? true,
+            },
+            metricsSettings: {
+                metricsEnabled: settings.metricsEnabled ?? false,
+                metricsSecret: settings.metricsSecret ?? '',
             },
             isLoading: false,
         });
@@ -180,6 +201,10 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     webhookOnView: settings.webhookOnView ?? true,
                     webhookOnBurn: settings.webhookOnBurn ?? true,
                 },
+                metricsSettings: {
+                    metricsEnabled: settings.metricsEnabled ?? false,
+                    metricsSecret: settings.metricsSecret ?? '',
+                },
                 isLoading: false,
             });
         } catch (error) {
@@ -214,11 +239,22 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         }));
     },
 
+    setMetricsSetting: (key, value) => {
+        set((state) => ({
+            metricsSettings: { ...state.metricsSettings, [key]: value },
+        }));
+    },
+
     saveSettings: async (section) => {
         set({ isLoading: true });
         try {
-            const { generalSettings, securitySettings, organizationSettings, webhookSettings } =
-                get();
+            const {
+                generalSettings,
+                securitySettings,
+                organizationSettings,
+                webhookSettings,
+                metricsSettings,
+            } = get();
             let settingsToSave = {};
             if (section === 'general') {
                 settingsToSave = generalSettings;
@@ -228,6 +264,8 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 settingsToSave = organizationSettings;
             } else if (section === 'webhook') {
                 settingsToSave = webhookSettings;
+            } else if (section === 'metrics') {
+                settingsToSave = metricsSettings;
             }
 
             await api.instance.settings.$put({ json: settingsToSave });

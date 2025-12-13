@@ -76,4 +76,6 @@ export const ADMIN_SETTINGS_FIELDS = {
     webhookOnView: true,
     webhookOnBurn: true,
     importantMessage: true,
+    metricsEnabled: true,
+    metricsSecret: true,
 } as const;
