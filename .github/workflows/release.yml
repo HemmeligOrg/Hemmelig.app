@@ -104,4 +104,4 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
                   repository: hemmeligapp/hemmelig
-                  readme-filepath: ./README.md
+                  readme-filepath: ./docs/docker.md
