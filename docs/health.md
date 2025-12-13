@@ -35,7 +35,7 @@ Comprehensive check verifying all dependencies are operational. Use for Kubernet
 | ------------ | ---------------------------------------- |
 | **Database** | Executes `SELECT 1`, measures latency    |
 | **Storage**  | Verifies uploads directory is read/write |
-| **Memory**   | Checks heap usage is below 90%           |
+| **Memory**   | Checks RSS is below 1GB threshold        |
 
 **Response:** `200 OK` (all healthy) or `503 Service Unavailable` (one or more failed)
 
@@ -51,7 +51,7 @@ Comprehensive check verifying all dependencies are operational. Use for Kubernet
             "heap_used_mb": 128,
             "heap_total_mb": 256,
             "rss_mb": 312,
-            "heap_usage_percent": 50
+            "rss_threshold_mb": 1024
         }
     }
 }

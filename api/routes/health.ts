@@ -72,6 +72,8 @@ async function checkStorage(): Promise<CheckResult> {
 
 /**
  * Check memory usage is within acceptable bounds
+ * Note: heapUsed/heapTotal ratio is often high (90%+) in normal Node.js operation
+ * since the heap grows dynamically. We use RSS-based threshold instead.
  */
 function checkMemory(): CheckResult {
     const memUsage = process.memoryUsage();
@@ -79,16 +81,16 @@ function checkMemory(): CheckResult {
     const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
     const rssMB = Math.round(memUsage.rss / 1024 / 1024);
 
-    // Consider unhealthy if heap usage exceeds 90% of total heap
-    const heapUsagePercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
-    const isHealthy = heapUsagePercent < 90;
+    // Consider unhealthy if RSS exceeds 1GB (reasonable default for most deployments)
+    const RSS_THRESHOLD_MB = 1024;
+    const isHealthy = rssMB < RSS_THRESHOLD_MB;
 
     return {
         status: isHealthy ? 'healthy' : 'unhealthy',
         heap_used_mb: heapUsedMB,
         heap_total_mb: heapTotalMB,
         rss_mb: rssMB,
-        heap_usage_percent: Math.round(heapUsagePercent),
+        rss_threshold_mb: RSS_THRESHOLD_MB,
     };
 }
 
