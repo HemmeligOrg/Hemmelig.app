@@ -83,11 +83,9 @@ useHemmeligStore.subscribe((state, prevState) => {
         // Only update if user hasn't modified the expiration (still at initial value)
         // and if saveSettings is not enabled (user preferences take precedence)
         if (!settingsStore.saveSettings && secretStore.expiresAt === DEFAULT_EXPIRATION_SECONDS) {
-            useSecretStore
-                .getState()
-                .setSecretData({
-                    expiresAt: state.settings.defaultSecretExpiration * SECONDS_PER_HOUR,
-                });
+            useSecretStore.getState().setSecretData({
+                expiresAt: state.settings.defaultSecretExpiration * SECONDS_PER_HOUR,
+            });
         }
     }
 });

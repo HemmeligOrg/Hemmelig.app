@@ -47,16 +47,16 @@ model User {
     sessions      Session[]
     accounts      Account[]
 
-    displayUsername    String?
-    role               String?   @default("user")
-    banned             Boolean?  @default(false)
-    banReason          String?
-    banExpires         DateTime?
-    inviteCodeUsed     String?
-    twoFactorEnabled   Boolean?  @default(false)
-    Secrets            Secrets[]
-    apiKeys            ApiKey[]
-    twoFactor          TwoFactor[]
+    displayUsername  String?
+    role             String?     @default("user")
+    banned           Boolean?    @default(false)
+    banReason        String?
+    banExpires       DateTime?
+    inviteCodeUsed   String?
+    twoFactorEnabled Boolean?    @default(false)
+    Secrets          Secrets[]
+    apiKeys          ApiKey[]
+    twoFactor        TwoFactor[]
 
     @@unique([email])
     @@map("user")
