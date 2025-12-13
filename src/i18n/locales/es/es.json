@@ -442,9 +442,7 @@
         "filter": {
             "all_roles": "Todos los roles",
             "admin": "Administrador",
-            "user": "Usuario"
-        },
-        "filter": {
+            "user": "Usuario",
             "all_status": "Todos los estados",
             "active": "Activo",
             "suspended": "Suspendido",

@@ -441,9 +441,7 @@
         "filter": {
             "all_roles": "All Roles",
             "admin": "Admin",
-            "user": "User"
-        },
-        "filter": {
+            "user": "User",
             "all_status": "All Status",
             "active": "Active",
             "suspended": "Suspended",
