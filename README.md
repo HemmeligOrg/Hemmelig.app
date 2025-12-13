@@ -73,20 +73,21 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 Create secrets directly from the command line:
 
 ```bash
-# Install globally
+# Download the binary (recommended for CI/CD)
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v1.0.1/hemmelig-linux-amd64 -o hemmelig
+chmod +x hemmelig
+
+# Or install via npm
 npm install -g hemmelig
 
-# Or use with npx
-npx hemmelig "my secret message"
+# Create a secret
+hemmelig "my secret message"
 
 # With options
 hemmelig "API key: sk-1234" -t "Production API Key" -e 7d -v 3
-
-# Pipe from stdin
-cat config.json | hemmelig -t "Config file"
 ```
 
-See [CLI Documentation](docs/cli.md) for CI/CD integration and automation examples.
+See [CLI Documentation](docs/cli.md) for all platforms and CI/CD integration examples.
 
 ## Documentation
 
