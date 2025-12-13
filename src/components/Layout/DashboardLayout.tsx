@@ -105,7 +105,7 @@ export function DashboardLayout() {
                             <div className="flex items-center px-6 py-6 border-b border-gray-200 dark:border-dark-600">
                                 <Link
                                     to="/"
-                                    className="flex items-center space-x-2 text-gray-900 dark:text-white hover:text-teal-400 transition-colors duration-300"
+                                    className="flex items-center space-x-2 text-gray-900 dark:text-white hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200"
                                 >
                                     <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-gray-900 dark:fill-white" />
                                     <span className="text-xl font-bold">Hemmelig</span>
@@ -113,21 +113,21 @@ export function DashboardLayout() {
                             </div>
 
                             {/* Navigation */}
-                            <nav className="flex-1 px-4 py-6 space-y-2">
+                            <nav className="flex-1 px-4 py-6 space-y-1.5">
                                 {navigation.map((item) => {
                                     const Icon = item.icon;
                                     return (
                                         <Link
                                             key={item.name}
                                             to={item.href}
-                                            className={`flex items-center space-x-3 px-3 py-2 transition-all duration-200 ${
+                                            className={`flex items-center space-x-3 px-3 py-2.5 transition-all duration-200 ${
                                                 isActive(item.href)
-                                                    ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                                                    : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-600'
+                                                    ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 -ml-[2px] pl-[14px]'
+                                                    : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-dark-700/50'
                                             }`}
                                         >
                                             <Icon className="w-5 h-5" />
-                                            <span>{item.name}</span>
+                                            <span className="font-medium">{item.name}</span>
                                         </Link>
                                     );
                                 })}
@@ -135,10 +135,10 @@ export function DashboardLayout() {
 
                             {/* User info */}
                             <div className="px-4 py-4 border-t border-gray-200 dark:border-dark-600">
-                                <div className="flex items-center justify-between px-3 py-2">
+                                <div className="flex items-center justify-between px-3 py-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50">
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-                                            <User className="w-4 h-4 text-gray-900 dark:text-white" />
+                                        <div className="w-9 h-9 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                                            <User className="w-4 h-4 text-white" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             {isLoading ? (
@@ -160,10 +160,10 @@ export function DashboardLayout() {
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center space-x-2 w-full px-3 py-2 mt-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+                                    className="flex items-center space-x-2 w-full px-3 py-2.5 mt-3 text-gray-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
                                 >
                                     <LogOut className="w-4 h-4" />
-                                    <span className="text-sm">
+                                    <span className="text-sm font-medium">
                                         {t('dashboard_layout.sign_out')}
                                     </span>
                                 </button>

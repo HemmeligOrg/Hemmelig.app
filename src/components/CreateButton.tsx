@@ -16,23 +16,23 @@ export function CreateButton({ onSubmit, isLoading, disabled }: CreateButtonProp
                 onClick={onSubmit}
                 disabled={disabled || isLoading}
                 className={`
-     flex items-center justify-center space-x-2 sm:space-x-3 px-6 sm:px-8 py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all duration-300 transform w-full sm:w-auto min-w-[200px] touch-manipulation
-     ${
-         disabled || isLoading
-             ? 'bg-gray-300 dark:bg-dark-600 text-gray-500 dark:text-slate-400 cursor-not-allowed'
-             : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-gray-900 dark:text-white hover:scale-105 hover:shadow-2xl shadow-teal-500/25'
-     }
-     focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-white dark:ring-offset-dark-900
-    `}
+                    flex items-center justify-center space-x-2 px-5 py-2 font-medium text-sm transition-all duration-200 w-full sm:w-auto min-w-[160px] touch-manipulation
+                    ${
+                        disabled || isLoading
+                            ? 'bg-gray-300 dark:bg-dark-600 text-gray-500 dark:text-slate-400 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-md shadow-teal-500/20 hover:shadow-lg hover:shadow-teal-500/30'
+                    }
+                    focus:outline-none focus:ring-2 focus:ring-teal-500/30
+                `}
             >
                 {isLoading ? (
                     <>
-                        <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin" />
                         <span>{t('create_button.creating_secret')}</span>
                     </>
                 ) : (
                     <>
-                        <Send className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <Send className="w-4 h-4" />
                         <span>{t('create_button.create')}</span>
                     </>
                 )}

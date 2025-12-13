@@ -71,10 +71,10 @@ export function SecretsPage() {
     };
 
     return (
-        <div className="p-4 sm:p-6">
+        <div className="p-4 sm:p-6 lg:p-8">
             {/* Header */}
             <div className="mb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                             {t('secrets_page.title')}
@@ -85,7 +85,7 @@ export function SecretsPage() {
                     </div>
                     <Link
                         to="/"
-                        className="flex items-center space-x-2 px-3 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm transition-all duration-300 w-fit"
+                        className="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-teal-500/20 hover:shadow-lg hover:shadow-teal-500/30 w-fit"
                     >
                         <Plus className="w-4 h-4" />
                         <span>{t('secrets_page.create_secret_button')}</span>
@@ -93,17 +93,18 @@ export function SecretsPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-3">
-                    <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-teal-500/20">
-                            <Shield className="w-4 h-4 text-teal-400" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4 shadow-sm">
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 to-teal-600" />
+                    <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 flex items-center justify-center bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400">
+                            <Shield className="w-6 h-6" />
                         </div>
                         <div>
-                            <p className="text-xl font-bold text-gray-900 dark:text-white">
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {secrets.length}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-slate-400">
+                            <p className="text-sm text-gray-500 dark:text-slate-400">
                                 {t('secrets_page.total_secrets')}
                             </p>
                         </div>
@@ -116,16 +117,18 @@ export function SecretsPage() {
                 {secrets.map((secret) => (
                     <div
                         key={secret.id}
-                        className="bg-white dark:bg-dark-800/80 border border-gray-200 dark:border-dark-600 p-4"
+                        className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4 shadow-sm"
                     >
                         <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center space-x-2">
-                                <Shield className="w-4 h-4 text-teal-400" />
+                                <div className="w-8 h-8 flex items-center justify-center bg-teal-500/10 text-teal-500">
+                                    <Shield className="w-4 h-4" />
+                                </div>
                                 <span
                                     className={`inline-flex items-center px-2 py-0.5 text-xs font-medium ${
                                         secret.isExpired
-                                            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                            : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                            ? 'bg-red-500/10 text-red-500 border border-red-500/20'
+                                            : 'bg-green-500/10 text-green-500 border border-green-500/20'
                                     }`}
                                 >
                                     {secret.isExpired
@@ -135,7 +138,7 @@ export function SecretsPage() {
                             </div>
                             <button
                                 onClick={() => openDeleteModal(secret.id)}
-                                className="p-2 text-gray-500 dark:text-slate-400 hover:text-red-400 transition-colors"
+                                className="p-2 text-gray-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
                             >
                                 <Trash2 className="w-4 h-4" />
                             </button>
@@ -147,24 +150,24 @@ export function SecretsPage() {
 
                         <div className="flex items-center flex-wrap gap-2 text-xs text-gray-500 dark:text-slate-400">
                             {secret.isPasswordProtected && (
-                                <span className="flex items-center gap-1">
+                                <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-2 py-1">
                                     <Lock className="w-3 h-3" />
                                     {t('secrets_page.password_protected')}
                                 </span>
                             )}
                             {secret.fileCount > 0 && (
-                                <span className="flex items-center gap-1">
+                                <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-2 py-1">
                                     <FileIcon className="w-3 h-3" />
                                     {secret.fileCount} {t('secrets_page.files')}
                                 </span>
                             )}
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-2 py-1">
                                 <Eye className="w-3 h-3" />
                                 {secret.views}
                             </span>
                         </div>
 
-                        <div className="mt-2 pt-2 border-t border-gray-200 dark:border-dark-600 text-xs text-gray-500 dark:text-slate-400">
+                        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-dark-600 text-xs text-gray-500 dark:text-slate-400">
                             <span>{formatDate(secret.createdAt)}</span>
                             <span className="mx-2">·</span>
                             <span>
@@ -180,38 +183,39 @@ export function SecretsPage() {
             </div>
 
             {/* Desktop: Table Layout */}
-            <div className="hidden sm:block bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 overflow-hidden">
+            <div className="hidden sm:block relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 overflow-hidden shadow-sm">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500" />
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-gray-50 dark:bg-dark-700/30 border-b border-gray-300 dark:border-dark-500/50">
+                        <thead className="bg-gray-50 dark:bg-dark-700/30 border-b border-gray-200 dark:border-dark-600">
                             <tr>
-                                <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-gray-600 dark:text-slate-300">
+                                <th className="text-left px-4 sm:px-6 py-4 text-sm font-semibold text-gray-600 dark:text-slate-300">
                                     {t('secrets_page.table.secret_header')}
                                 </th>
-                                <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-gray-600 dark:text-slate-300">
+                                <th className="text-left px-4 sm:px-6 py-4 text-sm font-semibold text-gray-600 dark:text-slate-300">
                                     {t('secrets_page.table.created_header')}
                                 </th>
-                                <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-gray-600 dark:text-slate-300">
+                                <th className="text-left px-4 sm:px-6 py-4 text-sm font-semibold text-gray-600 dark:text-slate-300">
                                     {t('secrets_page.table.status_header')}
                                 </th>
-                                <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-gray-600 dark:text-slate-300 hidden lg:table-cell">
+                                <th className="text-left px-4 sm:px-6 py-4 text-sm font-semibold text-gray-600 dark:text-slate-300 hidden lg:table-cell">
                                     {t('secrets_page.table.views_header')}
                                 </th>
-                                <th className="text-left px-4 sm:px-6 py-3 text-sm font-medium text-gray-600 dark:text-slate-300">
+                                <th className="text-left px-4 sm:px-6 py-4 text-sm font-semibold text-gray-600 dark:text-slate-300">
                                     {t('secrets_page.table.actions_header')}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-dark-500/30">
+                        <tbody className="divide-y divide-gray-100 dark:divide-dark-600/50">
                             {secrets.map((secret) => (
                                 <tr
                                     key={secret.id}
-                                    className="hover:bg-gray-50 dark:hover:bg-dark-700/20 transition-colors duration-200"
+                                    className="hover:bg-gray-50 dark:hover:bg-dark-700/30 transition-colors duration-200"
                                 >
-                                    <td className="px-4 sm:px-6 py-3">
+                                    <td className="px-4 sm:px-6 py-4">
                                         <div className="flex items-start space-x-3">
-                                            <div className="p-2 flex-shrink-0 bg-teal-500/20">
-                                                <Shield className="text-teal-400 w-4 h-4" />
+                                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400">
+                                                <Shield className="w-5 h-5" />
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
@@ -219,11 +223,11 @@ export function SecretsPage() {
                                                 </p>
                                                 <div className="flex items-center space-x-2 mt-1">
                                                     {secret.isPasswordProtected && (
-                                                        <Lock className="w-3 h-3 text-gray-500 dark:text-slate-400" />
+                                                        <Lock className="w-3 h-3 text-gray-400 dark:text-slate-500" />
                                                     )}
                                                     {secret.fileCount > 0 && (
                                                         <div className="flex items-center space-x-1">
-                                                            <FileIcon className="w-3 h-3 text-gray-500 dark:text-slate-400" />
+                                                            <FileIcon className="w-3 h-3 text-gray-400 dark:text-slate-500" />
                                                             <span className="text-xs text-gray-500 dark:text-slate-400">
                                                                 {secret.fileCount}
                                                             </span>
@@ -242,10 +246,10 @@ export function SecretsPage() {
                                     <td className="px-4 sm:px-6 py-4">
                                         <div className="space-y-1">
                                             <span
-                                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                                className={`inline-flex items-center px-2.5 py-1 text-xs font-medium ${
                                                     secret.isExpired
-                                                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                                        : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                                        ? 'bg-red-500/10 text-red-500 border border-red-500/20'
+                                                        : 'bg-green-500/10 text-green-500 border border-green-500/20'
                                                 }`}
                                             >
                                                 {secret.isExpired
@@ -273,7 +277,7 @@ export function SecretsPage() {
                                         <div className="flex items-center space-x-2">
                                             <button
                                                 onClick={() => openDeleteModal(secret.id)}
-                                                className="p-2 text-gray-500 dark:text-slate-400 hover:text-red-400 transition-colors duration-200"
+                                                className="p-2 text-gray-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
                                                 title={t(
                                                     'secrets_page.table.delete_secret_tooltip'
                                                 )}

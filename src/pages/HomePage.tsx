@@ -7,7 +7,7 @@ export function HomePage() {
     const { secretId } = useSecretStore();
 
     return (
-        <div className="mt-4">
+        <div className="py-6 sm:py-8">
             <ImportantAlert />
             {!secretId && <SecretForm />}
             {secretId && <SecretSettings />}

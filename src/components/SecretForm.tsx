@@ -126,12 +126,14 @@ export function SecretForm() {
     const isFormValid = secret.trim().length > 0;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             {/* Main editor card */}
-            <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6 shadow-xl">
+            <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-5 sm:p-8 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50 transition-shadow duration-300 hover:shadow-xl hover:shadow-gray-300/50 dark:hover:shadow-dark-900/70">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500" />
+
                 <Editor value={secret} onChange={(value) => setSecretData({ secret: value })} />
 
-                <div className="mt-4">
+                <div className="mt-5">
                     <TitleField
                         value={title}
                         onChange={(value) => setSecretData({ title: value })}
@@ -139,7 +141,7 @@ export function SecretForm() {
                 </div>
 
                 {/* File upload and quick create button */}
-                <div className="mt-4 flex flex-col sm:flex-row gap-4 sm:items-start">
+                <div className="mt-5 flex flex-col sm:flex-row gap-4 sm:items-start">
                     <div className="flex-1">
                         <FileUpload onFileChange={handleFileChange} compact />
                     </div>
