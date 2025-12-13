@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificate
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
-RUN npm ci --legacy-peer-deps
+RUN npm ci 
 COPY prisma ./prisma
 COPY prisma.config.ts ./
 # Workaround for node:25-alpine ARM64 environment variable issue with Prisma
