@@ -29,7 +29,7 @@ COPY --from=builder /app/prisma.config.ts ./
 ENV NODE_ENV=production
 # Workaround for node:25-alpine ARM64 environment variable issue with Prisma
 ENV DATABASE_URL="file:/app/database/hemmelig.db"
-RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && \
+RUN npm ci --omit=dev --ignore-scripts && \
     npm rebuild better-sqlite3 && \
     npx prisma generate && \
     npm cache clean --force && \
