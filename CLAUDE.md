@@ -1,42 +1,52 @@
 # Claude AI Assistant Guidelines for Hemmelig.app
 
-This document provides comprehensive guidelines for Claude when working within the Hemmelig.app codebase. Follow these instructions precisely to maintain code quality, security, and architectural consistency.
+Welcome to Hemmelig.app! This guide will help you navigate our codebase and contribute effectively. Think of this document as your onboarding buddy - it covers everything you need to know to maintain code quality, security, and architectural consistency.
 
-## Project Overview
+## What is Hemmelig?
 
-Hemmelig.app is a secure secret-sharing application that enables users to share encrypted messages that automatically self-destruct after being read. The name "Hemmelig" means "secret" in Norwegian.
+Hemmelig.app is a secure secret-sharing application that lets users share encrypted messages that automatically self-destruct after being read. The name "Hemmelig" means "secret" in Norwegian - fitting, right?
 
-### Core Security Model
+### The Security Model You Must Understand
 
 **CRITICAL: Zero-Knowledge Architecture**
 
+This is the heart of Hemmelig. Before you write a single line of code, make sure you understand this:
+
 - All encryption/decryption happens **client-side only** using the Web Crypto API
-- The server **never** sees plaintext secrets—only encrypted blobs
-- Decryption keys are passed via URL fragments (`#decryptionKey=...`), which are **never sent to the server**
-- This is the fundamental security guarantee of the application—**do not compromise this**
+- The server **never** sees plaintext secrets - only encrypted blobs
+- Decryption keys live in URL fragments (`#decryptionKey=...`), which browsers **never send to servers**
+- This is our fundamental security promise to users - **do not compromise this under any circumstances**
 
-### Encryption Details
+### How Encryption Works
 
-- **Algorithm:** AES-256-GCM (authenticated encryption)
-- **Key Derivation:** PBKDF2 with SHA-256, 100,000 iterations
-- **IV:** 96-bit random initialization vector per encryption
-- **Salt:** 32-character random string per secret (stored server-side)
-- **Implementation:** `src/lib/crypto.ts`
+| Component          | Details                                                    |
+| ------------------ | ---------------------------------------------------------- |
+| **Algorithm**      | AES-256-GCM (authenticated encryption)                     |
+| **Key Derivation** | PBKDF2 with SHA-256, 100,000 iterations                    |
+| **IV**             | 96-bit random initialization vector per encryption         |
+| **Salt**           | 32-character random string per secret (stored server-side) |
+| **Implementation** | `src/lib/crypto.ts`                                        |
 
 ## Technology Stack
 
-| Layer        | Technology                   | Notes                                                |
-| ------------ | ---------------------------- | ---------------------------------------------------- |
-| **Runtime**  | Node.js 25                   | JavaScript runtime, used for both dev and production |
-| **Frontend** | React 18 + Vite + TypeScript | All components in `.tsx`                             |
-| **Backend**  | Hono (RPC mode)              | Type-safe API client generation                      |
-| **Database** | SQLite + Prisma ORM          | Schema in `prisma/schema.prisma`                     |
-| **Styling**  | Tailwind CSS                 | Class-based, supports light/dark mode                |
-| **State**    | Zustand                      | Lightweight state management                         |
-| **Auth**     | better-auth                  | Session-based authentication                         |
-| **i18n**     | react-i18next                | All user-facing strings must be translated           |
+Here's what powers Hemmelig:
+
+| Layer          | Technology                   | Notes                                      |
+| -------------- | ---------------------------- | ------------------------------------------ |
+| **Runtime**    | Node.js 25                   | JavaScript runtime for dev and production  |
+| **Frontend**   | React 19 + Vite + TypeScript | All components use `.tsx`                  |
+| **Backend**    | Hono (RPC mode)              | Type-safe API client generation            |
+| **Database**   | SQLite + Prisma ORM          | Schema in `prisma/schema.prisma`           |
+| **Styling**    | Tailwind CSS v4              | Class-based, light/dark mode support       |
+| **State**      | Zustand                      | Lightweight state management               |
+| **Auth**       | better-auth                  | Session-based with 2FA support             |
+| **i18n**       | react-i18next                | All user-facing strings must be translated |
+| **Monitoring** | prom-client                  | Prometheus metrics                         |
+| **API Docs**   | Swagger UI                   | OpenAPI documentation                      |
 
 ## Project Structure
+
+Here's how the codebase is organized:
 
 ```
 hemmelig.app/
@@ -51,12 +61,20 @@ hemmelig.app/
 │   │   ├── user.ts        # User management (admin)
 │   │   ├── instance.ts    # Instance settings
 │   │   ├── analytics.ts   # Usage analytics
-│   │   └── invites.ts     # Invite code management
+│   │   ├── invites.ts     # Invite code management
+│   │   ├── api-keys.ts    # API key management
+│   │   ├── setup.ts       # Initial setup flow
+│   │   ├── health.ts      # Health check endpoints
+│   │   └── metrics.ts     # Prometheus metrics
 │   ├── lib/               # Backend utilities
 │   │   ├── db.ts          # Prisma client singleton
-│   │   ├── password.ts    # Password hashing utilities
+│   │   ├── password.ts    # Password hashing (Argon2)
+│   │   ├── files.ts       # File handling utilities
 │   │   └── utils.ts       # General utilities
 │   ├── middlewares/       # Hono middlewares
+│   │   ├── auth.ts        # Authentication middleware
+│   │   ├── ratelimit.ts   # Rate limiting
+│   │   └── ip-restriction.ts # IP allowlist/blocklist
 │   ├── validations/       # Zod schemas for request validation
 │   └── jobs/              # Background jobs (cleanup, etc.)
 ├── src/                   # Frontend (React)
@@ -67,35 +85,45 @@ hemmelig.app/
 │   ├── pages/             # Route-level components
 │   │   ├── HomePage.tsx
 │   │   ├── SecretPage.tsx
+│   │   ├── SetupPage.tsx  # Initial admin setup
+│   │   ├── Verify2FAPage.tsx # Two-factor verification
 │   │   ├── Dashboard/     # Admin dashboard pages
 │   │   └── ...
 │   ├── store/             # Zustand stores
 │   │   ├── secretStore.ts # Secret creation state
 │   │   ├── userStore.ts   # Current user state
-│   │   ├── themeStore.ts  # Light/dark mode (persisted to localStorage)
+│   │   ├── hemmeligStore.ts # Instance settings
+│   │   ├── themeStore.ts  # Light/dark mode (persisted)
 │   │   └── ...
 │   ├── lib/               # Frontend utilities
 │   │   ├── api.ts         # Hono RPC client
-│   │   └── crypto.ts      # Client-side encryption
+│   │   ├── auth.ts        # better-auth client
+│   │   ├── crypto.ts      # Client-side encryption
+│   │   └── analytics.ts   # Page view tracking
 │   ├── i18n/              # Internationalization
 │   │   └── locales/       # Translation JSON files
 │   └── router.tsx         # React Router configuration
 ├── prisma/
 │   └── schema.prisma      # Database schema
+├── scripts/               # Utility scripts
+│   ├── admin.ts           # Set user as admin
+│   └── seed-demo.ts       # Seed demo data
 ├── server.ts              # Production server entry point
 └── vite.config.ts         # Vite configuration
 ```
 
-## Development Commands
+## Getting Started
+
+### Development Commands
 
 ```bash
 # Install dependencies
 npm install
 
-# Development (frontend only, hot reload)
+# Start frontend with hot reload
 npm run dev
 
-# Development (API server with database migrations)
+# Start API server (runs migrations automatically)
 npm run dev:api
 
 # Build for production
@@ -104,73 +132,83 @@ npm run build
 # Run production server
 npm run start
 
-# Database migrations
-npm run migrate:dev      # Create and apply migrations
-npm run migrate:deploy   # Apply pending migrations
-npm run migrate:reset    # Reset database (destructive!)
+# Database commands
+npm run migrate:dev          # Create and apply migrations
+npm run migrate:deploy       # Apply pending migrations (production)
+npm run migrate:reset        # Reset database (destructive!)
+npm run migrate:status       # Check migration status
 
-# Run tests
-npm run test
+# Utility scripts
+npm run set:admin            # Promote a user to admin
+npm run seed:demo            # Seed database with demo data
+
+# Code quality
+npm run format               # Format code with Prettier
+npm run format:check         # Check formatting
+npm run test                 # Run API tests with Hurl
 ```
 
 ## Coding Guidelines
 
-### General Principles
+### Core Principles
 
-1. **Surgical Changes Only:** Make the minimum changes necessary. Do not refactor, optimize, or "improve" unrelated code.
+1. **Make Surgical Changes** - Only change what's necessary. Don't refactor, optimize, or "improve" unrelated code.
 
-2. **Preserve Existing Patterns:** Follow the conventions already established in the codebase. Consistency trumps personal preference.
+2. **Follow Existing Patterns** - Consistency trumps personal preference. Match what's already in the codebase.
 
-3. **No Unsolicited Dependencies:** Never add, remove, or update packages without explicit permission.
+3. **Ask Before Adding Dependencies** - Never add, remove, or update packages without explicit permission.
 
-4. **Security First:** Any change touching encryption, authentication, or data handling requires extra scrutiny.
+4. **Security First** - Extra scrutiny for anything touching encryption, authentication, or data handling.
 
-### Frontend Guidelines
+---
 
-#### Component Structure
+## Frontend Guidelines
+
+### Component Structure
+
+Keep your components clean and consistent:
 
 ```tsx
 // Use functional components with hooks
 export function MyComponent({ prop1, prop2 }: MyComponentProps) {
-    const { t } = useTranslation(); // Always use i18n
+    const { t } = useTranslation(); // Always use i18n for user-facing text
     const [state, setState] = useState<Type>(initialValue);
 
-    // Event handlers
     const handleAction = () => {
-        /* ... */
+        // Event handler logic
     };
 
     return <div className="bg-white dark:bg-dark-800">{/* Always support light/dark mode */}</div>;
 }
 ```
 
-#### Design System
+### Design System
 
-**UI Principles:**
+Our UI follows these principles:
 
-- Compact design with minimal padding
-- Sharp corners (no `rounded-*` classes)
-- All components must support both light and dark modes
-- Mobile-first responsive design
+- **Compact design** with minimal padding
+- **Sharp corners** - no `rounded-*` classes
+- **Light and dark mode** support is mandatory
+- **Mobile-first** responsive design
 
-#### Styling with Tailwind
+### Styling with Tailwind
 
 ```tsx
-// ✅ Correct: Light mode first, then dark variant, sharp corners
+// GOOD: Light mode first, then dark variant, sharp corners
 className =
     'bg-white dark:bg-dark-800 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600';
 
-// ❌ Wrong: Missing light mode variant
+// BAD: Missing light mode variant
 className = 'dark:bg-dark-800';
 
-// ❌ Wrong: Using rounded corners
+// BAD: Using rounded corners
 className = 'rounded-lg';
 
-// ❌ Wrong: Using arbitrary values when design tokens exist
+// BAD: Using arbitrary values when design tokens exist
 className = 'bg-[#111111]'; // Use bg-dark-800 instead
 ```
 
-#### Custom Color Palette
+### Custom Color Palette
 
 ```javascript
 // tailwind.config.js defines these colors:
@@ -190,7 +228,7 @@ light: {
 }
 ```
 
-#### State Management with Zustand
+### State Management with Zustand
 
 ```typescript
 // src/store/exampleStore.ts
@@ -207,10 +245,11 @@ export const useExampleStore = create<ExampleState>((set) => ({
 }));
 ```
 
-#### API Calls
+### API Calls
+
+Always use the typed Hono RPC client - it gives you full type safety:
 
 ```typescript
-// Always use the typed Hono RPC client
 import { api } from '../lib/api';
 
 // The client is fully typed based on backend routes
@@ -220,27 +259,88 @@ const response = await api.secrets.$post({
 const data = await response.json();
 ```
 
-#### Internationalization
+### React Router Loaders
+
+We use React Router v7 with data loaders. Here's the pattern:
+
+```typescript
+// In router.tsx
+{
+    path: '/dashboard/secrets',
+    element: <SecretsPage />,
+    loader: async () => {
+        const res = await api.secrets.$get();
+        return await res.json();
+    },
+}
+
+// In the component
+import { useLoaderData } from 'react-router-dom';
+
+export function SecretsPage() {
+    const secrets = useLoaderData();
+    // Use the pre-loaded data
+}
+```
+
+---
+
+## Internationalization (i18n)
+
+### The Golden Rule
+
+**When you add or modify any user-facing string, you MUST update ALL translation files.**
+
+### Supported Languages
+
+We currently support these languages:
+
+| Language | File Path                     |
+| -------- | ----------------------------- |
+| English  | `src/i18n/locales/en/en.json` |
+| German   | `src/i18n/locales/de/de.json` |
+| French   | `src/i18n/locales/fr/fr.json` |
+| Spanish  | `src/i18n/locales/es/es.json` |
+| Dutch    | `src/i18n/locales/nl/nl.json` |
+| Italian  | `src/i18n/locales/it/it.json` |
+| Chinese  | `src/i18n/locales/zh/zh.json` |
+
+### How to Add New Strings
+
+1. **Add to English first** - `src/i18n/locales/en/en.json`
+2. **Add to ALL other locale files** - Even if you use English as a placeholder, add the key to every file
+3. **Use nested keys** - Follow the existing structure (e.g., `secret_page.loading_message`)
 
 ```tsx
-// All user-facing strings must use translations
+// Using translations in components
 const { t } = useTranslation();
 
-// ✅ Correct
+// GOOD
 <p>{t('secret_page.loading_message')}</p>
 
-// ❌ Wrong: Hardcoded string
+// BAD: Hardcoded string
 <p>Loading...</p>
 ```
 
-When adding new strings:
+### Translation Checklist
 
-1. Add to `src/i18n/locales/en/en.json` (required)
-2. Add to other locale files as appropriate
+Before committing, verify:
 
-### Backend Guidelines
+- [ ] Added key to `en/en.json` with proper English text
+- [ ] Added key to `de/de.json`
+- [ ] Added key to `fr/fr.json`
+- [ ] Added key to `es/es.json`
+- [ ] Added key to `nl/nl.json`
+- [ ] Added key to `it/it.json`
+- [ ] Added key to `zh/zh.json`
 
-#### Route Structure
+> **Tip**: If you don't know the translation, use the English text as a placeholder and add a `// TODO: translate` comment in your PR description.
+
+---
+
+## Backend Guidelines
+
+### Route Structure
 
 ```typescript
 // api/routes/example.ts
@@ -258,7 +358,7 @@ const exampleRoute = new Hono().post(
     ),
     async (c) => {
         const { field } = c.req.valid('json');
-        // ... handler logic
+        // Handler logic here
         return c.json({ success: true });
     }
 );
@@ -266,11 +366,11 @@ const exampleRoute = new Hono().post(
 export default exampleRoute;
 ```
 
-#### Database Operations
+### Database Operations
 
 ```typescript
 // Always use the Prisma client from api/lib/db.ts
-import { prisma } from '../lib/db';
+import prisma from '../lib/db';
 
 // Use transactions for multiple operations
 await prisma.$transaction([
@@ -279,19 +379,19 @@ await prisma.$transaction([
 ]);
 ```
 
-#### Input Validation
+### Input Validation
 
 - **Always** validate input using Zod schemas
 - Place reusable schemas in `api/validations/`
 - Validate at the route level using `zValidator`
 
-#### Error Handling
+### Error Handling
 
 ```typescript
 // Return consistent error responses
 return c.json({ error: 'Descriptive error message' }, 400);
 
-// For validation errors, Zod automatically formats them
+// Zod automatically handles validation errors
 ```
 
 ### Database Schema Changes
@@ -300,6 +400,25 @@ return c.json({ error: 'Descriptive error message' }, 400);
 2. Run `npm run migrate:dev --name descriptive_name`
 3. Test the migration locally
 4. Commit both schema and migration files
+
+---
+
+## Health & Monitoring
+
+### Health Endpoints
+
+Hemmelig provides Kubernetes-ready health checks:
+
+| Endpoint            | Purpose         | Checks                    |
+| ------------------- | --------------- | ------------------------- |
+| `GET /health/live`  | Liveness probe  | Process is running        |
+| `GET /health/ready` | Readiness probe | Database, storage, memory |
+
+### Metrics Endpoint
+
+Prometheus metrics are available at `GET /metrics`. This endpoint can be optionally protected with authentication.
+
+---
 
 ## Security Checklist
 
@@ -313,19 +432,23 @@ When modifying security-sensitive code, verify:
 - [ ] No sensitive data in logs or error messages
 - [ ] File uploads are validated and sanitized
 
+---
+
 ## Testing
 
-- API tests use Hurl (`api/tests/`)
-- Run with `npm run test`
+- API tests use [Hurl](https://hurl.dev/) - find them in `api/tests/`
+- Run tests with `npm run test`
 - When adding new endpoints, add corresponding test files
+
+---
 
 ## Common Patterns
 
 ### Creating a New Page
 
 1. Create component in `src/pages/`
-2. Add route in `src/router.tsx`
-3. Add translations in locale files
+2. Add route with loader in `src/router.tsx`
+3. **Add translations to ALL locale files**
 4. Ensure light/dark mode support
 
 ### Creating a New API Endpoint
@@ -333,15 +456,19 @@ When modifying security-sensitive code, verify:
 1. Add route handler in `api/routes/`
 2. Register in `api/routes.ts`
 3. Add Zod validation schema
-4. Update frontend API types (automatic via Hono RPC)
+4. Frontend types update automatically via Hono RPC
 
 ### Adding a New Store
 
 1. Create store in `src/store/`
-2. Follow existing store patterns (Zustand)
-3. Export from store file
+2. Follow existing Zustand patterns
+3. Export from the store file
+
+---
 
 ## What NOT to Do
+
+These are hard rules - no exceptions:
 
 1. **Never** modify encryption logic without explicit approval
 2. **Never** log or store plaintext secrets server-side
@@ -352,112 +479,84 @@ When modifying security-sensitive code, verify:
 7. **Never** use `any` types in TypeScript
 8. **Never** commit `.env` files or secrets
 9. **Never** disable security features "temporarily"
+10. **Never** add user-facing strings without updating ALL translation files
+
+---
 
 ## Quick Reference
 
-### File Locations
+### Key File Locations
 
-- Frontend components: `src/components/`
-- Page components: `src/pages/`
-- API routes: `api/routes/`
-- Database schema: `prisma/schema.prisma`
-- Translations: `src/i18n/locales/`
-- Stores: `src/store/`
-
-### Key Files
-
-- `src/lib/crypto.ts` - Client-side encryption
-- `src/lib/api.ts` - API client
-- `api/app.ts` - Backend setup
-- `tailwind.config.js` - Design tokens
+| What                   | Where                  |
+| ---------------------- | ---------------------- |
+| Frontend components    | `src/components/`      |
+| Page components        | `src/pages/`           |
+| API routes             | `api/routes/`          |
+| Database schema        | `prisma/schema.prisma` |
+| Translations           | `src/i18n/locales/`    |
+| Stores                 | `src/store/`           |
+| Client-side encryption | `src/lib/crypto.ts`    |
+| API client             | `src/lib/api.ts`       |
+| Backend setup          | `api/app.ts`           |
+| Design tokens          | `tailwind.config.js`   |
 
 ### Environment Variables
 
 ```bash
-DATABASE_URL=          # PostgreSQL connection string
-BETTER_AUTH_SECRET=    # Auth secret key
-ANALYTICS_ENABLED=     # Enable/disable analytics tracking
-ANALYTICS_HMAC_SECRET= # HMAC secret for anonymizing visitor IDs
+# Required
+DATABASE_URL=              # SQLite connection (file:./data/hemmelig.db)
+BETTER_AUTH_SECRET=        # Auth secret key (generate a random string)
+
+# Optional - Analytics
+ANALYTICS_ENABLED=         # Enable/disable analytics tracking
+ANALYTICS_HMAC_SECRET=     # HMAC secret for anonymizing visitor IDs
+
+# Optional - Restrictions
+RESTRICT_ORGANIZATION_EMAIL= # Restrict signups to email domain
+
+# Optional - File Storage
+MAX_FILE_SIZE=             # Maximum file upload size
+UPLOAD_RESTRICTION=        # File upload restrictions
 ```
-
-## Organization Features
-
-Hemmelig supports organization-level configuration for enterprise deployments:
-
-### Invite-Only Registration
-
-- Admins can enable invite-only mode via Instance Settings
-- Generate invite codes with configurable max uses
-- Track invite code usage and creation
-
-### Email Domain Restrictions
-
-- Restrict registration to specific email domains (e.g., `company.com`)
-- Multiple domains supported (comma-separated)
-- Works independently or alongside invite codes
-
-### Configuration (Instance Settings)
-
-- `allowRegistration`: Enable/disable public registration
-- `requireInvite`: Require invite code to register
-- `allowedEmailDomains`: Comma-separated list of allowed email domains
-
-## Analytics System
-
-Privacy-focused analytics for tracking usage:
-
-### How It Works
-
-- HMAC-SHA256 hashing creates anonymous visitor IDs (IP never stored)
-- Tracks page visits on landing page and secret view page
-- Bot traffic automatically filtered using `isbot`
-- Configurable via environment variables
-
-### Dashboard
-
-- Admins can view analytics at `/dashboard/analytics`
-- Shows daily visitor counts with a bar chart
-- Displays unique visitors vs total visits
-
-### Frontend Integration
-
-```typescript
-// Analytics tracking is automatic via useAnalytics hook
-// Tracks: HomePage, SecretPage (on view)
-import { useAnalytics } from '../hooks/useAnalytics';
-
-// In components that should be tracked:
-useAnalytics('/path-to-track');
-```
-
-## Authentication (better-auth)
-
-### Custom Hooks
-
-The auth system uses better-auth with custom hooks:
-
-```typescript
-// In api/auth.ts - email domain validation example
-emailAndPassword: {
-    enabled: true,
-    hooks: {
-        before: createBeforeSignupHook(async (data) => {
-            // Validate email domain
-            const settings = await prisma.settings.findFirst();
-            if (settings?.allowedEmailDomains) {
-                // Check domain and throw BetterAuthError if not allowed
-            }
-        }),
-    },
-}
-```
-
-### Error Handling
-
-- Custom errors thrown with `BetterAuthError`
-- Error codes: `EMAIL_DOMAIN_NOT_ALLOWED`, `INVALID_INVITE_CODE`, etc.
-- Frontend catches and displays user-friendly messages
 
 ---
 
-_This document should be treated as the source of truth for development practices in this repository. When in doubt, ask for clarification rather than making assumptions._
+## Feature Reference
+
+### Organization Features
+
+Hemmelig supports enterprise deployments with:
+
+- **Invite-Only Registration** - Require invite codes to sign up
+- **Email Domain Restrictions** - Limit signups to specific domains (e.g., `company.com`)
+- **Instance Settings** - Configure `allowRegistration`, `requireInvite`, `allowedEmailDomains`
+
+### Analytics System
+
+Privacy-focused analytics with:
+
+- HMAC-SHA256 hashing for anonymous visitor IDs (IPs never stored)
+- Automatic bot filtering using `isbot`
+- Tracks: Homepage (`/`) and Secret view page (`/secret`)
+- Admin dashboard at `/dashboard/analytics`
+
+### Authentication
+
+better-auth provides:
+
+- Session-based authentication
+- Two-factor authentication (2FA) with TOTP
+- Custom signup hooks for email domain validation
+- Admin user management
+
+---
+
+## Need Help?
+
+- Check existing patterns in the codebase first
+- Read related components/routes for context
+- When in doubt, ask for clarification rather than making assumptions
+
+---
+
+_This document is the source of truth for development practices in this repository._
