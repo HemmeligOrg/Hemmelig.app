@@ -92,18 +92,10 @@ export function SecretPage() {
                     setShowSecretContent(true);
                     setIsBurnable(data.isBurnable ?? false);
 
-                    // Consume the view after successful decryption
-                    // This decrements views and burns if burnable + last view
-                    try {
-                        const consumeResponse = await api.secrets[':id'].consume.$post({
-                            param: { id: id! },
-                        });
-                        const consumeData = await consumeResponse.json();
-                        if ('views' in consumeData) {
-                            setViewsRemaining(consumeData.views);
-                        }
-                    } catch (err) {
-                        console.error('Failed to consume secret:', err);
+                    // View consumption now happens atomically on the server during retrieval
+                    // Update views from the response
+                    if ('views' in data) {
+                        setViewsRemaining(data.views);
                     }
                 }
             } catch (err: unknown) {
