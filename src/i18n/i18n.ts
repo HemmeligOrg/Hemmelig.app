@@ -7,6 +7,7 @@ import enTranslations from './locales/en/en.json';
 import esTranslations from './locales/es/es.json';
 import frTranslations from './locales/fr/fr.json';
 import itTranslations from './locales/it/it.json';
+import nlTranslations from './locales/nl/nl.json';
 import zhTranslations from './locales/zh/zh.json';
 
 i18n.use(LanguageDetector)
@@ -28,6 +29,7 @@ i18n.use(LanguageDetector)
             fr: { translations: frTranslations },
             it: { translations: itTranslations },
             zh: { translations: zhTranslations },
+            nl: { translations: nlTranslations },
         },
         defaultNS: 'translations',
     });
