@@ -1,7 +1,10 @@
 import { zValidator } from '@hono/zod-validator';
-import { readFile, writeFile } from 'fs/promises';
+import { createReadStream, createWriteStream } from 'fs';
 import { Hono } from 'hono';
+import { stream } from 'hono/streaming';
 import { nanoid } from 'nanoid';
+import { Readable } from 'stream';
+import { pipeline } from 'stream/promises';
 import { z } from 'zod';
 import prisma from '../lib/db';
 import { generateSafeFilePath, getMaxFileSize, isPathSafe } from '../lib/files';
@@ -53,8 +56,16 @@ files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
             return c.json({ error: 'File not found' }, 404);
         }
 
-        const fileBuffer = await readFile(file.path);
-        return c.body(fileBuffer);
+        // Stream the file instead of loading it entirely into memory
+        const nodeStream = createReadStream(file.path);
+        const webStream = Readable.toWeb(nodeStream) as ReadableStream;
+
+        return stream(c, async (s) => {
+            s.onAbort(() => {
+                nodeStream.destroy();
+            });
+            await s.pipe(webStream);
+        });
     } catch (error) {
         console.error('Failed to download file:', error);
         return c.json({ error: 'Failed to download file' }, 500);
@@ -86,7 +97,12 @@ files.post('/', async (c) => {
             return c.json({ error: 'Invalid filename' }, 400);
         }
 
-        await writeFile(safePath.path, Buffer.from(await file.arrayBuffer()));
+        // Stream the file to disk instead of loading it entirely into memory
+        const webStream = file.stream();
+        const nodeStream = Readable.fromWeb(webStream as import('stream/web').ReadableStream);
+        const writeStream = createWriteStream(safePath.path);
+
+        await pipeline(nodeStream, writeStream);
 
         const newFile = await prisma.file.create({
             data: { id, filename: safePath.filename, path: safePath.path },
