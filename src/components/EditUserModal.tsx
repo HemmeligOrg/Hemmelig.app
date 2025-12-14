@@ -59,45 +59,45 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
             confirmText={t('users_page.edit_user_modal.save_button')}
             cancelText={t('users_page.edit_user_modal.cancel_button')}
         >
-            <div className="space-y-4">
+            <div className="space-y-3">
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                         {t('users_page.edit_user_modal.username_label')}
                     </label>
                     <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400 w-5 h-5" />
+                        <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                         />
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                         {t('users_page.edit_user_modal.email_label')}
                     </label>
                     <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400 w-5 h-5" />
+                        <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                         />
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                         {t('users_page.edit_user_modal.role_label')}
                     </label>
                     <div className="relative">
-                        <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400 w-5 h-5" />
+                        <Shield className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
                         <select
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 appearance-none"
+                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none"
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
@@ -105,15 +105,15 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
                     </div>
                 </div>
                 <div>
-                    <label className="flex items-center">
+                    <label className="flex items-center gap-2">
                         <input
                             type="checkbox"
                             checked={banned}
                             onChange={(e) => setBanned(e.target.checked)}
-                            className="h-4 w-4 border-gray-300 text-teal-600 focus:ring-teal-500"
+                            className="h-3.5 w-3.5 border-gray-300 text-teal-600 focus:ring-teal-500"
                         />
-                        <span className="ml-2 text-sm text-gray-600 dark:text-slate-300">
-                            <Ban className="inline w-4 h-4 mr-2" />
+                        <span className="text-xs text-gray-600 dark:text-slate-300 flex items-center gap-1.5">
+                            <Ban className="w-3.5 h-3.5" />
                             {t('users_page.edit_user_modal.banned_label')}
                         </span>
                     </label>

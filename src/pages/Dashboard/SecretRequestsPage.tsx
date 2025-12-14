@@ -110,68 +110,70 @@ export function SecretRequestsPage() {
     };
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
-            <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div className="p-4 sm:p-6">
+            <div className="mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                         {t('secret_requests_page.title')}
                     </h1>
-                    <p className="text-gray-500 dark:text-slate-400 mt-1">
+                    <p className="text-gray-500 dark:text-slate-400 text-xs mt-0.5">
                         {t('secret_requests_page.description')}
                     </p>
                 </div>
                 <button
                     onClick={() => navigate('/dashboard/secret-requests/create')}
-                    className="flex items-center justify-center space-x-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 w-full sm:w-auto"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors w-fit"
                 >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-3.5 h-3.5" />
                     <span>{t('secret_requests_page.create_request_button')}</span>
                 </button>
             </div>
 
-            <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 overflow-hidden">
+            <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-600">
-                        <thead className="bg-gray-50 dark:bg-dark-800">
+                        <thead className="bg-gray-50 dark:bg-dark-700/50">
                             <tr>
                                 <th
                                     scope="col"
-                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6"
+                                    className="py-2.5 pl-4 pr-3 text-left text-xs font-medium text-gray-600 dark:text-slate-400 sm:pl-4"
                                 >
                                     {t('secret_requests_page.table.title_header')}
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
                                 >
                                     {t('secret_requests_page.table.status_header')}
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white hidden sm:table-cell"
+                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400 hidden sm:table-cell"
                                 >
                                     {t('secret_requests_page.table.secret_expiry_header')}
                                 </th>
                                 <th
                                     scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white hidden md:table-cell"
+                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400 hidden md:table-cell"
                                 >
                                     {t('secret_requests_page.table.link_expires_header')}
                                 </th>
-                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                <th scope="col" className="relative py-2.5 pl-3 pr-4 sm:pr-4">
                                     <span className="sr-only">Actions</span>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-dark-700">
+                        <tbody className="divide-y divide-gray-100 dark:divide-dark-600">
                             {requests.length === 0 ? (
                                 <tr>
                                     <td
                                         colSpan={5}
-                                        className="py-8 text-center text-gray-500 dark:text-slate-400"
+                                        className="py-6 text-center text-gray-500 dark:text-slate-400"
                                     >
-                                        <Link2 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                                        <p>{t('secret_requests_page.no_requests')}</p>
+                                        <Link2 className="w-8 h-8 mx-auto mb-1.5 opacity-50" />
+                                        <p className="text-xs">
+                                            {t('secret_requests_page.no_requests')}
+                                        </p>
                                     </td>
                                 </tr>
                             ) : (
@@ -180,47 +182,50 @@ export function SecretRequestsPage() {
                                     const isPending = request.status === 'pending' && !isExpired;
 
                                     return (
-                                        <tr key={request.id}>
-                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                        <tr
+                                            key={request.id}
+                                            className="hover:bg-gray-50 dark:hover:bg-dark-700/30"
+                                        >
+                                            <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-xs sm:pl-4">
                                                 <div className="flex flex-col">
                                                     <span className="font-medium text-gray-900 dark:text-white">
                                                         {request.title}
                                                     </span>
                                                     {request.description && (
-                                                        <span className="text-xs text-gray-500 dark:text-slate-400 truncate max-w-[200px]">
+                                                        <span className="text-xs text-gray-500 dark:text-slate-400 truncate max-w-[180px]">
                                                             {request.description}
                                                         </span>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs">
                                                 <span
-                                                    className={`px-2 inline-flex text-xs leading-5 font-semibold ${getStatusColor(isExpired && request.status === 'pending' ? 'expired' : request.status)}`}
+                                                    className={`px-1.5 py-0.5 inline-flex text-xs font-medium ${getStatusColor(isExpired && request.status === 'pending' ? 'expired' : request.status)}`}
                                                 >
                                                     {t(
                                                         `secret_requests_page.status.${isExpired && request.status === 'pending' ? 'expired' : request.status}`
                                                     )}
                                                 </span>
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400 hidden sm:table-cell">
+                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden sm:table-cell">
                                                 {formatExpiration(request.expiresIn)}
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-slate-400 hidden md:table-cell">
+                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden md:table-cell">
                                                 {new Date(request.expiresAt).toLocaleDateString()}
                                             </td>
-                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                <div className="flex items-center justify-end space-x-2">
+                                            <td className="relative whitespace-nowrap py-2.5 pl-3 pr-4 text-right sm:pr-4">
+                                                <div className="flex items-center justify-end gap-1">
                                                     {isPending && (
                                                         <button
                                                             onClick={() =>
                                                                 fetchCreatorLink(request)
                                                             }
-                                                            className="text-teal-400 hover:text-teal-300"
+                                                            className="p-1.5 text-teal-500 hover:bg-teal-50 dark:hover:bg-teal-500/10 transition-colors"
                                                             title={t(
                                                                 'secret_requests_page.table.copy_link_tooltip'
                                                             )}
                                                         >
-                                                            <Copy className="w-4 h-4" />
+                                                            <Copy className="w-3.5 h-3.5" />
                                                         </button>
                                                     )}
                                                     {isPending && (
@@ -228,12 +233,12 @@ export function SecretRequestsPage() {
                                                             onClick={() =>
                                                                 setRequestToCancel(request)
                                                             }
-                                                            className="text-red-400 hover:text-red-300"
+                                                            className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                                                             title={t(
                                                                 'secret_requests_page.table.cancel_tooltip'
                                                             )}
                                                         >
-                                                            <Trash2 className="w-4 h-4" />
+                                                            <Trash2 className="w-3.5 h-3.5" />
                                                         </button>
                                                     )}
                                                 </div>
@@ -255,26 +260,24 @@ export function SecretRequestsPage() {
                     setCreatorLink(null);
                 }}
                 onConfirm={() => {
-                    if (creatorLink) {
-                        handleCopyToClipboard(creatorLink);
-                    }
+                    if (creatorLink) handleCopyToClipboard(creatorLink);
                 }}
                 title={t('secret_requests_page.link_modal.title')}
                 confirmText={t('secret_requests_page.link_modal.copy_button')}
                 cancelText={t('secret_requests_page.link_modal.close_button')}
             >
-                <div className="space-y-4">
-                    <p className="text-gray-600 dark:text-slate-300">
+                <div className="space-y-3">
+                    <p className="text-xs text-gray-600 dark:text-slate-300">
                         {t('secret_requests_page.link_modal.description')}
                     </p>
                     {creatorLink && (
-                        <div className="bg-gray-100 dark:bg-dark-700 p-3 break-all">
-                            <code className="text-sm text-gray-900 dark:text-white">
+                        <div className="bg-gray-50 dark:bg-dark-700 p-2.5 break-all">
+                            <code className="text-xs text-gray-900 dark:text-white">
                                 {creatorLink}
                             </code>
                         </div>
                     )}
-                    <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                    <p className="text-xs text-yellow-600 dark:text-yellow-400">
                         {t('secret_requests_page.link_modal.warning')}
                     </p>
                 </div>
@@ -289,7 +292,7 @@ export function SecretRequestsPage() {
                 confirmText={t('secret_requests_page.cancel_modal.confirm_text')}
                 cancelText={t('secret_requests_page.cancel_modal.cancel_text')}
             >
-                <p className="text-gray-600 dark:text-slate-300">
+                <p className="text-xs text-gray-600 dark:text-slate-300">
                     {t('secret_requests_page.cancel_modal.message', {
                         title: requestToCancel?.title,
                     })}

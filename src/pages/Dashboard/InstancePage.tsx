@@ -104,21 +104,21 @@ export function InstancePage() {
     ];
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="p-4 sm:p-6">
             {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            <div className="mb-5">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                     {t('instance_page.title')}
                 </h1>
-                <p className="text-gray-500 dark:text-slate-400 mt-1">
+                <p className="text-gray-500 dark:text-slate-400 text-xs mt-0.5">
                     {t('instance_page.description')}
                 </p>
             </div>
 
             {/* Tabs */}
-            <div className="mb-8">
+            <div className="mb-5">
                 <div className="border-b border-gray-200 dark:border-dark-600 overflow-x-auto">
-                    <nav className="flex space-x-4 sm:space-x-8 min-w-max px-1">
+                    <nav className="flex space-x-4 sm:space-x-6 min-w-max px-0.5">
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
                             return (
@@ -134,13 +134,13 @@ export function InstancePage() {
                                                 | 'metrics'
                                         )
                                     }
-                                    className={`flex items-center space-x-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-200 ${
+                                    className={`flex items-center gap-1.5 py-2.5 px-0.5 border-b-2 font-medium text-xs whitespace-nowrap transition-colors ${
                                         activeTab === tab.id
                                             ? 'border-teal-500 text-teal-500 dark:text-teal-400'
-                                            : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-dark-500'
+                                            : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300'
                                     }`}
                                 >
-                                    <Icon className="w-4 h-4" />
+                                    <Icon className="w-3.5 h-3.5" />
                                     <span>{tab.name}</span>
                                 </button>
                             );
@@ -150,27 +150,27 @@ export function InstancePage() {
             </div>
 
             {/* Tab Content */}
-            <div className="w-full">
+            <div className="max-w-xl">
                 {activeTab === 'general' && (
-                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
-                        <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-blue-500/20 ">
-                                <Settings className="w-5 h-5 text-blue-400" />
+                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="p-1.5 bg-blue-500/10">
+                                <Settings className="w-4 h-4 text-blue-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {t('instance_page.general_settings.title')}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                <p className="text-xs text-gray-500 dark:text-slate-400">
                                     {t('instance_page.general_settings.description')}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-4">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t('instance_page.general_settings.instance_name_label')}
                                     </label>
                                     <input
@@ -179,12 +179,12 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setGeneralSetting('instanceName', e.target.value)
                                         }
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t(
                                             'instance_page.general_settings.default_expiration_label'
                                         )}
@@ -198,26 +198,26 @@ export function InstancePage() {
                                                     parseFloat(e.target.value)
                                                 )
                                             }
-                                            className="w-full appearance-none px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 cursor-pointer"
+                                            className="w-full appearance-none px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors cursor-pointer"
                                         >
                                             {EXPIRATION_OPTIONS.map((option) => (
                                                 <option
                                                     key={option.seconds}
                                                     value={option.hours}
-                                                    className="bg-gray-100 dark:bg-dark-700"
+                                                    className="bg-gray-50 dark:bg-dark-700"
                                                 >
                                                     {t(option.labelKey)}
                                                 </option>
                                             ))}
                                         </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-slate-400" />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none">
+                                            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t('instance_page.general_settings.max_secret_size_label')}
                                     </label>
                                     <input
@@ -231,13 +231,13 @@ export function InstancePage() {
                                                 Math.round(parseFloat(e.target.value) * 1024)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                     {t('instance_page.general_settings.instance_description_label')}
                                 </label>
                                 <textarea
@@ -245,13 +245,13 @@ export function InstancePage() {
                                     onChange={(e) =>
                                         setGeneralSetting('instanceDescription', e.target.value)
                                     }
-                                    rows={3}
-                                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    rows={2}
+                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                     {t('instance_page.general_settings.important_message_label')}
                                 </label>
                                 <textarea
@@ -263,9 +263,9 @@ export function InstancePage() {
                                     placeholder={t(
                                         'instance_page.general_settings.important_message_placeholder'
                                     )}
-                                    className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                 />
-                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                     {t('instance_page.general_settings.important_message_hint')}
                                 </p>
                             </div>
@@ -273,9 +273,9 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('general')}
                                 disabled={isLoading}
-                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-3.5 h-3.5" />
                                 <span>
                                     {isLoading
                                         ? t('instance_page.saving_button')
@@ -287,29 +287,29 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'security' && (
-                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
-                        <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-orange-500/20 ">
-                                <Shield className="w-5 h-5 text-orange-400" />
+                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="p-1.5 bg-orange-500/10">
+                                <Shield className="w-4 h-4 text-orange-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     Security Settings
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                <p className="text-xs text-gray-500 dark:text-slate-400">
                                     Configure security and access controls
                                 </p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             Rate Limiting
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             Enable request rate limiting
                                         </p>
                                     </div>
@@ -325,16 +325,16 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             Allow Password Protection
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             Allow users to password protect secrets
                                         </p>
                                     </div>
@@ -350,16 +350,16 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             Allow IP Restriction
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             Allow users to restrict secrets by IP
                                         </p>
                                     </div>
@@ -375,14 +375,14 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         Rate Limit Requests
                                     </label>
                                     <input
@@ -394,12 +394,12 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         Rate Limit Window (seconds)
                                     </label>
                                     <input
@@ -411,7 +411,7 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
                                 </div>
                             </div>
@@ -419,9 +419,9 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('security')}
                                 disabled={isLoading}
-                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-3.5 h-3.5" />
                                 <span>
                                     {isLoading
                                         ? t('instance_page.saving_button')
@@ -433,31 +433,31 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'organization' && (
-                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
-                        <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-purple-500/20 ">
-                                <Building2 className="w-5 h-5 text-purple-400" />
+                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="p-1.5 bg-purple-500/10">
+                                <Building2 className="w-4 h-4 text-purple-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {t('organization_page.title')}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                <p className="text-xs text-gray-500 dark:text-slate-400">
                                     {t('organization_page.description')}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             {t(
                                                 'organization_page.registration_settings.invite_only_title'
                                             )}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             {t(
                                                 'organization_page.registration_settings.invite_only_description'
                                             )}
@@ -475,18 +475,18 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             {t(
                                                 'organization_page.registration_settings.require_registered_user_title'
                                             )}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             {t(
                                                 'organization_page.registration_settings.require_registered_user_description'
                                             )}
@@ -504,14 +504,14 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 gap-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t(
                                             'organization_page.registration_settings.allowed_domains_title'
                                         )}
@@ -528,9 +528,9 @@ export function InstancePage() {
                                         placeholder={t(
                                             'organization_page.registration_settings.allowed_domains_placeholder'
                                         )}
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t(
                                             'organization_page.registration_settings.allowed_domains_hint'
                                         )}
@@ -541,9 +541,9 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('organization')}
                                 disabled={isLoading}
-                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-3.5 h-3.5" />
                                 <span>
                                     {isLoading
                                         ? t('organization_page.saving_button')
@@ -555,29 +555,29 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'webhook' && (
-                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
-                        <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-green-500/20 ">
-                                <Webhook className="w-5 h-5 text-green-400" />
+                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="p-1.5 bg-green-500/10">
+                                <Webhook className="w-4 h-4 text-green-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {t('webhook_settings.title')}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                <p className="text-xs text-gray-500 dark:text-slate-400">
                                     {t('webhook_settings.description')}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             {t('webhook_settings.enable_webhooks_title')}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             {t('webhook_settings.enable_webhooks_description')}
                                         </p>
                                     </div>
@@ -593,12 +593,12 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t('webhook_settings.webhook_url_label')}
                                     </label>
                                     <input
@@ -608,15 +608,15 @@ export function InstancePage() {
                                             setWebhookSetting('webhookUrl', e.target.value)
                                         }
                                         placeholder={t('webhook_settings.webhook_url_placeholder')}
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('webhook_settings.webhook_url_hint')}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t('webhook_settings.webhook_secret_label')}
                                     </label>
                                     <input
@@ -628,25 +628,25 @@ export function InstancePage() {
                                         placeholder={t(
                                             'webhook_settings.webhook_secret_placeholder'
                                         )}
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('webhook_settings.webhook_secret_hint')}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="border-t border-gray-200 dark:border-dark-600 pt-4">
-                                <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                            <div className="border-t border-gray-200 dark:border-dark-600 pt-3">
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
                                     {t('webhook_settings.events_title')}
                                 </h3>
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                        <div className="flex-1 min-w-0 mr-4">
-                                            <h3 className="font-medium text-gray-900 dark:text-white">
+                                <div className="grid grid-cols-1 gap-3">
+                                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                        <div className="flex-1 min-w-0 mr-3">
+                                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                                 {t('webhook_settings.on_view_title')}
                                             </h3>
-                                            <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            <p className="text-xs text-gray-500 dark:text-slate-400">
                                                 {t('webhook_settings.on_view_description')}
                                             </p>
                                         </div>
@@ -662,16 +662,16 @@ export function InstancePage() {
                                                 }
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                            <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                         </label>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                        <div className="flex-1 min-w-0 mr-4">
-                                            <h3 className="font-medium text-gray-900 dark:text-white">
+                                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                        <div className="flex-1 min-w-0 mr-3">
+                                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                                 {t('webhook_settings.on_burn_title')}
                                             </h3>
-                                            <p className="text-sm text-gray-500 dark:text-slate-400">
+                                            <p className="text-xs text-gray-500 dark:text-slate-400">
                                                 {t('webhook_settings.on_burn_description')}
                                             </p>
                                         </div>
@@ -687,7 +687,7 @@ export function InstancePage() {
                                                 }
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                            <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                         </label>
                                     </div>
                                 </div>
@@ -696,9 +696,9 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('webhook')}
                                 disabled={isLoading}
-                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-3.5 h-3.5" />
                                 <span>
                                     {isLoading
                                         ? t('instance_page.saving_button')
@@ -710,29 +710,29 @@ export function InstancePage() {
                 )}
 
                 {activeTab === 'metrics' && (
-                    <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-4 sm:p-6">
-                        <div className="flex items-center space-x-3 mb-6">
-                            <div className="p-2 bg-cyan-500/20 ">
-                                <Activity className="w-5 h-5 text-cyan-400" />
+                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="p-1.5 bg-cyan-500/10">
+                                <Activity className="w-4 h-4 text-cyan-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
                                     {t('metrics_settings.title')}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
+                                <p className="text-xs text-gray-500 dark:text-slate-400">
                                     {t('metrics_settings.description')}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-700/30 ">
-                                    <div className="flex-1 min-w-0 mr-4">
-                                        <h3 className="font-medium text-gray-900 dark:text-white">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <div className="flex-1 min-w-0 mr-3">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                                             {t('metrics_settings.enable_metrics_title')}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-slate-400">
+                                        <p className="text-xs text-gray-500 dark:text-slate-400">
                                             {t('metrics_settings.enable_metrics_description')}
                                         </p>
                                     </div>
@@ -748,12 +748,12 @@ export function InstancePage() {
                                             }
                                             className="sr-only peer"
                                         />
-                                        <div className="w-11 h-6 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
                                     </label>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
                                         {t('metrics_settings.metrics_secret_label')}
                                     </label>
                                     <input
@@ -765,26 +765,26 @@ export function InstancePage() {
                                         placeholder={t(
                                             'metrics_settings.metrics_secret_placeholder'
                                         )}
-                                        className="w-full px-4 py-3 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                                     />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('metrics_settings.metrics_secret_hint')}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="border-t border-gray-200 dark:border-dark-600 pt-4">
-                                <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                            <div className="border-t border-gray-200 dark:border-dark-600 pt-3">
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
                                     {t('metrics_settings.endpoint_info_title')}
                                 </h3>
-                                <div className="p-4 bg-gray-50 dark:bg-dark-700/30">
-                                    <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">
+                                <div className="p-3 bg-gray-50 dark:bg-dark-700/30">
+                                    <p className="text-xs text-gray-600 dark:text-slate-300 mb-1.5">
                                         {t('metrics_settings.endpoint_info_description')}
                                     </p>
-                                    <code className="block p-2 bg-gray-200 dark:bg-dark-600 text-sm font-mono text-gray-800 dark:text-slate-200">
+                                    <code className="block p-1.5 bg-gray-100 dark:bg-dark-600 text-xs font-mono text-gray-800 dark:text-slate-200">
                                         GET /api/metrics
                                     </code>
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">
                                         {t('metrics_settings.endpoint_auth_hint')}
                                     </p>
                                 </div>
@@ -793,9 +793,9 @@ export function InstancePage() {
                             <button
                                 onClick={() => handleSaveSettings('metrics')}
                                 disabled={isLoading}
-                                className="flex items-center justify-center space-x-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save className="w-4 h-4" />
+                                <Save className="w-3.5 h-3.5" />
                                 <span>
                                     {isLoading
                                         ? t('instance_page.saving_button')

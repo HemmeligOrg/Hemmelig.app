@@ -20,28 +20,28 @@ export const Modal: React.FC<ModalProps> = ({
     children,
     confirmText,
     cancelText,
-    confirmButtonClass = 'bg-red-600 hover:bg-red-700',
+    confirmButtonClass = 'bg-red-500 hover:bg-red-600',
 }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div className="bg-white dark:bg-dark-800 shadow-xl p-5 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
+            <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-xl p-4 w-full max-w-sm">
                 <div className="flex justify-between items-center mb-3">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h2>
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white"
+                        className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
-                <div className="text-gray-600 dark:text-slate-300 text-sm mb-4">{children}</div>
-                <div className="flex justify-end space-x-3">
+                <div className="text-gray-600 dark:text-slate-300 text-xs mb-4">{children}</div>
+                <div className="flex justify-end gap-2">
                     {cancelText && (
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-200 dark:bg-dark-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-dark-600 transition-colors"
+                            className="px-3 py-1.5 text-xs font-medium bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-600 transition-colors"
                         >
                             {cancelText}
                         </button>
@@ -49,7 +49,7 @@ export const Modal: React.FC<ModalProps> = ({
                     {onConfirm && confirmText && (
                         <button
                             onClick={onConfirm}
-                            className={`px-4 py-2 text-white transition-colors ${confirmButtonClass}`}
+                            className={`px-3 py-1.5 text-xs font-medium text-white transition-colors ${confirmButtonClass}`}
                         >
                             {confirmText}
                         </button>

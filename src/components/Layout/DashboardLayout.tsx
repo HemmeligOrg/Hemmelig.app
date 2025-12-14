@@ -118,52 +118,52 @@ export function DashboardLayout() {
                     <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0">
                         <div className="flex flex-col flex-1 bg-white dark:bg-dark-800 border-r border-gray-200 dark:border-dark-600">
                             {/* Logo */}
-                            <div className="flex items-center px-6 py-6 border-b border-gray-200 dark:border-dark-600">
+                            <div className="flex items-center px-4 py-4 border-b border-gray-200 dark:border-dark-600">
                                 <Link
                                     to="/"
-                                    className="flex items-center space-x-2 text-gray-900 dark:text-white hover:text-teal-500 dark:hover:text-teal-400 transition-colors duration-200"
+                                    className="flex items-center gap-2 text-gray-900 dark:text-white hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
                                 >
-                                    <Logo className="w-5 h-5 sm:w-6 sm:h-6 fill-gray-900 dark:fill-white" />
-                                    <span className="text-xl font-bold">Hemmelig</span>
+                                    <Logo className="w-5 h-5 fill-gray-900 dark:fill-white" />
+                                    <span className="text-lg font-bold">Hemmelig</span>
                                 </Link>
                             </div>
 
                             {/* Navigation */}
-                            <nav className="flex-1 px-4 py-6 space-y-1.5">
+                            <nav className="flex-1 px-3 py-4 space-y-1">
                                 {navigation.map((item) => {
                                     const Icon = item.icon;
                                     return (
                                         <Link
                                             key={item.name}
                                             to={item.href}
-                                            className={`flex items-center space-x-3 px-3 py-2.5 transition-all duration-200 ${
+                                            className={`flex items-center gap-2.5 px-2.5 py-2 text-sm transition-colors ${
                                                 isActive(item.href)
-                                                    ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 -ml-[2px] pl-[14px]'
+                                                    ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 -ml-[2px] pl-[12px]'
                                                     : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-dark-700/50'
                                             }`}
                                         >
-                                            <Icon className="w-5 h-5" />
-                                            <span className="font-medium">{item.name}</span>
+                                            <Icon className="w-4 h-4" />
+                                            <span className="font-medium text-xs">{item.name}</span>
                                         </Link>
                                     );
                                 })}
                             </nav>
 
                             {/* User info */}
-                            <div className="px-4 py-4 border-t border-gray-200 dark:border-dark-600">
-                                <div className="flex items-center justify-between px-3 py-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-9 h-9 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-                                            <User className="w-4 h-4 text-white" />
+                            <div className="px-3 py-3 border-t border-gray-200 dark:border-dark-600">
+                                <div className="flex items-center justify-between px-2.5 py-2 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                                            <User className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             {isLoading ? (
-                                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                                     Loading...
                                                 </p>
                                             ) : (
                                                 <>
-                                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                    <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                                         {user?.username}
                                                     </p>
                                                     <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
@@ -176,10 +176,10 @@ export function DashboardLayout() {
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center space-x-2 w-full px-3 py-2.5 mt-3 text-gray-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
+                                    className="flex items-center gap-2 w-full px-2.5 py-2 mt-2 text-gray-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                                 >
-                                    <LogOut className="w-4 h-4" />
-                                    <span className="text-sm font-medium">
+                                    <LogOut className="w-3.5 h-3.5" />
+                                    <span className="text-xs font-medium">
                                         {t('dashboard_layout.sign_out')}
                                     </span>
                                 </button>

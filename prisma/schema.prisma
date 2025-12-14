@@ -191,37 +191,37 @@ model ApiKey {
 }
 
 model SecretRequest {
-    id            String    @id @default(uuid())
-    title         String // Displayed to Creator
-    description   String? // Optional additional context
+    id          String  @id @default(uuid())
+    title       String // Displayed to Creator
+    description String? // Optional additional context
 
     // Pre-configured secret settings
-    maxViews      Int       @default(1) @map("max_views")
-    expiresIn     Int       @map("expires_in") // Seconds until secret expires after creation
-    password      String? // Optional password protection (hashed)
-    allowedIp     String?   @map("allowed_ip") // Optional IP restriction
-    preventBurn   Boolean   @default(false) @map("prevent_burn")
+    maxViews    Int     @default(1) @map("max_views")
+    expiresIn   Int     @map("expires_in") // Seconds until secret expires after creation
+    password    String? // Optional password protection (hashed)
+    allowedIp   String? @map("allowed_ip") // Optional IP restriction
+    preventBurn Boolean @default(false) @map("prevent_burn")
 
     // Request security
-    token         String    @unique // Secure token for Creator Link
+    token String @unique // Secure token for Creator Link
 
     // Webhook configuration
-    webhookUrl    String?   @map("webhook_url") // Optional webhook URL
-    webhookSecret String?   @map("webhook_secret") // HMAC secret for webhook signature
+    webhookUrl    String? @map("webhook_url") // Optional webhook URL
+    webhookSecret String? @map("webhook_secret") // HMAC secret for webhook signature
 
     // Status tracking
-    status        String    @default("pending") // pending | fulfilled | expired | cancelled
+    status String @default("pending") // pending | fulfilled | expired | cancelled
 
     // Relationships
-    userId        String    @map("user_id") // Requester's user ID
-    user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    secretId      String?   @unique @map("secret_id") // Created secret (once fulfilled)
-    secret        Secrets?  @relation(fields: [secretId], references: [id], onDelete: SetNull)
+    userId   String   @map("user_id") // Requester's user ID
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    secretId String?  @unique @map("secret_id") // Created secret (once fulfilled)
+    secret   Secrets? @relation(fields: [secretId], references: [id], onDelete: SetNull)
 
     // Timestamps
-    createdAt     DateTime  @default(now()) @map("created_at")
-    expiresAt     DateTime  @map("expires_at") // When the Creator Link expires
-    fulfilledAt   DateTime? @map("fulfilled_at") // When secret was created
+    createdAt   DateTime  @default(now()) @map("created_at")
+    expiresAt   DateTime  @map("expires_at") // When the Creator Link expires
+    fulfilledAt DateTime? @map("fulfilled_at") // When secret was created
 
     @@index([userId])
     @@index([token])
