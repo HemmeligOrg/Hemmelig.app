@@ -1,7 +1,7 @@
-import { Copy, ExternalLink, Link2, Plus, Trash2 } from 'lucide-react';
+import { Copy, Link2, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Modal } from '../../components/Modal';
 import { api } from '../../lib/api';
@@ -223,18 +223,6 @@ export function SecretRequestsPage() {
                                                             <Copy className="w-4 h-4" />
                                                         </button>
                                                     )}
-                                                    {request.status === 'fulfilled' &&
-                                                        request.secretId && (
-                                                            <Link
-                                                                to={`/secret/${request.secretId}`}
-                                                                className="text-blue-400 hover:text-blue-300"
-                                                                title={t(
-                                                                    'secret_requests_page.table.view_secret_tooltip'
-                                                                )}
-                                                            >
-                                                                <ExternalLink className="w-4 h-4" />
-                                                            </Link>
-                                                        )}
                                                     {isPending && (
                                                         <button
                                                             onClick={() =>

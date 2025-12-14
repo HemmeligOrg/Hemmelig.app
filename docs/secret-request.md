@@ -6,28 +6,27 @@ Secret Requests allow you to request secrets from others securely. Instead of as
 
 1. **Create a Request** - You configure the secret settings (expiration, max views, etc.) and get a unique request link
 2. **Share the Link** - Send the request link to the person who has the secret
-3. **They Submit** - They enter their secret, which gets encrypted in their browser and submitted
-4. **You Receive** - You get notified (via webhook) or check your dashboard for the secret link
+3. **They Submit** - They enter their secret, which gets encrypted in their browser. They receive a secret URL which they must manually send back to you.
 
 ```
-┌─────────────┐         ┌─────────────┐         ┌─────────────┐
-│  Requester  │         │   Creator   │         │   Viewer    │
-│  (You)      │         │  (Them)     │         │   (You)     │
-└──────┬──────┘         └──────┬──────┘         └──────┬──────┘
-       │                       │                       │
-       │ 1. Create request     │                       │
-       │───────────────────>   │                       │
-       │                       │                       │
-       │ 2. Share link         │                       │
-       │ ─ ─ ─ ─ ─ ─ ─ ─ ─ >   │                       │
-       │                       │                       │
-       │                       │ 3. Submit secret      │
-       │                       │──────────────────────>│
-       │                       │    (encrypted)        │
-       │                       │                       │
-       │ 4. View secret        │                       │
-       │<──────────────────────────────────────────────│
-       │                       │                       │
+┌─────────────┐         ┌─────────────┐
+│  Requester  │         │   Creator   │
+│  (You)      │         │  (Them)     │
+└──────┬──────┘         └──────┬──────┘
+       │                       │
+       │ 1. Create request     │
+       │───────────────────>   │
+       │                       │
+       │ 2. Share request link │
+       │ ─ ─ ─ ─ ─ ─ ─ ─ ─ >   │
+       │                       │
+       │                       │ 3. Submit secret
+       │                       │    (encrypted)
+       │                       │
+       │ 4. They send you the  │
+       │    secret URL         │
+       │< ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+       │                       │
 ```
 
 ## Creating a Request
