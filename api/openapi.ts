@@ -869,7 +869,7 @@ const spec = {
                                 schema: {
                                     type: 'string',
                                     example:
-                                        '# HELP hemmelig_secrets_created_total Total number of secrets created\n# TYPE hemmelig_secrets_created_total counter\nhemmelig_secrets_created_total 42',
+                                        '# HELP hemmelig_secrets_active_count Current number of active (unexpired) secrets\n# TYPE hemmelig_secrets_active_count gauge\nhemmelig_secrets_active_count 42',
                                 },
                             },
                         },

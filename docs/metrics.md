@@ -31,11 +31,10 @@ If no secret is configured, the endpoint is accessible without authentication (n
 
 | Metric                                   | Type      | Description                                  |
 | ---------------------------------------- | --------- | -------------------------------------------- |
-| `hemmelig_secrets_created_total`         | Counter   | Total number of secrets created              |
-| `hemmelig_secrets_viewed_total`          | Counter   | Total number of secrets viewed               |
-| `hemmelig_secrets_expired_total`         | Counter   | Total number of secrets that expired         |
 | `hemmelig_secrets_active_count`          | Gauge     | Current number of active (unexpired) secrets |
 | `hemmelig_users_total`                   | Gauge     | Total number of registered users             |
+| `hemmelig_visitors_unique_30d`           | Gauge     | Unique visitors in the last 30 days          |
+| `hemmelig_visitors_views_30d`            | Gauge     | Total page views in the last 30 days         |
 | `hemmelig_http_request_duration_seconds` | Histogram | Duration of HTTP requests in seconds         |
 
 ### Default Node.js Metrics
@@ -77,12 +76,6 @@ You can create a Grafana dashboard to visualize these metrics. Here's an example
 
 ```promql
 hemmelig_secrets_active_count
-```
-
-For secrets creation rate over time:
-
-```promql
-rate(hemmelig_secrets_created_total[5m])
 ```
 
 ## Security Considerations

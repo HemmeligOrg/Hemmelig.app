@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { collectDefaultMetrics, Counter, Gauge, Histogram, register, Registry } from 'prom-client';
+import { collectDefaultMetrics, Gauge, Histogram, register, Registry } from 'prom-client';
 import prisma from '../lib/db';
 import { getInstanceSettings } from '../lib/settings';
 
@@ -12,24 +12,6 @@ const metricsRegistry = new Registry();
 collectDefaultMetrics({ register: metricsRegistry });
 
 // Custom application metrics
-const secretsCreatedTotal = new Counter({
-    name: 'hemmelig_secrets_created_total',
-    help: 'Total number of secrets created',
-    registers: [metricsRegistry],
-});
-
-const secretsViewedTotal = new Counter({
-    name: 'hemmelig_secrets_viewed_total',
-    help: 'Total number of secrets viewed',
-    registers: [metricsRegistry],
-});
-
-const secretsExpiredTotal = new Counter({
-    name: 'hemmelig_secrets_expired_total',
-    help: 'Total number of secrets that expired',
-    registers: [metricsRegistry],
-});
-
 const activeSecretsGauge = new Gauge({
     name: 'hemmelig_secrets_active_count',
     help: 'Current number of active (unexpired) secrets',
@@ -39,6 +21,18 @@ const activeSecretsGauge = new Gauge({
 const totalUsersGauge = new Gauge({
     name: 'hemmelig_users_total',
     help: 'Total number of registered users',
+    registers: [metricsRegistry],
+});
+
+const visitorsUnique30dGauge = new Gauge({
+    name: 'hemmelig_visitors_unique_30d',
+    help: 'Unique visitors in the last 30 days',
+    registers: [metricsRegistry],
+});
+
+const visitorsViews30dGauge = new Gauge({
+    name: 'hemmelig_visitors_views_30d',
+    help: 'Total page views in the last 30 days',
     registers: [metricsRegistry],
 });
 
@@ -54,6 +48,7 @@ const httpRequestDuration = new Histogram({
 async function updateGaugeMetrics() {
     try {
         const now = new Date();
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
         // Count active secrets (not expired)
         const activeSecrets = await prisma.secrets.count({
@@ -68,6 +63,22 @@ async function updateGaugeMetrics() {
         // Count total users
         const totalUsers = await prisma.user.count();
         totalUsersGauge.set(totalUsers);
+
+        // Get visitor stats for the last 30 days
+        const visitorStats = await prisma.$queryRaw<
+            Array<{ unique_visitors: bigint; total_views: bigint }>
+        >`
+            SELECT
+                COUNT(DISTINCT uniqueId) as unique_visitors,
+                COUNT(*) as total_views
+            FROM visitor_analytics
+            WHERE timestamp >= ${thirtyDaysAgo}
+        `;
+
+        if (visitorStats.length > 0) {
+            visitorsUnique30dGauge.set(Number(visitorStats[0].unique_visitors));
+            visitorsViews30dGauge.set(Number(visitorStats[0].total_views));
+        }
     } catch (error) {
         console.error('Failed to update metrics gauges:', error);
     }
@@ -119,19 +130,6 @@ app.get('/', async (c) => {
         return c.json({ error: 'Failed to generate metrics' }, 500);
     }
 });
-
-// Export metric incrementers for use in other routes
-export function incrementSecretsCreated() {
-    secretsCreatedTotal.inc();
-}
-
-export function incrementSecretsViewed() {
-    secretsViewedTotal.inc();
-}
-
-export function incrementSecretsExpired() {
-    secretsExpiredTotal.inc();
-}
 
 export function observeHttpRequest(
     method: string,
