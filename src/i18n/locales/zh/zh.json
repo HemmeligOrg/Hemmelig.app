@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "秘密",
+        "secret_requests": "秘密请求",
         "account": "账户",
         "analytics": "分析",
         "users": "用户",
@@ -795,5 +796,139 @@
         "unknown_error": "发生了未知错误",
         "try_again_button": "重试",
         "go_home_button": "返回首页"
+    },
+    "secret_requests_page": {
+        "title": "秘密请求",
+        "description": "通过安全链接向他人请求秘密",
+        "create_request_button": "创建请求",
+        "no_requests": "暂无秘密请求。创建一个开始吧。",
+        "table": {
+            "title_header": "标题",
+            "status_header": "状态",
+            "secret_expiry_header": "秘密过期",
+            "link_expires_header": "链接过期",
+            "copy_link_tooltip": "复制创建者链接",
+            "view_secret_tooltip": "查看秘密",
+            "cancel_tooltip": "取消请求"
+        },
+        "status": {
+            "pending": "待处理",
+            "fulfilled": "已完成",
+            "expired": "已过期",
+            "cancelled": "已取消"
+        },
+        "time": {
+            "days": "{{count}} 天",
+            "days_plural": "{{count}} 天",
+            "hours": "{{count}} 小时",
+            "hours_plural": "{{count}} 小时",
+            "minutes": "{{count}} 分钟",
+            "minutes_plural": "{{count}} 分钟"
+        },
+        "link_modal": {
+            "title": "创建者链接",
+            "description": "将此链接发送给需要提供秘密的人。他们可以使用此链接输入并加密秘密。",
+            "copy_button": "复制链接",
+            "close_button": "关闭",
+            "warning": "此链接只能使用一次。一旦提交了秘密，链接将不再有效。"
+        },
+        "cancel_modal": {
+            "title": "取消请求",
+            "message": "您确定要取消请求 \"{{title}}\" 吗？此操作无法撤销。",
+            "confirm_text": "取消请求",
+            "cancel_text": "保留请求"
+        },
+        "toast": {
+            "copied": "链接已复制到剪贴板",
+            "cancelled": "请求已取消",
+            "fetch_error": "获取请求详情失败",
+            "cancel_error": "取消请求失败"
+        }
+    },
+    "create_request_page": {
+        "title": "创建秘密请求",
+        "description": "通过生成安全链接向他人请求秘密，他们可以使用该链接提交秘密",
+        "back_button": "返回秘密请求",
+        "form": {
+            "title_label": "请求标题",
+            "title_placeholder": "例如：项目 X 的 AWS 凭证",
+            "description_label": "描述（可选）",
+            "description_placeholder": "提供关于您需要什么的额外背景...",
+            "link_validity_label": "链接有效期",
+            "link_validity_hint": "创建者链接保持活动的时间",
+            "secret_settings_title": "秘密设置",
+            "secret_settings_description": "这些设置将在秘密创建后应用",
+            "secret_expiration_label": "秘密过期时间",
+            "max_views_label": "最大查看次数",
+            "password_label": "密码保护（可选）",
+            "password_placeholder": "输入密码（至少5个字符）",
+            "password_hint": "接收者需要此密码才能查看秘密",
+            "ip_restriction_label": "IP 限制（可选）",
+            "ip_restriction_placeholder": "192.168.1.0/24 或 203.0.113.5",
+            "prevent_burn_label": "防止自动销毁（达到最大查看次数后保留秘密）",
+            "webhook_title": "Webhook 通知（可选）",
+            "webhook_description": "在秘密提交时收到通知",
+            "webhook_url_label": "Webhook URL",
+            "webhook_url_placeholder": "https://您的服务器.com/webhook",
+            "webhook_url_hint": "建议使用 HTTPS。秘密创建后将发送通知。",
+            "creating_button": "创建中...",
+            "create_button": "创建请求"
+        },
+        "validity": {
+            "30_days": "30 天",
+            "14_days": "14 天",
+            "7_days": "7 天",
+            "3_days": "3 天",
+            "1_day": "1 天",
+            "12_hours": "12 小时",
+            "1_hour": "1 小时"
+        },
+        "success": {
+            "title": "请求已创建！",
+            "description": "与需要提供秘密的人分享创建者链接",
+            "creator_link_label": "创建者链接",
+            "webhook_secret_label": "Webhook 密钥",
+            "webhook_secret_warning": "现在保存此密钥！它不会再次显示。使用它来验证 webhook 签名。",
+            "expires_at": "链接过期时间：{{date}}",
+            "create_another_button": "创建另一个请求",
+            "view_all_button": "查看所有请求"
+        },
+        "toast": {
+            "created": "秘密请求创建成功",
+            "create_error": "创建秘密请求失败",
+            "copied": "已复制到剪贴板"
+        }
+    },
+    "request_secret_page": {
+        "loading": "加载请求中...",
+        "error": {
+            "title": "请求不可用",
+            "invalid_link": "此链接无效或已被篡改。",
+            "not_found": "未找到此请求或链接无效。",
+            "already_fulfilled": "此请求已完成或已过期。",
+            "generic": "加载请求时发生错误。",
+            "go_home_button": "返回首页"
+        },
+        "form": {
+            "title": "提交秘密",
+            "description": "有人请求您安全地与他们分享秘密",
+            "password_protected_note": "此秘密将受密码保护",
+            "encryption_note": "您的秘密将在浏览器中加密后再发送。解密密钥仅包含在您分享的最终 URL 中。",
+            "submitting_button": "加密并提交中...",
+            "submit_button": "提交秘密"
+        },
+        "success": {
+            "title": "秘密已创建！",
+            "description": "您的秘密已加密并安全存储",
+            "view_url_label": "秘密查看 URL",
+            "warning": "重要：现在复制此 URL 并发送给请求者。这是您唯一一次看到它！",
+            "manual_send_note": "您必须手动将此 URL 发送给请求秘密的人。它不会自动发送。",
+            "create_own_button": "创建您自己的秘密"
+        },
+        "toast": {
+            "created": "秘密提交成功",
+            "create_error": "提交秘密失败",
+            "copied": "URL 已复制到剪贴板"
+        }
     }
 }

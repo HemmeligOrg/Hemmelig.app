@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Hemmeligheder",
+        "secret_requests": "Hemmelighedsanmodninger",
         "account": "Konto",
         "analytics": "Analyse",
         "users": "Brugere",
@@ -795,5 +796,139 @@
         "unknown_error": "Der opstod en ukendt fejl",
         "try_again_button": "Prøv igen",
         "go_home_button": "Gå hjem"
+    },
+    "secret_requests_page": {
+        "title": "Hemmelighedsanmodninger",
+        "description": "Anmod om hemmeligheder fra andre via sikre links",
+        "create_request_button": "Opret anmodning",
+        "no_requests": "Ingen hemmelighedsanmodninger endnu. Opret en for at komme i gang.",
+        "table": {
+            "title_header": "Titel",
+            "status_header": "Status",
+            "secret_expiry_header": "Hemmelighed udløber",
+            "link_expires_header": "Link udløber",
+            "copy_link_tooltip": "Kopier opretterlink",
+            "view_secret_tooltip": "Vis hemmelighed",
+            "cancel_tooltip": "Annuller anmodning"
+        },
+        "status": {
+            "pending": "Afventer",
+            "fulfilled": "Opfyldt",
+            "expired": "Udløbet",
+            "cancelled": "Annulleret"
+        },
+        "time": {
+            "days": "{{count}} dag",
+            "days_plural": "{{count}} dage",
+            "hours": "{{count}} time",
+            "hours_plural": "{{count}} timer",
+            "minutes": "{{count}} minut",
+            "minutes_plural": "{{count}} minutter"
+        },
+        "link_modal": {
+            "title": "Opretterlink",
+            "description": "Send dette link til den person, der skal levere hemmeligheden. De vil kunne indtaste og kryptere hemmeligheden via dette link.",
+            "copy_button": "Kopier link",
+            "close_button": "Luk",
+            "warning": "Dette link kan kun bruges én gang. Når en hemmelighed er indsendt, vil linket ikke længere virke."
+        },
+        "cancel_modal": {
+            "title": "Annuller anmodning",
+            "message": "Er du sikker på, at du vil annullere anmodningen \"{{title}}\"? Denne handling kan ikke fortrydes.",
+            "confirm_text": "Annuller anmodning",
+            "cancel_text": "Behold anmodning"
+        },
+        "toast": {
+            "copied": "Link kopieret til udklipsholder",
+            "cancelled": "Anmodning annulleret",
+            "fetch_error": "Kunne ikke hente anmodningsdetaljer",
+            "cancel_error": "Kunne ikke annullere anmodning"
+        }
+    },
+    "create_request_page": {
+        "title": "Opret hemmelighedsanmodning",
+        "description": "Anmod om en hemmelighed fra nogen ved at generere et sikkert link, de kan bruge til at indsende den",
+        "back_button": "Tilbage til hemmelighedsanmodninger",
+        "form": {
+            "title_label": "Anmodningstitel",
+            "title_placeholder": "f.eks. AWS-legitimationsoplysninger til Projekt X",
+            "description_label": "Beskrivelse (valgfrit)",
+            "description_placeholder": "Giv yderligere kontekst om hvad du har brug for...",
+            "link_validity_label": "Linkgyldighed",
+            "link_validity_hint": "Hvor længe opretterlinket forbliver aktivt",
+            "secret_settings_title": "Hemmelighedsindstillinger",
+            "secret_settings_description": "Disse indstillinger vil gælde for hemmeligheden, når den er oprettet",
+            "secret_expiration_label": "Hemmelighed udløber",
+            "max_views_label": "Maksimale visninger",
+            "password_label": "Adgangskodebeskyttelse (valgfrit)",
+            "password_placeholder": "Indtast en adgangskode (min 5 tegn)",
+            "password_hint": "Modtagere skal bruge denne adgangskode for at se hemmeligheden",
+            "ip_restriction_label": "IP-begrænsning (valgfrit)",
+            "ip_restriction_placeholder": "192.168.1.0/24 eller 203.0.113.5",
+            "prevent_burn_label": "Forhindre auto-sletning (behold hemmelighed efter max visninger)",
+            "webhook_title": "Webhook-notifikation (valgfrit)",
+            "webhook_description": "Modtag en notifikation, når hemmeligheden indsendes",
+            "webhook_url_label": "Webhook-URL",
+            "webhook_url_placeholder": "https://din-server.com/webhook",
+            "webhook_url_hint": "HTTPS anbefales. En notifikation sendes, når hemmeligheden oprettes.",
+            "creating_button": "Opretter...",
+            "create_button": "Opret anmodning"
+        },
+        "validity": {
+            "30_days": "30 dage",
+            "14_days": "14 dage",
+            "7_days": "7 dage",
+            "3_days": "3 dage",
+            "1_day": "1 dag",
+            "12_hours": "12 timer",
+            "1_hour": "1 time"
+        },
+        "success": {
+            "title": "Anmodning oprettet!",
+            "description": "Del opretterlinket med den person, der skal levere hemmeligheden",
+            "creator_link_label": "Opretterlink",
+            "webhook_secret_label": "Webhook-hemmelighed",
+            "webhook_secret_warning": "Gem denne hemmelighed nu! Den vises ikke igen. Brug den til at verificere webhook-signaturer.",
+            "expires_at": "Link udløber: {{date}}",
+            "create_another_button": "Opret endnu en anmodning",
+            "view_all_button": "Se alle anmodninger"
+        },
+        "toast": {
+            "created": "Hemmelighedsanmodning oprettet",
+            "create_error": "Kunne ikke oprette hemmelighedsanmodning",
+            "copied": "Kopieret til udklipsholder"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Indlæser anmodning...",
+        "error": {
+            "title": "Anmodning ikke tilgængelig",
+            "invalid_link": "Dette link er ugyldigt eller er blevet ændret.",
+            "not_found": "Denne anmodning blev ikke fundet, eller linket er ugyldigt.",
+            "already_fulfilled": "Denne anmodning er allerede opfyldt eller udløbet.",
+            "generic": "Der opstod en fejl under indlæsning af anmodningen.",
+            "go_home_button": "Gå til forsiden"
+        },
+        "form": {
+            "title": "Indsend en hemmelighed",
+            "description": "Nogen har bedt dig om at dele en hemmelighed med dem sikkert",
+            "password_protected_note": "Denne hemmelighed vil være adgangskodebeskyttet",
+            "encryption_note": "Din hemmelighed krypteres i din browser, før den sendes. Dekrypteringsnøglen inkluderes kun i den endelige URL, du deler.",
+            "submitting_button": "Krypterer og indsender...",
+            "submit_button": "Indsend hemmelighed"
+        },
+        "success": {
+            "title": "Hemmelighed oprettet!",
+            "description": "Din hemmelighed er blevet krypteret og gemt sikkert",
+            "view_url_label": "Hemmeligheds-visnings-URL",
+            "warning": "Vigtigt: Kopier denne URL nu og send den til anmoderen. Dette er den eneste gang, du vil se den!",
+            "manual_send_note": "Du skal manuelt sende denne URL til den person, der anmodede om hemmeligheden. Den sendes ikke automatisk.",
+            "create_own_button": "Opret din egen hemmelighed"
+        },
+        "toast": {
+            "created": "Hemmelighed indsendt",
+            "create_error": "Kunne ikke indsende hemmelighed",
+            "copied": "URL kopieret til udklipsholder"
+        }
     }
 }

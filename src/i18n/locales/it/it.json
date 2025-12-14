@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Segreti",
+        "secret_requests": "Richieste di segreti",
         "account": "Account",
         "analytics": "Analitiche",
         "users": "Utenti",
@@ -795,5 +796,139 @@
         "unknown_error": "Si è verificato un errore sconosciuto",
         "try_again_button": "Riprova",
         "go_home_button": "Torna alla home"
+    },
+    "secret_requests_page": {
+        "title": "Richieste di segreti",
+        "description": "Richiedi segreti da altri tramite link sicuri",
+        "create_request_button": "Crea richiesta",
+        "no_requests": "Nessuna richiesta di segreti ancora. Creane una per iniziare.",
+        "table": {
+            "title_header": "Titolo",
+            "status_header": "Stato",
+            "secret_expiry_header": "Scadenza segreto",
+            "link_expires_header": "Scadenza link",
+            "copy_link_tooltip": "Copia link creatore",
+            "view_secret_tooltip": "Visualizza segreto",
+            "cancel_tooltip": "Annulla richiesta"
+        },
+        "status": {
+            "pending": "In attesa",
+            "fulfilled": "Completata",
+            "expired": "Scaduta",
+            "cancelled": "Annullata"
+        },
+        "time": {
+            "days": "{{count}} giorno",
+            "days_plural": "{{count}} giorni",
+            "hours": "{{count}} ora",
+            "hours_plural": "{{count}} ore",
+            "minutes": "{{count}} minuto",
+            "minutes_plural": "{{count}} minuti"
+        },
+        "link_modal": {
+            "title": "Link creatore",
+            "description": "Invia questo link alla persona che deve fornire il segreto. Potrà inserire e crittografare il segreto usando questo link.",
+            "copy_button": "Copia link",
+            "close_button": "Chiudi",
+            "warning": "Questo link può essere usato solo una volta. Una volta inviato un segreto, il link non funzionerà più."
+        },
+        "cancel_modal": {
+            "title": "Annulla richiesta",
+            "message": "Sei sicuro di voler annullare la richiesta \"{{title}}\"? Questa azione non può essere annullata.",
+            "confirm_text": "Annulla richiesta",
+            "cancel_text": "Mantieni richiesta"
+        },
+        "toast": {
+            "copied": "Link copiato negli appunti",
+            "cancelled": "Richiesta annullata",
+            "fetch_error": "Impossibile recuperare i dettagli della richiesta",
+            "cancel_error": "Impossibile annullare la richiesta"
+        }
+    },
+    "create_request_page": {
+        "title": "Crea richiesta di segreto",
+        "description": "Richiedi un segreto da qualcuno generando un link sicuro che può usare per inviarlo",
+        "back_button": "Torna alle richieste di segreti",
+        "form": {
+            "title_label": "Titolo richiesta",
+            "title_placeholder": "es. Credenziali AWS per Progetto X",
+            "description_label": "Descrizione (opzionale)",
+            "description_placeholder": "Fornisci contesto aggiuntivo su ciò di cui hai bisogno...",
+            "link_validity_label": "Validità link",
+            "link_validity_hint": "Per quanto tempo il link creatore rimarrà attivo",
+            "secret_settings_title": "Impostazioni segreto",
+            "secret_settings_description": "Queste impostazioni si applicheranno al segreto una volta creato",
+            "secret_expiration_label": "Scadenza segreto",
+            "max_views_label": "Visualizzazioni massime",
+            "password_label": "Protezione con password (opzionale)",
+            "password_placeholder": "Inserisci una password (min 5 caratteri)",
+            "password_hint": "I destinatari avranno bisogno di questa password per visualizzare il segreto",
+            "ip_restriction_label": "Restrizione IP (opzionale)",
+            "ip_restriction_placeholder": "192.168.1.0/24 o 203.0.113.5",
+            "prevent_burn_label": "Previeni auto-distruzione (mantieni il segreto dopo le visualizzazioni max)",
+            "webhook_title": "Notifica webhook (opzionale)",
+            "webhook_description": "Ricevi una notifica quando il segreto viene inviato",
+            "webhook_url_label": "URL webhook",
+            "webhook_url_placeholder": "https://tuo-server.com/webhook",
+            "webhook_url_hint": "HTTPS consigliato. Una notifica verrà inviata quando il segreto sarà creato.",
+            "creating_button": "Creazione...",
+            "create_button": "Crea richiesta"
+        },
+        "validity": {
+            "30_days": "30 giorni",
+            "14_days": "14 giorni",
+            "7_days": "7 giorni",
+            "3_days": "3 giorni",
+            "1_day": "1 giorno",
+            "12_hours": "12 ore",
+            "1_hour": "1 ora"
+        },
+        "success": {
+            "title": "Richiesta creata!",
+            "description": "Condividi il link creatore con la persona che deve fornire il segreto",
+            "creator_link_label": "Link creatore",
+            "webhook_secret_label": "Segreto webhook",
+            "webhook_secret_warning": "Salva questo segreto ora! Non verrà mostrato di nuovo. Usalo per verificare le firme webhook.",
+            "expires_at": "Il link scade: {{date}}",
+            "create_another_button": "Crea un'altra richiesta",
+            "view_all_button": "Visualizza tutte le richieste"
+        },
+        "toast": {
+            "created": "Richiesta di segreto creata con successo",
+            "create_error": "Impossibile creare la richiesta di segreto",
+            "copied": "Copiato negli appunti"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Caricamento richiesta...",
+        "error": {
+            "title": "Richiesta non disponibile",
+            "invalid_link": "Questo link non è valido o è stato manomesso.",
+            "not_found": "Questa richiesta non è stata trovata o il link non è valido.",
+            "already_fulfilled": "Questa richiesta è già stata completata o è scaduta.",
+            "generic": "Si è verificato un errore durante il caricamento della richiesta.",
+            "go_home_button": "Vai alla home"
+        },
+        "form": {
+            "title": "Invia un segreto",
+            "description": "Qualcuno ti ha chiesto di condividere un segreto in modo sicuro",
+            "password_protected_note": "Questo segreto sarà protetto da password",
+            "encryption_note": "Il tuo segreto verrà crittografato nel tuo browser prima di essere inviato. La chiave di decrittazione sarà inclusa solo nell'URL finale che condividerai.",
+            "submitting_button": "Crittografia e invio...",
+            "submit_button": "Invia segreto"
+        },
+        "success": {
+            "title": "Segreto creato!",
+            "description": "Il tuo segreto è stato crittografato e memorizzato in modo sicuro",
+            "view_url_label": "URL di visualizzazione segreto",
+            "warning": "Importante: Copia questo URL ora e invialo al richiedente. Questa è l'unica volta che lo vedrai!",
+            "manual_send_note": "Devi inviare manualmente questo URL alla persona che ha richiesto il segreto. Non verrà inviato automaticamente.",
+            "create_own_button": "Crea il tuo segreto"
+        },
+        "toast": {
+            "created": "Segreto inviato con successo",
+            "create_error": "Impossibile inviare il segreto",
+            "copied": "URL copiato negli appunti"
+        }
     }
 }

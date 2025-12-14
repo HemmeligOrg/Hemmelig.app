@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Geheimnisse",
+        "secret_requests": "Geheimnis-Anfragen",
         "account": "Konto",
         "analytics": "Analysen",
         "users": "Benutzer",
@@ -795,5 +796,139 @@
         "unknown_error": "Ein unbekannter Fehler ist aufgetreten",
         "try_again_button": "Erneut versuchen",
         "go_home_button": "Zur Startseite"
+    },
+    "secret_requests_page": {
+        "title": "Geheimnis-Anfragen",
+        "description": "Fordern Sie Geheimnisse von anderen über sichere Links an",
+        "create_request_button": "Anfrage erstellen",
+        "no_requests": "Noch keine Geheimnis-Anfragen. Erstellen Sie eine, um zu beginnen.",
+        "table": {
+            "title_header": "Titel",
+            "status_header": "Status",
+            "secret_expiry_header": "Geheimnis-Ablauf",
+            "link_expires_header": "Link läuft ab",
+            "copy_link_tooltip": "Ersteller-Link kopieren",
+            "view_secret_tooltip": "Geheimnis anzeigen",
+            "cancel_tooltip": "Anfrage abbrechen"
+        },
+        "status": {
+            "pending": "Ausstehend",
+            "fulfilled": "Erfüllt",
+            "expired": "Abgelaufen",
+            "cancelled": "Abgebrochen"
+        },
+        "time": {
+            "days": "{{count}} Tag",
+            "days_plural": "{{count}} Tage",
+            "hours": "{{count}} Stunde",
+            "hours_plural": "{{count}} Stunden",
+            "minutes": "{{count}} Minute",
+            "minutes_plural": "{{count}} Minuten"
+        },
+        "link_modal": {
+            "title": "Ersteller-Link",
+            "description": "Senden Sie diesen Link an die Person, die das Geheimnis bereitstellen soll. Sie kann das Geheimnis über diesen Link eingeben und verschlüsseln.",
+            "copy_button": "Link kopieren",
+            "close_button": "Schließen",
+            "warning": "Dieser Link kann nur einmal verwendet werden. Sobald ein Geheimnis übermittelt wurde, funktioniert der Link nicht mehr."
+        },
+        "cancel_modal": {
+            "title": "Anfrage abbrechen",
+            "message": "Möchten Sie die Anfrage \"{{title}}\" wirklich abbrechen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "confirm_text": "Anfrage abbrechen",
+            "cancel_text": "Anfrage behalten"
+        },
+        "toast": {
+            "copied": "Link in Zwischenablage kopiert",
+            "cancelled": "Anfrage abgebrochen",
+            "fetch_error": "Anfrage-Details konnten nicht abgerufen werden",
+            "cancel_error": "Anfrage konnte nicht abgebrochen werden"
+        }
+    },
+    "create_request_page": {
+        "title": "Geheimnis-Anfrage erstellen",
+        "description": "Fordern Sie ein Geheimnis von jemandem an, indem Sie einen sicheren Link generieren, über den es übermittelt werden kann",
+        "back_button": "Zurück zu Geheimnis-Anfragen",
+        "form": {
+            "title_label": "Anfrage-Titel",
+            "title_placeholder": "z.B. AWS-Anmeldedaten für Projekt X",
+            "description_label": "Beschreibung (optional)",
+            "description_placeholder": "Geben Sie zusätzlichen Kontext zu Ihren Anforderungen...",
+            "link_validity_label": "Link-Gültigkeit",
+            "link_validity_hint": "Wie lange der Ersteller-Link aktiv bleibt",
+            "secret_settings_title": "Geheimnis-Einstellungen",
+            "secret_settings_description": "Diese Einstellungen gelten für das Geheimnis, sobald es erstellt wurde",
+            "secret_expiration_label": "Geheimnis-Ablauf",
+            "max_views_label": "Maximale Ansichten",
+            "password_label": "Passwortschutz (optional)",
+            "password_placeholder": "Passwort eingeben (mind. 5 Zeichen)",
+            "password_hint": "Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
+            "ip_restriction_label": "IP-Einschränkung (optional)",
+            "ip_restriction_placeholder": "192.168.1.0/24 oder 203.0.113.5",
+            "prevent_burn_label": "Auto-Löschen verhindern (Geheimnis auch nach max. Ansichten behalten)",
+            "webhook_title": "Webhook-Benachrichtigung (optional)",
+            "webhook_description": "Benachrichtigung erhalten, wenn das Geheimnis übermittelt wird",
+            "webhook_url_label": "Webhook-URL",
+            "webhook_url_placeholder": "https://ihr-server.com/webhook",
+            "webhook_url_hint": "HTTPS empfohlen. Eine Benachrichtigung wird gesendet, wenn das Geheimnis erstellt wird.",
+            "creating_button": "Wird erstellt...",
+            "create_button": "Anfrage erstellen"
+        },
+        "validity": {
+            "30_days": "30 Tage",
+            "14_days": "14 Tage",
+            "7_days": "7 Tage",
+            "3_days": "3 Tage",
+            "1_day": "1 Tag",
+            "12_hours": "12 Stunden",
+            "1_hour": "1 Stunde"
+        },
+        "success": {
+            "title": "Anfrage erstellt!",
+            "description": "Teilen Sie den Ersteller-Link mit der Person, die das Geheimnis bereitstellen soll",
+            "creator_link_label": "Ersteller-Link",
+            "webhook_secret_label": "Webhook-Geheimnis",
+            "webhook_secret_warning": "Speichern Sie dieses Geheimnis jetzt! Es wird nicht erneut angezeigt. Verwenden Sie es zur Überprüfung von Webhook-Signaturen.",
+            "expires_at": "Link läuft ab: {{date}}",
+            "create_another_button": "Weitere Anfrage erstellen",
+            "view_all_button": "Alle Anfragen anzeigen"
+        },
+        "toast": {
+            "created": "Geheimnis-Anfrage erfolgreich erstellt",
+            "create_error": "Geheimnis-Anfrage konnte nicht erstellt werden",
+            "copied": "In Zwischenablage kopiert"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Anfrage wird geladen...",
+        "error": {
+            "title": "Anfrage nicht verfügbar",
+            "invalid_link": "Dieser Link ist ungültig oder wurde manipuliert.",
+            "not_found": "Diese Anfrage wurde nicht gefunden oder der Link ist ungültig.",
+            "already_fulfilled": "Diese Anfrage wurde bereits erfüllt oder ist abgelaufen.",
+            "generic": "Beim Laden der Anfrage ist ein Fehler aufgetreten.",
+            "go_home_button": "Zur Startseite"
+        },
+        "form": {
+            "title": "Ein Geheimnis übermitteln",
+            "description": "Jemand hat Sie gebeten, ein Geheimnis sicher mit ihm zu teilen",
+            "password_protected_note": "Dieses Geheimnis wird passwortgeschützt sein",
+            "encryption_note": "Ihr Geheimnis wird in Ihrem Browser verschlüsselt, bevor es gesendet wird. Der Entschlüsselungsschlüssel wird nur in der endgültigen URL enthalten sein, die Sie teilen.",
+            "submitting_button": "Verschlüsseln & Übermitteln...",
+            "submit_button": "Geheimnis übermitteln"
+        },
+        "success": {
+            "title": "Geheimnis erstellt!",
+            "description": "Ihr Geheimnis wurde verschlüsselt und sicher gespeichert",
+            "view_url_label": "Geheimnis-Ansichts-URL",
+            "warning": "Wichtig: Kopieren Sie diese URL jetzt und senden Sie sie an den Anforderer. Dies ist das einzige Mal, dass Sie sie sehen werden!",
+            "manual_send_note": "Sie müssen diese URL manuell an die Person senden, die das Geheimnis angefordert hat. Sie wird nicht automatisch gesendet.",
+            "create_own_button": "Eigenes Geheimnis erstellen"
+        },
+        "toast": {
+            "created": "Geheimnis erfolgreich übermittelt",
+            "create_error": "Geheimnis konnte nicht übermittelt werden",
+            "copied": "URL in Zwischenablage kopiert"
+        }
     }
 }

@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Secrets",
+        "secret_requests": "Secret Requests",
         "account": "Account",
         "analytics": "Analytics",
         "users": "Users",
@@ -796,5 +797,139 @@
         "unknown_error": "An unknown error occurred",
         "try_again_button": "Try Again",
         "go_home_button": "Go Home"
+    },
+    "secret_requests_page": {
+        "title": "Secret Requests",
+        "description": "Request secrets from others via secure links",
+        "create_request_button": "Create Request",
+        "no_requests": "No secret requests yet. Create one to get started.",
+        "table": {
+            "title_header": "Title",
+            "status_header": "Status",
+            "secret_expiry_header": "Secret Expiry",
+            "link_expires_header": "Link Expires",
+            "copy_link_tooltip": "Copy Creator Link",
+            "view_secret_tooltip": "View Secret",
+            "cancel_tooltip": "Cancel Request"
+        },
+        "status": {
+            "pending": "Pending",
+            "fulfilled": "Fulfilled",
+            "expired": "Expired",
+            "cancelled": "Cancelled"
+        },
+        "time": {
+            "days": "{{count}} day",
+            "days_plural": "{{count}} days",
+            "hours": "{{count}} hour",
+            "hours_plural": "{{count}} hours",
+            "minutes": "{{count}} minute",
+            "minutes_plural": "{{count}} minutes"
+        },
+        "link_modal": {
+            "title": "Creator Link",
+            "description": "Send this link to the person who should provide the secret. They will be able to enter and encrypt the secret using this link.",
+            "copy_button": "Copy Link",
+            "close_button": "Close",
+            "warning": "This link can only be used once. Once a secret is submitted, the link will no longer work."
+        },
+        "cancel_modal": {
+            "title": "Cancel Request",
+            "message": "Are you sure you want to cancel the request \"{{title}}\"? This action cannot be undone.",
+            "confirm_text": "Cancel Request",
+            "cancel_text": "Keep Request"
+        },
+        "toast": {
+            "copied": "Link copied to clipboard",
+            "cancelled": "Request cancelled",
+            "fetch_error": "Failed to fetch request details",
+            "cancel_error": "Failed to cancel request"
+        }
+    },
+    "create_request_page": {
+        "title": "Create Secret Request",
+        "description": "Request a secret from someone by generating a secure link they can use to submit it",
+        "back_button": "Back to Secret Requests",
+        "form": {
+            "title_label": "Request Title",
+            "title_placeholder": "e.g., AWS Credentials for Project X",
+            "description_label": "Description (optional)",
+            "description_placeholder": "Provide additional context about what you need...",
+            "link_validity_label": "Link Validity",
+            "link_validity_hint": "How long the creator link will remain active",
+            "secret_settings_title": "Secret Settings",
+            "secret_settings_description": "These settings will apply to the secret once it's created",
+            "secret_expiration_label": "Secret Expiration",
+            "max_views_label": "Maximum Views",
+            "password_label": "Password Protection (optional)",
+            "password_placeholder": "Enter a password (min 5 characters)",
+            "password_hint": "Recipients will need this password to view the secret",
+            "ip_restriction_label": "IP Restriction (optional)",
+            "ip_restriction_placeholder": "192.168.1.0/24 or 203.0.113.5",
+            "prevent_burn_label": "Prevent auto-burn (keep secret even after max views)",
+            "webhook_title": "Webhook Notification (optional)",
+            "webhook_description": "Get notified when the secret is submitted",
+            "webhook_url_label": "Webhook URL",
+            "webhook_url_placeholder": "https://your-server.com/webhook",
+            "webhook_url_hint": "HTTPS recommended. A notification will be sent when the secret is created.",
+            "creating_button": "Creating...",
+            "create_button": "Create Request"
+        },
+        "validity": {
+            "30_days": "30 Days",
+            "14_days": "14 Days",
+            "7_days": "7 Days",
+            "3_days": "3 Days",
+            "1_day": "1 Day",
+            "12_hours": "12 Hours",
+            "1_hour": "1 Hour"
+        },
+        "success": {
+            "title": "Request Created!",
+            "description": "Share the creator link with the person who should provide the secret",
+            "creator_link_label": "Creator Link",
+            "webhook_secret_label": "Webhook Secret",
+            "webhook_secret_warning": "Save this secret now! It won't be shown again. Use it to verify webhook signatures.",
+            "expires_at": "Link expires: {{date}}",
+            "create_another_button": "Create Another Request",
+            "view_all_button": "View All Requests"
+        },
+        "toast": {
+            "created": "Secret request created successfully",
+            "create_error": "Failed to create secret request",
+            "copied": "Copied to clipboard"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Loading request...",
+        "error": {
+            "title": "Request Unavailable",
+            "invalid_link": "This link is invalid or has been tampered with.",
+            "not_found": "This request was not found or the link is invalid.",
+            "already_fulfilled": "This request has already been fulfilled or has expired.",
+            "generic": "An error occurred while loading the request.",
+            "go_home_button": "Go to Homepage"
+        },
+        "form": {
+            "title": "Submit a Secret",
+            "description": "Someone has requested that you share a secret with them securely",
+            "password_protected_note": "This secret will be password protected",
+            "encryption_note": "Your secret will be encrypted in your browser before being sent. The decryption key will only be included in the final URL you share.",
+            "submitting_button": "Encrypting & Submitting...",
+            "submit_button": "Submit Secret"
+        },
+        "success": {
+            "title": "Secret Created!",
+            "description": "Your secret has been encrypted and stored securely",
+            "view_url_label": "Secret View URL",
+            "warning": "Important: Copy this URL now and send it to the requester. This is the only time you will see it!",
+            "manual_send_note": "You must manually send this URL to the person who requested the secret. It will not be sent automatically.",
+            "create_own_button": "Create Your Own Secret"
+        },
+        "toast": {
+            "created": "Secret submitted successfully",
+            "create_error": "Failed to submit secret",
+            "copied": "URL copied to clipboard"
+        }
     }
 }

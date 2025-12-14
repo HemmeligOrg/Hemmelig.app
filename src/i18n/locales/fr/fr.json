@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Secrets",
+        "secret_requests": "Demandes de secrets",
         "account": "Compte",
         "analytics": "Analytiques",
         "users": "Utilisateurs",
@@ -795,5 +796,139 @@
         "unknown_error": "Une erreur inconnue s'est produite",
         "try_again_button": "Réessayer",
         "go_home_button": "Retour à l'accueil"
+    },
+    "secret_requests_page": {
+        "title": "Demandes de secrets",
+        "description": "Demandez des secrets à d'autres via des liens sécurisés",
+        "create_request_button": "Créer une demande",
+        "no_requests": "Pas encore de demandes de secrets. Créez-en une pour commencer.",
+        "table": {
+            "title_header": "Titre",
+            "status_header": "Statut",
+            "secret_expiry_header": "Expiration du secret",
+            "link_expires_header": "Expiration du lien",
+            "copy_link_tooltip": "Copier le lien créateur",
+            "view_secret_tooltip": "Voir le secret",
+            "cancel_tooltip": "Annuler la demande"
+        },
+        "status": {
+            "pending": "En attente",
+            "fulfilled": "Complétée",
+            "expired": "Expirée",
+            "cancelled": "Annulée"
+        },
+        "time": {
+            "days": "{{count}} jour",
+            "days_plural": "{{count}} jours",
+            "hours": "{{count}} heure",
+            "hours_plural": "{{count}} heures",
+            "minutes": "{{count}} minute",
+            "minutes_plural": "{{count}} minutes"
+        },
+        "link_modal": {
+            "title": "Lien créateur",
+            "description": "Envoyez ce lien à la personne qui doit fournir le secret. Elle pourra entrer et chiffrer le secret en utilisant ce lien.",
+            "copy_button": "Copier le lien",
+            "close_button": "Fermer",
+            "warning": "Ce lien ne peut être utilisé qu'une seule fois. Une fois un secret soumis, le lien ne fonctionnera plus."
+        },
+        "cancel_modal": {
+            "title": "Annuler la demande",
+            "message": "Êtes-vous sûr de vouloir annuler la demande \"{{title}}\" ? Cette action ne peut pas être annulée.",
+            "confirm_text": "Annuler la demande",
+            "cancel_text": "Garder la demande"
+        },
+        "toast": {
+            "copied": "Lien copié dans le presse-papiers",
+            "cancelled": "Demande annulée",
+            "fetch_error": "Échec de la récupération des détails de la demande",
+            "cancel_error": "Échec de l'annulation de la demande"
+        }
+    },
+    "create_request_page": {
+        "title": "Créer une demande de secret",
+        "description": "Demandez un secret à quelqu'un en générant un lien sécurisé qu'il peut utiliser pour le soumettre",
+        "back_button": "Retour aux demandes de secrets",
+        "form": {
+            "title_label": "Titre de la demande",
+            "title_placeholder": "ex: Identifiants AWS pour le projet X",
+            "description_label": "Description (optionnel)",
+            "description_placeholder": "Fournissez un contexte supplémentaire sur ce dont vous avez besoin...",
+            "link_validity_label": "Validité du lien",
+            "link_validity_hint": "Durée pendant laquelle le lien créateur restera actif",
+            "secret_settings_title": "Paramètres du secret",
+            "secret_settings_description": "Ces paramètres s'appliqueront au secret une fois créé",
+            "secret_expiration_label": "Expiration du secret",
+            "max_views_label": "Vues maximum",
+            "password_label": "Protection par mot de passe (optionnel)",
+            "password_placeholder": "Entrez un mot de passe (min 5 caractères)",
+            "password_hint": "Les destinataires auront besoin de ce mot de passe pour voir le secret",
+            "ip_restriction_label": "Restriction IP (optionnel)",
+            "ip_restriction_placeholder": "192.168.1.0/24 ou 203.0.113.5",
+            "prevent_burn_label": "Empêcher la destruction auto (garder le secret même après le max de vues)",
+            "webhook_title": "Notification webhook (optionnel)",
+            "webhook_description": "Recevez une notification lorsque le secret est soumis",
+            "webhook_url_label": "URL du webhook",
+            "webhook_url_placeholder": "https://votre-serveur.com/webhook",
+            "webhook_url_hint": "HTTPS recommandé. Une notification sera envoyée lorsque le secret sera créé.",
+            "creating_button": "Création...",
+            "create_button": "Créer la demande"
+        },
+        "validity": {
+            "30_days": "30 jours",
+            "14_days": "14 jours",
+            "7_days": "7 jours",
+            "3_days": "3 jours",
+            "1_day": "1 jour",
+            "12_hours": "12 heures",
+            "1_hour": "1 heure"
+        },
+        "success": {
+            "title": "Demande créée !",
+            "description": "Partagez le lien créateur avec la personne qui doit fournir le secret",
+            "creator_link_label": "Lien créateur",
+            "webhook_secret_label": "Secret webhook",
+            "webhook_secret_warning": "Sauvegardez ce secret maintenant ! Il ne sera plus affiché. Utilisez-le pour vérifier les signatures webhook.",
+            "expires_at": "Le lien expire : {{date}}",
+            "create_another_button": "Créer une autre demande",
+            "view_all_button": "Voir toutes les demandes"
+        },
+        "toast": {
+            "created": "Demande de secret créée avec succès",
+            "create_error": "Échec de la création de la demande de secret",
+            "copied": "Copié dans le presse-papiers"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Chargement de la demande...",
+        "error": {
+            "title": "Demande indisponible",
+            "invalid_link": "Ce lien est invalide ou a été modifié.",
+            "not_found": "Cette demande n'a pas été trouvée ou le lien est invalide.",
+            "already_fulfilled": "Cette demande a déjà été complétée ou a expiré.",
+            "generic": "Une erreur s'est produite lors du chargement de la demande.",
+            "go_home_button": "Aller à l'accueil"
+        },
+        "form": {
+            "title": "Soumettre un secret",
+            "description": "Quelqu'un vous a demandé de partager un secret avec lui de manière sécurisée",
+            "password_protected_note": "Ce secret sera protégé par mot de passe",
+            "encryption_note": "Votre secret sera chiffré dans votre navigateur avant d'être envoyé. La clé de déchiffrement ne sera incluse que dans l'URL finale que vous partagerez.",
+            "submitting_button": "Chiffrement et soumission...",
+            "submit_button": "Soumettre le secret"
+        },
+        "success": {
+            "title": "Secret créé !",
+            "description": "Votre secret a été chiffré et stocké de manière sécurisée",
+            "view_url_label": "URL de visualisation du secret",
+            "warning": "Important : Copiez cette URL maintenant et envoyez-la au demandeur. C'est la seule fois que vous la verrez !",
+            "manual_send_note": "Vous devez envoyer manuellement cette URL à la personne qui a demandé le secret. Elle ne sera pas envoyée automatiquement.",
+            "create_own_button": "Créer votre propre secret"
+        },
+        "toast": {
+            "created": "Secret soumis avec succès",
+            "create_error": "Échec de la soumission du secret",
+            "copied": "URL copiée dans le presse-papiers"
+        }
     }
 }

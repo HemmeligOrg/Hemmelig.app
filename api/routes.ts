@@ -9,6 +9,7 @@ import healthRoute from './routes/health';
 import instanceRoute from './routes/instance';
 import { invitePublicRoute, inviteRoute } from './routes/invites';
 import metricsRoute from './routes/metrics';
+import secretRequestsRoute from './routes/secret-requests';
 import secretsRoute from './routes/secrets';
 import setupRoute from './routes/setup';
 import { userRoute } from './routes/user';
@@ -16,6 +17,7 @@ import { userRoute } from './routes/user';
 // Create a new router
 const routes = new Hono()
     .route('/secrets', secretsRoute)
+    .route('/secret-requests', secretRequestsRoute)
     .route('/account', accountRoute)
     .route('/files', filesRoute)
     .route('/user', userRoute)

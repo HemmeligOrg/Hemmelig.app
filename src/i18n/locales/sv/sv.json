@@ -93,6 +93,7 @@
     },
     "dashboard_layout": {
         "secrets": "Hemligheter",
+        "secret_requests": "Hemlighetsförfrågningar",
         "account": "Konto",
         "analytics": "Analys",
         "users": "Användare",
@@ -795,5 +796,139 @@
         "unknown_error": "Ett okänt fel inträffade",
         "try_again_button": "Försök igen",
         "go_home_button": "Gå hem"
+    },
+    "secret_requests_page": {
+        "title": "Hemlighetsförfrågningar",
+        "description": "Begär hemligheter från andra via säkra länkar",
+        "create_request_button": "Skapa förfrågan",
+        "no_requests": "Inga hemlighetsförfrågningar ännu. Skapa en för att komma igång.",
+        "table": {
+            "title_header": "Titel",
+            "status_header": "Status",
+            "secret_expiry_header": "Hemlighet upphör",
+            "link_expires_header": "Länk upphör",
+            "copy_link_tooltip": "Kopiera skaparlänk",
+            "view_secret_tooltip": "Visa hemlighet",
+            "cancel_tooltip": "Avbryt förfrågan"
+        },
+        "status": {
+            "pending": "Väntande",
+            "fulfilled": "Uppfylld",
+            "expired": "Utgången",
+            "cancelled": "Avbruten"
+        },
+        "time": {
+            "days": "{{count}} dag",
+            "days_plural": "{{count}} dagar",
+            "hours": "{{count}} timme",
+            "hours_plural": "{{count}} timmar",
+            "minutes": "{{count}} minut",
+            "minutes_plural": "{{count}} minuter"
+        },
+        "link_modal": {
+            "title": "Skaparlänk",
+            "description": "Skicka denna länk till personen som ska tillhandahålla hemligheten. De kan ange och kryptera hemligheten via denna länk.",
+            "copy_button": "Kopiera länk",
+            "close_button": "Stäng",
+            "warning": "Denna länk kan endast användas en gång. När en hemlighet har skickats in kommer länken inte längre att fungera."
+        },
+        "cancel_modal": {
+            "title": "Avbryt förfrågan",
+            "message": "Är du säker på att du vill avbryta förfrågan \"{{title}}\"? Denna åtgärd kan inte ångras.",
+            "confirm_text": "Avbryt förfrågan",
+            "cancel_text": "Behåll förfrågan"
+        },
+        "toast": {
+            "copied": "Länk kopierad till urklipp",
+            "cancelled": "Förfrågan avbruten",
+            "fetch_error": "Kunde inte hämta förfrågningsdetaljer",
+            "cancel_error": "Kunde inte avbryta förfrågan"
+        }
+    },
+    "create_request_page": {
+        "title": "Skapa hemlighetsförfrågan",
+        "description": "Begär en hemlighet från någon genom att generera en säker länk som de kan använda för att skicka in den",
+        "back_button": "Tillbaka till hemlighetsförfrågningar",
+        "form": {
+            "title_label": "Förfrågantitel",
+            "title_placeholder": "t.ex. AWS-uppgifter för Projekt X",
+            "description_label": "Beskrivning (valfritt)",
+            "description_placeholder": "Ge ytterligare sammanhang om vad du behöver...",
+            "link_validity_label": "Länkgiltighet",
+            "link_validity_hint": "Hur länge skaparlänken förblir aktiv",
+            "secret_settings_title": "Hemlighetsinställningar",
+            "secret_settings_description": "Dessa inställningar kommer att gälla för hemligheten när den har skapats",
+            "secret_expiration_label": "Hemlighet upphör",
+            "max_views_label": "Maximala visningar",
+            "password_label": "Lösenordsskydd (valfritt)",
+            "password_placeholder": "Ange ett lösenord (minst 5 tecken)",
+            "password_hint": "Mottagare behöver detta lösenord för att visa hemligheten",
+            "ip_restriction_label": "IP-begränsning (valfritt)",
+            "ip_restriction_placeholder": "192.168.1.0/24 eller 203.0.113.5",
+            "prevent_burn_label": "Förhindra auto-radering (behåll hemlighet efter max visningar)",
+            "webhook_title": "Webhook-notifikation (valfritt)",
+            "webhook_description": "Få en notifikation när hemligheten skickas in",
+            "webhook_url_label": "Webhook-URL",
+            "webhook_url_placeholder": "https://din-server.com/webhook",
+            "webhook_url_hint": "HTTPS rekommenderas. En notifikation skickas när hemligheten skapas.",
+            "creating_button": "Skapar...",
+            "create_button": "Skapa förfrågan"
+        },
+        "validity": {
+            "30_days": "30 dagar",
+            "14_days": "14 dagar",
+            "7_days": "7 dagar",
+            "3_days": "3 dagar",
+            "1_day": "1 dag",
+            "12_hours": "12 timmar",
+            "1_hour": "1 timme"
+        },
+        "success": {
+            "title": "Förfrågan skapad!",
+            "description": "Dela skaparlänken med personen som ska tillhandahålla hemligheten",
+            "creator_link_label": "Skaparlänk",
+            "webhook_secret_label": "Webhook-hemlighet",
+            "webhook_secret_warning": "Spara denna hemlighet nu! Den visas inte igen. Använd den för att verifiera webhook-signaturer.",
+            "expires_at": "Länk upphör: {{date}}",
+            "create_another_button": "Skapa en ny förfrågan",
+            "view_all_button": "Visa alla förfrågningar"
+        },
+        "toast": {
+            "created": "Hemlighetsförfrågan skapad",
+            "create_error": "Kunde inte skapa hemlighetsförfrågan",
+            "copied": "Kopierat till urklipp"
+        }
+    },
+    "request_secret_page": {
+        "loading": "Laddar förfrågan...",
+        "error": {
+            "title": "Förfrågan inte tillgänglig",
+            "invalid_link": "Denna länk är ogiltig eller har manipulerats.",
+            "not_found": "Denna förfrågan hittades inte eller så är länken ogiltig.",
+            "already_fulfilled": "Denna förfrågan har redan uppfyllts eller har gått ut.",
+            "generic": "Ett fel inträffade vid inläsning av förfrågan.",
+            "go_home_button": "Gå till startsidan"
+        },
+        "form": {
+            "title": "Skicka in en hemlighet",
+            "description": "Någon har bett dig att dela en hemlighet med dem på ett säkert sätt",
+            "password_protected_note": "Denna hemlighet kommer att vara lösenordsskyddad",
+            "encryption_note": "Din hemlighet krypteras i din webbläsare innan den skickas. Dekrypteringsnyckeln inkluderas endast i den slutliga URL:en du delar.",
+            "submitting_button": "Krypterar och skickar in...",
+            "submit_button": "Skicka in hemlighet"
+        },
+        "success": {
+            "title": "Hemlighet skapad!",
+            "description": "Din hemlighet har krypterats och lagrats säkert",
+            "view_url_label": "Hemlighetens visnings-URL",
+            "warning": "Viktigt: Kopiera denna URL nu och skicka den till den som begärde den. Detta är den enda gången du kommer att se den!",
+            "manual_send_note": "Du måste manuellt skicka denna URL till personen som begärde hemligheten. Den skickas inte automatiskt.",
+            "create_own_button": "Skapa din egen hemlighet"
+        },
+        "toast": {
+            "created": "Hemlighet skickad",
+            "create_error": "Kunde inte skicka in hemlighet",
+            "copied": "URL kopierad till urklipp"
+        }
     }
 }

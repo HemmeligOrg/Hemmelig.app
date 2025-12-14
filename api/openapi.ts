@@ -23,6 +23,7 @@ const spec = {
     ],
     tags: [
         { name: 'Secrets', description: 'Secret management endpoints' },
+        { name: 'Secret Requests', description: 'Request secrets from others' },
         { name: 'Files', description: 'File upload/download endpoints' },
         { name: 'Account', description: 'User account management' },
         { name: 'API Keys', description: 'API key management for programmatic access' },
@@ -284,6 +285,273 @@ const spec = {
                         },
                     },
                     '404': { description: 'Secret not found' },
+                },
+            },
+        },
+        '/secret-requests': {
+            get: {
+                tags: ['Secret Requests'],
+                summary: 'List your secret requests',
+                description:
+                    'Get paginated list of secret requests created by the authenticated user',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: 'page',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, default: 1 },
+                    },
+                    {
+                        name: 'limit',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
+                    },
+                    {
+                        name: 'status',
+                        in: 'query',
+                        schema: {
+                            type: 'string',
+                            enum: ['all', 'pending', 'fulfilled', 'expired', 'cancelled'],
+                        },
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'List of secret requests',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        data: {
+                                            type: 'array',
+                                            items: { $ref: '#/components/schemas/SecretRequest' },
+                                        },
+                                        meta: { $ref: '#/components/schemas/PaginationMeta' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+            post: {
+                tags: ['Secret Requests'],
+                summary: 'Create a secret request',
+                description:
+                    'Create a new secret request. Returns a link to share with the person who will submit the secret.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: { $ref: '#/components/schemas/CreateSecretRequestBody' },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'Secret request created',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        id: { type: 'string', format: 'uuid' },
+                                        creatorLink: {
+                                            type: 'string',
+                                            description: 'Link to share with the secret creator',
+                                        },
+                                        webhookSecret: {
+                                            type: 'string',
+                                            nullable: true,
+                                            description: 'Webhook signing secret (only shown once)',
+                                        },
+                                        expiresAt: { type: 'string', format: 'date-time' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                },
+            },
+        },
+        '/secret-requests/{id}': {
+            get: {
+                tags: ['Secret Requests'],
+                summary: 'Get secret request details',
+                description: 'Get details of a specific secret request (owner only)',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'string', format: 'uuid' },
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Secret request details',
+                        content: {
+                            'application/json': {
+                                schema: { $ref: '#/components/schemas/SecretRequestDetail' },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'Secret request not found' },
+                },
+            },
+            delete: {
+                tags: ['Secret Requests'],
+                summary: 'Cancel a secret request',
+                description: 'Cancel a pending secret request (owner only)',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'string', format: 'uuid' },
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Secret request cancelled',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean' },
+                                        message: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '400': { description: 'Can only cancel pending requests' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'Secret request not found' },
+                },
+            },
+        },
+        '/secret-requests/{id}/info': {
+            get: {
+                tags: ['Secret Requests'],
+                summary: 'Get request info (public)',
+                description:
+                    'Get basic info about a secret request. Requires the token from the request link.',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'string', format: 'uuid' },
+                    },
+                    {
+                        name: 'token',
+                        in: 'query',
+                        required: true,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description: 'Request token from the creator link',
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Request info',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        id: { type: 'string', format: 'uuid' },
+                                        title: { type: 'string' },
+                                        description: { type: 'string', nullable: true },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '404': { description: 'Invalid or expired request' },
+                    '410': { description: 'Request already fulfilled or expired' },
+                },
+            },
+        },
+        '/secret-requests/{id}/submit': {
+            post: {
+                tags: ['Secret Requests'],
+                summary: 'Submit a secret (public)',
+                description:
+                    'Submit an encrypted secret for a request. The secret is encrypted client-side before submission.',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'string', format: 'uuid' },
+                    },
+                    {
+                        name: 'token',
+                        in: 'query',
+                        required: true,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description: 'Request token from the creator link',
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['secret', 'salt'],
+                                properties: {
+                                    secret: {
+                                        type: 'object',
+                                        description: 'Encrypted secret as Uint8Array object',
+                                    },
+                                    title: {
+                                        type: 'object',
+                                        nullable: true,
+                                        description: 'Encrypted title as Uint8Array object',
+                                    },
+                                    salt: {
+                                        type: 'string',
+                                        minLength: 16,
+                                        maxLength: 64,
+                                        description: 'Salt used for encryption',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'Secret created',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        secretId: {
+                                            type: 'string',
+                                            description:
+                                                'ID of the created secret. Client constructs full URL with decryption key.',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '404': { description: 'Invalid request' },
+                    '410': { description: 'Request already fulfilled or expired' },
                 },
             },
         },
@@ -921,6 +1189,84 @@ const spec = {
             },
         },
         schemas: {
+            SecretRequest: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string', format: 'uuid' },
+                    title: { type: 'string' },
+                    description: { type: 'string', nullable: true },
+                    status: {
+                        type: 'string',
+                        enum: ['pending', 'fulfilled', 'expired', 'cancelled'],
+                    },
+                    maxViews: { type: 'integer' },
+                    expiresIn: { type: 'integer', description: 'Secret expiration in seconds' },
+                    webhookUrl: { type: 'string', nullable: true },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    expiresAt: { type: 'string', format: 'date-time' },
+                    fulfilledAt: { type: 'string', format: 'date-time', nullable: true },
+                    secretId: { type: 'string', nullable: true },
+                },
+            },
+            SecretRequestDetail: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string', format: 'uuid' },
+                    title: { type: 'string' },
+                    description: { type: 'string', nullable: true },
+                    status: {
+                        type: 'string',
+                        enum: ['pending', 'fulfilled', 'expired', 'cancelled'],
+                    },
+                    maxViews: { type: 'integer' },
+                    expiresIn: { type: 'integer' },
+                    preventBurn: { type: 'boolean' },
+                    allowedIp: { type: 'string', nullable: true },
+                    webhookUrl: { type: 'string', nullable: true },
+                    token: { type: 'string' },
+                    creatorLink: { type: 'string' },
+                    createdAt: { type: 'string', format: 'date-time' },
+                    expiresAt: { type: 'string', format: 'date-time' },
+                    fulfilledAt: { type: 'string', format: 'date-time', nullable: true },
+                    secretId: { type: 'string', nullable: true },
+                },
+            },
+            CreateSecretRequestBody: {
+                type: 'object',
+                required: ['title', 'expiresIn', 'validFor'],
+                properties: {
+                    title: { type: 'string', minLength: 1, maxLength: 200 },
+                    description: { type: 'string', maxLength: 1000 },
+                    maxViews: { type: 'integer', minimum: 1, maximum: 9999, default: 1 },
+                    expiresIn: {
+                        type: 'integer',
+                        description: 'How long the created secret lives (seconds)',
+                        enum: [
+                            300, 1800, 3600, 14400, 43200, 86400, 259200, 604800, 1209600, 2419200,
+                        ],
+                    },
+                    validFor: {
+                        type: 'integer',
+                        description: 'How long the request link is valid (seconds)',
+                        enum: [3600, 43200, 86400, 259200, 604800, 1209600, 2592000],
+                    },
+                    allowedIp: {
+                        type: 'string',
+                        nullable: true,
+                        description: 'IP/CIDR restriction for viewing the secret',
+                    },
+                    preventBurn: {
+                        type: 'boolean',
+                        default: false,
+                        description: 'Keep secret even after max views reached',
+                    },
+                    webhookUrl: {
+                        type: 'string',
+                        format: 'uri',
+                        description: 'URL to receive webhook when secret is submitted',
+                    },
+                },
+            },
             ApiKey: {
                 type: 'object',
                 properties: {

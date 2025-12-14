@@ -7,8 +7,10 @@ import { api } from './lib/api';
 import { authClient } from './lib/auth';
 import { AccountPage } from './pages/Dashboard/AccountPage';
 import { AnalyticsPage } from './pages/Dashboard/AnalyticsPage';
+import { CreateSecretRequestPage } from './pages/Dashboard/CreateSecretRequestPage';
 import { InstancePage } from './pages/Dashboard/InstancePage';
 import { InvitesPage } from './pages/Dashboard/InvitesPage';
+import { SecretRequestsPage } from './pages/Dashboard/SecretRequestsPage';
 import { SecretsPage } from './pages/Dashboard/SecretsPage';
 import { UsersPage } from './pages/Dashboard/UsersPage';
 import { HomePage } from './pages/HomePage';
@@ -16,6 +18,7 @@ import { LoginPage } from './pages/LoginPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { RequestSecretPage } from './pages/RequestSecretPage';
 import { SecretNotFoundPage } from './pages/SecretNotFoundPage';
 import { SecretPage } from './pages/SecretPage';
 import { SetupPage } from './pages/SetupPage';
@@ -177,6 +180,10 @@ export const router = createBrowserRouter([
                 },
             },
             {
+                path: '/request/:id',
+                element: <RequestSecretPage />,
+            },
+            {
                 path: '/terms',
                 element: <TermsPage />,
             },
@@ -300,6 +307,26 @@ export const router = createBrowserRouter([
                         return [];
                     }
                 },
+            },
+            {
+                path: 'secret-requests',
+                element: <SecretRequestsPage />,
+                loader: async () => {
+                    try {
+                        const res = await api['secret-requests'].$get();
+                        if (res.ok) {
+                            return await res.json();
+                        }
+                        return { data: [], meta: { total: 0, page: 1, totalPages: 0 } };
+                    } catch (error) {
+                        console.error('Failed to fetch secret requests:', error);
+                        return { data: [], meta: { total: 0, page: 1, totalPages: 0 } };
+                    }
+                },
+            },
+            {
+                path: 'secret-requests/create',
+                element: <CreateSecretRequestPage />,
             },
         ],
     },

@@ -1,4 +1,15 @@
-import { BarChart3, LogOut, Menu, Server, Shield, Ticket, User, Users, X } from 'lucide-react';
+import {
+    BarChart3,
+    Link2,
+    LogOut,
+    Menu,
+    Server,
+    Shield,
+    Ticket,
+    User,
+    Users,
+    X,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
@@ -19,6 +30,11 @@ export function DashboardLayout() {
 
     const navigation = [
         { name: t('dashboard_layout.secrets'), href: '/dashboard', icon: Shield },
+        {
+            name: t('dashboard_layout.secret_requests'),
+            href: '/dashboard/secret-requests',
+            icon: Link2,
+        },
         { name: t('dashboard_layout.account'), href: '/dashboard/account', icon: User },
         //...(user?.isAdmin ? [
         { name: t('dashboard_layout.analytics'), href: '/dashboard/analytics', icon: BarChart3 },
