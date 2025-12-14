@@ -63,46 +63,56 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
 
     try {
         // Use aggregations for basic counts - much more efficient than loading all records
-        const [aggregates, activeCount, typesCounts, dailyStats] = await Promise.all([
-            // Get total count and sum of views
-            prisma.secrets.aggregate({
-                where: { createdAt: { gte: startDate } },
-                _count: true,
-                _sum: { views: true },
-            }),
-            // Count active (non-expired) secrets
-            prisma.secrets.count({
-                where: {
-                    createdAt: { gte: startDate },
-                    expiresAt: { gt: now },
-                },
-            }),
-            // Get counts for secret types in parallel
-            Promise.all([
-                prisma.secrets.count({
-                    where: { createdAt: { gte: startDate }, password: { not: null } },
+        const [aggregates, activeCount, typesCounts, dailyStats, secretRequestStats] =
+            await Promise.all([
+                // Get total count and sum of views
+                prisma.secrets.aggregate({
+                    where: { createdAt: { gte: startDate } },
+                    _count: true,
+                    _sum: { views: true },
                 }),
+                // Count active (non-expired) secrets
                 prisma.secrets.count({
                     where: {
                         createdAt: { gte: startDate },
-                        ipRange: { not: null },
-                        NOT: { ipRange: '' },
+                        expiresAt: { gt: now },
                     },
                 }),
-                prisma.secrets.count({
-                    where: { createdAt: { gte: startDate }, isBurnable: true },
+                // Get counts for secret types in parallel
+                Promise.all([
+                    prisma.secrets.count({
+                        where: { createdAt: { gte: startDate }, password: { not: null } },
+                    }),
+                    prisma.secrets.count({
+                        where: {
+                            createdAt: { gte: startDate },
+                            ipRange: { not: null },
+                            NOT: { ipRange: '' },
+                        },
+                    }),
+                    prisma.secrets.count({
+                        where: { createdAt: { gte: startDate }, isBurnable: true },
+                    }),
+                ]),
+                // For daily stats, we still need individual records but only select minimal fields
+                prisma.secrets.findMany({
+                    where: { createdAt: { gte: startDate } },
+                    select: {
+                        createdAt: true,
+                        views: true,
+                        expiresAt: true,
+                    },
                 }),
-            ]),
-            // For daily stats, we still need individual records but only select minimal fields
-            prisma.secrets.findMany({
-                where: { createdAt: { gte: startDate } },
-                select: {
-                    createdAt: true,
-                    views: true,
-                    expiresAt: true,
-                },
-            }),
-        ]);
+                // Secret request statistics
+                Promise.all([
+                    prisma.secretRequest.count({
+                        where: { createdAt: { gte: startDate } },
+                    }),
+                    prisma.secretRequest.count({
+                        where: { createdAt: { gte: startDate }, status: 'fulfilled' },
+                    }),
+                ]),
+            ]);
 
         const totalSecrets = aggregates._count;
         const totalViews = aggregates._sum.views || 0;
@@ -111,6 +121,7 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
         const averageViews = totalSecrets > 0 ? totalViews / totalSecrets : 0;
 
         const [passwordProtected, ipRestricted, burnable] = typesCounts;
+        const [totalSecretRequests, fulfilledSecretRequests] = secretRequestStats;
 
         // Process daily stats from minimal data
         const dailyStatsMap = dailyStats.reduce(
@@ -150,6 +161,10 @@ app.get('/', authMiddleware, checkAdmin, zValidator('query', timeRangeSchema), a
                 oneHour: calculatePercentage(oneHour, totalSecrets),
                 oneDay: calculatePercentage(oneDay, totalSecrets),
                 oneWeekPlus: calculatePercentage(oneWeekPlus, totalSecrets),
+            },
+            secretRequests: {
+                total: totalSecretRequests,
+                fulfilled: fulfilledSecretRequests,
             },
         });
     } catch (error) {

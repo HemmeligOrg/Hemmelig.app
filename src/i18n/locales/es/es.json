@@ -308,6 +308,10 @@
             "vs_previous": "vs día anterior",
             "no_data": "Aún no hay datos de visitantes disponibles."
         },
+        "secret_requests": {
+            "total": "Solicitudes de secretos",
+            "fulfilled": "Solicitudes completadas"
+        },
         "loading": "Cargando analíticas...",
         "no_permission": "No tienes permiso para ver las analíticas.",
         "failed_to_fetch": "Error al obtener los datos de analíticas."

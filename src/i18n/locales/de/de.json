@@ -308,6 +308,10 @@
             "vs_previous": "ggü. Vortag",
             "no_data": "Noch keine Besucherdaten verfügbar."
         },
+        "secret_requests": {
+            "total": "Geheimnis-Anfragen",
+            "fulfilled": "Erfüllte Anfragen"
+        },
         "loading": "Analysen werden geladen...",
         "no_permission": "Sie haben keine Berechtigung, Analysen anzuzeigen.",
         "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden."

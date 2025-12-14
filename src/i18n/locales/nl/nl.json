@@ -308,6 +308,10 @@
             "vs_previous": "vs vorige dag",
             "no_data": "Er zijn nog geen bezoekersgegevens beschikbaar."
         },
+        "secret_requests": {
+            "total": "Geheime aanvragen",
+            "fulfilled": "Vervulde aanvragen"
+        },
         "loading": "Analyses worden geladen...",
         "no_permission": "Je hebt geen toestemming om analyses te bekijken.",
         "failed_to_fetch": "Kan analysegegevens niet ophalen."

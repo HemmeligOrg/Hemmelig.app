@@ -308,6 +308,10 @@
             "vs_previous": "对比前一天",
             "no_data": "暂无访客数据。"
         },
+        "secret_requests": {
+            "total": "密钥请求",
+            "fulfilled": "已完成请求"
+        },
         "loading": "正在加载分析...",
         "no_permission": "您没有权限查看分析。",
         "failed_to_fetch": "获取分析数据失败。"

@@ -308,6 +308,10 @@
             "vs_previous": "vs giorno precedente",
             "no_data": "Nessun dato sui visitatori disponibile ancora."
         },
+        "secret_requests": {
+            "total": "Richieste di segreti",
+            "fulfilled": "Richieste soddisfatte"
+        },
         "loading": "Caricamento analisi...",
         "no_permission": "Non hai il permesso di visualizzare le analitiche.",
         "failed_to_fetch": "Impossibile recuperare i dati analitici."

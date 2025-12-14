@@ -1,9 +1,11 @@
 import {
     BarChart3,
     Calendar,
+    CheckCircle,
     Clock,
     Eye,
     Globe,
+    MessageSquare,
     Shield,
     TrendingDown,
     TrendingUp,
@@ -41,6 +43,11 @@ interface ExpirationStats {
     oneWeekPlus: number;
 }
 
+interface SecretRequestStats {
+    total: number;
+    fulfilled: number;
+}
+
 interface AnalyticsData {
     totalSecrets: number;
     totalViews: number;
@@ -50,6 +57,7 @@ interface AnalyticsData {
     dailyStats: DailyStat[];
     secretTypes: SecretTypes;
     expirationStats: ExpirationStats;
+    secretRequests: SecretRequestStats;
 }
 
 interface AnalyticsLoaderData {
@@ -62,6 +70,7 @@ interface AnalyticsLoaderData {
     dailyStats?: DailyStat[];
     secretTypes?: SecretTypes;
     expirationStats?: ExpirationStats;
+    secretRequests?: SecretRequestStats;
     visitorStats?: DailyVisitor[];
 }
 
@@ -234,6 +243,41 @@ export function AnalyticsPage() {
                             </p>
                             <p className="text-xs text-gray-500 dark:text-slate-400">
                                 {t('analytics_page.active_secrets')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Secret Requests Metrics */}
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 mb-5">
+                <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-3">
+                    <div className="flex items-center gap-2.5">
+                        <div className="p-1.5 bg-violet-500/10">
+                            <MessageSquare className="w-4 h-4 text-violet-500" />
+                        </div>
+                        <div>
+                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                {analytics.secretRequests?.total ?? 0}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-slate-400">
+                                {t('analytics_page.secret_requests.total')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-3">
+                    <div className="flex items-center gap-2.5">
+                        <div className="p-1.5 bg-emerald-500/10">
+                            <CheckCircle className="w-4 h-4 text-emerald-500" />
+                        </div>
+                        <div>
+                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                {analytics.secretRequests?.fulfilled ?? 0}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-slate-400">
+                                {t('analytics_page.secret_requests.fulfilled')}
                             </p>
                         </div>
                     </div>
