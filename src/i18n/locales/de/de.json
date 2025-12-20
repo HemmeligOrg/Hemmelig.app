@@ -579,6 +579,8 @@
     "secret_page": {
         "password_label": "Passwort",
         "password_placeholder": "Passwort eingeben, um das Geheimnis anzuzeigen",
+        "decryption_key_label": "Entschlüsselungsschlüssel",
+        "decryption_key_placeholder": "Entschlüsselungsschlüssel eingeben",
         "view_secret_button": "Geheimnis anzeigen",
         "views_remaining_tooltip": "Verbleibende Aufrufe: {{count}}",
         "loading_message": "Geheimnis wird entschlüsselt...",
@@ -924,15 +926,15 @@
         "success": {
             "title": "Geheimnis erstellt!",
             "description": "Ihr Geheimnis wurde verschlüsselt und sicher gespeichert",
-            "view_url_label": "Geheimnis-Ansichts-URL",
-            "warning": "Wichtig: Kopieren Sie diese URL jetzt und senden Sie sie an den Anforderer. Dies ist das einzige Mal, dass Sie sie sehen werden!",
-            "manual_send_note": "Sie müssen diese URL manuell an die Person senden, die das Geheimnis angefordert hat. Sie wird nicht automatisch gesendet.",
+            "decryption_key_label": "Entschlüsselungsschlüssel",
+            "warning": "Wichtig: Kopieren Sie diesen Entschlüsselungsschlüssel jetzt und senden Sie ihn an den Anforderer. Dies ist das einzige Mal, dass Sie ihn sehen werden!",
+            "manual_send_note": "Sie müssen diesen Entschlüsselungsschlüssel manuell an die Person senden, die das Geheimnis angefordert hat. Sie haben die Geheimnis-URL bereits in ihrem Dashboard.",
             "create_own_button": "Eigenes Geheimnis erstellen"
         },
         "toast": {
             "created": "Geheimnis erfolgreich übermittelt",
             "create_error": "Geheimnis konnte nicht übermittelt werden",
-            "copied": "URL in Zwischenablage kopiert"
+            "copied": "In Zwischenablage kopiert"
         }
     }
 }

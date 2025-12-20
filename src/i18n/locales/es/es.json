@@ -581,6 +581,8 @@
     "secret_page": {
         "password_label": "Contraseña",
         "password_placeholder": "Introduce la contraseña para ver el secreto",
+        "decryption_key_label": "Clave de descifrado",
+        "decryption_key_placeholder": "Introduce la clave de descifrado",
         "view_secret_button": "Ver secreto",
         "views_remaining_tooltip": "Vistas restantes: {{count}}",
         "loading_message": "Descifrando secreto...",
@@ -924,15 +926,15 @@
         "success": {
             "title": "¡Secreto creado!",
             "description": "Tu secreto ha sido cifrado y almacenado de forma segura",
-            "view_url_label": "URL de visualización del secreto",
-            "warning": "Importante: ¡Copia esta URL ahora y envíala al solicitante. Esta es la única vez que la verás!",
-            "manual_send_note": "Debes enviar manualmente esta URL a la persona que solicitó el secreto. No se enviará automáticamente.",
+            "decryption_key_label": "Clave de descifrado",
+            "warning": "Importante: ¡Copia esta clave de descifrado ahora y envíala al solicitante. Esta es la única vez que la verás!",
+            "manual_send_note": "Debes enviar manualmente esta clave de descifrado a la persona que solicitó el secreto. Ya tienen la URL del secreto en su panel de control.",
             "create_own_button": "Crear tu propio secreto"
         },
         "toast": {
             "created": "Secreto enviado con éxito",
             "create_error": "Error al enviar el secreto",
-            "copied": "URL copiada al portapapeles"
+            "copied": "Copiado al portapapeles"
         }
     }
 }

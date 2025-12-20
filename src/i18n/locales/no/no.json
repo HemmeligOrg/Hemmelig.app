@@ -575,6 +575,8 @@
     "secret_page": {
         "password_label": "Passord",
         "password_placeholder": "Skriv inn passord for å se hemmelighet",
+        "decryption_key_label": "Dekrypteringsnøkkel",
+        "decryption_key_placeholder": "Skriv inn dekrypteringsnøkkelen",
         "view_secret_button": "Se hemmelighet",
         "views_remaining_tooltip": "Gjenstående visninger: {{count}}",
         "loading_message": "Dekrypterer hemmelighet...",
@@ -920,15 +922,15 @@
         "success": {
             "title": "Hemmelighet opprettet!",
             "description": "Hemmeligheten din er kryptert og lagret sikkert",
-            "view_url_label": "Hemmelighets-visnings-URL",
-            "warning": "Viktig: Kopier denne URL-en nå og send den til forespørreren. Dette er den eneste gangen du vil se den!",
-            "manual_send_note": "Du må manuelt sende denne URL-en til personen som ba om hemmeligheten. Den sendes ikke automatisk.",
+            "decryption_key_label": "Dekrypteringsnøkkel",
+            "warning": "Viktig: Kopier denne dekrypteringsnøkkelen nå og send den til forespørreren. Dette er den eneste gangen du vil se den!",
+            "manual_send_note": "Du må manuelt sende denne dekrypteringsnøkkelen til personen som ba om hemmeligheten. De har allerede hemmelighetens URL i sitt dashboard.",
             "create_own_button": "Opprett din egen hemmelighet"
         },
         "toast": {
             "created": "Hemmelighet sendt inn",
             "create_error": "Kunne ikke sende inn hemmelighet",
-            "copied": "URL kopiert til utklippstavle"
+            "copied": "Kopiert til utklippstavle"
         }
     }
 }

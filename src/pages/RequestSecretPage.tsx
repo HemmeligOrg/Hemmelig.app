@@ -17,7 +17,7 @@ interface RequestInfo {
 
 interface CreatedSecret {
     secretId: string;
-    viewUrl: string;
+    decryptionKey: string;
 }
 
 export function RequestSecretPage() {
@@ -97,17 +97,13 @@ export function RequestSecretPage() {
             });
 
             if (res.ok) {
-                const data = await res.json();
-                // Construct the view URL with the decryption key in the fragment
-                const viewUrl = `${window.location.origin}/secret/${data.secretId}#decryptionKey=${encryptionKey}`;
-
                 // Clear sensitive data from state
                 setSecret('');
                 setTitle('');
 
                 setCreatedSecret({
-                    secretId: data.secretId,
-                    viewUrl,
+                    secretId: '',
+                    decryptionKey: encryptionKey,
                 });
                 toast.success(t('request_secret_page.toast.created'));
             } else if (res.status === 410) {
@@ -185,16 +181,18 @@ export function RequestSecretPage() {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                    {t('request_secret_page.success.view_url_label')}
+                                    {t('request_secret_page.success.decryption_key_label')}
                                 </label>
                                 <div className="flex items-center gap-2">
                                     <div className="flex-1 bg-gray-100 dark:bg-dark-700 p-3 overflow-x-auto">
                                         <code className="text-sm text-gray-900 dark:text-white break-all">
-                                            {createdSecret.viewUrl}
+                                            {createdSecret.decryptionKey}
                                         </code>
                                     </div>
                                     <button
-                                        onClick={() => handleCopyToClipboard(createdSecret.viewUrl)}
+                                        onClick={() =>
+                                            handleCopyToClipboard(createdSecret.decryptionKey)
+                                        }
                                         className="p-3 bg-teal-500 hover:bg-teal-600 text-white transition-colors"
                                     >
                                         <Copy className="w-4 h-4" />

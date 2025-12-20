@@ -1,4 +1,4 @@
-import { Copy, Link2, Plus, Trash2 } from 'lucide-react';
+import { Copy, ExternalLink, Link2, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate } from 'react-router-dom';
@@ -215,6 +215,20 @@ export function SecretRequestsPage() {
                                             </td>
                                             <td className="relative whitespace-nowrap py-2.5 pl-3 pr-4 text-right sm:pr-4">
                                                 <div className="flex items-center justify-end gap-1">
+                                                    {request.status === 'fulfilled' &&
+                                                        request.secretId && (
+                                                            <a
+                                                                href={`/secret/${request.secretId}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="p-1.5 text-teal-500 hover:bg-teal-50 dark:hover:bg-teal-500/10 transition-colors"
+                                                                title={t(
+                                                                    'secret_requests_page.table.view_secret_tooltip'
+                                                                )}
+                                                            >
+                                                                <ExternalLink className="w-3.5 h-3.5" />
+                                                            </a>
+                                                        )}
                                                     {isPending && (
                                                         <button
                                                             onClick={() =>

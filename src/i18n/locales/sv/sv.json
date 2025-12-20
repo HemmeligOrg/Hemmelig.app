@@ -575,6 +575,8 @@
     "secret_page": {
         "password_label": "Lösenord",
         "password_placeholder": "Ange lösenord för att se hemlighet",
+        "decryption_key_label": "Dekrypteringsnyckel",
+        "decryption_key_placeholder": "Ange dekrypteringsnyckeln",
         "view_secret_button": "Se hemlighet",
         "views_remaining_tooltip": "Visningar kvar: {{count}}",
         "loading_message": "Dekrypterar hemlighet...",
@@ -920,15 +922,15 @@
         "success": {
             "title": "Hemlighet skapad!",
             "description": "Din hemlighet har krypterats och lagrats säkert",
-            "view_url_label": "Hemlighetens visnings-URL",
-            "warning": "Viktigt: Kopiera denna URL nu och skicka den till den som begärde den. Detta är den enda gången du kommer att se den!",
-            "manual_send_note": "Du måste manuellt skicka denna URL till personen som begärde hemligheten. Den skickas inte automatiskt.",
+            "decryption_key_label": "Dekrypteringsnyckel",
+            "warning": "Viktigt: Kopiera denna dekrypteringsnyckel nu och skicka den till den som begärde den. Detta är den enda gången du kommer att se den!",
+            "manual_send_note": "Du måste manuellt skicka denna dekrypteringsnyckel till personen som begärde hemligheten. De har redan hemlighetens URL i sin instrumentpanel.",
             "create_own_button": "Skapa din egen hemlighet"
         },
         "toast": {
             "created": "Hemlighet skickad",
             "create_error": "Kunde inte skicka in hemlighet",
-            "copied": "URL kopierad till urklipp"
+            "copied": "Kopierad till urklipp"
         }
     }
 }

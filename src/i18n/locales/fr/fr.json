@@ -579,6 +579,8 @@
     "secret_page": {
         "password_label": "Mot de passe",
         "password_placeholder": "Entrez le mot de passe pour voir le secret",
+        "decryption_key_label": "Clé de déchiffrement",
+        "decryption_key_placeholder": "Entrez la clé de déchiffrement",
         "view_secret_button": "Voir le secret",
         "views_remaining_tooltip": "Vues restantes : {{count}}",
         "loading_message": "Déchiffrement du secret...",
@@ -924,15 +926,15 @@
         "success": {
             "title": "Secret créé !",
             "description": "Votre secret a été chiffré et stocké de manière sécurisée",
-            "view_url_label": "URL de visualisation du secret",
-            "warning": "Important : Copiez cette URL maintenant et envoyez-la au demandeur. C'est la seule fois que vous la verrez !",
-            "manual_send_note": "Vous devez envoyer manuellement cette URL à la personne qui a demandé le secret. Elle ne sera pas envoyée automatiquement.",
+            "decryption_key_label": "Clé de déchiffrement",
+            "warning": "Important : Copiez cette clé de déchiffrement maintenant et envoyez-la au demandeur. C'est la seule fois que vous la verrez !",
+            "manual_send_note": "Vous devez envoyer manuellement cette clé de déchiffrement à la personne qui a demandé le secret. Elle a déjà l'URL du secret dans son tableau de bord.",
             "create_own_button": "Créer votre propre secret"
         },
         "toast": {
             "created": "Secret soumis avec succès",
             "create_error": "Échec de la soumission du secret",
-            "copied": "URL copiée dans le presse-papiers"
+            "copied": "Copié dans le presse-papiers"
         }
     }
 }

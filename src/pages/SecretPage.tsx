@@ -42,6 +42,7 @@ export function SecretPage() {
     const [files, setFiles] = useState<SecretFile[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [passwordInput, setPasswordInput] = useState('');
+    const [decryptionKeyInput, setDecryptionKeyInput] = useState('');
     const [isPasswordProtected, setIsPasswordProtected] = useState(false);
     const [showSecretContent, setShowSecretContent] = useState(false);
     const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
@@ -52,9 +53,15 @@ export function SecretPage() {
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
     const [isBurnable, setIsBurnable] = useState(false);
 
-    const decryptionKey = location.hash.startsWith('#decryptionKey=')
+    const decryptionKeyFromUrl = location.hash.startsWith('#decryptionKey=')
         ? location.hash.substring('#decryptionKey='.length)
         : '';
+
+    // Use URL key if available, otherwise use manually entered key
+    const decryptionKey = decryptionKeyFromUrl || decryptionKeyInput;
+
+    // Check if we need manual key entry (no key in URL and not password protected)
+    const needsManualKeyEntry = !decryptionKeyFromUrl && !isPasswordProtected;
 
     const fetchSecretContent = useCallback(
         async (password: string) => {
@@ -225,6 +232,23 @@ export function SecretPage() {
 
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-white/90 dark:bg-dark-800/90 backdrop-blur-[2px] flex flex-col items-center justify-center p-6">
+                            {needsManualKeyEntry && (
+                                <div className="w-full max-w-xs mb-5">
+                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2 text-center">
+                                        {t('secret_page.decryption_key_label')}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={decryptionKeyInput}
+                                        onChange={(e) => setDecryptionKeyInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center font-mono text-sm"
+                                        placeholder={t('secret_page.decryption_key_placeholder')}
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+
                             {isPasswordProtected && (
                                 <div className="w-full max-w-xs mb-5">
                                     <input
@@ -234,14 +258,15 @@ export function SecretPage() {
                                         onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
                                         className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center"
                                         placeholder={t('secret_page.password_placeholder')}
-                                        autoFocus
+                                        autoFocus={!needsManualKeyEntry}
                                     />
                                 </div>
                             )}
 
                             <button
                                 onClick={handleViewSecret}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold transition-all duration-200 shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30"
+                                disabled={needsManualKeyEntry && !decryptionKeyInput}
+                                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30"
                             >
                                 <LockOpen className="w-5 h-5" />
                                 {t('secret_page.unlock_secret')}

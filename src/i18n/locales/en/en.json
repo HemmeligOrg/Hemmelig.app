@@ -580,6 +580,8 @@
     "secret_page": {
         "password_label": "Password",
         "password_placeholder": "Enter password to view secret",
+        "decryption_key_label": "Decryption Key",
+        "decryption_key_placeholder": "Enter the decryption key",
         "view_secret_button": "View Secret",
         "views_remaining_tooltip": "Views remaining: {{count}}",
         "loading_message": "Decrypting secret...",
@@ -925,15 +927,15 @@
         "success": {
             "title": "Secret Created!",
             "description": "Your secret has been encrypted and stored securely",
-            "view_url_label": "Secret View URL",
-            "warning": "Important: Copy this URL now and send it to the requester. This is the only time you will see it!",
-            "manual_send_note": "You must manually send this URL to the person who requested the secret. It will not be sent automatically.",
+            "decryption_key_label": "Decryption Key",
+            "warning": "Important: Copy this decryption key now and send it to the requester. This is the only time you will see it!",
+            "manual_send_note": "You must manually send this decryption key to the person who requested the secret. They already have the secret URL in their dashboard.",
             "create_own_button": "Create Your Own Secret"
         },
         "toast": {
             "created": "Secret submitted successfully",
             "create_error": "Failed to submit secret",
-            "copied": "URL copied to clipboard"
+            "copied": "Copied to clipboard"
         }
     }
 }

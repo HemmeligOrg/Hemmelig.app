@@ -579,6 +579,8 @@
     "secret_page": {
         "password_label": "密码",
         "password_placeholder": "输入密码以查看秘密",
+        "decryption_key_label": "解密密钥",
+        "decryption_key_placeholder": "输入解密密钥",
         "view_secret_button": "查看秘密",
         "views_remaining_tooltip": "剩余查看次数：{{count}}",
         "loading_message": "正在解密秘密...",
@@ -924,15 +926,15 @@
         "success": {
             "title": "秘密已创建！",
             "description": "您的秘密已加密并安全存储",
-            "view_url_label": "秘密查看 URL",
-            "warning": "重要：现在复制此 URL 并发送给请求者。这是您唯一一次看到它！",
-            "manual_send_note": "您必须手动将此 URL 发送给请求秘密的人。它不会自动发送。",
+            "decryption_key_label": "解密密钥",
+            "warning": "重要：现在复制此解密密钥并发送给请求者。这是您唯一一次看到它！",
+            "manual_send_note": "您必须手动将此解密密钥发送给请求秘密的人。他们的仪表板中已经有秘密 URL。",
             "create_own_button": "创建您自己的秘密"
         },
         "toast": {
             "created": "秘密提交成功",
             "create_error": "提交秘密失败",
-            "copied": "URL 已复制到剪贴板"
+            "copied": "已复制到剪贴板"
         }
     }
 }

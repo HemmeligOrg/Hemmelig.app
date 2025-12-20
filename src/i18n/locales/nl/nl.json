@@ -580,6 +580,8 @@
     "secret_page": {
         "password_label": "Wachtwoord",
         "password_placeholder": "Voer wachtwoord in om geheim te bekijken",
+        "decryption_key_label": "Ontcijferingssleutel",
+        "decryption_key_placeholder": "Voer de ontcijferingssleutel in",
         "view_secret_button": "Geheim bekijken",
         "views_remaining_tooltip": "Resterende weergaven: {{count}}",
         "loading_message": "Geheim wordt ontsleuteld...",
@@ -925,15 +927,15 @@
         "success": {
             "title": "Geheim aangemaakt!",
             "description": "Je geheim is versleuteld en veilig opgeslagen",
-            "view_url_label": "Geheim-weergave-URL",
-            "warning": "Belangrijk: Kopieer deze URL nu en stuur deze naar de aanvrager. Dit is de enige keer dat je deze zult zien!",
-            "manual_send_note": "Je moet deze URL handmatig versturen naar de persoon die het geheim heeft aangevraagd. Het wordt niet automatisch verzonden.",
+            "decryption_key_label": "Ontcijferingssleutel",
+            "warning": "Belangrijk: Kopieer deze ontcijferingssleutel nu en stuur deze naar de aanvrager. Dit is de enige keer dat je deze zult zien!",
+            "manual_send_note": "Je moet deze ontcijferingssleutel handmatig versturen naar de persoon die het geheim heeft aangevraagd. Ze hebben de geheime URL al in hun dashboard.",
             "create_own_button": "Je eigen geheim aanmaken"
         },
         "toast": {
             "created": "Geheim succesvol ingediend",
             "create_error": "Kon geheim niet indienen",
-            "copied": "URL gekopieerd naar klembord"
+            "copied": "Gekopieerd naar klembord"
         }
     }
 }

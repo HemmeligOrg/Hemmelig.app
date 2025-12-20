@@ -579,6 +579,8 @@
     "secret_page": {
         "password_label": "Password",
         "password_placeholder": "Inserisci la password per vedere il segreto",
+        "decryption_key_label": "Chiave di decrittazione",
+        "decryption_key_placeholder": "Inserisci la chiave di decrittazione",
         "view_secret_button": "Visualizza segreto",
         "views_remaining_tooltip": "Visualizzazioni rimanenti: {{count}}",
         "loading_message": "Decrittazione del segreto...",
@@ -924,15 +926,15 @@
         "success": {
             "title": "Segreto creato!",
             "description": "Il tuo segreto è stato crittografato e memorizzato in modo sicuro",
-            "view_url_label": "URL di visualizzazione segreto",
-            "warning": "Importante: Copia questo URL ora e invialo al richiedente. Questa è l'unica volta che lo vedrai!",
-            "manual_send_note": "Devi inviare manualmente questo URL alla persona che ha richiesto il segreto. Non verrà inviato automaticamente.",
+            "decryption_key_label": "Chiave di decrittazione",
+            "warning": "Importante: Copia questa chiave di decrittazione ora e inviala al richiedente. Questa è l'unica volta che la vedrai!",
+            "manual_send_note": "Devi inviare manualmente questa chiave di decrittazione alla persona che ha richiesto il segreto. Hanno già l'URL del segreto nella loro dashboard.",
             "create_own_button": "Crea il tuo segreto"
         },
         "toast": {
             "created": "Segreto inviato con successo",
             "create_error": "Impossibile inviare il segreto",
-            "copied": "URL copiato negli appunti"
+            "copied": "Copiato negli appunti"
         }
     }
 }

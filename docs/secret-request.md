@@ -6,7 +6,8 @@ Secret Requests allow you to request secrets from others securely. Instead of as
 
 1. **Create a Request** - You configure the secret settings (expiration, max views, etc.) and get a unique request link
 2. **Share the Link** - Send the request link to the person who has the secret
-3. **They Submit** - They enter their secret, which gets encrypted in their browser. They receive a secret URL which they must manually send back to you.
+3. **They Submit** - They enter their secret, which gets encrypted in their browser. They receive a decryption key which they must send back to you.
+4. **View the Secret** - You use the secret URL from your dashboard combined with the decryption key to view the secret.
 
 ```
 ┌─────────────┐         ┌─────────────┐
@@ -24,8 +25,11 @@ Secret Requests allow you to request secrets from others securely. Instead of as
        │                       │    (encrypted)
        │                       │
        │ 4. They send you the  │
-       │    secret URL         │
+       │    decryption key     │
        │< ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+       │                       │
+       │ 5. View secret from   │
+       │    dashboard with key │
        │                       │
 ```
 
