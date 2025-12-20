@@ -24,7 +24,6 @@ import {
     IconServer,
     IconSourceCode,
     IconStrikethrough,
-    IconX,
 } from '@tabler/icons-react';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Color } from '@tiptap/extension-color';
@@ -91,87 +90,6 @@ const Tooltip: FC<TooltipProps> = ({ text, children }) => {
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-dark-800"></div>
                 </div>
             )}
-        </div>
-    );
-};
-
-// Link Modal Component
-interface LinkModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSubmit: (url: string) => void;
-    initialUrl?: string;
-}
-const LinkModal: FC<LinkModalProps> = ({ isOpen, onClose, onSubmit, initialUrl = '' }) => {
-    const [url, setUrl] = useState(initialUrl);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const { t } = useTranslation();
-
-    // Focus the input when the modal opens
-    useEffect(() => {
-        if (isOpen && inputRef.current) {
-            setTimeout(() => {
-                inputRef.current?.focus();
-            }, 50);
-        }
-    }, [isOpen]);
-
-    if (!isOpen) return null;
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit(url);
-        onClose();
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-dark-800 shadow-lg p-6 w-full max-w-md">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100">
-                        {t('editor.link_modal.title')}
-                    </h3>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
-                    >
-                        <IconX size={20} />
-                    </button>
-                </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label
-                            htmlFor="url"
-                            className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2"
-                        >
-                            {t('editor.link_modal.url_label')}
-                        </label>
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            id="url"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            placeholder={t('editor.link_modal.url_placeholder')}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        />
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-dark-600"
-                        >
-                            {t('editor.link_modal.cancel')}
-                        </button>
-                        <button type="submit" className="px-4 py-2 bg-teal-500 text-white ">
-                            {initialUrl
-                                ? t('editor.link_modal.update')
-                                : t('editor.link_modal.insert')}
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
     );
 };
@@ -464,6 +382,103 @@ const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) 
     );
 };
 
+// Link Dropdown Component for toolbar
+interface LinkDropdownProps {
+    onSubmit: (url: string) => void;
+    buttonClass: string;
+    activeButtonClass: string;
+    isActive: boolean;
+    initialUrl?: string;
+}
+
+const LinkDropdown: FC<LinkDropdownProps> = ({
+    onSubmit,
+    buttonClass,
+    activeButtonClass,
+    isActive,
+    initialUrl = '',
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [url, setUrl] = useState(initialUrl);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        if (isOpen && inputRef.current) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 50);
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) {
+            setUrl(initialUrl);
+        }
+    }, [isOpen, initialUrl]);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit(url);
+        setIsOpen(false);
+        setUrl('');
+    };
+
+    return (
+        <div className="relative">
+            <Tooltip text={t('editor.tooltips.link')}>
+                <button
+                    type="button"
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={isActive ? activeButtonClass : buttonClass}
+                >
+                    <IconLink
+                        size={18}
+                        stroke={1.5}
+                        className="text-gray-600 dark:text-slate-300 mx-auto"
+                    />
+                </button>
+            </Tooltip>
+
+            {isOpen && (
+                <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+                    <div className="absolute left-0 top-full mt-1 z-20 w-72 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
+                        <div className="p-3 border-b border-gray-200 dark:border-dark-600">
+                            <p className="text-xs font-medium text-gray-700 dark:text-slate-300">
+                                {t('editor.link_modal.title')}
+                            </p>
+                        </div>
+                        <form onSubmit={handleSubmit} className="p-3 space-y-3">
+                            <div>
+                                <label className="block text-xs text-gray-600 dark:text-slate-400 mb-1">
+                                    {t('editor.link_modal.url_label')}
+                                </label>
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    placeholder={t('editor.link_modal.url_placeholder')}
+                                    className="w-full px-2 py-1.5 text-xs bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full px-3 py-1.5 bg-teal-500 text-white text-xs font-medium hover:bg-teal-600 transition-colors"
+                            >
+                                {initialUrl
+                                    ? t('editor.link_modal.update')
+                                    : t('editor.link_modal.insert')}
+                            </button>
+                        </form>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
 // ReadOnlyMenuBar component for non-editable mode
 const ReadOnlyMenuBar: FC = () => {
     const { editor } = useCurrentEditor();
@@ -569,13 +584,8 @@ const ReadOnlyMenuBar: FC = () => {
 const MenuBar: FC = () => {
     const { editor } = useCurrentEditor();
     const onChange = useContext(EditorOnChangeContext);
-    const [linkModalOpen, setLinkModalOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
-
-    const openLinkModal = useCallback(() => {
-        setLinkModalOpen(true);
-    }, []);
 
     const handleLinkSubmit = useCallback(
         (url: string) => {
@@ -726,20 +736,13 @@ const MenuBar: FC = () => {
                                     />
                                 </button>
                             </Tooltip>
-                            <Tooltip text={t('editor.tooltips.link')}>
-                                <button
-                                    onClick={openLinkModal}
-                                    className={
-                                        editor.isActive('link') ? activeButtonClass : buttonClass
-                                    }
-                                >
-                                    <IconLink
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
+                            <LinkDropdown
+                                onSubmit={handleLinkSubmit}
+                                buttonClass={buttonClass}
+                                activeButtonClass={activeButtonClass}
+                                isActive={editor.isActive('link')}
+                                initialUrl={editor.getAttributes('link').href || ''}
+                            />
                             <Tooltip text={t('editor.tooltips.remove_link')}>
                                 <button
                                     onClick={() => editor.chain().focus().unsetLink().run()}
@@ -912,13 +915,6 @@ const MenuBar: FC = () => {
                     </div>
                 </div>
             </div>
-
-            <LinkModal
-                isOpen={linkModalOpen}
-                onClose={() => setLinkModalOpen(false)}
-                onSubmit={handleLinkSubmit}
-                initialUrl={editor?.getAttributes('link').href || ''}
-            />
         </>
     );
 };
