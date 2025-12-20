@@ -40,7 +40,7 @@ async function getDerivedKey(userKeyString: string, salt: string): Promise<Crypt
         {
             name: 'PBKDF2',
             salt: new TextEncoder().encode(salt),
-            iterations: 600000,
+            iterations: 1300000, // OWASP 2024 recommendation for PBKDF2-SHA256
             hash: 'SHA-256',
         },
         keyMaterial,
