@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSecretSettingsStore } from '../store/secretSettingsStore';
 import { useSecretStore } from '../store/secretStore';
-import { useUserStore } from '../store/userStore';
 import { ExpirationSelect } from './ExpirationSelect';
 import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
@@ -13,7 +12,6 @@ import { useHemmeligStore } from '../store/hemmeligStore';
 export function SecuritySettings() {
     const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
     const { saveSettings, setSaveSettings, updateSettings } = useSecretSettingsStore();
-    const { user } = useUserStore();
     const { settings: instanceSettings } = useHemmeligStore();
     const { t } = useTranslation();
 
@@ -57,15 +55,13 @@ export function SecuritySettings() {
                         {t('security_settings.security_description')}
                     </p>
                 </div>
-                {user && (
-                    <div className="flex items-center space-x-2 bg-gray-50 dark:bg-dark-700/50 px-3 py-2 border border-gray-200 dark:border-dark-600">
-                        <Save className="w-4 h-4 text-gray-500 dark:text-slate-400" />
-                        <span className="text-xs text-gray-500 dark:text-slate-400 hidden sm:inline">
-                            {t('security_settings.remember_settings')}
-                        </span>
-                        <ToggleSwitch checked={saveSettings} onChange={setSaveSettings} />
-                    </div>
-                )}
+                <div className="flex items-center space-x-2 bg-gray-50 dark:bg-dark-700/50 px-3 py-2 border border-gray-200 dark:border-dark-600">
+                    <Save className="w-4 h-4 text-gray-500 dark:text-slate-400" />
+                    <span className="text-xs text-gray-500 dark:text-slate-400 hidden sm:inline">
+                        {t('security_settings.remember_settings')}
+                    </span>
+                    <ToggleSwitch checked={saveSettings} onChange={setSaveSettings} />
+                </div>
             </div>
 
             <div className="space-y-4">
