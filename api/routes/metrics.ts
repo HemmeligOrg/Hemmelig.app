@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import { Hono } from 'hono';
 import { collectDefaultMetrics, Gauge, Histogram, register, Registry } from 'prom-client';
 import prisma from '../lib/db';
@@ -84,7 +85,7 @@ async function updateGaugeMetrics() {
     }
 }
 
-// Helper function to verify Bearer token
+// Helper function to verify Bearer token using constant-time comparison
 function verifyBearerToken(authHeader: string | undefined, expectedSecret: string): boolean {
     if (!authHeader || !expectedSecret) {
         return false;
@@ -95,7 +96,15 @@ function verifyBearerToken(authHeader: string | undefined, expectedSecret: strin
         return false;
     }
 
-    return parts[1] === expectedSecret;
+    const provided = Buffer.from(parts[1]);
+    const expected = Buffer.from(expectedSecret);
+
+    // Constant-time comparison to prevent timing attacks
+    if (provided.length !== expected.length) {
+        return false;
+    }
+
+    return timingSafeEqual(provided, expected);
 }
 
 // GET /api/metrics - Prometheus metrics endpoint
