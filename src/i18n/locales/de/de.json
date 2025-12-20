@@ -638,7 +638,7 @@
             "invite_only_title": "Nur mit Einladung",
             "invite_only_description": "Benutzer können sich nur mit einem gültigen Einladungscode registrieren",
             "require_registered_user_title": "Nur registrierte Benutzer",
-            "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen",
+            "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen und lesen",
             "allowed_domains_title": "Erlaubte E-Mail-Domains",
             "allowed_domains_description": "Nur Registrierung von bestimmten E-Mail-Domains erlauben (kommagetrennt, z.B. firma.de, org.net)",
             "allowed_domains_placeholder": "firma.de, org.net",

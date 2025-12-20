@@ -73,11 +73,11 @@ HEMMELIG_ALLOWED_EMAIL_DOMAINS="company.com,partner.com"
 
 ### Organization Settings
 
-| Variable                           | Description                              | Default |
-| ---------------------------------- | ---------------------------------------- | ------- |
-| `HEMMELIG_REQUIRE_INVITE_CODE`     | Require invite code for registration     | `false` |
-| `HEMMELIG_ALLOWED_EMAIL_DOMAINS`   | Comma-separated list of allowed domains  | `""`    |
-| `HEMMELIG_REQUIRE_REGISTERED_USER` | Only registered users can create secrets | `false` |
+| Variable                           | Description                                       | Default |
+| ---------------------------------- | ------------------------------------------------- | ------- |
+| `HEMMELIG_REQUIRE_INVITE_CODE`     | Require invite code for registration              | `false` |
+| `HEMMELIG_ALLOWED_EMAIL_DOMAINS`   | Comma-separated list of allowed domains           | `""`    |
+| `HEMMELIG_REQUIRE_REGISTERED_USER` | Only registered users can create and read secrets | `false` |
 
 ### Webhook Settings
 

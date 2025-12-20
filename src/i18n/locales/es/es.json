@@ -638,7 +638,7 @@
             "invite_only_title": "Registro solo con invitación",
             "invite_only_description": "Los usuarios solo pueden registrarse con un código de invitación válido",
             "require_registered_user_title": "Solo usuarios registrados",
-            "require_registered_user_description": "Solo los usuarios registrados pueden crear secretos",
+            "require_registered_user_description": "Solo los usuarios registrados pueden crear y leer secretos",
             "allowed_domains_title": "Dominios de correo permitidos",
             "allowed_domains_description": "Solo permitir registro desde dominios de correo específicos (separados por comas, ej., empresa.com, org.net)",
             "allowed_domains_placeholder": "empresa.com, org.net",

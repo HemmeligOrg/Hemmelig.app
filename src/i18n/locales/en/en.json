@@ -639,7 +639,7 @@
             "invite_only_title": "Invite Only Registration",
             "invite_only_description": "Users can only register with a valid invite code",
             "require_registered_user_title": "Registered Users Only",
-            "require_registered_user_description": "Only registered users can create secrets",
+            "require_registered_user_description": "Only registered users can create and read secrets",
             "allowed_domains_title": "Allowed Email Domains",
             "allowed_domains_description": "Only allow registration from specific email domains (comma-separated, e.g., company.com, org.net)",
             "allowed_domains_placeholder": "company.com, org.net",

@@ -632,7 +632,7 @@
             "invite_only_title": "Endast inbjudningsregistrering",
             "invite_only_description": "Användare kan endast registrera sig med en giltig inbjudningskod",
             "require_registered_user_title": "Endast registrerade användare",
-            "require_registered_user_description": "Endast registrerade användare kan skapa hemligheter",
+            "require_registered_user_description": "Endast registrerade användare kan skapa och läsa hemligheter",
             "allowed_domains_title": "Tillåtna e-postdomäner",
             "allowed_domains_description": "Tillåt endast registrering från specifika e-postdomäner (kommaseparerad, t.ex., foretag.com, org.net)",
             "allowed_domains_placeholder": "foretag.com, org.net",

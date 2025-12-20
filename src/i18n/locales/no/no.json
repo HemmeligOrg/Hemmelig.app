@@ -632,7 +632,7 @@
             "invite_only_title": "Kun invitasjonsregistrering",
             "invite_only_description": "Brukere kan kun registrere seg med en gyldig invitasjonskode",
             "require_registered_user_title": "Kun registrerte brukere",
-            "require_registered_user_description": "Kun registrerte brukere kan opprette hemmeligheter",
+            "require_registered_user_description": "Kun registrerte brukere kan opprette og lese hemmeligheter",
             "allowed_domains_title": "Tillatte e-postdomener",
             "allowed_domains_description": "Tillat kun registrering fra spesifikke e-postdomener (komseparert, f.eks., bedrift.com, org.net)",
             "allowed_domains_placeholder": "bedrift.com, org.net",

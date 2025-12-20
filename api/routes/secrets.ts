@@ -245,7 +245,7 @@ const app = new Hono<{
             // Check if only registered users can create secrets
             const settings = await getInstanceSettings();
             if (settings?.requireRegisteredUser && !user) {
-                return c.json({ error: 'Only registered users can create secrets' }, 401);
+                return c.json({ error: 'Only registered users can create and read secrets' }, 401);
             }
 
             const validatedData = c.req.valid('json');

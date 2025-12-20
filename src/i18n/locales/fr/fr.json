@@ -638,7 +638,7 @@
             "invite_only_title": "Inscription sur invitation uniquement",
             "invite_only_description": "Les utilisateurs ne peuvent s'inscrire qu'avec un code d'invitation valide",
             "require_registered_user_title": "Utilisateurs enregistrés uniquement",
-            "require_registered_user_description": "Seuls les utilisateurs enregistrés peuvent créer des secrets",
+            "require_registered_user_description": "Seuls les utilisateurs enregistrés peuvent créer et lire des secrets",
             "allowed_domains_title": "Domaines e-mail autorisés",
             "allowed_domains_description": "Autoriser uniquement l'inscription depuis des domaines e-mail spécifiques (séparés par des virgules, ex. : entreprise.com, org.net)",
             "allowed_domains_placeholder": "entreprise.com, org.net",
