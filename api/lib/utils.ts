@@ -43,3 +43,44 @@ export const getClientIp = (c: Context): string => {
         '127.0.0.1'
     );
 };
+
+/**
+ * Check if a URL points to a private/internal address (SSRF protection)
+ * @param url URL string to validate
+ * @returns true if URL is safe (not internal), false if it's a private/internal address
+ */
+export const isPublicUrl = (url: string): boolean => {
+    try {
+        const parsed = new URL(url);
+        const hostname = parsed.hostname.toLowerCase();
+
+        // Block private/internal addresses to prevent SSRF
+        const blockedPatterns = [
+            // Localhost variants
+            /^localhost$/,
+            /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
+            /^0\.0\.0\.0$/,
+            /^::1$/,
+            /^\[::1\]$/,
+            // Private IPv4 ranges
+            /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
+            /^192\.168\.\d{1,3}\.\d{1,3}$/,
+            /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/,
+            // Link-local
+            /^169\.254\.\d{1,3}\.\d{1,3}$/,
+            /^fe80:/i,
+            // Private IPv6
+            /^fc00:/i,
+            /^fd[0-9a-f]{2}:/i,
+            // Special domains
+            /\.local$/,
+            /\.internal$/,
+            /\.localhost$/,
+            /\.localdomain$/,
+        ];
+
+        return !blockedPatterns.some((pattern) => pattern.test(hostname));
+    } catch {
+        return false;
+    }
+};

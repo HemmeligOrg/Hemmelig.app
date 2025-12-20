@@ -2,6 +2,7 @@ import isCidr from 'is-cidr';
 import { isIP } from 'is-ip';
 import { z } from 'zod';
 import { EXPIRATION_TIMES_SECONDS } from '../lib/constants';
+import { isPublicUrl } from '../lib/utils';
 
 // Valid durations for request validity (how long the creator link is active)
 export const REQUEST_VALIDITY_SECONDS = [
@@ -48,44 +49,9 @@ export const createSecretRequestSchema = z.object({
     webhookUrl: z
         .string()
         .url()
-        .refine(
-            (url) => {
-                try {
-                    const parsed = new URL(url);
-                    const hostname = parsed.hostname.toLowerCase();
-
-                    // Block private/internal addresses to prevent SSRF
-                    const blockedPatterns = [
-                        // Localhost variants
-                        /^localhost$/,
-                        /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-                        /^0\.0\.0\.0$/,
-                        /^::1$/,
-                        /^\[::1\]$/,
-                        // Private IPv4 ranges
-                        /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-                        /^192\.168\.\d{1,3}\.\d{1,3}$/,
-                        /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/,
-                        // Link-local
-                        /^169\.254\.\d{1,3}\.\d{1,3}$/,
-                        /^fe80:/i,
-                        // Private IPv6
-                        /^fc00:/i,
-                        /^fd[0-9a-f]{2}:/i,
-                        // Special domains
-                        /\.local$/,
-                        /\.internal$/,
-                        /\.localhost$/,
-                        /\.localdomain$/,
-                    ];
-
-                    return !blockedPatterns.some((pattern) => pattern.test(hostname));
-                } catch {
-                    return false;
-                }
-            },
-            { message: 'Webhook URL cannot point to private/internal addresses' }
-        )
+        .refine((url) => isPublicUrl(url), {
+            message: 'Webhook URL cannot point to private/internal addresses',
+        })
         .optional(),
 });
 

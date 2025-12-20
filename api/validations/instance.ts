@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isPublicUrl } from '../lib/utils';
 
 export const instanceSettingsSchema = z.object({
     instanceName: z.string().optional(),
@@ -24,7 +25,14 @@ export const instanceSettingsSchema = z.object({
 
     // Webhook notifications
     webhookEnabled: z.boolean().optional(),
-    webhookUrl: z.string().url().optional().or(z.literal('')),
+    webhookUrl: z
+        .string()
+        .url()
+        .refine((url) => isPublicUrl(url), {
+            message: 'Webhook URL cannot point to private/internal addresses',
+        })
+        .optional()
+        .or(z.literal('')),
     webhookSecret: z.string().optional(),
     webhookOnView: z.boolean().optional(),
     webhookOnBurn: z.boolean().optional(),
