@@ -2,6 +2,17 @@
 
 Complete guide for deploying Hemmelig using Docker.
 
+## Architecture Support
+
+Hemmelig Docker images are built for multiple architectures:
+
+| Architecture  | Supported | Use Case                                     |
+| ------------- | --------- | -------------------------------------------- |
+| `linux/amd64` | Yes       | Intel/AMD servers, most cloud providers      |
+| `linux/arm64` | Yes       | Apple Silicon, AWS Graviton, Raspberry Pi 4+ |
+
+Docker will automatically pull the correct image for your platform.
+
 ## Quick Start
 
 ```bash
@@ -154,6 +165,23 @@ git clone https://github.com/HemmeligOrg/Hemmelig.app.git
 cd Hemmelig.app
 docker build -t hemmelig .
 ```
+
+### Building for ARM64
+
+To build for ARM64 (e.g., for Apple Silicon or AWS Graviton):
+
+```bash
+# Set up Docker buildx with multi-architecture support
+docker buildx create --name multiarch --driver docker-container --use
+
+# Build for ARM64
+docker buildx build --platform linux/arm64 -t hemmelig:arm64 --load .
+
+# Build for both architectures
+docker buildx build --platform linux/amd64,linux/arm64 -t hemmelig:latest --push .
+```
+
+The Dockerfile uses a cross-compilation strategy where Prisma client generation runs on the build host's native architecture to avoid QEMU emulation issues.
 
 ## Reverse Proxy
 
