@@ -492,6 +492,7 @@ These are hard rules - no exceptions:
 | Frontend components    | `src/components/`      |
 | Page components        | `src/pages/`           |
 | API routes             | `api/routes/`          |
+| API config             | `api/config.ts`        |
 | Database schema        | `prisma/schema.prisma` |
 | Translations           | `src/i18n/locales/`    |
 | Stores                 | `src/store/`           |
@@ -517,7 +518,46 @@ RESTRICT_ORGANIZATION_EMAIL= # Restrict signups to email domain
 # Optional - File Storage
 MAX_FILE_SIZE=             # Maximum file upload size
 UPLOAD_RESTRICTION=        # File upload restrictions
+
+# Optional - Managed Mode (all instance settings via env vars)
+HEMMELIG_MANAGED=          # Enable managed mode (true/false)
 ```
+
+---
+
+## Managed Mode
+
+When `HEMMELIG_MANAGED=true`, all instance settings are controlled via environment variables instead of the database. The admin dashboard becomes read-only.
+
+### Managed Mode Environment Variables
+
+| Variable                              | Description                          | Default |
+| ------------------------------------- | ------------------------------------ | ------- |
+| `HEMMELIG_MANAGED`                    | Enable managed mode                  | `false` |
+| `HEMMELIG_INSTANCE_NAME`              | Display name for your instance       | `""`    |
+| `HEMMELIG_INSTANCE_DESCRIPTION`       | Description shown on the homepage    | `""`    |
+| `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user signups               | `true`  |
+| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification           | `false` |
+| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration in hours          | `72`    |
+| `HEMMELIG_MAX_SECRET_SIZE`            | Max secret size in KB                | `1024`  |
+| `HEMMELIG_IMPORTANT_MESSAGE`          | Alert banner shown to all users      | `""`    |
+| `HEMMELIG_ALLOW_PASSWORD_PROTECTION`  | Allow password-protected secrets     | `true`  |
+| `HEMMELIG_ALLOW_IP_RESTRICTION`       | Allow IP range restrictions          | `true`  |
+| `HEMMELIG_ENABLE_RATE_LIMITING`       | Enable API rate limiting             | `true`  |
+| `HEMMELIG_RATE_LIMIT_REQUESTS`        | Max requests per window              | `100`   |
+| `HEMMELIG_RATE_LIMIT_WINDOW`          | Rate limit window in seconds         | `60`    |
+| `HEMMELIG_REQUIRE_INVITE_CODE`        | Require invite code for registration | `false` |
+| `HEMMELIG_ALLOWED_EMAIL_DOMAINS`      | Comma-separated allowed domains      | `""`    |
+| `HEMMELIG_REQUIRE_REGISTERED_USER`    | Only registered users create secrets | `false` |
+| `HEMMELIG_WEBHOOK_ENABLED`            | Enable webhook notifications         | `false` |
+| `HEMMELIG_WEBHOOK_URL`                | Webhook endpoint URL                 | `""`    |
+| `HEMMELIG_WEBHOOK_SECRET`             | HMAC secret for webhook signatures   | `""`    |
+| `HEMMELIG_WEBHOOK_ON_VIEW`            | Send webhook when secret is viewed   | `true`  |
+| `HEMMELIG_WEBHOOK_ON_BURN`            | Send webhook when secret is burned   | `true`  |
+| `HEMMELIG_METRICS_ENABLED`            | Enable Prometheus metrics endpoint   | `false` |
+| `HEMMELIG_METRICS_SECRET`             | Bearer token for `/api/metrics`      | `""`    |
+
+See `docs/managed.md` for full documentation.
 
 ---
 
@@ -548,6 +588,26 @@ better-auth provides:
 - Two-factor authentication (2FA) with TOTP
 - Custom signup hooks for email domain validation
 - Admin user management
+- Social login providers (GitHub, Google, Microsoft, Discord, GitLab, Apple, Twitter)
+
+### Social Login Providers
+
+Social login can be configured via:
+
+1. **Admin Dashboard** - Instance Settings > Social Login tab (when not in managed mode)
+2. **Environment Variables** - Using `HEMMELIG_AUTH_*` variables (always available)
+
+Environment variable format:
+
+```bash
+HEMMELIG_AUTH_GITHUB_ID=your-client-id
+HEMMELIG_AUTH_GITHUB_SECRET=your-client-secret
+HEMMELIG_AUTH_GOOGLE_ID=your-client-id
+HEMMELIG_AUTH_GOOGLE_SECRET=your-client-secret
+# ... etc for microsoft, discord, gitlab, apple, twitter
+```
+
+See `docs/social-login.md` for full setup instructions.
 
 ---
 
