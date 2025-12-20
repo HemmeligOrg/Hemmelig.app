@@ -296,13 +296,18 @@ const app = new Hono<{
         try {
             const { id } = c.req.valid('param');
 
-            // Get secret info before deleting for webhook
-            const secret = await prisma.secrets.findUnique({
-                where: { id },
-                select: { id: true, password: true, ipRange: true },
-            });
+            // Use transaction to prevent race conditions
+            const secret = await prisma.$transaction(async (tx) => {
+                // Get secret info before deleting for webhook
+                const secretData = await tx.secrets.findUnique({
+                    where: { id },
+                    select: { id: true, password: true, ipRange: true },
+                });
 
-            await prisma.secrets.delete({ where: { id } });
+                await tx.secrets.delete({ where: { id } });
+
+                return secretData;
+            });
 
             // Send webhook for manually burned secret
             if (secret) {
