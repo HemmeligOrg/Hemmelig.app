@@ -171,29 +171,30 @@ export function DashboardLayout() {
 
                             {/* User info */}
                             <div className="px-3 py-3 border-t border-gray-200 dark:border-dark-600">
-                                <div className="flex items-center justify-between px-2.5 py-2 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
-                                            <User className="w-3.5 h-3.5 text-white" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            {isLoading ? (
-                                                <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                                                    Loading...
-                                                </p>
-                                            ) : (
-                                                <>
-                                                    <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                                                        {user?.username}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
-                                                        {user?.email}
-                                                    </p>
-                                                </>
-                                            )}
-                                        </div>
+                                <Link
+                                    to="/dashboard/account"
+                                    className="flex items-center gap-2.5 px-2.5 py-2 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50 hover:bg-gray-100 dark:hover:bg-dark-700/50 transition-colors overflow-hidden"
+                                >
+                                    <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center shrink-0">
+                                        <User className="w-3.5 h-3.5 text-white" />
                                     </div>
-                                </div>
+                                    <div className="min-w-0">
+                                        {isLoading ? (
+                                            <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
+                                                Loading...
+                                            </p>
+                                        ) : (
+                                            <>
+                                                <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
+                                                    {user?.username}
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
+                                                    {user?.email}
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="flex items-center gap-2 w-full px-2.5 py-2 mt-2 text-gray-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
