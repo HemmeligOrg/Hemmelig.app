@@ -23,6 +23,8 @@ model Secrets {
     files         File[]         @relation
     secretRequest SecretRequest?
 
+    @@index([expiresAt])
+    @@index([userId])
     @@map("secrets")
 }
 
@@ -173,6 +175,7 @@ model VisitorAnalytics {
     timestamp DateTime @default(now())
 
     @@index([timestamp])
+    @@index([uniqueId])
     @@map("visitor_analytics")
 }
 
