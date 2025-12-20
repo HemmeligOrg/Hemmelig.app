@@ -58,7 +58,9 @@
             "generated_password": "生成的密码",
             "refresh": "刷新",
             "cancel": "取消",
-            "insert": "插入"
+            "insert": "插入",
+            "copied_and_added": "密码已添加并复制到剪贴板",
+            "added": "密码已添加"
         },
         "formatting_tools": "格式化工具"
     },

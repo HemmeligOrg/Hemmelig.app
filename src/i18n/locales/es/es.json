@@ -58,7 +58,9 @@
             "generated_password": "Contraseña generada",
             "refresh": "Actualizar",
             "cancel": "Cancelar",
-            "insert": "Insertar"
+            "insert": "Insertar",
+            "copied_and_added": "Contraseña añadida y copiada al portapapeles",
+            "added": "Contraseña añadida"
         },
         "formatting_tools": "Herramientas de formato"
     },

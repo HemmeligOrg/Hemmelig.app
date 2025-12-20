@@ -58,7 +58,9 @@
             "generated_password": "Password generata",
             "refresh": "Aggiorna",
             "cancel": "Annulla",
-            "insert": "Inserisci"
+            "insert": "Inserisci",
+            "copied_and_added": "Password aggiunta e copiata negli appunti",
+            "added": "Password aggiunta"
         },
         "formatting_tools": "Strumenti di formattazione"
     },

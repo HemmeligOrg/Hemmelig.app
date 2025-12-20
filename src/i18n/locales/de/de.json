@@ -58,7 +58,9 @@
             "generated_password": "Generiertes Passwort",
             "refresh": "Aktualisieren",
             "cancel": "Abbrechen",
-            "insert": "Einfügen"
+            "insert": "Einfügen",
+            "copied_and_added": "Passwort hinzugefügt und in Zwischenablage kopiert",
+            "added": "Passwort hinzugefügt"
         },
         "formatting_tools": "Formatierungswerkzeuge"
     },

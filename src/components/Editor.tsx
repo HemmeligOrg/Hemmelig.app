@@ -20,6 +20,7 @@ import {
     IconNumber64Small,
     IconPassword,
     IconQuote,
+    IconRefresh,
     IconServer,
     IconSourceCode,
     IconStrikethrough,
@@ -44,6 +45,7 @@ import {
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 // Context for passing onChange to MenuBar
 const EditorOnChangeContext = createContext<((content: string) => void) | undefined>(undefined);
@@ -166,189 +168,6 @@ const LinkModal: FC<LinkModalProps> = ({ isOpen, onClose, onSubmit, initialUrl =
                             {initialUrl
                                 ? t('editor.link_modal.update')
                                 : t('editor.link_modal.insert')}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-};
-
-// Password Modal Component
-interface PasswordModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSubmit: (password: string) => void;
-}
-const PasswordModal: FC<PasswordModalProps> = ({ isOpen, onClose, onSubmit }) => {
-    const [passwordLength, setPasswordLength] = useState(16);
-    const [options, setOptions] = useState<PasswordOptions>({
-        numbers: true,
-        symbols: true,
-        uppercase: true,
-        lowercase: true,
-    });
-    const [password, setPassword] = useState(generatePassword(16, options));
-    const { t } = useTranslation();
-
-    if (!isOpen) return null;
-
-    const regeneratePassword = () => {
-        setPassword(generatePassword(passwordLength, options));
-    };
-
-    const handleOptionChange = (option: keyof PasswordOptions) => {
-        // Prevent disabling all options - at least one must be enabled
-        const newOptions = { ...options, [option]: !options[option] };
-        if (Object.values(newOptions).some((value) => value)) {
-            setOptions(newOptions);
-            setPassword(generatePassword(passwordLength, newOptions));
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit(password);
-        onClose();
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-dark-800 shadow-lg p-6 w-full max-w-md">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100">
-                        {t('editor.password_modal.title')}
-                    </h3>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200"
-                    >
-                        <IconX size={20} />
-                    </button>
-                </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                            {t('editor.password_modal.length_label')}
-                        </label>
-                        <div className="flex items-center mb-4">
-                            <input
-                                type="range"
-                                min="8"
-                                max="32"
-                                value={passwordLength}
-                                onChange={(e) => {
-                                    const newLength = parseInt(e.target.value);
-                                    setPasswordLength(newLength);
-                                    setPassword(generatePassword(newLength, options));
-                                }}
-                                className="w-full mr-3 accent-teal-500"
-                            />
-                            <span className="text-gray-700 dark:text-slate-200 w-8 text-center">
-                                {passwordLength}
-                            </span>
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('editor.password_modal.options_label')}
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="numbers"
-                                        checked={options.numbers}
-                                        onChange={() => handleOptionChange('numbers')}
-                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:focus:bg-primary/60 checked:active:bg-primary/60"
-                                    />
-                                    <label
-                                        htmlFor="numbers"
-                                        className="text-gray-600 dark:text-slate-300 text-sm"
-                                    >
-                                        {t('editor.password_modal.include_numbers')}
-                                    </label>
-                                </div>
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="symbols"
-                                        checked={options.symbols}
-                                        onChange={() => handleOptionChange('symbols')}
-                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
-                                    />
-                                    <label
-                                        htmlFor="symbols"
-                                        className="text-gray-600 dark:text-slate-300 text-sm"
-                                    >
-                                        {t('editor.password_modal.include_symbols')}
-                                    </label>
-                                </div>
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="uppercase"
-                                        checked={options.uppercase}
-                                        onChange={() => handleOptionChange('uppercase')}
-                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
-                                    />
-                                    <label
-                                        htmlFor="uppercase"
-                                        className="text-gray-600 dark:text-slate-300 text-sm"
-                                    >
-                                        {t('editor.password_modal.include_uppercase')}
-                                    </label>
-                                </div>
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="lowercase"
-                                        checked={options.lowercase}
-                                        onChange={() => handleOptionChange('lowercase')}
-                                        className="mr-2 checked:bg-primary checked:hover:bg-primary/80 checked:active:bg-primary/60 checked:focus:bg-primary/60"
-                                    />
-                                    <label
-                                        htmlFor="lowercase"
-                                        className="text-gray-600 dark:text-slate-300 text-sm"
-                                    >
-                                        {t('editor.password_modal.include_lowercase')}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                            {t('editor.password_modal.generated_password')}
-                        </label>
-                        <div className="flex">
-                            <input
-                                type="text"
-                                value={password}
-                                readOnly
-                                className="w-full px-3 py-2 bg-light-800 dark:bg-dark-900 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100"
-                            />
-                            <button
-                                type="button"
-                                onClick={regeneratePassword}
-                                className="px-3 py-2 bg-teal-500 text-white hover:opacity-90"
-                            >
-                                {t('editor.password_modal.refresh')}
-                            </button>
-                        </div>
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-dark-600"
-                        >
-                            {t('editor.password_modal.cancel')}
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-teal-500 text-white hover:opacity-90"
-                        >
-                            {t('editor.password_modal.insert')}
                         </button>
                     </div>
                 </form>
@@ -499,6 +318,152 @@ const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled, butto
     );
 };
 
+// Password Dropdown Component for toolbar
+interface PasswordDropdownProps {
+    onInsert: (password: string) => void;
+    buttonClass: string;
+}
+
+const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [passwordLength, setPasswordLength] = useState(16);
+    const [options, setOptions] = useState<PasswordOptions>({
+        numbers: true,
+        symbols: true,
+        uppercase: true,
+        lowercase: true,
+    });
+    const [password, setPassword] = useState(() => generatePassword(16, options));
+    const { t } = useTranslation();
+
+    const regeneratePassword = () => {
+        setPassword(generatePassword(passwordLength, options));
+    };
+
+    const handleOptionChange = (option: keyof PasswordOptions) => {
+        const newOptions = { ...options, [option]: !options[option] };
+        if (Object.values(newOptions).some((value) => value)) {
+            setOptions(newOptions);
+            setPassword(generatePassword(passwordLength, newOptions));
+        }
+    };
+
+    const handleInsert = () => {
+        onInsert(password);
+        setIsOpen(false);
+    };
+
+    return (
+        <div className="relative">
+            <Tooltip text={t('editor.tooltips.insert_password')}>
+                <button type="button" onClick={() => setIsOpen(!isOpen)} className={buttonClass}>
+                    <IconKey
+                        size={18}
+                        stroke={1.5}
+                        className="text-gray-600 dark:text-slate-300 mx-auto"
+                    />
+                </button>
+            </Tooltip>
+
+            {isOpen && (
+                <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+                    <div className="absolute left-0 top-full mt-1 z-20 w-72 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
+                        <div className="p-3 border-b border-gray-200 dark:border-dark-600">
+                            <p className="text-xs font-medium text-gray-700 dark:text-slate-300">
+                                {t('editor.password_modal.title')}
+                            </p>
+                        </div>
+                        <div className="p-3 space-y-3">
+                            <div>
+                                <label className="block text-xs text-gray-600 dark:text-slate-400 mb-1">
+                                    {t('editor.password_modal.length_label')}: {passwordLength}
+                                </label>
+                                <input
+                                    type="range"
+                                    min="8"
+                                    max="32"
+                                    value={passwordLength}
+                                    onChange={(e) => {
+                                        const newLength = parseInt(e.target.value);
+                                        setPasswordLength(newLength);
+                                        setPassword(generatePassword(newLength, options));
+                                    }}
+                                    className="w-full accent-teal-500"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-1">
+                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
+                                    <input
+                                        type="checkbox"
+                                        checked={options.numbers}
+                                        onChange={() => handleOptionChange('numbers')}
+                                        className="mr-1.5 accent-teal-500"
+                                    />
+                                    {t('editor.password_modal.include_numbers')}
+                                </label>
+                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
+                                    <input
+                                        type="checkbox"
+                                        checked={options.symbols}
+                                        onChange={() => handleOptionChange('symbols')}
+                                        className="mr-1.5 accent-teal-500"
+                                    />
+                                    {t('editor.password_modal.include_symbols')}
+                                </label>
+                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
+                                    <input
+                                        type="checkbox"
+                                        checked={options.uppercase}
+                                        onChange={() => handleOptionChange('uppercase')}
+                                        className="mr-1.5 accent-teal-500"
+                                    />
+                                    {t('editor.password_modal.include_uppercase')}
+                                </label>
+                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
+                                    <input
+                                        type="checkbox"
+                                        checked={options.lowercase}
+                                        onChange={() => handleOptionChange('lowercase')}
+                                        className="mr-1.5 accent-teal-500"
+                                    />
+                                    {t('editor.password_modal.include_lowercase')}
+                                </label>
+                            </div>
+
+                            <div className="flex gap-1">
+                                <input
+                                    type="text"
+                                    value={password}
+                                    readOnly
+                                    className="flex-1 px-2 py-1.5 text-xs bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 font-mono"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={regeneratePassword}
+                                    className="px-2 py-1.5 bg-gray-100 dark:bg-dark-600 border border-gray-200 dark:border-dark-600 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-500"
+                                    title={t('editor.password_modal.refresh')}
+                                >
+                                    <IconRefresh size={14} />
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleInsert}
+                                className="w-full px-3 py-1.5 bg-teal-500 text-white text-xs font-medium hover:bg-teal-600 transition-colors"
+                            >
+                                {t('editor.password_modal.insert')}
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
 // ReadOnlyMenuBar component for non-editable mode
 const ReadOnlyMenuBar: FC = () => {
     const { editor } = useCurrentEditor();
@@ -605,7 +570,6 @@ const MenuBar: FC = () => {
     const { editor } = useCurrentEditor();
     const onChange = useContext(EditorOnChangeContext);
     const [linkModalOpen, setLinkModalOpen] = useState(false);
-    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
 
@@ -629,11 +593,17 @@ const MenuBar: FC = () => {
     );
 
     const handlePasswordSubmit = useCallback(
-        (password: string) => {
+        async (password: string) => {
             if (!editor) return;
             editor.chain().focus().insertContent(password).run();
+            try {
+                await navigator.clipboard.writeText(password);
+                toast.success(t('editor.password_modal.copied_and_added'));
+            } catch {
+                toast.success(t('editor.password_modal.added'));
+            }
         },
-        [editor]
+        [editor, t]
     );
 
     const handleTemplateSubmit = useCallback(
@@ -783,18 +753,10 @@ const MenuBar: FC = () => {
                                     />
                                 </button>
                             </Tooltip>
-                            <Tooltip text={t('editor.tooltips.insert_password')}>
-                                <button
-                                    onClick={() => setPasswordModalOpen(true)}
-                                    className={buttonClass}
-                                >
-                                    <IconKey
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
+                            <PasswordDropdown
+                                onInsert={handlePasswordSubmit}
+                                buttonClass={buttonClass}
+                            />
                             <TemplateDropdown
                                 onSelect={handleTemplateSubmit}
                                 disabled={editorHasContent}
@@ -956,12 +918,6 @@ const MenuBar: FC = () => {
                 onClose={() => setLinkModalOpen(false)}
                 onSubmit={handleLinkSubmit}
                 initialUrl={editor?.getAttributes('link').href || ''}
-            />
-
-            <PasswordModal
-                isOpen={passwordModalOpen}
-                onClose={() => setPasswordModalOpen(false)}
-                onSubmit={handlePasswordSubmit}
             />
         </>
     );

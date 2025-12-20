@@ -58,7 +58,9 @@
             "generated_password": "Gegenereerd wachtwoord",
             "refresh": "Vernieuwen",
             "cancel": "Annuleren",
-            "insert": "Invoegen"
+            "insert": "Invoegen",
+            "copied_and_added": "Wachtwoord toegevoegd en gekopieerd naar klembord",
+            "added": "Wachtwoord toegevoegd"
         },
         "formatting_tools": "Stijlen"
     },

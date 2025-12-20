@@ -58,7 +58,9 @@
             "generated_password": "Mot de passe généré",
             "refresh": "Actualiser",
             "cancel": "Annuler",
-            "insert": "Insérer"
+            "insert": "Insérer",
+            "copied_and_added": "Mot de passe ajouté et copié dans le presse-papiers",
+            "added": "Mot de passe ajouté"
         },
         "formatting_tools": "Outils de formatage"
     },
