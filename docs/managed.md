@@ -8,10 +8,10 @@ When managed mode is enabled, all instance settings are read from environment va
 
 **Key benefits:**
 
-- 🔒 **Immutable configuration** — Settings can't be changed through the UI
-- 📦 **GitOps-friendly** — Version control your configuration
-- 🚀 **Reproducible deployments** — Same config across all environments
-- 🛡️ **Security hardening** — No accidental configuration changes
+- **Immutable configuration** - Settings can't be changed through the UI
+- **GitOps-friendly** - Version control your configuration
+- **Reproducible deployments** - Same config across all environments
+- **Security hardening** - No accidental configuration changes
 
 ## Quick Start
 
@@ -204,10 +204,10 @@ spec:
 
 When managed mode is enabled:
 
-1. **Settings are read-only** — All form inputs are disabled
-2. **Save buttons are hidden** — No option to modify settings
-3. **Banner is displayed** — Admins see a clear "Managed Mode" indicator
-4. **API rejects updates** — `PUT /api/instance/settings` returns `403 Forbidden`
+1. **Settings are read-only** - All form inputs are disabled
+2. **Save buttons are hidden** - No option to modify settings
+3. **Banner is displayed** - Admins see a clear "Managed Mode" indicator
+4. **API rejects updates** - `PUT /api/instance/settings` returns `403 Forbidden`
 
 Admins can still **view** all settings, making it easy to verify the configuration.
 
@@ -249,15 +249,15 @@ Response:
 
 ### From Database Settings to Managed Mode
 
-1. **Export current settings** — Note your current configuration from the admin dashboard
+1. **Export current settings** - Note your current configuration from the admin dashboard
 
-2. **Create environment configuration** — Translate settings to environment variables
+2. **Create environment configuration** - Translate settings to environment variables
 
-3. **Enable managed mode** — Set `HEMMELIG_MANAGED=true`
+3. **Enable managed mode** - Set `HEMMELIG_MANAGED=true`
 
-4. **Deploy** — Restart with new configuration
+4. **Deploy** - Restart with new configuration
 
-Your database settings will be ignored once managed mode is active. The database is still used for secrets, users, and other data—only instance settings come from environment variables.
+Your database settings will be ignored once managed mode is active. The database is still used for secrets, users, and other data - only instance settings come from environment variables.
 
 ### Reverting to Database Settings
 
@@ -265,15 +265,15 @@ Simply remove or set `HEMMELIG_MANAGED=false`. Settings will be read from the da
 
 ## Best Practices
 
-1. **Use secrets management** — Store sensitive values like `HEMMELIG_WEBHOOK_SECRET` and `HEMMELIG_METRICS_SECRET` in a secrets manager (Vault, AWS Secrets Manager, etc.)
+1. **Use secrets management** - Store sensitive values like `HEMMELIG_WEBHOOK_SECRET` and `HEMMELIG_METRICS_SECRET` in a secrets manager (Vault, AWS Secrets Manager, etc.)
 
-2. **Version control your config** — Keep your docker-compose or Kubernetes manifests in git
+2. **Version control your config** - Keep your docker-compose or Kubernetes manifests in git
 
-3. **Use CI/CD for changes** — Deploy configuration changes through your pipeline, not manual edits
+3. **Use CI/CD for changes** - Deploy configuration changes through your pipeline, not manual edits
 
-4. **Document your settings** — Add comments in your configuration files explaining each setting
+4. **Document your settings** - Add comments in your configuration files explaining each setting
 
-5. **Test in staging first** — Validate configuration changes in a non-production environment
+5. **Test in staging first** - Validate configuration changes in a non-production environment
 
 ## Troubleshooting
 
