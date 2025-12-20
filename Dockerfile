@@ -1,17 +1,26 @@
 # syntax=docker/dockerfile:1
 
+# Prisma client generation stage - runs on native architecture to avoid QEMU issues
+FROM --platform=$BUILDPLATFORM node:25-slim AS prisma-gen
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+ENV DATABASE_URL="file:/app/database/hemmelig.db"
+RUN npx prisma generate --schema=prisma/schema.prisma --generator client
+
 # Build stage
 FROM node:25-slim AS builder
 RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
-RUN npm ci 
+RUN npm ci
 COPY prisma ./prisma
 COPY prisma.config.ts ./
-# Workaround for node:25-alpine ARM64 environment variable issue with Prisma
-ENV DATABASE_URL="file:/app/database/hemmelig.db"
-RUN npx prisma generate
+# Copy pre-generated Prisma client from native build
+COPY --from=prisma-gen /app/prisma/generated ./prisma/generated
 COPY api ./api
 COPY src ./src
 COPY public ./public
@@ -26,12 +35,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
+# Copy pre-generated Prisma client from native build
+COPY --from=prisma-gen /app/prisma/generated ./prisma/generated
 ENV NODE_ENV=production
-# Workaround for node:25-alpine ARM64 environment variable issue with Prisma
-ENV DATABASE_URL="file:/app/database/hemmelig.db"
 RUN npm ci --omit=dev --ignore-scripts && \
     npm rebuild better-sqlite3 && \
-    npx prisma generate && \
     npm cache clean --force && \
     rm -rf /root/.npm /tmp/*
 
