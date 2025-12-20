@@ -94,14 +94,17 @@ See [CLI Documentation](docs/cli.md) for all platforms and CI/CD integration exa
 - [Docker Deployment](docs/docker.md) - Complete Docker setup guide
 - [Helm Chart](docs/helm.md) - Kubernetes deployment with Helm
 - [Environment Variables](docs/env.md) - All configuration options
+- [Managed Mode](docs/managed.md) - Configure instance settings via environment variables
 - [CLI](docs/cli.md) - Command-line interface for automation and CI/CD
 - [Encryption](docs/encryption.md) - How client-side encryption works
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
+- [Secret Requests](docs/secret-request.md) - Request secrets from others securely
 - [Webhooks](docs/webhook.md) - Webhook notifications for secret events
 - [Health Checks](docs/health.md) - Liveness and readiness probes for container orchestration
 - [Prometheus Metrics](docs/metrics.md) - Monitor your instance with Prometheus
 - [API Documentation](docs/api.md) - REST API reference and OpenAPI spec
 - [SDK Generation](docs/sdk.md) - Generate client SDKs from OpenAPI spec
+- [E2E Testing](docs/e2e.md) - End-to-end testing with Playwright
 - [Upgrading from v6](docs/upgrade.md) - Migration guide for v6 to v7
 
 ## Development
