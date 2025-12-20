@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Serverinstellingen",
         "description": "Configureer jouw Hemmelig-server",
+        "managed_mode": {
+            "title": "Beheerde modus",
+            "description": "Deze server wordt beheerd via omgevingsvariabelen. Instellingen zijn alleen-lezen."
+        },
         "tabs": {
             "general": "Algemeen",
             "security": "Beveiliging",

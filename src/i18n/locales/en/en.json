@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Instance Settings",
         "description": "Configure your Hemmelig instance",
+        "managed_mode": {
+            "title": "Managed Mode",
+            "description": "This instance is managed via environment variables. Settings are read-only."
+        },
         "tabs": {
             "general": "General",
             "security": "Security",

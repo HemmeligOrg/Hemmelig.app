@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Paramètres de l'instance",
         "description": "Configurez votre instance Hemmelig",
+        "managed_mode": {
+            "title": "Mode géré",
+            "description": "Cette instance est gérée via des variables d'environnement. Les paramètres sont en lecture seule."
+        },
         "tabs": {
             "general": "Général",
             "security": "Sécurité",

@@ -315,6 +315,10 @@
     "instance_page": {
         "title": "Instansindstillinger",
         "description": "Konfigurer din Hemmelig-instans",
+        "managed_mode": {
+            "title": "Administreret tilstand",
+            "description": "Denne instans administreres via miljøvariabler. Indstillinger er skrivebeskyttede."
+        },
         "tabs": {
             "general": "Generelt",
             "security": "Sikkerhed",

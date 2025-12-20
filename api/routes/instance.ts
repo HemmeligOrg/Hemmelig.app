@@ -9,9 +9,25 @@ import { instanceSettingsSchema } from '../validations/instance';
 
 const app = new Hono();
 
+// GET /api/instance/managed - check if instance is in managed mode
+app.get('/managed', async (c) => {
+    return c.json({ managed: config.isManaged() });
+});
+
 // GET /api/instance/settings/public - public settings for all users
 app.get('/settings/public', async (c) => {
     try {
+        // In managed mode, return settings from environment variables
+        if (config.isManaged()) {
+            const managedSettings = config.getManagedSettings();
+            const publicSettings = Object.fromEntries(
+                Object.entries(managedSettings || {}).filter(
+                    ([key]) => key in PUBLIC_SETTINGS_FIELDS
+                )
+            );
+            return c.json(publicSettings);
+        }
+
         let dbSettings = await prisma.instanceSettings.findFirst({
             select: PUBLIC_SETTINGS_FIELDS,
         });
@@ -57,6 +73,12 @@ app.get('/settings/public', async (c) => {
 // GET /api/instance/settings - admin only
 app.get('/settings', authMiddleware, checkAdmin, async (c) => {
     try {
+        // In managed mode, return settings from environment variables
+        if (config.isManaged()) {
+            const managedSettings = config.getManagedSettings();
+            return c.json(managedSettings);
+        }
+
         let dbSettings = await prisma.instanceSettings.findFirst({ select: ADMIN_SETTINGS_FIELDS });
 
         if (!dbSettings) {
@@ -102,6 +124,14 @@ app.put(
     checkAdmin,
     zValidator('json', instanceSettingsSchema),
     async (c) => {
+        // Block updates in managed mode
+        if (config.isManaged()) {
+            return c.json(
+                { error: 'Instance is in managed mode. Settings cannot be modified.' },
+                403
+            );
+        }
+
         const body = c.req.valid('json');
 
         try {

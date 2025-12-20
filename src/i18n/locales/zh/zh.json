@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "实例设置",
         "description": "配置您的 Hemmelig 实例",
+        "managed_mode": {
+            "title": "托管模式",
+            "description": "此实例通过环境变量进行管理。设置为只读。"
+        },
         "tabs": {
             "general": "常规",
             "security": "安全",

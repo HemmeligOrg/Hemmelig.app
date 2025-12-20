@@ -8,6 +8,13 @@ const parseBoolean = (value: string | undefined): boolean | undefined => {
     return value.toLowerCase() === 'true';
 };
 
+// Helper to parse integer from env, returns undefined if not set
+const parseInteger = (value: string | undefined): number | undefined => {
+    if (value === undefined || value === null || value === '') return undefined;
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? undefined : parsed;
+};
+
 // Social provider configuration type
 export interface SocialProviderConfig {
     clientId: string;
@@ -83,6 +90,50 @@ const buildSocialProviders = () => {
 
 const socialProviders = buildSocialProviders();
 
+// Managed mode: all settings are controlled via environment variables
+const isManaged = parseBoolean(process.env.HEMMELIG_MANAGED) ?? false;
+
+// Managed mode settings (only used when HEMMELIG_MANAGED=true)
+const managedSettings = isManaged
+    ? {
+          // General settings
+          instanceName: process.env.HEMMELIG_INSTANCE_NAME ?? '',
+          instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION ?? '',
+          allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION) ?? true,
+          requireEmailVerification:
+              parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION) ?? false,
+          defaultSecretExpiration:
+              parseInteger(process.env.HEMMELIG_DEFAULT_SECRET_EXPIRATION) ?? 72,
+          maxSecretSize: parseInteger(process.env.HEMMELIG_MAX_SECRET_SIZE) ?? 1024,
+          importantMessage: process.env.HEMMELIG_IMPORTANT_MESSAGE ?? '',
+
+          // Security settings
+          allowPasswordProtection:
+              parseBoolean(process.env.HEMMELIG_ALLOW_PASSWORD_PROTECTION) ?? true,
+          allowIpRestriction: parseBoolean(process.env.HEMMELIG_ALLOW_IP_RESTRICTION) ?? true,
+          enableRateLimiting: parseBoolean(process.env.HEMMELIG_ENABLE_RATE_LIMITING) ?? true,
+          rateLimitRequests: parseInteger(process.env.HEMMELIG_RATE_LIMIT_REQUESTS) ?? 100,
+          rateLimitWindow: parseInteger(process.env.HEMMELIG_RATE_LIMIT_WINDOW) ?? 60,
+
+          // Organization settings
+          requireInviteCode: parseBoolean(process.env.HEMMELIG_REQUIRE_INVITE_CODE) ?? false,
+          allowedEmailDomains: process.env.HEMMELIG_ALLOWED_EMAIL_DOMAINS ?? '',
+          requireRegisteredUser:
+              parseBoolean(process.env.HEMMELIG_REQUIRE_REGISTERED_USER) ?? false,
+
+          // Webhook settings
+          webhookEnabled: parseBoolean(process.env.HEMMELIG_WEBHOOK_ENABLED) ?? false,
+          webhookUrl: process.env.HEMMELIG_WEBHOOK_URL ?? '',
+          webhookSecret: process.env.HEMMELIG_WEBHOOK_SECRET ?? '',
+          webhookOnView: parseBoolean(process.env.HEMMELIG_WEBHOOK_ON_VIEW) ?? true,
+          webhookOnBurn: parseBoolean(process.env.HEMMELIG_WEBHOOK_ON_BURN) ?? true,
+
+          // Metrics settings
+          metricsEnabled: parseBoolean(process.env.HEMMELIG_METRICS_ENABLED) ?? false,
+          metricsSecret: process.env.HEMMELIG_METRICS_SECRET ?? '',
+      }
+    : null;
+
 const config = {
     server: {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
@@ -123,4 +174,6 @@ function get<T>(path: string, defaultValue?: T): T {
 export default {
     get,
     getSocialProviders: () => config.socialProviders,
+    isManaged: () => isManaged,
+    getManagedSettings: () => managedSettings,
 };

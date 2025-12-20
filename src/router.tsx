@@ -3,7 +3,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { RootLayout } from './components/Layout/RootLayout';
 import { trackPageView } from './lib/analytics';
-import { api } from './lib/api';
+import { api, apiRaw } from './lib/api';
 import { authClient } from './lib/auth';
 import { AccountPage } from './pages/Dashboard/AccountPage';
 import { AnalyticsPage } from './pages/Dashboard/AnalyticsPage';
@@ -281,11 +281,16 @@ export const router = createBrowserRouter([
                 element: <InstancePage />,
                 loader: async () => {
                     try {
-                        const res = await api.instance.settings.$get();
-                        if (res.status === 403) {
+                        const [settingsRes, managedRes] = await Promise.all([
+                            api.instance.settings.$get(),
+                            apiRaw.instance.managed.$get(),
+                        ]);
+                        if (settingsRes.status === 403) {
                             return { error: "You don't have permission to view settings." };
                         }
-                        return await res.json();
+                        const settings = await settingsRes.json();
+                        const managedData = await managedRes.json();
+                        return { ...settings, managed: managedData.managed ?? false };
                     } catch (error) {
                         console.error('Failed to fetch instance settings:', error);
                         return { error: 'Failed to fetch settings.' };

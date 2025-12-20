@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Configuración de la instancia",
         "description": "Configura tu instancia de Hemmelig",
+        "managed_mode": {
+            "title": "Modo administrado",
+            "description": "Esta instancia se administra mediante variables de entorno. La configuración es de solo lectura."
+        },
         "tabs": {
             "general": "General",
             "security": "Seguridad",

@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Impostazioni istanza",
         "description": "Configura la tua istanza Hemmelig",
+        "managed_mode": {
+            "title": "Modalità gestita",
+            "description": "Questa istanza è gestita tramite variabili d'ambiente. Le impostazioni sono di sola lettura."
+        },
         "tabs": {
             "general": "Generale",
             "security": "Sicurezza",

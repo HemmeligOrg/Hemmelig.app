@@ -1,4 +1,13 @@
-import { Activity, Building2, ChevronDown, Save, Settings, Shield, Webhook } from 'lucide-react';
+import {
+    Activity,
+    Building2,
+    ChevronDown,
+    Lock,
+    Save,
+    Settings,
+    Shield,
+    Webhook,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
@@ -32,6 +41,7 @@ type InstanceSettings = {
     metricsEnabled: boolean;
     metricsSecret: string;
     error?: string;
+    managed?: boolean;
 };
 
 const EXPIRATION_OPTIONS = [
@@ -53,6 +63,7 @@ export function InstancePage() {
     >('general');
     const { t } = useTranslation();
     const loaderData = useLoaderData() as InstanceSettings;
+    const isManaged = loaderData?.managed ?? false;
 
     const {
         generalSettings,
@@ -81,6 +92,7 @@ export function InstancePage() {
     const handleSaveSettings = (
         section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
     ) => {
+        if (isManaged) return;
         saveSettings(section);
     };
 
@@ -114,6 +126,21 @@ export function InstancePage() {
                     {t('instance_page.description')}
                 </p>
             </div>
+
+            {/* Managed Mode Banner */}
+            {isManaged && (
+                <div className="mb-5 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                            {t('instance_page.managed_mode.title')}
+                        </p>
+                        <p className="text-xs text-amber-600 dark:text-amber-400">
+                            {t('instance_page.managed_mode.description')}
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* Tabs */}
             <div className="mb-5">
@@ -179,7 +206,8 @@ export function InstancePage() {
                                         onChange={(e) =>
                                             setGeneralSetting('instanceName', e.target.value)
                                         }
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                 </div>
 
@@ -198,7 +226,8 @@ export function InstancePage() {
                                                     parseFloat(e.target.value)
                                                 )
                                             }
-                                            className="w-full appearance-none px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors cursor-pointer"
+                                            disabled={isManaged}
+                                            className="w-full appearance-none px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                                         >
                                             {EXPIRATION_OPTIONS.map((option) => (
                                                 <option
@@ -231,7 +260,8 @@ export function InstancePage() {
                                                 Math.round(parseFloat(e.target.value) * 1024)
                                             )
                                         }
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                 </div>
                             </div>
@@ -246,7 +276,8 @@ export function InstancePage() {
                                         setGeneralSetting('instanceDescription', e.target.value)
                                     }
                                     rows={2}
-                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    disabled={isManaged}
+                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                 />
                             </div>
 
@@ -263,25 +294,28 @@ export function InstancePage() {
                                     placeholder={t(
                                         'instance_page.general_settings.important_message_placeholder'
                                     )}
-                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    disabled={isManaged}
+                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                 />
                                 <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                     {t('instance_page.general_settings.important_message_hint')}
                                 </p>
                             </div>
 
-                            <button
-                                onClick={() => handleSaveSettings('general')}
-                                disabled={isLoading}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-3.5 h-3.5" />
-                                <span>
-                                    {isLoading
-                                        ? t('instance_page.saving_button')
-                                        : t('instance_page.save_settings_button')}
-                                </span>
-                            </button>
+                            {!isManaged && (
+                                <button
+                                    onClick={() => handleSaveSettings('general')}
+                                    disabled={isLoading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save className="w-3.5 h-3.5" />
+                                    <span>
+                                        {isLoading
+                                            ? t('instance_page.saving_button')
+                                            : t('instance_page.save_settings_button')}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -313,7 +347,9 @@ export function InstancePage() {
                                             Enable request rate limiting
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.enableRateLimiting}
@@ -323,9 +359,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
 
@@ -338,7 +377,9 @@ export function InstancePage() {
                                             Allow users to password protect secrets
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.allowPasswordProtection}
@@ -348,9 +389,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
 
@@ -363,7 +407,9 @@ export function InstancePage() {
                                             Allow users to restrict secrets by IP
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={securitySettings.allowIpRestriction}
@@ -373,9 +419,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
                             </div>
@@ -394,7 +443,8 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                 </div>
 
@@ -411,23 +461,26 @@ export function InstancePage() {
                                                 parseInt(e.target.value)
                                             )
                                         }
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => handleSaveSettings('security')}
-                                disabled={isLoading}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-3.5 h-3.5" />
-                                <span>
-                                    {isLoading
-                                        ? t('instance_page.saving_button')
-                                        : t('instance_page.save_settings_button')}
-                                </span>
-                            </button>
+                            {!isManaged && (
+                                <button
+                                    onClick={() => handleSaveSettings('security')}
+                                    disabled={isLoading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save className="w-3.5 h-3.5" />
+                                    <span>
+                                        {isLoading
+                                            ? t('instance_page.saving_button')
+                                            : t('instance_page.save_settings_button')}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -463,7 +516,9 @@ export function InstancePage() {
                                             )}
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={organizationSettings.requireInviteCode}
@@ -473,9 +528,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
 
@@ -492,7 +550,9 @@ export function InstancePage() {
                                             )}
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={organizationSettings.requireRegisteredUser}
@@ -502,9 +562,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
                             </div>
@@ -528,7 +591,8 @@ export function InstancePage() {
                                         placeholder={t(
                                             'organization_page.registration_settings.allowed_domains_placeholder'
                                         )}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t(
@@ -538,18 +602,20 @@ export function InstancePage() {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => handleSaveSettings('organization')}
-                                disabled={isLoading}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-3.5 h-3.5" />
-                                <span>
-                                    {isLoading
-                                        ? t('organization_page.saving_button')
-                                        : t('organization_page.save_settings_button')}
-                                </span>
-                            </button>
+                            {!isManaged && (
+                                <button
+                                    onClick={() => handleSaveSettings('organization')}
+                                    disabled={isLoading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save className="w-3.5 h-3.5" />
+                                    <span>
+                                        {isLoading
+                                            ? t('organization_page.saving_button')
+                                            : t('organization_page.save_settings_button')}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -581,7 +647,9 @@ export function InstancePage() {
                                             {t('webhook_settings.enable_webhooks_description')}
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={webhookSettings.webhookEnabled}
@@ -591,9 +659,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
 
@@ -608,7 +679,8 @@ export function InstancePage() {
                                             setWebhookSetting('webhookUrl', e.target.value)
                                         }
                                         placeholder={t('webhook_settings.webhook_url_placeholder')}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('webhook_settings.webhook_url_hint')}
@@ -628,7 +700,8 @@ export function InstancePage() {
                                         placeholder={t(
                                             'webhook_settings.webhook_secret_placeholder'
                                         )}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('webhook_settings.webhook_secret_hint')}
@@ -650,7 +723,9 @@ export function InstancePage() {
                                                 {t('webhook_settings.on_view_description')}
                                             </p>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                        <label
+                                            className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={webhookSettings.webhookOnView}
@@ -660,9 +735,12 @@ export function InstancePage() {
                                                         e.target.checked
                                                     )
                                                 }
+                                                disabled={isManaged}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                            <div
+                                                className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                            ></div>
                                         </label>
                                     </div>
 
@@ -675,7 +753,9 @@ export function InstancePage() {
                                                 {t('webhook_settings.on_burn_description')}
                                             </p>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                        <label
+                                            className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={webhookSettings.webhookOnBurn}
@@ -685,26 +765,31 @@ export function InstancePage() {
                                                         e.target.checked
                                                     )
                                                 }
+                                                disabled={isManaged}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                            <div
+                                                className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                            ></div>
                                         </label>
                                     </div>
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => handleSaveSettings('webhook')}
-                                disabled={isLoading}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-3.5 h-3.5" />
-                                <span>
-                                    {isLoading
-                                        ? t('instance_page.saving_button')
-                                        : t('instance_page.save_settings_button')}
-                                </span>
-                            </button>
+                            {!isManaged && (
+                                <button
+                                    onClick={() => handleSaveSettings('webhook')}
+                                    disabled={isLoading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save className="w-3.5 h-3.5" />
+                                    <span>
+                                        {isLoading
+                                            ? t('instance_page.saving_button')
+                                            : t('instance_page.save_settings_button')}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -736,7 +821,9 @@ export function InstancePage() {
                                             {t('metrics_settings.enable_metrics_description')}
                                         </p>
                                     </div>
-                                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <label
+                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                    >
                                         <input
                                             type="checkbox"
                                             checked={metricsSettings.metricsEnabled}
@@ -746,9 +833,12 @@ export function InstancePage() {
                                                     e.target.checked
                                                 )
                                             }
+                                            disabled={isManaged}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500"></div>
+                                        <div
+                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
+                                        ></div>
                                     </label>
                                 </div>
 
@@ -765,7 +855,8 @@ export function InstancePage() {
                                         placeholder={t(
                                             'metrics_settings.metrics_secret_placeholder'
                                         )}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                        disabled={isManaged}
+                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
                                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
                                         {t('metrics_settings.metrics_secret_hint')}
@@ -790,18 +881,20 @@ export function InstancePage() {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => handleSaveSettings('metrics')}
-                                disabled={isLoading}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Save className="w-3.5 h-3.5" />
-                                <span>
-                                    {isLoading
-                                        ? t('instance_page.saving_button')
-                                        : t('instance_page.save_settings_button')}
-                                </span>
-                            </button>
+                            {!isManaged && (
+                                <button
+                                    onClick={() => handleSaveSettings('metrics')}
+                                    disabled={isLoading}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Save className="w-3.5 h-3.5" />
+                                    <span>
+                                        {isLoading
+                                            ? t('instance_page.saving_button')
+                                            : t('instance_page.save_settings_button')}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}

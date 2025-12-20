@@ -321,6 +321,10 @@
     "instance_page": {
         "title": "Instanzeinstellungen",
         "description": "Konfigurieren Sie Ihre Hemmelig-Instanz",
+        "managed_mode": {
+            "title": "Verwalteter Modus",
+            "description": "Diese Instanz wird über Umgebungsvariablen verwaltet. Einstellungen sind schreibgeschützt."
+        },
         "tabs": {
             "general": "Allgemein",
             "security": "Sicherheit",
