@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { authClient } from '../../lib/auth';
+import { useHemmeligStore } from '../../store/hemmeligStore';
 import { useUserStore } from '../../store/userStore';
 import Logo from '../Logo';
 
@@ -22,6 +23,7 @@ export function DashboardLayout() {
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { user, isLoading } = useUserStore();
+    const { settings } = useHemmeligStore();
 
     const handleLogout = async () => {
         await authClient.signOut();
@@ -36,12 +38,30 @@ export function DashboardLayout() {
             icon: Link2,
         },
         { name: t('dashboard_layout.account'), href: '/dashboard/account', icon: User },
-        //...(user?.isAdmin ? [
-        { name: t('dashboard_layout.analytics'), href: '/dashboard/analytics', icon: BarChart3 },
-        { name: t('dashboard_layout.users'), href: '/dashboard/users', icon: Users },
-        { name: t('dashboard_layout.invites'), href: '/dashboard/invites', icon: Ticket },
-        { name: t('dashboard_layout.instance'), href: '/dashboard/instance', icon: Server },
-        //] : []),
+        ...(user?.isAdmin
+            ? [
+                  {
+                      name: t('dashboard_layout.analytics'),
+                      href: '/dashboard/analytics',
+                      icon: BarChart3,
+                  },
+                  { name: t('dashboard_layout.users'), href: '/dashboard/users', icon: Users },
+                  ...(settings.requireInviteCode
+                      ? [
+                            {
+                                name: t('dashboard_layout.invites'),
+                                href: '/dashboard/invites',
+                                icon: Ticket,
+                            },
+                        ]
+                      : []),
+                  {
+                      name: t('dashboard_layout.instance'),
+                      href: '/dashboard/instance',
+                      icon: Server,
+                  },
+              ]
+            : []),
     ];
 
     const isActive = (href: string) => {
