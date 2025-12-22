@@ -538,6 +538,7 @@
     "register_page": {
         "back_to_hemmelig": "Tilbage til Hemmelig",
         "join_hemmelig": "Tilmeld dig Hemmelig for at dele hemmeligheder sikkert",
+        "email_password_disabled_message": "Registrering med e-mail og adgangskode er deaktiveret. Brug venligst en af de sociale login-muligheder nedenfor.",
         "create_account_title": "Opret konto",
         "create_account_description": "Tilmeld dig Hemmelig for at dele hemmeligheder sikkert",
         "username_label": "Brugernavn",
@@ -635,6 +636,8 @@
             "invite_only_description": "Brugere kan kun registrere sig med en gyldig invitationskode",
             "require_registered_user_title": "Kun registrerede brugere",
             "require_registered_user_description": "Kun registrerede brugere kan oprette og læse hemmeligheder",
+            "disable_email_password_signup_title": "Deaktiver e-mail/adgangskode registrering",
+            "disable_email_password_signup_description": "Deaktiver registrering med e-mail og adgangskode (kun social login)",
             "allowed_domains_title": "Tilladte e-mail-domæner",
             "allowed_domains_description": "Tillad kun registrering fra specifikke e-mail-domæner (komma-separeret, f.eks., firma.com, org.net)",
             "allowed_domains_placeholder": "firma.com, org.net",

@@ -545,6 +545,7 @@
     "register_page": {
         "back_to_hemmelig": "Back to Hemmelig",
         "join_hemmelig": "Join Hemmelig to share secrets securely",
+        "email_password_disabled_message": "Email and password registration is disabled. Please use one of the social login options below.",
         "create_account_title": "Create account",
         "create_account_description": "Join Hemmelig to share secrets securely",
         "username_label": "Username",
@@ -642,6 +643,8 @@
             "invite_only_description": "Users can only register with a valid invite code",
             "require_registered_user_title": "Registered Users Only",
             "require_registered_user_description": "Only registered users can create and read secrets",
+            "disable_email_password_signup_title": "Disable Email/Password Signup",
+            "disable_email_password_signup_description": "Disable registration with email and password (social login only)",
             "allowed_domains_title": "Allowed Email Domains",
             "allowed_domains_description": "Only allow registration from specific email domains (comma-separated, e.g., company.com, org.net)",
             "allowed_domains_placeholder": "company.com, org.net",

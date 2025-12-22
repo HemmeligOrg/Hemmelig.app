@@ -531,32 +531,33 @@ When `HEMMELIG_MANAGED=true`, all instance settings are controlled via environme
 
 ### Managed Mode Environment Variables
 
-| Variable                              | Description                          | Default |
-| ------------------------------------- | ------------------------------------ | ------- |
-| `HEMMELIG_MANAGED`                    | Enable managed mode                  | `false` |
-| `HEMMELIG_INSTANCE_NAME`              | Display name for your instance       | `""`    |
-| `HEMMELIG_INSTANCE_DESCRIPTION`       | Description shown on the homepage    | `""`    |
-| `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user signups               | `true`  |
-| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification           | `false` |
-| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration in hours          | `72`    |
-| `HEMMELIG_MAX_SECRET_SIZE`            | Max secret size in KB                | `1024`  |
-| `HEMMELIG_IMPORTANT_MESSAGE`          | Alert banner shown to all users      | `""`    |
-| `HEMMELIG_ALLOW_PASSWORD_PROTECTION`  | Allow password-protected secrets     | `true`  |
-| `HEMMELIG_ALLOW_IP_RESTRICTION`       | Allow IP range restrictions          | `true`  |
-| `HEMMELIG_ALLOW_FILE_UPLOADS`         | Allow users to attach files          | `true`  |
-| `HEMMELIG_ENABLE_RATE_LIMITING`       | Enable API rate limiting             | `true`  |
-| `HEMMELIG_RATE_LIMIT_REQUESTS`        | Max requests per window              | `100`   |
-| `HEMMELIG_RATE_LIMIT_WINDOW`          | Rate limit window in seconds         | `60`    |
-| `HEMMELIG_REQUIRE_INVITE_CODE`        | Require invite code for registration | `false` |
-| `HEMMELIG_ALLOWED_EMAIL_DOMAINS`      | Comma-separated allowed domains      | `""`    |
-| `HEMMELIG_REQUIRE_REGISTERED_USER`    | Only registered users create secrets | `false` |
-| `HEMMELIG_WEBHOOK_ENABLED`            | Enable webhook notifications         | `false` |
-| `HEMMELIG_WEBHOOK_URL`                | Webhook endpoint URL                 | `""`    |
-| `HEMMELIG_WEBHOOK_SECRET`             | HMAC secret for webhook signatures   | `""`    |
-| `HEMMELIG_WEBHOOK_ON_VIEW`            | Send webhook when secret is viewed   | `true`  |
-| `HEMMELIG_WEBHOOK_ON_BURN`            | Send webhook when secret is burned   | `true`  |
-| `HEMMELIG_METRICS_ENABLED`            | Enable Prometheus metrics endpoint   | `false` |
-| `HEMMELIG_METRICS_SECRET`             | Bearer token for `/api/metrics`      | `""`    |
+| Variable                                 | Description                                 | Default |
+| ---------------------------------------- | ------------------------------------------- | ------- |
+| `HEMMELIG_MANAGED`                       | Enable managed mode                         | `false` |
+| `HEMMELIG_INSTANCE_NAME`                 | Display name for your instance              | `""`    |
+| `HEMMELIG_INSTANCE_DESCRIPTION`          | Description shown on the homepage           | `""`    |
+| `HEMMELIG_ALLOW_REGISTRATION`            | Allow new user signups                      | `true`  |
+| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION`    | Require email verification                  | `false` |
+| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`     | Default expiration in hours                 | `72`    |
+| `HEMMELIG_MAX_SECRET_SIZE`               | Max secret size in KB                       | `1024`  |
+| `HEMMELIG_IMPORTANT_MESSAGE`             | Alert banner shown to all users             | `""`    |
+| `HEMMELIG_ALLOW_PASSWORD_PROTECTION`     | Allow password-protected secrets            | `true`  |
+| `HEMMELIG_ALLOW_IP_RESTRICTION`          | Allow IP range restrictions                 | `true`  |
+| `HEMMELIG_ALLOW_FILE_UPLOADS`            | Allow users to attach files                 | `true`  |
+| `HEMMELIG_ENABLE_RATE_LIMITING`          | Enable API rate limiting                    | `true`  |
+| `HEMMELIG_RATE_LIMIT_REQUESTS`           | Max requests per window                     | `100`   |
+| `HEMMELIG_RATE_LIMIT_WINDOW`             | Rate limit window in seconds                | `60`    |
+| `HEMMELIG_REQUIRE_INVITE_CODE`           | Require invite code for registration        | `false` |
+| `HEMMELIG_ALLOWED_EMAIL_DOMAINS`         | Comma-separated allowed domains             | `""`    |
+| `HEMMELIG_REQUIRE_REGISTERED_USER`       | Only registered users create secrets        | `false` |
+| `HEMMELIG_DISABLE_EMAIL_PASSWORD_SIGNUP` | Disable email/password signup (social only) | `false` |
+| `HEMMELIG_WEBHOOK_ENABLED`               | Enable webhook notifications                | `false` |
+| `HEMMELIG_WEBHOOK_URL`                   | Webhook endpoint URL                        | `""`    |
+| `HEMMELIG_WEBHOOK_SECRET`                | HMAC secret for webhook signatures          | `""`    |
+| `HEMMELIG_WEBHOOK_ON_VIEW`               | Send webhook when secret is viewed          | `true`  |
+| `HEMMELIG_WEBHOOK_ON_BURN`               | Send webhook when secret is burned          | `true`  |
+| `HEMMELIG_METRICS_ENABLED`               | Enable Prometheus metrics endpoint          | `false` |
+| `HEMMELIG_METRICS_SECRET`                | Bearer token for `/api/metrics`             | `""`    |
 
 See `docs/managed.md` for full documentation.
 

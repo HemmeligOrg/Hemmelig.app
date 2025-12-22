@@ -544,6 +544,7 @@
     "register_page": {
         "back_to_hemmelig": "返回 Hemmelig",
         "join_hemmelig": "加入 Hemmelig 安全分享秘密",
+        "email_password_disabled_message": "邮箱和密码注册已禁用。请使用下方的社交登录选项。",
         "create_account_title": "创建账户",
         "create_account_description": "加入 Hemmelig 安全分享秘密",
         "username_label": "用户名",
@@ -641,6 +642,8 @@
             "invite_only_description": "用户只能使用有效的邀请码注册",
             "require_registered_user_title": "仅限注册用户",
             "require_registered_user_description": "只有注册用户才能创建和查看秘密",
+            "disable_email_password_signup_title": "禁用邮箱/密码注册",
+            "disable_email_password_signup_description": "禁用邮箱和密码注册（仅允许社交登录）",
             "allowed_domains_title": "允许的邮箱域名",
             "allowed_domains_description": "仅允许特定邮箱域名注册（逗号分隔，如 company.com, org.net）",
             "allowed_domains_placeholder": "company.com, org.net",

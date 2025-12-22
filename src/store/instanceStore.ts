@@ -29,6 +29,7 @@ type OrganizationSettings = {
     requireInviteCode: boolean;
     allowedEmailDomains: string;
     requireRegisteredUser: boolean;
+    disableEmailPasswordSignup: boolean;
 };
 
 type WebhookSettings = {
@@ -102,6 +103,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         requireInviteCode: false,
         allowedEmailDomains: '',
         requireRegisteredUser: false,
+        disableEmailPasswordSignup: false,
     },
     webhookSettings: {
         webhookEnabled: false,
@@ -144,6 +146,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 requireInviteCode: settings.requireInviteCode ?? false,
                 allowedEmailDomains: settings.allowedEmailDomains ?? '',
                 requireRegisteredUser: settings.requireRegisteredUser ?? false,
+                disableEmailPasswordSignup: settings.disableEmailPasswordSignup ?? false,
             },
             webhookSettings: {
                 webhookEnabled: settings.webhookEnabled ?? false,
@@ -197,6 +200,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     requireInviteCode: settings.requireInviteCode ?? false,
                     allowedEmailDomains: settings.allowedEmailDomains ?? '',
                     requireRegisteredUser: settings.requireRegisteredUser ?? false,
+                    disableEmailPasswordSignup: settings.disableEmailPasswordSignup ?? false,
                 },
                 webhookSettings: {
                     webhookEnabled: settings.webhookEnabled ?? false,

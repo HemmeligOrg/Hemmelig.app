@@ -58,6 +58,7 @@ export const PUBLIC_SETTINGS_FIELDS = {
     allowFileUploads: true,
     requireRegisteredUser: true,
     importantMessage: true,
+    disableEmailPasswordSignup: true,
 } as const;
 
 /**
@@ -71,6 +72,7 @@ export const ADMIN_SETTINGS_FIELDS = {
     rateLimitWindow: true,
     requireInviteCode: true,
     allowedEmailDomains: true,
+    disableEmailPasswordSignup: true,
     webhookEnabled: true,
     webhookUrl: true,
     webhookSecret: true,

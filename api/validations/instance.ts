@@ -23,6 +23,7 @@ export const instanceSettingsSchema = z.object({
     requireInviteCode: z.boolean().optional(),
     allowedEmailDomains: z.string().optional(),
     requireRegisteredUser: z.boolean().optional(),
+    disableEmailPasswordSignup: z.boolean().optional(),
 
     // Webhook notifications
     webhookEnabled: z.boolean().optional(),

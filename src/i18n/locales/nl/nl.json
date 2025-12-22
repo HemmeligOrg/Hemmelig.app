@@ -545,6 +545,7 @@
     "register_page": {
         "back_to_hemmelig": "Terug naar Hemmelig",
         "join_hemmelig": "Word lid van Hemmelig om veilig geheimen te delen",
+        "email_password_disabled_message": "Registratie met e-mail en wachtwoord is uitgeschakeld. Gebruik een van de onderstaande sociale login-opties.",
         "create_account_title": "Account aanmaken",
         "create_account_description": "Word lid van Hemmelig om veilig geheimen te delen",
         "username_label": "Gebruikersnaam",
@@ -642,6 +643,8 @@
             "invite_only_description": "Gebruikers kunnen zich alleen registreren met een geldige uitnodigingscode",
             "require_registered_user_title": "Alleen geregistreerde gebruikers",
             "require_registered_user_description": "Alleen geregistreerde gebruikers kunnen geheimen aanmaken en lezen",
+            "disable_email_password_signup_title": "E-mail/wachtwoord registratie uitschakelen",
+            "disable_email_password_signup_description": "Registratie met e-mail en wachtwoord uitschakelen (alleen sociale login)",
             "allowed_domains_title": "Toegestane e-maildomeinen",
             "allowed_domains_description": "Registratie alleen toestaan van specifieke e-maildomeinen (gescheiden door komma's, bijv. bedrijf.com, org.net)",
             "allowed_domains_placeholder": "bedrijf.com, org.net",

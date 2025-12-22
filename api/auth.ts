@@ -73,7 +73,7 @@ export const auth = betterAuth({
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
         before: async (context) => {
-            // Only apply email domain validation to sign-up
+            // Only apply validation to email/password sign-up
             if (context.path !== '/sign-up/email') {
                 return;
             }
@@ -85,10 +85,17 @@ export const auth = betterAuth({
                 return;
             }
 
-            // Get instance settings for allowed email domains
+            // Get instance settings
             const settings = await prisma.instanceSettings.findFirst({
-                select: { allowedEmailDomains: true },
+                select: { allowedEmailDomains: true, disableEmailPasswordSignup: true },
             });
+
+            // Check if email/password signup is disabled
+            if (settings?.disableEmailPasswordSignup) {
+                throw new APIError('FORBIDDEN', {
+                    message: 'Email/password registration is disabled. Please use social login.',
+                });
+            }
 
             const allowedDomains = settings?.allowedEmailDomains?.trim();
 

@@ -120,6 +120,8 @@ const managedSettings = isManaged
           allowedEmailDomains: process.env.HEMMELIG_ALLOWED_EMAIL_DOMAINS ?? '',
           requireRegisteredUser:
               parseBoolean(process.env.HEMMELIG_REQUIRE_REGISTERED_USER) ?? false,
+          disableEmailPasswordSignup:
+              parseBoolean(process.env.HEMMELIG_DISABLE_EMAIL_PASSWORD_SIGNUP) ?? false,
 
           // Webhook settings
           webhookEnabled: parseBoolean(process.env.HEMMELIG_WEBHOOK_ENABLED) ?? false,

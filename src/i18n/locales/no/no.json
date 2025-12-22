@@ -538,6 +538,7 @@
     "register_page": {
         "back_to_hemmelig": "Tilbake til Hemmelig",
         "join_hemmelig": "Bli med i Hemmelig for å dele hemmeligheter sikkert",
+        "email_password_disabled_message": "Registrering med e-post og passord er deaktivert. Bruk en av de sosiale innloggingsalternativene nedenfor.",
         "create_account_title": "Opprett konto",
         "create_account_description": "Bli med i Hemmelig for å dele hemmeligheter sikkert",
         "username_label": "Brukernavn",
@@ -635,6 +636,8 @@
             "invite_only_description": "Brukere kan kun registrere seg med en gyldig invitasjonskode",
             "require_registered_user_title": "Kun registrerte brukere",
             "require_registered_user_description": "Kun registrerte brukere kan opprette og lese hemmeligheter",
+            "disable_email_password_signup_title": "Deaktiver e-post/passord registrering",
+            "disable_email_password_signup_description": "Deaktiver registrering med e-post og passord (kun sosial innlogging)",
             "allowed_domains_title": "Tillatte e-postdomener",
             "allowed_domains_description": "Tillat kun registrering fra spesifikke e-postdomener (komseparert, f.eks., bedrift.com, org.net)",
             "allowed_domains_placeholder": "bedrift.com, org.net",

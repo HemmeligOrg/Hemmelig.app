@@ -122,37 +122,38 @@ model Verification {
 }
 
 model InstanceSettings {
-    id                       String   @id @default(uuid())
-    instanceName             String?  @default("")
-    instanceDescription      String?  @default("")
-    allowRegistration        Boolean? @default(true)
-    requireEmailVerification Boolean? @default(false)
-    defaultSecretExpiration  Int?     @default(72) // hours
-    maxSecretSize            Int?     @default(1024) // KB
-    allowPasswordProtection  Boolean? @default(true)
-    allowIpRestriction       Boolean? @default(true)
-    enableRateLimiting       Boolean? @default(true)
-    rateLimitRequests        Int?     @default(100)
-    rateLimitWindow          Int?     @default(60) // minutes
+    id                         String   @id @default(uuid())
+    instanceName               String?  @default("")
+    instanceDescription        String?  @default("")
+    allowRegistration          Boolean? @default(true)
+    requireEmailVerification   Boolean? @default(false)
+    defaultSecretExpiration    Int?     @default(72) // hours
+    maxSecretSize              Int?     @default(1024) // KB
+    allowPasswordProtection    Boolean? @default(true)
+    allowIpRestriction         Boolean? @default(true)
+    enableRateLimiting         Boolean? @default(true)
+    rateLimitRequests          Int?     @default(100)
+    rateLimitWindow            Int?     @default(60) // minutes
     // Organization features
-    requireInviteCode        Boolean? @default(false)
-    allowedEmailDomains      String?  @default("") // comma-separated list of allowed email domains
-    requireRegisteredUser    Boolean? @default(false) // only registered users can create secrets
+    requireInviteCode          Boolean? @default(false)
+    allowedEmailDomains        String?  @default("") // comma-separated list of allowed email domains
+    requireRegisteredUser      Boolean? @default(false) // only registered users can create secrets
+    disableEmailPasswordSignup Boolean? @default(false) // disable email/password registration (social login only)
     // Webhook notifications
-    webhookEnabled           Boolean? @default(false)
-    webhookUrl               String?  @default("")
-    webhookSecret            String?  @default("") // HMAC secret for signing webhook payloads
-    webhookOnView            Boolean? @default(true) // send webhook when secret is viewed
-    webhookOnBurn            Boolean? @default(true) // send webhook when secret is burned/deleted
+    webhookEnabled             Boolean? @default(false)
+    webhookUrl                 String?  @default("")
+    webhookSecret              String?  @default("") // HMAC secret for signing webhook payloads
+    webhookOnView              Boolean? @default(true) // send webhook when secret is viewed
+    webhookOnBurn              Boolean? @default(true) // send webhook when secret is burned/deleted
     // Important message alert
-    importantMessage         String?  @default("") // Message to display to all users
+    importantMessage           String?  @default("") // Message to display to all users
     // Prometheus metrics
-    metricsEnabled           Boolean? @default(false)
-    metricsSecret            String?  @default("") // Bearer token for /metrics endpoint
+    metricsEnabled             Boolean? @default(false)
+    metricsSecret              String?  @default("") // Bearer token for /metrics endpoint
     // File uploads
-    allowFileUploads         Boolean? @default(true)
-    createdAt                DateTime @default(now())
-    updatedAt                DateTime @updatedAt
+    allowFileUploads           Boolean? @default(true)
+    createdAt                  DateTime @default(now())
+    updatedAt                  DateTime @updatedAt
 
     @@map("instance_settings")
 }

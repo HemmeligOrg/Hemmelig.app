@@ -544,6 +544,7 @@
     "register_page": {
         "back_to_hemmelig": "Zurück zu Hemmelig",
         "join_hemmelig": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
+        "email_password_disabled_message": "Die Registrierung mit E-Mail und Passwort ist deaktiviert. Bitte verwenden Sie eine der unten stehenden Social-Login-Optionen.",
         "create_account_title": "Konto erstellen",
         "create_account_description": "Treten Sie Hemmelig bei, um Geheimnisse sicher zu teilen",
         "username_label": "Benutzername",
@@ -641,6 +642,8 @@
             "invite_only_description": "Benutzer können sich nur mit einem gültigen Einladungscode registrieren",
             "require_registered_user_title": "Nur registrierte Benutzer",
             "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen und lesen",
+            "disable_email_password_signup_title": "E-Mail/Passwort-Registrierung deaktivieren",
+            "disable_email_password_signup_description": "Registrierung mit E-Mail und Passwort deaktivieren (nur Social Login)",
             "allowed_domains_title": "Erlaubte E-Mail-Domains",
             "allowed_domains_description": "Nur Registrierung von bestimmten E-Mail-Domains erlauben (kommagetrennt, z.B. firma.de, org.net)",
             "allowed_domains_placeholder": "firma.de, org.net",
