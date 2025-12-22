@@ -55,6 +55,7 @@ export const PUBLIC_SETTINGS_FIELDS = {
     maxSecretSize: true,
     allowPasswordProtection: true,
     allowIpRestriction: true,
+    allowFileUploads: true,
     requireRegisteredUser: true,
     importantMessage: true,
 } as const;

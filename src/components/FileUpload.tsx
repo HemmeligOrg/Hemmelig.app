@@ -70,6 +70,11 @@ export function FileUpload({ onFileChange, compact = false }: FileUploadProps) {
         maxSize: maxFileSizeInBytes, // Enforce max size per file as well
     });
 
+    // Check if file uploads are disabled at the instance level
+    if (instanceSettings.allowFileUploads === false) {
+        return null;
+    }
+
     if (!user) {
         return (
             <div

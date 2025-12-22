@@ -364,7 +364,9 @@
             "rate_limiting_title": "Ratenbegrenzung",
             "rate_limiting_description": "Anfragenratenbegrenzung aktivieren",
             "max_password_attempts_label": "Max. Passwortversuche",
-            "session_timeout_label": "Sitzungstimeout (Stunden)"
+            "session_timeout_label": "Sitzungstimeout (Stunden)",
+            "allow_file_uploads_title": "Datei-Uploads erlauben",
+            "allow_file_uploads_description": "Benutzern erlauben, Dateien an Geheimnisse anzuhängen"
         },
         "email_settings": {
             "title": "E-Mail-Einstellungen",

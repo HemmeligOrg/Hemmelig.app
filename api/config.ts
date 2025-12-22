@@ -131,6 +131,9 @@ const managedSettings = isManaged
           // Metrics settings
           metricsEnabled: parseBoolean(process.env.HEMMELIG_METRICS_ENABLED) ?? false,
           metricsSecret: process.env.HEMMELIG_METRICS_SECRET ?? '',
+
+          // File upload settings
+          allowFileUploads: parseBoolean(process.env.HEMMELIG_ALLOW_FILE_UPLOADS) ?? true,
       }
     : null;
 

@@ -33,6 +33,7 @@ Complete reference for all environment variables supported by Hemmelig.
 | ------------------------------------ | -------------------------------------- | ------- |
 | `HEMMELIG_ALLOW_PASSWORD_PROTECTION` | Allow password-protected secrets       | `true`  |
 | `HEMMELIG_ALLOW_IP_RESTRICTION`      | Allow IP range restrictions on secrets | `true`  |
+| `HEMMELIG_ALLOW_FILE_UPLOADS`        | Allow users to attach files to secrets | `true`  |
 
 ## Analytics
 

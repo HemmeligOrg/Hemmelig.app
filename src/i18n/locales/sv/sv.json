@@ -358,7 +358,9 @@
             "rate_limiting_title": "Hastighetsbegränsning",
             "rate_limiting_description": "Aktivera begäran om hastighetsbegränsning",
             "max_password_attempts_label": "Max lösenordsförsök",
-            "session_timeout_label": "Sessionstimeout (timmar)"
+            "session_timeout_label": "Sessionstimeout (timmar)",
+            "allow_file_uploads_title": "Tillåt filuppladdningar",
+            "allow_file_uploads_description": "Tillåt användare att bifoga filer till hemligheter"
         },
         "email_settings": {
             "title": "E-postinställningar",

@@ -67,6 +67,7 @@ HEMMELIG_ALLOWED_EMAIL_DOMAINS="company.com,partner.com"
 | ------------------------------------ | -------------------------------- | ------- |
 | `HEMMELIG_ALLOW_PASSWORD_PROTECTION` | Allow password-protected secrets | `true`  |
 | `HEMMELIG_ALLOW_IP_RESTRICTION`      | Allow IP range restrictions      | `true`  |
+| `HEMMELIG_ALLOW_FILE_UPLOADS`        | Allow users to attach files      | `true`  |
 | `HEMMELIG_ENABLE_RATE_LIMITING`      | Enable API rate limiting         | `true`  |
 | `HEMMELIG_RATE_LIMIT_REQUESTS`       | Max requests per window          | `100`   |
 | `HEMMELIG_RATE_LIMIT_WINDOW`         | Rate limit window in seconds     | `60`    |

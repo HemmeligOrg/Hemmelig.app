@@ -358,7 +358,9 @@
             "rate_limiting_title": "Hastighetsbegrensning",
             "rate_limiting_description": "Aktiver forespørselshastighetsbegrensning",
             "max_password_attempts_label": "Maks passordforsøk",
-            "session_timeout_label": "Økttidsavbrudd (timer)"
+            "session_timeout_label": "Økttidsavbrudd (timer)",
+            "allow_file_uploads_title": "Tillat filopplasting",
+            "allow_file_uploads_description": "Tillat brukere å legge ved filer til hemmeligheter"
         },
         "email_settings": {
             "title": "E-postinnstillinger",

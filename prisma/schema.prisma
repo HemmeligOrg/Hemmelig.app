@@ -149,6 +149,8 @@ model InstanceSettings {
     // Prometheus metrics
     metricsEnabled           Boolean? @default(false)
     metricsSecret            String?  @default("") // Bearer token for /metrics endpoint
+    // File uploads
+    allowFileUploads         Boolean? @default(true)
     createdAt                DateTime @default(now())
     updatedAt                DateTime @updatedAt
 

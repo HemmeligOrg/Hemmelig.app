@@ -365,7 +365,9 @@
             "rate_limiting_title": "Rate Limiting",
             "rate_limiting_description": "Enable request rate limiting",
             "max_password_attempts_label": "Max Password Attempts",
-            "session_timeout_label": "Session Timeout (hours)"
+            "session_timeout_label": "Session Timeout (hours)",
+            "allow_file_uploads_title": "Allow File Uploads",
+            "allow_file_uploads_description": "Allow users to attach files to secrets"
         },
         "email_settings": {
             "title": "Email Settings",

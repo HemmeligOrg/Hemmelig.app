@@ -6,8 +6,10 @@ import { nanoid } from 'nanoid';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
 import { z } from 'zod';
+import config from '../config';
 import prisma from '../lib/db';
 import { generateSafeFilePath, getMaxFileSize, isPathSafe } from '../lib/files';
+import { getInstanceSettings } from '../lib/settings';
 
 const files = new Hono();
 
@@ -74,6 +76,20 @@ files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
 
 files.post('/', async (c) => {
     try {
+        // Check if file uploads are allowed
+        let allowFileUploads = true;
+        if (config.isManaged()) {
+            const managedSettings = config.getManagedSettings();
+            allowFileUploads = managedSettings?.allowFileUploads ?? true;
+        } else {
+            const instanceSettings = await getInstanceSettings();
+            allowFileUploads = instanceSettings?.allowFileUploads ?? true;
+        }
+
+        if (!allowFileUploads) {
+            return c.json({ error: 'File uploads are disabled on this instance.' }, 403);
+        }
+
         const body = await c.req.parseBody();
         const file = body['file'];
 

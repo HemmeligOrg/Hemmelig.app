@@ -364,7 +364,9 @@
             "rate_limiting_title": "速率限制",
             "rate_limiting_description": "启用请求速率限制",
             "max_password_attempts_label": "最大密码尝试次数",
-            "session_timeout_label": "会话超时（小时）"
+            "session_timeout_label": "会话超时（小时）",
+            "allow_file_uploads_title": "允许文件上传",
+            "allow_file_uploads_description": "允许用户将文件附加到密钥"
         },
         "email_settings": {
             "title": "邮件设置",

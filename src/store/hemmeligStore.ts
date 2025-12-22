@@ -11,6 +11,7 @@ export type HemmeligSettings = {
     enforceHttps: boolean;
     allowPasswordProtection: boolean;
     allowIpRestriction: boolean;
+    allowFileUploads: boolean;
     maxPasswordAttempts: number;
     sessionTimeout: number;
     enableRateLimiting: boolean;
@@ -35,6 +36,7 @@ export const useHemmeligStore = create<HemmeligState>((set) => ({
         allowRegistration: true,
         requireInviteCode: false,
         requireRegisteredUser: false,
+        allowFileUploads: true,
         importantMessage: '',
     },
     setSettings: (settings) => {

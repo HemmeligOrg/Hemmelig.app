@@ -366,7 +366,9 @@
             "rate_limiting_title": "Limitación de velocidad",
             "rate_limiting_description": "Habilitar limitación de velocidad de solicitudes",
             "max_password_attempts_label": "Intentos máximos de contraseña",
-            "session_timeout_label": "Tiempo de espera de sesión (horas)"
+            "session_timeout_label": "Tiempo de espera de sesión (horas)",
+            "allow_file_uploads_title": "Permitir subida de archivos",
+            "allow_file_uploads_description": "Permitir a los usuarios adjuntar archivos a los secretos"
         },
         "email_settings": {
             "title": "Configuración de correo electrónico",

@@ -365,7 +365,9 @@
             "rate_limiting_title": "Snelheidsbeperking",
             "rate_limiting_description": "Beperking van het aantal verzoeken inschakelen",
             "max_password_attempts_label": "Maximaal aantal wachtwoordpogingen",
-            "session_timeout_label": "Time-out sessie (uren)"
+            "session_timeout_label": "Time-out sessie (uren)",
+            "allow_file_uploads_title": "Bestandsuploads toestaan",
+            "allow_file_uploads_description": "Gebruikers toestaan bestanden aan geheimen toe te voegen"
         },
         "email_settings": {
             "title": "E-mailinstellingen",

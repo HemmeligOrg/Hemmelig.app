@@ -364,7 +364,9 @@
             "rate_limiting_title": "Limitazione richieste",
             "rate_limiting_description": "Abilita la limitazione del tasso di richieste",
             "max_password_attempts_label": "Max tentativi password",
-            "session_timeout_label": "Timeout sessione (ore)"
+            "session_timeout_label": "Timeout sessione (ore)",
+            "allow_file_uploads_title": "Consenti caricamento file",
+            "allow_file_uploads_description": "Consenti agli utenti di allegare file ai segreti"
         },
         "email_settings": {
             "title": "Impostazioni e-mail",

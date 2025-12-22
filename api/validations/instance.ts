@@ -12,6 +12,7 @@ export const instanceSettingsSchema = z.object({
 
     allowPasswordProtection: z.boolean().optional(),
     allowIpRestriction: z.boolean().optional(),
+    allowFileUploads: z.boolean().optional(),
     maxPasswordAttempts: z.number().int().min(1).optional(),
     sessionTimeout: z.number().int().min(1).optional(),
     enableRateLimiting: z.boolean().optional(),

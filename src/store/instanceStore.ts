@@ -17,6 +17,7 @@ type SecuritySettings = {
     enforceHttps: boolean;
     allowPasswordProtection: boolean;
     allowIpRestriction: boolean;
+    allowFileUploads: boolean;
     maxPasswordAttempts: number;
     sessionTimeout: number;
     enableRateLimiting: boolean;
@@ -90,6 +91,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
         enforceHttps: true,
         allowPasswordProtection: true,
         allowIpRestriction: true,
+        allowFileUploads: true,
         maxPasswordAttempts: 3,
         sessionTimeout: 24,
         enableRateLimiting: true,
@@ -131,6 +133,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 enforceHttps: settings.enforceHttps,
                 allowPasswordProtection: settings.allowPasswordProtection,
                 allowIpRestriction: settings.allowIpRestriction,
+                allowFileUploads: settings.allowFileUploads ?? true,
                 maxPasswordAttempts: settings.maxPasswordAttempts,
                 sessionTimeout: settings.sessionTimeout,
                 enableRateLimiting: settings.enableRateLimiting,
@@ -183,6 +186,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                     enforceHttps: settings.enforceHttps,
                     allowPasswordProtection: settings.allowPasswordProtection,
                     allowIpRestriction: settings.allowIpRestriction,
+                    allowFileUploads: settings.allowFileUploads ?? true,
                     maxPasswordAttempts: settings.maxPasswordAttempts,
                     sessionTimeout: settings.sessionTimeout,
                     enableRateLimiting: settings.enableRateLimiting,

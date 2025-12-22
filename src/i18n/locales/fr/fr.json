@@ -364,7 +364,9 @@
             "rate_limiting_title": "Limitation de débit",
             "rate_limiting_description": "Activer la limitation du débit des requêtes",
             "max_password_attempts_label": "Max tentatives de mot de passe",
-            "session_timeout_label": "Délai d'expiration de session (heures)"
+            "session_timeout_label": "Délai d'expiration de session (heures)",
+            "allow_file_uploads_title": "Autoriser le téléchargement de fichiers",
+            "allow_file_uploads_description": "Permettre aux utilisateurs de joindre des fichiers aux secrets"
         },
         "email_settings": {
             "title": "Paramètres e-mail",
