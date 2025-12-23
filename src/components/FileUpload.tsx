@@ -2,6 +2,7 @@ import { File as FileIcon, Lock, UploadCloud, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { useUserStore } from '../store/userStore';
 
@@ -89,9 +90,12 @@ export function FileUpload({ onFileChange, compact = false }: FileUploadProps) {
                     <span className="text-gray-500 dark:text-slate-400 text-sm group-hover:text-gray-600 dark:text-slate-300 transition-colors duration-300">
                         {t('file_upload.sign_in_to_upload')}
                     </span>
-                    <button className="px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                    <Link
+                        to="/login"
+                        className="inline-block px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                    >
                         {t('file_upload.sign_in')}
-                    </button>
+                    </Link>
                 </div>
             </div>
         );
