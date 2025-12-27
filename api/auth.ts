@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
 import { admin, twoFactor, username } from 'better-auth/plugins';
+import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
 
@@ -45,6 +46,30 @@ const buildBetterAuthSocialProviders = () => {
     return betterAuthProviders;
 };
 
+// Build better-auth plugins array
+const buildPlugins = () => {
+    const plugins: any[] = [username(), admin(), twoFactor()];
+
+    const genericProviders = config.getGenericOAuthProviders();
+    if (genericProviders.length > 0) {
+        plugins.push(
+            genericOAuth({
+                config: genericProviders.map((provider) => ({
+                    ...provider,
+                    // Map profile to include username
+                    mapProfileToUser: (profile: any) => ({
+                        username: generateUsernameFromEmail(
+                            profile.email || profile.name || 'user'
+                        ),
+                    }),
+                })),
+            })
+        );
+    }
+
+    return plugins;
+};
+
 export const auth = betterAuth({
     appName: 'Hemmelig',
     baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
@@ -66,10 +91,12 @@ export const auth = betterAuth({
                 'discord',
                 'apple',
                 'twitter',
+                // Add all generic OAuth provider IDs as trusted
+                ...config.getGenericOAuthProviders().map((p) => p.providerId),
             ],
         },
     },
-    plugins: [username(), admin(), twoFactor()],
+    plugins: buildPlugins(),
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
         before: async (context) => {
@@ -128,5 +155,7 @@ export const auth = betterAuth({
 
 // Export enabled social providers for frontend consumption
 export const getEnabledSocialProviders = (): string[] => {
-    return Object.keys(config.getSocialProviders());
+    const standardProviders = Object.keys(config.getSocialProviders());
+    const genericProviders = config.getGenericOAuthProviders().map((p) => p.providerId);
+    return [...standardProviders, ...genericProviders];
 };
