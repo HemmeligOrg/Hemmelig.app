@@ -23,6 +23,19 @@ export interface SocialProviderConfig {
     issuer?: string; // For self-hosted instances (e.g., GitLab)
 }
 
+// Generic OAuth provider configuration type (for better-auth genericOAuth plugin)
+export interface GenericOAuthProviderConfig {
+    providerId: string;
+    discoveryUrl?: string;
+    authorizationUrl?: string;
+    tokenUrl?: string;
+    userInfoUrl?: string;
+    clientId: string;
+    clientSecret: string;
+    scopes?: string[];
+    pkce?: boolean;
+}
+
 // Build social providers config dynamically from env vars
 const buildSocialProviders = () => {
     const providers: Record<string, SocialProviderConfig> = {};
@@ -88,7 +101,55 @@ const buildSocialProviders = () => {
     return providers;
 };
 
+// Build generic OAuth providers from JSON env var
+const buildGenericOAuthProviders = (): GenericOAuthProviderConfig[] => {
+    const genericOAuthEnv = process.env.HEMMELIG_AUTH_GENERIC_OAUTH;
+
+    if (!genericOAuthEnv) {
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(genericOAuthEnv);
+        if (!Array.isArray(parsed)) {
+            console.error('HEMMELIG_AUTH_GENERIC_OAUTH must be a JSON array');
+            return [];
+        }
+
+        // Validate each provider config
+        return parsed.filter((provider: any) => {
+            if (!provider.providerId || !provider.clientId || !provider.clientSecret) {
+                console.error(
+                    `Invalid generic OAuth provider config: missing required fields (providerId, clientId, or clientSecret)`
+                );
+                return false;
+            }
+
+            // Must have either discoveryUrl OR all three URLs (authorization, token, userInfo)
+            const hasDiscoveryUrl = !!provider.discoveryUrl;
+            const hasManualUrls = !!(
+                provider.authorizationUrl &&
+                provider.tokenUrl &&
+                provider.userInfoUrl
+            );
+
+            if (!hasDiscoveryUrl && !hasManualUrls) {
+                console.error(
+                    `Invalid generic OAuth provider config for "${provider.providerId}": must provide either discoveryUrl OR all of (authorizationUrl, tokenUrl, userInfoUrl)`
+                );
+                return false;
+            }
+
+            return true;
+        }) as GenericOAuthProviderConfig[];
+    } catch (error) {
+        console.error('Failed to parse HEMMELIG_AUTH_GENERIC_OAUTH:', error);
+        return [];
+    }
+};
+
 const socialProviders = buildSocialProviders();
+const genericOAuthProviders = buildGenericOAuthProviders();
 
 // Managed mode: all settings are controlled via environment variables
 const isManaged = parseBoolean(process.env.HEMMELIG_MANAGED) ?? false;
@@ -179,6 +240,7 @@ function get<T>(path: string, defaultValue?: T): T {
 export default {
     get,
     getSocialProviders: () => config.socialProviders,
+    getGenericOAuthProviders: () => genericOAuthProviders,
     isManaged: () => isManaged,
     getManagedSettings: () => managedSettings,
 };

@@ -97,6 +97,22 @@ See [Social Login Documentation](./social-login.md) for detailed setup instructi
 | `HEMMELIG_AUTH_TWITTER_ID`     | Twitter OAuth 2.0 Client ID     |
 | `HEMMELIG_AUTH_TWITTER_SECRET` | Twitter OAuth 2.0 Client Secret |
 
+### Generic OAuth
+
+Hemmelig supports any OAuth 2.0 / OpenID Connect provider through generic OAuth configuration.
+
+| Variable                      | Description                                                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `HEMMELIG_AUTH_GENERIC_OAUTH` | JSON array of generic OAuth provider configurations. See [Social Login docs](./social-login.md) for details. |
+
+**Example**:
+
+```bash
+HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"client-id","clientSecret":"secret","scopes":["openid","profile","email"]}]'
+```
+
+Supported generic providers include: Authentik, Authelia, Keycloak, Zitadel, Ory Hydra, and any OAuth 2.0 / OIDC-compatible identity provider.
+
 ## Example Configuration
 
 ### Minimal Setup
