@@ -5,14 +5,15 @@ import { admin, twoFactor, username } from 'better-auth/plugins';
 import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
+import { randomBytes } from 'crypto';
 
 // Generate a unique username from email
 const generateUsernameFromEmail = (email: string): string => {
     const localPart = email.split('@')[0] || 'user';
     // Sanitize: only keep alphanumeric characters and underscores
     const sanitized = localPart.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
-    // Add random suffix to ensure uniqueness
-    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    // Add random suffix to ensure uniqueness (cryptographically secure)
+    const randomSuffix = randomBytes(4).toString('hex').substring(0, 6);
     return `${sanitized}_${randomSuffix}`;
 };
 
