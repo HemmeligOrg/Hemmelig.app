@@ -10,7 +10,8 @@ type SocialProvider =
     | 'discord'
     | 'gitlab'
     | 'apple'
-    | 'twitter';
+    | 'twitter'
+    | string; // Allow any string for generic OAuth providers
 
 interface SocialLoginButtonsProps {
     mode: 'login' | 'register';
@@ -80,6 +81,13 @@ const TwitterIcon = () => (
     </svg>
 );
 
+// Generic OAuth icon for unknown providers
+const GenericOAuthIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+    </svg>
+);
+
 // Provider display configuration
 const providerConfig: Record<
     SocialProvider,
@@ -125,7 +133,7 @@ const providerConfig: Record<
 
 export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
     const { t } = useTranslation();
-    const [providers, setProviders] = useState<SocialProvider[]>([]);
+    const [providers, setProviders] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -134,7 +142,7 @@ export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
                 const res = await apiRaw.config['social-providers'].$get();
                 if (res.ok) {
                     const data = await res.json();
-                    setProviders(data.providers as SocialProvider[]);
+                    setProviders(data.providers as string[]);
                 }
             } catch (error) {
                 console.error('Failed to fetch social providers:', error);
@@ -145,12 +153,47 @@ export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
         fetchProviders();
     }, []);
 
-    const handleSocialLogin = async (provider: SocialProvider) => {
+    const handleSocialLogin = async (provider: string) => {
         try {
-            await authClient.signIn.social({
-                provider,
-                callbackURL: '/dashboard',
-            });
+            // Check if it's a known standard provider
+            const standardProviders = [
+                'github',
+                'google',
+                'microsoft',
+                'discord',
+                'gitlab',
+                'apple',
+                'twitter',
+            ];
+
+            if (standardProviders.includes(provider)) {
+                // Use standard social sign-in
+                await authClient.signIn.social({
+                    provider: provider as any,
+                    callbackURL: '/dashboard',
+                });
+            } else {
+                // Use OAuth2 sign-in for generic providers
+                const response = await fetch('/api/auth/sign-in/oauth2', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        providerId: provider,
+                        callbackURL: window.location.origin + '/dashboard',
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.url) {
+                        window.location.href = data.url;
+                    }
+                } else {
+                    console.error(`OAuth2 login failed for ${provider}`);
+                }
+            }
         } catch (error) {
             console.error(`${provider} login failed:`, error);
         }
@@ -177,21 +220,42 @@ export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
             {/* Social Login Buttons */}
             <div className="space-y-3">
                 {providers.map((provider) => {
-                    const config = providerConfig[provider];
-                    if (!config) return null;
+                    const config = providerConfig[provider as keyof typeof providerConfig];
 
+                    // If config exists, it's a known provider
+                    if (config) {
+                        const buttonText =
+                            mode === 'login'
+                                ? t('social_login.continue_with', { provider: config.name })
+                                : t('social_login.sign_up_with', { provider: config.name });
+
+                        return (
+                            <button
+                                key={provider}
+                                onClick={() => handleSocialLogin(provider)}
+                                className={`w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 ${config.buttonClass}`}
+                            >
+                                {config.icon}
+                                <span>{buttonText}</span>
+                            </button>
+                        );
+                    }
+
+                    // Generic OAuth provider (unknown provider)
+                    // Capitalize first letter for display name
+                    const displayName = provider.charAt(0).toUpperCase() + provider.slice(1);
                     const buttonText =
                         mode === 'login'
-                            ? t('social_login.continue_with', { provider: config.name })
-                            : t('social_login.sign_up_with', { provider: config.name });
+                            ? t('social_login.continue_with', { provider: displayName })
+                            : t('social_login.sign_up_with', { provider: displayName });
 
                     return (
                         <button
                             key={provider}
                             onClick={() => handleSocialLogin(provider)}
-                            className={`w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 ${config.buttonClass}`}
+                            className="w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 bg-light-700 hover:bg-light-600 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white border-gray-300 dark:border-dark-500"
                         >
-                            {config.icon}
+                            <GenericOAuthIcon />
                             <span>{buttonText}</span>
                         </button>
                     );
