@@ -130,16 +130,16 @@ When configuring your OAuth applications, use these callback URLs:
 For generic OAuth providers, the callback URL format is:
 
 ```
-https://your-domain.com/api/auth/callback/oauth2/{providerId}
+https://your-domain.com/api/auth/oauth2/callback/{providerId}
 ```
 
 Where `{providerId}` is the value you specified in the `providerId` field.
 
 **Examples:**
 
-- Authentik: `https://your-domain.com/api/auth/callback/oauth2/authentik`
-- Authelia: `https://your-domain.com/api/auth/callback/oauth2/authelia`
-- Keycloak: `https://your-domain.com/api/auth/callback/oauth2/keycloak`
+- Authentik: `https://your-domain.com/api/auth/oauth2/callback/authentik`
+- Authelia: `https://your-domain.com/api/auth/oauth2/callback/authelia`
+- Keycloak: `https://your-domain.com/api/auth/oauth2/callback/keycloak`
 
 ## Configuration
 
@@ -274,7 +274,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://
 4. Configure the provider:
     - **Name**: Hemmelig
     - **Authorization flow**: Select your flow (e.g., default-authentication-flow)
-    - **Redirect URIs**: `https://your-domain.com/api/auth/callback/oauth2/authentik`
+    - **Redirect URIs**: `https://your-domain.com/api/auth/oauth2/callback/authentik`
     - **Client type**: Confidential
     - **Scopes**: `openid`, `profile`, `email`
 5. Save and copy the **Client ID** and **Client Secret**
@@ -297,7 +297,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://
           description: Hemmelig Secret Sharing
           secret: <generate-a-secure-secret>
           redirect_uris:
-              - https://your-domain.com/api/auth/callback/oauth2/authelia
+              - https://your-domain.com/api/auth/oauth2/callback/authelia
           scopes:
               - openid
               - profile
@@ -323,7 +323,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authelia","discoveryUrl":"https://a
     - **Client ID**: `hemmelig`
 5. On the next screen:
     - **Client authentication**: ON
-    - **Valid redirect URIs**: `https://your-domain.com/api/auth/callback/oauth2/keycloak`
+    - **Valid redirect URIs**: `https://your-domain.com/api/auth/oauth2/callback/keycloak`
     - **Web origins**: `https://your-domain.com`
 6. Go to the **Credentials** tab and copy the **Client Secret**
 7. Your discovery URL will be: `https://keycloak.example.com/realms/{realm-name}/.well-known/openid-configuration`
@@ -342,7 +342,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"keycloak","discoveryUrl":"https://k
     - **Type**: Web
     - **Authentication method**: PKCE or Code
 4. Configure:
-    - **Redirect URIs**: `https://your-domain.com/api/auth/callback/oauth2/zitadel`
+    - **Redirect URIs**: `https://your-domain.com/api/auth/oauth2/callback/zitadel`
     - **Post logout redirect URIs**: `https://your-domain.com`
 5. Copy the **Client ID** and **Client Secret** (if using Code flow)
 6. Your discovery URL: `https://<instance>.zitadel.cloud/.well-known/openid-configuration`
@@ -428,7 +428,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://
 
 **Generic OAuth providers:**
 
-- Callback URL format: `https://your-domain.com/api/auth/callback/oauth2/{providerId}`
+- Callback URL format: `https://your-domain.com/api/auth/oauth2/callback/{providerId}`
 - Ensure the `providerId` in your config matches the one in your identity provider settings
 
 **Common issues:**
