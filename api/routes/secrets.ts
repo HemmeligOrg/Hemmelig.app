@@ -1,6 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
+import config from '../config';
 import prisma from '../lib/db';
 import { compare, hash } from '../lib/password';
 import { getInstanceSettings } from '../lib/settings';
@@ -243,7 +244,10 @@ const app = new Hono<{
             const user = c.get('user');
 
             // Check if only registered users can create secrets
-            const settings = await getInstanceSettings();
+            // In managed mode, use environment-based settings; otherwise use database
+            const settings = config.isManaged()
+                ? config.getManagedSettings()
+                : await getInstanceSettings();
             if (settings?.requireRegisteredUser && !user) {
                 return c.json({ error: 'Only registered users can create and read secrets' }, 401);
             }

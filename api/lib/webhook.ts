@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto';
+import config from '../config';
 import { getInstanceSettings } from './settings';
 
 export type WebhookEvent = 'secret.viewed' | 'secret.burned' | 'apikey.created';
@@ -32,7 +33,10 @@ export async function sendWebhook(
     data: WebhookPayload['data']
 ): Promise<void> {
     try {
-        const settings = await getInstanceSettings();
+        // In managed mode, use environment-based settings; otherwise use database
+        const settings = config.isManaged()
+            ? config.getManagedSettings()
+            : await getInstanceSettings();
 
         if (!settings?.webhookEnabled || !settings.webhookUrl) {
             return;
