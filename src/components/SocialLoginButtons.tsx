@@ -81,10 +81,10 @@ const TwitterIcon = () => (
     </svg>
 );
 
-// Generic OAuth icon for unknown providers
+// Generic OAuth icon for unknown providers (shield with checkmark)
 const GenericOAuthIcon = () => (
     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1.5 12.81l-2.8-2.8 1.4-1.42 1.4 1.42 4.24-4.24 1.41 1.41-5.65 5.63z" />
     </svg>
 );
 
@@ -233,7 +233,7 @@ export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
                             <button
                                 key={provider}
                                 onClick={() => handleSocialLogin(provider)}
-                                className={`w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 ${config.buttonClass}`}
+                                className={`w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 cursor-pointer ${config.buttonClass}`}
                             >
                                 {config.icon}
                                 <span>{buttonText}</span>
@@ -253,7 +253,7 @@ export function SocialLoginButtons({ mode }: SocialLoginButtonsProps) {
                         <button
                             key={provider}
                             onClick={() => handleSocialLogin(provider)}
-                            className="w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 bg-light-700 hover:bg-light-600 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white border-gray-300 dark:border-dark-500"
+                            className="w-full flex items-center justify-center space-x-3 py-2.5 px-4 border font-medium transition-all duration-300 hover:scale-105 cursor-pointer bg-light-700 hover:bg-light-600 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white border-gray-300 dark:border-dark-500"
                         >
                             <GenericOAuthIcon />
                             <span>{buttonText}</span>
