@@ -49,7 +49,7 @@ export const createSecretRequestSchema = z.object({
     webhookUrl: z
         .string()
         .url()
-        .refine((url) => isPublicUrl(url), {
+        .refine(async (url) => await isPublicUrl(url), {
             message: 'Webhook URL cannot point to private/internal addresses',
         })
         .optional(),

@@ -60,6 +60,7 @@ async function sendSecretRequestWebhook(
                     headers,
                     body: payloadString,
                     signal: AbortSignal.timeout(5000), // 5 second timeout to prevent slow-loris
+                    redirect: 'error', // Prevent SSRF via open redirects
                 });
 
                 if (response.ok) return;

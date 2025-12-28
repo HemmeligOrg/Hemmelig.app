@@ -1,4 +1,6 @@
+import dns from 'dns/promises';
 import { type Context } from 'hono';
+import { isIP } from 'is-ip';
 
 /**
  * Handle not found error from Prisma
@@ -44,42 +46,84 @@ export const getClientIp = (c: Context): string => {
     );
 };
 
+// Patterns for private/internal IP addresses
+const privateIpPatterns = [
+    // Localhost variants
+    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
+    /^0\.0\.0\.0$/,
+    // Private IPv4 ranges
+    /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
+    /^192\.168\.\d{1,3}\.\d{1,3}$/,
+    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/,
+    // Link-local IPv4
+    /^169\.254\.\d{1,3}\.\d{1,3}$/,
+    // IPv6 localhost
+    /^::1$/,
+    /^\[::1\]$/,
+    // IPv6 link-local
+    /^fe80:/i,
+    // IPv6 private (unique local addresses)
+    /^fc00:/i,
+    /^fd[0-9a-f]{2}:/i,
+];
+
+// Patterns for special domains that should always be blocked
+const blockedHostnamePatterns = [
+    /^localhost$/,
+    /\.local$/,
+    /\.internal$/,
+    /\.localhost$/,
+    /\.localdomain$/,
+];
+
+/**
+ * Check if an IP address is private/internal
+ * @param ip IP address to check
+ * @returns true if IP is private/internal
+ */
+const isPrivateIp = (ip: string): boolean => {
+    return privateIpPatterns.some((pattern) => pattern.test(ip));
+};
+
 /**
  * Check if a URL points to a private/internal address (SSRF protection)
+ * Resolves DNS to check actual IP addresses, preventing DNS rebinding attacks.
  * @param url URL string to validate
- * @returns true if URL is safe (not internal), false if it's a private/internal address
+ * @returns Promise<true> if URL is safe (not internal), Promise<false> if it's a private/internal address
  */
-export const isPublicUrl = (url: string): boolean => {
+export const isPublicUrl = async (url: string): Promise<boolean> => {
     try {
         const parsed = new URL(url);
         const hostname = parsed.hostname.toLowerCase();
 
-        // Block private/internal addresses to prevent SSRF
-        const blockedPatterns = [
-            // Localhost variants
-            /^localhost$/,
-            /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-            /^0\.0\.0\.0$/,
-            /^::1$/,
-            /^\[::1\]$/,
-            // Private IPv4 ranges
-            /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-            /^192\.168\.\d{1,3}\.\d{1,3}$/,
-            /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/,
-            // Link-local
-            /^169\.254\.\d{1,3}\.\d{1,3}$/,
-            /^fe80:/i,
-            // Private IPv6
-            /^fc00:/i,
-            /^fd[0-9a-f]{2}:/i,
-            // Special domains
-            /\.local$/,
-            /\.internal$/,
-            /\.localhost$/,
-            /\.localdomain$/,
-        ];
+        // Block special domain patterns (e.g., .local, .localhost)
+        if (blockedHostnamePatterns.some((pattern) => pattern.test(hostname))) {
+            return false;
+        }
 
-        return !blockedPatterns.some((pattern) => pattern.test(hostname));
+        // If hostname is already an IP address, check it directly
+        if (isIP(hostname)) {
+            return !isPrivateIp(hostname);
+        }
+
+        // Resolve DNS to get actual IP addresses
+        let addresses: string[] = [];
+        try {
+            const ipv4Addresses = await dns.resolve4(hostname).catch(() => []);
+            const ipv6Addresses = await dns.resolve6(hostname).catch(() => []);
+            addresses = [...ipv4Addresses, ...ipv6Addresses];
+        } catch {
+            // DNS resolution failed - reject for safety
+            return false;
+        }
+
+        // Require at least one resolvable address
+        if (addresses.length === 0) {
+            return false;
+        }
+
+        // Check all resolved IPs - reject if ANY resolve to private addresses
+        return !addresses.some((ip) => isPrivateIp(ip));
     } catch {
         return false;
     }

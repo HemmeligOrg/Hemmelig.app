@@ -73,6 +73,8 @@ export async function sendWebhook(
             method: 'POST',
             headers,
             body: payloadString,
+            signal: AbortSignal.timeout(5000), // 5 second timeout
+            redirect: 'error', // Prevent SSRF via open redirects
         }).catch((error) => {
             console.error('Failed to send webhook:', error);
         });
