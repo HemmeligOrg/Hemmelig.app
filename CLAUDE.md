@@ -536,6 +536,7 @@ When `HEMMELIG_MANAGED=true`, all instance settings are controlled via environme
 | `HEMMELIG_MANAGED`                       | Enable managed mode                         | `false` |
 | `HEMMELIG_INSTANCE_NAME`                 | Display name for your instance              | `""`    |
 | `HEMMELIG_INSTANCE_DESCRIPTION`          | Description shown on the homepage           | `""`    |
+| `HEMMELIG_INSTANCE_LOGO`                 | Base64-encoded logo image (max 512KB)       | `""`    |
 | `HEMMELIG_ALLOW_REGISTRATION`            | Allow new user signups                      | `true`  |
 | `HEMMELIG_REQUIRE_EMAIL_VERIFICATION`    | Require email verification                  | `false` |
 | `HEMMELIG_DEFAULT_SECRET_EXPIRATION`     | Default expiration in hours                 | `72`    |

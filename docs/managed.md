@@ -51,15 +51,16 @@ HEMMELIG_ALLOWED_EMAIL_DOMAINS="company.com,partner.com"
 
 ### General Settings
 
-| Variable                              | Description                       | Default |
-| ------------------------------------- | --------------------------------- | ------- |
-| `HEMMELIG_INSTANCE_NAME`              | Display name for your instance    | `""`    |
-| `HEMMELIG_INSTANCE_DESCRIPTION`       | Description shown on the homepage | `""`    |
-| `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user signups            | `true`  |
-| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification        | `false` |
-| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration in hours       | `72`    |
-| `HEMMELIG_MAX_SECRET_SIZE`            | Max secret size in KB             | `1024`  |
-| `HEMMELIG_IMPORTANT_MESSAGE`          | Alert banner shown to all users   | `""`    |
+| Variable                              | Description                           | Default |
+| ------------------------------------- | ------------------------------------- | ------- |
+| `HEMMELIG_INSTANCE_NAME`              | Display name for your instance        | `""`    |
+| `HEMMELIG_INSTANCE_DESCRIPTION`       | Description shown on the homepage     | `""`    |
+| `HEMMELIG_INSTANCE_LOGO`              | Base64-encoded logo image (max 512KB) | `""`    |
+| `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user signups                | `true`  |
+| `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Require email verification            | `false` |
+| `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration in hours           | `72`    |
+| `HEMMELIG_MAX_SECRET_SIZE`            | Max secret size in KB                 | `1024`  |
+| `HEMMELIG_IMPORTANT_MESSAGE`          | Alert banner shown to all users       | `""`    |
 
 ### Security Settings
 

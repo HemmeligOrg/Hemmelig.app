@@ -160,6 +160,7 @@ const managedSettings = isManaged
           // General settings
           instanceName: process.env.HEMMELIG_INSTANCE_NAME ?? '',
           instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION ?? '',
+          instanceLogo: process.env.HEMMELIG_INSTANCE_LOGO ?? '',
           allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION) ?? true,
           requireEmailVerification:
               parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION) ?? false,
@@ -211,6 +212,7 @@ const config = {
     general: {
         instanceName: process.env.HEMMELIG_INSTANCE_NAME,
         instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION,
+        instanceLogo: process.env.HEMMELIG_INSTANCE_LOGO,
         allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION),
     },
     security: {
