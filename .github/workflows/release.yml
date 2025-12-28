@@ -47,8 +47,9 @@ jobs:
                   echo "Generating commits for range: $RANGE"
 
                   # Generate commit list with format: title - @nickname - sha with link
+                  # Using tformat instead of format to ensure trailing newline
                   COMMITS=""
-                  while IFS='|' read -r SHA SHORT_SHA TITLE AUTHOR; do
+                  while IFS='|' read -r SHA SHORT_SHA TITLE AUTHOR || [ -n "$SHA" ]; do
                     [ -z "$SHA" ] && continue
 
                     # Try to get GitHub username from commit API
@@ -69,7 +70,7 @@ jobs:
                     else
                       COMMITS="${COMMITS}- ${TITLE} by ${AUTHOR_INFO} ([\`${SHORT_SHA}\`](${REPO_URL}/commit/${SHA}))"$'\n'
                     fi
-                  done < <(git log "${RANGE}" --pretty=format:"%H|%h|%s|%an")
+                  done < <(git log "${RANGE}" --pretty=tformat:"%H|%h|%s|%an")
 
                   # Handle multiline output
                   {
