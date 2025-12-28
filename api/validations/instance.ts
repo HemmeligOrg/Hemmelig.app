@@ -1,9 +1,24 @@
 import { z } from 'zod';
 import { isPublicUrl } from '../lib/utils';
 
+// Max logo size: 512KB in base64 (which is ~683KB as base64 string)
+const MAX_LOGO_BASE64_LENGTH = 700000;
+
 export const instanceSettingsSchema = z.object({
     instanceName: z.string().optional(),
     instanceDescription: z.string().optional(),
+    instanceLogo: z
+        .string()
+        .max(MAX_LOGO_BASE64_LENGTH, 'Logo must be smaller than 512KB')
+        .refine(
+            (val) => {
+                if (!val || val === '') return true;
+                // Check if it's a valid base64 data URL for images
+                return /^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/.test(val);
+            },
+            { message: 'Logo must be a valid image (PNG, JPEG, GIF, SVG, or WebP)' }
+        )
+        .optional(),
     allowRegistration: z.boolean().optional(),
     requireEmailVerification: z.boolean().optional(),
     maxSecretsPerUser: z.number().int().min(1).optional(),

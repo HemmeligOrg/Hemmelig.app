@@ -125,6 +125,7 @@ model InstanceSettings {
     id                         String   @id @default(uuid())
     instanceName               String?  @default("")
     instanceDescription        String?  @default("")
+    instanceLogo               String?  @default("") // Base64 encoded logo image
     allowRegistration          Boolean? @default(true)
     requireEmailVerification   Boolean? @default(false)
     defaultSecretExpiration    Int?     @default(72) // hours

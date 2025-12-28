@@ -2,20 +2,25 @@ import {
     Activity,
     Building2,
     ChevronDown,
+    ImageIcon,
     Lock,
     Save,
     Settings,
     Shield,
+    Trash2,
+    Upload,
     Webhook,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
+import { Modal } from '../../components/Modal';
 import { useInstanceStore } from '../../store/instanceStore';
 
 type InstanceSettings = {
     instanceName: string;
     instanceDescription: string;
+    instanceLogo: string;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
@@ -91,11 +96,50 @@ export function InstancePage() {
         }
     }, [loaderData, initializeSettings]);
 
+    const logoInputRef = useRef<HTMLInputElement>(null);
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     const handleSaveSettings = (
         section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
     ) => {
         if (isManaged) return;
         saveSettings(section);
+    };
+
+    const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            setErrorMessage(t('instance_page.general_settings.logo_invalid_type'));
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        // Validate file size (max 512KB)
+        const maxSize = 512 * 1024;
+        if (file.size > maxSize) {
+            setErrorMessage(t('instance_page.general_settings.logo_too_large'));
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result as string;
+            setGeneralSetting('instanceLogo', base64String);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleRemoveLogo = () => {
+        setGeneralSetting('instanceLogo', '');
+        if (logoInputRef.current) {
+            logoInputRef.current.value = '';
+        }
     };
 
     if (error || loaderData?.error) {
@@ -211,6 +255,65 @@ export function InstancePage() {
                                         disabled={isManaged}
                                         className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                                     />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
+                                        {t('instance_page.general_settings.logo_label')}
+                                    </label>
+                                    <div className="flex items-start gap-3">
+                                        {generalSettings.instanceLogo ? (
+                                            <div className="relative">
+                                                <img
+                                                    src={generalSettings.instanceLogo}
+                                                    alt={t(
+                                                        'instance_page.general_settings.logo_alt'
+                                                    )}
+                                                    className="w-16 h-16 object-contain bg-gray-100 dark:bg-dark-700 border border-gray-200 dark:border-dark-600"
+                                                />
+                                                {!isManaged && (
+                                                    <button
+                                                        onClick={handleRemoveLogo}
+                                                        className="absolute -top-2 -right-2 p-1 bg-red-500 hover:bg-red-600 text-white transition-colors"
+                                                        title={t(
+                                                            'instance_page.general_settings.logo_remove'
+                                                        )}
+                                                    >
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="w-16 h-16 flex items-center justify-center bg-gray-100 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 border-dashed">
+                                                <ImageIcon className="w-6 h-6 text-gray-400 dark:text-slate-500" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1">
+                                            <input
+                                                ref={logoInputRef}
+                                                type="file"
+                                                accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp"
+                                                onChange={handleLogoUpload}
+                                                disabled={isManaged}
+                                                className="hidden"
+                                                id="logo-upload"
+                                            />
+                                            <label
+                                                htmlFor="logo-upload"
+                                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
+                                                    isManaged
+                                                        ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
+                                                        : 'bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-700 dark:text-slate-300 cursor-pointer'
+                                                }`}
+                                            >
+                                                <Upload className="w-3.5 h-3.5" />
+                                                {t('instance_page.general_settings.logo_upload')}
+                                            </label>
+                                            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                                                {t('instance_page.general_settings.logo_hint')}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
@@ -971,6 +1074,17 @@ export function InstancePage() {
                     </div>
                 )}
             </div>
+
+            <Modal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                title={t('common.error')}
+                confirmText={t('common.ok')}
+                onConfirm={() => setIsErrorModalOpen(false)}
+                confirmButtonClass="bg-teal-500 hover:bg-teal-600"
+            >
+                <p>{errorMessage}</p>
+            </Modal>
         </div>
     );
 }

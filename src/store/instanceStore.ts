@@ -5,6 +5,7 @@ import { api } from '../lib/api';
 type GeneralSettings = {
     instanceName: string;
     instanceDescription: string;
+    instanceLogo: string;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
@@ -81,6 +82,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
     generalSettings: {
         instanceName: '',
         instanceDescription: '',
+        instanceLogo: '',
         allowRegistration: true,
         requireEmailVerification: false,
         maxSecretsPerUser: 1000,
@@ -124,6 +126,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
             generalSettings: {
                 instanceName: settings.instanceName,
                 instanceDescription: settings.instanceDescription,
+                instanceLogo: settings.instanceLogo ?? '',
                 allowRegistration: settings.allowRegistration,
                 requireEmailVerification: settings.requireEmailVerification,
                 maxSecretsPerUser: settings.maxSecretsPerUser,
@@ -178,6 +181,7 @@ export const useInstanceStore = create<InstanceState>((set, get) => ({
                 generalSettings: {
                     instanceName: settings.instanceName,
                     instanceDescription: settings.instanceDescription,
+                    instanceLogo: settings.instanceLogo ?? '',
                     allowRegistration: settings.allowRegistration,
                     requireEmailVerification: settings.requireEmailVerification,
                     maxSecretsPerUser: settings.maxSecretsPerUser,

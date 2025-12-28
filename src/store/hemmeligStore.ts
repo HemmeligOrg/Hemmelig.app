@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export type HemmeligSettings = {
     instanceName: string;
     instanceDescription: string;
+    instanceLogo: string;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
@@ -20,7 +21,6 @@ export type HemmeligSettings = {
     requireInviteCode: boolean;
     requireRegisteredUser: boolean;
     disableEmailPasswordSignup: boolean;
-    logoUrl: string;
     primaryColor: string;
     importantMessage: string;
 };
@@ -34,6 +34,7 @@ export const useHemmeligStore = create<HemmeligState>((set) => ({
     settings: {
         instanceName: '',
         instanceDescription: '',
+        instanceLogo: '',
         allowRegistration: true,
         requireInviteCode: false,
         requireRegisteredUser: false,

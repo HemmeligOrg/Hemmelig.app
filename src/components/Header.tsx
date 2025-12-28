@@ -56,7 +56,15 @@ export function Header() {
                 <div className="text-center">
                     <div className="flex items-center justify-center mb-3 sm:mb-4">
                         <div className="relative">
-                            <Logo className="w-12 h-12 sm:w-14 sm:h-14 fill-gray-900 dark:fill-white" />
+                            {settings.instanceLogo ? (
+                                <img
+                                    src={settings.instanceLogo}
+                                    alt={settings.instanceName || 'Logo'}
+                                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                                />
+                            ) : (
+                                <Logo className="w-12 h-12 sm:w-14 sm:h-14 fill-gray-900 dark:fill-white" />
+                            )}
                         </div>
                     </div>
 

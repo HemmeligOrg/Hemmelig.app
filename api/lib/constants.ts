@@ -50,6 +50,7 @@ export const EXPIRATION_TIMES_SECONDS = [
 export const PUBLIC_SETTINGS_FIELDS = {
     instanceName: true,
     instanceDescription: true,
+    instanceLogo: true,
     allowRegistration: true,
     defaultSecretExpiration: true,
     maxSecretSize: true,
