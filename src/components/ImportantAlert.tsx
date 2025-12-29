@@ -1,4 +1,4 @@
-import { AlertTriangle, X } from 'lucide-react';
+import { Info, X } from 'lucide-react';
 import { useState } from 'react';
 import Markdown from 'react-markdown';
 import { hashString } from '../lib/hash';
@@ -31,15 +31,15 @@ export function ImportantAlert() {
     }
 
     return (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 p-4 mb-4">
+        <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4 mb-4">
             <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1 text-sm text-amber-800 dark:text-amber-200 prose prose-sm prose-amber dark:prose-invert prose-p:my-0 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-amber-700 dark:prose-a:text-amber-300 max-w-none">
+                <Info className="w-5 h-5 text-teal-500 dark:text-teal-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 text-sm text-gray-700 dark:text-slate-300 prose prose-sm dark:prose-invert prose-p:my-0 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-teal-600 dark:prose-a:text-teal-400 max-w-none">
                     <Markdown>{settings.importantMessage}</Markdown>
                 </div>
                 <button
                     onClick={handleDismiss}
-                    className="flex-shrink-0 text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200"
+                    className="flex-shrink-0 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300"
                     aria-label="Dismiss"
                 >
                     <X className="w-4 h-4" />
