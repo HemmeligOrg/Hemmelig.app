@@ -64,19 +64,19 @@ Each provider in the array must include:
 #### Example: Authentik
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]
 ```
 
 #### Example: Authelia
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authelia","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"your-client-secret","scopes":["openid","profile","email","groups"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authelia","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"your-client-secret","scopes":["openid","profile","email","groups"]}]
 ```
 
 #### Example: Keycloak
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"keycloak","discoveryUrl":"https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"keycloak","discoveryUrl":"https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]
 ```
 
 #### Example: Multiple Generic Providers
@@ -84,7 +84,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"keycloak","discoveryUrl":"https://k
 You can configure multiple generic OAuth providers in the same JSON array:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[
+HEMMELIG_AUTH_GENERIC_OAUTH=[
   {
     "providerId": "authentik",
     "discoveryUrl": "https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration",
@@ -98,7 +98,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[
     "clientId": "client-id-2",
     "clientSecret": "secret-2"
   }
-]'
+]
 ```
 
 #### Example: Manual URLs (without discovery)
@@ -106,7 +106,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[
 If your provider doesn't support OpenID Connect discovery:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"custom","authorizationUrl":"https://oauth.example.com/authorize","tokenUrl":"https://oauth.example.com/token","userInfoUrl":"https://oauth.example.com/userinfo","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"custom","authorizationUrl":"https://oauth.example.com/authorize","tokenUrl":"https://oauth.example.com/token","userInfoUrl":"https://oauth.example.com/userinfo","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]
 ```
 
 ## Callback URLs
@@ -200,7 +200,7 @@ HEMMELIG_AUTH_TWITTER_ID=your-twitter-client-id
 HEMMELIG_AUTH_TWITTER_SECRET=your-twitter-client-secret
 
 # Generic OAuth (supports Authentik, Authelia, Keycloak, etc.)
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"your-client-id","clientSecret":"your-client-secret","scopes":["openid","profile","email"]}]
 ```
 
 ## Setting Up OAuth Applications
@@ -284,7 +284,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://
 Example environment variable:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"<client-id>","clientSecret":"<client-secret>","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/application/o/hemmelig/.well-known/openid-configuration","clientId":"<client-id>","clientSecret":"<client-secret>","scopes":["openid","profile","email"]}]
 ```
 
 #### Authelia
@@ -310,7 +310,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://
 Example environment variable:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authelia","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"<client-secret>","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authelia","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"<client-secret>","scopes":["openid","profile","email"]}]
 ```
 
 #### Keycloak
@@ -331,7 +331,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authelia","discoveryUrl":"https://a
 Example environment variable:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"keycloak","discoveryUrl":"https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"<client-secret>"}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"keycloak","discoveryUrl":"https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"<client-secret>"}]
 ```
 
 #### Zitadel
@@ -350,7 +350,7 @@ HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"keycloak","discoveryUrl":"https://k
 Example environment variable:
 
 ```bash
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"zitadel","discoveryUrl":"https://instance.zitadel.cloud/.well-known/openid-configuration","clientId":"<client-id>","clientSecret":"<client-secret>","scopes":["openid","profile","email"],"pkce":true}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"zitadel","discoveryUrl":"https://instance.zitadel.cloud/.well-known/openid-configuration","clientId":"<client-id>","clientSecret":"<client-secret>","scopes":["openid","profile","email"],"pkce":true}]
 ```
 
 ## How It Works
@@ -399,7 +399,7 @@ HEMMELIG_AUTH_TWITTER_ID=
 HEMMELIG_AUTH_TWITTER_SECRET=
 
 # Generic OAuth (JSON array - supports any OAuth 2.0 / OIDC provider)
-HEMMELIG_AUTH_GENERIC_OAUTH='[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"client-id","clientSecret":"client-secret","scopes":["openid","profile","email"]}]'
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"client-id","clientSecret":"client-secret","scopes":["openid","profile","email"]}]
 ```
 
 ## Troubleshooting
