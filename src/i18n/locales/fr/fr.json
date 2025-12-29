@@ -358,7 +358,7 @@
             "instance_description_label": "Description de l'instance",
             "important_message_label": "Message important",
             "important_message_placeholder": "Entrez un message important à afficher à tous les utilisateurs...",
-            "important_message_hint": "Ce message sera affiché comme bannière d'alerte sur la page d'accueil. Laissez vide pour masquer.",
+            "important_message_hint": "Ce message sera affiché comme bannière d'alerte sur la page d'accueil. Prend en charge le formatage markdown. Laissez vide pour masquer.",
             "allow_registration_title": "Autoriser l'inscription",
             "allow_registration_description": "Permettre aux nouveaux utilisateurs de s'inscrire",
             "email_verification_title": "Vérification e-mail",

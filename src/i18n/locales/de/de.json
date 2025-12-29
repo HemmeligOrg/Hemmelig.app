@@ -358,7 +358,7 @@
             "instance_description_label": "Instanzbeschreibung",
             "important_message_label": "Wichtige Nachricht",
             "important_message_placeholder": "Geben Sie eine wichtige Nachricht ein, die allen Benutzern angezeigt wird...",
-            "important_message_hint": "Diese Nachricht wird als Warnbanner auf der Startseite angezeigt. Leer lassen zum Ausblenden.",
+            "important_message_hint": "Diese Nachricht wird als Warnbanner auf der Startseite angezeigt. Unterstützt Markdown-Formatierung. Leer lassen zum Ausblenden.",
             "allow_registration_title": "Registrierung erlauben",
             "allow_registration_description": "Neuen Benutzern die Registrierung erlauben",
             "email_verification_title": "E-Mail-Verifizierung",

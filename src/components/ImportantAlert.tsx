@@ -1,5 +1,6 @@
 import { AlertTriangle, X } from 'lucide-react';
 import { useState } from 'react';
+import Markdown from 'react-markdown';
 import { hashString } from '../lib/hash';
 import { useHemmeligStore } from '../store/hemmeligStore';
 
@@ -33,8 +34,8 @@ export function ImportantAlert() {
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 p-4 mb-4">
             <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1 text-sm text-amber-800 dark:text-amber-200">
-                    {settings.importantMessage}
+                <div className="flex-1 text-sm text-amber-800 dark:text-amber-200 prose prose-sm prose-amber dark:prose-invert prose-p:my-0 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-amber-700 dark:prose-a:text-amber-300 max-w-none">
+                    <Markdown>{settings.importantMessage}</Markdown>
                 </div>
                 <button
                     onClick={handleDismiss}

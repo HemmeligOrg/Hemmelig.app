@@ -345,7 +345,7 @@
             "instance_description_label": "Instansbeskrivning",
             "important_message_label": "Viktigt meddelande",
             "important_message_placeholder": "Ange ett viktigt meddelande som ska visas för alla användare...",
-            "important_message_hint": "Detta meddelande kommer att visas som en varningsbanner på hemsidan. Lämna tomt för att dölja.",
+            "important_message_hint": "Dette meddelande kommer att visas som en varningsbanner på hemsidan. Stödjer markdown-formatering. Lämna tomt för att dölja.",
             "allow_registration_title": "Tillåt registrering",
             "allow_registration_description": "Tillåt nya användare att registrera sig",
             "email_verification_title": "E-postverifiering",

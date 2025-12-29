@@ -358,7 +358,7 @@
             "instance_description_label": "Descripción de la instancia",
             "important_message_label": "Mensaje importante",
             "important_message_placeholder": "Ingrese un mensaje importante para mostrar a todos los usuarios...",
-            "important_message_hint": "Este mensaje se mostrará como un banner de alerta en la página de inicio. Déjelo vacío para ocultar.",
+            "important_message_hint": "Este mensaje se mostrará como un banner de alerta en la página de inicio. Soporta formato markdown. Déjelo vacío para ocultar.",
             "allow_registration_title": "Permitir registro",
             "allow_registration_description": "Permitir que los nuevos usuarios se registren",
             "email_verification_title": "Verificación de correo electrónico",

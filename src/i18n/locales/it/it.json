@@ -358,7 +358,7 @@
             "instance_description_label": "Descrizione istanza",
             "important_message_label": "Messaggio importante",
             "important_message_placeholder": "Inserisci un messaggio importante da mostrare a tutti gli utenti...",
-            "important_message_hint": "Questo messaggio verrà visualizzato come banner di avviso nella pagina principale. Lascia vuoto per nascondere.",
+            "important_message_hint": "Questo messaggio verrà visualizzato come banner di avviso nella pagina principale. Supporta la formattazione markdown. Lascia vuoto per nascondere.",
             "allow_registration_title": "Consenti registrazione",
             "allow_registration_description": "Permetti ai nuovi utenti di registrarsi",
             "email_verification_title": "Verifica e-mail",

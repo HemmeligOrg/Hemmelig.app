@@ -358,7 +358,7 @@
             "instance_description_label": "Instance Description",
             "important_message_label": "Important Message",
             "important_message_placeholder": "Enter an important message to display to all users...",
-            "important_message_hint": "This message will be displayed as an alert banner on the homepage. Leave empty to hide.",
+            "important_message_hint": "This message will be displayed as an alert banner on the homepage. Supports markdown formatting. Leave empty to hide.",
             "allow_registration_title": "Allow Registration",
             "allow_registration_description": "Allow new users to register",
             "email_verification_title": "Email Verification",

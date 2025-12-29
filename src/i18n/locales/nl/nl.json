@@ -358,7 +358,7 @@
             "instance_description_label": "Beschrijving server",
             "important_message_label": "Belangrijk bericht",
             "important_message_placeholder": "Voer een belangrijk bericht in dat aan alle gebruikers moet worden getoond...",
-            "important_message_hint": "Dit bericht wordt weergegeven als een waarschuwingsbanner op de startpagina. Laat leeg om te verbergen.",
+            "important_message_hint": "Dit bericht wordt weergegeven als een waarschuwingsbanner op de startpagina. Ondersteunt markdown-opmaak. Laat leeg om te verbergen.",
             "allow_registration_title": "Registratie toestaan",
             "allow_registration_description": "Nieuwe gebruikers toestaan zich te registreren",
             "email_verification_title": "E-mailverificatie",

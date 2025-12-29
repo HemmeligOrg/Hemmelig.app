@@ -345,7 +345,7 @@
             "instance_description_label": "Instansbeskrivelse",
             "important_message_label": "Vigtig besked",
             "important_message_placeholder": "Indtast en vigtig besked, der skal vises til alle brugere...",
-            "important_message_hint": "Denne besked vil blive vist som et advarselsbanner på hjemmesiden. Lad stå tomt for at skjule.",
+            "important_message_hint": "Denne besked vil blive vist som et advarselsbanner på hjemmesiden. Understøtter markdown-formatering. Lad stå tomt for at skjule.",
             "allow_registration_title": "Tillad registrering",
             "allow_registration_description": "Tillad nye brugere at registrere sig",
             "email_verification_title": "E-mailbekræftelse",
