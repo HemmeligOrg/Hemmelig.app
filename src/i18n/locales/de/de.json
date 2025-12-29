@@ -82,7 +82,8 @@
         "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch",
         "privacy": "Datenschutz",
         "terms": "AGB",
-        "api": "API"
+        "api": "API",
+        "managed_hosting": "Managed Hosting"
     },
     "header": {
         "home": "Startseite",

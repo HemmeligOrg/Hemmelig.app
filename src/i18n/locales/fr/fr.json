@@ -82,7 +82,8 @@
         "tagline": "Hemmelig, [heˈm(ɛ)li], signifie 'secret' en norvégien",
         "privacy": "Confidentialité",
         "terms": "Conditions",
-        "api": "API"
+        "api": "API",
+        "managed_hosting": "Hébergement géré"
     },
     "header": {
         "home": "Accueil",

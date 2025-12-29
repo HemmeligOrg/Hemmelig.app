@@ -80,7 +80,8 @@
         "tagline": "Hemmelig, [heˈm(ɛ)li], betyder 'secret' på norska",
         "privacy": "Integritet",
         "terms": "Villkor",
-        "api": "API"
+        "api": "API",
+        "managed_hosting": "Managed Hosting"
     },
     "header": {
         "home": "Hem",

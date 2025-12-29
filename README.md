@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="https://hemmelig.app">Try it online</a> •
+  <a href="https://terces.cloud">Deploy to terces.cloud</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="docs/docker.md">Docker Guide</a> •
   <a href="docs/env.md">Configuration</a>
@@ -17,6 +18,7 @@
 
 <p align="center">
   <a href="https://hub.docker.com/r/hemmeligapp/hemmelig"><img src="https://img.shields.io/docker/pulls/hemmeligapp/hemmelig" alt="Docker pulls" /></a>
+  <a href="https://terces.cloud"><img src="https://img.shields.io/badge/Deploy%20to-terces.cloud-269B91" alt="Deploy to terces.cloud" /></a>
 </p>
 
 ## How It Works
@@ -114,6 +116,12 @@ npm install
 npm run dev
 npm run dev:api
 ```
+
+## Deploy to terces.cloud
+
+Want a hassle-free managed Hemmelig instance? [terces.cloud](https://terces.cloud) offers fully managed Hemmelig hosting for **$20/month**. Get your own private instance with automatic updates, backups, and zero maintenance overhead.
+
+<a href="https://terces.cloud"><img src="https://img.shields.io/badge/Deploy%20to-terces.cloud-269B91?style=for-the-badge" alt="Deploy to terces.cloud" /></a>
 
 ## Hetzner Cloud Referral
 

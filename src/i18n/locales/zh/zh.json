@@ -82,7 +82,8 @@
         "tagline": "Hemmelig，[heˈm(ɛ)li]，在挪威语中意为「秘密」",
         "privacy": "隐私",
         "terms": "条款",
-        "api": "API"
+        "api": "API",
+        "managed_hosting": "托管服务"
     },
     "header": {
         "home": "首页",

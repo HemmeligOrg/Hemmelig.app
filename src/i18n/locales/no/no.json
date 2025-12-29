@@ -80,7 +80,8 @@
         "tagline": "Hemmelig, [heˈm(ɛ)li], betyr 'secret' på norsk",
         "privacy": "Personvern",
         "terms": "Vilkår",
-        "api": "API"
+        "api": "API",
+        "managed_hosting": "Managed Hosting"
     },
     "header": {
         "home": "Hjem",
