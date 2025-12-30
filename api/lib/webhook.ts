@@ -28,57 +28,79 @@ function signPayload(payload: string, secret: string): string {
     return createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-export async function sendWebhook(
-    event: WebhookEvent,
-    data: WebhookPayload['data']
+async function sendWithRetry(
+    url: string,
+    headers: Record<string, string>,
+    body: string
 ): Promise<void> {
-    try {
-        // In managed mode, use environment-based settings; otherwise use database
-        const settings = config.isManaged()
-            ? config.getManagedSettings()
-            : await getInstanceSettings();
+    const maxRetries = 3;
 
-        if (!settings?.webhookEnabled || !settings.webhookUrl) {
-            return;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers,
+                body,
+                signal: AbortSignal.timeout(5000),
+                redirect: 'error',
+            });
+
+            if (response.ok) return;
+
+            if (response.status >= 400 && response.status < 500) {
+                console.error(`Webhook delivery failed: ${response.status}`);
+                return;
+            }
+        } catch (error) {
+            if (attempt === maxRetries - 1) {
+                console.error('Webhook delivery failed after retries:', error);
+                return;
+            }
         }
 
-        // Check if this event type should trigger webhook
-        if (event === 'secret.viewed' && !settings.webhookOnView) {
-            return;
-        }
-        if (event === 'secret.burned' && !settings.webhookOnBurn) {
-            return;
-        }
-
-        const payload: WebhookPayload = {
-            event,
-            timestamp: new Date().toISOString(),
-            data,
-        };
-
-        const payloadString = JSON.stringify(payload);
-        const headers: Record<string, string> = {
-            'Content-Type': 'application/json',
-            'X-Hemmelig-Event': event,
-        };
-
-        // Add HMAC signature if secret is configured
-        if (settings.webhookSecret) {
-            const signature = signPayload(payloadString, settings.webhookSecret);
-            headers['X-Hemmelig-Signature'] = `sha256=${signature}`;
-        }
-
-        // Fire and forget - don't block the response
-        fetch(settings.webhookUrl, {
-            method: 'POST',
-            headers,
-            body: payloadString,
-            signal: AbortSignal.timeout(5000), // 5 second timeout
-            redirect: 'error', // Prevent SSRF via open redirects
-        }).catch((error) => {
-            console.error('Failed to send webhook:', error);
-        });
-    } catch (error) {
-        console.error('Error preparing webhook:', error);
+        await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
     }
+}
+
+export function sendWebhook(event: WebhookEvent, data: WebhookPayload['data']): void {
+    (async () => {
+        try {
+            const settings = config.isManaged()
+                ? config.getManagedSettings()
+                : await getInstanceSettings();
+
+            if (!settings?.webhookEnabled || !settings.webhookUrl) {
+                return;
+            }
+
+            if (event === 'secret.viewed' && !settings.webhookOnView) {
+                return;
+            }
+            if (event === 'secret.burned' && !settings.webhookOnBurn) {
+                return;
+            }
+
+            const payload: WebhookPayload = {
+                event,
+                timestamp: new Date().toISOString(),
+                data,
+            };
+
+            const payloadString = JSON.stringify(payload);
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'X-Hemmelig-Event': event,
+                'User-Agent': 'Hemmelig-Webhook/1.0',
+            };
+
+            if (settings.webhookSecret) {
+                const signature = signPayload(payloadString, settings.webhookSecret);
+                headers['X-Hemmelig-Signature'] = `sha256=${signature}`;
+            }
+
+            await sendWithRetry(settings.webhookUrl, headers, payloadString);
+        } catch (error) {
+            console.error('Error preparing webhook:', error);
+        }
+    })();
 }
