@@ -19,6 +19,7 @@
 <p align="center">
   <a href="https://hub.docker.com/r/hemmeligapp/hemmelig"><img src="https://img.shields.io/docker/pulls/hemmeligapp/hemmelig" alt="Docker pulls" /></a>
   <a href="https://terces.cloud"><img src="https://img.shields.io/badge/Deploy%20to-terces.cloud-269B91" alt="Deploy to terces.cloud" /></a>
+  <a href="https://ko-fi.com/bjarneoeverli"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white" alt="Buy Me a Coffee" /></a>
 </p>
 
 ## How It Works
