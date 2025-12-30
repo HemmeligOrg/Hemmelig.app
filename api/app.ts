@@ -2,11 +2,13 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
+import { HTTPException } from 'hono/http-exception';
 import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import { timeout } from 'hono/timeout';
 import { trimTrailingSlash } from 'hono/trailing-slash';
+import { ZodError } from 'zod';
 
 import { auth } from './auth';
 import config from './config';
@@ -22,6 +24,46 @@ const app = new Hono<{
         session: typeof auth.$Infer.Session.session | null;
     };
 }>();
+
+// Global error handler
+app.onError((err, c) => {
+    const requestId = c.get('requestId') || 'unknown';
+
+    // Handle Zod validation errors
+    if (err instanceof ZodError) {
+        console.error(`[${requestId}] Validation error:`, err.flatten());
+        return c.json(
+            {
+                error: 'Validation failed',
+                details: err.flatten().fieldErrors,
+            },
+            400
+        );
+    }
+
+    // Handle HTTP exceptions (thrown by Hono or middleware)
+    if (err instanceof HTTPException) {
+        console.error(`[${requestId}] HTTP exception:`, {
+            status: err.status,
+            message: err.message,
+        });
+        return c.json({ error: err.message }, err.status);
+    }
+
+    // Handle all other errors
+    console.error(`[${requestId}] Unhandled error:`, {
+        error: err.message,
+        stack: err.stack,
+    });
+
+    // Don't expose internal error details in production
+    return c.json({ error: 'Internal server error' }, 500);
+});
+
+// Handle 404 - route not found
+app.notFound((c) => {
+    return c.json({ error: 'Not found' }, 404);
+});
 
 // Start the background jobs
 startJobs();
