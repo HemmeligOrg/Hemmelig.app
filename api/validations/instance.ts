@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
+const sanitizeString = (str: string) => str.trim().replace(/[\x00-\x1F\x7F]/g, '');
+
+const sanitizedString = (maxLength: number) =>
+    z.string().transform(sanitizeString).pipe(z.string().max(maxLength));
+
 // Max logo size: 512KB in base64 (which is ~683KB as base64 string)
 const MAX_LOGO_BASE64_LENGTH = 700000;
 
 export const instanceSettingsSchema = z.object({
-    instanceName: z.string().optional(),
-    instanceDescription: z.string().optional(),
+    instanceName: sanitizedString(100).optional(),
+    instanceDescription: sanitizedString(500).optional(),
     instanceLogo: z
         .string()
         .max(MAX_LOGO_BASE64_LENGTH, 'Logo must be smaller than 512KB')
@@ -35,21 +40,21 @@ export const instanceSettingsSchema = z.object({
 
     // Organization features
     requireInviteCode: z.boolean().optional(),
-    allowedEmailDomains: z.string().optional(),
+    allowedEmailDomains: sanitizedString(500).optional(),
     requireRegisteredUser: z.boolean().optional(),
     disableEmailPasswordSignup: z.boolean().optional(),
 
     // Webhook notifications
     webhookEnabled: z.boolean().optional(),
     webhookUrl: z.string().url().optional().or(z.literal('')),
-    webhookSecret: z.string().optional(),
+    webhookSecret: sanitizedString(200).optional(),
     webhookOnView: z.boolean().optional(),
     webhookOnBurn: z.boolean().optional(),
 
     // Important message alert
-    importantMessage: z.string().optional(),
+    importantMessage: sanitizedString(1000).optional(),
 
     // Prometheus metrics
     metricsEnabled: z.boolean().optional(),
-    metricsSecret: z.string().optional(),
+    metricsSecret: sanitizedString(200).optional(),
 });
