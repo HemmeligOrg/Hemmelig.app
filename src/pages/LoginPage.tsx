@@ -2,8 +2,10 @@ import { ArrowLeft, Eye, EyeOff, Lock, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
+import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
 
 export function LoginPage() {
@@ -15,8 +17,7 @@ export function LoginPage() {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const errorModal = useErrorModal();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,15 +41,13 @@ export function LoginPage() {
             );
 
             if (error) {
-                setErrorMessage(`Login failed: ${error.message}`);
-                setIsErrorModalOpen(true);
+                errorModal.showError(`Login failed: ${error.message}`);
             } else if (data && !('twoFactorRedirect' in data)) {
                 navigate('/dashboard');
             }
         } catch (error) {
             console.error('An error occurred:', error);
-            setErrorMessage(t('login_page.unexpected_error'));
-            setIsErrorModalOpen(true);
+            errorModal.showError(t('login_page.unexpected_error'));
         } finally {
             setIsLoading(false);
         }
@@ -76,10 +75,7 @@ export function LoginPage() {
                     </p>
                 </div>
 
-                {/* Login Form */}
-                <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-6 sm:p-8 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50">
-                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500" />
-
+                <Card gradient="teal" noPadding className="p-6 sm:p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Username Field */}
                         <div className="space-y-2">
@@ -182,17 +178,17 @@ export function LoginPage() {
                             </Link>
                         </p>
                     </div>
-                </div>
+                </Card>
             </div>
             <Modal
-                isOpen={isErrorModalOpen}
-                onClose={() => setIsErrorModalOpen(false)}
+                isOpen={errorModal.isOpen}
+                onClose={errorModal.close}
                 title={t('common.error')}
                 confirmText={t('common.ok')}
-                onConfirm={() => setIsErrorModalOpen(false)}
+                onConfirm={errorModal.close}
                 confirmButtonClass="bg-blue-600 hover:bg-blue-700"
             >
-                <p>{errorMessage}</p>
+                <p>{errorModal.message}</p>
             </Modal>
         </div>
     );

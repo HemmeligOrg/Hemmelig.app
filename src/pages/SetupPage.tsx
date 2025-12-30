@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Card } from '../components/Card';
 import Logo from '../components/Logo';
 import { api } from '../lib/api';
 
@@ -68,7 +69,7 @@ export function SetupPage() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-8">
+                <Card gradient="teal" noPadding className="p-8">
                     {/* Header */}
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center justify-center mb-4">
@@ -190,7 +191,7 @@ export function SetupPage() {
                     <p className="text-xs text-gray-500 dark:text-slate-400 text-center mt-6">
                         {t('setup_page.note')}
                     </p>
-                </div>
+                </Card>
             </div>
         </div>
     );

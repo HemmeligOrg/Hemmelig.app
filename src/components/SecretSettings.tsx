@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { api } from '../lib/api';
+import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
 import { copyToClipboard as copyText } from '../utils/clipboard';
-
-import { useHemmeligStore } from '../store/hemmeligStore';
+import { Card } from './Card';
 
 export const SecretSettings = () => {
     const { secretId, decryptionKey, password, resetSecret } = useSecretStore();
@@ -42,9 +42,7 @@ export const SecretSettings = () => {
     };
 
     return (
-        <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-5 sm:p-8 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50 mt-6">
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-green-500 via-teal-500 to-green-500" />
-
+        <Card gradient="green" className="mt-6">
             {/* Success header */}
             <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 dark:bg-green-500/20 mb-4">
@@ -165,6 +163,6 @@ export const SecretSettings = () => {
                     })}
                 </p>
             )}
-        </div>
+        </Card>
     );
 };

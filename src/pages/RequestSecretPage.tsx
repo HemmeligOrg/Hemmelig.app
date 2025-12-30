@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Card } from '../components/Card';
 import Editor from '../components/Editor';
 import { TitleField } from '../components/TitleField';
 import { api } from '../lib/api';
@@ -143,7 +144,7 @@ export function RequestSecretPage() {
         return (
             <div className="py-12">
                 <div className="max-w-lg mx-auto text-center">
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-8">
+                    <Card noPadding className="p-8">
                         <Lock className="w-12 h-12 mx-auto mb-4 text-red-400" />
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                             {t('request_secret_page.error.title')}
@@ -155,7 +156,7 @@ export function RequestSecretPage() {
                         >
                             {t('request_secret_page.error.go_home_button')}
                         </Link>
-                    </div>
+                    </Card>
                 </div>
             </div>
         );
@@ -165,7 +166,7 @@ export function RequestSecretPage() {
         return (
             <div className="py-12">
                 <div className="max-w-2xl mx-auto">
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-6 sm:p-8">
+                    <Card gradient="green" noPadding className="p-6 sm:p-8">
                         <div className="text-center mb-6">
                             <div className="w-16 h-16 bg-green-500/20 mx-auto mb-4 flex items-center justify-center">
                                 <Send className="w-8 h-8 text-green-400" />
@@ -219,7 +220,7 @@ export function RequestSecretPage() {
                                 </Link>
                             </div>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             </div>
         );
@@ -228,7 +229,7 @@ export function RequestSecretPage() {
     return (
         <div className="py-6 sm:py-8">
             <div className="max-w-2xl mx-auto">
-                <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-6 sm:p-8">
+                <Card gradient="teal" noPadding className="p-6 sm:p-8">
                     <div className="mb-6">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                             {t('request_secret_page.form.title')}
@@ -252,12 +253,7 @@ export function RequestSecretPage() {
                     )}
 
                     <div className="space-y-6">
-                        <div className="relative">
-                            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500" />
-                            <div className="pt-4">
-                                <Editor value={secret} onChange={setSecret} />
-                            </div>
-                        </div>
+                        <Editor value={secret} onChange={setSecret} />
 
                         <TitleField value={title} onChange={setTitle} />
 
@@ -282,7 +278,7 @@ export function RequestSecretPage() {
                             )}
                         </button>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

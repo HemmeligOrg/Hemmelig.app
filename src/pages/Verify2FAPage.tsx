@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Modal } from '../components/Modal';
+import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
 
 export function Verify2FAPage() {
@@ -10,8 +11,7 @@ export function Verify2FAPage() {
     const navigate = useNavigate();
     const [code, setCode] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
-    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const errorModal = useErrorModal();
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const handleChange = (index: number, value: string) => {
@@ -58,15 +58,13 @@ export function Verify2FAPage() {
             });
 
             if (error) {
-                setErrorMessage(t('verify_2fa_page.invalid_code'));
-                setIsErrorModalOpen(true);
+                errorModal.showError(t('verify_2fa_page.invalid_code'));
             } else {
                 navigate('/dashboard');
             }
         } catch (error) {
             console.error('2FA verification error:', error);
-            setErrorMessage(t('verify_2fa_page.unexpected_error'));
-            setIsErrorModalOpen(true);
+            errorModal.showError(t('verify_2fa_page.unexpected_error'));
         } finally {
             setIsLoading(false);
         }
@@ -153,14 +151,14 @@ export function Verify2FAPage() {
                 </div>
             </div>
             <Modal
-                isOpen={isErrorModalOpen}
-                onClose={() => setIsErrorModalOpen(false)}
+                isOpen={errorModal.isOpen}
+                onClose={errorModal.close}
                 title={t('common.error')}
                 confirmText={t('common.ok')}
-                onConfirm={() => setIsErrorModalOpen(false)}
+                onConfirm={errorModal.close}
                 confirmButtonClass="bg-blue-600 hover:bg-blue-700"
             >
-                <p>{errorMessage}</p>
+                <p>{errorModal.message}</p>
             </Modal>
         </div>
     );

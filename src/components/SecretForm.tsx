@@ -4,6 +4,7 @@ import { api } from '../lib/api';
 import { encrypt, encryptFile, generateEncryptionKey, generateSalt } from '../lib/crypto';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
+import { Card } from './Card';
 import { CreateButton } from './CreateButton';
 import Editor from './Editor';
 import { FileUpload } from './FileUpload';
@@ -127,10 +128,7 @@ export function SecretForm() {
 
     return (
         <div className="space-y-6">
-            {/* Main editor card */}
-            <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-5 sm:p-8 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50 transition-shadow duration-300 hover:shadow-xl hover:shadow-gray-300/50 dark:hover:shadow-dark-900/70">
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500" />
-
+            <Card gradient="teal" hover>
                 <Editor value={secret} onChange={(value) => setSecretData({ secret: value })} />
 
                 <div className="mt-5">
@@ -153,9 +151,8 @@ export function SecretForm() {
                         />
                     </div>
                 </div>
-            </div>
+            </Card>
 
-            {/* Security settings */}
             <SecuritySettings instanceSettings={instanceSettings} />
 
             {/* Create button */}

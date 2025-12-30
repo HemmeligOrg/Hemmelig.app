@@ -14,11 +14,12 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Card } from '../components/Card';
 import Editor from '../components/Editor';
 import { Modal } from '../components/Modal';
+import { useCopyFeedback } from '../hooks/useCopyFeedback';
 import { api } from '../lib/api';
 import { decrypt, decryptFile, generateEncryptionKey } from '../lib/crypto';
-import { copyToClipboard as copyText } from '../utils/clipboard';
 
 interface SecretFile {
     id: string;
@@ -47,7 +48,7 @@ export function SecretPage() {
     const [showSecretContent, setShowSecretContent] = useState(false);
     const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
     const [salt, setSalt] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
+    const { copied, copy: copyToClipboard } = useCopyFeedback();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
@@ -150,12 +151,8 @@ export function SecretPage() {
         URL.revokeObjectURL(link.href);
     };
 
-    const handleCopyToClipboard = async () => {
-        const success = await copyText(secretContent || '');
-        if (success) {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
+    const handleCopyToClipboard = () => {
+        copyToClipboard(secretContent || '');
     };
 
     const handleDeleteSecret = async () => {
@@ -191,9 +188,7 @@ export function SecretPage() {
     if (!showSecretContent) {
         return (
             <main className="py-6 sm:py-8">
-                <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50">
-                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500" />
-
+                <Card gradient="amber" noPadding>
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-dark-600">
                         <div className="flex items-center gap-3">
@@ -285,7 +280,7 @@ export function SecretPage() {
                             </p>
                         </div>
                     </div>
-                </div>
+                </Card>
             </main>
         );
     }
@@ -293,9 +288,7 @@ export function SecretPage() {
     // Secret revealed state
     return (
         <main className="py-6 sm:py-8">
-            <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50">
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-green-500 to-teal-500" />
-
+            <Card gradient="green" noPadding>
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-dark-600">
                     <div className="flex items-center gap-3">
@@ -382,7 +375,7 @@ export function SecretPage() {
                         {t('secret_page.delete_secret')}
                     </button>
                 </div>
-            </div>
+            </Card>
 
             <Modal
                 isOpen={showDeleteModal}

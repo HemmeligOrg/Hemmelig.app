@@ -15,7 +15,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import { Modal } from '../../components/Modal';
-import { useInstanceStore } from '../../store/instanceStore';
+import { ToggleSwitchRow } from '../../components/ToggleSwitchRow';
+import { useHemmeligStore } from '../../store/hemmeligStore';
 
 type InstanceSettings = {
     instanceName: string;
@@ -80,21 +81,21 @@ export function InstancePage() {
         metricsSettings,
         isLoading,
         error,
-        initializeSettings,
+        initializeAdminSettings,
         setGeneralSetting,
         setSecuritySetting,
         setOrganizationSetting,
         setWebhookSetting,
         setMetricsSetting,
         saveSettings,
-    } = useInstanceStore();
+    } = useHemmeligStore();
 
     // Initialize store with loader data
     useEffect(() => {
         if (loaderData && !loaderData.error) {
-            initializeSettings(loaderData);
+            initializeAdminSettings(loaderData);
         }
-    }, [loaderData, initializeSettings]);
+    }, [loaderData, initializeAdminSettings]);
 
     const logoInputRef = useRef<HTMLInputElement>(null);
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
@@ -443,129 +444,49 @@ export function InstancePage() {
 
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 gap-3">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            Rate Limiting
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            Enable request rate limiting
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={securitySettings.enableRateLimiting}
-                                            onChange={(e) =>
-                                                setSecuritySetting(
-                                                    'enableRateLimiting',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
+                                <ToggleSwitchRow
+                                    title="Rate Limiting"
+                                    description="Enable request rate limiting"
+                                    checked={securitySettings.enableRateLimiting}
+                                    onChange={(checked) =>
+                                        setSecuritySetting('enableRateLimiting', checked)
+                                    }
+                                    disabled={isManaged}
+                                />
 
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            Allow Password Protection
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            Allow users to password protect secrets
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={securitySettings.allowPasswordProtection}
-                                            onChange={(e) =>
-                                                setSecuritySetting(
-                                                    'allowPasswordProtection',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
+                                <ToggleSwitchRow
+                                    title="Allow Password Protection"
+                                    description="Allow users to password protect secrets"
+                                    checked={securitySettings.allowPasswordProtection}
+                                    onChange={(checked) =>
+                                        setSecuritySetting('allowPasswordProtection', checked)
+                                    }
+                                    disabled={isManaged}
+                                />
 
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            Allow IP Restriction
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            Allow users to restrict secrets by IP
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={securitySettings.allowIpRestriction}
-                                            onChange={(e) =>
-                                                setSecuritySetting(
-                                                    'allowIpRestriction',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
+                                <ToggleSwitchRow
+                                    title="Allow IP Restriction"
+                                    description="Allow users to restrict secrets by IP"
+                                    checked={securitySettings.allowIpRestriction}
+                                    onChange={(checked) =>
+                                        setSecuritySetting('allowIpRestriction', checked)
+                                    }
+                                    disabled={isManaged}
+                                />
 
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t(
-                                                'instance_page.security_settings.allow_file_uploads_title'
-                                            )}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t(
-                                                'instance_page.security_settings.allow_file_uploads_description'
-                                            )}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={securitySettings.allowFileUploads}
-                                            onChange={(e) =>
-                                                setSecuritySetting(
-                                                    'allowFileUploads',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
+                                <ToggleSwitchRow
+                                    title={t(
+                                        'instance_page.security_settings.allow_file_uploads_title'
+                                    )}
+                                    description={t(
+                                        'instance_page.security_settings.allow_file_uploads_description'
+                                    )}
+                                    checked={securitySettings.allowFileUploads}
+                                    onChange={(checked) =>
+                                        setSecuritySetting('allowFileUploads', checked)
+                                    }
+                                    disabled={isManaged}
+                                />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

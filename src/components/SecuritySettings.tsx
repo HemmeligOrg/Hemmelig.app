@@ -1,13 +1,13 @@
 import { Clock, Eye, Flame, Globe, Key, Save } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretSettingsStore } from '../store/secretSettingsStore';
 import { useSecretStore } from '../store/secretStore';
+import { Card } from './Card';
 import { ExpirationSelect } from './ExpirationSelect';
 import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
-
-import { useHemmeligStore } from '../store/hemmeligStore';
 
 export function SecuritySettings() {
     const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
@@ -43,9 +43,7 @@ export function SecuritySettings() {
     };
 
     return (
-        <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-5 sm:p-6 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50 transition-shadow duration-300 hover:shadow-xl">
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500" />
-
+        <Card gradient="purple" noPadding className="p-5 sm:p-6" hover>
             <div className="flex items-center justify-between mb-5">
                 <div>
                     <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
@@ -238,6 +236,6 @@ export function SecuritySettings() {
                     </div>
                 </div>
             </div>
-        </div>
+        </Card>
     );
 }

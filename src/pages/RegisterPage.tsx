@@ -2,8 +2,10 @@ import { ArrowLeft, Check, Eye, EyeOff, Lock, Mail, Ticket, User } from 'lucide-
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
+import { useErrorModal } from '../hooks/useModalState';
 import { apiRaw } from '../lib/api';
 import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
@@ -23,17 +25,10 @@ export function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
     const [inviteCodeError, setInviteCodeError] = useState('');
+    const errorModal = useErrorModal();
 
-    // Check if email/password signup is disabled
     const isEmailPasswordDisabled = settings.disableEmailPasswordSignup;
-
-    const showError = (message: string) => {
-        setErrorMessage(message);
-        setIsErrorModalOpen(true);
-    };
 
     const validateInviteCode = async (): Promise<boolean> => {
         if (!settings.requireInviteCode) return true;
@@ -113,7 +108,7 @@ export function RegisterPage() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            showError(t('register_page.password_mismatch_alert'));
+            errorModal.showError(t('register_page.password_mismatch_alert'));
             return;
         }
 
@@ -150,7 +145,7 @@ export function RegisterPage() {
 
             if (error || registrationError) {
                 const userMessage = registrationError || parseRegistrationError(error);
-                showError(userMessage);
+                errorModal.showError(userMessage);
                 return;
             }
 
@@ -159,7 +154,7 @@ export function RegisterPage() {
                 navigate('/dashboard');
             }
         } catch {
-            showError(t('register_page.unexpected_error'));
+            errorModal.showError(t('register_page.unexpected_error'));
         } finally {
             setIsLoading(false);
         }
@@ -203,10 +198,7 @@ export function RegisterPage() {
                     </p>
                 </div>
 
-                {/* Register Form */}
-                <div className="relative bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-6 sm:p-8 shadow-lg shadow-gray-200/50 dark:shadow-dark-900/50">
-                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500" />
-
+                <Card gradient="purple" noPadding className="p-6 sm:p-8">
                     {isEmailPasswordDisabled && (
                         <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                             <p className="text-sm text-blue-800 dark:text-blue-200">
@@ -459,17 +451,17 @@ export function RegisterPage() {
                             </Link>
                         </p>
                     </div>
-                </div>
+                </Card>
             </div>
             <Modal
-                isOpen={isErrorModalOpen}
-                onClose={() => setIsErrorModalOpen(false)}
+                isOpen={errorModal.isOpen}
+                onClose={errorModal.close}
                 title={t('common.error')}
                 confirmText={t('common.ok')}
-                onConfirm={() => setIsErrorModalOpen(false)}
+                onConfirm={errorModal.close}
                 confirmButtonClass="bg-blue-600 hover:bg-blue-700"
             >
-                <p>{errorMessage}</p>
+                <p>{errorModal.message}</p>
             </Modal>
         </div>
     );
