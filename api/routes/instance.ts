@@ -4,6 +4,7 @@ import config from '../config';
 import { ADMIN_SETTINGS_FIELDS, PUBLIC_SETTINGS_FIELDS } from '../lib/constants';
 import prisma from '../lib/db';
 import settingsCache, { setCachedInstanceSettings } from '../lib/settings';
+import { handleNotFound } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
 
@@ -156,7 +157,7 @@ app.put(
             return c.json(updatedSettings);
         } catch (error) {
             console.error('Failed to update instance settings:', error);
-            return c.json({ error: 'Failed to update instance settings' }, 500);
+            return handleNotFound(error as Error & { code?: string }, c);
         }
     }
 );

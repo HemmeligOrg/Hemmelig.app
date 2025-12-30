@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { authMiddleware } from '../middlewares/auth';
 
@@ -145,7 +146,7 @@ const app = new Hono<{
             return c.json({ success: true });
         } catch (error) {
             console.error('Failed to delete API key:', error);
-            return c.json({ error: 'Failed to delete API key' }, 500);
+            return handleNotFound(error as Error & { code?: string }, c);
         }
     });
 

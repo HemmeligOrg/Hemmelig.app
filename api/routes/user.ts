@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import prisma from '../lib/db';
+import { handleNotFound } from '../lib/utils';
 import { checkAdmin } from '../middlewares/auth';
 import { updateUserSchema } from '../validations/user';
 
@@ -36,7 +37,7 @@ export const userRoute = new Hono()
                 return c.json(user);
             } catch (error) {
                 console.error(`Failed to update user ${id}:`, error);
-                return c.json({ error: 'Failed to update user' }, 500);
+                return handleNotFound(error as Error & { code?: string }, c);
             }
         }
     );

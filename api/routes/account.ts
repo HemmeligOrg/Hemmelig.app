@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { handleNotFound } from '../lib/utils';
 import { authMiddleware } from '../middlewares/auth';
 import { updateAccountSchema, updatePasswordSchema } from '../validations/account';
 
@@ -60,7 +61,7 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
         });
     } catch (error) {
         console.error('Failed to update account:', error);
-        return c.json({ error: 'Failed to update account' }, 500);
+        return handleNotFound(error as Error & { code?: string }, c);
     }
 });
 
@@ -111,7 +112,7 @@ app.delete('/', authMiddleware, async (c) => {
         return c.json({ message: 'Account deleted successfully' });
     } catch (error) {
         console.error('Failed to delete account:', error);
-        return c.json({ error: 'Failed to delete account' }, 500);
+        return handleNotFound(error as Error & { code?: string }, c);
     }
 });
 

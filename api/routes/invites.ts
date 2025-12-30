@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { auth } from '../auth';
 import { TIME } from '../lib/constants';
 import prisma from '../lib/db';
+import { handleNotFound } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 
 const createInviteSchema = z.object({
@@ -144,6 +145,6 @@ export const inviteRoute = new Hono<{
             return c.json({ success: true });
         } catch (error) {
             console.error(`Failed to delete invite code ${id}:`, error);
-            return c.json({ error: 'Failed to delete invite code' }, 500);
+            return handleNotFound(error as Error & { code?: string }, c);
         }
     });
