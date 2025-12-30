@@ -3,6 +3,7 @@ import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { isPublicUrl } from '../lib/utils';
 import { authMiddleware } from '../middlewares/auth';
 import {
     createSecretRequestSchema,
@@ -170,6 +171,13 @@ const app = new Hono<{
             const user = c.get('user')!; // authMiddleware guarantees user exists
 
             const data = c.req.valid('json');
+
+            if (data.webhookUrl && !(await isPublicUrl(data.webhookUrl))) {
+                return c.json(
+                    { error: 'Webhook URL cannot point to private/internal addresses' },
+                    400
+                );
+            }
 
             // Generate secure token (64 hex chars = 32 bytes)
             const token = randomBytes(32).toString('hex');

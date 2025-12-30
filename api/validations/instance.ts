@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { isPublicUrl } from '../lib/utils';
 
 // Max logo size: 512KB in base64 (which is ~683KB as base64 string)
 const MAX_LOGO_BASE64_LENGTH = 700000;
@@ -42,14 +41,7 @@ export const instanceSettingsSchema = z.object({
 
     // Webhook notifications
     webhookEnabled: z.boolean().optional(),
-    webhookUrl: z
-        .string()
-        .url()
-        .refine(async (url) => await isPublicUrl(url), {
-            message: 'Webhook URL cannot point to private/internal addresses',
-        })
-        .optional()
-        .or(z.literal('')),
+    webhookUrl: z.string().url().optional().or(z.literal('')),
     webhookSecret: z.string().optional(),
     webhookOnView: z.boolean().optional(),
     webhookOnBurn: z.boolean().optional(),

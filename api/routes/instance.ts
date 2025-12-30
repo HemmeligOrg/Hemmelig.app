@@ -4,7 +4,7 @@ import config from '../config';
 import { ADMIN_SETTINGS_FIELDS, PUBLIC_SETTINGS_FIELDS } from '../lib/constants';
 import prisma from '../lib/db';
 import settingsCache, { setCachedInstanceSettings } from '../lib/settings';
-import { handleNotFound } from '../lib/utils';
+import { handleNotFound, isPublicUrl } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { instanceSettingsSchema } from '../validations/instance';
 
@@ -134,6 +134,10 @@ app.put(
         }
 
         const body = c.req.valid('json');
+
+        if (body.webhookUrl && body.webhookUrl !== '' && !(await isPublicUrl(body.webhookUrl))) {
+            return c.json({ error: 'Webhook URL cannot point to private/internal addresses' }, 400);
+        }
 
         try {
             const settings = await prisma.instanceSettings.findFirst();

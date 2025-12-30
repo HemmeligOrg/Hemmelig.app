@@ -2,7 +2,6 @@ import isCidr from 'is-cidr';
 import { isIP } from 'is-ip';
 import { z } from 'zod';
 import { EXPIRATION_TIMES_SECONDS } from '../lib/constants';
-import { isPublicUrl } from '../lib/utils';
 
 // Valid durations for request validity (how long the creator link is active)
 export const REQUEST_VALIDITY_SECONDS = [
@@ -46,13 +45,7 @@ export const createSecretRequestSchema = z.object({
         .nullable()
         .optional(),
     preventBurn: z.boolean().default(false),
-    webhookUrl: z
-        .string()
-        .url()
-        .refine(async (url) => await isPublicUrl(url), {
-            message: 'Webhook URL cannot point to private/internal addresses',
-        })
-        .optional(),
+    webhookUrl: z.string().url().optional(),
 });
 
 export const secretRequestIdParamSchema = z.object({
