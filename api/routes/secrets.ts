@@ -135,7 +135,8 @@ const app = new Hono<{
                     }
 
                     // Check if secret has no views remaining (already consumed)
-                    if (item.views !== null && item.views <= 0) {
+                    // Skip this check for burnable secrets (they don't use views)
+                    if (!item.isBurnable && item.views !== null && item.views <= 0) {
                         return { error: 'Secret not found', status: 404 as const };
                     }
 
@@ -147,21 +148,20 @@ const app = new Hono<{
                         }
                     }
 
-                    // Consume the view atomically with retrieval
-                    const newViews = item.views! - 1;
-
-                    // If burnable and last view, delete the secret after returning data
-                    if (item.isBurnable && newViews <= 0) {
-                        await tx.secrets.delete({ where: { id } });
-
-                        // Send webhook for burned secret
-                        sendWebhook('secret.burned', {
+                    // For burnable secrets, views should be null and we don't decrement them
+                    // For regular secrets, consume the view atomically with retrieval
+                    if (item.isBurnable) {
+                        // Burnable secrets don't track views - send webhook for viewed secret
+                        sendWebhook('secret.viewed', {
                             secretId: id,
                             hasPassword: !!item.password,
                             hasIpRestriction: !!item.ipRange,
+                            viewsRemaining: null, // No view limit for burnable secrets
                         });
                     } else {
-                        // Decrement views
+                        // Regular secret: decrement views
+                        const newViews = item.views! - 1;
+
                         await tx.secrets.update({
                             where: { id },
                             data: { views: newViews },
@@ -180,8 +180,9 @@ const app = new Hono<{
                     const { password: _password, ...itemWithoutPassword } = item;
                     return {
                         ...itemWithoutPassword,
-                        views: newViews,
-                        burned: item.isBurnable && newViews <= 0,
+                        // For burnable secrets, views remains null; for regular secrets, return the updated view count
+                        views: item.isBurnable ? item.views : item.views! - 1,
+                        burned: false, // Burnable secrets are not burned on view, only on expiration
                     };
                 });
 
@@ -253,7 +254,7 @@ const app = new Hono<{
             }
 
             const validatedData = c.req.valid('json');
-            const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
+            const { expiresAt, password, fileIds, salt, title, isBurnable, views, ...rest } = validatedData;
 
             const data: SecretCreateData = {
                 ...rest,
@@ -262,6 +263,9 @@ const app = new Hono<{
                 title: title ?? new Uint8Array(0),
                 password: password ? await hash(password) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
+                // When isBurnable is true, views should be null so the secret only burns after time expires
+                views: isBurnable ? null : views,
+                isBurnable,
                 ...(fileIds && {
                     files: { connect: fileIds.map((id: string) => ({ id })) },
                 }),

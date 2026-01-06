@@ -48,7 +48,7 @@ const secretSchema = {
                 message: 'Invalid expiration time',
             }
         ),
-    views: z.number().int().min(1).max(9999).optional(),
+    views: z.number().int().min(1).max(9999).nullable().optional(),
     isBurnable: z.boolean().default(true).optional(),
     ipRange: z
         .string()

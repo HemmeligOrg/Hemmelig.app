@@ -88,7 +88,8 @@ export function SecretForm() {
             salt,
             password: password ? encryptionKey : '',
             expiresAt,
-            views,
+            // When isBurnable is true, views should be null (unlimited) so the secret only burns after time expires
+            views: isBurnable ? null : views,
             isBurnable,
             ipRange: ipRange === '' ? null : ipRange,
             fileIds,

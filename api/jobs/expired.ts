@@ -13,7 +13,19 @@ export const deleteExpiredSecrets = async () => {
                         },
                     },
                     {
-                        views: 0,
+                        // Only delete non-burnable secrets when views reach 0
+                        // Burnable secrets should only be deleted on expiration
+                        AND: [
+                            {
+                                views: 0,
+                            },
+                            {
+                                OR: [
+                                    { isBurnable: false },
+                                    { isBurnable: null },
+                                ],
+                            },
+                        ],
                     },
                 ],
             },
