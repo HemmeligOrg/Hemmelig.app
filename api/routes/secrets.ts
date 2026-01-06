@@ -150,6 +150,8 @@ const app = new Hono<{
 
                     // For burnable secrets, views should be null and we don't decrement them
                     // For regular secrets, consume the view atomically with retrieval
+                    let newViews: number | null = item.views;
+
                     if (item.isBurnable) {
                         // Burnable secrets don't track views - send webhook for viewed secret
                         sendWebhook('secret.viewed', {
@@ -160,7 +162,7 @@ const app = new Hono<{
                         });
                     } else {
                         // Regular secret: decrement views
-                        const newViews = item.views! - 1;
+                        newViews = item.views! - 1;
 
                         await tx.secrets.update({
                             where: { id },
@@ -181,7 +183,7 @@ const app = new Hono<{
                     return {
                         ...itemWithoutPassword,
                         // For burnable secrets, views remains null; for regular secrets, return the updated view count
-                        views: item.isBurnable ? item.views : item.views! - 1,
+                        views: newViews,
                         burned: false, // Burnable secrets are not burned on view, only on expiration
                     };
                 });
@@ -254,7 +256,8 @@ const app = new Hono<{
             }
 
             const validatedData = c.req.valid('json');
-            const { expiresAt, password, fileIds, salt, title, isBurnable, views, ...rest } = validatedData;
+            const { expiresAt, password, fileIds, salt, title, isBurnable, views, ...rest } =
+                validatedData;
 
             const data: SecretCreateData = {
                 ...rest,
