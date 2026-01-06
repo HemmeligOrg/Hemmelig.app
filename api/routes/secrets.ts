@@ -215,6 +215,7 @@ const app = new Hono<{
                     views: true,
                     title: true,
                     password: true,
+                    isBurnable: true,
                 },
             });
 
@@ -223,7 +224,8 @@ const app = new Hono<{
             }
 
             // Check if secret has no views remaining (already consumed)
-            if (item.views !== null && item.views <= 0) {
+            // Skip this check for burnable secrets (they don't use views)
+            if (!item.isBurnable && item.views !== null && item.views <= 0) {
                 return c.json({ error: 'Secret not found' }, 404);
             }
 
