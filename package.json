@@ -106,7 +106,7 @@
         "react-dom": "^19.2.3",
         "react-dropzone": "^14.3.8",
         "react-i18next": "^16.5.0",
-        "react-router-dom": "^7.10.1",
+        "react-router-dom": "^7.12.0",
         "recharts": "^3.5.1",
         "sonner": "^2.0.7",
         "tailwindcss": "^4.1.18",
