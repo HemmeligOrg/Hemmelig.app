@@ -63,7 +63,7 @@ func generateSalt() string {
 }
 
 func deriveKey(password, salt string) []byte {
-	return pbkdf2.Key([]byte(password), []byte(salt), 600000, 32, sha256.New)
+	return pbkdf2.Key([]byte(password), []byte(salt), 1300000, 32, sha256.New)
 }
 
 func encrypt(data []byte, encryptionKey, salt string) ([]byte, error) {
