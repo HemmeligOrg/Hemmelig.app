@@ -18,7 +18,7 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const version = "1.0.1"
+const version = "1.0.2"
 
 var expirationTimes = map[string]int{
 	"5m":  300,
