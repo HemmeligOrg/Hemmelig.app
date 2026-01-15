@@ -265,40 +265,42 @@ export const router = createBrowserRouter([
                 element: <UsersPage />,
                 loader: async ({ request }) => {
                     const url = new URL(request.url);
-                    const page = parseInt(url.searchParams.get('page') || '1', 10);
-                    const pageSize = parseInt(url.searchParams.get('pageSize') || '10', 10);
-                    const offset = (page - 1) * pageSize;
+                    const page = url.searchParams.get('page') || '1';
+                    const pageSize = url.searchParams.get('pageSize') || '10';
+                    const search = url.searchParams.get('search') || '';
+
+                    const emptyResponse = (error: string) => ({
+                        error,
+                        users: [],
+                        pagination: { total: 0, page: 1, pageSize: 10, totalPages: 0 },
+                        search: '',
+                    });
 
                     try {
-                        const response = await authClient.admin.listUsers({
-                            query: {
-                                limit: pageSize,
-                                offset,
-                            },
+                        const response = await api.user.$get({
+                            query: { page, pageSize, search },
                         });
-                        if (response.status === 403) {
-                            return {
-                                error: "You don't have permission to view users.",
-                                users: [],
-                                pagination: { total: 0, page: 1, pageSize, totalPages: 0 },
-                            };
+
+                        if (!response.ok) {
+                            return emptyResponse("You don't have permission to view users.");
                         }
-                        const users = response?.data?.users || [];
-                        const total = response?.data?.total ?? users.length;
-                        const totalPages = Math.ceil(total / pageSize);
+
+                        const data = await response.json();
 
                         return {
-                            users,
+                            users: data.users,
                             error: null,
-                            pagination: { total, page, pageSize, totalPages },
+                            pagination: {
+                                total: data.total,
+                                page: data.page,
+                                pageSize: data.pageSize,
+                                totalPages: data.totalPages,
+                            },
+                            search,
                         };
                     } catch (error) {
                         console.error('Failed to fetch users:', error);
-                        return {
-                            error: 'Failed to fetch users',
-                            users: [],
-                            pagination: { total: 0, page: 1, pageSize, totalPages: 0 },
-                        };
+                        return emptyResponse('Failed to fetch users');
                     }
                 },
             },

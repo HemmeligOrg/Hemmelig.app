@@ -1,5 +1,5 @@
 import { Edit, Search, Trash2, UserPlus, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate, useRevalidator, useSearchParams } from 'react-router-dom';
 import { AddUserModal } from '../../components/AddUserModal';
@@ -11,18 +11,11 @@ import { useUsersStore } from '../../store/usersStore';
 
 type User = {
     id: string;
-    name: string;
     username: string;
-    displayUsername: string;
     email: string;
-    emailVerified: boolean;
-    image: string | null;
     role: string;
     banned: boolean;
-    banReason: string | null;
-    banExpires: string | null;
     createdAt: string;
-    updatedAt: string;
 };
 
 type PaginationMeta = {
@@ -36,6 +29,7 @@ type LoaderData = {
     users: User[];
     error: string | null;
     pagination: PaginationMeta;
+    search: string;
 };
 
 export function UsersPage() {
@@ -44,7 +38,8 @@ export function UsersPage() {
     const navigate = useNavigate();
     const revalidator = useRevalidator();
     const [searchParams] = useSearchParams();
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchInput, setSearchInput] = useState(loaderData.search || '');
+    const debounceRef = useRef<NodeJS.Timeout>();
     const {
         userToDelete,
         userToEdit,
@@ -58,28 +53,41 @@ export function UsersPage() {
     } = useUsersStore();
     const { profileData } = useAccountStore();
 
-    // Use loader data directly instead of syncing to store
     const users = loaderData.users || [];
     const pagination = loaderData.pagination || { total: 0, page: 1, pageSize: 10, totalPages: 0 };
     const error = loaderData.error;
 
-    // Filter users client-side based on search term
-    const filteredUsers = searchTerm
-        ? users.filter(
-              (user) =>
-                  (user.username &&
-                      user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                  (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
-          )
-        : users;
+    // Sync search input with URL when loader data changes
+    useEffect(() => {
+        setSearchInput(loaderData.search || '');
+    }, [loaderData.search]);
 
-    // Determine if we should show pagination (hide when searching since it's client-side filtered)
-    const showPagination = !searchTerm && pagination.totalPages > 1;
+    const updateUrl = (params: { page?: number; search?: string }) => {
+        const newParams = new URLSearchParams(searchParams);
+        if (params.page !== undefined) {
+            newParams.set('page', params.page.toString());
+        }
+        if (params.search !== undefined) {
+            if (params.search) {
+                newParams.set('search', params.search);
+                newParams.set('page', '1'); // Reset to page 1 when searching
+            } else {
+                newParams.delete('search');
+            }
+        }
+        navigate(`/dashboard/users?${newParams.toString()}`);
+    };
+
+    const handleSearchChange = (value: string) => {
+        setSearchInput(value);
+        clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            updateUrl({ search: value });
+        }, 300);
+    };
 
     const handlePageChange = (page: number) => {
-        const params = new URLSearchParams(searchParams);
-        params.set('page', page.toString());
-        navigate(`/dashboard/users?${params.toString()}`);
+        updateUrl({ page });
     };
 
     const handleUserAdded = async (newUser: Parameters<typeof addUser>[0]) => {
@@ -141,8 +149,8 @@ export function UsersPage() {
                     <input
                         type="text"
                         placeholder={t('users_page.search_placeholder')}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         className="w-full max-w-xs pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                     />
                 </div>
@@ -185,7 +193,7 @@ export function UsersPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-dark-600">
-                            {filteredUsers.length === 0 ? (
+                            {users.length === 0 ? (
                                 <tr>
                                     <td
                                         colSpan={5}
@@ -196,14 +204,14 @@ export function UsersPage() {
                                             {t('users_page.no_users_found_title')}
                                         </p>
                                         <p className="text-xs mt-1">
-                                            {searchTerm
+                                            {loaderData.search
                                                 ? t('users_page.no_users_found_description_filter')
                                                 : t('users_page.no_users_found_description_empty')}
                                         </p>
                                     </td>
                                 </tr>
                             ) : (
-                                filteredUsers.map((user) => (
+                                users.map((user) => (
                                     <tr
                                         key={user.id}
                                         className="hover:bg-gray-50 dark:hover:bg-dark-700/30"
@@ -257,7 +265,7 @@ export function UsersPage() {
                 </div>
             </div>
 
-            {showPagination && (
+            {pagination.totalPages > 1 && (
                 <Pagination
                     currentPage={pagination.page}
                     totalPages={pagination.totalPages}

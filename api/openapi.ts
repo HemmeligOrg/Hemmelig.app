@@ -1039,6 +1039,56 @@ const spec = {
                 },
             },
         },
+        '/user': {
+            get: {
+                tags: ['Users'],
+                summary: 'List users (admin)',
+                description: 'Get paginated list of users with optional search',
+                security: [{ cookieAuth: [] }],
+                parameters: [
+                    {
+                        name: 'page',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, default: 1 },
+                    },
+                    {
+                        name: 'pageSize',
+                        in: 'query',
+                        schema: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
+                    },
+                    {
+                        name: 'search',
+                        in: 'query',
+                        schema: { type: 'string', maxLength: 100 },
+                        description: 'Search by username, email, or name',
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Paginated list of users',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        users: {
+                                            type: 'array',
+                                            items: { $ref: '#/components/schemas/User' },
+                                        },
+                                        total: { type: 'integer' },
+                                        page: { type: 'integer' },
+                                        pageSize: { type: 'integer' },
+                                        totalPages: { type: 'integer' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+        },
         '/user/{id}': {
             put: {
                 tags: ['Users'],
