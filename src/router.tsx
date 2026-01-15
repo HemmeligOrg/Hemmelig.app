@@ -263,16 +263,42 @@ export const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                loader: async () => {
+                loader: async ({ request }) => {
+                    const url = new URL(request.url);
+                    const page = parseInt(url.searchParams.get('page') || '1', 10);
+                    const pageSize = parseInt(url.searchParams.get('pageSize') || '10', 10);
+                    const offset = (page - 1) * pageSize;
+
                     try {
-                        const response = await authClient.admin.listUsers();
+                        const response = await authClient.admin.listUsers({
+                            query: {
+                                limit: pageSize,
+                                offset,
+                            },
+                        });
                         if (response.status === 403) {
-                            return { error: "You don't have permission to view users.", users: [] };
+                            return {
+                                error: "You don't have permission to view users.",
+                                users: [],
+                                pagination: { total: 0, page: 1, pageSize, totalPages: 0 },
+                            };
                         }
-                        return { users: response?.data?.users || [], error: null };
+                        const users = response?.data?.users || [];
+                        const total = response?.data?.total ?? users.length;
+                        const totalPages = Math.ceil(total / pageSize);
+
+                        return {
+                            users,
+                            error: null,
+                            pagination: { total, page, pageSize, totalPages },
+                        };
                     } catch (error) {
                         console.error('Failed to fetch users:', error);
-                        return { error: 'Failed to fetch users', users: [] };
+                        return {
+                            error: 'Failed to fetch users',
+                            users: [],
+                            pagination: { total: 0, page: 1, pageSize, totalPages: 0 },
+                        };
                     }
                 },
             },

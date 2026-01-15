@@ -807,6 +807,13 @@
         "deleting": "Deleting...",
         "loading": "Loading..."
     },
+    "pagination": {
+        "showing": "Showing {{start}} to {{end}} of {{total}} results",
+        "first_page": "First page",
+        "previous_page": "Previous page",
+        "next_page": "Next page",
+        "last_page": "Last page"
+    },
     "not_found_page": {
         "title": "Page Not Found",
         "message": "This page has vanished into thin air, just like our secrets do.",

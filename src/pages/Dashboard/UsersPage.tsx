@@ -1,10 +1,11 @@
-import { Edit, Search, Trash2, UserPlus } from 'lucide-react';
-import { useEffect } from 'react';
+import { Edit, Search, Trash2, UserPlus, Users } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate, useRevalidator, useSearchParams } from 'react-router-dom';
 import { AddUserModal } from '../../components/AddUserModal';
 import { EditUserModal } from '../../components/EditUserModal';
 import { Modal } from '../../components/Modal';
+import { Pagination } from '../../components/Pagination';
 import { useAccountStore } from '../../store/accountStore';
 import { useUsersStore } from '../../store/usersStore';
 
@@ -24,57 +25,95 @@ type User = {
     updatedAt: string;
 };
 
+type PaginationMeta = {
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+};
+
 type LoaderData = {
     users: User[];
     error: string | null;
+    pagination: PaginationMeta;
 };
 
 export function UsersPage() {
     const { t } = useTranslation();
     const loaderData = useLoaderData() as LoaderData;
+    const navigate = useNavigate();
+    const revalidator = useRevalidator();
+    const [searchParams] = useSearchParams();
+    const [searchTerm, setSearchTerm] = useState('');
     const {
-        users,
         userToDelete,
         userToEdit,
         isAddUserModalOpen,
-        searchTerm,
-        error,
-        setUsers,
         addUser,
         editUser,
         deleteUser,
         setUserToDelete,
         setUserToEdit,
         setIsAddUserModalOpen,
-        setSearchTerm,
-        setError,
     } = useUsersStore();
     const { profileData } = useAccountStore();
 
-    // Initialize store with loader data
-    useEffect(() => {
-        if (loaderData.users) {
-            setUsers(loaderData.users);
-        }
-        if (loaderData.error) {
-            setError(loaderData.error);
-        }
-    }, [loaderData, setUsers, setError]);
+    // Use loader data directly instead of syncing to store
+    const users = loaderData.users || [];
+    const pagination = loaderData.pagination || { total: 0, page: 1, pageSize: 10, totalPages: 0 };
+    const error = loaderData.error;
 
-    if (error || loaderData.error) {
+    // Filter users client-side based on search term
+    const filteredUsers = searchTerm
+        ? users.filter(
+              (user) =>
+                  (user.username &&
+                      user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                  (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+          )
+        : users;
+
+    // Determine if we should show pagination (hide when searching since it's client-side filtered)
+    const showPagination = !searchTerm && pagination.totalPages > 1;
+
+    const handlePageChange = (page: number) => {
+        const params = new URLSearchParams(searchParams);
+        params.set('page', page.toString());
+        navigate(`/dashboard/users?${params.toString()}`);
+    };
+
+    const handleUserAdded = async (newUser: Parameters<typeof addUser>[0]) => {
+        await addUser(newUser);
+        // Revalidate to refresh data from the server
+        revalidator.revalidate();
+    };
+
+    const handleUserEdited = async (user: Parameters<typeof editUser>[0]) => {
+        await editUser(user);
+        // Revalidate to refresh data from the server
+        revalidator.revalidate();
+    };
+
+    const handleUserDeleted = async () => {
+        await deleteUser();
+        // If we deleted the last user on the current page, go to previous page
+        const isLastUserOnPage = users.length === 1 && pagination.page > 1;
+        if (isLastUserOnPage) {
+            handlePageChange(pagination.page - 1);
+        } else {
+            // Revalidate to refresh data from the server
+            revalidator.revalidate();
+        }
+    };
+
+    if (error) {
         return (
             <div className="p-8 text-center">
-                <h2 className="text-2xl font-bold text-red-500">Error</h2>
+                <h2 className="text-2xl font-bold text-red-500">{t('common.error')}</h2>
                 <p className="text-gray-500 dark:text-slate-400 mt-2">{error}</p>
             </div>
         );
     }
-
-    const filteredUsers = users.filter(
-        (user) =>
-            (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
 
     return (
         <div className="p-4 sm:p-6">
@@ -146,62 +185,92 @@ export function UsersPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-dark-600">
-                            {filteredUsers.map((user) => (
-                                <tr
-                                    key={user.id}
-                                    className="hover:bg-gray-50 dark:hover:bg-dark-700/30"
-                                >
-                                    <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-xs sm:pl-4">
-                                        <div>
-                                            <div className="font-medium text-gray-900 dark:text-white">
-                                                {user.username}
-                                            </div>
-                                            <div className="text-gray-500 dark:text-slate-400">
-                                                {user.email}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400">
-                                        {user.role}
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5 text-xs">
-                                        <span
-                                            className={`px-1.5 py-0.5 inline-flex text-xs font-medium ${user.banned ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}
-                                        >
-                                            {user.banned
-                                                ? t('users_page.status.banned')
-                                                : t('users_page.status.active')}
-                                        </span>
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden sm:table-cell">
-                                        {new Date(user.createdAt).toLocaleDateString()}
-                                    </td>
-                                    <td className="relative whitespace-nowrap py-2.5 pl-3 pr-4 text-right sm:pr-4">
-                                        <button
-                                            onClick={() => setUserToEdit(user)}
-                                            disabled={user.id === profileData.id}
-                                            className="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 disabled:opacity-50 transition-colors mr-1"
-                                        >
-                                            <Edit className="w-3.5 h-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => setUserToDelete(user)}
-                                            disabled={user.id === profileData.id}
-                                            className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50 transition-colors"
-                                        >
-                                            <Trash2 className="w-3.5 h-3.5" />
-                                        </button>
+                            {filteredUsers.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className="py-8 text-center text-gray-500 dark:text-slate-400"
+                                    >
+                                        <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                        <p className="text-sm font-medium">
+                                            {t('users_page.no_users_found_title')}
+                                        </p>
+                                        <p className="text-xs mt-1">
+                                            {searchTerm
+                                                ? t('users_page.no_users_found_description_filter')
+                                                : t('users_page.no_users_found_description_empty')}
+                                        </p>
                                     </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                filteredUsers.map((user) => (
+                                    <tr
+                                        key={user.id}
+                                        className="hover:bg-gray-50 dark:hover:bg-dark-700/30"
+                                    >
+                                        <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-xs sm:pl-4">
+                                            <div>
+                                                <div className="font-medium text-gray-900 dark:text-white">
+                                                    {user.username}
+                                                </div>
+                                                <div className="text-gray-500 dark:text-slate-400">
+                                                    {user.email}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400">
+                                            {user.role}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-2.5 text-xs">
+                                            <span
+                                                className={`px-1.5 py-0.5 inline-flex text-xs font-medium ${user.banned ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}
+                                            >
+                                                {user.banned
+                                                    ? t('users_page.status.banned')
+                                                    : t('users_page.status.active')}
+                                            </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden sm:table-cell">
+                                            {new Date(user.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="relative whitespace-nowrap py-2.5 pl-3 pr-4 text-right sm:pr-4">
+                                            <button
+                                                onClick={() => setUserToEdit(user)}
+                                                disabled={user.id === profileData.id}
+                                                className="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 disabled:opacity-50 transition-colors mr-1"
+                                            >
+                                                <Edit className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button
+                                                onClick={() => setUserToDelete(user)}
+                                                disabled={user.id === profileData.id}
+                                                className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50 transition-colors"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {showPagination && (
+                <Pagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.totalPages}
+                    totalItems={pagination.total}
+                    pageSize={pagination.pageSize}
+                    onPageChange={handlePageChange}
+                />
+            )}
+
             <Modal
                 isOpen={!!userToDelete}
                 onClose={() => setUserToDelete(null)}
-                onConfirm={deleteUser}
+                onConfirm={handleUserDeleted}
                 title={t('users_page.delete_user_modal.title')}
                 confirmText={t('users_page.delete_user_modal.confirm_button')}
                 cancelText={t('users_page.delete_user_modal.cancel_button')}
@@ -215,13 +284,13 @@ export function UsersPage() {
             <EditUserModal
                 isOpen={!!userToEdit}
                 onClose={() => setUserToEdit(null)}
-                onSave={editUser}
+                onSave={handleUserEdited}
                 user={userToEdit}
             />
             <AddUserModal
                 isOpen={isAddUserModalOpen}
                 onClose={() => setIsAddUserModalOpen(false)}
-                onSave={addUser}
+                onSave={handleUserAdded}
             />
         </div>
     );

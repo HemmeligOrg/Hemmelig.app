@@ -807,6 +807,13 @@
         "deleting": "Bezig met verwijderen...",
         "loading": "Bezig met laden..."
     },
+    "pagination": {
+        "showing": "Toont {{start}} tot {{end}} van {{total}} resultaten",
+        "first_page": "Eerste pagina",
+        "previous_page": "Vorige pagina",
+        "next_page": "Volgende pagina",
+        "last_page": "Laatste pagina"
+    },
     "not_found_page": {
         "title": "Pagina niet gevonden",
         "message": "Deze pagina is in rook opgegaan, net als onze geheimen.",

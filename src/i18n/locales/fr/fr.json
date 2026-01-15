@@ -806,6 +806,13 @@
         "deleting": "Suppression...",
         "loading": "Chargement..."
     },
+    "pagination": {
+        "showing": "Affichage de {{start}} à {{end}} sur {{total}} résultats",
+        "first_page": "Première page",
+        "previous_page": "Page précédente",
+        "next_page": "Page suivante",
+        "last_page": "Dernière page"
+    },
     "not_found_page": {
         "title": "Page introuvable",
         "message": "Cette page s'est volatilisée, tout comme nos secrets.",

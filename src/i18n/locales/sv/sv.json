@@ -793,6 +793,13 @@
         "deleting": "Tar bort...",
         "loading": "Laddar..."
     },
+    "pagination": {
+        "showing": "Visar {{start}} till {{end}} av {{total}} resultat",
+        "first_page": "Första sidan",
+        "previous_page": "Föregående sida",
+        "next_page": "Nästa sida",
+        "last_page": "Sista sidan"
+    },
     "not_found_page": {
         "title": "Sidan hittades inte",
         "message": "Denna sida har försvunnit i tomma intet, precis som våra hemligheter gör.",

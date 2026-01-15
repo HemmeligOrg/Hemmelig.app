@@ -793,6 +793,13 @@
         "deleting": "Sletter...",
         "loading": "Indlæser..."
     },
+    "pagination": {
+        "showing": "Viser {{start}} til {{end}} af {{total}} resultater",
+        "first_page": "Første side",
+        "previous_page": "Forrige side",
+        "next_page": "Næste side",
+        "last_page": "Sidste side"
+    },
     "not_found_page": {
         "title": "Side ikke fundet",
         "message": "Denne side er forsvundet i den blå luft, ligesom vores hemmeligheder gør.",

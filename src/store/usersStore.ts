@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { create } from 'zustand';
 import { api } from '../lib/api';
 import { authClient } from '../lib/auth';
@@ -28,100 +27,54 @@ interface NewUser {
 }
 
 interface UsersStore {
-    users: User[];
     userToDelete: User | null;
     userToEdit: User | null;
     isAddUserModalOpen: boolean;
-    searchTerm: string;
-    error: string | null;
-    setUsers: (users: User[]) => void;
-    setError: (error: string | null) => void;
-    fetchUsers: () => Promise<void>;
     addUser: (newUser: NewUser) => Promise<void>;
     editUser: (user: User & { password?: string }) => Promise<void>;
     deleteUser: () => Promise<void>;
     setUserToDelete: (user: User | null) => void;
     setUserToEdit: (user: User | null) => void;
     setIsAddUserModalOpen: (isOpen: boolean) => void;
-    setSearchTerm: (term: string) => void;
 }
 
 export const useUsersStore = create<UsersStore>((set, get) => ({
-    users: [],
     userToDelete: null,
     userToEdit: null,
     isAddUserModalOpen: false,
-    searchTerm: '',
-    error: null,
-    setUsers: (users) => set({ users }),
-    setError: (error) => set({ error }),
-    fetchUsers: async () => {
-        set({ error: null });
-        try {
-            const response = await authClient.admin.listUsers();
-            if (response.status === 403) {
-                const errorMsg = "You don't have permission to view users.";
-                toast.error(errorMsg);
-                set({ error: errorMsg, users: [] });
-                return;
-            }
-            set({ users: response?.data?.users || [] });
-        } catch (error) {
-            const errorMsg = 'Failed to fetch users';
-            console.error(errorMsg, error);
-            toast.error(errorMsg);
-            set({ users: [], error: errorMsg });
-        }
-    },
     addUser: async (newUser) => {
-        try {
-            await authClient.admin.createUser({
-                name: newUser.name,
-                email: newUser.email,
-                password: newUser.password,
-                role: newUser.role,
-                data: {
-                    username: newUser.username,
-                    displayUsername: newUser.username,
-                },
-            });
-            await get().fetchUsers();
-            set({ isAddUserModalOpen: false });
-        } catch (error) {
-            console.error('Failed to create user', error);
-        }
+        await authClient.admin.createUser({
+            name: newUser.name,
+            email: newUser.email,
+            password: newUser.password,
+            role: newUser.role,
+            data: {
+                username: newUser.username,
+                displayUsername: newUser.username,
+            },
+        });
+        set({ isAddUserModalOpen: false });
     },
     editUser: async (user) => {
-        try {
-            await api.user[':id'].$put({
-                param: { id: user.id },
-                json: { username: user.username, email: user.email },
-            });
-            await authClient.admin.setRole({ userId: user.id, role: user.role });
-            if (user.banned) {
-                await authClient.admin.banUser({ userId: user.id });
-            } else {
-                await authClient.admin.unbanUser({ userId: user.id });
-            }
-            await get().fetchUsers();
-            set({ userToEdit: null });
-        } catch (error) {
-            console.error('Failed to update user', error);
+        await api.user[':id'].$put({
+            param: { id: user.id },
+            json: { username: user.username, email: user.email },
+        });
+        await authClient.admin.setRole({ userId: user.id, role: user.role });
+        if (user.banned) {
+            await authClient.admin.banUser({ userId: user.id });
+        } else {
+            await authClient.admin.unbanUser({ userId: user.id });
         }
+        set({ userToEdit: null });
     },
     deleteUser: async () => {
         const { userToDelete } = get();
         if (!userToDelete) return;
-        try {
-            await authClient.admin.removeUser({ userId: userToDelete.id });
-            await get().fetchUsers();
-            set({ userToDelete: null });
-        } catch (error) {
-            console.error('Failed to delete user', error);
-        }
+        await authClient.admin.removeUser({ userId: userToDelete.id });
+        set({ userToDelete: null });
     },
     setUserToDelete: (user) => set({ userToDelete: user }),
     setUserToEdit: (user) => set({ userToEdit: user }),
     setIsAddUserModalOpen: (isOpen) => set({ isAddUserModalOpen: isOpen }),
-    setSearchTerm: (term) => set({ searchTerm: term }),
 }));

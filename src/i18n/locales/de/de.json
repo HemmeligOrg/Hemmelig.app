@@ -806,6 +806,13 @@
         "deleting": "Wird gelöscht...",
         "loading": "Wird geladen..."
     },
+    "pagination": {
+        "showing": "Zeige {{start}} bis {{end}} von {{total}} Ergebnissen",
+        "first_page": "Erste Seite",
+        "previous_page": "Vorherige Seite",
+        "next_page": "Nächste Seite",
+        "last_page": "Letzte Seite"
+    },
     "not_found_page": {
         "title": "Seite nicht gefunden",
         "message": "Diese Seite ist verschwunden, genau wie unsere Geheimnisse es tun.",

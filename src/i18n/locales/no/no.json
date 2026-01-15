@@ -793,6 +793,13 @@
         "deleting": "Sletter...",
         "loading": "Laster..."
     },
+    "pagination": {
+        "showing": "Viser {{start}} til {{end}} av {{total}} resultater",
+        "first_page": "Første side",
+        "previous_page": "Forrige side",
+        "next_page": "Neste side",
+        "last_page": "Siste side"
+    },
     "not_found_page": {
         "title": "Side ikke funnet",
         "message": "Denne siden har forsvunnet i løse luften, akkurat som våre hemmeligheter gjør.",
