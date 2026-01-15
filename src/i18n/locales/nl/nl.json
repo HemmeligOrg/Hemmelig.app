@@ -809,10 +809,8 @@
     },
     "pagination": {
         "showing": "Toont {{start}} tot {{end}} van {{total}} resultaten",
-        "first_page": "Eerste pagina",
         "previous_page": "Vorige pagina",
-        "next_page": "Volgende pagina",
-        "last_page": "Laatste pagina"
+        "next_page": "Volgende pagina"
     },
     "not_found_page": {
         "title": "Pagina niet gevonden",

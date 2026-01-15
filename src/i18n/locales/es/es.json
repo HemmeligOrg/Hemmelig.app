@@ -808,10 +808,8 @@
     },
     "pagination": {
         "showing": "Mostrando {{start}} a {{end}} de {{total}} resultados",
-        "first_page": "Primera página",
         "previous_page": "Página anterior",
-        "next_page": "Página siguiente",
-        "last_page": "Última página"
+        "next_page": "Página siguiente"
     },
     "not_found_page": {
         "title": "Página no encontrada",

@@ -795,10 +795,8 @@
     },
     "pagination": {
         "showing": "Viser {{start}} til {{end}} af {{total}} resultater",
-        "first_page": "Første side",
         "previous_page": "Forrige side",
-        "next_page": "Næste side",
-        "last_page": "Sidste side"
+        "next_page": "Næste side"
     },
     "not_found_page": {
         "title": "Side ikke fundet",
