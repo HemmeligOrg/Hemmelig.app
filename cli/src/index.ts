@@ -68,7 +68,7 @@ function generateSalt(): string {
  * Derives a 256-bit AES key using PBKDF2-SHA256
  */
 function deriveKey(password: string, salt: string): Buffer {
-    return pbkdf2Sync(password, salt, 600000, 32, 'sha256');
+    return pbkdf2Sync(password, salt, 1300000, 32, 'sha256');
 }
 
 /**
