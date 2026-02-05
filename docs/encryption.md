@@ -62,7 +62,7 @@ Hemmelig uses **AES-256-GCM** via the **Web Crypto API** for several important r
 | Key Length        | 256 bits           | Maximum AES key size                                     |
 | IV Length         | 96 bits (12 bytes) | Initialization vector, randomly generated per encryption |
 | Salt Length       | 32 characters      | Unique per secret, stored server-side                    |
-| PBKDF2 Iterations | 600,000            | Key derivation iterations                                |
+| PBKDF2 Iterations | 1,300,000          | Key derivation iterations                                |
 | PBKDF2 Hash       | SHA-256            | Hash function for key derivation                         |
 
 ### Encryption Process
@@ -91,7 +91,7 @@ When you set a password on a secret:
 
 - **Confidentiality**: AES-256 provides strong encryption
 - **Integrity**: GCM mode provides authenticated encryption, detecting any tampering
-- **Key Strength**: PBKDF2 with 600,000 iterations provides resistance against brute-force attacks
+- **Key Strength**: PBKDF2 with 1,300,000 iterations provides resistance against brute-force attacks
 - **Forward Secrecy**: Each secret uses a unique salt and random IV
 
 ## File Encryption

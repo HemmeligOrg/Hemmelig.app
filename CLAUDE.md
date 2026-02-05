@@ -22,7 +22,7 @@ This is the heart of Hemmelig. Before you write a single line of code, make sure
 | Component          | Details                                                    |
 | ------------------ | ---------------------------------------------------------- |
 | **Algorithm**      | AES-256-GCM (authenticated encryption)                     |
-| **Key Derivation** | PBKDF2 with SHA-256, 100,000 iterations                    |
+| **Key Derivation** | PBKDF2 with SHA-256, 1,300,000 iterations                  |
 | **IV**             | 96-bit random initialization vector per encryption         |
 | **Salt**           | 32-character random string per secret (stored server-side) |
 | **Implementation** | `src/lib/crypto.ts`                                        |
@@ -53,9 +53,12 @@ hemmelig.app/
 ├── api/                    # Backend (Hono)
 │   ├── app.ts             # Main Hono application setup
 │   ├── auth.ts            # Authentication configuration
+│   ├── config.ts          # Application configuration
+│   ├── openapi.ts         # OpenAPI/Swagger spec & UI
 │   ├── routes.ts          # Route aggregator
 │   ├── routes/            # Individual route handlers
 │   │   ├── secrets.ts     # Secret CRUD operations
+│   │   ├── secret-requests.ts # Secret request management
 │   │   ├── account.ts     # User account management
 │   │   ├── files.ts       # File upload/download
 │   │   ├── user.ts        # User management (admin)
@@ -70,6 +73,10 @@ hemmelig.app/
 │   │   ├── db.ts          # Prisma client singleton
 │   │   ├── password.ts    # Password hashing (Argon2)
 │   │   ├── files.ts       # File handling utilities
+│   │   ├── settings.ts    # Instance settings helper
+│   │   ├── webhook.ts     # Webhook dispatch utilities
+│   │   ├── analytics.ts   # Analytics utilities
+│   │   ├── constants.ts   # Shared constants
 │   │   └── utils.ts       # General utilities
 │   ├── middlewares/       # Hono middlewares
 │   │   ├── auth.ts        # Authentication middleware
@@ -99,6 +106,7 @@ hemmelig.app/
 │   │   ├── api.ts         # Hono RPC client
 │   │   ├── auth.ts        # better-auth client
 │   │   ├── crypto.ts      # Client-side encryption
+│   │   ├── hash.ts        # Hashing utilities
 │   │   └── analytics.ts   # Page view tracking
 │   ├── i18n/              # Internationalization
 │   │   └── locales/       # Translation JSON files
@@ -145,7 +153,7 @@ npm run seed:demo            # Seed database with demo data
 # Code quality
 npm run format               # Format code with Prettier
 npm run format:check         # Check formatting
-npm run test                 # Run API tests with Hurl
+npm run test:e2e             # Run end-to-end tests with Playwright
 ```
 
 ## Coding Guidelines
@@ -295,15 +303,18 @@ export function SecretsPage() {
 
 We currently support these languages:
 
-| Language | File Path                     |
-| -------- | ----------------------------- |
-| English  | `src/i18n/locales/en/en.json` |
-| German   | `src/i18n/locales/de/de.json` |
-| French   | `src/i18n/locales/fr/fr.json` |
-| Spanish  | `src/i18n/locales/es/es.json` |
-| Dutch    | `src/i18n/locales/nl/nl.json` |
-| Italian  | `src/i18n/locales/it/it.json` |
-| Chinese  | `src/i18n/locales/zh/zh.json` |
+| Language  | File Path                     |
+| --------- | ----------------------------- |
+| English   | `src/i18n/locales/en/en.json` |
+| Danish    | `src/i18n/locales/da/da.json` |
+| German    | `src/i18n/locales/de/de.json` |
+| Spanish   | `src/i18n/locales/es/es.json` |
+| French    | `src/i18n/locales/fr/fr.json` |
+| Italian   | `src/i18n/locales/it/it.json` |
+| Dutch     | `src/i18n/locales/nl/nl.json` |
+| Norwegian | `src/i18n/locales/no/no.json` |
+| Swedish   | `src/i18n/locales/sv/sv.json` |
+| Chinese   | `src/i18n/locales/zh/zh.json` |
 
 ### How to Add New Strings
 
@@ -327,11 +338,14 @@ const { t } = useTranslation();
 Before committing, verify:
 
 - [ ] Added key to `en/en.json` with proper English text
+- [ ] Added key to `da/da.json`
 - [ ] Added key to `de/de.json`
-- [ ] Added key to `fr/fr.json`
 - [ ] Added key to `es/es.json`
-- [ ] Added key to `nl/nl.json`
+- [ ] Added key to `fr/fr.json`
 - [ ] Added key to `it/it.json`
+- [ ] Added key to `nl/nl.json`
+- [ ] Added key to `no/no.json`
+- [ ] Added key to `sv/sv.json`
 - [ ] Added key to `zh/zh.json`
 
 > **Tip**: If you don't know the translation, use the English text as a placeholder and add a `// TODO: translate` comment in your PR description.
@@ -436,9 +450,9 @@ When modifying security-sensitive code, verify:
 
 ## Testing
 
-- API tests use [Hurl](https://hurl.dev/) - find them in `api/tests/`
-- Run tests with `npm run test`
-- When adding new endpoints, add corresponding test files
+- End-to-end tests use [Playwright](https://playwright.dev/) - find them in `tests/e2e/`
+- Run e2e tests with `npm run test:e2e`
+- When adding new features, add corresponding test files
 
 ---
 
@@ -505,23 +519,24 @@ These are hard rules - no exceptions:
 
 ```bash
 # Required
-DATABASE_URL=              # SQLite connection (file:./data/hemmelig.db)
-BETTER_AUTH_SECRET=        # Auth secret key (generate a random string)
+DATABASE_URL=                      # SQLite connection (file:./data/hemmelig.db)
+BETTER_AUTH_SECRET=                # Auth secret key (generate a random string)
+BETTER_AUTH_URL=                   # Public URL of your instance
+
+# Optional - Server
+HEMMELIG_PORT=                     # Port the server listens on (default: 3000)
+HEMMELIG_BASE_URL=                 # Public URL (required for OAuth callbacks)
+HEMMELIG_TRUSTED_ORIGIN=           # Additional trusted origin for CORS
 
 # Optional - Analytics
-ANALYTICS_ENABLED=         # Enable/disable analytics tracking
-ANALYTICS_HMAC_SECRET=     # HMAC secret for anonymizing visitor IDs
-
-# Optional - Restrictions
-RESTRICT_ORGANIZATION_EMAIL= # Restrict signups to email domain
-
-# Optional - File Storage
-MAX_FILE_SIZE=             # Maximum file upload size
-UPLOAD_RESTRICTION=        # File upload restrictions
+HEMMELIG_ANALYTICS_ENABLED=        # Enable/disable analytics tracking (default: true)
+HEMMELIG_ANALYTICS_HMAC_SECRET=    # HMAC secret for anonymizing visitor IDs
 
 # Optional - Managed Mode (all instance settings via env vars)
-HEMMELIG_MANAGED=          # Enable managed mode (true/false)
+HEMMELIG_MANAGED=                  # Enable managed mode (true/false)
 ```
+
+See `docs/env.md` for the full environment variable reference.
 
 ---
 
