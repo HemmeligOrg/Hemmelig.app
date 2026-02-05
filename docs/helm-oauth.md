@@ -99,7 +99,7 @@ stringData:
   # Google
   HEMMELIG_AUTH_GOOGLE_ID: "google-client-id"
   HEMMELIG_AUTH_GOOGLE_SECRET: "google-client-secret"
-  # Microsoft
+  # Microsoft (Azure AD)
   HEMMELIG_AUTH_MICROSOFT_ID: "microsoft-client-id"
   HEMMELIG_AUTH_MICROSOFT_SECRET: "microsoft-client-secret"
   HEMMELIG_AUTH_MICROSOFT_TENANT_ID: "tenant-id" # Optional
@@ -113,15 +113,17 @@ stringData:
   # Apple
   HEMMELIG_AUTH_APPLE_ID: "apple-client-id"
   HEMMELIG_AUTH_APPLE_SECRET: "apple-client-secret"
-  # Twitter
+  # Twitter/X
   HEMMELIG_AUTH_TWITTER_ID: "twitter-client-id"
   HEMMELIG_AUTH_TWITTER_SECRET: "twitter-client-secret"
+  # Generic OAuth (JSON array - supports any OAuth 2.0 / OIDC provider)
+  HEMMELIG_AUTH_GENERIC_OAUTH: "[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"client-id","clientSecret":"client-secret","scopes":["openid","profile","email"]}]"
 ```
 
 ## Notes
 
 - All `HEMMELIG_AUTH_*` variables require both `_ID` and `_SECRET`
-to enable a provider.
+to enable a provider, except the "Gereric" type.
 
 If you enable a provider and not include the required environment variables for it,
 the pod will fail to start with CreateContainerConfigError, with an event
