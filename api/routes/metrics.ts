@@ -100,12 +100,15 @@ function verifyBearerToken(authHeader: string | undefined, expectedSecret: strin
     const provided = Buffer.from(parts[1]);
     const expected = Buffer.from(expectedSecret);
 
-    // Constant-time comparison to prevent timing attacks
-    if (provided.length !== expected.length) {
-        return false;
-    }
+    // Pad to same length to prevent timing leaks on token length
+    const maxLen = Math.max(provided.length, expected.length);
+    const paddedProvided = Buffer.alloc(maxLen);
+    const paddedExpected = Buffer.alloc(maxLen);
+    provided.copy(paddedProvided);
+    expected.copy(paddedExpected);
 
-    return timingSafeEqual(provided, expected);
+    // Constant-time comparison to prevent timing attacks
+    return timingSafeEqual(paddedProvided, paddedExpected) && provided.length === expected.length;
 }
 
 // GET /api/metrics - Prometheus metrics endpoint
