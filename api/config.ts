@@ -227,6 +227,13 @@ const config = {
     socialProviders,
 };
 
+if (!process.env.HEMMELIG_ANALYTICS_HMAC_SECRET && config.analytics.enabled) {
+    console.warn(
+        'WARNING: HEMMELIG_ANALYTICS_HMAC_SECRET is not set. Analytics visitor IDs are generated ' +
+            'with a default secret, making them predictable. Set a random secret for production use.'
+    );
+}
+
 /**
  * A type-safe utility to get a value from the configuration.
  * Its return type is inferred from the type of the default value.
