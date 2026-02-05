@@ -123,7 +123,7 @@ stringData:
 ## Notes
 
 - All `HEMMELIG_AUTH_*` variables require both `_ID` and `_SECRET`
-to enable a provider, except the "Gereric" type.
+to enable a provider, except the "Generic" type.
 
 If you enable a provider and not include the required environment variables for it,
 the pod will fail to start with CreateContainerConfigError, with an event
