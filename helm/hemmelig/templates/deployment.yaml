@@ -49,6 +49,10 @@ spec:
             - name: BETTER_AUTH_URL
               value: {{ .Values.config.betterAuthUrl | quote }}
             {{- end }}
+            {{- if .Values.config.baseUrl }}
+            - name: HEMMELIG_BASE_URL
+              value: {{ .Values.config.baseUrl | quote }}
+            {{- end }}
             {{- if .Values.existingSecret }}
             - name: BETTER_AUTH_SECRET
               valueFrom:
@@ -61,6 +65,219 @@ spec:
                 secretKeyRef:
                   name: {{ include "hemmelig.fullname" . }}
                   key: BETTER_AUTH_SECRET
+            {{- end }}
+            {{- if or (.Values.oauth.github.enabled) (.Values.oauth.google.enabled) (.Values.oauth.microsoft.enabled) (.Values.oauth.discord.enabled) (.Values.oauth.gitlab.enabled) (.Values.oauth.apple.enabled) (.Values.oauth.twitter.enabled) (.Values.oauth.generic) }}
+            {{- if .Values.existingSecret }}
+            # OAuth variables from existing secret
+            {{- if .Values.oauth.github.enabled }}
+            - name: HEMMELIG_AUTH_GITHUB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GITHUB_ID
+            - name: HEMMELIG_AUTH_GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GITHUB_SECRET
+            {{- end }}
+            {{- if .Values.oauth.google.enabled }}
+            - name: HEMMELIG_AUTH_GOOGLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GOOGLE_ID
+            - name: HEMMELIG_AUTH_GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GOOGLE_SECRET
+            {{- end }}
+            {{- if .Values.oauth.microsoft.enabled }}
+            - name: HEMMELIG_AUTH_MICROSOFT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_MICROSOFT_ID
+            - name: HEMMELIG_AUTH_MICROSOFT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_MICROSOFT_SECRET
+            - name: HEMMELIG_AUTH_MICROSOFT_TENANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_MICROSOFT_TENANT_ID
+                  optional: true
+            {{- end }}
+            {{- if .Values.oauth.discord.enabled }}
+            - name: HEMMELIG_AUTH_DISCORD_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_DISCORD_ID
+            - name: HEMMELIG_AUTH_DISCORD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_DISCORD_SECRET
+            {{- end }}
+            {{- if .Values.oauth.gitlab.enabled }}
+            - name: HEMMELIG_AUTH_GITLAB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GITLAB_ID
+            - name: HEMMELIG_AUTH_GITLAB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GITLAB_SECRET
+            - name: HEMMELIG_AUTH_GITLAB_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GITLAB_ISSUER
+                  optional: true
+            {{- end }}
+            {{- if .Values.oauth.apple.enabled }}
+            - name: HEMMELIG_AUTH_APPLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_APPLE_ID
+            - name: HEMMELIG_AUTH_APPLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_APPLE_SECRET
+            {{- end }}
+            {{- if .Values.oauth.twitter.enabled }}
+            - name: HEMMELIG_AUTH_TWITTER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_TWITTER_ID
+            - name: HEMMELIG_AUTH_TWITTER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_TWITTER_SECRET
+            {{- end }}
+            {{- if .Values.oauth.generic }}
+            - name: HEMMELIG_AUTH_GENERIC_OAUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_AUTH_GENERIC_OAUTH
+            {{- end }}
+            {{- else }}
+            # OAuth variables from default secret (when not using existingSecret)
+            {{- if .Values.oauth.github.enabled }}
+            - name: HEMMELIG_AUTH_GITHUB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GITHUB_ID
+            - name: HEMMELIG_AUTH_GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GITHUB_SECRET
+            {{- end }}
+            {{- if .Values.oauth.google.enabled }}
+            - name: HEMMELIG_AUTH_GOOGLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GOOGLE_ID
+            - name: HEMMELIG_AUTH_GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GOOGLE_SECRET
+            {{- end }}
+            {{- if .Values.oauth.microsoft.enabled }}
+            - name: HEMMELIG_AUTH_MICROSOFT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_MICROSOFT_ID
+            - name: HEMMELIG_AUTH_MICROSOFT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_MICROSOFT_SECRET
+            - name: HEMMELIG_AUTH_MICROSOFT_TENANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_MICROSOFT_TENANT_ID
+                  optional: true
+            {{- end }}
+            {{- if .Values.oauth.discord.enabled }}
+            - name: HEMMELIG_AUTH_DISCORD_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_DISCORD_ID
+            - name: HEMMELIG_AUTH_DISCORD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_DISCORD_SECRET
+            {{- end }}
+            {{- if .Values.oauth.gitlab.enabled }}
+            - name: HEMMELIG_AUTH_GITLAB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GITLAB_ID
+            - name: HEMMELIG_AUTH_GITLAB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GITLAB_SECRET
+            - name: HEMMELIG_AUTH_GITLAB_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GITLAB_ISSUER
+                  optional: true
+            {{- end }}
+            {{- if .Values.oauth.apple.enabled }}
+            - name: HEMMELIG_AUTH_APPLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_APPLE_ID
+            - name: HEMMELIG_AUTH_APPLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_APPLE_SECRET
+            {{- end }}
+            {{- if .Values.oauth.twitter.enabled }}
+            - name: HEMMELIG_AUTH_TWITTER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_TWITTER_ID
+            - name: HEMMELIG_AUTH_TWITTER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_TWITTER_SECRET
+            {{- end }}
+            {{- if .Values.oauth.generic }}
+            - name: HEMMELIG_AUTH_GENERIC_OAUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hemmelig.fullname" . }}
+                  key: HEMMELIG_AUTH_GENERIC_OAUTH
+            {{- end }}
+            {{- end }}
             {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}

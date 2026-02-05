@@ -17,6 +17,8 @@ config:
   betterAuthSecret: ""
   # Public URL of your instance (required for OAuth and cookie handling)
   betterAuthUrl: ""
+  # Base URL for OAuth callbacks (required for social login)
+  baseUrl: ""
 
 # Additional environment variables
 env: []
@@ -28,6 +30,48 @@ existingSecret: ""
 # Keys expected in the secret:
 #   BETTER_AUTH_SECRET
 #   HEMMELIG_ANALYTICS_HMAC_SECRET (optional)
+#   HEMMELIG_AUTH_GITHUB_ID, HEMMELIG_AUTH_GITHUB_SECRET (optional)
+#   HEMMELIG_AUTH_GOOGLE_ID, HEMMELIG_AUTH_GOOGLE_SECRET (optional)
+#   HEMMELIG_AUTH_MICROSOFT_ID, HEMMELIG_AUTH_MICROSOFT_SECRET, HEMMELIG_AUTH_MICROSOFT_TENANT_ID (optional)
+#   HEMMELIG_AUTH_DISCORD_ID, HEMMELIG_AUTH_DISCORD_SECRET (optional)
+#   HEMMELIG_AUTH_GITLAB_ID, HEMMELIG_AUTH_GITLAB_SECRET, HEMMELIG_AUTH_GITLAB_ISSUER (optional)
+#   HEMMELIG_AUTH_APPLE_ID, HEMMELIG_AUTH_APPLE_SECRET (optional)
+#   HEMMELIG_AUTH_TWITTER_ID, HEMMELIG_AUTH_TWITTER_SECRET (optional)
+
+# OAuth / Social Login Configuration
+oauth:
+  github:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+  google:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+  microsoft:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    tenantId: ""
+  discord:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+  gitlab:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    issuer: ""  # Optional, for self-hosted GitLab (e.g., https://gitlab.example.com)
+  apple:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+  twitter:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+  generic: ""
+    # Example: '[{"providerId":"authentik","discoveryUrl":"https://auth.example.com/.well-known/openid-configuration","clientId":"client-id","clientSecret":"secret","scopes":["openid","profile","email"]}]'
 
 serviceAccount:
   create: true
