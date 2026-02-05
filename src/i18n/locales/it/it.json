@@ -650,7 +650,7 @@
             "invite_only_title": "Solo su invito",
             "invite_only_description": "Gli utenti possono registrarsi solo con un codice invito valido",
             "require_registered_user_title": "Solo utenti registrati",
-            "require_registered_user_description": "Solo gli utenti registrati possono creare e leggere segreti",
+            "require_registered_user_description": "Solo gli utenti registrati possono creare segreti",
             "disable_email_password_signup_title": "Disabilita registrazione email/password",
             "disable_email_password_signup_description": "Disabilita la registrazione con email e password (solo login social)",
             "allowed_domains_title": "Domini e-mail consentiti",

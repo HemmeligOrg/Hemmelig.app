@@ -650,7 +650,7 @@
             "invite_only_title": "Kun invitasjonsregistrering",
             "invite_only_description": "Brukere kan kun registrere seg med en gyldig invitasjonskode",
             "require_registered_user_title": "Kun registrerte brukere",
-            "require_registered_user_description": "Kun registrerte brukere kan opprette og lese hemmeligheter",
+            "require_registered_user_description": "Kun registrerte brukere kan opprette hemmeligheter",
             "disable_email_password_signup_title": "Deaktiver e-post/passord registrering",
             "disable_email_password_signup_description": "Deaktiver registrering med e-post og passord (kun sosial innlogging)",
             "allowed_domains_title": "Tillatte e-postdomener",

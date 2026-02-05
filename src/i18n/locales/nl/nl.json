@@ -651,7 +651,7 @@
             "invite_only_title": "Registratie alleen op uitnodiging",
             "invite_only_description": "Gebruikers kunnen zich alleen registreren met een geldige uitnodigingscode",
             "require_registered_user_title": "Alleen geregistreerde gebruikers",
-            "require_registered_user_description": "Alleen geregistreerde gebruikers kunnen geheimen aanmaken en lezen",
+            "require_registered_user_description": "Alleen geregistreerde gebruikers kunnen geheimen aanmaken",
             "disable_email_password_signup_title": "E-mail/wachtwoord registratie uitschakelen",
             "disable_email_password_signup_description": "Registratie met e-mail en wachtwoord uitschakelen (alleen sociale login)",
             "allowed_domains_title": "Toegestane e-maildomeinen",

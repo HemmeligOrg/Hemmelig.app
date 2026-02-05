@@ -650,7 +650,7 @@
             "invite_only_title": "Endast inbjudningsregistrering",
             "invite_only_description": "Användare kan endast registrera sig med en giltig inbjudningskod",
             "require_registered_user_title": "Endast registrerade användare",
-            "require_registered_user_description": "Endast registrerade användare kan skapa och läsa hemligheter",
+            "require_registered_user_description": "Endast registrerade användare kan skapa hemligheter",
             "disable_email_password_signup_title": "Inaktivera e-post/lösenord-registrering",
             "disable_email_password_signup_description": "Inaktivera registrering med e-post och lösenord (endast social inloggning)",
             "allowed_domains_title": "Tillåtna e-postdomäner",

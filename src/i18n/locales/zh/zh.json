@@ -650,7 +650,7 @@
             "invite_only_title": "仅限邀请注册",
             "invite_only_description": "用户只能使用有效的邀请码注册",
             "require_registered_user_title": "仅限注册用户",
-            "require_registered_user_description": "只有注册用户才能创建和查看秘密",
+            "require_registered_user_description": "只有注册用户才能创建秘密",
             "disable_email_password_signup_title": "禁用邮箱/密码注册",
             "disable_email_password_signup_description": "禁用邮箱和密码注册（仅允许社交登录）",
             "allowed_domains_title": "允许的邮箱域名",

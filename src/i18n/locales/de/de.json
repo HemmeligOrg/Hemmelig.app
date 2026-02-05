@@ -650,7 +650,7 @@
             "invite_only_title": "Nur mit Einladung",
             "invite_only_description": "Benutzer können sich nur mit einem gültigen Einladungscode registrieren",
             "require_registered_user_title": "Nur registrierte Benutzer",
-            "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen und lesen",
+            "require_registered_user_description": "Nur registrierte Benutzer können Geheimnisse erstellen",
             "disable_email_password_signup_title": "E-Mail/Passwort-Registrierung deaktivieren",
             "disable_email_password_signup_description": "Registrierung mit E-Mail und Passwort deaktivieren (nur Social Login)",
             "allowed_domains_title": "Erlaubte E-Mail-Domains",

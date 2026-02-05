@@ -651,7 +651,7 @@
             "invite_only_title": "Invite Only Registration",
             "invite_only_description": "Users can only register with a valid invite code",
             "require_registered_user_title": "Registered Users Only",
-            "require_registered_user_description": "Only registered users can create and read secrets",
+            "require_registered_user_description": "Only registered users can create secrets",
             "disable_email_password_signup_title": "Disable Email/Password Signup",
             "disable_email_password_signup_description": "Disable registration with email and password (social login only)",
             "allowed_domains_title": "Allowed Email Domains",
