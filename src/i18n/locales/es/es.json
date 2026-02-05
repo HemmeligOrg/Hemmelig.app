@@ -62,7 +62,8 @@
             "copied_and_added": "Contraseña añadida y copiada al portapapeles",
             "added": "Contraseña añadida"
         },
-        "formatting_tools": "Herramientas de formato"
+        "formatting_tools": "Herramientas de formato",
+        "character_count": "caracteres"
     },
     "create_button": {
         "creating_secret": "Creando secreto...",
@@ -369,8 +370,6 @@
         "security_settings": {
             "title": "Configuración de seguridad",
             "description": "Configurar controles de seguridad y acceso",
-            "enforce_https_title": "Forzar HTTPS",
-            "enforce_https_description": "Requerir conexiones seguras",
             "rate_limiting_title": "Limitación de velocidad",
             "rate_limiting_description": "Habilitar limitación de velocidad de solicitudes",
             "max_password_attempts_label": "Intentos máximos de contraseña",
@@ -622,6 +621,8 @@
         "fetch_error": "Ocurrió un error al obtener el secreto. Por favor, inténtalo de nuevo."
     },
     "expiration": {
+        "28_days": "28 Días",
+        "14_days": "14 Días",
         "7_days": "7 Días",
         "3_days": "3 Días",
         "1_day": "1 Día",

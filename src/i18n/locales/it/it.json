@@ -62,7 +62,8 @@
             "copied_and_added": "Password aggiunta e copiata negli appunti",
             "added": "Password aggiunta"
         },
-        "formatting_tools": "Strumenti di formattazione"
+        "formatting_tools": "Strumenti di formattazione",
+        "character_count": "caratteri"
     },
     "create_button": {
         "creating_secret": "Creazione segreto...",

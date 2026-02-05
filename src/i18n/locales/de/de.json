@@ -62,7 +62,8 @@
             "copied_and_added": "Passwort hinzugefügt und in Zwischenablage kopiert",
             "added": "Passwort hinzugefügt"
         },
-        "formatting_tools": "Formatierungswerkzeuge"
+        "formatting_tools": "Formatierungswerkzeuge",
+        "character_count": "Zeichen"
     },
     "create_button": {
         "creating_secret": "Geheimnis wird erstellt...",

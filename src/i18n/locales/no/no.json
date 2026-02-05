@@ -58,9 +58,12 @@
             "generated_password": "Generert passord",
             "refresh": "Oppdater",
             "cancel": "Avbryt",
-            "insert": "Sett inn"
+            "insert": "Sett inn",
+            "copied_and_added": "Passord lagt til og kopiert til utklippstavlen",
+            "added": "Passord lagt til"
         },
-        "formatting_tools": "Formateringsverktøy"
+        "formatting_tools": "Formateringsverktøy",
+        "character_count": "tegn"
     },
     "create_button": {
         "creating_secret": "Oppretter hemmelighet...",
@@ -309,6 +312,10 @@
             "vs_previous": "vs forrige dag",
             "no_data": "Ingen besøksdata tilgjengelig ennå."
         },
+        "secret_requests": {
+            "total": "Hemmeligforespørsler",
+            "fulfilled": "Oppfylte forespørsler"
+        },
         "loading": "Laster analyse...",
         "no_permission": "Du har ikke tillatelse til å se analyse.",
         "failed_to_fetch": "Kunne ikke hente analysedata."
@@ -339,6 +346,13 @@
             "title": "Generelle innstillinger",
             "description": "Grunnleggende instanskonfigurasjon",
             "instance_name_label": "Instansnavn",
+            "logo_label": "Instanslogo",
+            "logo_upload": "Last opp logo",
+            "logo_remove": "Fjern logo",
+            "logo_hint": "PNG, JPEG, GIF, SVG eller WebP. Maks 512KB.",
+            "logo_alt": "Instanslogo",
+            "logo_invalid_type": "Ugyldig filtype. Vennligst last opp et PNG-, JPEG-, GIF-, SVG- eller WebP-bilde.",
+            "logo_too_large": "Filen er for stor. Maksimal størrelse er 512KB.",
             "default_expiration_label": "Standard utløpstid for hemmeligheter",
             "max_secrets_per_user_label": "Maks hemmeligheter per bruker",
             "max_secret_size_label": "Maks hemmelighetsstørrelse (MB)",

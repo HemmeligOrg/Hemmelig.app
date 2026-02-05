@@ -58,9 +58,12 @@
             "generated_password": "Genererat lösenord",
             "refresh": "Uppdatera",
             "cancel": "Avbryt",
-            "insert": "Infoga"
+            "insert": "Infoga",
+            "copied_and_added": "Lösenord tillagt och kopierat till urklipp",
+            "added": "Lösenord tillagt"
         },
-        "formatting_tools": "Formateringsverktyg"
+        "formatting_tools": "Formateringsverktyg",
+        "character_count": "tecken"
     },
     "create_button": {
         "creating_secret": "Skapar hemlighet...",
@@ -309,6 +312,10 @@
             "vs_previous": "vs föregående dag",
             "no_data": "Ingen besöksdata tillgänglig än."
         },
+        "secret_requests": {
+            "total": "Hemlighetsförfrågningar",
+            "fulfilled": "Uppfyllda förfrågningar"
+        },
         "loading": "Laddar analys...",
         "no_permission": "Du har inte behörighet att se analys.",
         "failed_to_fetch": "Misslyckades med att hämta analysdata."
@@ -339,6 +346,13 @@
             "title": "Allmänna inställningar",
             "description": "Grundläggande instanskonfiguration",
             "instance_name_label": "Instansnamn",
+            "logo_label": "Instanslogotyp",
+            "logo_upload": "Ladda upp logotyp",
+            "logo_remove": "Ta bort logotyp",
+            "logo_hint": "PNG, JPEG, GIF, SVG eller WebP. Max 512KB.",
+            "logo_alt": "Instanslogotyp",
+            "logo_invalid_type": "Ogiltig filtyp. Ladda upp en PNG-, JPEG-, GIF-, SVG- eller WebP-bild.",
+            "logo_too_large": "Filen är för stor. Maximal storlek är 512KB.",
             "default_expiration_label": "Standard hemlighetsutgång",
             "max_secrets_per_user_label": "Max hemligheter per användare",
             "max_secret_size_label": "Max hemlighetsstorlek (MB)",

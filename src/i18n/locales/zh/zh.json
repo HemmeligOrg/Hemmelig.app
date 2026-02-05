@@ -62,7 +62,8 @@
             "copied_and_added": "密码已添加并复制到剪贴板",
             "added": "密码已添加"
         },
-        "formatting_tools": "格式化工具"
+        "formatting_tools": "格式化工具",
+        "character_count": "字符"
     },
     "create_button": {
         "creating_secret": "正在创建秘密...",

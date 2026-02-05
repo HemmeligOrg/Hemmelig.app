@@ -62,7 +62,8 @@
             "copied_and_added": "Password added and copied to clipboard",
             "added": "Password added"
         },
-        "formatting_tools": "Formatting Tools"
+        "formatting_tools": "Formatting Tools",
+        "character_count": "characters"
     },
     "create_button": {
         "creating_secret": "Creating Secret...",

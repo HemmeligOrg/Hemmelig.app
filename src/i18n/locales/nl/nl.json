@@ -62,7 +62,8 @@
             "copied_and_added": "Wachtwoord toegevoegd en gekopieerd naar klembord",
             "added": "Wachtwoord toegevoegd"
         },
-        "formatting_tools": "Stijlen"
+        "formatting_tools": "Stijlen",
+        "character_count": "tekens"
     },
     "create_button": {
         "creating_secret": "Geheim wordt aangemaakt...",
