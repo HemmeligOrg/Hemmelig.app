@@ -3,6 +3,14 @@ import { isIP } from 'is-ip';
 import { z } from 'zod';
 import { EXPIRATION_TIMES_SECONDS } from '../lib/constants';
 
+// Hard ceiling for encrypted payloads at parse time (prevents memory exhaustion).
+// Configurable via env var in KB, defaults to 1024 KB (1MB).
+const MAX_ENCRYPTED_PAYLOAD_KB = parseInt(
+    process.env.HEMMELIG_MAX_ENCRYPTED_PAYLOAD_SIZE || '1024',
+    10
+);
+export const MAX_ENCRYPTED_SIZE = MAX_ENCRYPTED_PAYLOAD_KB * 1024;
+
 // Schema for URL parameters (expecting string from URL)
 export const secretsIdParamSchema = z.object({
     id: z.string(),
@@ -24,15 +32,23 @@ export const secretsQuerySchema = z.object({
         }),
 });
 
-const jsonToUint8ArraySchema = z.preprocess((arg) => {
-    if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
-        const values = Object.values(arg);
+const jsonToUint8ArraySchema = z.preprocess(
+    (arg) => {
+        if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
+            const values = Object.values(arg);
+            if (values.length > MAX_ENCRYPTED_SIZE) {
+                return arg; // Let the refine below catch the size error
+            }
 
-        return new Uint8Array(values);
-    }
+            return new Uint8Array(values);
+        }
 
-    return arg;
-}, z.instanceof(Uint8Array));
+        return arg;
+    },
+    z.instanceof(Uint8Array).refine((arr) => arr.length <= MAX_ENCRYPTED_SIZE, {
+        message: `Encrypted payload exceeds maximum size of ${MAX_ENCRYPTED_PAYLOAD_KB} KB`,
+    })
+);
 
 const secretSchema = {
     salt: z.string(),

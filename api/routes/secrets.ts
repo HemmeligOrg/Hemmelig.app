@@ -253,6 +253,14 @@ const app = new Hono<{
             }
 
             const validatedData = c.req.valid('json');
+
+            // Enforce dynamic maxSecretSize from instance settings (in KB)
+            const maxSizeKB = settings?.maxSecretSize ?? 1024;
+            const maxSizeBytes = maxSizeKB * 1024;
+            if (validatedData.secret.length > maxSizeBytes) {
+                return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
+            }
+
             const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
 
             const data: SecretCreateData = {

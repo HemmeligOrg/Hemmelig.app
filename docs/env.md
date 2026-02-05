@@ -29,12 +29,13 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Security Settings
 
-| Variable                                 | Description                                             | Default |
-| ---------------------------------------- | ------------------------------------------------------- | ------- |
-| `HEMMELIG_ALLOW_PASSWORD_PROTECTION`     | Allow password-protected secrets                        | `true`  |
-| `HEMMELIG_ALLOW_IP_RESTRICTION`          | Allow IP range restrictions on secrets                  | `true`  |
-| `HEMMELIG_ALLOW_FILE_UPLOADS`            | Allow users to attach files to secrets                  | `true`  |
-| `HEMMELIG_DISABLE_EMAIL_PASSWORD_SIGNUP` | Disable email/password registration (social login only) | `false` |
+| Variable                                 | Description                                                   | Default |
+| ---------------------------------------- | ------------------------------------------------------------- | ------- |
+| `HEMMELIG_ALLOW_PASSWORD_PROTECTION`     | Allow password-protected secrets                              | `true`  |
+| `HEMMELIG_ALLOW_IP_RESTRICTION`          | Allow IP range restrictions on secrets                        | `true`  |
+| `HEMMELIG_ALLOW_FILE_UPLOADS`            | Allow users to attach files to secrets                        | `true`  |
+| `HEMMELIG_DISABLE_EMAIL_PASSWORD_SIGNUP` | Disable email/password registration (social login only)       | `false` |
+| `HEMMELIG_MAX_ENCRYPTED_PAYLOAD_SIZE`    | Hard ceiling for encrypted payloads in KB (parsed at startup) | `1024`  |
 
 ## Analytics
 
