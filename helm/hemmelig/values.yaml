@@ -52,7 +52,7 @@ oauth:
     enabled: false
     clientId: ""
     clientSecret: ""
-    tenantId: ""
+    tenantId: "" # Optional
   discord:
     enabled: false
     clientId: ""
