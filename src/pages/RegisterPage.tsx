@@ -92,12 +92,12 @@ export function RegisterPage() {
         return t('register_page.unexpected_error');
     };
 
-    const markInviteCodeUsed = async (userId: string) => {
+    const markInviteCodeUsed = async () => {
         if (!formData.inviteCode) return;
 
         try {
             await apiRaw.invites.public.use.$post({
-                json: { code: formData.inviteCode, userId },
+                json: { code: formData.inviteCode },
             });
         } catch (e) {
             console.error('Failed to mark invite code as used:', e);
@@ -150,7 +150,7 @@ export function RegisterPage() {
             }
 
             if (data?.user?.id) {
-                await markInviteCodeUsed(data.user.id);
+                await markInviteCodeUsed();
                 navigate('/dashboard');
             }
         } catch {
