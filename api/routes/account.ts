@@ -47,6 +47,17 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
             }
         }
 
+        // Check if email is taken by another user
+        if (email) {
+            const existingEmail = await prisma.user.findFirst({
+                where: { email },
+                select: { id: true },
+            });
+            if (existingEmail && existingEmail.id !== user.id) {
+                return c.json({ error: 'Email is already taken' }, 409);
+            }
+        }
+
         const updatedUser = await prisma.user.update({
             where: { id: user.id },
             data: {
