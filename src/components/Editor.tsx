@@ -957,6 +957,7 @@ export default function Editor({
     ...props
 }: EditorProps) {
     const [characterCount, setCharacterCount] = useState(0);
+    const { t } = useTranslation();
     return (
         <EditorOnChangeContext.Provider value={onChange}>
             <div className="space-y-3 sm:space-y-4 relative">
@@ -995,8 +996,8 @@ export default function Editor({
                     }}
                     {...props}
                 >
-                    <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-gray-500 dark:text-slate-400 bg-white dark:bg-dark-800/80 px-2 py-1 rounded">
-                        {characterCount} characters
+                    <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-gray-500 dark:text-slate-400 bg-white dark:bg-dark-800/80 px-2 py-1">
+                        {characterCount} {t('editor.character_count')}
                     </div>
                 </EditorProvider>
             </div>

@@ -181,7 +181,7 @@ export function DashboardLayout() {
                                     <div className="min-w-0">
                                         {isLoading ? (
                                             <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                                                Loading...
+                                                {t('common.loading')}
                                             </p>
                                         ) : (
                                             <>
