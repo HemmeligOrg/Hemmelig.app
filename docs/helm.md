@@ -120,6 +120,18 @@ env:
       value: 'true'
 ```
 
+## OAuth Configuration
+
+The Hemmelig Helm Chart supports comprehensive OAuth provider configuration. For detailed setup instructions and examples, see:
+
+**[OAuth Configuration with Helm](helm-oauth.md)**
+
+This guide covers:
+- All supported OAuth providers (GitHub, Google, Microsoft, Discord, GitLab, Apple, Twitter/X)
+- Generic OAuth providers (Authentik, Authelia, Keycloak, etc.)
+- Default secret vs existing secret management
+- Required configuration for OAuth callbacks
+
 ## Ingress Examples
 
 ### Nginx Ingress
