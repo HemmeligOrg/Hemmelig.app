@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { passwordSchema } from './password';
 
 const sanitizeString = (str: string) => str.trim().replace(/[\x00-\x1F\x7F]/g, '');
 
@@ -20,13 +21,6 @@ export const updateAccountSchema = z.object({
     username: usernameSchema,
     email: z.string().email('Invalid email address'),
 });
-
-const passwordSchema = z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number');
 
 export const updatePasswordSchema = z
     .object({

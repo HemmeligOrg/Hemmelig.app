@@ -77,7 +77,12 @@ export function SecurityTab({ initialTwoFactorEnabled }: SecurityTabProps) {
             }
         } catch (error) {
             console.error('An error occurred', error);
-            setPasswordErrors({ form: t('account_page.security_settings.password_change_error') });
+            setPasswordErrors({
+                form:
+                    error instanceof Error && error.message !== 'Unknown error'
+                        ? error.message
+                        : t('account_page.security_settings.password_change_error'),
+            });
         } finally {
             setIsLoading(false);
         }

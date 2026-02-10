@@ -3,9 +3,10 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
 import { admin, twoFactor, username } from 'better-auth/plugins';
 import { genericOAuth } from 'better-auth/plugins/generic-oauth';
+import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
-import { randomBytes } from 'crypto';
+import { validatePassword } from './validations/password';
 
 // Generate a unique username from email
 const generateUsernameFromEmail = (email: string): string => {
@@ -79,6 +80,10 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
+        // Set to 1 so better-auth doesn't reject weak current passwords during password change.
+        // Password strength for new passwords is enforced by our Zod schema (updatePasswordSchema)
+        // and for sign-up by the before hook below.
+        minPasswordLength: 1,
     },
     socialProviders: buildBetterAuthSocialProviders(),
     account: {
@@ -106,11 +111,20 @@ export const auth = betterAuth({
                 return;
             }
 
-            const body = context.body as { email?: string };
+            const body = context.body as { email?: string; password?: string };
             const email = body?.email;
+            const password = body?.password;
 
             if (!email) {
                 return;
+            }
+
+            // Validate password strength for sign-up
+            if (password) {
+                const passwordError = validatePassword(password);
+                if (passwordError) {
+                    throw new APIError('BAD_REQUEST', { message: passwordError });
+                }
             }
 
             // Get instance settings

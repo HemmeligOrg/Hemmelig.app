@@ -3,10 +3,11 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { passwordSchema } from '../validations/password';
 
 const setupSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(8),
+    password: passwordSchema,
     username: z.string().min(3).max(32),
     name: z.string().min(1).max(100),
 });
