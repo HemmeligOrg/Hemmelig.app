@@ -51,14 +51,6 @@ export function Footer() {
                         >
                             {t('footer.api')}
                         </a>
-                        <a
-                            href="https://terces.cloud"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs transition-colors"
-                        >
-                            {t('footer.managed_hosting')}
-                        </a>
                         <div className="flex items-center space-x-2 pl-2 border-l border-gray-300 dark:border-dark-500">
                             <a
                                 href="https://github.com/HemmeligOrg/Hemmelig.app"
