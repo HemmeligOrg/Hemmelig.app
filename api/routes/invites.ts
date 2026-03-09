@@ -7,6 +7,7 @@ import { TIME } from '../lib/constants';
 import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
+import { idParamSchema } from '../validations/shared';
 
 const createInviteSchema = z.object({
     maxUses: z.number().int().min(1).max(100).optional().default(1),
@@ -43,7 +44,7 @@ export const invitePublicRoute = new Hono()
             return c.json({ error: 'Failed to validate invite code' }, 500);
         }
     })
-    .post('/use', zValidator('json', z.object({ code: z.string() })), async (c) => {
+    .post('/use', zValidator('json', codeSchema), async (c) => {
         const { code } = c.req.valid('json');
         const user = c.get('user');
         if (!user) {
@@ -134,7 +135,7 @@ export const inviteRoute = new Hono<{
             return c.json({ error: 'Failed to create invite code' }, 500);
         }
     })
-    .delete('/:id', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    .delete('/:id', zValidator('param', idParamSchema), async (c) => {
         const { id } = c.req.valid('param');
 
         try {

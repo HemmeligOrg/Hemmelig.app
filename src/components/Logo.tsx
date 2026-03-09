@@ -1,4 +1,4 @@
-const Logo = ({ className, ...rest }) => (
+const Logo = ({ className, ...rest }: React.SVGProps<SVGSVGElement>) => (
     <svg
         version="1.0"
         className={className}

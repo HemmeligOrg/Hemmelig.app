@@ -14,7 +14,6 @@ export function SecuritySettings() {
     const { saveSettings, setSaveSettings, updateSettings } = useSecretSettingsStore();
     const { settings: instanceSettings } = useHemmeligStore();
     const { t } = useTranslation();
-
     const [isPasswordEnabled, setIsPasswordEnabled] = useState(!!password);
 
     // Sync settings to localStorage when saveSettings is enabled

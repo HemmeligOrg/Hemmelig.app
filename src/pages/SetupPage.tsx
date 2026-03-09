@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Card } from '../components/Card';
+import { FormField } from '../components/FormField';
+import { LoadingButton } from '../components/LoadingButton';
 import Logo from '../components/Logo';
 import { api } from '../lib/api';
 
@@ -18,13 +20,6 @@ export function SetupPage() {
         password: '',
         confirmPassword: '',
     });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,7 +65,6 @@ export function SetupPage() {
         <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <Card noPadding className="p-8">
-                    {/* Header */}
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center justify-center mb-4">
                             <Logo className="w-16 h-16 fill-gray-900 dark:fill-white" />
@@ -83,109 +77,68 @@ export function SetupPage() {
                         </p>
                     </div>
 
-                    {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('setup_page.name_label')}
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500"
-                                    placeholder={t('setup_page.name_placeholder')}
-                                />
-                            </div>
-                        </div>
+                        <FormField
+                            label={t('setup_page.name_label')}
+                            icon={User}
+                            value={formData.name}
+                            onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
+                            placeholder={t('setup_page.name_placeholder')}
+                            required
+                        />
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('setup_page.username_label')}
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    required
-                                    minLength={3}
-                                    maxLength={32}
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500"
-                                    placeholder={t('setup_page.username_placeholder')}
-                                />
-                            </div>
-                        </div>
+                        <FormField
+                            label={t('setup_page.username_label')}
+                            icon={User}
+                            value={formData.username}
+                            onChange={(value) =>
+                                setFormData((prev) => ({ ...prev, username: value }))
+                            }
+                            placeholder={t('setup_page.username_placeholder')}
+                            required
+                            minLength={3}
+                            maxLength={32}
+                        />
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('setup_page.email_label')}
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500"
-                                    placeholder={t('setup_page.email_placeholder')}
-                                />
-                            </div>
-                        </div>
+                        <FormField
+                            label={t('setup_page.email_label')}
+                            icon={Mail}
+                            type="email"
+                            value={formData.email}
+                            onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
+                            placeholder={t('setup_page.email_placeholder')}
+                            required
+                        />
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('setup_page.password_label')}
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    required
-                                    minLength={8}
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500"
-                                    placeholder={t('setup_page.password_placeholder')}
-                                />
-                            </div>
-                        </div>
+                        <FormField
+                            label={t('setup_page.password_label')}
+                            icon={Lock}
+                            type="password"
+                            value={formData.password}
+                            onChange={(value) =>
+                                setFormData((prev) => ({ ...prev, password: value }))
+                            }
+                            placeholder={t('setup_page.password_placeholder')}
+                            required
+                            minLength={8}
+                        />
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                {t('setup_page.confirm_password_label')}
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    required
-                                    minLength={8}
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-dark-700 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500"
-                                    placeholder={t('setup_page.confirm_password_placeholder')}
-                                />
-                            </div>
-                        </div>
+                        <FormField
+                            label={t('setup_page.confirm_password_label')}
+                            icon={Lock}
+                            type="password"
+                            value={formData.confirmPassword}
+                            onChange={(value) =>
+                                setFormData((prev) => ({ ...prev, confirmPassword: value }))
+                            }
+                            placeholder={t('setup_page.confirm_password_placeholder')}
+                            required
+                            minLength={8}
+                        />
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {isLoading ? t('setup_page.creating') : t('setup_page.create_admin')}
-                        </button>
+                        <LoadingButton isLoading={isLoading} loadingText={t('setup_page.creating')}>
+                            <span>{t('setup_page.create_admin')}</span>
+                        </LoadingButton>
                     </form>
 
                     <p className="text-xs text-gray-500 dark:text-slate-400 text-center mt-6">

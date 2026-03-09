@@ -7,14 +7,11 @@ import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { authMiddleware } from '../middlewares/auth';
+import { idParamSchema } from '../validations/shared';
 
 const createApiKeySchema = z.object({
     name: z.string().min(1).max(100),
     expiresInDays: z.number().int().min(1).max(365).optional(),
-});
-
-const deleteApiKeySchema = z.object({
-    id: z.string(),
 });
 
 function hashApiKey(key: string): string {
@@ -123,7 +120,7 @@ const app = new Hono<{
             return c.json({ error: 'Failed to create API key' }, 500);
         }
     })
-    .delete('/:id', zValidator('param', deleteApiKeySchema), async (c) => {
+    .delete('/:id', zValidator('param', idParamSchema), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ error: 'Unauthorized' }, 401);

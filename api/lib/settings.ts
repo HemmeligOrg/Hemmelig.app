@@ -1,3 +1,4 @@
+import config from '../config';
 import prisma from './db';
 
 const settingsCache = new Map();
@@ -20,6 +21,18 @@ export async function getInstanceSettings() {
         }
     }
     return cachedSettings;
+}
+
+/**
+ * Resolves instance settings from the appropriate source.
+ * In managed mode, returns environment-based settings; otherwise fetches from database.
+ * This eliminates the repeated config.isManaged() ternary pattern across routes.
+ */
+export async function resolveSettings() {
+    if (config.isManaged()) {
+        return config.getManagedSettings();
+    }
+    return getInstanceSettings();
 }
 
 /**

@@ -1,10 +1,10 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
-import config from '../config';
 import prisma from '../lib/db';
 import { compare, hash } from '../lib/password';
-import { getInstanceSettings } from '../lib/settings';
+import { buildPaginationMeta } from '../lib/route-utils';
+import { resolveSettings } from '../lib/settings';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { apiKeyOrAuthMiddleware } from '../middlewares/auth';
@@ -81,13 +81,7 @@ const app = new Hono<{
 
             return c.json({
                 data: formattedItems,
-                meta: {
-                    total,
-                    skip: options.skip,
-                    take: options.take,
-                    page: Math.floor(options.skip / options.take) + 1,
-                    totalPages: Math.ceil(total / options.take),
-                },
+                meta: buildPaginationMeta(total, options.skip, options.take),
             });
         } catch (error) {
             console.error('Failed to retrieve secrets:', error);
@@ -242,10 +236,7 @@ const app = new Hono<{
             const user = c.get('user');
 
             // Check if only registered users can create secrets
-            // In managed mode, use environment-based settings; otherwise use database
-            const settings = config.isManaged()
-                ? config.getManagedSettings()
-                : await getInstanceSettings();
+            const settings = await resolveSettings();
             if (settings?.requireRegisteredUser && !user) {
                 return c.json({ error: 'Only registered users can create secrets' }, 401);
             }

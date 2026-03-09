@@ -1,9 +1,8 @@
 import { timingSafeEqual } from 'crypto';
 import { Hono } from 'hono';
 import { collectDefaultMetrics, Gauge, Histogram, register, Registry } from 'prom-client';
-import config from '../config';
 import prisma from '../lib/db';
-import { getInstanceSettings } from '../lib/settings';
+import { resolveSettings } from '../lib/settings';
 
 const app = new Hono();
 
@@ -114,10 +113,7 @@ function verifyBearerToken(authHeader: string | undefined, expectedSecret: strin
 // GET /api/metrics - Prometheus metrics endpoint
 app.get('/', async (c) => {
     try {
-        // In managed mode, use environment-based settings; otherwise use database
-        const settings = config.isManaged()
-            ? config.getManagedSettings()
-            : await getInstanceSettings();
+        const settings = await resolveSettings();
 
         // Check if metrics are enabled
         if (!settings?.metricsEnabled) {

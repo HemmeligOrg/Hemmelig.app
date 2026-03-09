@@ -1,6 +1,5 @@
 import { createHmac } from 'crypto';
-import config from '../config';
-import { getInstanceSettings } from './settings';
+import { resolveSettings } from './settings';
 
 export type WebhookEvent = 'secret.viewed' | 'secret.burned' | 'apikey.created';
 
@@ -28,13 +27,16 @@ function signPayload(payload: string, secret: string): string {
     return createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-async function sendWithRetry(
+/**
+ * Sends an HTTP POST with exponential backoff retry.
+ * Shared by both the main webhook system and secret-request webhooks.
+ */
+export async function sendWithRetry(
     url: string,
     headers: Record<string, string>,
-    body: string
+    body: string,
+    maxRetries = 3
 ): Promise<void> {
-    const maxRetries = 3;
-
     for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
             const response = await fetch(url, {
@@ -65,9 +67,7 @@ async function sendWithRetry(
 export function sendWebhook(event: WebhookEvent, data: WebhookPayload['data']): void {
     (async () => {
         try {
-            const settings = config.isManaged()
-                ? config.getManagedSettings()
-                : await getInstanceSettings();
+            const settings = await resolveSettings();
 
             if (!settings?.webhookEnabled || !settings.webhookUrl) {
                 return;

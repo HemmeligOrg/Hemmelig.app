@@ -1,6 +1,5 @@
 import { z } from 'zod';
-
-const sanitizeString = (str: string) => str.trim().replace(/[\x00-\x1F\x7F]/g, '');
+import { sanitizeString } from './shared';
 
 const sanitizedString = (maxLength: number) =>
     z.string().transform(sanitizeString).pipe(z.string().max(maxLength));

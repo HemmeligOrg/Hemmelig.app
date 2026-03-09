@@ -1,9 +1,12 @@
-import { ArrowLeft, Check, Eye, EyeOff, Lock, Mail, Ticket, User } from 'lucide-react';
+import { Check, Lock, Mail, Ticket, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthPageLayout } from '../components/AuthPageLayout';
 import { Card } from '../components/Card';
-import { Modal } from '../components/Modal';
+import { FormField } from '../components/FormField';
+import { LoadingButton } from '../components/LoadingButton';
+import { PasswordToggle } from '../components/PasswordToggle';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
 import { apiRaw } from '../lib/api';
@@ -177,292 +180,174 @@ export function RegisterPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-light-800 dark:bg-dark-900 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-md">
-                {/* Back to Home */}
-                <Link
-                    to="/"
-                    className="inline-flex items-center space-x-2 text-gray-500 dark:text-slate-400 hover:text-teal-400 transition-colors duration-300 mb-8 group"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-                    <span>{t('register_page.back_to_hemmelig')}</span>
-                </Link>
+        <AuthPageLayout
+            title={t('register_page.create_account_button')}
+            subtitle={t('register_page.join_hemmelig')}
+            backTo="/"
+            backLabel={t('register_page.back_to_hemmelig')}
+            errorModal={errorModal}
+        >
+            <Card noPadding className="p-6 sm:p-8">
+                {isEmailPasswordDisabled && (
+                    <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                            {t('register_page.email_password_disabled_message')}
+                        </p>
+                    </div>
+                )}
 
-                {/* Header */}
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {t('register_page.create_account_button')}
-                    </h1>
-                    <p className="text-gray-500 dark:text-slate-400 mt-1">
-                        {t('register_page.join_hemmelig')}
-                    </p>
-                </div>
+                {!isEmailPasswordDisabled && (
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {settings.requireInviteCode && (
+                            <FormField
+                                label={t('register_page.invite_code_label')}
+                                icon={Ticket}
+                                value={formData.inviteCode}
+                                onChange={(value) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        inviteCode: value.toUpperCase(),
+                                    }));
+                                    setInviteCodeError('');
+                                }}
+                                placeholder={t('register_page.invite_code_placeholder')}
+                                required
+                                error={inviteCodeError}
+                            />
+                        )}
 
-                <Card noPadding className="p-6 sm:p-8">
-                    {isEmailPasswordDisabled && (
-                        <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                            <p className="text-sm text-blue-800 dark:text-blue-200">
-                                {t('register_page.email_password_disabled_message')}
-                            </p>
-                        </div>
-                    )}
+                        <FormField
+                            label={t('register_page.username_label')}
+                            icon={User}
+                            value={formData.username}
+                            onChange={(value) =>
+                                setFormData((prev) => ({ ...prev, username: value }))
+                            }
+                            placeholder={t('register_page.username_placeholder')}
+                            required
+                        />
 
-                    {!isEmailPasswordDisabled && (
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {/* Invite Code Field (conditional) */}
-                            {settings.requireInviteCode && (
+                        <FormField
+                            label={t('register_page.email_label')}
+                            icon={Mail}
+                            type="email"
+                            value={formData.email}
+                            onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
+                            placeholder={t('register_page.email_placeholder')}
+                            required
+                        />
+
+                        <div className="space-y-2">
+                            <FormField
+                                label={t('register_page.password_label')}
+                                icon={Lock}
+                                type={showPassword ? 'text' : 'password'}
+                                value={formData.password}
+                                onChange={(value) =>
+                                    setFormData((prev) => ({ ...prev, password: value }))
+                                }
+                                placeholder={t('register_page.password_placeholder')}
+                                required
+                                rightElement={
+                                    <PasswordToggle
+                                        visible={showPassword}
+                                        onToggle={() => setShowPassword(!showPassword)}
+                                    />
+                                }
+                            />
+
+                            {formData.password && (
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                        {t('register_page.invite_code_label')}
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                                            <Ticket className="w-4 h-4" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            value={formData.inviteCode}
-                                            onChange={(e) => {
-                                                setFormData((prev) => ({
-                                                    ...prev,
-                                                    inviteCode: e.target.value.toUpperCase(),
-                                                }));
-                                                setInviteCodeError('');
-                                            }}
-                                            placeholder={t('register_page.invite_code_placeholder')}
-                                            className={`w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-dark-700/50 border ${inviteCodeError ? 'border-red-500' : 'border-gray-200 dark:border-dark-500/50'} text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200`}
-                                            required
-                                        />
+                                    <div className="flex space-x-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className={`h-1.5 flex-1 transition-all duration-200 ${
+                                                    i < passwordStrength
+                                                        ? strengthColors[passwordStrength - 1]
+                                                        : 'bg-gray-200 dark:bg-dark-600'
+                                                }`}
+                                            />
+                                        ))}
                                     </div>
-                                    {inviteCodeError && (
-                                        <p className="text-xs text-red-500">{inviteCodeError}</p>
+                                    <p
+                                        className={`text-xs ${passwordStrength >= 3 ? 'text-green-500' : passwordStrength >= 2 ? 'text-yellow-500' : 'text-red-500'}`}
+                                    >
+                                        {t('register_page.password_strength_label')}:{' '}
+                                        {t(
+                                            `register_page.password_strength_levels.${strengthLabels[passwordStrength - 1].toLowerCase().replace(' ', '_')}`
+                                        )}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <FormField
+                                label={t('register_page.confirm_password_label')}
+                                icon={Lock}
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                value={formData.confirmPassword}
+                                onChange={(value) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        confirmPassword: value,
+                                    }))
+                                }
+                                placeholder={t('register_page.confirm_password_placeholder')}
+                                required
+                                rightElement={
+                                    <PasswordToggle
+                                        visible={showConfirmPassword}
+                                        onToggle={() =>
+                                            setShowConfirmPassword(!showConfirmPassword)
+                                        }
+                                    />
+                                }
+                            />
+
+                            {formData.confirmPassword && (
+                                <div className="flex items-center space-x-2">
+                                    {formData.password === formData.confirmPassword ? (
+                                        <>
+                                            <Check className="w-4 h-4 text-green-500" />
+                                            <span className="text-xs text-green-500">
+                                                {t('register_page.passwords_match')}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="text-xs text-red-500">
+                                            {t('register_page.passwords_do_not_match')}
+                                        </span>
                                     )}
                                 </div>
                             )}
+                        </div>
 
-                            {/* Username Field */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                    {t('register_page.username_label')}
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                                        <User className="w-4 h-4" />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        value={formData.username}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                username: e.target.value,
-                                            }))
-                                        }
-                                        placeholder={t('register_page.username_placeholder')}
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200"
-                                        required
-                                    />
-                                </div>
-                            </div>
+                        <LoadingButton
+                            isLoading={isLoading}
+                            disabled={formData.password !== formData.confirmPassword}
+                            loadingText={t('register_page.creating_account_button')}
+                        >
+                            <span>{t('register_page.create_account_button')}</span>
+                        </LoadingButton>
+                    </form>
+                )}
 
-                            {/* Email Field */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                    {t('register_page.email_label')}
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                                        <Mail className="w-4 h-4" />
-                                    </div>
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                email: e.target.value,
-                                            }))
-                                        }
-                                        placeholder={t('register_page.email_placeholder')}
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200"
-                                        required
-                                    />
-                                </div>
-                            </div>
+                <SocialLoginButtons mode="register" />
 
-                            {/* Password Field */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                    {t('register_page.password_label')}
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                                        <Lock className="w-4 h-4" />
-                                    </div>
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={formData.password}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                password: e.target.value,
-                                            }))
-                                        }
-                                        placeholder={t('register_page.password_placeholder')}
-                                        className="w-full pl-10 pr-10 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-colors duration-200"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff className="w-4 h-4" />
-                                        ) : (
-                                            <Eye className="w-4 h-4" />
-                                        )}
-                                    </button>
-                                </div>
-
-                                {/* Password Strength Indicator */}
-                                {formData.password && (
-                                    <div className="space-y-2">
-                                        <div className="flex space-x-1">
-                                            {[...Array(5)].map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`h-1.5 flex-1 transition-all duration-200 ${
-                                                        i < passwordStrength
-                                                            ? strengthColors[passwordStrength - 1]
-                                                            : 'bg-gray-200 dark:bg-dark-600'
-                                                    }`}
-                                                />
-                                            ))}
-                                        </div>
-                                        <p
-                                            className={`text-xs ${passwordStrength >= 3 ? 'text-green-500' : passwordStrength >= 2 ? 'text-yellow-500' : 'text-red-500'}`}
-                                        >
-                                            {t('register_page.password_strength_label')}:{' '}
-                                            {t(
-                                                `register_page.password_strength_levels.${strengthLabels[passwordStrength - 1].toLowerCase().replace(' ', '_')}`
-                                            )}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Confirm Password Field */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
-                                    {t('register_page.confirm_password_label')}
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                                        <Lock className="w-4 h-4" />
-                                    </div>
-                                    <input
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        value={formData.confirmPassword}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                confirmPassword: e.target.value,
-                                            }))
-                                        }
-                                        placeholder={t(
-                                            'register_page.confirm_password_placeholder'
-                                        )}
-                                        className="w-full pl-10 pr-10 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200"
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 transition-colors duration-200"
-                                    >
-                                        {showConfirmPassword ? (
-                                            <EyeOff className="w-4 h-4" />
-                                        ) : (
-                                            <Eye className="w-4 h-4" />
-                                        )}
-                                    </button>
-                                </div>
-
-                                {/* Password Match Indicator */}
-                                {formData.confirmPassword && (
-                                    <div className="flex items-center space-x-2">
-                                        {formData.password === formData.confirmPassword ? (
-                                            <>
-                                                <Check className="w-4 h-4 text-green-500" />
-                                                <span className="text-xs text-green-500">
-                                                    {t('register_page.passwords_match')}
-                                                </span>
-                                            </>
-                                        ) : (
-                                            <span className="text-xs text-red-500">
-                                                {t('register_page.passwords_do_not_match')}
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={
-                                    isLoading || formData.password !== formData.confirmPassword
-                                }
-                                className={`
-                                w-full flex items-center justify-center space-x-3 py-3 px-4 font-semibold transition-all duration-200
-                                ${
-                                    isLoading || formData.password !== formData.confirmPassword
-                                        ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
-                                }
-                                focus:outline-none focus:ring-4 focus:ring-teal-500/30
-                            `}
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                                        <span>{t('register_page.creating_account_button')}</span>
-                                    </>
-                                ) : (
-                                    <span>{t('register_page.create_account_button')}</span>
-                                )}
-                            </button>
-                        </form>
-                    )}
-
-                    {/* Social Login Buttons */}
-                    <SocialLoginButtons mode="register" />
-
-                    {/* Sign In Link */}
-                    <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
-                        <p className="text-gray-500 dark:text-slate-400">
-                            {t('register_page.already_have_account_question')}{' '}
-                            <Link
-                                to="/login"
-                                className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200"
-                            >
-                                {t('register_page.sign_in_link')}
-                            </Link>
-                        </p>
-                    </div>
-                </Card>
-            </div>
-            <Modal
-                isOpen={errorModal.isOpen}
-                onClose={errorModal.close}
-                title={t('common.error')}
-                confirmText={t('common.ok')}
-                onConfirm={errorModal.close}
-                confirmButtonClass="bg-blue-600 hover:bg-blue-700"
-            >
-                <p>{errorModal.message}</p>
-            </Modal>
-        </div>
+                <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
+                    <p className="text-gray-500 dark:text-slate-400">
+                        {t('register_page.already_have_account_question')}{' '}
+                        <Link
+                            to="/login"
+                            className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200"
+                        >
+                            {t('register_page.sign_in_link')}
+                        </Link>
+                    </p>
+                </div>
+            </Card>
+        </AuthPageLayout>
     );
 }

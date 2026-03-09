@@ -1,7 +1,11 @@
-import isCidr from 'is-cidr';
-import { isIP } from 'is-ip';
 import { z } from 'zod';
 import { EXPIRATION_TIMES_SECONDS } from '../lib/constants';
+import {
+    ipRangeSchema,
+    paginationQuerySchema,
+    processPaginationParams,
+    uint8ArraySchema,
+} from './shared';
 
 // Valid durations for request validity (how long the creator link is active)
 export const REQUEST_VALIDITY_SECONDS = [
@@ -37,13 +41,7 @@ export const createSecretRequestSchema = z.object({
             }
         ),
 
-    allowedIp: z
-        .string()
-        .refine((val) => isCidr(val) || isIP(val), {
-            message: 'Must be a valid IPv4, IPv6, or CIDR',
-        })
-        .nullable()
-        .optional(),
+    allowedIp: ipRangeSchema,
     preventBurn: z.boolean().default(false),
     webhookUrl: z.string().url().optional(),
 });
@@ -64,59 +62,25 @@ const MIN_SECRET_SIZE = 28;
 const MAX_TITLE_SIZE = 1024;
 
 export const submitSecretRequestSchema = z.object({
-    secret: z
-        .preprocess((arg) => {
-            if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
-                const values = Object.values(arg);
-                return new Uint8Array(values as number[]);
-            }
-            return arg;
-        }, z.instanceof(Uint8Array))
-        .refine((arr) => arr.length >= MIN_SECRET_SIZE, {
+    secret: uint8ArraySchema(MAX_SECRET_SIZE, `Secret (max ${MAX_SECRET_SIZE} bytes)`).refine(
+        (arr) => arr instanceof Uint8Array && arr.length >= MIN_SECRET_SIZE,
+        {
             message: 'Secret data is too small to be valid encrypted content',
-        })
-        .refine((arr) => arr.length <= MAX_SECRET_SIZE, {
-            message: `Secret exceeds maximum size of ${MAX_SECRET_SIZE} bytes`,
-        }),
-    title: z
-        .preprocess((arg) => {
-            if (arg && typeof arg === 'object' && !Array.isArray(arg)) {
-                const values = Object.values(arg);
-                return new Uint8Array(values as number[]);
-            }
-            return arg;
-        }, z.instanceof(Uint8Array))
-        .refine((arr) => arr.length <= MAX_TITLE_SIZE, {
-            message: `Title exceeds maximum size of ${MAX_TITLE_SIZE} bytes`,
-        })
+        }
+    ),
+    title: uint8ArraySchema(MAX_TITLE_SIZE, `Title (max ${MAX_TITLE_SIZE} bytes)`)
         .optional()
         .nullable(),
     salt: z.string().min(16).max(64),
 });
 
-export const secretRequestsQuerySchema = z.object({
-    page: z
-        .string()
-        .optional()
-        .refine((val) => val === undefined || /^\d+$/.test(val), {
-            message: 'Page must be a positive integer string',
-        }),
-    limit: z
-        .string()
-        .optional()
-        .refine((val) => val === undefined || /^\d+$/.test(val), {
-            message: 'Limit must be a positive integer string',
-        }),
+export const secretRequestsQuerySchema = paginationQuerySchema.extend({
     status: z.enum(['all', 'pending', 'fulfilled', 'expired', 'cancelled']).optional(),
 });
 
 export const processSecretRequestsQueryParams = (
     query: z.infer<typeof secretRequestsQuerySchema>
 ) => {
-    const page = query.page ? parseInt(query.page, 10) : undefined;
-    const limit = query.limit ? parseInt(query.limit, 10) : undefined;
-    const take = limit && limit > 0 && limit <= 100 ? limit : 10;
-    const skip = page && page > 0 ? (page - 1) * take : 0;
-
+    const { skip, take } = processPaginationParams(query);
     return { skip, take, status: query.status };
 };

@@ -5,19 +5,14 @@ import { stream } from 'hono/streaming';
 import { nanoid } from 'nanoid';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
-import { z } from 'zod';
-import config from '../config';
 import prisma from '../lib/db';
 import { generateSafeFilePath, getMaxFileSize, isPathSafe } from '../lib/files';
-import { getInstanceSettings } from '../lib/settings';
+import { resolveSettings } from '../lib/settings';
+import { idParamSchema } from '../validations/shared';
 
 const files = new Hono();
 
-const fileIdParamSchema = z.object({
-    id: z.string(),
-});
-
-files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
+files.get('/:id', zValidator('param', idParamSchema), async (c) => {
     const { id } = c.req.valid('param');
 
     try {
@@ -79,14 +74,8 @@ files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
 files.post('/', async (c) => {
     try {
         // Check if file uploads are allowed
-        let allowFileUploads = true;
-        if (config.isManaged()) {
-            const managedSettings = config.getManagedSettings();
-            allowFileUploads = managedSettings?.allowFileUploads ?? true;
-        } else {
-            const instanceSettings = await getInstanceSettings();
-            allowFileUploads = instanceSettings?.allowFileUploads ?? true;
-        }
+        const instanceSettings = await resolveSettings();
+        const allowFileUploads = instanceSettings?.allowFileUploads ?? true;
 
         if (!allowFileUploads) {
             return c.json({ error: 'File uploads are disabled on this instance.' }, 403);

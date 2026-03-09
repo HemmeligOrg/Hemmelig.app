@@ -2,6 +2,7 @@ import { Key, Mail, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from './Modal';
+import { ModalInput } from './ModalInput';
 
 interface NewUser {
     name: string;
@@ -45,78 +46,45 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
             cancelText={t('users_page.add_user_modal.cancel_button')}
         >
             <div className="space-y-3">
-                <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                        {t('users_page.add_user_modal.name_label')}
-                    </label>
-                    <div className="relative">
-                        <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                        {t('users_page.add_user_modal.username_label')}
-                    </label>
-                    <div className="relative">
-                        <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                        {t('users_page.add_user_modal.email_label')}
-                    </label>
-                    <div className="relative">
-                        <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                        {t('users_page.add_user_modal.password_label')}
-                    </label>
-                    <div className="relative">
-                        <Key className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                        {t('users_page.add_user_modal.role_label')}
-                    </label>
-                    <div className="relative">
-                        <Shield className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500 w-4 h-4" />
-                        <select
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none"
-                        >
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                </div>
+                <ModalInput
+                    label={t('users_page.add_user_modal.name_label')}
+                    icon={User}
+                    type="text"
+                    value={name}
+                    onChange={setName}
+                />
+                <ModalInput
+                    label={t('users_page.add_user_modal.username_label')}
+                    icon={User}
+                    type="text"
+                    value={username}
+                    onChange={setUsername}
+                />
+                <ModalInput
+                    label={t('users_page.add_user_modal.email_label')}
+                    icon={Mail}
+                    type="email"
+                    value={email}
+                    onChange={setEmail}
+                />
+                <ModalInput
+                    label={t('users_page.add_user_modal.password_label')}
+                    icon={Key}
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                />
+                <ModalInput
+                    label={t('users_page.add_user_modal.role_label')}
+                    icon={Shield}
+                    as="select"
+                    value={role}
+                    onChange={setRole}
+                    options={[
+                        { value: 'user', label: 'User' },
+                        { value: 'admin', label: 'Admin' },
+                    ]}
+                />
             </div>
         </Modal>
     );

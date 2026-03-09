@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import prisma from '../lib/db';
 import { checkAdmin } from '../middlewares/auth';
+import { idParamSchema } from '../validations/shared';
 import { updateUserSchema } from '../validations/user';
 
 export const userRoute = new Hono()
@@ -60,7 +61,7 @@ export const userRoute = new Hono()
     )
     .put(
         '/:id',
-        zValidator('param', z.object({ id: z.string() })),
+        zValidator('param', idParamSchema),
         zValidator('json', updateUserSchema),
         async (c) => {
             const { id } = c.req.valid('param');

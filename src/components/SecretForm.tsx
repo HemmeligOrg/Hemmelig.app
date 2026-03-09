@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 import { encrypt, encryptFile, generateEncryptionKey, generateSalt } from '../lib/crypto';
-import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
 import { Card } from './Card';
 import { CreateButton } from './CreateButton';
@@ -13,7 +12,6 @@ import { SecuritySettings } from './SecuritySettings';
 import { TitleField } from './TitleField';
 
 export function SecretForm() {
-    const { settings: instanceSettings } = useHemmeligStore();
     const {
         secret,
         title,
@@ -31,10 +29,6 @@ export function SecretForm() {
     const [files, setFiles] = useState<File[]>([]);
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
-    const handleFileChange = (files: File[]) => {
-        setFiles(files);
-    };
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -141,7 +135,7 @@ export function SecretForm() {
                 {/* File upload and quick create button */}
                 <div className="mt-5 flex flex-col sm:flex-row gap-4 sm:items-start">
                     <div className="flex-1">
-                        <FileUpload onFileChange={handleFileChange} compact />
+                        <FileUpload onFileChange={setFiles} compact />
                     </div>
                     <div className="sm:flex-shrink-0">
                         <CreateButton
@@ -153,7 +147,7 @@ export function SecretForm() {
                 </div>
             </Card>
 
-            <SecuritySettings instanceSettings={instanceSettings} />
+            <SecuritySettings />
 
             {/* Create button */}
             <CreateButton onSubmit={handleSubmit} isLoading={isLoading} disabled={!isFormValid} />

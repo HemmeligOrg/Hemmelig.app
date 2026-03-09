@@ -3,7 +3,9 @@ import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { buildPaginationMeta } from '../lib/route-utils';
 import { isPublicUrl } from '../lib/utils';
+import { sendWithRetry } from '../lib/webhook';
 import { authMiddleware } from '../middlewares/auth';
 import {
     createSecretRequestSchema,
@@ -52,34 +54,7 @@ async function sendSecretRequestWebhook(
             'User-Agent': 'Hemmelig-Webhook/1.0',
         };
 
-        // Retry with exponential backoff
-        const maxRetries = 3;
-        for (let attempt = 0; attempt < maxRetries; attempt++) {
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers,
-                    body: payloadString,
-                    signal: AbortSignal.timeout(5000), // 5 second timeout to prevent slow-loris
-                    redirect: 'error', // Prevent SSRF via open redirects
-                });
-
-                if (response.ok) return;
-
-                // Don't retry for client errors (4xx)
-                if (response.status >= 400 && response.status < 500) {
-                    console.error(`Secret request webhook delivery failed: ${response.status}`);
-                    return;
-                }
-            } catch (error) {
-                if (attempt === maxRetries - 1) {
-                    console.error('Secret request webhook delivery failed after retries:', error);
-                }
-            }
-
-            // Exponential backoff: 1s, 2s, 4s
-            await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
-        }
+        await sendWithRetry(webhookUrl, headers, payloadString);
     } catch (error) {
         console.error('Error preparing secret request webhook:', error);
     }
@@ -152,13 +127,7 @@ const app = new Hono<{
 
             return c.json({
                 data: items,
-                meta: {
-                    total,
-                    skip,
-                    take,
-                    page: Math.floor(skip / take) + 1,
-                    totalPages: Math.ceil(total / take),
-                },
+                meta: buildPaginationMeta(total, skip, take),
             });
         } catch (error) {
             console.error('Failed to retrieve secret requests:', error);
