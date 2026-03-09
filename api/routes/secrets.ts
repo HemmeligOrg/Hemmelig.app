@@ -150,10 +150,14 @@ const app = new Hono<{
                     // Consume the view atomically with retrieval
                     const newViews = item.views! - 1;
 
-                    // If burnable and last view, delete the secret after returning data
-                    if (item.isBurnable && newViews <= 0) {
-                        await tx.secrets.delete({ where: { id } });
+                    // Decrement views (don't delete yet — files may still need downloading)
+                    // The cleanup job handles deletion of secrets with views=0
+                    await tx.secrets.update({
+                        where: { id },
+                        data: { views: newViews },
+                    });
 
+                    if (item.isBurnable && newViews <= 0) {
                         // Send webhook for burned secret
                         sendWebhook('secret.burned', {
                             secretId: id,
@@ -161,12 +165,6 @@ const app = new Hono<{
                             hasIpRestriction: !!item.ipRange,
                         });
                     } else {
-                        // Decrement views
-                        await tx.secrets.update({
-                            where: { id },
-                            data: { views: newViews },
-                        });
-
                         // Send webhook for viewed secret
                         sendWebhook('secret.viewed', {
                             secretId: id,

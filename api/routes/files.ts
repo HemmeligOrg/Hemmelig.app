@@ -39,11 +39,13 @@ files.get('/:id', zValidator('param', fileIdParamSchema), async (c) => {
             return c.json({ error: 'File not found' }, 404);
         }
 
-        // Security: Verify the file is associated with at least one valid (non-expired, has views) secret
+        // Security: Verify the file is associated with at least one valid (non-expired) secret
         // This prevents direct file access without going through the secret viewing flow
+        // We allow views >= 0 because files need to be downloadable after the last view is consumed
+        // (the secret view and file download are separate requests)
         const hasValidSecret = file.secrets.some((secret) => {
             const now = new Date();
-            const hasViewsRemaining = secret.views === null || secret.views > 0;
+            const hasViewsRemaining = secret.views === null || secret.views >= 0;
             const notExpired = secret.expiresAt > now;
             return hasViewsRemaining && notExpired;
         });
