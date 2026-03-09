@@ -2,6 +2,7 @@ import { CircleUser, Home, LogIn, UserPlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useHemmeligStore } from '../store/hemmeligStore.ts';
+import { useSecretStore } from '../store/secretStore.ts';
 import { useUserStore } from '../store/userStore.ts';
 import Logo from './Logo.tsx';
 
@@ -9,6 +10,7 @@ export function Header() {
     const { t } = useTranslation();
     const { user } = useUserStore();
     const { settings } = useHemmeligStore();
+    const resetSecret = useSecretStore((s) => s.resetSecret);
 
     return (
         <header className="pt-4 sm:pt-8 pb-4 sm:pb-6">
@@ -17,6 +19,7 @@ export function Header() {
                 <div className="flex justify-between items-center mb-4 sm:mb-6">
                     <Link
                         to="/"
+                        onClick={resetSecret}
                         className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-xs sm:text-sm"
                     >
                         <Home className="w-4 h-4" />
