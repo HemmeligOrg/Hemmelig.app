@@ -136,7 +136,7 @@ export const SecretSettings = () => {
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <button
                     onClick={resetSecret}
-                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                 >
                     <Plus className="h-4 w-4" />
                     {t('secret_settings.create_new_secret_button')}
@@ -144,13 +144,13 @@ export const SecretSettings = () => {
                 <div className="w-full sm:w-auto flex gap-3">
                     <button
                         onClick={() => handleCopyToClipboard(secretUrl, 'url')}
-                        className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-teal-500/20 hover:shadow-lg hover:shadow-teal-500/30"
+                        className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-medium transition-all duration-200"
                     >
                         {t('secret_settings.copy_url_button')}
                     </button>
                     <button
                         onClick={handleBurnSecret}
-                        className="flex-1 sm:flex-none px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30"
+                        className="flex-1 sm:flex-none px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200"
                     >
                         {t('secret_settings.burn_secret_button')}
                     </button>

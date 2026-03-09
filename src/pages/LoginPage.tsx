@@ -147,7 +147,7 @@ export function LoginPage() {
                                 ${
                                     isLoading
                                         ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                                        : 'bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-white'
                                 }
                                 focus:outline-none focus:ring-4 focus:ring-teal-500/30
                             `}

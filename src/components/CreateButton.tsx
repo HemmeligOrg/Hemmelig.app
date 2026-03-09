@@ -20,7 +20,7 @@ export function CreateButton({ onSubmit, isLoading, disabled }: CreateButtonProp
                     ${
                         disabled || isLoading
                             ? 'bg-gray-300 dark:bg-dark-600 text-gray-500 dark:text-slate-400 cursor-not-allowed'
-                            : 'bg-teal-500 hover:bg-teal-600 text-white shadow-md shadow-teal-500/20 hover:shadow-lg hover:shadow-teal-500/30'
+                            : 'bg-teal-500 hover:bg-teal-600 text-white'
                     }
                     focus:outline-none focus:ring-2 focus:ring-teal-500/30
                 `}

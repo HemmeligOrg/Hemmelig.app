@@ -261,7 +261,7 @@ export function SecretPage() {
                             <button
                                 onClick={handleViewSecret}
                                 disabled={needsManualKeyEntry && !decryptionKeyInput}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30"
+                                className="inline-flex items-center gap-2 px-8 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200"
                             >
                                 <LockOpen className="w-5 h-5" />
                                 {t('secret_page.unlock_secret')}
@@ -362,14 +362,14 @@ export function SecretPage() {
                 <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-700/30 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <Link
                         to="/"
-                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-teal-500/20"
+                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-all duration-200"
                     >
                         <Plus className="w-4 h-4" />
                         {t('secret_page.create_your_own')}
                     </Link>
                     <button
                         onClick={() => setShowDeleteModal(true)}
-                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-red-500/20"
+                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200"
                     >
                         <Trash2 className="w-4 h-4" />
                         {t('secret_page.delete_secret')}

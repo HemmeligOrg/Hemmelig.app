@@ -133,7 +133,7 @@ export function Verify2FAPage() {
                                 ${
                                     isLoading || code.join('').length !== 6
                                         ? 'bg-dark-600 text-gray-500 dark:text-slate-400 cursor-not-allowed'
-                                        : 'bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white hover:scale-105 hover:shadow-2xl shadow-teal-500/25'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white'
                                 }
                                 focus:outline-none focus:ring-4 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-white dark:ring-offset-dark-800
                             `}
