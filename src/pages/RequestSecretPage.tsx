@@ -166,7 +166,7 @@ export function RequestSecretPage() {
         return (
             <div className="py-12">
                 <div className="max-w-2xl mx-auto">
-                    <Card gradient="green" noPadding className="p-6 sm:p-8">
+                    <Card noPadding className="p-6 sm:p-8">
                         <div className="text-center mb-6">
                             <div className="w-16 h-16 bg-green-500/20 mx-auto mb-4 flex items-center justify-center">
                                 <Send className="w-8 h-8 text-green-400" />
@@ -229,7 +229,7 @@ export function RequestSecretPage() {
     return (
         <div className="py-6 sm:py-8">
             <div className="max-w-2xl mx-auto">
-                <Card gradient="teal" noPadding className="p-6 sm:p-8">
+                <Card noPadding className="p-6 sm:p-8">
                     <div className="mb-6">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                             {t('request_secret_page.form.title')}

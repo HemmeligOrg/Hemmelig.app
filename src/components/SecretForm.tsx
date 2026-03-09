@@ -128,7 +128,7 @@ export function SecretForm() {
 
     return (
         <div className="space-y-6">
-            <Card gradient="teal" hover>
+            <Card hover>
                 <Editor value={secret} onChange={(value) => setSecretData({ secret: value })} />
 
                 <div className="mt-5">

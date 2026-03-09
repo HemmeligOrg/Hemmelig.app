@@ -198,7 +198,7 @@ export function RegisterPage() {
                     </p>
                 </div>
 
-                <Card gradient="purple" noPadding className="p-6 sm:p-8">
+                <Card noPadding className="p-6 sm:p-8">
                     {isEmailPasswordDisabled && (
                         <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                             <p className="text-sm text-blue-800 dark:text-blue-200">
@@ -419,7 +419,7 @@ export function RegisterPage() {
                                 ${
                                     isLoading || formData.password !== formData.confirmPassword
                                         ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30'
                                 }
                                 focus:outline-none focus:ring-4 focus:ring-teal-500/30
                             `}

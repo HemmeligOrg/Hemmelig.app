@@ -69,7 +69,7 @@ export function SetupPage() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                <Card gradient="teal" noPadding className="p-8">
+                <Card noPadding className="p-8">
                     {/* Header */}
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center justify-center mb-4">

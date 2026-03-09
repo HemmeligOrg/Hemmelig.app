@@ -42,7 +42,7 @@ export const SecretSettings = () => {
     };
 
     return (
-        <Card gradient="green" className="mt-6">
+        <Card className="mt-6">
             {/* Success header */}
             <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 dark:bg-green-500/20 mb-4">

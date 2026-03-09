@@ -43,7 +43,7 @@ export function SecuritySettings() {
     };
 
     return (
-        <Card gradient="purple" noPadding className="p-5 sm:p-6" hover>
+        <Card noPadding className="p-5 sm:p-6" hover>
             <div className="flex items-center justify-between mb-5">
                 <div>
                     <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
@@ -107,7 +107,7 @@ export function SecuritySettings() {
 
                 {/* Burn After Time Notice - Mobile optimized */}
                 {isBurnable && (
-                    <div className="p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30">
+                    <div className="p-4 bg-orange-500/10 border border-orange-500/30">
                         <div className="flex items-start space-x-3">
                             <div className="w-10 h-10 flex items-center justify-center bg-orange-500/20 text-orange-400 flex-shrink-0">
                                 <Flame className="w-5 h-5" />

@@ -75,7 +75,7 @@ export function LoginPage() {
                     </p>
                 </div>
 
-                <Card gradient="teal" noPadding className="p-6 sm:p-8">
+                <Card noPadding className="p-6 sm:p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Username Field */}
                         <div className="space-y-2">
@@ -147,7 +147,7 @@ export function LoginPage() {
                                 ${
                                     isLoading
                                         ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30'
+                                        : 'bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30'
                                 }
                                 focus:outline-none focus:ring-4 focus:ring-teal-500/30
                             `}
