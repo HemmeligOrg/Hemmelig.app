@@ -1,7 +1,7 @@
 import { mkdir } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
-import settingsCache from './settings';
+import { resolveSettings } from './settings';
 
 /** Upload directory path */
 export const UPLOAD_DIR = resolve(process.cwd(), 'uploads');
@@ -30,8 +30,8 @@ export function isPathSafe(filePath: string): boolean {
  * Gets max file size from instance settings (in KB), converted to bytes.
  * Defaults to 10MB if not configured.
  */
-export function getMaxFileSize(): number {
-    const settings = settingsCache.get('instanceSettings');
+export async function getMaxFileSize(): Promise<number> {
+    const settings = await resolveSettings();
     const maxSecretSizeKB = settings?.maxSecretSize ?? FILE.DEFAULT_MAX_SIZE_KB;
     return maxSecretSizeKB * 1024; // Convert KB to bytes
 }
