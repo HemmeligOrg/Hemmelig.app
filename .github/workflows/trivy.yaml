@@ -4,6 +4,9 @@ on:
         # https://crontab.guru/daily
         - cron: '0 0 * * *'
     pull_request:
+permissions:
+    contents: read
+    security-events: write
 jobs:
     scan_repository:
         name: Scan the repository
