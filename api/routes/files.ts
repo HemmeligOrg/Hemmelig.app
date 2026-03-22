@@ -8,6 +8,7 @@ import { pipeline } from 'stream/promises';
 import prisma from '../lib/db';
 import { generateSafeFilePath, getMaxFileSize, isPathSafe } from '../lib/files';
 import { resolveSettings } from '../lib/settings';
+import { authMiddleware } from '../middlewares/auth';
 import { idParamSchema } from '../validations/shared';
 
 const files = new Hono();
