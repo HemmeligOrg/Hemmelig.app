@@ -10,7 +10,7 @@ export const UPLOAD_DIR = resolve(process.cwd(), 'uploads');
  * Sanitizes a filename by removing path traversal sequences and directory separators.
  * Returns only the base filename to prevent directory escape attacks.
  */
-export function sanitizeFilename(filename: string): string {
+function sanitizeFilename(filename: string): string {
     // Get only the base filename, stripping any directory components
     const base = basename(filename);
     // Remove any remaining null bytes or other dangerous characters
@@ -39,7 +39,7 @@ export async function getMaxFileSize(): Promise<number> {
 /**
  * Ensures the upload directory exists, creating it if necessary.
  */
-export async function ensureUploadDir(): Promise<void> {
+async function ensureUploadDir(): Promise<void> {
     try {
         await mkdir(UPLOAD_DIR, { recursive: true });
     } catch (error) {

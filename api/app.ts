@@ -130,9 +130,6 @@ app.on(['POST', 'GET'], `/auth/*`, (c) => {
 // Add the application routes
 app.route('/', routes);
 
-// https://hono.dev/docs/guides/rpc#rpc
-export type AppType = typeof routes;
-
 export default app;
 
 // Handle graceful shutdown

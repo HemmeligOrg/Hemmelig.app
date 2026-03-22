@@ -13,14 +13,6 @@ export const TIME = {
 } as const;
 
 /**
- * Secret-related constants
- */
-export const SECRET = {
-    /** Grace period for file downloads after last view (5 minutes) */
-    FILE_DOWNLOAD_GRACE_PERIOD_MS: 5 * TIME.MINUTE_MS,
-} as const;
-
-/**
  * File upload constants
  */
 export const FILE = {

@@ -143,13 +143,4 @@ app.get('/', async (c) => {
     }
 });
 
-export function observeHttpRequest(
-    method: string,
-    route: string,
-    statusCode: number,
-    duration: number
-) {
-    httpRequestDuration.labels(method, route, String(statusCode)).observe(duration);
-}
-
 export default app;

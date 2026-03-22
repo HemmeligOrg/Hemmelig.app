@@ -294,6 +294,3 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
         }
     },
 }));
-
-// Backwards compatibility alias for instanceStore
-export const useInstanceStore = useHemmeligStore;

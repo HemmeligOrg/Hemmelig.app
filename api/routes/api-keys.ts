@@ -148,6 +148,3 @@ const app = new Hono<{
     });
 
 export default app;
-
-// Export helper for middleware
-export { hashApiKey };

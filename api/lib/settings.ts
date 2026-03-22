@@ -7,7 +7,7 @@ const settingsCache = new Map();
  * Gets instance settings, fetching from database if not cached.
  * Use this utility to avoid duplicating the cache-check pattern.
  */
-export async function getInstanceSettings() {
+async function getInstanceSettings() {
     let cachedSettings = settingsCache.get('instanceSettings');
     if (!cachedSettings) {
         try {
@@ -41,13 +41,6 @@ export async function resolveSettings() {
  */
 export function setCachedInstanceSettings(settings: unknown) {
     settingsCache.set('instanceSettings', settings);
-}
-
-/**
- * Gets the raw settings cache (for direct access when needed).
- */
-export function getSettingsCache() {
-    return settingsCache;
 }
 
 export default settingsCache;
