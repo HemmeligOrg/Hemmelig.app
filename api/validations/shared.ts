@@ -31,7 +31,11 @@ export const usernameSchema = z
  * Used across secrets, files, API keys, invites, etc.
  */
 export const idParamSchema = z.object({
-    id: z.string(),
+    id: z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[a-zA-Z0-9_-]+$/, 'Invalid ID format'),
 });
 
 /**
