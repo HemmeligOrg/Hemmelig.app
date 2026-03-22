@@ -88,7 +88,7 @@ files.post('/', async (c) => {
             return c.json({ error: 'File is required and must be a file.' }, 400);
         }
 
-        const maxFileSize = getMaxFileSize();
+        const maxFileSize = await getMaxFileSize();
         if (file.size > maxFileSize) {
             return c.json(
                 { error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` },
