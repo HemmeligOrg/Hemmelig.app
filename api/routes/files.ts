@@ -71,7 +71,7 @@ files.get('/:id', zValidator('param', idParamSchema), async (c) => {
     }
 });
 
-files.post('/', async (c) => {
+files.post('/', authMiddleware, async (c) => {
     try {
         // Check if file uploads are allowed
         const instanceSettings = await resolveSettings();
