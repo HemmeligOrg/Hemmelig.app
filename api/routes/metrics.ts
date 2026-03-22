@@ -120,12 +120,15 @@ app.get('/', async (c) => {
             return c.json({ error: 'Metrics endpoint is disabled' }, 404);
         }
 
-        // Verify authentication if secret is configured
-        if (settings.metricsSecret) {
-            const authHeader = c.req.header('Authorization');
-            if (!verifyBearerToken(authHeader, settings.metricsSecret)) {
-                return c.json({ error: 'Unauthorized' }, 401);
-            }
+        // Require a metrics secret to be configured
+        if (!settings.metricsSecret) {
+            return c.json({ error: 'Metrics secret is not configured' }, 403);
+        }
+
+        // Verify authentication
+        const authHeader = c.req.header('Authorization');
+        if (!verifyBearerToken(authHeader, settings.metricsSecret)) {
+            return c.json({ error: 'Unauthorized' }, 401);
         }
 
         // Update gauge metrics before returning
