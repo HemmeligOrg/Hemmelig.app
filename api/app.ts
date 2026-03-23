@@ -72,8 +72,8 @@ startJobs();
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
 app.use(async (c, next) => {
-    // Skip CSP for Swagger UI docs page (it loads scripts/styles from unpkg.com CDN)
-    if (c.req.path === '/docs') {
+    // Skip CSP for Swagger UI docs page (it loads scripts/styles from cdn.jsdelivr.net)
+    if (c.req.path.endsWith('/api/docs')) {
         return next();
     }
     return secureHeaders({
