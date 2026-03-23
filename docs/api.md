@@ -83,8 +83,10 @@ For endpoints requiring admin access, the authenticated user must have the `admi
 ```bash
 curl -X POST https://your-instance.com/api/secrets \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer hemmelig_your_api_key_here" \
   -d '{
-    "secret": "BASE64_ENCRYPTED_CONTENT",
+    "secret": { "0": 116, "1": 101, "2": 115, "3": 116 },
+    "title": { "0": 78, "1": 111, "2": 116, "3": 101 },
     "salt": "ENCRYPTION_SALT",
     "expiresAt": 3600,
     "views": 1
@@ -102,5 +104,6 @@ Response:
 ## Important Notes
 
 - **Client-side encryption:** All secret content should be encrypted client-side before sending to the API. The server only stores encrypted data.
+- **Serialized `Uint8Array` fields:** `secret` and `title` must be sent as JSON-serialized `Uint8Array` objects such as `{ "0": 116, "1": 101, "2": 115, "3": 116 }`.
 - **Decryption keys:** Never send decryption keys to the server. They should be passed via URL fragments (`#key=...`) which are not transmitted to the server.
 - **Rate limiting:** API requests may be rate-limited based on instance settings.

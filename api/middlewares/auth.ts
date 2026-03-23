@@ -1,4 +1,5 @@
 import { createHash } from 'crypto';
+import type { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
 import { auth } from '../auth';
 import prisma from '../lib/db';
@@ -9,6 +10,61 @@ type Env = {
         session: typeof auth.$Infer.Session.session | null;
     };
 };
+
+type ApiKeyAuthResult = { user: typeof auth.$Infer.Session.user } | { error: string; status: 401 };
+type AuthContext = Context<Env>;
+
+async function authenticateApiKeyHeader(authHeader: string | undefined): Promise<ApiKeyAuthResult> {
+    if (!authHeader?.startsWith('Bearer ')) {
+        return { error: 'Unauthorized', status: 401 };
+    }
+
+    const apiKey = authHeader.substring(7);
+    if (!apiKey.startsWith('hemmelig_')) {
+        return { error: 'Invalid API key format', status: 401 };
+    }
+
+    try {
+        const keyHash = createHash('sha256').update(apiKey).digest('hex');
+
+        const apiKeyRecord = await prisma.apiKey.findUnique({
+            where: { keyHash },
+            include: { user: true },
+        });
+
+        if (!apiKeyRecord) {
+            return { error: 'Invalid API key', status: 401 };
+        }
+
+        if (apiKeyRecord.expiresAt && new Date() > apiKeyRecord.expiresAt) {
+            return { error: 'API key has expired', status: 401 };
+        }
+
+        prisma.apiKey
+            .update({
+                where: { id: apiKeyRecord.id },
+                data: { lastUsedAt: new Date() },
+            })
+            .catch(() => {});
+
+        return { user: apiKeyRecord.user as typeof auth.$Infer.Session.user };
+    } catch (error) {
+        console.error('API key auth error:', error);
+        return { error: 'Authentication failed', status: 401 };
+    }
+}
+
+async function setApiKeyUserFromHeader(c: AuthContext, authHeader: string | undefined) {
+    const result = await authenticateApiKeyHeader(authHeader);
+    if ('error' in result) {
+        return c.json({ error: result.error }, result.status);
+    }
+
+    c.set('user', result.user);
+    c.set('session', null);
+
+    return null;
+}
 
 export const authMiddleware = createMiddleware<Env>(async (c, next) => {
     const user = c.get('user');
@@ -43,49 +99,30 @@ export const apiKeyOrAuthMiddleware = createMiddleware<Env>(async (c, next) => {
         return next();
     }
 
-    // Check for API key in Authorization header
-    const authHeader = c.req.header('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-        return c.json({ error: 'Unauthorized' }, 401);
+    const authResponse = await setApiKeyUserFromHeader(c, c.req.header('Authorization'));
+    if (authResponse) {
+        return authResponse;
     }
 
-    const apiKey = authHeader.substring(7);
-    if (!apiKey.startsWith('hemmelig_')) {
-        return c.json({ error: 'Invalid API key format' }, 401);
-    }
+    return next();
+});
 
-    try {
-        const keyHash = createHash('sha256').update(apiKey).digest('hex');
-
-        const apiKeyRecord = await prisma.apiKey.findUnique({
-            where: { keyHash },
-            include: { user: true },
-        });
-
-        if (!apiKeyRecord) {
-            return c.json({ error: 'Invalid API key' }, 401);
-        }
-
-        // Check if key is expired
-        if (apiKeyRecord.expiresAt && new Date() > apiKeyRecord.expiresAt) {
-            return c.json({ error: 'API key has expired' }, 401);
-        }
-
-        // Update last used timestamp (fire and forget)
-        prisma.apiKey
-            .update({
-                where: { id: apiKeyRecord.id },
-                data: { lastUsedAt: new Date() },
-            })
-            .catch(() => {});
-
-        // Set user from API key
-        c.set('user', apiKeyRecord.user as typeof auth.$Infer.Session.user);
-        c.set('session', null);
-
+// Middleware that accepts session auth OR API key auth, but also allows anonymous access
+export const optionalApiKeyOrAuthMiddleware = createMiddleware<Env>(async (c, next) => {
+    const sessionUser = c.get('user');
+    if (sessionUser) {
         return next();
-    } catch (error) {
-        console.error('API key auth error:', error);
-        return c.json({ error: 'Authentication failed' }, 401);
     }
+
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader) {
+        return next();
+    }
+
+    const authResponse = await setApiKeyUserFromHeader(c, authHeader);
+    if (authResponse) {
+        return authResponse;
+    }
+
+    return next();
 });

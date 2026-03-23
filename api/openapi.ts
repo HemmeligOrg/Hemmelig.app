@@ -138,7 +138,7 @@ const spec = {
                 tags: ['Secrets'],
                 summary: 'List user secrets',
                 description: 'Get paginated list of secrets created by the authenticated user',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     {
                         name: 'page',
@@ -176,7 +176,8 @@ const spec = {
                 tags: ['Secrets'],
                 summary: 'Create a new secret',
                 description:
-                    'Create a new encrypted secret. The secret content should be encrypted client-side before sending.',
+                    'Create a new encrypted secret. Authentication is optional: anonymous creation works when the instance does not require registered users, and authenticated creation supports either a session cookie or Authorization: Bearer hemmelig_... . The secret and title fields must be sent as JSON-serialized Uint8Array objects.',
+                security: [{}, { cookieAuth: [] }, { bearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -1369,8 +1370,28 @@ const spec = {
                 type: 'object',
                 required: ['secret', 'salt', 'expiresAt'],
                 properties: {
-                    secret: { type: 'string', description: 'Encrypted secret content' },
-                    title: { type: 'string', nullable: true },
+                    secret: {
+                        type: 'object',
+                        additionalProperties: {
+                            type: 'integer',
+                            minimum: 0,
+                            maximum: 255,
+                        },
+                        description:
+                            'Encrypted secret content sent as a JSON-serialized Uint8Array',
+                        example: { '0': 116, '1': 101, '2': 115, '3': 116 },
+                    },
+                    title: {
+                        type: 'object',
+                        nullable: true,
+                        additionalProperties: {
+                            type: 'integer',
+                            minimum: 0,
+                            maximum: 255,
+                        },
+                        description: 'Encrypted title as a JSON-serialized Uint8Array',
+                        example: { '0': 78, '1': 111, '2': 116, '3': 101 },
+                    },
                     salt: { type: 'string', description: 'Salt used for encryption' },
                     password: { type: 'string', description: 'Optional password protection' },
                     expiresAt: {

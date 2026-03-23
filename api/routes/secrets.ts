@@ -7,7 +7,7 @@ import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
-import { apiKeyOrAuthMiddleware } from '../middlewares/auth';
+import { apiKeyOrAuthMiddleware, optionalApiKeyOrAuthMiddleware } from '../middlewares/auth';
 import { ipRestriction } from '../middlewares/ip-restriction';
 import {
     createSecretsSchema,
@@ -231,68 +231,78 @@ const app = new Hono<{
             );
         }
     })
-    .post('/', zValidator('json', createSecretsSchema), async (c) => {
-        try {
-            const user = c.get('user');
+    .post(
+        '/',
+        optionalApiKeyOrAuthMiddleware,
+        zValidator('json', createSecretsSchema),
+        async (c) => {
+            try {
+                const user = c.get('user');
 
-            // Check if only registered users can create secrets
-            const settings = await resolveSettings();
-            if (settings?.requireRegisteredUser && !user) {
-                return c.json({ error: 'Only registered users can create secrets' }, 401);
-            }
+                // Check if only registered users can create secrets
+                const settings = await resolveSettings();
+                if (settings?.requireRegisteredUser && !user) {
+                    return c.json({ error: 'Only registered users can create secrets' }, 401);
+                }
 
-            const validatedData = c.req.valid('json');
+                const validatedData = c.req.valid('json');
 
-            // Enforce dynamic maxSecretSize from instance settings (in KB)
-            const maxSizeKB = settings?.maxSecretSize ?? 1024;
-            const maxSizeBytes = maxSizeKB * 1024;
-            if (validatedData.secret.length > maxSizeBytes) {
-                return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
-            }
+                // Enforce dynamic maxSecretSize from instance settings (in KB)
+                const maxSizeKB = settings?.maxSecretSize ?? 1024;
+                const maxSizeBytes = maxSizeKB * 1024;
+                if (validatedData.secret.length > maxSizeBytes) {
+                    return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
+                }
 
-            const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
+                const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
 
-            const data: SecretCreateData = {
-                ...rest,
-                salt,
-                // Title is required by the database, default to empty Uint8Array if not provided
-                title: title ?? new Uint8Array(0),
-                password: password ? await hash(password) : null,
-                expiresAt: new Date(Date.now() + expiresAt * 1000),
-                ...(fileIds && {
-                    files: { connect: fileIds.map((id: string) => ({ id })) },
-                }),
-            };
+                const data: SecretCreateData = {
+                    ...rest,
+                    salt,
+                    // Title is required by the database, default to empty Uint8Array if not provided
+                    title: title ?? new Uint8Array(0),
+                    password: password ? await hash(password) : null,
+                    expiresAt: new Date(Date.now() + expiresAt * 1000),
+                    ...(fileIds && {
+                        files: { connect: fileIds.map((id: string) => ({ id })) },
+                    }),
+                };
 
-            if (user) {
-                data.userId = user.id;
-            }
+                if (user) {
+                    data.userId = user.id;
+                }
 
-            const item = await prisma.secrets.create({ data });
+                const item = await prisma.secrets.create({ data });
 
-            return c.json({ id: item.id }, 201);
-        } catch (error: unknown) {
-            console.error('Failed to create secrets:', error);
+                return c.json({ id: item.id }, 201);
+            } catch (error: unknown) {
+                console.error('Failed to create secrets:', error);
 
-            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
-                const prismaError = error as { meta?: { target?: string } };
+                if (
+                    error &&
+                    typeof error === 'object' &&
+                    'code' in error &&
+                    error.code === 'P2002'
+                ) {
+                    const prismaError = error as { meta?: { target?: string } };
+                    return c.json(
+                        {
+                            error: 'Could not create secrets',
+                            details: prismaError.meta?.target,
+                        },
+                        409
+                    );
+                }
+
                 return c.json(
                     {
-                        error: 'Could not create secrets',
-                        details: prismaError.meta?.target,
+                        error: 'Failed to create secret',
                     },
-                    409
+                    500
                 );
             }
-
-            return c.json(
-                {
-                    error: 'Failed to create secret',
-                },
-                500
-            );
         }
-    })
+    )
     .delete('/:id', zValidator('param', secretsIdParamSchema), async (c) => {
         try {
             const { id } = c.req.valid('param');
