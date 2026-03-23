@@ -71,8 +71,12 @@ startJobs();
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
-app.use(
-    secureHeaders({
+app.use(async (c, next) => {
+    // Skip CSP for Swagger UI docs page (it loads scripts/styles from unpkg.com CDN)
+    if (c.req.path === '/docs') {
+        return next();
+    }
+    return secureHeaders({
         contentSecurityPolicy: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'"],
@@ -90,8 +94,8 @@ app.use(
             microphone: [],
             geolocation: [],
         },
-    })
-);
+    })(c, next);
+});
 app.use(logger());
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
