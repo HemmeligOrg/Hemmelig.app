@@ -141,8 +141,8 @@ const app = new Hono<{
                         }
                     }
 
-                    // Consume the view atomically with retrieval
-                    const newViews = item.views! - 1;
+                    // Consume the view atomically with retrieval if the secret is not burnable
+                    const newViews = item.isBurnable ? item.views : item.views! - 1;
 
                     // Decrement views (don't delete yet — files may still need downloading)
                     // The cleanup job handles deletion of secrets with views=0
@@ -204,6 +204,7 @@ const app = new Hono<{
                     views: true,
                     title: true,
                     password: true,
+                    isBurnable: true,
                 },
             });
 
