@@ -43,6 +43,12 @@ RUN npm ci --omit=dev --ignore-scripts && \
     npm cache clean --force && \
     rm -rf /root/.npm /tmp/*
 
+# Remove unused Prisma targets
+RUN find /app/node_modules/@prisma/client/runtime \
+    -name "*.wasm-base64.*" \
+    ! -name "*sqlite*" \
+    -delete
+
 # Final image
 FROM node:25-alpine
 RUN apk add --no-cache wget openssl ca-certificates gosu && \
