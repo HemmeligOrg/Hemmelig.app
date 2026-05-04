@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Prisma client generation stage - runs on native architecture to avoid QEMU issues
-FROM --platform=$BUILDPLATFORM node:25-slim AS prisma-gen
+FROM --platform=$BUILDPLATFORM node:25-alpine AS prisma-gen
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
@@ -29,8 +29,8 @@ COPY server.ts ./
 RUN npm run build
 
 # Production dependencies
-FROM node:25-slim AS deps
-RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM node:25-alpine AS deps
+RUN apk add --no-cache python3 make g++ openssl ca-certificates
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
@@ -44,9 +44,9 @@ RUN npm ci --omit=dev --ignore-scripts && \
     rm -rf /root/.npm /tmp/*
 
 # Final image
-FROM node:25-slim
-RUN apt-get update && apt-get install -y wget openssl ca-certificates gosu && rm -rf /var/lib/apt/lists/* && \
-    groupadd -r app && useradd -r -g app -m -d /home/app app
+FROM node:25-alpine
+RUN apk add --no-cache wget openssl ca-certificates gosu && \
+    addgroup -S app && adduser -S -G app -h /home/app app
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.ts ./
