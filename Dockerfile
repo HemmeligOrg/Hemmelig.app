@@ -48,16 +48,16 @@ FROM node:25-alpine
 RUN apk add --no-cache wget openssl ca-certificates gosu && \
     addgroup -S app && adduser -S -G app -h /home/app app
 WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/server.ts ./
-COPY --from=builder /app/api ./api
-COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
-COPY --from=builder /app/prisma/migrations ./prisma/migrations
-COPY --from=builder /app/prisma.config.ts ./
-COPY --from=deps /app/package.json ./
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/prisma/generated ./prisma/generated
-RUN mkdir -p /app/database /app/uploads && chown -R app:app /app
+COPY --chown=app:app --from=builder /app/dist ./dist
+COPY --chown=app:app --from=builder /app/server.ts ./
+COPY --chown=app:app --from=builder /app/api ./api
+COPY --chown=app:app --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
+COPY --chown=app:app --from=builder /app/prisma/migrations ./prisma/migrations
+COPY --chown=app:app --from=builder /app/prisma.config.ts ./
+COPY --chown=app:app --from=deps /app/package.json ./
+COPY --chown=app:app --from=deps /app/node_modules ./node_modules
+COPY --chown=app:app --from=deps /app/prisma/generated ./prisma/generated
+RUN mkdir -p /app/database /app/uploads && chown app:app /app/database /app/uploads
 COPY --chown=app:app scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
