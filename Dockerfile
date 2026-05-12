@@ -11,8 +11,13 @@ ENV DATABASE_URL="file:/app/database/hemmelig.db"
 RUN npx prisma generate --schema=prisma/schema.prisma --generator client
 
 # Build stage
-FROM node:25-slim AS builder
-RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM node:25-alpine AS builder
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    openssl \
+    ca-certificates
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
