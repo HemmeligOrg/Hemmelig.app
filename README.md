@@ -1,3 +1,4 @@
+**Looking for serious maintainer(s), see [issue](https://github.com/HemmeligOrg/Hemmelig.app/issues/536).**
 <div align="center">
   <img src="banner.png" alt="hemmelig" />
 </div>
