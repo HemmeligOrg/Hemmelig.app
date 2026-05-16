@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Prisma client generation stage - runs on native architecture to avoid QEMU issues
-FROM --platform=$BUILDPLATFORM node:25-slim AS prisma-gen
+FROM --platform=$BUILDPLATFORM node:25-alpine AS prisma-gen
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
@@ -11,8 +11,13 @@ ENV DATABASE_URL="file:/app/database/hemmelig.db"
 RUN npx prisma generate --schema=prisma/schema.prisma --generator client
 
 # Build stage
-FROM node:25-slim AS builder
-RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM node:25-alpine AS builder
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    openssl \
+    ca-certificates
 WORKDIR /app
 COPY package.json package-lock.json ./
 ENV NODE_ENV=development
@@ -29,8 +34,8 @@ COPY server.ts ./
 RUN npm run build
 
 # Production dependencies
-FROM node:25-slim AS deps
-RUN apt-get update && apt-get install -y python3 make g++ openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM node:25-alpine AS deps
+RUN apk add --no-cache python3 make g++ openssl ca-certificates
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=builder /app/prisma ./prisma
@@ -43,21 +48,27 @@ RUN npm ci --omit=dev --ignore-scripts && \
     npm cache clean --force && \
     rm -rf /root/.npm /tmp/*
 
+# Remove unused Prisma targets
+RUN find /app/node_modules/@prisma/client/runtime \
+    -name "*.wasm-base64.*" \
+    ! -name "*sqlite*" \
+    -delete
+
 # Final image
-FROM node:25-slim
-RUN apt-get update && apt-get install -y wget openssl ca-certificates gosu && rm -rf /var/lib/apt/lists/* && \
-    groupadd -r app && useradd -r -g app -m -d /home/app app
+FROM node:25-alpine
+RUN apk add --no-cache wget openssl ca-certificates gosu && \
+    addgroup -S app && adduser -S -G app -h /home/app app
 WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/server.ts ./
-COPY --from=builder /app/api ./api
-COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
-COPY --from=builder /app/prisma/migrations ./prisma/migrations
-COPY --from=builder /app/prisma.config.ts ./
-COPY --from=deps /app/package.json ./
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/prisma/generated ./prisma/generated
-RUN mkdir -p /app/database /app/uploads && chown -R app:app /app
+COPY --chown=app:app --from=builder /app/dist ./dist
+COPY --chown=app:app --from=builder /app/server.ts ./
+COPY --chown=app:app --from=builder /app/api ./api
+COPY --chown=app:app --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
+COPY --chown=app:app --from=builder /app/prisma/migrations ./prisma/migrations
+COPY --chown=app:app --from=builder /app/prisma.config.ts ./
+COPY --chown=app:app --from=deps /app/package.json ./
+COPY --chown=app:app --from=deps /app/node_modules ./node_modules
+COPY --chown=app:app --from=deps /app/prisma/generated ./prisma/generated
+RUN mkdir -p /app/database /app/uploads && chown app:app /app/database /app/uploads
 COPY --chown=app:app scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
