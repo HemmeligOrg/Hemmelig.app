@@ -9,6 +9,7 @@ const LANGUAGES = [
     { code: 'it', label: 'IT' },
     { code: 'nl', label: 'NL' },
     { code: 'no', label: 'NO' },
+    { code: 'pt', label: 'PT' },
     { code: 'sv', label: 'SV' },
     { code: 'zh', label: '中文' },
 ] as const;
