@@ -101,10 +101,10 @@
         "react-router-dom": "^7.12.0",
         "sonner": "^2.0.7",
         "tailwindcss": "^4.1.18",
-        "tsx": "^4.21.0",
+        "tsx": "^4.22.4",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.49.0",
-        "vite": "^7.2.7",
+        "vite": "^8.0.16",
         "zustand": "^5.0.9"
     },
     "prisma": {
