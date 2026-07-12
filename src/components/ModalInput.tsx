@@ -45,6 +45,7 @@ export function ModalInput({
                 <Icon className={iconClass} />
                 {as === 'select' ? (
                     <select
+                        aria-label={label}
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                         className={`${inputClass} appearance-none`}
@@ -57,6 +58,7 @@ export function ModalInput({
                     </select>
                 ) : (
                     <input
+                        aria-label={label}
                         type={type ?? 'text'}
                         value={value}
                         onChange={(e) => onChange(e.target.value)}

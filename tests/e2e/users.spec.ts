@@ -5,22 +5,26 @@ test.describe('User management', () => {
         await page.goto('/dashboard/users');
         await page.getByRole('button', { name: 'Add User' }).click();
 
-        const modal = page.getByRole('heading', { name: 'Add User' }).locator('../..');
-        const inputs = modal.locator('input');
-        await inputs.nth(0).fill('Second User');
-        await inputs.nth(1).fill('seconduser');
-        await inputs.nth(2).fill('second@example.com');
-        await inputs.nth(3).fill('SecondPassword123!');
-        await modal.locator('select').selectOption('admin');
-        await modal.getByRole('button', { name: 'Add User' }).click();
+        const nameInput = page.getByLabel('Name', { exact: true });
+        const usernameInput = page.getByLabel('Username', { exact: true });
+        const emailInput = page.getByLabel('Email', { exact: true });
+        const passwordInput = page.getByLabel('Password', { exact: true });
+        const roleSelect = page.getByLabel('Role', { exact: true });
 
-        await expect(modal).toBeHidden();
+        await nameInput.fill('Second User');
+        await usernameInput.fill('seconduser');
+        await emailInput.fill('second@example.com');
+        await passwordInput.fill('SecondPassword123!');
+        await roleSelect.selectOption('admin');
+        await page.getByRole('button', { name: 'Add User' }).last().click();
+
+        await expect(page.getByRole('heading', { name: 'Add User' })).toBeHidden();
         await page.getByRole('button', { name: 'Add User' }).click();
 
-        await expect(inputs.nth(0)).toHaveValue('');
-        await expect(inputs.nth(1)).toHaveValue('');
-        await expect(inputs.nth(2)).toHaveValue('');
-        await expect(inputs.nth(3)).toHaveValue('');
-        await expect(modal.locator('select')).toHaveValue('user');
+        await expect(nameInput).toHaveValue('');
+        await expect(usernameInput).toHaveValue('');
+        await expect(emailInput).toHaveValue('');
+        await expect(passwordInput).toHaveValue('');
+        await expect(roleSelect).toHaveValue('user');
     });
 });
