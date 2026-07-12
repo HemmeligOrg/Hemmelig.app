@@ -1,5 +1,5 @@
 import { Key, Mail, Shield, User } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from './Modal';
 import { ModalInput } from './ModalInput';
@@ -25,6 +25,16 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('user');
+
+    useEffect(() => {
+        if (!isOpen) {
+            setName('');
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setRole('user');
+        }
+    }, [isOpen]);
 
     const handleSave = () => {
         onSave({
