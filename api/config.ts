@@ -204,6 +204,7 @@ const managedSettings = isManaged
 const config = {
     server: {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
+        requestTimeout: parseInteger(process.env.HEMMELIG_REQUEST_TIMEOUT) ?? 15,
     },
     trustedOrigins: [
         ...(!isProduction ? ['http://localhost:5173'] : []),
