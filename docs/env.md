@@ -12,13 +12,13 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Server Configuration
 
-| Variable                   | Description                                                   | Default       |
-| -------------------------- | ------------------------------------------------------------- | ------------- |
-| `NODE_ENV`                 | Environment mode (`production` or `development`)              | `development` |
-| `HEMMELIG_PORT`            | Port the server listens on                                    | `3000`        |
-| `HEMMELIG_REQUEST_TIMEOUT` | API request timeout in seconds (`0` disables the app timeout) | `15`          |
-| `HEMMELIG_BASE_URL`        | Public URL of your instance (required for OAuth)              | -             |
-| `HEMMELIG_TRUSTED_ORIGIN`  | Additional trusted origin for CORS                            | -             |
+| Variable                   | Description                                                                | Default       |
+| -------------------------- | -------------------------------------------------------------------------- | ------------- |
+| `NODE_ENV`                 | Environment mode (`production` or `development`)                           | `development` |
+| `HEMMELIG_PORT`            | Port the server listens on                                                 | `3000`        |
+| `HEMMELIG_REQUEST_TIMEOUT` | API request timeout in seconds (zero or negative disables the app timeout) | `15`          |
+| `HEMMELIG_BASE_URL`        | Public URL of your instance (required for OAuth)                           | -             |
+| `HEMMELIG_TRUSTED_ORIGIN`  | Additional trusted origin for CORS                                         | -             |
 
 ## General Settings
 
