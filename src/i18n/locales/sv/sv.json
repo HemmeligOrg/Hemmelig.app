@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 eller 203.0.113.5",
         "ip_address_cidr_hint": "Endast förfrågningar från dessa IP-adresser kommer att kunna komma åt hemligheten",
         "burn_after_time_title": "Bränn efter att tiden går ut",
-        "burn_after_time_description": "Bränn hemligheten endast efter att tiden går ut"
+        "burn_after_time_description": "Bränn hemligheten endast efter att tiden går ut",
+        "limit_password_attempts_title": "Begränsa lösenordsförsök",
+        "limit_password_attempts_description": "Bränn automatiskt hemligheten och dess bifogade filer efter för många felaktiga lösenordsförsök",
+        "max_attempts_label": "Max antal försök",
+        "max_attempts_hint": "Hemligheten kommer att förstöras permanent efter detta antal felaktiga försök (1-20)"
     },
     "title_field": {
         "placeholder": "Titel",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Ta bort hemlighet",
         "delete_modal_message": "Är du säker på att du vill ta bort denna hemlighet? Denna åtgärd kan inte ångras.",
         "decryption_failed": "Misslyckades med att dekryptera hemligheten. Kontrollera ditt lösenord eller dekrypteringsnyckel.",
-        "fetch_error": "Ett fel inträffade vid hämtning av hemligheten. Försök igen."
+        "fetch_error": "Ett fel inträffade vid hämtning av hemligheten. Försök igen.",
+        "invalid_password": "Fel lösenord. Försök igen.",
+        "invalid_password_one_attempt_remaining": "Fel lösenord. 1 försök kvar innan denna hemlighet förstörs.",
+        "invalid_password_attempts_remaining": "Fel lösenord. {{count}} försök kvar innan denna hemlighet förstörs.",
+        "secret_burned_attempts_exceeded": "Denna hemlighet har permanent förstörts efter för många felaktiga lösenordsförsök."
     },
     "expiration": {
         "28_days": "28 dagar",

@@ -8,6 +8,7 @@ interface SecretWebhookData {
     hasPassword: boolean;
     hasIpRestriction: boolean;
     viewsRemaining?: number;
+    reason?: string;
 }
 
 interface ApiKeyWebhookData {

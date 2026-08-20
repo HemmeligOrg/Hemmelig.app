@@ -34,6 +34,8 @@ const secretSchema = {
         .optional()
         .nullable(),
     password: z.string().optional(),
+    limitPasswordAttempts: z.boolean().default(true).optional(),
+    maxPasswordAttempts: z.number().int().min(1).max(20).optional(),
     expiresAt: z
         .number()
         .refine(

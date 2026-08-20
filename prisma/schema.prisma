@@ -8,20 +8,23 @@ generator client {
 }
 
 model Secrets {
-    id            String         @id @default(uuid())
-    secret        Bytes
-    title         Bytes
-    views         Int?           @default(1)
-    password      String?
-    salt          String
-    isBurnable    Boolean?       @default(false) @map("is_burnable")
-    createdAt     DateTime       @default(now()) @map("created_at")
-    expiresAt     DateTime       @map("expires_at")
-    ipRange       String?        @default("") @map("ip_range")
-    userId        String?
-    user          User?          @relation(fields: [userId], references: [id])
-    files         File[]         @relation
-    secretRequest SecretRequest?
+    id                     String         @id @default(uuid())
+    secret                 Bytes
+    title                  Bytes
+    views                  Int?           @default(1)
+    password               String?
+    limitPasswordAttempts  Boolean?       @default(true) @map("limit_password_attempts")
+    maxPasswordAttempts    Int?           @default(5) @map("max_password_attempts")
+    failedPasswordAttempts Int?           @default(0) @map("failed_password_attempts")
+    salt                   String
+    isBurnable             Boolean?       @default(false) @map("is_burnable")
+    createdAt              DateTime       @default(now()) @map("created_at")
+    expiresAt              DateTime       @map("expires_at")
+    ipRange                String?        @default("") @map("ip_range")
+    userId                 String?
+    user                   User?          @relation(fields: [userId], references: [id])
+    files                  File[]         @relation
+    secretRequest          SecretRequest?
 
     @@index([expiresAt])
     @@index([userId])

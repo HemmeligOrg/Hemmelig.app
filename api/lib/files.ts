@@ -1,4 +1,4 @@
-import { mkdir } from 'fs/promises';
+import { mkdir, unlink } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
 import { resolveSettings } from './settings';
@@ -34,6 +34,19 @@ export async function getMaxFileSize(): Promise<number> {
     const settings = await resolveSettings();
     const maxSecretSizeKB = settings?.maxSecretSize ?? FILE.DEFAULT_MAX_SIZE_KB;
     return maxSecretSizeKB * 1024; // Convert KB to bytes
+}
+
+/**
+ * Unlinks files from disk, logging (not throwing) on individual failures —
+ * a file may already be gone or inaccessible.
+ */
+export async function unlinkFiles(paths: string[]): Promise<void> {
+    const results = await Promise.allSettled(paths.map((path) => unlink(path)));
+    results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+            console.error(`Failed to delete file from disk: ${paths[index]}`, result.reason);
+        }
+    });
 }
 
 /**

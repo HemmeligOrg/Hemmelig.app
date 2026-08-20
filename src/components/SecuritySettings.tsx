@@ -10,7 +10,16 @@ import { ToggleSwitch } from './ToggleSwitch';
 import { ViewsSlider } from './ViewsSlider';
 
 export function SecuritySettings() {
-    const { expiresAt, views, isBurnable, password, ipRange, setSecretData } = useSecretStore();
+    const {
+        expiresAt,
+        views,
+        isBurnable,
+        password,
+        ipRange,
+        limitPasswordAttempts,
+        maxPasswordAttempts,
+        setSecretData,
+    } = useSecretStore();
     const { saveSettings, setSaveSettings, updateSettings } = useSecretSettingsStore();
     const { settings: instanceSettings } = useHemmeligStore();
     const { t } = useTranslation();
@@ -174,6 +183,56 @@ export function SecuritySettings() {
                                             {t('security_settings.password_hint')}
                                         </p>
                                     )}
+
+                                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-500/50">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs font-medium text-gray-700 dark:text-slate-200">
+                                                {t(
+                                                    'security_settings.limit_password_attempts_title'
+                                                )}
+                                            </span>
+                                            <ToggleSwitch
+                                                checked={limitPasswordAttempts}
+                                                onChange={(val) =>
+                                                    setSecretData({ limitPasswordAttempts: val })
+                                                }
+                                            />
+                                        </div>
+                                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
+                                            {t(
+                                                'security_settings.limit_password_attempts_description'
+                                            )}
+                                        </p>
+
+                                        {limitPasswordAttempts && (
+                                            <div className="mt-3">
+                                                <label className="block text-xs text-gray-500 dark:text-slate-400 mb-2">
+                                                    {t('security_settings.max_attempts_label')}
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    max={20}
+                                                    value={maxPasswordAttempts}
+                                                    onChange={(e) =>
+                                                        setSecretData({
+                                                            maxPasswordAttempts: Math.min(
+                                                                20,
+                                                                Math.max(
+                                                                    1,
+                                                                    Number(e.target.value) || 1
+                                                                )
+                                                            ),
+                                                        })
+                                                    }
+                                                    className="w-24 px-3 py-2 bg-white dark:bg-dark-600 border border-gray-300 dark:border-dark-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 text-sm"
+                                                />
+                                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
+                                                    {t('security_settings.max_attempts_hint')}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </div>

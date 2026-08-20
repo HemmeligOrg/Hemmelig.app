@@ -1,5 +1,5 @@
-import { unlink } from 'fs/promises';
 import prisma from '../lib/db';
+import { unlinkFiles } from '../lib/files';
 
 export const deleteExpiredSecrets = async () => {
     try {
@@ -39,19 +39,7 @@ export const deleteOrphanedFiles = async () => {
         }
 
         // Delete files from disk in parallel for better performance
-        const deleteResults = await Promise.allSettled(
-            orphanedFiles.map((file) => unlink(file.path))
-        );
-
-        // Log any failures (file may already be deleted or inaccessible)
-        deleteResults.forEach((result, index) => {
-            if (result.status === 'rejected') {
-                console.error(
-                    `Failed to delete file from disk: ${orphanedFiles[index].path}`,
-                    result.reason
-                );
-            }
-        });
+        await unlinkFiles(orphanedFiles.map((file) => file.path));
 
         // Delete orphaned file records from database
         await prisma.file.deleteMany({

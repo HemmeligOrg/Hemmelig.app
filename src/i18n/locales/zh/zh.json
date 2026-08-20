@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 或 203.0.113.5",
         "ip_address_cidr_hint": "只有来自这些 IP 地址的请求才能访问秘密",
         "burn_after_time_title": "过期后销毁",
-        "burn_after_time_description": "仅在时间到期后销毁秘密"
+        "burn_after_time_description": "仅在时间到期后销毁秘密",
+        "limit_password_attempts_title": "限制密码尝试次数",
+        "limit_password_attempts_description": "在密码错误尝试次数过多后自动销毁该秘密及其附件",
+        "max_attempts_label": "最大尝试次数",
+        "max_attempts_hint": "在达到此错误尝试次数后，该秘密将被永久销毁（1-20）"
     },
     "title_field": {
         "placeholder": "标题",
@@ -618,7 +622,11 @@
         "delete_modal_title": "删除秘密",
         "delete_modal_message": "您确定要删除此秘密吗？此操作无法撤消。",
         "decryption_failed": "解密秘密失败。请检查您的密码或解密密钥。",
-        "fetch_error": "获取秘密时发生错误。请重试。"
+        "fetch_error": "获取秘密时发生错误。请重试。",
+        "invalid_password": "密码错误，请重试。",
+        "invalid_password_one_attempt_remaining": "密码错误。还剩 1 次尝试机会，之后该秘密将被销毁。",
+        "invalid_password_attempts_remaining": "密码错误。还剩 {{count}} 次尝试机会，之后该秘密将被销毁。",
+        "secret_burned_attempts_exceeded": "由于密码错误尝试次数过多，该秘密已被永久销毁。"
     },
     "expiration": {
         "28_days": "28 天",

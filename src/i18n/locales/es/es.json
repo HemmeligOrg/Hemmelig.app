@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 o 203.0.113.5",
         "ip_address_cidr_hint": "Solo las solicitudes de estas direcciones IP podrán acceder al secreto",
         "burn_after_time_title": "Autodestrucción al expirar el tiempo",
-        "burn_after_time_description": "Quemar el secreto solo después de que expire el tiempo"
+        "burn_after_time_description": "Quemar el secreto solo después de que expire el tiempo",
+        "limit_password_attempts_title": "Limitar intentos de contraseña",
+        "limit_password_attempts_description": "Quemar automáticamente el secreto y sus archivos adjuntos tras demasiados intentos de contraseña incorrectos",
+        "max_attempts_label": "Intentos máximos",
+        "max_attempts_hint": "El secreto se destruirá permanentemente después de este número de intentos incorrectos (1-20)"
     },
     "title_field": {
         "placeholder": "Título",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Eliminar secreto",
         "delete_modal_message": "¿Estás seguro de que quieres eliminar este secreto? Esta acción no se puede deshacer.",
         "decryption_failed": "No se pudo descifrar el secreto. Por favor, verifica tu contraseña o clave de descifrado.",
-        "fetch_error": "Ocurrió un error al obtener el secreto. Por favor, inténtalo de nuevo."
+        "fetch_error": "Ocurrió un error al obtener el secreto. Por favor, inténtalo de nuevo.",
+        "invalid_password": "Contraseña incorrecta. Por favor, inténtalo de nuevo.",
+        "invalid_password_one_attempt_remaining": "Contraseña incorrecta. Queda 1 intento antes de que este secreto se destruya.",
+        "invalid_password_attempts_remaining": "Contraseña incorrecta. Quedan {{count}} intentos antes de que este secreto se destruya.",
+        "secret_burned_attempts_exceeded": "Este secreto ha sido destruido permanentemente tras demasiados intentos de contraseña incorrectos."
     },
     "expiration": {
         "28_days": "28 Días",

@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { unlinkFiles } from '../lib/files';
 import { compare, hash } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
@@ -22,6 +23,8 @@ interface SecretCreateData {
     secret: Uint8Array;
     title?: Uint8Array | null;
     password: string | null;
+    limitPasswordAttempts?: boolean | null;
+    maxPasswordAttempts?: number | null;
     expiresAt: Date;
     views?: number;
     isBurnable?: boolean;
@@ -117,6 +120,8 @@ const app = new Hono<{
                             createdAt: true,
                             isBurnable: true,
                             password: true,
+                            limitPasswordAttempts: true,
+                            maxPasswordAttempts: true,
                             salt: true,
                             files: {
                                 select: { id: true, filename: true },
@@ -137,7 +142,48 @@ const app = new Hono<{
                     if (item.password) {
                         const isValidPassword = await compare(data.password!, item.password);
                         if (!isValidPassword) {
-                            return { error: 'Invalid password', status: 401 as const };
+                            if (!item.limitPasswordAttempts) {
+                                return { error: 'Invalid password', status: 401 as const };
+                            }
+
+                            // Atomically increment and read back the counter to avoid a
+                            // read-then-write race under concurrent guess attempts.
+                            const updated = await tx.secrets.update({
+                                where: { id },
+                                data: { failedPasswordAttempts: { increment: 1 } },
+                                select: { failedPasswordAttempts: true },
+                            });
+                            const maxAttempts = item.maxPasswordAttempts ?? 5;
+                            const failedAttempts = updated.failedPasswordAttempts ?? 0;
+
+                            if (failedAttempts >= maxAttempts) {
+                                const filesToDelete = await tx.file.findMany({
+                                    where: { secrets: { some: { id } } },
+                                    select: { id: true, path: true },
+                                });
+
+                                if (filesToDelete.length > 0) {
+                                    await tx.file.deleteMany({
+                                        where: { id: { in: filesToDelete.map((f) => f.id) } },
+                                    });
+                                }
+
+                                await tx.secrets.delete({ where: { id } });
+
+                                return {
+                                    error: 'Secret burned due to too many failed password attempts',
+                                    status: 401 as const,
+                                    burned: true,
+                                    ipRange: item.ipRange,
+                                    filesToDelete: filesToDelete.map((f) => f.path),
+                                };
+                            }
+
+                            return {
+                                error: 'Invalid password',
+                                status: 401 as const,
+                                attemptsRemaining: maxAttempts - failedAttempts,
+                            };
                         }
                     }
 
@@ -178,7 +224,34 @@ const app = new Hono<{
                 });
 
                 if ('error' in result) {
-                    return c.json({ error: result.error }, result.status);
+                    const { error, status, burned, attemptsRemaining, filesToDelete, ipRange } =
+                        result as {
+                            error: string;
+                            status: 401 | 404;
+                            burned?: boolean;
+                            attemptsRemaining?: number;
+                            filesToDelete?: string[];
+                            ipRange?: string | null;
+                        };
+
+                    if (filesToDelete && filesToDelete.length > 0) {
+                        await unlinkFiles(filesToDelete);
+                        sendWebhook('secret.burned', {
+                            secretId: id,
+                            hasPassword: true,
+                            hasIpRestriction: !!ipRange,
+                            reason: 'max_password_attempts_exceeded',
+                        });
+                    }
+
+                    return c.json(
+                        {
+                            error,
+                            ...(burned !== undefined && { burned }),
+                            ...(attemptsRemaining !== undefined && { attemptsRemaining }),
+                        },
+                        status
+                    );
                 }
 
                 return c.json(result);
@@ -250,7 +323,16 @@ const app = new Hono<{
                 return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
             }
 
-            const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
+            const {
+                expiresAt,
+                password,
+                fileIds,
+                salt,
+                title,
+                limitPasswordAttempts,
+                maxPasswordAttempts,
+                ...rest
+            } = validatedData;
 
             const data: SecretCreateData = {
                 ...rest,
@@ -258,6 +340,8 @@ const app = new Hono<{
                 // Title is required by the database, default to empty Uint8Array if not provided
                 title: title ?? new Uint8Array(0),
                 password: password ? await hash(password) : null,
+                limitPasswordAttempts: password ? (limitPasswordAttempts ?? true) : null,
+                maxPasswordAttempts: password ? (maxPasswordAttempts ?? 5) : null,
                 expiresAt: new Date(Date.now() + expiresAt * 1000),
                 ...(fileIds && {
                     files: { connect: fileIds.map((id: string) => ({ id })) },

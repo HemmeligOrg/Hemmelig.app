@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 of 203.0.113.5",
         "ip_address_cidr_hint": "Alleen verzoeken van deze IP-adressen hebben toegang tot het geheim",
         "burn_after_time_title": "Vernietigen na het verlopen van de tijd",
-        "burn_after_time_description": "Vernietig het geheim pas nadat de tijd is verstreken"
+        "burn_after_time_description": "Vernietig het geheim pas nadat de tijd is verstreken",
+        "limit_password_attempts_title": "Wachtwoordpogingen beperken",
+        "limit_password_attempts_description": "Vernietig het geheim en de bijgevoegde bestanden automatisch na te veel onjuiste wachtwoordpogingen",
+        "max_attempts_label": "Max. pogingen",
+        "max_attempts_hint": "Het geheim wordt permanent vernietigd na dit aantal onjuiste pogingen (1-20)"
     },
     "title_field": {
         "placeholder": "Titel",
@@ -619,7 +623,11 @@
         "delete_modal_title": "Geheim verwijderen",
         "delete_modal_message": "Weet je zeker dat je dit geheim wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
         "decryption_failed": "Het ontsleutelen van het geheim is mislukt. Controleer je wachtwoord en decryptiesleutel.",
-        "fetch_error": "Er is een fout opgetreden tijdens het ophalen van het geheim. Probeer het opnieuw."
+        "fetch_error": "Er is een fout opgetreden tijdens het ophalen van het geheim. Probeer het opnieuw.",
+        "invalid_password": "Onjuist wachtwoord. Probeer het opnieuw.",
+        "invalid_password_one_attempt_remaining": "Onjuist wachtwoord. Nog 1 poging over voordat dit geheim wordt vernietigd.",
+        "invalid_password_attempts_remaining": "Onjuist wachtwoord. Nog {{count}} pogingen over voordat dit geheim wordt vernietigd.",
+        "secret_burned_attempts_exceeded": "Dit geheim is permanent vernietigd na te veel onjuiste wachtwoordpogingen."
     },
     "expiration": {
         "28_days": "28 dagen",

@@ -17,6 +17,8 @@ interface SecretState {
     views: number;
     isBurnable: boolean;
     ipRange: string | null;
+    limitPasswordAttempts: boolean;
+    maxPasswordAttempts: number;
     setSecretIdAndKeys: (
         secretId: string | null,
         decryptionKey: string | null,
@@ -24,7 +26,18 @@ interface SecretState {
     ) => void;
     setSecretData: (
         data: Partial<
-            Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>
+            Pick<
+                SecretState,
+                | 'secret'
+                | 'title'
+                | 'expiresAt'
+                | 'views'
+                | 'isBurnable'
+                | 'ipRange'
+                | 'password'
+                | 'limitPasswordAttempts'
+                | 'maxPasswordAttempts'
+            >
         >
     ) => void;
     resetSecret: () => void;
@@ -49,6 +62,8 @@ const defaultState = {
     views: 1,
     isBurnable: false,
     ipRange: null,
+    limitPasswordAttempts: true,
+    maxPasswordAttempts: 5,
 };
 
 export const useSecretStore = create<SecretState>((set) => ({
