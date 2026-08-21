@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 or 203.0.113.5",
         "ip_address_cidr_hint": "Only requests from these IP addresses will be able to access the secret",
         "burn_after_time_title": "Burn after time expires",
-        "burn_after_time_description": "Burn the secret only after the time expires"
+        "burn_after_time_description": "Burn the secret only after the time expires",
+        "limit_password_attempts_title": "Limit Password Attempts",
+        "limit_password_attempts_description": "Automatically burn the secret and its attached files after too many incorrect password attempts",
+        "max_attempts_label": "Max Attempts",
+        "max_attempts_hint": "The secret will be permanently destroyed after this many incorrect attempts (1-20)"
     },
     "title_field": {
         "placeholder": "Title",
@@ -619,7 +623,11 @@
         "delete_modal_title": "Delete Secret",
         "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone.",
         "decryption_failed": "Failed to decrypt the secret. Please check your password or decryption key.",
-        "fetch_error": "An error occurred while fetching the secret. Please try again."
+        "fetch_error": "An error occurred while fetching the secret. Please try again.",
+        "invalid_password": "Incorrect password. Please try again.",
+        "invalid_password_one_attempt_remaining": "Incorrect password. 1 attempt remaining before this secret is destroyed.",
+        "invalid_password_attempts_remaining": "Incorrect password. {{count}} attempts remaining before this secret is destroyed.",
+        "secret_burned_attempts_exceeded": "This secret has been permanently destroyed after too many incorrect password attempts."
     },
     "expiration": {
         "28_days": "28 Days",

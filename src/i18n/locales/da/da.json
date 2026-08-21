@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 eller 203.0.113.5",
         "ip_address_cidr_hint": "Kun anmodninger fra disse IP-adresser vil kunne få adgang til hemmeligheden",
         "burn_after_time_title": "Brænd efter tiden udløber",
-        "burn_after_time_description": "Brænd kun hemmeligheden efter tiden udløber"
+        "burn_after_time_description": "Brænd kun hemmeligheden efter tiden udløber",
+        "limit_password_attempts_title": "Begræns antal adgangskodeforsøg",
+        "limit_password_attempts_description": "Brænd automatisk hemmeligheden og dens vedhæftede filer efter for mange forkerte adgangskodeforsøg",
+        "max_attempts_label": "Maks. forsøg",
+        "max_attempts_hint": "Hemmeligheden vil blive permanent destrueret efter dette antal forkerte forsøg (1-20)"
     },
     "title_field": {
         "placeholder": "Titel",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Slet hemmelighed",
         "delete_modal_message": "Er du sikker på, at du vil slette denne hemmelighed? Denne handling kan ikke fortrydes.",
         "decryption_failed": "Kunne ikke dekryptere hemmeligheden. Tjek venligst din adgangskode eller dekrypteringsnøgle.",
-        "fetch_error": "Der opstod en fejl ved hentning af hemmeligheden. Prøv venligst igen."
+        "fetch_error": "Der opstod en fejl ved hentning af hemmeligheden. Prøv venligst igen.",
+        "invalid_password": "Forkert adgangskode. Prøv venligst igen.",
+        "invalid_password_one_attempt_remaining": "Forkert adgangskode. 1 forsøg tilbage, før denne hemmelighed destrueres.",
+        "invalid_password_attempts_remaining": "Forkert adgangskode. {{count}} forsøg tilbage, før denne hemmelighed destrueres.",
+        "secret_burned_attempts_exceeded": "Denne hemmelighed er blevet permanent destrueret efter for mange forkerte adgangskodeforsøg."
     },
     "expiration": {
         "28_days": "28 dage",

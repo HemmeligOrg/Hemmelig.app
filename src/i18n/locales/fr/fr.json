@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 ou 203.0.113.5",
         "ip_address_cidr_hint": "Seules les requêtes provenant de ces adresses IP pourront accéder au secret",
         "burn_after_time_title": "Détruire après expiration",
-        "burn_after_time_description": "Détruire le secret uniquement après l'expiration du délai"
+        "burn_after_time_description": "Détruire le secret uniquement après l'expiration du délai",
+        "limit_password_attempts_title": "Limiter les tentatives de mot de passe",
+        "limit_password_attempts_description": "Détruire automatiquement le secret et ses fichiers joints après trop de tentatives de mot de passe incorrectes",
+        "max_attempts_label": "Tentatives maximales",
+        "max_attempts_hint": "Le secret sera définitivement détruit après ce nombre de tentatives incorrectes (1-20)"
     },
     "title_field": {
         "placeholder": "Titre",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Supprimer le secret",
         "delete_modal_message": "Êtes-vous sûr de vouloir supprimer ce secret ? Cette action est irréversible.",
         "decryption_failed": "Échec du déchiffrement du secret. Veuillez vérifier votre mot de passe ou votre clé de déchiffrement.",
-        "fetch_error": "Une erreur s'est produite lors de la récupération du secret. Veuillez réessayer."
+        "fetch_error": "Une erreur s'est produite lors de la récupération du secret. Veuillez réessayer.",
+        "invalid_password": "Mot de passe incorrect. Veuillez réessayer.",
+        "invalid_password_one_attempt_remaining": "Mot de passe incorrect. Il reste 1 tentative avant que ce secret ne soit détruit.",
+        "invalid_password_attempts_remaining": "Mot de passe incorrect. Il reste {{count}} tentatives avant que ce secret ne soit détruit.",
+        "secret_burned_attempts_exceeded": "Ce secret a été définitivement détruit après trop de tentatives de mot de passe incorrectes."
     },
     "expiration": {
         "28_days": "28 Jours",

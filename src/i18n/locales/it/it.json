@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 o 203.0.113.5",
         "ip_address_cidr_hint": "Solo le richieste da questi indirizzi IP potranno accedere al segreto",
         "burn_after_time_title": "Distruggi dopo la scadenza",
-        "burn_after_time_description": "Distruggi il segreto solo dopo la scadenza del tempo"
+        "burn_after_time_description": "Distruggi il segreto solo dopo la scadenza del tempo",
+        "limit_password_attempts_title": "Limita i tentativi di password",
+        "limit_password_attempts_description": "Distruggi automaticamente il segreto e i file allegati dopo troppi tentativi di password errati",
+        "max_attempts_label": "Tentativi massimi",
+        "max_attempts_hint": "Il segreto verrà distrutto definitivamente dopo questo numero di tentativi errati (1-20)"
     },
     "title_field": {
         "placeholder": "Titolo",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Elimina segreto",
         "delete_modal_message": "Sei sicuro di voler eliminare questo segreto? Questa azione non può essere annullata.",
         "decryption_failed": "Impossibile decifrare il segreto. Verifica la tua password o la chiave di decrittazione.",
-        "fetch_error": "Si è verificato un errore durante il recupero del segreto. Riprova."
+        "fetch_error": "Si è verificato un errore durante il recupero del segreto. Riprova.",
+        "invalid_password": "Password errata. Riprova.",
+        "invalid_password_one_attempt_remaining": "Password errata. Rimane 1 tentativo prima che questo segreto venga distrutto.",
+        "invalid_password_attempts_remaining": "Password errata. Rimangono {{count}} tentativi prima che questo segreto venga distrutto.",
+        "secret_burned_attempts_exceeded": "Questo segreto è stato distrutto definitivamente dopo troppi tentativi di password errati."
     },
     "expiration": {
         "28_days": "28 Giorni",

@@ -20,6 +20,8 @@ export function SecretForm() {
         views,
         isBurnable,
         ipRange,
+        limitPasswordAttempts,
+        maxPasswordAttempts,
         setSecretIdAndKeys,
         setSecretData,
     } = useSecretStore();
@@ -81,6 +83,7 @@ export function SecretForm() {
             title: encryptedTitle,
             salt,
             password: password ? encryptionKey : '',
+            ...(password && { limitPasswordAttempts, maxPasswordAttempts }),
             expiresAt,
             views,
             isBurnable,

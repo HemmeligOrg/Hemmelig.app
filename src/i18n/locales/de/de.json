@@ -142,7 +142,11 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 oder 203.0.113.5",
         "ip_address_cidr_hint": "Nur Anfragen von diesen IP-Adressen können auf das Geheimnis zugreifen",
         "burn_after_time_title": "Nach Zeitablauf vernichten",
-        "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten"
+        "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten",
+        "limit_password_attempts_title": "Passwortversuche begrenzen",
+        "limit_password_attempts_description": "Das Geheimnis und die angehängten Dateien nach zu vielen falschen Passwortversuchen automatisch vernichten",
+        "max_attempts_label": "Max. Versuche",
+        "max_attempts_hint": "Das Geheimnis wird nach dieser Anzahl falscher Versuche dauerhaft vernichtet (1-20)"
     },
     "title_field": {
         "placeholder": "Titel",
@@ -618,7 +622,11 @@
         "delete_modal_title": "Geheimnis löschen",
         "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
         "decryption_failed": "Das Geheimnis konnte nicht entschlüsselt werden. Bitte überprüfen Sie Ihr Passwort oder den Entschlüsselungsschlüssel.",
-        "fetch_error": "Beim Abrufen des Geheimnisses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        "fetch_error": "Beim Abrufen des Geheimnisses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        "invalid_password": "Falsches Passwort. Bitte versuchen Sie es erneut.",
+        "invalid_password_one_attempt_remaining": "Falsches Passwort. Noch 1 Versuch übrig, bevor dieses Geheimnis vernichtet wird.",
+        "invalid_password_attempts_remaining": "Falsches Passwort. Noch {{count}} Versuche übrig, bevor dieses Geheimnis vernichtet wird.",
+        "secret_burned_attempts_exceeded": "Dieses Geheimnis wurde nach zu vielen falschen Passwortversuchen dauerhaft vernichtet."
     },
     "expiration": {
         "28_days": "28 Tage",

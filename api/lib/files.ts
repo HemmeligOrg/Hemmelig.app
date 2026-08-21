@@ -1,4 +1,4 @@
-import { mkdir } from 'fs/promises';
+import { mkdir, unlink } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
 import { resolveSettings } from './settings';
@@ -34,6 +34,29 @@ export async function getMaxFileSize(): Promise<number> {
     const settings = await resolveSettings();
     const maxSecretSizeKB = settings?.maxSecretSize ?? FILE.DEFAULT_MAX_SIZE_KB;
     return maxSecretSizeKB * 1024; // Convert KB to bytes
+}
+
+/**
+ * Unlinks files from disk, logging (not throwing) on individual failures.
+ * A missing file (ENOENT) still counts as removed, since the end state — no
+ * file left on disk — is already achieved. Returns the paths that were
+ * actually removed so callers only drop DB records for confirmed deletions.
+ */
+export async function unlinkFiles(paths: string[]): Promise<string[]> {
+    const results = await Promise.allSettled(paths.map((path) => unlink(path)));
+    const deleted: string[] = [];
+    results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+            if ((result.reason as NodeJS.ErrnoException)?.code === 'ENOENT') {
+                deleted.push(paths[index]);
+            } else {
+                console.error(`Failed to delete file from disk: ${paths[index]}`, result.reason);
+            }
+        } else {
+            deleted.push(paths[index]);
+        }
+    });
+    return deleted;
 }
 
 /**

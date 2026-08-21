@@ -18,7 +18,7 @@ import { Card } from '../components/Card';
 import Editor from '../components/Editor';
 import { Modal } from '../components/Modal';
 import { useCopyFeedback } from '../hooks/useCopyFeedback';
-import { api } from '../lib/api';
+import { api, apiRaw } from '../lib/api';
 import { decrypt, decryptFile, generateEncryptionKey } from '../lib/crypto';
 
 interface SecretFile {
@@ -53,6 +53,7 @@ export function SecretPage() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
     const [isBurnable, setIsBurnable] = useState(false);
+    const [isBurnedByAttempts, setIsBurnedByAttempts] = useState(false);
 
     const decryptionKeyFromUrl = location.hash.startsWith('#decryptionKey=')
         ? location.hash.substring('#decryptionKey='.length)
@@ -72,7 +73,7 @@ export function SecretPage() {
                 const finalDecryptionKey = password
                     ? generateEncryptionKey(password)
                     : decryptionKey;
-                const response = await api.secrets[':id'].$post({
+                const response = await apiRaw.secrets[':id'].$post({
                     param: { id: id! },
                     json: { password: finalDecryptionKey },
                 });
@@ -105,6 +106,26 @@ export function SecretPage() {
                     if ('views' in data) {
                         setViewsRemaining(data.views);
                     }
+                } else if (response.status === 401) {
+                    if ('burned' in data && data.burned) {
+                        setIsBurnedByAttempts(true);
+                        setDecryptionError(t('secret_page.secret_burned_attempts_exceeded'));
+                    } else if (
+                        'attemptsRemaining' in data &&
+                        typeof data.attemptsRemaining === 'number'
+                    ) {
+                        setDecryptionError(
+                            data.attemptsRemaining === 1
+                                ? t('secret_page.invalid_password_one_attempt_remaining')
+                                : t('secret_page.invalid_password_attempts_remaining', {
+                                      count: data.attemptsRemaining,
+                                  })
+                        );
+                    } else {
+                        setDecryptionError(t('secret_page.invalid_password'));
+                    }
+                } else {
+                    setDecryptionError(t('secret_page.fetch_error'));
                 }
             } catch (err: unknown) {
                 console.error('Error fetching secret:', err);
@@ -227,57 +248,75 @@ export function SecretPage() {
 
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-white/90 dark:bg-dark-800/90 backdrop-blur-[2px] flex flex-col items-center justify-center p-6">
-                            {needsManualKeyEntry && (
-                                <div className="w-full max-w-xs mb-5">
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2 text-center">
-                                        {t('secret_page.decryption_key_label')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={decryptionKeyInput}
-                                        onChange={(e) => setDecryptionKeyInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center font-mono text-sm"
-                                        placeholder={t('secret_page.decryption_key_placeholder')}
-                                        autoFocus
-                                    />
-                                </div>
-                            )}
-
-                            {isPasswordProtected && (
-                                <div className="w-full max-w-xs mb-5">
-                                    <input
-                                        type="password"
-                                        value={passwordInput}
-                                        onChange={(e) => setPasswordInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center"
-                                        placeholder={t('secret_page.password_placeholder')}
-                                        autoFocus={!needsManualKeyEntry}
-                                    />
-                                </div>
-                            )}
-
-                            <button
-                                onClick={handleViewSecret}
-                                disabled={needsManualKeyEntry && !decryptionKeyInput}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200"
-                            >
-                                <LockOpen className="w-5 h-5" />
-                                {t('secret_page.unlock_secret')}
-                            </button>
-
-                            {decryptionError && (
-                                <p className="text-sm text-red-500 mt-4 text-center">
+                            {isBurnedByAttempts ? (
+                                <p className="text-sm text-red-500 text-center max-w-xs">
                                     {decryptionError}
                                 </p>
-                            )}
+                            ) : (
+                                <>
+                                    {needsManualKeyEntry && (
+                                        <div className="w-full max-w-xs mb-5">
+                                            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2 text-center">
+                                                {t('secret_page.decryption_key_label')}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={decryptionKeyInput}
+                                                onChange={(e) =>
+                                                    setDecryptionKeyInput(e.target.value)
+                                                }
+                                                onKeyDown={(e) =>
+                                                    e.key === 'Enter' && handleViewSecret()
+                                                }
+                                                className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center font-mono text-sm"
+                                                placeholder={t(
+                                                    'secret_page.decryption_key_placeholder'
+                                                )}
+                                                autoFocus
+                                            />
+                                        </div>
+                                    )}
 
-                            <p className="text-xs text-gray-500 dark:text-slate-400 mt-5 text-center">
-                                {viewsRemaining === 1
-                                    ? t('secret_page.one_view_remaining')
-                                    : t('secret_page.views_remaining', { count: viewsRemaining })}
-                            </p>
+                                    {isPasswordProtected && (
+                                        <div className="w-full max-w-xs mb-5">
+                                            <input
+                                                type="password"
+                                                value={passwordInput}
+                                                onChange={(e) => setPasswordInput(e.target.value)}
+                                                onKeyDown={(e) =>
+                                                    e.key === 'Enter' && handleViewSecret()
+                                                }
+                                                className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center"
+                                                placeholder={t('secret_page.password_placeholder')}
+                                                autoFocus={!needsManualKeyEntry}
+                                            />
+                                        </div>
+                                    )}
+
+                                    <button
+                                        onClick={handleViewSecret}
+                                        disabled={needsManualKeyEntry && !decryptionKeyInput}
+                                        className="inline-flex items-center gap-2 px-8 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200"
+                                    >
+                                        <LockOpen className="w-5 h-5" />
+                                        {t('secret_page.unlock_secret')}
+                                    </button>
+
+                                    {decryptionError && (
+                                        <p className="text-sm text-red-500 mt-4 text-center">
+                                            {decryptionError}
+                                        </p>
+                                    )}
+
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-5 text-center">
+                                        {viewsRemaining === 1
+                                            ? t('secret_page.one_view_remaining')
+                                            : t('secret_page.views_remaining', {
+                                                  count: viewsRemaining,
+                                              })}
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                 </Card>
