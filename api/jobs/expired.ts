@@ -39,13 +39,20 @@ export const deleteOrphanedFiles = async () => {
         }
 
         // Delete files from disk in parallel for better performance
-        await unlinkFiles(orphanedFiles.map((file) => file.path));
+        const deletedPaths = await unlinkFiles(orphanedFiles.map((file) => file.path));
 
-        // Delete orphaned file records from database
+        // Only drop DB records for files that were actually removed from disk —
+        // failures stay as orphan records so this job retries them next run.
+        const deletedFiles = orphanedFiles.filter((file) => deletedPaths.includes(file.path));
+
+        if (deletedFiles.length === 0) {
+            return;
+        }
+
         await prisma.file.deleteMany({
             where: {
                 id: {
-                    in: orphanedFiles.map((f) => f.id),
+                    in: deletedFiles.map((f) => f.id),
                 },
             },
         });

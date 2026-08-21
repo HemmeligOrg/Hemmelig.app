@@ -162,12 +162,9 @@ const app = new Hono<{
                                     select: { id: true, path: true },
                                 });
 
-                                if (filesToDelete.length > 0) {
-                                    await tx.file.deleteMany({
-                                        where: { id: { in: filesToDelete.map((f) => f.id) } },
-                                    });
-                                }
-
+                                // Delete the secret only — leave the file records in place
+                                // until disk deletion is confirmed below. Once the secret is
+                                // gone they become orphans that deleteOrphanedFiles retries.
                                 await tx.secrets.delete({ where: { id } });
 
                                 return {
@@ -175,7 +172,7 @@ const app = new Hono<{
                                     status: 401 as const,
                                     burned: true,
                                     ipRange: item.ipRange,
-                                    filesToDelete: filesToDelete.map((f) => f.path),
+                                    filesToDelete,
                                 };
                             }
 
@@ -230,12 +227,24 @@ const app = new Hono<{
                             status: 401 | 404;
                             burned?: boolean;
                             attemptsRemaining?: number;
-                            filesToDelete?: string[];
+                            filesToDelete?: { id: string; path: string }[];
                             ipRange?: string | null;
                         };
 
                     if (filesToDelete && filesToDelete.length > 0) {
-                        await unlinkFiles(filesToDelete);
+                        const deletedPaths = await unlinkFiles(filesToDelete.map((f) => f.path));
+                        const deletedIds = filesToDelete
+                            .filter((f) => deletedPaths.includes(f.path))
+                            .map((f) => f.id);
+
+                        if (deletedIds.length > 0) {
+                            await prisma.file.deleteMany({
+                                where: { id: { in: deletedIds } },
+                            });
+                        }
+                    }
+
+                    if (burned) {
                         sendWebhook('secret.burned', {
                             secretId: id,
                             hasPassword: true,

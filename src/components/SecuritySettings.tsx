@@ -206,10 +206,14 @@ export function SecuritySettings() {
 
                                         {limitPasswordAttempts && (
                                             <div className="mt-3">
-                                                <label className="block text-xs text-gray-500 dark:text-slate-400 mb-2">
+                                                <label
+                                                    htmlFor="max-password-attempts"
+                                                    className="block text-xs text-gray-500 dark:text-slate-400 mb-2"
+                                                >
                                                     {t('security_settings.max_attempts_label')}
                                                 </label>
                                                 <input
+                                                    id="max-password-attempts"
                                                     type="number"
                                                     min={1}
                                                     max={20}

@@ -38,15 +38,20 @@ export async function getMaxFileSize(): Promise<number> {
 
 /**
  * Unlinks files from disk, logging (not throwing) on individual failures —
- * a file may already be gone or inaccessible.
+ * a file may already be gone or inaccessible. Returns the paths that were
+ * actually removed so callers only drop DB records for confirmed deletions.
  */
-export async function unlinkFiles(paths: string[]): Promise<void> {
+export async function unlinkFiles(paths: string[]): Promise<string[]> {
     const results = await Promise.allSettled(paths.map((path) => unlink(path)));
+    const deleted: string[] = [];
     results.forEach((result, index) => {
         if (result.status === 'rejected') {
             console.error(`Failed to delete file from disk: ${paths[index]}`, result.reason);
+        } else {
+            deleted.push(paths[index]);
         }
     });
+    return deleted;
 }
 
 /**
