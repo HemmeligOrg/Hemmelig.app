@@ -9,10 +9,7 @@ async function loginUser(page: Page, username: string, password: string): Promis
     await page.getByPlaceholder(/password/i).fill(password);
     await page.getByRole('button', { name: /sign in/i }).click();
 
-    await page.waitForURL(
-        (url) => url.pathname.startsWith('/dashboard') || url.pathname === '/verify-2fa',
-        { timeout: 10000 }
-    );
+    await page.waitForURL((url) => url.pathname.startsWith('/dashboard'), { timeout: 10000 });
 }
 
 // Extend the base test with auth fixture
