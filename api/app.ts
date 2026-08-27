@@ -99,7 +99,10 @@ app.use(async (c, next) => {
 app.use(logger());
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
-app.use(`/*`, timeout(15 * 1000)); // 15 seconds timeout to the API calls
+const requestTimeout = config.get<number>('server.requestTimeout', 15);
+if (requestTimeout > 0) {
+    app.use(`/*`, timeout(requestTimeout * 1000));
+}
 app.use(ratelimit);
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag
