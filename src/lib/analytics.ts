@@ -1,4 +1,4 @@
-import { api } from './api';
+import { apiRaw } from './api';
 
 const TRACKED_PATHS = ['/', '/secret'];
 
@@ -19,7 +19,7 @@ export async function trackPageView(path: string): Promise<void> {
     const normalizedPath = path.startsWith('/secret/') ? '/secret' : path;
 
     try {
-        await api.analytics.track.$post({ json: { path: normalizedPath } });
+        await apiRaw.analytics.track.$post({ json: { path: normalizedPath } });
     } catch {
         // Silently fail - analytics should not affect user experience
     }
