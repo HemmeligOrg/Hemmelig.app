@@ -849,12 +849,12 @@
             "cancelled": "Avbruten"
         },
         "time": {
-            "days": "{{count}} dag",
-            "days_plural": "{{count}} dagar",
-            "hours": "{{count}} timme",
-            "hours_plural": "{{count}} timmar",
-            "minutes": "{{count}} minut",
-            "minutes_plural": "{{count}} minuter"
+            "days_one": "{{count}} dag",
+            "days_other": "{{count}} dagar",
+            "hours_one": "{{count}} timme",
+            "hours_other": "{{count}} timmar",
+            "minutes_one": "{{count}} minut",
+            "minutes_other": "{{count}} minuter"
         },
         "link_modal": {
             "title": "Skaparlänk",

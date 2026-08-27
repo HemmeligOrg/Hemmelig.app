@@ -850,12 +850,12 @@
             "cancelled": "Geannuleerd"
         },
         "time": {
-            "days": "{{count}} dag",
-            "days_plural": "{{count}} dagen",
-            "hours": "{{count}} uur",
-            "hours_plural": "{{count}} uren",
-            "minutes": "{{count}} minuut",
-            "minutes_plural": "{{count}} minuten"
+            "days_one": "{{count}} dag",
+            "days_other": "{{count}} dagen",
+            "hours_one": "{{count}} uur",
+            "hours_other": "{{count}} uren",
+            "minutes_one": "{{count}} minuut",
+            "minutes_other": "{{count}} minuten"
         },
         "link_modal": {
             "title": "Invoerlink",

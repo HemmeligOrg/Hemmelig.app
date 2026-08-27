@@ -9,6 +9,7 @@ const LANGUAGES = [
     { code: 'it', label: 'IT' },
     { code: 'nl', label: 'NL' },
     { code: 'no', label: 'NO' },
+    { code: 'pt', label: 'PT' },
     { code: 'sv', label: 'SV' },
     { code: 'zh', label: '中文' },
 ] as const;
@@ -22,7 +23,7 @@ export function LanguagePicker() {
 
     return (
         <select
-            value={i18n.language}
+            value={i18n.resolvedLanguage ?? i18n.language}
             onChange={handleLanguageChange}
             className="bg-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs cursor-pointer border-none outline-none appearance-none pr-1"
             aria-label="Select language"

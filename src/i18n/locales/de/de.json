@@ -849,12 +849,12 @@
             "cancelled": "Abgebrochen"
         },
         "time": {
-            "days": "{{count}} Tag",
-            "days_plural": "{{count}} Tage",
-            "hours": "{{count}} Stunde",
-            "hours_plural": "{{count}} Stunden",
-            "minutes": "{{count}} Minute",
-            "minutes_plural": "{{count}} Minuten"
+            "days_one": "{{count}} Tag",
+            "days_other": "{{count}} Tage",
+            "hours_one": "{{count}} Stunde",
+            "hours_other": "{{count}} Stunden",
+            "minutes_one": "{{count}} Minute",
+            "minutes_other": "{{count}} Minuten"
         },
         "link_modal": {
             "title": "Ersteller-Link",

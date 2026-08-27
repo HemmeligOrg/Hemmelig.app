@@ -849,12 +849,12 @@
             "cancelled": "Annulleret"
         },
         "time": {
-            "days": "{{count}} dag",
-            "days_plural": "{{count}} dage",
-            "hours": "{{count}} time",
-            "hours_plural": "{{count}} timer",
-            "minutes": "{{count}} minut",
-            "minutes_plural": "{{count}} minutter"
+            "days_one": "{{count}} dag",
+            "days_other": "{{count}} dage",
+            "hours_one": "{{count}} time",
+            "hours_other": "{{count}} timer",
+            "minutes_one": "{{count}} minut",
+            "minutes_other": "{{count}} minutter"
         },
         "link_modal": {
             "title": "Opretterlink",

@@ -849,12 +849,12 @@
             "cancelled": "Avbrutt"
         },
         "time": {
-            "days": "{{count}} dag",
-            "days_plural": "{{count}} dager",
-            "hours": "{{count}} time",
-            "hours_plural": "{{count}} timer",
-            "minutes": "{{count}} minutt",
-            "minutes_plural": "{{count}} minutter"
+            "days_one": "{{count}} dag",
+            "days_other": "{{count}} dager",
+            "hours_one": "{{count}} time",
+            "hours_other": "{{count}} timer",
+            "minutes_one": "{{count}} minutt",
+            "minutes_other": "{{count}} minutter"
         },
         "link_modal": {
             "title": "Oppretter-lenke",

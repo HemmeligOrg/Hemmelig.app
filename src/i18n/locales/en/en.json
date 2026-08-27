@@ -850,12 +850,12 @@
             "cancelled": "Cancelled"
         },
         "time": {
-            "days": "{{count}} day",
-            "days_plural": "{{count}} days",
-            "hours": "{{count}} hour",
-            "hours_plural": "{{count}} hours",
-            "minutes": "{{count}} minute",
-            "minutes_plural": "{{count}} minutes"
+            "days_one": "{{count}} day",
+            "days_other": "{{count}} days",
+            "hours_one": "{{count}} hour",
+            "hours_other": "{{count}} hours",
+            "minutes_one": "{{count}} minute",
+            "minutes_other": "{{count}} minutes"
         },
         "link_modal": {
             "title": "Creator Link",

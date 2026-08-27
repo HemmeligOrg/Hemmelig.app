@@ -10,6 +10,7 @@ import frTranslations from './locales/fr/fr.json';
 import itTranslations from './locales/it/it.json';
 import nlTranslations from './locales/nl/nl.json';
 import noTranslations from './locales/no/no.json';
+import ptTranslations from './locales/pt/pt.json';
 import svTranslations from './locales/sv/sv.json';
 import zhTranslations from './locales/zh/zh.json';
 
@@ -37,6 +38,7 @@ i18n.use(LanguageDetector)
             da: { translations: daTranslations },
             no: { translations: noTranslations },
             sv: { translations: svTranslations },
+            pt: { translations: ptTranslations },
         },
         defaultNS: 'translations',
     });
