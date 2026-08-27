@@ -19,6 +19,9 @@ test.describe('User management', () => {
         await page.getByRole('button', { name: 'Add User' }).last().click();
 
         await expect(page.getByRole('heading', { name: 'Add User' })).toBeHidden();
+        await expect(page.getByRole('row').filter({ hasText: 'seconduser' })).toContainText(
+            'second@example.com'
+        );
         await page.getByRole('button', { name: 'Add User' }).click();
 
         await expect(nameInput).toHaveValue('');
