@@ -25,6 +25,18 @@ export function AddUserModal({ isOpen, onClose, onSave }: AddUserModalProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('user');
+    const [previousIsOpen, setPreviousIsOpen] = useState(isOpen);
+
+    if (isOpen !== previousIsOpen) {
+        setPreviousIsOpen(isOpen);
+        if (!isOpen) {
+            setName('');
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setRole('user');
+        }
+    }
 
     const handleSave = () => {
         onSave({
