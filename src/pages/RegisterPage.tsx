@@ -274,9 +274,7 @@ export function RegisterPage() {
                                         className={`text-xs ${passwordStrength >= 3 ? 'text-green-500' : passwordStrength >= 2 ? 'text-yellow-500' : 'text-red-500'}`}
                                     >
                                         {t('register_page.password_strength_label')}:{' '}
-                                        {t(
-                                            `register_page.password_strength_levels.${strengthLabels[passwordStrength - 1].toLowerCase().replace(' ', '_')}`
-                                        )}
+                                        {strengthLabels[passwordStrength - 1]}
                                     </p>
                                 </div>
                             )}

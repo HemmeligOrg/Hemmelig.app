@@ -18,7 +18,6 @@ i18n.use(LanguageDetector)
     .use(initReactI18next)
     .init({
         fallbackLng: 'en',
-        nonExplicitSupportedLngs: true,
         debug: true,
         detection: {
             order: ['localStorage', 'navigator', 'htmlTag'],
