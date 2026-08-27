@@ -849,12 +849,12 @@
             "cancelled": "已取消"
         },
         "time": {
-            "days": "{{count}} 天",
-            "days_plural": "{{count}} 天",
-            "hours": "{{count}} 小时",
-            "hours_plural": "{{count}} 小时",
-            "minutes": "{{count}} 分钟",
-            "minutes_plural": "{{count}} 分钟"
+            "days_one": "{{count}} 天",
+            "days_other": "{{count}} 天",
+            "hours_one": "{{count}} 小时",
+            "hours_other": "{{count}} 小时",
+            "minutes_one": "{{count}} 分钟",
+            "minutes_other": "{{count}} 分钟"
         },
         "link_modal": {
             "title": "创建者链接",
