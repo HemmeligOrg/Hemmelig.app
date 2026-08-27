@@ -930,6 +930,7 @@ const extensions = [
         validate: (href) => /^https?:\/\//.test(href),
     }),
     StarterKit.configure({
+        link: false,
         bulletList: {
             keepMarks: true,
             keepAttributes: false,
