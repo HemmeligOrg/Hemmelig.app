@@ -45,7 +45,7 @@
         "@prisma/client": "^7.4.1",
         "@tailwindcss/vite": "^4.1.18",
         "argon2": "^0.44.0",
-        "better-auth": "^1.4.6",
+        "better-auth": "1.6.30",
         "better-sqlite3": "^12.5.0",
         "croner": "^9.1.0",
         "dlv": "^1.1.3",
