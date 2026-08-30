@@ -66,7 +66,7 @@
         "character_count": "znaků"
     },
     "create_button": {
-        "creating_secret": "Vytváření tajemství...",
+        "creating_secret": "Vytváření secretu...",
         "create": "Vytvořit"
     },
     "file_upload": {
@@ -90,14 +90,14 @@
         "home": "Domů",
         "sign_in": "Přihlásit se",
         "sign_up": "Registrovat se",
-        "dashboard": "Přehled",
-        "hero_text_part1": "Sdílejte tajemství bezpečně pomocí šifrovaných zpráv, které se po přečtení",
+        "dashboard": "Dashboard",
+        "hero_text_part1": "Sdílejte secrety bezpečně pomocí šifrovaných zpráv, které se po přečtení",
         "hero_text_part2": " automaticky zničí",
         "hero_text_part3": "."
     },
     "dashboard_layout": {
-        "secrets": "Tajemství",
-        "secret_requests": "Žádosti o tajemství",
+        "secrets": "Secrets",
+        "secret_requests": "Žádosti o secrety",
         "account": "Účet",
         "analytics": "Analytika",
         "users": "Uživatelé",
@@ -107,46 +107,46 @@
         "hemmelig": "Hemmelig"
     },
     "secret_settings": {
-        "secret_created_title": "Tajemství bylo vytvořeno!",
-        "secret_created_description": "Vaše tajemství je nyní dostupné na následující URL. Dešifrovací klíč bezpečně uschovejte, protože jej nelze obnovit.",
-        "secret_url_label": "URL tajemství",
+        "secret_created_title": "Secret byl vytvořen!",
+        "secret_created_description": "Váš secret je nyní dostupný na následující URL. Dešifrovací klíč bezpečně uschovejte, protože jej nelze obnovit.",
+        "secret_url_label": "URL secretu",
         "decryption_key_label": "Dešifrovací klíč",
         "password_label": "Heslo",
-        "create_new_secret_button": "Vytvořit nové tajemství",
+        "create_new_secret_button": "Vytvořit nový secret",
         "copy_url_button": "Kopírovat URL",
-        "burn_secret_button": "Zničit tajemství",
-        "max_secrets_per_user_info": "Můžete vytvořit až {{count}} tajemství.",
-        "failed_to_burn": "Tajemství se nepodařilo zničit. Zkuste to znovu."
+        "burn_secret_button": "Zničit secret",
+        "max_secrets_per_user_info": "Můžete vytvořit až {{count}} secretů.",
+        "failed_to_burn": "Secret se nepodařilo zničit. Zkuste to znovu."
     },
     "security_settings": {
         "security_title": "Zabezpečení",
-        "security_description": "Nastavte zabezpečení svého tajemství",
+        "security_description": "Nastavte zabezpečení svého secretu",
         "remember_settings": "Zapamatovat",
         "private_title": "Soukromé",
-        "private_description": "Soukromá tajemství jsou šifrovaná a lze je zobrazit pouze s dešifrovacím klíčem nebo heslem.",
+        "private_description": "Soukromé secrety jsou šifrované a lze je zobrazit pouze s dešifrovacím klíčem nebo heslem.",
         "expiration_title": "Platnost",
-        "expiration_burn_after_time_description": "Nastavte, kdy se má tajemství zničit",
-        "expiration_default_description": "Nastavte, jak dlouho má být tajemství dostupné",
+        "expiration_burn_after_time_description": "Nastavte, kdy se má secret zničit",
+        "expiration_default_description": "Nastavte, jak dlouho má být secret dostupný",
         "max_views_title": "Maximum zobrazení",
         "burn_after_time_mode_title": "Zničení po uplynutí času",
-        "burn_after_time_mode_description": "Tajemství se po uplynutí času zničí bez ohledu na počet zobrazení.",
+        "burn_after_time_mode_description": "Secret se po uplynutí času zničí bez ohledu na počet zobrazení.",
         "password_protection_title": "Ochrana heslem",
         "password_protection_description": "Přidejte další vrstvu zabezpečení pomocí hesla",
         "enter_password_label": "Zadejte heslo",
         "password_placeholder": "Zadejte bezpečné heslo...",
-        "password_hint": "Minimálně 5 znaků. Příjemci budou toto heslo potřebovat k zobrazení tajemství",
+        "password_hint": "Minimálně 5 znaků. Příjemci budou toto heslo potřebovat k zobrazení secretu",
         "password_error": "Heslo musí mít alespoň 5 znaků",
         "ip_restriction_title": "Omezit podle IP nebo CIDR",
-        "ip_restriction_description": "Pomocí CIDR můžete určit rozsahy IP adres, které smějí k tajemství přistupovat.",
+        "ip_restriction_description": "Pomocí CIDR můžete určit rozsahy IP adres, které smějí k secretu přistupovat.",
         "ip_address_cidr_label": "IP adresa nebo rozsah CIDR",
         "ip_address_cidr_placeholder": "192.168.1.0/24 nebo 203.0.113.5",
-        "ip_address_cidr_hint": "K tajemství budou mít přístup pouze požadavky z těchto IP adres",
+        "ip_address_cidr_hint": "K secretu budou mít přístup pouze požadavky z těchto IP adres",
         "burn_after_time_title": "Zničit po uplynutí času",
-        "burn_after_time_description": "Zničit tajemství až po uplynutí času"
+        "burn_after_time_description": "Zničit secret až po uplynutí času"
     },
     "title_field": {
         "placeholder": "Název",
-        "hint": "Dejte tajemství zapamatovatelný název (volitelné)"
+        "hint": "Dejte secretu zapamatovatelný název (volitelné)"
     },
     "views_slider": {
         "min_views": "1",
@@ -222,10 +222,10 @@
             "title": "Nebezpečná zóna",
             "description": "Nevratné a destruktivní akce",
             "delete_account_title": "Smazat účet",
-            "delete_account_description": "Smazání účtu je nevratné. Trvale odstraní váš účet, všechna vaše tajemství a související data.",
-            "delete_account_bullet1": "Všechna vaše tajemství budou trvale smazána",
+            "delete_account_description": "Smazání účtu je nevratné. Trvale odstraní váš účet, všechny vaše secrety a související data.",
+            "delete_account_bullet1": "Všechny vaše secrety budou trvale smazány",
             "delete_account_bullet2": "Data vašeho účtu budou odstraněna z našich serverů",
-            "delete_account_bullet3": "Jakékoli sdílené tajné odkazy budou neplatné",
+            "delete_account_bullet3": "Všechny sdílené odkazy na secrety budou neplatné",
             "delete_account_bullet4": "Tuto akci nelze vrátit zpět",
             "delete_account_confirm": "Jste si jisti, že chcete smazat svůj účet? Tuto akci nelze zrušit.",
             "delete_account_button": "Smazat účet",
@@ -259,24 +259,24 @@
     },
     "analytics_page": {
         "title": "Analytika",
-        "description": "Sledujte aktivitu a přehledy sdílených tajemství",
+        "description": "Sledujte aktivitu a přehledy sdílených secretů",
         "time_range": {
             "last_7_days": "Posledních 7 dní",
             "last_14_days": "Posledních 14 dní",
             "last_30_days": "Posledních 30 dní"
         },
-        "total_secrets": "Celkem tajemství",
+        "total_secrets": "Celkem secretů",
         "from_last_period": "+{{percentage}} % oproti minulému období",
         "total_views": "Celkem zobrazení",
-        "avg_views_per_secret": "Průměr zobrazení na tajemství",
-        "active_secrets": "Aktivní tajemství",
+        "avg_views_per_secret": "Průměr zobrazení na secret",
+        "active_secrets": "Aktivní secrety",
         "daily_activity": {
             "title": "Denní aktivita",
-            "description": "Vytvořená tajemství a zobrazení v čase",
-            "secrets": "Tajemství",
+            "description": "Vytvořené secrety a zobrazení v čase",
+            "secrets": "Secrets",
             "views": "Zobrazení",
-            "secrets_created": "Vytvořená tajemství",
-            "secret_views": "Zobrazení tajemství",
+            "secrets_created": "Vytvořené secrety",
+            "secret_views": "Zobrazení secretů",
             "date": "Datum",
             "trend": "Změna",
             "vs_previous": "oproti předchozímu dni",
@@ -285,11 +285,11 @@
         "locale": "cs-CZ",
         "top_countries": {
             "title": "Nejčastější země",
-            "description": "Odkud jsou vaše tajemství zobrazována",
+            "description": "Odkud jsou vaše secrety zobrazovány",
             "views": "Zobrazení"
         },
         "secret_types": {
-            "title": "Typy tajemství",
+            "title": "Typy secretů",
             "description": "Distribuce podle úrovně ochrany",
             "password_protected": "Chráněno heslem",
             "ip_restricted": "Omezeno IP",
@@ -297,7 +297,7 @@
         },
         "expiration_stats": {
             "title": "Statistiky platnosti",
-            "description": "Jak dlouho tajemství obvykle vydrží",
+            "description": "Jak dlouho secrety obvykle vydrží",
             "one_hour": "1 hodina",
             "one_day": "1 den",
             "one_week_plus": "1 týden a více"
@@ -313,7 +313,7 @@
             "no_data": "Zatím nejsou k dispozici žádné údaje o návštěvách."
         },
         "secret_requests": {
-            "total": "Žádosti o tajemství",
+            "total": "Žádosti o secrety",
             "fulfilled": "Vyřízené žádosti"
         },
         "loading": "Načítám analytiku...",
@@ -353,9 +353,9 @@
             "logo_alt": "Logo instance",
             "logo_invalid_type": "Neplatný typ souboru. Nahrajte prosím PNG, JPEG, GIF, SVG nebo WebP obrázek.",
             "logo_too_large": "Soubor je příliš velký. Maximální velikost je 512KB.",
-            "default_expiration_label": "Výchozí platnost tajemství",
-            "max_secrets_per_user_label": "Maximum tajemství na uživatele",
-            "max_secret_size_label": "Maximální velikost tajemství (MB)",
+            "default_expiration_label": "Výchozí platnost secretu",
+            "max_secrets_per_user_label": "Maximum secretů na uživatele",
+            "max_secret_size_label": "Maximální velikost secretu (MB)",
             "instance_description_label": "Popis instance",
             "important_message_label": "Důležitá zpráva",
             "important_message_placeholder": "Zadejte důležitou zprávu pro zobrazení pro všechny uživatele...",
@@ -375,7 +375,7 @@
             "max_password_attempts_label": "Maximální počet pokusů o zadání hesla",
             "session_timeout_label": "Platnost relace (hodiny)",
             "allow_file_uploads_title": "Povolit nahrávání souborů",
-            "allow_file_uploads_description": "Umožnit uživatelům připojit soubory k tajemstvím"
+            "allow_file_uploads_description": "Umožnit uživatelům připojit soubory k secretům"
         },
         "email_settings": {
             "title": "Nastavení e-mailu",
@@ -389,7 +389,7 @@
             "title": "Databázové informace",
             "description": "Stav databáze a statistiky",
             "stats_title": "Databázové údaje",
-            "total_secrets": "Tajemství celkem:",
+            "total_secrets": "Secrety celkem:",
             "total_users": "Uživatelé celkem:",
             "disk_usage": "Použití disků:",
             "connection_status_title": "Stav připojení",
@@ -417,40 +417,40 @@
         }
     },
     "secrets_page": {
-        "title": "Vaše tajemství",
-        "description": "Spravujte a sledujte svá sdílená tajemství",
-        "create_secret_button": "Vytvořit tajemství",
-        "search_placeholder": "Vyhledávání tajemství...",
+        "title": "Vaše secrety",
+        "description": "Spravujte a sledujte své sdílené secrety",
+        "create_secret_button": "Vytvořit secret",
+        "search_placeholder": "Hledat secrety...",
         "filter": {
-            "all_secrets": "Všechna tajemství",
+            "all_secrets": "Všechny secrety",
             "active": "Aktivní",
             "expired": "Po platnosti"
         },
-        "total_secrets": "Celkem tajemství",
+        "total_secrets": "Celkem secretů",
         "active_secrets": "Aktivní",
         "expired_secrets": "Po platnosti",
-        "no_secrets_found_title": "Nebyla nalezena žádná tajemství",
+        "no_secrets_found_title": "Nebyly nalezeny žádné secrety",
         "no_secrets_found_description_filter": "Zkuste upravit kritéria vyhledávání nebo filtru.",
-        "no_secrets_found_description_empty": "Začněte vytvořením prvního tajemství.",
+        "no_secrets_found_description_empty": "Začněte vytvořením prvního secretu.",
         "password_protected": "Heslo",
         "files": "soubory",
         "table": {
-            "secret_header": "Tajemství",
+            "secret_header": "Secret",
             "created_header": "Vytvořeno",
             "status_header": "Stav",
             "views_header": "Zobrazení",
             "actions_header": "Akce",
-            "untitled_secret": "Nepojmenované tajemství",
+            "untitled_secret": "Secret bez názvu",
             "expired_status": "Po platnosti",
             "active_status": "Aktivní",
             "never_expires": "Bez omezení platnosti",
             "expired_time": "Po platnosti",
             "views_left": "zbývajících zobrazení",
             "copy_url_tooltip": "Kopírovat URL",
-            "open_secret_tooltip": "Otevřít tajemství",
-            "delete_secret_tooltip": "Smazat tajemství",
+            "open_secret_tooltip": "Otevřít secret",
+            "delete_secret_tooltip": "Smazat secret",
             "delete_confirmation_title": "Jste si jistí?",
-            "delete_confirmation_text": "Tuto akci nelze vrátit zpět. Tajemství bude trvale smazáno.",
+            "delete_confirmation_text": "Tuto akci nelze vrátit zpět. Secret bude trvale smazán.",
             "delete_confirm_button": "Ano, smazat",
             "delete_cancel_button": "Zrušit"
         }
@@ -552,10 +552,10 @@
     },
     "register_page": {
         "back_to_hemmelig": "Zpět do Hemmelig",
-        "join_hemmelig": "Připojte se k Hemmelig a sdílejte tajemství bezpečně",
+        "join_hemmelig": "Připojte se k Hemmelig a sdílejte secrety bezpečně",
         "email_password_disabled_message": "Registrace e-mailem a heslem je vypnutá. Použijte jednu z možností přihlášení níže.",
         "create_account_title": "Vytvořit účet",
-        "create_account_description": "Připojte se k Hemmelig a sdílejte tajemství bezpečně",
+        "create_account_description": "Připojte se k Hemmelig a sdílejte secrety bezpečně",
         "username_label": "Uživatelské jméno",
         "username_placeholder": "Zvolte uživatelské jméno",
         "email_label": "E-mail",
@@ -591,34 +591,34 @@
         "account_already_exists": "Účet s tímto e-mailem již existuje. Přihlaste se."
     },
     "secret_form": {
-        "failed_to_create_secret": "Nepodařilo se vytvořit tajemství: {{errorMessage}}",
+        "failed_to_create_secret": "Nepodařilo se vytvořit secret: {{errorMessage}}",
         "failed_to_upload_file": "Nepodařilo se nahrát soubor: {{fileName}}"
     },
     "secret_page": {
         "password_label": "Heslo",
-        "password_placeholder": "Zadejte heslo pro zobrazení tajemství",
+        "password_placeholder": "Zadejte heslo pro zobrazení secretu",
         "decryption_key_label": "Dešifrovací klíč",
         "decryption_key_placeholder": "Zadejte dešifrovací klíč",
-        "view_secret_button": "Zobrazit tajemství",
+        "view_secret_button": "Zobrazit secret",
         "views_remaining_tooltip": "Zbývající zobrazení: {{count}}",
-        "loading_message": "Dešifrování tajemství...",
+        "loading_message": "Dešifrování secretu...",
         "files_title": "Přiložené soubory",
-        "secret_waiting_title": "Někdo s vámi sdílí tajemství",
-        "secret_waiting_description": "Tajemství je zašifrované a zobrazí se až po kliknutí na tlačítko níže.",
-        "one_view_remaining": "Tajemství lze zobrazit už jen jednou",
-        "views_remaining": "Tajemství lze zobrazit ještě {{count}}krát",
+        "secret_waiting_title": "Někdo s vámi sdílí secret",
+        "secret_waiting_description": "Secret je zašifrovaný a zobrazí se až po kliknutí na tlačítko níže.",
+        "one_view_remaining": "Secret lze zobrazit už jen jednou",
+        "views_remaining": "Secret lze zobrazit ještě {{count}}krát",
         "view_warning": "Po zobrazení nelze tuto akci vrátit zpět",
-        "secret_revealed": "Tajemství",
+        "secret_revealed": "Secret",
         "copy_secret": "Kopírovat do schránky",
         "download": "Stáhnout",
-        "create_your_own": "Vytvořit vlastní tajemství",
-        "encrypted_secret": "Zašifrované tajemství",
-        "unlock_secret": "Odemknout tajemství",
-        "delete_secret": "Smazat tajemství",
-        "delete_modal_title": "Smazat tajemství",
-        "delete_modal_message": "Opravdu chcete toto tajemství smazat? Tuto akci nelze vrátit zpět.",
-        "decryption_failed": "Tajemství se nepodařilo dešifrovat. Zkontrolujte heslo nebo dešifrovací klíč.",
-        "fetch_error": "Při načítání tajemství došlo k chybě. Zkuste to znovu."
+        "create_your_own": "Vytvořit vlastní secret",
+        "encrypted_secret": "Zašifrovaný secret",
+        "unlock_secret": "Odemknout secret",
+        "delete_secret": "Smazat secret",
+        "delete_modal_title": "Smazat secret",
+        "delete_modal_message": "Opravdu chcete tento secret smazat? Tuto akci nelze vrátit zpět.",
+        "decryption_failed": "Secret se nepodařilo dešifrovat. Zkontrolujte heslo nebo dešifrovací klíč.",
+        "fetch_error": "Při načítání secretu došlo k chybě. Zkuste to znovu."
     },
     "expiration": {
         "28_days": "28 dní",
@@ -636,8 +636,8 @@
         "clear_errors_button_title": "Smazat chyby"
     },
     "secret_not_found_page": {
-        "title": "Tajemství nebylo nalezeno",
-        "message": "Hledané tajemství neexistuje, vypršela jeho platnost nebo bylo zničeno.",
+        "title": "Secret nebyl nalezen",
+        "message": "Hledaný secret neexistuje, vypršela jeho platnost nebo byl zničen.",
         "error_details": "Podrobnosti chyby:",
         "go_home_button": "Přejít na domovskou stránku"
     },
@@ -650,7 +650,7 @@
             "invite_only_title": "Registrace pouze s pozvánkou",
             "invite_only_description": "Uživatelé se mohou registrovat pouze s platným kódem pozvánky",
             "require_registered_user_title": "Pouze registrovaní uživatelé",
-            "require_registered_user_description": "Pouze registrovaní uživatelé mohou vytvářet tajemství",
+            "require_registered_user_description": "Pouze registrovaní uživatelé mohou vytvářet secrety",
             "disable_email_password_signup_title": "Vypnout registraci e-mailem a heslem",
             "disable_email_password_signup_description": "Vypnout registraci e-mailem a heslem (pouze externí přihlášení)",
             "allowed_domains_title": "Povolené e-mailové domény",
@@ -761,32 +761,32 @@
     },
     "webhook_settings": {
         "title": "Oznámení webhookem",
-        "description": "Informujte externí služby při zobrazení nebo zničení tajemství",
+        "description": "Informujte externí služby při zobrazení nebo zničení secretu",
         "enable_webhooks_title": "Zapnout webhooky",
         "enable_webhooks_description": "Při událostech posílat HTTP POST požadavky na URL webhooku",
         "webhook_url_label": "URL webhooku",
         "webhook_url_placeholder": "https://example.com/webhook",
         "webhook_url_hint": "URL, na kterou se budou posílat data webhooku",
-        "webhook_secret_label": "Tajemství webhooku",
-        "webhook_secret_placeholder": "Zadejte tajemství pro podpis HMAC",
+        "webhook_secret_label": "Webhook secret",
+        "webhook_secret_placeholder": "Zadejte secret pro podpis HMAC",
         "webhook_secret_hint": "Používá se k podepisování dat webhooku pomocí HMAC-SHA256. Podpis se posílá v hlavičce X-Hemmelig-Signature.",
         "events_title": "Události webhooku",
-        "on_view_title": "Tajemství zobrazeno",
-        "on_view_description": "Odeslat webhook při zobrazení tajemství",
-        "on_burn_title": "Tajemství zničeno",
-        "on_burn_description": "Odeslat webhook při zničení nebo smazání tajemství"
+        "on_view_title": "Secret zobrazen",
+        "on_view_description": "Odeslat webhook při zobrazení secretu",
+        "on_burn_title": "Secret zničen",
+        "on_burn_description": "Odeslat webhook při zničení nebo smazání secretu"
     },
     "metrics_settings": {
         "title": "Metriky Prometheus",
         "description": "Zpřístupněte metriky pro monitoring pomocí Promethea",
         "enable_metrics_title": "Zapnout metriky Prometheus",
         "enable_metrics_description": "Zpřístupnit endpoint /api/metrics pro načítání Prometheem",
-        "metrics_secret_label": "Tajemství metrik",
-        "metrics_secret_placeholder": "Zadejte tajemství pro ověření",
+        "metrics_secret_label": "Metrics secret",
+        "metrics_secret_placeholder": "Zadejte secret pro ověření",
         "metrics_secret_hint": "Používá se jako Bearer token pro ověření požadavků na endpoint metrik. Prázdná hodnota vypne ověření (nedoporučuje se).",
         "endpoint_info_title": "Informace o endpointu",
         "endpoint_info_description": "Po zapnutí budou metriky dostupné na:",
-        "endpoint_auth_hint": "Při načítání metrik vložte tajemství jako Bearer token do hlavičky Authorization."
+        "endpoint_auth_hint": "Při načítání metrik vložte secret jako Bearer token do hlavičky Authorization."
     },
     "verify_2fa_page": {
         "back_to_login": "Zpět k přihlášení",
@@ -814,32 +814,32 @@
     },
     "not_found_page": {
         "title": "Stránka nenalezena",
-        "message": "Tahle stránka se vypařila, stejně jako naše tajemství.",
+        "message": "Tahle stránka se vypařila, stejně jako naše secrety.",
         "hint": "Stránka, kterou hledáte, neexistuje nebo byla přesunuta.",
         "go_home_button": "Přejít domů",
-        "create_secret_button": "Vytvořit tajemství"
+        "create_secret_button": "Vytvořit secret"
     },
     "error_boundary": {
         "title": "Něco se pokazilo.",
         "message": "Při zpracovávání vaší žádosti došlo k neočekávané chybě.",
-        "hint": "Vaše tajemství jsou stále v bezpečí. Zkuste stránku obnovit.",
+        "hint": "Vaše secrety jsou stále v bezpečí. Zkuste stránku obnovit.",
         "error_details": "Údaje o chybě:",
         "unknown_error": "Nastala neznámá chyba.",
         "try_again_button": "Zkusit znovu",
         "go_home_button": "Přejít domů"
     },
     "secret_requests_page": {
-        "title": "Žádosti o tajemství",
-        "description": "Vyžádejte si tajemství od ostatních pomocí bezpečných odkazů",
+        "title": "Žádosti o secrety",
+        "description": "Vyžádejte si secrety od ostatních pomocí bezpečných odkazů",
         "create_request_button": "Vytvořit žádost",
-        "no_requests": "Zatím nemáte žádné žádosti o tajemství. Začněte vytvořením první.",
+        "no_requests": "Zatím nemáte žádné žádosti o secrety. Začněte vytvořením první.",
         "table": {
             "title_header": "Název",
             "status_header": "Stav",
-            "secret_expiry_header": "Platnost tajemství",
+            "secret_expiry_header": "Platnost secretu",
             "link_expires_header": "Platnost odkazu",
             "copy_link_tooltip": "Kopírovat odkaz pro odesílatele",
-            "view_secret_tooltip": "Zobrazit tajemství",
+            "view_secret_tooltip": "Zobrazit secret",
             "cancel_tooltip": "Zrušit žádost"
         },
         "status": {
@@ -850,18 +850,21 @@
         },
         "time": {
             "days_one": "{{count}} den",
+            "days_few": "{{count}} dny",
             "days_other": "{{count}} dní",
             "hours_one": "{{count}} hodina",
+            "hours_few": "{{count}} hodiny",
             "hours_other": "{{count}} hodin",
             "minutes_one": "{{count}} minuta",
+            "minutes_few": "{{count}} minuty",
             "minutes_other": "{{count}} minut"
         },
         "link_modal": {
             "title": "Odkaz pro odesílatele",
-            "description": "Pošlete tento odkaz osobě, která má tajemství poskytnout. Pomocí odkazu může tajemství zadat a zašifrovat.",
+            "description": "Pošlete tento odkaz osobě, která má secret poskytnout. Pomocí odkazu může secret zadat a zašifrovat.",
             "copy_button": "Kopírovat odkaz",
             "close_button": "Zavřít",
-            "warning": "Tento odkaz lze použít pouze jednou. Po odeslání tajemství už nebude fungovat."
+            "warning": "Tento odkaz lze použít pouze jednou. Po odeslání secretu už nebude fungovat."
         },
         "cancel_modal": {
             "title": "Zrušit žádost",
@@ -877,9 +880,9 @@
         }
     },
     "create_request_page": {
-        "title": "Vytvořit žádost o tajemství",
-        "description": "Vyžádejte si od někoho tajemství vytvořením bezpečného odkazu pro jeho odeslání",
-        "back_button": "Zpět na žádosti o tajemství",
+        "title": "Vytvořit žádost o secret",
+        "description": "Vyžádejte si od někoho secret vytvořením bezpečného odkazu pro jeho odeslání",
+        "back_button": "Zpět na žádosti o secrety",
         "form": {
             "title_label": "Název žádosti",
             "title_placeholder": "např. Přístupové údaje AWS pro projekt X",
@@ -887,21 +890,21 @@
             "description_placeholder": "Doplňte kontext k požadovaným údajům...",
             "link_validity_label": "Platnost odkazu",
             "link_validity_hint": "Jak dlouho zůstane odkaz pro odesílatele aktivní",
-            "secret_settings_title": "Nastavení tajemství",
-            "secret_settings_description": "Tato nastavení se použijí na vytvořené tajemství",
-            "secret_expiration_label": "Platnost tajemství",
+            "secret_settings_title": "Nastavení secretu",
+            "secret_settings_description": "Tato nastavení se použijí na vytvořený secret",
+            "secret_expiration_label": "Platnost secretu",
             "max_views_label": "Maximální zobrazení",
             "password_label": "Ochrana heslem (volitelné)",
             "password_placeholder": "Zadejte heslo (min. 5 znaků)",
-            "password_hint": "Příjemci budou potřebovat toto heslo pro zobrazení tajemství",
+            "password_hint": "Příjemci budou potřebovat toto heslo pro zobrazení secretu",
             "ip_restriction_label": "Omezení podle IP (volitelné)",
             "ip_restriction_placeholder": "192.168.1.0/24 nebo 203.0.113.5",
-            "prevent_burn_label": "Zabránit automatickému zničení (ponechat tajemství i po dosažení maxima zobrazení)",
+            "prevent_burn_label": "Zabránit automatickému zničení (ponechat secret i po dosažení maxima zobrazení)",
             "webhook_title": "Oznámení webhookem (volitelné)",
-            "webhook_description": "Nechat se informovat po odeslání tajemství",
+            "webhook_description": "Nechat se informovat po odeslání secretu",
             "webhook_url_label": "URL webhooku",
             "webhook_url_placeholder": "https://vas-server.cz/webhook",
-            "webhook_url_hint": "Doporučeno HTTPS. Oznámení bude odesláno při vytvoření tajemství.",
+            "webhook_url_hint": "Doporučeno HTTPS. Oznámení bude odesláno při vytvoření secretu.",
             "creating_button": "Vytváření...",
             "create_button": "Vytvořit žádost"
         },
@@ -916,17 +919,17 @@
         },
         "success": {
             "title": "Žádost byla vytvořena!",
-            "description": "Sdílejte odkaz s osobou, která má tajemství poskytnout",
+            "description": "Sdílejte odkaz s osobou, která má secret poskytnout",
             "creator_link_label": "Odkaz pro odesílatele",
-            "webhook_secret_label": "Tajemství webhooku",
+            "webhook_secret_label": "Webhook secret",
             "webhook_secret_warning": "Tuto hodnotu si nyní uložte. Už se znovu nezobrazí a slouží k ověření podpisů webhooku.",
             "expires_at": "Platnost odkazu končí: {{date}}",
             "create_another_button": "Vytvořit další žádost",
             "view_all_button": "Zobrazit všechny žádosti"
         },
         "toast": {
-            "created": "Žádost o tajemství byla úspěšně vytvořena",
-            "create_error": "Žádost o tajemství se nepodařilo vytvořit",
+            "created": "Žádost o secret byla úspěšně vytvořena",
+            "create_error": "Žádost o secret se nepodařilo vytvořit",
             "copied": "Zkopírováno do schránky"
         }
     },
@@ -941,24 +944,24 @@
             "go_home_button": "Přejít na domovskou stránku"
         },
         "form": {
-            "title": "Odeslat tajemství",
-            "description": "Někdo vás požádal o bezpečné sdílení tajemství",
-            "password_protected_note": "Toto tajemství bude chráněno heslem",
-            "encryption_note": "Tajemství se před odesláním zašifruje ve vašem prohlížeči. Dešifrovací klíč bude pouze ve výsledné URL, kterou budete sdílet.",
+            "title": "Odeslat secret",
+            "description": "Někdo vás požádal o bezpečné sdílení secretu",
+            "password_protected_note": "Tento secret bude chráněn heslem",
+            "encryption_note": "Secret se před odesláním zašifruje ve vašem prohlížeči. Dešifrovací klíč bude pouze ve výsledné URL, kterou budete sdílet.",
             "submitting_button": "Šifrování a odesílání...",
-            "submit_button": "Odeslat tajemství"
+            "submit_button": "Odeslat secret"
         },
         "success": {
-            "title": "Tajemství bylo vytvořeno!",
-            "description": "Vaše tajemství bylo zašifrováno a bezpečně uloženo",
+            "title": "Secret byl vytvořen!",
+            "description": "Váš secret byl zašifrován a bezpečně uložen",
             "decryption_key_label": "Dešifrovací klíč",
             "warning": "Důležité: Dešifrovací klíč nyní zkopírujte a pošlete žadateli. Zobrazuje se naposledy.",
-            "manual_send_note": "Dešifrovací klíč musíte osobě, která si tajemství vyžádala, poslat ručně. URL tajemství už má ve svém přehledu.",
-            "create_own_button": "Vytvořit vlastní tajemství"
+            "manual_send_note": "Dešifrovací klíč musíte osobě, která si secret vyžádala, poslat ručně. URL secretu už má ve svém dashboardu.",
+            "create_own_button": "Vytvořit vlastní secret"
         },
         "toast": {
-            "created": "Tajemství bylo úspěšně odesláno",
-            "create_error": "Tajemství se nepodařilo odeslat",
+            "created": "Secret byl úspěšně odeslán",
+            "create_error": "Secret se nepodařilo odeslat",
             "copied": "Zkopírováno do schránky"
         }
     }
