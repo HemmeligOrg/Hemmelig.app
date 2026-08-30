@@ -45,7 +45,7 @@ RUN npm ci --omit=dev --ignore-scripts && \
 
 # Final image
 FROM node:25-slim
-RUN apt-get update && apt-get install -y wget openssl ca-certificates gosu && rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update && apt-get install -y wget openssl ca-certificates && rm -rf /var/lib/apt/lists/* && \
     groupadd -r app && useradd -r -g app -m -d /home/app app
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
@@ -69,4 +69,5 @@ ENV DATABASE_URL=file:/app/database/hemmelig.db
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health/ready || exit 1
 
+USER app
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
