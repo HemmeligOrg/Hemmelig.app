@@ -15,3 +15,13 @@ test('should resolve regional Portuguese and render translated labels', async ({
 
     await expect(page.getByText(/Força da senha:\s+Muito Fraca/)).toBeVisible();
 });
+
+test('should resolve regional Czech and render translated labels', async ({ page }) => {
+    await page.addInitScript(() => {
+        window.localStorage.setItem('hemmelig-language', 'cs-CZ');
+    });
+    await page.goto('/register');
+
+    await expect(page.getByPlaceholder('Vytvořte heslo')).toBeVisible();
+    await expect(page.getByText('Vytvořit účet', { exact: true }).first()).toBeVisible();
+});
