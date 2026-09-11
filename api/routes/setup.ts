@@ -1,4 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
+import crypto from 'crypto';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { auth, SETUP_HEADER, SETUP_TOKEN } from '../auth';
@@ -27,6 +28,7 @@ const app = new Hono()
     })
     // Complete initial setup - create first admin user
     .post('/complete', zValidator('json', setupSchema), async (c) => {
+        const claimToken = crypto.randomUUID();
         let createdUserId: string | null = null;
         let setupClaimCreated = false;
         try {
@@ -52,7 +54,7 @@ const app = new Hono()
                     data: {
                         id: 'initial-setup-claim',
                         identifier: 'setup',
-                        value: 'claimed',
+                        value: claimToken,
                         expiresAt: new Date(Date.now() + 60000),
                     },
                 });
@@ -86,12 +88,25 @@ const app = new Hono()
 
             if (!result.user) {
                 await prisma.verification
-                    .delete({ where: { id: 'initial-setup-claim' } })
+                    .deleteMany({
+                        where: {
+                            id: 'initial-setup-claim',
+                            value: claimToken,
+                        },
+                    })
                     .catch(() => {});
                 return c.json({ error: 'Failed to create admin user' }, 500);
             }
 
             createdUserId = result.user.id;
+
+            // Verify setup claim is still active and owned by this exact request
+            const activeClaim = await prisma.verification.findUnique({
+                where: { id: 'initial-setup-claim' },
+            });
+            if (!activeClaim || activeClaim.value !== claimToken) {
+                throw new Error('Setup claim expired or was preempted by another request');
+            }
 
             // Update user to be admin
             await prisma.user.update({
@@ -109,7 +124,12 @@ const app = new Hono()
 
             // Clean up setup claim sentinel
             await prisma.verification
-                .delete({ where: { id: 'initial-setup-claim' } })
+                .deleteMany({
+                    where: {
+                        id: 'initial-setup-claim',
+                        value: claimToken,
+                    },
+                })
                 .catch(() => {});
 
             return c.json({
@@ -118,11 +138,36 @@ const app = new Hono()
             });
         } catch (error) {
             if (createdUserId) {
-                await prisma.user.delete({ where: { id: createdUserId } }).catch(() => {});
+                const delays = [50, 100, 200];
+                let rollbackSuccess = false;
+                let err: unknown;
+                for (let attempt = 0; attempt < delays.length; attempt++) {
+                    try {
+                        await prisma.user.delete({ where: { id: createdUserId } });
+                        rollbackSuccess = true;
+                        break;
+                    } catch (rollbackErr) {
+                        err = rollbackErr;
+                        if (attempt < delays.length - 1) {
+                            await new Promise((resolve) => setTimeout(resolve, delays[attempt]));
+                        }
+                    }
+                }
+                if (!rollbackSuccess) {
+                    console.error(
+                        `CRITICAL: Failed to rollback user ${createdUserId} during setup failure:`,
+                        err
+                    );
+                }
             }
             if (setupClaimCreated) {
                 await prisma.verification
-                    .delete({ where: { id: 'initial-setup-claim' } })
+                    .deleteMany({
+                        where: {
+                            id: 'initial-setup-claim',
+                            value: claimToken,
+                        },
+                    })
                     .catch(() => {});
             }
             console.error('Failed to complete setup:', error);
