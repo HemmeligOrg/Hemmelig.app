@@ -43,13 +43,17 @@ export function Header() {
                                     <LogIn className="w-4 h-4" />
                                     <span className="hidden xs:inline">{t('header.sign_in')}</span>
                                 </Link>
-                                <Link
-                                    to="/register"
-                                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
-                                >
-                                    <UserPlus className="w-4 h-4" />
-                                    <span className="hidden xs:inline">{t('header.sign_up')}</span>
-                                </Link>
+                                {settings.allowRegistration && (
+                                    <Link
+                                        to="/register"
+                                        className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-gray-900 dark:text-white transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
+                                    >
+                                        <UserPlus className="w-4 h-4" />
+                                        <span className="hidden xs:inline">
+                                            {t('header.sign_up')}
+                                        </span>
+                                    </Link>
+                                )}
                             </>
                         )}
                     </div>

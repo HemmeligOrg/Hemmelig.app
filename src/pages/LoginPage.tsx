@@ -10,10 +10,12 @@ import { PasswordToggle } from '../components/PasswordToggle';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
+import { useHemmeligStore } from '../store/hemmeligStore';
 
 export function LoginPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { settings } = useHemmeligStore();
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -101,17 +103,19 @@ export function LoginPage() {
 
                 <SocialLoginButtons mode="login" />
 
-                <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
-                    <p className="text-gray-500 dark:text-slate-400">
-                        {t('login_page.no_account_question')}{' '}
-                        <Link
-                            to="/register"
-                            className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200"
-                        >
-                            {t('login_page.sign_up_link')}
-                        </Link>
-                    </p>
-                </div>
+                {settings.allowRegistration && (
+                    <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
+                        <p className="text-gray-500 dark:text-slate-400">
+                            {t('login_page.no_account_question')}{' '}
+                            <Link
+                                to="/register"
+                                className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200"
+                            >
+                                {t('login_page.sign_up_link')}
+                            </Link>
+                        </p>
+                    </div>
+                )}
             </Card>
         </AuthPageLayout>
     );

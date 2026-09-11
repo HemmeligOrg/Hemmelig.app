@@ -80,4 +80,43 @@ test.describe('Authentication', () => {
 
         expect(isStillOnLogin || hasError).toBe(true);
     });
+
+    test('should hide registration prompt on login page when registration is disabled', async ({
+        page,
+    }) => {
+        await page.route('**/api/instance/settings/public', (route) => {
+            route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify({
+                    allowRegistration: false,
+                    disableEmailPasswordSignup: false,
+                }),
+            });
+        });
+
+        await page.goto('/login');
+        await expect(page.getByPlaceholder(/username/i)).toBeVisible();
+        await expect(page.getByRole('link', { name: /sign up/i })).not.toBeVisible();
+        await page.unrouteAll({ behavior: 'ignoreErrors' });
+    });
+
+    test('should hide registration link in header when registration is disabled', async ({
+        page,
+    }) => {
+        await page.route('**/api/instance/settings/public', (route) => {
+            route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify({
+                    allowRegistration: false,
+                    disableEmailPasswordSignup: false,
+                }),
+            });
+        });
+
+        await page.goto('/');
+        await expect(page.getByRole('link', { name: /sign up/i })).not.toBeVisible();
+        await page.unrouteAll({ behavior: 'ignoreErrors' });
+    });
 });

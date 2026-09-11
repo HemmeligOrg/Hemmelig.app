@@ -6,6 +6,7 @@ import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
+import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
 
 // Generate a unique username from email
@@ -128,9 +129,18 @@ export const auth = betterAuth({
             }
 
             // Get instance settings
-            const settings = await prisma.instanceSettings.findFirst({
-                select: { allowedEmailDomains: true, disableEmailPasswordSignup: true },
-            });
+            const settings = (await resolveSettings()) as {
+                allowedEmailDomains?: string | null;
+                disableEmailPasswordSignup?: boolean | null;
+                allowRegistration?: boolean | null;
+            } | null;
+
+            // Check if registration is disabled
+            if (settings?.allowRegistration === false) {
+                throw new APIError('FORBIDDEN', {
+                    message: 'Registration is disabled.',
+                });
+            }
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
