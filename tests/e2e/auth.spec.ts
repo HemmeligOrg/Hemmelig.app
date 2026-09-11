@@ -154,14 +154,18 @@ test.describe('Authentication', () => {
             });
             expect(adminCreateUserResponse.ok()).toBeTruthy();
         } finally {
-            await request.post('/api/auth/sign-in/email', {
+            const reLogin = await request.post('/api/auth/sign-in/email', {
                 headers: apiHeaders,
                 data: { email: TEST_USER.email, password: TEST_USER.password },
             });
-            await request.put('/api/instance/settings', {
+            const restore = await request.put('/api/instance/settings', {
                 headers: apiHeaders,
                 data: { allowRegistration: initialAllowRegistration },
             });
+            expect(
+                reLogin.ok() && restore.ok(),
+                'failed to restore allowRegistration after test'
+            ).toBeTruthy();
         }
     });
 });
