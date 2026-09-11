@@ -273,9 +273,13 @@ export const auth = betterAuth({
                         } catch (err) {
                             if (attempt === maxRetries) {
                                 console.error(
-                                    `Failed to rollback user ${id} after ${maxRetries} attempts:`,
+                                    `Critical: Failed to rollback user ${id} after ${maxRetries} attempts:`,
                                     err
                                 );
+                                throw new APIError('INTERNAL_SERVER_ERROR', {
+                                    message:
+                                        'Failed to rollback user after invite processing error.',
+                                });
                             } else {
                                 await new Promise((res) => setTimeout(res, 50 * attempt));
                             }

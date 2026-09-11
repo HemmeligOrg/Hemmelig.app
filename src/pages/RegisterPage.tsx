@@ -14,6 +14,12 @@ import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { getPasswordStrength } from '../utils/password';
 
+/**
+ * Renders the user registration page.
+ *
+ * Handles user sign-up with email, username, password, and optional or
+ * required invite code based on instance settings.
+ */
 export function RegisterPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
