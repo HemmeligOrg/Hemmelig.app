@@ -6,8 +6,12 @@ import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
+import { consumeInviteCode } from './lib/invite';
 import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
+
+export const SETUP_HEADER = 'x-hemmelig-setup-token';
+export const SETUP_TOKEN = randomBytes(32).toString('hex');
 
 // Generate a unique username from email
 const generateUsernameFromEmail = (email: string): string => {
@@ -107,22 +111,32 @@ export const auth = betterAuth({
         user: {
             create: {
                 before: async (_user, context) => {
-                    const userCount = await prisma.user.count();
-                    // Allow initial setup when no users exist yet, or user creation by admin
-                    if (userCount === 0 || context?.path === '/admin/create-user') {
+                    // Allow admin user creation by existing admin
+                    if (context?.path === '/admin/create-user') {
                         return;
                     }
 
-                    const settings = (await resolveSettings()) as {
-                        allowRegistration?: boolean | null;
-                        requireInviteCode?: boolean | null;
-                    } | null;
+                    // Allow verified initial setup to create the first admin user
+                    const isInitialSetup =
+                        context?.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
+                        (await prisma.user.count()) === 0;
 
-                    if (settings?.allowRegistration === false) {
+                    if (isInitialSetup) {
+                        return;
+                    }
+
+                    // On an empty deployment, social sign-in cannot create the initial account
+                    const userCount = await prisma.user.count();
+                    if (userCount === 0 && context?.path !== '/sign-up/email') {
                         throw new APIError('FORBIDDEN', {
-                            message: 'Registration is disabled.',
+                            message:
+                                'Initial setup must be completed before social sign-in is available.',
                         });
                     }
+
+                    const settings = (await resolveSettings()) as {
+                        requireInviteCode?: boolean | null;
+                    } | null;
 
                     // Social login / OAuth does not provide an invite code; block new user creation via social when invite code is required
                     if (settings?.requireInviteCode && context?.path !== '/sign-up/email') {
@@ -167,16 +181,8 @@ export const auth = betterAuth({
             const settings = (await resolveSettings()) as {
                 allowedEmailDomains?: string | null;
                 disableEmailPasswordSignup?: boolean | null;
-                allowRegistration?: boolean | null;
                 requireInviteCode?: boolean | null;
             } | null;
-
-            // Check if registration is disabled
-            if (settings?.allowRegistration === false) {
-                throw new APIError('FORBIDDEN', {
-                    message: 'Registration is disabled.',
-                });
-            }
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
@@ -207,7 +213,11 @@ export const auth = betterAuth({
             // Enforce invite-only registration: validate the code in before-hook without
             // consuming it, so that registration errors (e.g. domain/password/duplicate) do not burn it.
             const inviteCode = body?.inviteCode?.trim();
-            if (settings?.requireInviteCode && !inviteCode) {
+            const isInitialSetup =
+                context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
+                (await prisma.user.count()) === 0;
+
+            if (settings?.requireInviteCode && !isInitialSetup && !inviteCode) {
                 throw new APIError('FORBIDDEN', {
                     message: 'An invite code is required to register.',
                 });
@@ -248,7 +258,14 @@ export const auth = betterAuth({
                     requireInviteCode?: boolean | null;
                 } | null;
 
-                const rollbackUser = async (id: string, maxRetries = 3) => {
+                /**
+                 * Rolls back user creation if invite verification, consumption, or attribution fails.
+                 * Retries up to maxRetries times with exponential backoff to handle transient database locks.
+                 *
+                 * @param id - The ID of the user record to delete.
+                 * @param maxRetries - Maximum retry attempts before logging an error.
+                 */
+                const rollbackUser = async (id: string, maxRetries = 3): Promise<void> => {
                     for (let attempt = 1; attempt <= maxRetries; attempt++) {
                         try {
                             await prisma.user.delete({ where: { id } });
@@ -266,8 +283,12 @@ export const auth = betterAuth({
                     }
                 };
 
+                const isInitialSetup =
+                    context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
+                    (await prisma.user.count()) <= 1;
+
                 // Roll back user creation if invite code was required but absent or userId missing
-                if (settings?.requireInviteCode && (!inviteCode || !userId)) {
+                if (settings?.requireInviteCode && !isInitialSetup && (!inviteCode || !userId)) {
                     if (userId) {
                         await rollbackUser(userId);
                     }
@@ -300,30 +321,7 @@ export const auth = betterAuth({
                     }
 
                     try {
-                        // Atomically increment invite uses AND attribute invite ID to user
-                        await prisma.$transaction(async (tx) => {
-                            const consumed = await tx.inviteCode.updateMany({
-                                where: {
-                                    id: invite.id,
-                                    isActive: true,
-                                    uses:
-                                        typeof invite.maxUses === 'number'
-                                            ? { lt: invite.maxUses }
-                                            : undefined,
-                                    OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-                                },
-                                data: { uses: { increment: 1 } },
-                            });
-
-                            if (consumed.count === 0) {
-                                throw new Error('INVITE_EXHAUSTED');
-                            }
-
-                            await tx.user.update({
-                                where: { id: userId },
-                                data: { inviteCodeUsed: invite.id },
-                            });
-                        });
+                        await consumeInviteCode(invite, userId);
                     } catch (err: unknown) {
                         // Rollback user creation on any failure during consumption or attribution
                         await rollbackUser(userId);

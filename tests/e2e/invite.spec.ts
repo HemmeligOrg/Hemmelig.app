@@ -1,6 +1,11 @@
 import Database from 'better-sqlite3';
 import { expect, test, TEST_USER } from './fixtures';
 
+type InstanceSettingsResponse = {
+    requireInviteCode?: boolean;
+    allowedEmailDomains?: string | null;
+};
+
 const apiHeaders = { Origin: 'http://localhost:5173' };
 
 test.describe('Invite-only registration', () => {
@@ -19,7 +24,7 @@ test.describe('Invite-only registration', () => {
             headers: apiHeaders,
         });
         expect(currentSettingsRes.ok()).toBeTruthy();
-        const currentSettings = await currentSettingsRes.json();
+        const currentSettings: InstanceSettingsResponse = await currentSettingsRes.json();
         const initialRequireInviteCode = currentSettings.requireInviteCode;
 
         // Enable invite-only registration
@@ -147,7 +152,7 @@ test.describe('Invite-only registration', () => {
             headers: apiHeaders,
         });
         expect(currentSettingsRes.ok()).toBeTruthy();
-        const currentSettings = await currentSettingsRes.json();
+        const currentSettings: InstanceSettingsResponse = await currentSettingsRes.json();
         const initialRequireInviteCode = currentSettings.requireInviteCode;
 
         const enable = await request.put('/api/instance/settings', {
@@ -211,7 +216,7 @@ test.describe('Invite-only registration', () => {
             headers: apiHeaders,
         });
         expect(currentSettingsRes.ok()).toBeTruthy();
-        const currentSettings = await currentSettingsRes.json();
+        const currentSettings: InstanceSettingsResponse = await currentSettingsRes.json();
         const initialRequireInviteCode = currentSettings.requireInviteCode;
         const initialAllowedEmailDomains = currentSettings.allowedEmailDomains ?? '';
 
@@ -299,7 +304,7 @@ test.describe('Invite-only registration', () => {
             headers: apiHeaders,
         });
         expect(currentSettingsRes.ok()).toBeTruthy();
-        const currentSettings = await currentSettingsRes.json();
+        const currentSettings: InstanceSettingsResponse = await currentSettingsRes.json();
         const initialRequireInviteCode = currentSettings.requireInviteCode;
         const initialAllowedEmailDomains = currentSettings.allowedEmailDomains ?? '';
 
@@ -355,6 +360,56 @@ test.describe('Invite-only registration', () => {
                 data: {
                     requireInviteCode: initialRequireInviteCode,
                     allowedEmailDomains: initialAllowedEmailDomains,
+                },
+            });
+        }
+    });
+
+    test('allows admin user creation via admin endpoint when invite code is required', async ({
+        request,
+    }) => {
+        const login = await request.post('/api/auth/sign-in/email', {
+            headers: apiHeaders,
+            data: { email: TEST_USER.email, password: TEST_USER.password },
+        });
+        expect(login.ok()).toBeTruthy();
+
+        const currentSettingsRes = await request.get('/api/instance/settings', {
+            headers: apiHeaders,
+        });
+        expect(currentSettingsRes.ok()).toBeTruthy();
+        const currentSettings: InstanceSettingsResponse = await currentSettingsRes.json();
+        const initialRequireInviteCode = currentSettings.requireInviteCode;
+
+        const enable = await request.put('/api/instance/settings', {
+            headers: apiHeaders,
+            data: { requireInviteCode: true },
+        });
+        expect(enable.ok()).toBeTruthy();
+
+        try {
+            const adminCreateUser = await request.post('/api/auth/admin/create-user', {
+                headers: apiHeaders,
+                data: {
+                    email: 'admin-created-invite@hemmelig.local',
+                    name: 'Admin Created',
+                    password: 'AdminCreated123!',
+                    role: 'user',
+                    data: {
+                        username: 'admincreatedinvite',
+                    },
+                },
+            });
+            expect(adminCreateUser.ok()).toBeTruthy();
+        } finally {
+            await request.post('/api/auth/sign-in/email', {
+                headers: apiHeaders,
+                data: { email: TEST_USER.email, password: TEST_USER.password },
+            });
+            await request.put('/api/instance/settings', {
+                headers: apiHeaders,
+                data: {
+                    requireInviteCode: initialRequireInviteCode,
                 },
             });
         }

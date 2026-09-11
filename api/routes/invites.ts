@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { auth } from '../auth';
 import { TIME } from '../lib/constants';
 import prisma from '../lib/db';
+import { consumeInviteCode } from '../lib/invite';
 import { handleNotFound } from '../lib/utils';
 import { authMiddleware, checkAdmin } from '../middlewares/auth';
 import { idParamSchema } from '../validations/shared';
@@ -69,27 +70,7 @@ export const invitePublicRoute = new Hono()
                 return c.json({ error: 'Invite code has reached maximum uses' }, 400);
             }
 
-            await prisma.$transaction(async (tx) => {
-                const consumed = await tx.inviteCode.updateMany({
-                    where: {
-                        id: invite.id,
-                        isActive: true,
-                        uses:
-                            typeof invite.maxUses === 'number' ? { lt: invite.maxUses } : undefined,
-                        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-                    },
-                    data: { uses: { increment: 1 } },
-                });
-
-                if (consumed.count === 0) {
-                    throw new Error('INVITE_EXHAUSTED');
-                }
-
-                await tx.user.update({
-                    where: { id: userId },
-                    data: { inviteCodeUsed: invite.id },
-                });
-            });
+            await consumeInviteCode(invite, userId);
 
             return c.json({ success: true });
         } catch (error) {
