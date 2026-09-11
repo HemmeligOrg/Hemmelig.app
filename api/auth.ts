@@ -103,6 +103,29 @@ export const auth = betterAuth({
             ],
         },
     },
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (_user, context) => {
+                    const userCount = await prisma.user.count();
+                    // Allow initial setup when no users exist yet, or user creation by admin
+                    if (userCount === 0 || context?.path === '/admin/create-user') {
+                        return;
+                    }
+
+                    const settings = (await resolveSettings()) as {
+                        allowRegistration?: boolean | null;
+                    } | null;
+
+                    if (settings?.allowRegistration === false) {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Registration is disabled.',
+                        });
+                    }
+                },
+            },
+        },
+    },
     plugins: buildPlugins(),
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {

@@ -1,6 +1,8 @@
 import { expect, test, TEST_USER } from './fixtures';
 
 test.describe('Authentication', () => {
+    test.describe.configure({ mode: 'serial' });
+
     test('should complete initial setup if needed', async ({ page, request }) => {
         // Check if setup is needed
         const statusResponse = await request.get('/api/setup/status');
@@ -147,6 +149,56 @@ test.describe('Authentication', () => {
             expect(signupResponse.status()).toBe(403);
             const body = await signupResponse.json();
             expect(body.message).toBe('Registration is disabled.');
+        } finally {
+            await request.post('/api/auth/sign-in/email', {
+                headers: apiHeaders,
+                data: { email: TEST_USER.email, password: TEST_USER.password },
+            });
+            await request.put('/api/instance/settings', {
+                headers: apiHeaders,
+                data: { allowRegistration: initialAllowRegistration },
+            });
+        }
+    });
+
+    test('should allow admin to create user even when registration is disabled', async ({
+        request,
+    }) => {
+        const apiHeaders = { Origin: 'http://localhost:5173' };
+        const login = await request.post('/api/auth/sign-in/email', {
+            headers: apiHeaders,
+            data: { email: TEST_USER.email, password: TEST_USER.password },
+        });
+        expect(login.ok()).toBeTruthy();
+
+        const currentSettingsRes = await request.get('/api/instance/settings', {
+            headers: apiHeaders,
+        });
+        expect(currentSettingsRes.ok()).toBeTruthy();
+        const currentSettings = await currentSettingsRes.json();
+        const initialAllowRegistration = currentSettings.allowRegistration;
+
+        const updateSettings = await request.put('/api/instance/settings', {
+            headers: apiHeaders,
+            data: { allowRegistration: false },
+        });
+        expect(updateSettings.ok()).toBeTruthy();
+
+        try {
+            const adminCreateUserResponse = await request.post('/api/auth/admin/create-user', {
+                headers: apiHeaders,
+                data: {
+                    email: 'admin-created@hemmelig.local',
+                    name: 'Admin Created',
+                    password: 'AdminCreatedPassword123!',
+                    role: 'user',
+                    data: {
+                        username: 'admincreated',
+                        displayUsername: 'admincreated',
+                    },
+                },
+            });
+            expect(adminCreateUserResponse.ok()).toBeTruthy();
         } finally {
             await request.post('/api/auth/sign-in/email', {
                 headers: apiHeaders,
