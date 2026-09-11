@@ -27,6 +27,7 @@ const app = new Hono()
     })
     // Complete initial setup - create first admin user
     .post('/complete', zValidator('json', setupSchema), async (c) => {
+        let createdUserId: string | null = null;
         let setupClaimCreated = false;
         try {
             // Check if any users already exist
@@ -34,6 +35,16 @@ const app = new Hono()
             if (userCount > 0) {
                 return c.json({ error: 'Setup already completed' }, 403);
             }
+
+            // Clean up any expired/abandoned setup claim
+            await prisma.verification
+                .deleteMany({
+                    where: {
+                        id: 'initial-setup-claim',
+                        expiresAt: { lt: new Date() },
+                    },
+                })
+                .catch(() => {});
 
             // Atomically acquire single-use setup claim using unique sentinel row
             try {
@@ -46,9 +57,16 @@ const app = new Hono()
                     },
                 });
                 setupClaimCreated = true;
-            } catch {
-                // Another concurrent request has already claimed initial setup
-                return c.json({ error: 'Setup already completed' }, 403);
+            } catch (err: unknown) {
+                if (
+                    err &&
+                    typeof err === 'object' &&
+                    'code' in err &&
+                    (err as { code: string }).code === 'P2002'
+                ) {
+                    return c.json({ error: 'Setup already completed' }, 403);
+                }
+                throw err;
             }
 
             const { email, password, username, name } = c.req.valid('json');
@@ -72,6 +90,8 @@ const app = new Hono()
                     .catch(() => {});
                 return c.json({ error: 'Failed to create admin user' }, 500);
             }
+
+            createdUserId = result.user.id;
 
             // Update user to be admin
             await prisma.user.update({
@@ -97,6 +117,9 @@ const app = new Hono()
                 message: 'Setup completed successfully',
             });
         } catch (error) {
+            if (createdUserId) {
+                await prisma.user.delete({ where: { id: createdUserId } }).catch(() => {});
+            }
             if (setupClaimCreated) {
                 await prisma.verification
                     .delete({ where: { id: 'initial-setup-claim' } })

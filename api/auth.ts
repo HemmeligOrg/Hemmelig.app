@@ -135,8 +135,16 @@ export const auth = betterAuth({
                     }
 
                     const settings = (await resolveSettings()) as {
+                        allowRegistration?: boolean | null;
                         requireInviteCode?: boolean | null;
                     } | null;
+
+                    // Check if registration is disabled
+                    if (settings?.allowRegistration === false) {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Registration is disabled.',
+                        });
+                    }
 
                     // Social login / OAuth does not provide an invite code; block new user creation via social when invite code is required
                     if (settings?.requireInviteCode && context?.path !== '/sign-up/email') {
@@ -181,8 +189,20 @@ export const auth = betterAuth({
             const settings = (await resolveSettings()) as {
                 allowedEmailDomains?: string | null;
                 disableEmailPasswordSignup?: boolean | null;
+                allowRegistration?: boolean | null;
                 requireInviteCode?: boolean | null;
             } | null;
+
+            const isInitialSetup =
+                context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
+                (await prisma.user.count()) === 0;
+
+            // Check if registration is disabled
+            if (settings?.allowRegistration === false && !isInitialSetup) {
+                throw new APIError('FORBIDDEN', {
+                    message: 'Registration is disabled.',
+                });
+            }
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
@@ -213,9 +233,6 @@ export const auth = betterAuth({
             // Enforce invite-only registration: validate the code in before-hook without
             // consuming it, so that registration errors (e.g. domain/password/duplicate) do not burn it.
             const inviteCode = body?.inviteCode?.trim();
-            const isInitialSetup =
-                context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
-                (await prisma.user.count()) === 0;
 
             if (settings?.requireInviteCode && !isInitialSetup && !inviteCode) {
                 throw new APIError('FORBIDDEN', {
