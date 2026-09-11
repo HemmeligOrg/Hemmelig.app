@@ -2,7 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import crypto from 'crypto';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { auth, SETUP_HEADER, SETUP_TOKEN } from '../auth';
+import { auth, SETUP_CLAIM_HEADER, SETUP_HEADER, SETUP_TOKEN } from '../auth';
 import prisma from '../lib/db';
 import { passwordSchema } from '../validations/password';
 
@@ -28,9 +28,9 @@ const app = new Hono()
     })
     // Complete initial setup - create first admin user
     .post('/complete', zValidator('json', setupSchema), async (c) => {
-        const claimToken = crypto.randomUUID();
+        const claimToken: string = crypto.randomUUID();
         let createdUserId: string | null = null;
-        let setupClaimCreated = false;
+        let setupClaimCreated: boolean = false;
         try {
             // Check if any users already exist
             const userCount = await prisma.user.count();
@@ -73,6 +73,20 @@ const app = new Hono()
 
             const { email, password, username, name } = c.req.valid('json');
 
+            const preCheckClaim = await prisma.verification.findUnique({
+                where: { id: 'initial-setup-claim' },
+            });
+            if (
+                !preCheckClaim ||
+                preCheckClaim.value !== claimToken ||
+                preCheckClaim.expiresAt < new Date()
+            ) {
+                return c.json(
+                    { error: 'Setup claim expired or was preempted by another request' },
+                    403
+                );
+            }
+
             // Create the admin user using better-auth
             const result = await auth.api.signUpEmail({
                 body: {
@@ -83,6 +97,7 @@ const app = new Hono()
                 },
                 headers: {
                     [SETUP_HEADER]: SETUP_TOKEN,
+                    [SETUP_CLAIM_HEADER]: claimToken,
                 },
             });
 
@@ -101,7 +116,14 @@ const app = new Hono()
             createdUserId = result.user.id;
 
             // Verify setup claim is still active and owned by this exact request
-            const activeClaim = await prisma.verification.findUnique({
+            const activeClaim: {
+                id: string;
+                identifier: string;
+                value: string;
+                expiresAt: Date;
+                createdAt: Date;
+                updatedAt: Date;
+            } | null = await prisma.verification.findUnique({
                 where: { id: 'initial-setup-claim' },
             });
             if (!activeClaim || activeClaim.value !== claimToken) {
@@ -138,8 +160,8 @@ const app = new Hono()
             });
         } catch (error) {
             if (createdUserId) {
-                const delays = [50, 100, 200];
-                let rollbackSuccess = false;
+                const delays: number[] = [50, 100, 200];
+                let rollbackSuccess: boolean = false;
                 let err: unknown;
                 for (let attempt = 0; attempt < delays.length; attempt++) {
                     try {

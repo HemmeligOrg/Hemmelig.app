@@ -11,6 +11,7 @@ import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
 
 export const SETUP_HEADER = 'x-hemmelig-setup-token';
+export const SETUP_CLAIM_HEADER = 'x-setup-claim-token';
 export const SETUP_TOKEN = randomBytes(32).toString('hex');
 
 // Generate a unique username from email
@@ -77,6 +78,35 @@ const buildPlugins = () => {
     return plugins;
 };
 
+/**
+ * Validates that an incoming request on an uninitialized instance holds both the internal setup token
+ * and an active, unexpired setup claim token matching the database sentinel claim.
+ *
+ * @param headers - Request headers containing setup tokens.
+ */
+const validateInitialSetupClaim = async (
+    headers?: Headers | { get(name: string): string | null | undefined } | null
+): Promise<void> => {
+    const setupToken = headers?.get(SETUP_HEADER);
+    const claimToken = headers?.get(SETUP_CLAIM_HEADER);
+
+    if (!setupToken || setupToken !== SETUP_TOKEN || !claimToken) {
+        throw new APIError('FORBIDDEN', {
+            message: 'Initial setup must be completed before registration is available.',
+        });
+    }
+
+    const claim = await prisma.verification.findUnique({
+        where: { id: 'initial-setup-claim' },
+    });
+
+    if (!claim || claim.value !== claimToken || claim.expiresAt < new Date()) {
+        throw new APIError('FORBIDDEN', {
+            message: 'Initial setup must be completed before registration is available.',
+        });
+    }
+};
+
 export const auth = betterAuth({
     appName: 'Hemmelig',
     baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
@@ -116,22 +146,10 @@ export const auth = betterAuth({
                         return;
                     }
 
-                    // Allow verified initial setup to create the first admin user
-                    const isInitialSetup =
-                        context?.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
-                        (await prisma.user.count()) === 0;
-
-                    if (isInitialSetup) {
+                    // On an empty deployment, initial setup requires valid setup token and claim
+                    if ((await prisma.user.count()) === 0) {
+                        await validateInitialSetupClaim(context?.headers);
                         return;
-                    }
-
-                    // On an empty deployment, social sign-in cannot create the initial account
-                    const userCount = await prisma.user.count();
-                    if (userCount === 0 && context?.path !== '/sign-up/email') {
-                        throw new APIError('FORBIDDEN', {
-                            message:
-                                'Initial setup must be completed before social sign-in is available.',
-                        });
                     }
 
                     const settings = (await resolveSettings()) as {
@@ -165,6 +183,11 @@ export const auth = betterAuth({
                 return;
             }
 
+            const userCount = await prisma.user.count();
+            if (userCount === 0) {
+                await validateInitialSetupClaim(context.headers);
+            }
+
             const body = context.body as {
                 email?: string;
                 password?: string;
@@ -193,9 +216,7 @@ export const auth = betterAuth({
                 requireInviteCode?: boolean | null;
             } | null;
 
-            const isInitialSetup =
-                context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
-                (await prisma.user.count()) === 0;
+            const isInitialSetup = userCount === 0;
 
             // Check if registration is disabled
             if (settings?.allowRegistration === false && !isInitialSetup) {
