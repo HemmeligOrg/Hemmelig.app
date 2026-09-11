@@ -95,7 +95,13 @@ export function RegisterPage() {
         return t('register_page.unexpected_error');
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    /**
+     * Handles registration form submission, including email/password sign-up
+     * and invite code forwarding to server-side authentication.
+     *
+     * @param e - Form submission event
+     */
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
@@ -117,7 +123,7 @@ export function RegisterPage() {
                     password: formData.password,
                     username: formData.username,
                     name: formData.username,
-                    ...(settings.requireInviteCode ? { inviteCode: formData.inviteCode } : {}),
+                    ...(formData.inviteCode ? { inviteCode: formData.inviteCode } : {}),
                 },
                 {
                     onError: (ctx) => {

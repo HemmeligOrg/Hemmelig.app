@@ -6,6 +6,7 @@ import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
+import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
 
 // Generate a unique username from email
@@ -102,6 +103,37 @@ export const auth = betterAuth({
             ],
         },
     },
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (_user, context) => {
+                    const userCount = await prisma.user.count();
+                    // Allow initial setup when no users exist yet
+                    if (userCount === 0) {
+                        return;
+                    }
+
+                    const settings = (await resolveSettings()) as {
+                        allowRegistration?: boolean | null;
+                        requireInviteCode?: boolean | null;
+                    } | null;
+
+                    if (settings?.allowRegistration === false) {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Registration is disabled.',
+                        });
+                    }
+
+                    // Social login / OAuth does not provide an invite code; block new user creation via social when invite code is required
+                    if (settings?.requireInviteCode && context?.path !== '/sign-up/email') {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'An invite code is required to register.',
+                        });
+                    }
+                },
+            },
+        },
+    },
     plugins: buildPlugins(),
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
@@ -132,13 +164,19 @@ export const auth = betterAuth({
             }
 
             // Get instance settings
-            const settings = await prisma.instanceSettings.findFirst({
-                select: {
-                    allowedEmailDomains: true,
-                    disableEmailPasswordSignup: true,
-                    requireInviteCode: true,
-                },
-            });
+            const settings = (await resolveSettings()) as {
+                allowedEmailDomains?: string | null;
+                disableEmailPasswordSignup?: boolean | null;
+                allowRegistration?: boolean | null;
+                requireInviteCode?: boolean | null;
+            } | null;
+
+            // Check if registration is disabled
+            if (settings?.allowRegistration === false) {
+                throw new APIError('FORBIDDEN', {
+                    message: 'Registration is disabled.',
+                });
+            }
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
@@ -188,7 +226,7 @@ export const auth = betterAuth({
                     throw new APIError('FORBIDDEN', { message: 'Invite code has expired.' });
                 }
 
-                if (invite.maxUses && invite.uses >= invite.maxUses) {
+                if (typeof invite.maxUses === 'number' && invite.uses >= invite.maxUses) {
                     throw new APIError('FORBIDDEN', {
                         message: 'Invite code has reached maximum uses.',
                     });
@@ -206,38 +244,96 @@ export const auth = betterAuth({
                     ?.returned as { user?: { id?: string }; id?: string } | undefined;
                 const userId = returned?.user?.id ?? returned?.id;
 
+                const settings = (await resolveSettings()) as {
+                    requireInviteCode?: boolean | null;
+                } | null;
+
+                // Roll back user creation if invite code was required but absent
+                if (settings?.requireInviteCode && !inviteCode && userId) {
+                    await prisma.user.delete({ where: { id: userId } }).catch((err) => {
+                        console.error(
+                            'Failed to rollback user created without required invite:',
+                            err
+                        );
+                    });
+                    throw new APIError('FORBIDDEN', {
+                        message: 'An invite code is required to register.',
+                    });
+                }
+
                 if (inviteCode && userId) {
                     const invite = await prisma.inviteCode.findUnique({
                         where: { code: inviteCode.toUpperCase() },
                     });
 
-                    if (invite) {
-                        const consumed = await prisma.inviteCode.updateMany({
-                            where: {
-                                id: invite.id,
-                                isActive: true,
-                                uses: invite.maxUses ? { lt: invite.maxUses } : undefined,
-                                OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-                            },
-                            data: { uses: { increment: 1 } },
+                    // If invite code vanished or became invalid -> rollback user immediately
+                    if (!invite || !invite.isActive) {
+                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
+                            console.error('Failed to rollback user with invalid invite:', err);
+                        });
+                        throw new APIError('FORBIDDEN', { message: 'Invalid invite code.' });
+                    }
+
+                    if (invite.expiresAt && new Date() > invite.expiresAt) {
+                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
+                            console.error('Failed to rollback user with expired invite:', err);
+                        });
+                        throw new APIError('FORBIDDEN', { message: 'Invite code has expired.' });
+                    }
+
+                    if (typeof invite.maxUses === 'number' && invite.uses >= invite.maxUses) {
+                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
+                            console.error('Failed to rollback user with exhausted invite:', err);
+                        });
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Invite code has reached maximum uses.',
+                        });
+                    }
+
+                    try {
+                        // Atomically increment invite uses AND attribute invite ID to user
+                        await prisma.$transaction(async (tx) => {
+                            const consumed = await tx.inviteCode.updateMany({
+                                where: {
+                                    id: invite.id,
+                                    isActive: true,
+                                    uses:
+                                        typeof invite.maxUses === 'number'
+                                            ? { lt: invite.maxUses }
+                                            : undefined,
+                                    OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+                                },
+                                data: { uses: { increment: 1 } },
+                            });
+
+                            if (consumed.count === 0) {
+                                throw new Error('INVITE_EXHAUSTED');
+                            }
+
+                            await tx.user.update({
+                                where: { id: userId },
+                                data: { inviteCodeUsed: invite.id },
+                            });
+                        });
+                    } catch (err: unknown) {
+                        // Rollback user creation on any failure during consumption or attribution
+                        await prisma.user.delete({ where: { id: userId } }).catch((deleteErr) => {
+                            console.error(
+                                'Failed to rollback user after invite transaction error:',
+                                deleteErr
+                            );
                         });
 
-                        if (consumed.count > 0) {
-                            await prisma.user
-                                .update({
-                                    where: { id: userId },
-                                    data: { inviteCodeUsed: invite.id },
-                                })
-                                .catch(() => {
-                                    // Tracking only; never fail the sign-up because of it
-                                });
-                        } else {
-                            // Concurrently exhausted while creating user; rollback user creation
-                            await prisma.user.delete({ where: { id: userId } }).catch(() => {});
+                        if (err instanceof Error && err.message === 'INVITE_EXHAUSTED') {
                             throw new APIError('FORBIDDEN', {
                                 message: 'Invite code has reached maximum uses.',
                             });
                         }
+
+                        console.error('Error during invite consumption transaction:', err);
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Failed to process invite code.',
+                        });
                     }
                 }
             }
