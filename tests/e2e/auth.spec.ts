@@ -1,11 +1,4 @@
-import { expect, test } from '@playwright/test';
-
-const TEST_USER = {
-    email: 'e2etest@hemmelig.local',
-    username: 'e2etestuser',
-    password: 'TestPassword123!',
-    name: 'E2E Test User',
-};
+import { expect, test, TEST_USER } from './fixtures';
 
 test.describe('Authentication', () => {
     test('should complete initial setup if needed', async ({ page, request }) => {
@@ -118,5 +111,36 @@ test.describe('Authentication', () => {
         await page.goto('/');
         await expect(page.getByRole('link', { name: /sign up/i })).not.toBeVisible();
         await page.unrouteAll({ behavior: 'ignoreErrors' });
+    });
+
+    test('should reject sign-up via API when registration is disabled', async ({ request }) => {
+        const login = await request.post('/api/auth/sign-in/email', {
+            data: { email: TEST_USER.email, password: TEST_USER.password },
+        });
+        expect(login.ok()).toBeTruthy();
+
+        const updateSettings = await request.put('/api/instance/settings', {
+            data: { allowRegistration: false },
+        });
+        expect(updateSettings.ok()).toBeTruthy();
+
+        try {
+            const signupResponse = await request.post('/api/auth/sign-up/email', {
+                headers: { Origin: 'http://localhost:5173' },
+                data: {
+                    email: 'disabled-reg@hemmelig.local',
+                    name: 'Disabled Reg',
+                    username: 'disabledreg',
+                    password: 'DisabledPassword123!',
+                },
+            });
+            expect(signupResponse.status()).toBe(403);
+            const body = await signupResponse.json();
+            expect(body.message).toBe('Registration is disabled.');
+        } finally {
+            await request.put('/api/instance/settings', {
+                data: { allowRegistration: true },
+            });
+        }
     });
 });
