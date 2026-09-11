@@ -6,7 +6,6 @@ import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
-import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
 
 // Generate a unique username from email
@@ -103,42 +102,6 @@ export const auth = betterAuth({
             ],
         },
     },
-    databaseHooks: {
-        user: {
-            create: {
-                before: async (_user, context) => {
-                    // Allow admin user creation by existing admin
-                    if (context?.path === '/admin/create-user') {
-                        return;
-                    }
-
-                    // On an empty deployment, social sign-in cannot create the initial account
-                    const userCount = await prisma.user.count();
-                    if (userCount === 0 && context?.path !== '/sign-up/email') {
-                        throw new APIError('FORBIDDEN', {
-                            message:
-                                'Initial setup must be completed before social sign-in is available.',
-                        });
-                    }
-
-                    // Allow initial setup to create the first admin user
-                    if (userCount === 0) {
-                        return;
-                    }
-
-                    const settings = (await resolveSettings()) as {
-                        allowRegistration?: boolean | null;
-                    } | null;
-
-                    if (settings?.allowRegistration === false) {
-                        throw new APIError('FORBIDDEN', {
-                            message: 'Registration is disabled.',
-                        });
-                    }
-                },
-            },
-        },
-    },
     plugins: buildPlugins(),
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
@@ -165,18 +128,9 @@ export const auth = betterAuth({
             }
 
             // Get instance settings
-            const settings = (await resolveSettings()) as {
-                allowedEmailDomains?: string | null;
-                disableEmailPasswordSignup?: boolean | null;
-                allowRegistration?: boolean | null;
-            } | null;
-
-            // Check if registration is disabled
-            if (settings?.allowRegistration === false) {
-                throw new APIError('FORBIDDEN', {
-                    message: 'Registration is disabled.',
-                });
-            }
+            const settings = await prisma.instanceSettings.findFirst({
+                select: { allowedEmailDomains: true, disableEmailPasswordSignup: true },
+            });
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
