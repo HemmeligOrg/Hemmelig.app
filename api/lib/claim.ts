@@ -25,7 +25,10 @@ export function hashSetupClaimToken(claimToken: string): string {
 
 /**
  * Compares two secret strings in constant time to prevent timing attacks (CWE-208).
- * Mismatched lengths are rejected immediately, which only leaks string length —
+ * Both strings are UTF-8 encoded before the length check, so mismatched byte
+ * lengths (including multibyte untrusted input) return false instead of
+ * throwing a RangeError from `timingSafeEqual` (CWE-208 / CWE-476 hardening).
+ * A byte-length mismatch itself leaks only the encoded length, which is
  * acceptable for fixed-length secrets such as hex-encoded SHA-256 digests.
  *
  * @param a - First secret string.
@@ -33,8 +36,10 @@ export function hashSetupClaimToken(claimToken: string): string {
  * @returns True when both strings are byte-for-byte equal.
  */
 export function safeSecretEqual(a: string, b: string): boolean {
-    if (a.length !== b.length) {
+    const bufferA: Buffer = Buffer.from(a, 'utf8');
+    const bufferB: Buffer = Buffer.from(b, 'utf8');
+    if (bufferA.length !== bufferB.length) {
         return false;
     }
-    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
+    return timingSafeEqual(bufferA, bufferB);
 }
