@@ -114,19 +114,29 @@ test.describe('Authentication', () => {
     });
 
     test('should reject sign-up via API when registration is disabled', async ({ request }) => {
+        const apiHeaders = { Origin: 'http://localhost:5173' };
         const login = await request.post('/api/auth/sign-in/email', {
+            headers: apiHeaders,
             data: { email: TEST_USER.email, password: TEST_USER.password },
         });
         expect(login.ok()).toBeTruthy();
 
+        const currentSettingsRes = await request.get('/api/instance/settings', {
+            headers: apiHeaders,
+        });
+        expect(currentSettingsRes.ok()).toBeTruthy();
+        const currentSettings = await currentSettingsRes.json();
+        const initialAllowRegistration = currentSettings.allowRegistration;
+
         const updateSettings = await request.put('/api/instance/settings', {
+            headers: apiHeaders,
             data: { allowRegistration: false },
         });
         expect(updateSettings.ok()).toBeTruthy();
 
         try {
             const signupResponse = await request.post('/api/auth/sign-up/email', {
-                headers: { Origin: 'http://localhost:5173' },
+                headers: apiHeaders,
                 data: {
                     email: 'disabled-reg@hemmelig.local',
                     name: 'Disabled Reg',
@@ -138,8 +148,13 @@ test.describe('Authentication', () => {
             const body = await signupResponse.json();
             expect(body.message).toBe('Registration is disabled.');
         } finally {
+            await request.post('/api/auth/sign-in/email', {
+                headers: apiHeaders,
+                data: { email: TEST_USER.email, password: TEST_USER.password },
+            });
             await request.put('/api/instance/settings', {
-                data: { allowRegistration: true },
+                headers: apiHeaders,
+                data: { allowRegistration: initialAllowRegistration },
             });
         }
     });

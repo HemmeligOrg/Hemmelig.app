@@ -1,7 +1,7 @@
 import { Lock, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { AuthPageLayout } from '../components/AuthPageLayout';
 import { Card } from '../components/Card';
 import { FormField } from '../components/FormField';
@@ -10,12 +10,13 @@ import { PasswordToggle } from '../components/PasswordToggle';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
-import { useHemmeligStore } from '../store/hemmeligStore';
+import type { HemmeligSettings } from '../store/hemmeligStore';
 
 export function LoginPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { settings } = useHemmeligStore();
+    const loaderData = useLoaderData() as Partial<HemmeligSettings> | null;
+    const allowRegistration = loaderData?.allowRegistration ?? true;
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -103,7 +104,7 @@ export function LoginPage() {
 
                 <SocialLoginButtons mode="login" />
 
-                {settings.allowRegistration && (
+                {allowRegistration && (
                     <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
                         <p className="text-gray-500 dark:text-slate-400">
                             {t('login_page.no_account_question')}{' '}
