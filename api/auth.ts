@@ -108,8 +108,8 @@ export const auth = betterAuth({
             create: {
                 before: async (_user, context) => {
                     const userCount = await prisma.user.count();
-                    // Allow initial setup when no users exist yet
-                    if (userCount === 0) {
+                    // Allow initial setup when no users exist yet, or user creation by admin
+                    if (userCount === 0 || context?.path === '/admin/create-user') {
                         return;
                     }
 
@@ -248,14 +248,29 @@ export const auth = betterAuth({
                     requireInviteCode?: boolean | null;
                 } | null;
 
-                // Roll back user creation if invite code was required but absent
-                if (settings?.requireInviteCode && !inviteCode && userId) {
-                    await prisma.user.delete({ where: { id: userId } }).catch((err) => {
-                        console.error(
-                            'Failed to rollback user created without required invite:',
-                            err
-                        );
-                    });
+                const rollbackUser = async (id: string, maxRetries = 3) => {
+                    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                        try {
+                            await prisma.user.delete({ where: { id } });
+                            return;
+                        } catch (err) {
+                            if (attempt === maxRetries) {
+                                console.error(
+                                    `Failed to rollback user ${id} after ${maxRetries} attempts:`,
+                                    err
+                                );
+                            } else {
+                                await new Promise((res) => setTimeout(res, 50 * attempt));
+                            }
+                        }
+                    }
+                };
+
+                // Roll back user creation if invite code was required but absent or userId missing
+                if (settings?.requireInviteCode && (!inviteCode || !userId)) {
+                    if (userId) {
+                        await rollbackUser(userId);
+                    }
                     throw new APIError('FORBIDDEN', {
                         message: 'An invite code is required to register.',
                     });
@@ -268,23 +283,17 @@ export const auth = betterAuth({
 
                     // If invite code vanished or became invalid -> rollback user immediately
                     if (!invite || !invite.isActive) {
-                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
-                            console.error('Failed to rollback user with invalid invite:', err);
-                        });
+                        await rollbackUser(userId);
                         throw new APIError('FORBIDDEN', { message: 'Invalid invite code.' });
                     }
 
                     if (invite.expiresAt && new Date() > invite.expiresAt) {
-                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
-                            console.error('Failed to rollback user with expired invite:', err);
-                        });
+                        await rollbackUser(userId);
                         throw new APIError('FORBIDDEN', { message: 'Invite code has expired.' });
                     }
 
                     if (typeof invite.maxUses === 'number' && invite.uses >= invite.maxUses) {
-                        await prisma.user.delete({ where: { id: userId } }).catch((err) => {
-                            console.error('Failed to rollback user with exhausted invite:', err);
-                        });
+                        await rollbackUser(userId);
                         throw new APIError('FORBIDDEN', {
                             message: 'Invite code has reached maximum uses.',
                         });
@@ -317,12 +326,7 @@ export const auth = betterAuth({
                         });
                     } catch (err: unknown) {
                         // Rollback user creation on any failure during consumption or attribution
-                        await prisma.user.delete({ where: { id: userId } }).catch((deleteErr) => {
-                            console.error(
-                                'Failed to rollback user after invite transaction error:',
-                                deleteErr
-                            );
-                        });
+                        await rollbackUser(userId);
 
                         if (err instanceof Error && err.message === 'INVITE_EXHAUSTED') {
                             throw new APIError('FORBIDDEN', {

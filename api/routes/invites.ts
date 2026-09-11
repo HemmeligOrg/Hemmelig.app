@@ -65,23 +65,37 @@ export const invitePublicRoute = new Hono()
                 return c.json({ error: 'Invite code has expired' }, 400);
             }
 
-            if (invite.maxUses && invite.uses >= invite.maxUses) {
+            if (typeof invite.maxUses === 'number' && invite.uses >= invite.maxUses) {
                 return c.json({ error: 'Invite code has reached maximum uses' }, 400);
             }
 
-            await prisma.$transaction([
-                prisma.inviteCode.update({
-                    where: { id: invite.id },
+            await prisma.$transaction(async (tx) => {
+                const consumed = await tx.inviteCode.updateMany({
+                    where: {
+                        id: invite.id,
+                        isActive: true,
+                        uses:
+                            typeof invite.maxUses === 'number' ? { lt: invite.maxUses } : undefined,
+                        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+                    },
                     data: { uses: { increment: 1 } },
-                }),
-                prisma.user.update({
+                });
+
+                if (consumed.count === 0) {
+                    throw new Error('INVITE_EXHAUSTED');
+                }
+
+                await tx.user.update({
                     where: { id: userId },
-                    data: { inviteCodeUsed: code.toUpperCase() },
-                }),
-            ]);
+                    data: { inviteCodeUsed: invite.id },
+                });
+            });
 
             return c.json({ success: true });
         } catch (error) {
+            if (error instanceof Error && error.message === 'INVITE_EXHAUSTED') {
+                return c.json({ error: 'Invite code has reached maximum uses' }, 400);
+            }
             console.error('Failed to use invite code:', error);
             return c.json({ error: 'Failed to use invite code' }, 500);
         }
