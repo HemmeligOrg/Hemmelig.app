@@ -107,9 +107,22 @@ export const auth = betterAuth({
         user: {
             create: {
                 before: async (_user, context) => {
+                    // Allow admin user creation by existing admin
+                    if (context?.path === '/admin/create-user') {
+                        return;
+                    }
+
+                    // On an empty deployment, social sign-in cannot create the initial account
                     const userCount = await prisma.user.count();
-                    // Allow initial setup when no users exist yet, or user creation by admin
-                    if (userCount === 0 || context?.path === '/admin/create-user') {
+                    if (userCount === 0 && context?.path !== '/sign-up/email') {
+                        throw new APIError('FORBIDDEN', {
+                            message:
+                                'Initial setup must be completed before social sign-in is available.',
+                        });
+                    }
+
+                    // Allow initial setup to create the first admin user
+                    if (userCount === 0) {
                         return;
                     }
 

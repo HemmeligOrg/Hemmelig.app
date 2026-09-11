@@ -6,6 +6,9 @@ import { useSecretStore } from '../store/secretStore.ts';
 import { useUserStore } from '../store/userStore.ts';
 import Logo from './Logo.tsx';
 
+/**
+ * Main application header component with navigation, theme toggling, and authentication links.
+ */
 export function Header() {
     const { t } = useTranslation();
     const { user } = useUserStore();

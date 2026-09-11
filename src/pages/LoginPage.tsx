@@ -12,11 +12,17 @@ import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
 import type { HemmeligSettings } from '../store/hemmeligStore';
 
+/**
+ * Renders the user login page.
+ *
+ * Checks instance settings from the route loader to conditionally render
+ * the link to the registration page, failing closed if settings are unavailable.
+ */
 export function LoginPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const loaderData = useLoaderData() as Partial<HemmeligSettings> | null;
-    const allowRegistration = loaderData?.allowRegistration ?? true;
+    const allowRegistration = loaderData?.allowRegistration === true;
     const [formData, setFormData] = useState({
         username: '',
         password: '',
