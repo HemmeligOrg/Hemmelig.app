@@ -147,16 +147,35 @@ export const auth = betterAuth({
                 });
             }
 
-            // Enforce invite-only registration. The code is consumed atomically here so
-            // that sign-up cannot be replayed against a code that has reached maxUses.
-            if (settings?.requireInviteCode) {
-                const inviteCode = body?.inviteCode?.trim();
-                if (!inviteCode) {
-                    throw new APIError('FORBIDDEN', {
-                        message: 'An invite code is required to register.',
-                    });
-                }
+            const allowedDomains = settings?.allowedEmailDomains?.trim();
 
+            // Check email domain restrictions if configured
+            if (allowedDomains) {
+                const domains = allowedDomains
+                    .split(',')
+                    .map((d) => d.trim().toLowerCase())
+                    .filter((d) => d.length > 0);
+
+                if (domains.length > 0) {
+                    const emailDomain = email.split('@')[1]?.toLowerCase();
+                    if (!emailDomain || !domains.includes(emailDomain)) {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Email domain not allowed',
+                        });
+                    }
+                }
+            }
+
+            // Enforce invite-only registration: validate the code in before-hook without
+            // consuming it, so that registration errors (e.g. domain/password/duplicate) do not burn it.
+            const inviteCode = body?.inviteCode?.trim();
+            if (settings?.requireInviteCode && !inviteCode) {
+                throw new APIError('FORBIDDEN', {
+                    message: 'An invite code is required to register.',
+                });
+            }
+
+            if (inviteCode) {
                 const invite = await prisma.inviteCode.findUnique({
                     where: { code: inviteCode.toUpperCase() },
                 });
@@ -174,52 +193,10 @@ export const auth = betterAuth({
                         message: 'Invite code has reached maximum uses.',
                     });
                 }
-
-                const consumed = await prisma.inviteCode.updateMany({
-                    where: {
-                        id: invite.id,
-                        isActive: true,
-                        uses: invite.maxUses ? { lt: invite.maxUses } : undefined,
-                        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-                    },
-                    data: { uses: { increment: 1 } },
-                });
-
-                if (consumed.count === 0) {
-                    throw new APIError('FORBIDDEN', {
-                        message: 'Invite code has reached maximum uses.',
-                    });
-                }
-            }
-
-            const allowedDomains = settings?.allowedEmailDomains?.trim();
-
-            // If no domains configured, allow all
-            if (!allowedDomains) {
-                return;
-            }
-
-            // Parse comma-separated domains
-            const domains = allowedDomains
-                .split(',')
-                .map((d) => d.trim().toLowerCase())
-                .filter((d) => d.length > 0);
-
-            if (domains.length === 0) {
-                return;
-            }
-
-            // Extract domain from email
-            const emailDomain = email.split('@')[1]?.toLowerCase();
-
-            if (!emailDomain || !domains.includes(emailDomain)) {
-                throw new APIError('FORBIDDEN', {
-                    message: 'Email domain not allowed',
-                });
             }
         },
         after: async (context) => {
-            // Record which invite code the new account was created with
+            // Atomically consume invite code and associate its ID with user after successful registration
             if (context.path === '/sign-up/email') {
                 const inviteCode = (
                     context.body as { inviteCode?: string } | undefined
@@ -230,14 +207,38 @@ export const auth = betterAuth({
                 const userId = returned?.user?.id ?? returned?.id;
 
                 if (inviteCode && userId) {
-                    await prisma.user
-                        .update({
-                            where: { id: userId },
-                            data: { inviteCodeUsed: inviteCode.toUpperCase() },
-                        })
-                        .catch(() => {
-                            // Tracking only; never fail the sign-up because of it
+                    const invite = await prisma.inviteCode.findUnique({
+                        where: { code: inviteCode.toUpperCase() },
+                    });
+
+                    if (invite) {
+                        const consumed = await prisma.inviteCode.updateMany({
+                            where: {
+                                id: invite.id,
+                                isActive: true,
+                                uses: invite.maxUses ? { lt: invite.maxUses } : undefined,
+                                OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+                            },
+                            data: { uses: { increment: 1 } },
                         });
+
+                        if (consumed.count > 0) {
+                            await prisma.user
+                                .update({
+                                    where: { id: userId },
+                                    data: { inviteCodeUsed: invite.id },
+                                })
+                                .catch(() => {
+                                    // Tracking only; never fail the sign-up because of it
+                                });
+                        } else {
+                            // Concurrently exhausted while creating user; rollback user creation
+                            await prisma.user.delete({ where: { id: userId } }).catch(() => {});
+                            throw new APIError('FORBIDDEN', {
+                                message: 'Invite code has reached maximum uses.',
+                            });
+                        }
+                    }
                 }
             }
 

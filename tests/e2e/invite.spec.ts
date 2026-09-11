@@ -53,6 +53,19 @@ test.describe('Invite-only registration', () => {
             expect(invite.ok()).toBeTruthy();
             const { code } = await invite.json();
 
+            // A failed registration attempt (e.g. duplicate email) does NOT burn the invite code
+            const failedAttempt = await request.post(signupUrl, {
+                headers: signupHeaders,
+                data: {
+                    email: TEST_USER.email,
+                    username: 'unique_candidate',
+                    password: 'CandidatePassword123!',
+                    inviteCode: code,
+                },
+            });
+            expect(failedAttempt.status()).not.toBe(200);
+
+            // Valid registration using the same code still succeeds because it wasn't burned
             const withCode = await request.post(signupUrl, {
                 headers: signupHeaders,
                 data: {
