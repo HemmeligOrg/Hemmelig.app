@@ -3,11 +3,14 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { APIError } from 'better-auth/api';
 import { admin, twoFactor, username } from 'better-auth/plugins';
 import { genericOAuth } from 'better-auth/plugins/generic-oauth';
+import type { BetterAuthPlugin } from 'better-auth/types';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
+import { hashSetupClaimToken, safeSecretEqual, SETUP_CLAIM_ID } from './lib/claim';
 import prisma from './lib/db';
 import { consumeInviteCode } from './lib/invite';
 import { resolveSettings } from './lib/settings';
+import { deleteUserWithRetries } from './lib/user-rollback';
 import { validatePassword } from './validations/password';
 
 export const SETUP_HEADER = 'x-hemmelig-setup-token';
@@ -56,7 +59,7 @@ const buildBetterAuthSocialProviders = () => {
 
 // Build better-auth plugins array
 const buildPlugins = () => {
-    const plugins: any[] = [username(), admin(), twoFactor()];
+    const plugins: BetterAuthPlugin[] = [username(), admin(), twoFactor()];
 
     const genericProviders = config.getGenericOAuthProviders();
     if (genericProviders.length > 0) {
@@ -65,7 +68,7 @@ const buildPlugins = () => {
                 config: genericProviders.map((provider) => ({
                     ...provider,
                     // Map profile to include username
-                    mapProfileToUser: (profile: any) => ({
+                    mapProfileToUser: (profile: { email?: string; name?: string }) => ({
                         username: generateUsernameFromEmail(
                             profile.email || profile.name || 'user'
                         ),
@@ -90,17 +93,21 @@ const validateInitialSetupClaim = async (
     const setupToken = headers?.get(SETUP_HEADER);
     const claimToken = headers?.get(SETUP_CLAIM_HEADER);
 
-    if (!setupToken || setupToken !== SETUP_TOKEN || !claimToken) {
+    // Compare in constant time (CWE-208); a length mismatch only leaks the length.
+    if (!setupToken || !safeSecretEqual(setupToken, SETUP_TOKEN) || !claimToken) {
         throw new APIError('FORBIDDEN', {
             message: 'Initial setup must be completed before registration is available.',
         });
     }
 
+    // Only the SHA-256 digest is ever compared or stored (CWE-312).
+    const claimTokenHash = hashSetupClaimToken(claimToken);
+
     const claim = await prisma.verification.findUnique({
-        where: { id: 'initial-setup-claim' },
+        where: { id: SETUP_CLAIM_ID },
     });
 
-    if (!claim || claim.value !== claimToken || claim.expiresAt < new Date()) {
+    if (!claim || !safeSecretEqual(claim.value, claimTokenHash) || claim.expiresAt < new Date()) {
         throw new APIError('FORBIDDEN', {
             message: 'Initial setup must be completed before registration is available.',
         });
@@ -297,36 +304,24 @@ export const auth = betterAuth({
                 } | null;
 
                 /**
-                 * Rolls back user creation if invite verification, consumption, or attribution fails.
-                 * Retries up to maxRetries times with exponential backoff to handle transient database locks.
+                 * Rolls back user creation if invite verification, consumption, or
+                 * attribution fails. Delegates to a retrying delete helper; a P2025
+                 * (user already gone) counts as success. If the delete persistently
+                 * fails the user record survives, so this fails loudly instead of
+                 * returning a success-looking response (fail-closed).
                  *
                  * @param id - The ID of the user record to delete.
-                 * @param maxRetries - Maximum retry attempts before logging an error.
                  */
-                const rollbackUser = async (id: string, maxRetries = 3): Promise<void> => {
-                    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                        try {
-                            await prisma.user.delete({ where: { id } });
-                            return;
-                        } catch (err) {
-                            if (attempt === maxRetries) {
-                                console.error(
-                                    `Critical: Failed to rollback user ${id} after ${maxRetries} attempts:`,
-                                    err
-                                );
-                                throw new APIError('INTERNAL_SERVER_ERROR', {
-                                    message:
-                                        'Failed to rollback user after invite processing error.',
-                                });
-                            } else {
-                                await new Promise((res) => setTimeout(res, 50 * attempt));
-                            }
-                        }
+                const rollbackUser = async (id: string): Promise<void> => {
+                    if (!(await deleteUserWithRetries(id))) {
+                        throw new APIError('INTERNAL_SERVER_ERROR', {
+                            message: 'Failed to rollback user after invite processing error.',
+                        });
                     }
                 };
 
                 const isInitialSetup =
-                    context.headers?.get(SETUP_HEADER) === SETUP_TOKEN &&
+                    safeSecretEqual(context.headers?.get(SETUP_HEADER) ?? '', SETUP_TOKEN) &&
                     (await prisma.user.count()) <= 1;
 
                 // Roll back user creation if invite code was required but absent or userId missing
