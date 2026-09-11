@@ -155,6 +155,16 @@ export const auth = betterAuth({
 
                     // On an empty deployment, initial setup requires valid setup token and claim
                     if ((await prisma.user.count()) === 0) {
+                        // Bootstrap must only ever happen through the email setup path.
+                        // Reject every other creation path (social/generic OAuth) explicitly
+                        // so a fresh instance can never be claimed by an uninvited social
+                        // account, regardless of what headers the request carries.
+                        if (context?.path !== '/sign-up/email') {
+                            throw new APIError('FORBIDDEN', {
+                                message:
+                                    'Initial setup must be completed before social sign-in is available.',
+                            });
+                        }
                         await validateInitialSetupClaim(context?.headers);
                         return;
                     }
