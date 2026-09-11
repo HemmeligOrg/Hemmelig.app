@@ -111,7 +111,11 @@ export const auth = betterAuth({
                 return;
             }
 
-            const body = context.body as { email?: string; password?: string };
+            const body = context.body as {
+                email?: string;
+                password?: string;
+                inviteCode?: string;
+            };
             const email = body?.email;
             const password = body?.password;
 
@@ -129,7 +133,11 @@ export const auth = betterAuth({
 
             // Get instance settings
             const settings = await prisma.instanceSettings.findFirst({
-                select: { allowedEmailDomains: true, disableEmailPasswordSignup: true },
+                select: {
+                    allowedEmailDomains: true,
+                    disableEmailPasswordSignup: true,
+                    requireInviteCode: true,
+                },
             });
 
             // Check if email/password signup is disabled
@@ -137,6 +145,51 @@ export const auth = betterAuth({
                 throw new APIError('FORBIDDEN', {
                     message: 'Email/password registration is disabled. Please use social login.',
                 });
+            }
+
+            // Enforce invite-only registration. The code is consumed atomically here so
+            // that sign-up cannot be replayed against a code that has reached maxUses.
+            if (settings?.requireInviteCode) {
+                const inviteCode = body?.inviteCode?.trim();
+                if (!inviteCode) {
+                    throw new APIError('FORBIDDEN', {
+                        message: 'An invite code is required to register.',
+                    });
+                }
+
+                const invite = await prisma.inviteCode.findUnique({
+                    where: { code: inviteCode.toUpperCase() },
+                });
+
+                if (!invite || !invite.isActive) {
+                    throw new APIError('FORBIDDEN', { message: 'Invalid invite code.' });
+                }
+
+                if (invite.expiresAt && new Date() > invite.expiresAt) {
+                    throw new APIError('FORBIDDEN', { message: 'Invite code has expired.' });
+                }
+
+                if (invite.maxUses && invite.uses >= invite.maxUses) {
+                    throw new APIError('FORBIDDEN', {
+                        message: 'Invite code has reached maximum uses.',
+                    });
+                }
+
+                const consumed = await prisma.inviteCode.updateMany({
+                    where: {
+                        id: invite.id,
+                        isActive: true,
+                        uses: invite.maxUses ? { lt: invite.maxUses } : undefined,
+                        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+                    },
+                    data: { uses: { increment: 1 } },
+                });
+
+                if (consumed.count === 0) {
+                    throw new APIError('FORBIDDEN', {
+                        message: 'Invite code has reached maximum uses.',
+                    });
+                }
             }
 
             const allowedDomains = settings?.allowedEmailDomains?.trim();
@@ -164,6 +217,32 @@ export const auth = betterAuth({
                     message: 'Email domain not allowed',
                 });
             }
+        },
+        after: async (context) => {
+            // Record which invite code the new account was created with
+            if (context.path === '/sign-up/email') {
+                const inviteCode = (
+                    context.body as { inviteCode?: string } | undefined
+                )?.inviteCode?.trim();
+
+                const returned = (context as { context?: { returned?: unknown } }).context
+                    ?.returned as { user?: { id?: string }; id?: string } | undefined;
+                const userId = returned?.user?.id ?? returned?.id;
+
+                if (inviteCode && userId) {
+                    await prisma.user
+                        .update({
+                            where: { id: userId },
+                            data: { inviteCodeUsed: inviteCode.toUpperCase() },
+                        })
+                        .catch(() => {
+                            // Tracking only; never fail the sign-up because of it
+                        });
+                }
+            }
+
+            // better-auth requires after-hooks to return a result object
+            return { context: {} };
         },
     },
 });

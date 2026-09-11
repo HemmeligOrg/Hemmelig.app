@@ -95,18 +95,6 @@ export function RegisterPage() {
         return t('register_page.unexpected_error');
     };
 
-    const markInviteCodeUsed = async () => {
-        if (!formData.inviteCode) return;
-
-        try {
-            await apiRaw.invites.public.use.$post({
-                json: { code: formData.inviteCode },
-            });
-        } catch (e) {
-            console.error('Failed to mark invite code as used:', e);
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -129,6 +117,7 @@ export function RegisterPage() {
                     password: formData.password,
                     username: formData.username,
                     name: formData.username,
+                    ...(settings.requireInviteCode ? { inviteCode: formData.inviteCode } : {}),
                 },
                 {
                     onError: (ctx) => {
@@ -153,7 +142,6 @@ export function RegisterPage() {
             }
 
             if (data?.user?.id) {
-                await markInviteCodeUsed();
                 navigate('/dashboard');
             }
         } catch {

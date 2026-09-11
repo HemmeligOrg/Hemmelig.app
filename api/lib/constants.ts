@@ -50,6 +50,7 @@ export const PUBLIC_SETTINGS_FIELDS = {
     allowIpRestriction: true,
     allowFileUploads: true,
     requireRegisteredUser: true,
+    requireInviteCode: true,
     importantMessage: true,
     disableEmailPasswordSignup: true,
 } as const;
