@@ -7,10 +7,14 @@ start_app() {
     exec npx tsx server.ts
 }
 
+# The image ships /app/database and /app/uploads owned by app with a USER app
+# default, but operators may mount volumes over them owned by another UID.
+# Root can repair that ownership; anyone else can only report it.
 if [ "$(id -u)" = "0" ]; then
     # Started as root (plain `docker run` / compose default): take ownership
-    # of the data dirs, which may be host-mounted volumes owned by another
-    # UID, then drop privileges before touching the network.
+    # of the data dirs, creating them first so fresh named volumes work,
+    # then drop privileges before touching the network.
+    mkdir -p /app/database /app/uploads
     chown -R app:app /app/database /app/uploads 2>/dev/null || true
     exec setpriv --reuid=app --regid=app --clear-groups \
         env HOME=/home/app sh -c 'npx prisma migrate deploy && exec npx tsx server.ts'
