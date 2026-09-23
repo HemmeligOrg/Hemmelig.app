@@ -85,6 +85,10 @@ services:
 - `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32`
 - `HEMMELIG_BASE_URL` - Your public domain URL
 
+## Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform, and Hemmelig has a one-click deployment template there: https://easypanel.io/templates/hemmelig - it generates `BETTER_AUTH_SECRET` and sets up the database/uploads volumes for you automatically.
+
 ## Volume Mounts
 
 | Container Path  | Purpose                 | Required |
