@@ -111,10 +111,9 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
-        // Set to 1 so better-auth doesn't reject weak current passwords during password change.
-        // Password strength for new passwords is enforced by our Zod schema (updatePasswordSchema)
-        // and for sign-up by the before hook below.
-        minPasswordLength: 1,
+        // Strength rules for new passwords are enforced by the before hook below
+        // and by the Zod schemas on the application routes.
+        minPasswordLength: 8,
     },
     socialProviders: buildBetterAuthSocialProviders(),
     account: {
@@ -137,29 +136,41 @@ export const auth = betterAuth({
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
         before: async (context) => {
-            // Only apply validation to email/password sign-up
-            if (context.path !== '/sign-up/email') {
+            if (context.path === '/sign-up/email') {
+                const body = context.body as { email?: string; password?: string };
+                const password = body?.password;
+
+                // Validate password strength for sign-up
+                if (password) {
+                    const passwordError = validatePassword(password);
+                    if (passwordError) {
+                        throw new APIError('BAD_REQUEST', { message: passwordError });
+                    }
+                }
+
+                const settings = await resolveSettings();
+
+                // Check if email/password signup is disabled
+                if (settings?.disableEmailPasswordSignup) {
+                    throw new APIError('FORBIDDEN', {
+                        message:
+                            'Email/password registration is disabled. Please use social login.',
+                    });
+                }
+
                 return;
             }
 
-            const body = context.body as { email?: string; password?: string };
-            const password = body?.password;
+            // Password changes and resets must meet the same strength rules.
+            if (context.path === '/change-password' || context.path === '/reset-password') {
+                const body = context.body as { newPassword?: string } | undefined;
 
-            // Validate password strength for sign-up
-            if (password) {
-                const passwordError = validatePassword(password);
-                if (passwordError) {
-                    throw new APIError('BAD_REQUEST', { message: passwordError });
+                if (body?.newPassword) {
+                    const passwordError = validatePassword(body.newPassword);
+                    if (passwordError) {
+                        throw new APIError('BAD_REQUEST', { message: passwordError });
+                    }
                 }
-            }
-
-            const settings = await resolveSettings();
-
-            // Check if email/password signup is disabled
-            if (settings?.disableEmailPasswordSignup) {
-                throw new APIError('FORBIDDEN', {
-                    message: 'Email/password registration is disabled. Please use social login.',
-                });
             }
         },
     },
