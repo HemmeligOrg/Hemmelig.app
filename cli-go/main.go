@@ -13,7 +13,7 @@ import (
 	"github.com/HemmeligOrg/hemmelig-cli/internal/prompt"
 )
 
-const version = "1.1.0"
+const version = "1.2.0"
 
 const banner = ` _   _                               _ _
 | | | | ___ _ __ ___  _ __ ___   ___| (_) __ _
