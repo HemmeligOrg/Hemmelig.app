@@ -1,4 +1,5 @@
 **Looking for serious maintainer(s), see [issue](https://github.com/HemmeligOrg/Hemmelig.app/issues/536).**
+
 <div align="center">
   <img src="banner.png" alt="hemmelig" />
 </div>
@@ -72,24 +73,30 @@ See [Docker Guide](docs/docker.md) for detailed deployment instructions.
 
 ### CLI
 
-Create secrets directly from the command line:
+The `hemmelig` CLI does all that the web app does, with the access of your account. It encrypts and decrypts on your machine.
 
 ```bash
-# Download the binary (recommended for CI/CD)
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v1.0.1/hemmelig-linux-amd64 -o hemmelig
+# Download the binary for Linux on amd64. Other platforms are in docs/cli.md.
+curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v1.1.0/hemmelig-linux-amd64 -o hemmelig
 chmod +x hemmelig
 
-# Or install via npm
-npm install -g hemmelig
+# Create a secret and print the link.
+./hemmelig "API key: sk-1234" -t "Production API Key" -e 7d -v 3
 
-# Create a secret
-hemmelig "my secret message"
-
-# With options
-hemmelig "API key: sk-1234" -t "Production API Key" -e 7d -v 3
+# Read a secret, then work with your own instance.
+./hemmelig secrets get "https://hemmelig.app/s/<id>#<key>"
+./hemmelig login --url https://secrets.example.com
+./hemmelig admin users list --json
 ```
 
-See [CLI Documentation](docs/cli.md) for all platforms and CI/CD integration examples.
+The CLI also runs a local MCP server, so AI assistants can use Hemmelig with an API key:
+
+```bash
+HEMMELIG_API_KEY=hemmelig_xxxxxxxxxxxxxxxx ./hemmelig mcp
+```
+
+- [CLI documentation](docs/cli.md): install, authentication, every command, JSON output and exit codes.
+- [MCP server](docs/mcp.md): Claude Desktop and Claude Code setup, the tools and the security model.
 
 ## Documentation
 
@@ -98,6 +105,8 @@ See [CLI Documentation](docs/cli.md) for all platforms and CI/CD integration exa
 - [Environment Variables](docs/env.md) - All configuration options
 - [Managed Mode](docs/managed.md) - Configure instance settings via environment variables
 - [CLI](docs/cli.md) - Command-line interface for automation and CI/CD
+- [MCP Server](docs/mcp.md) - Let AI agents create and read secrets with local encryption
+- [API Keys](docs/api-keys.md) - Use the API with a key, and the actions that need a session
 - [Encryption](docs/encryption.md) - How client-side encryption works
 - [Social Login](docs/social-login.md) - OAuth provider setup (GitHub, Google, etc.)
 - [Secret Requests](docs/secret-request.md) - Request secrets from others securely

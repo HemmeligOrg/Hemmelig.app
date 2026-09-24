@@ -1,352 +1,208 @@
+// Command hemmelig is the Hemmelig command line client. It encrypts and
+// decrypts secrets locally, manages accounts and instances through the API,
+// and runs a local MCP server.
 package main
 
 import (
-	"bytes"
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/hex"
-	"encoding/json"
+	"context"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
-	"strconv"
+	"os/signal"
 	"strings"
 
-	"golang.org/x/crypto/pbkdf2"
+	"github.com/HemmeligOrg/hemmelig-cli/internal/prompt"
 )
 
 const version = "1.1.0"
 
-var expirationTimes = map[string]int{
-	"5m":  300,
-	"30m": 1800,
-	"1h":  3600,
-	"4h":  14400,
-	"12h": 43200,
-	"1d":  86400,
-	"3d":  259200,
-	"7d":  604800,
-	"14d": 1209600,
-	"28d": 2419200,
-}
-
-type Options struct {
-	Secret   string
-	Title    string
-	Password string
-	Expires  string
-	Views    int
-	Burnable bool
-	BaseURL  string
-}
-
-type SecretResponse struct {
-	ID    string `json:"id"`
-	Error string `json:"error,omitempty"`
-}
-
-func generateKey() string {
-	b := make([]byte, 24)
-	rand.Read(b)
-	encoded := base64.URLEncoding.EncodeToString(b)
-	if len(encoded) > 32 {
-		return encoded[:32]
-	}
-	return encoded
-}
-
-func generateSalt() string {
-	return generateKey()
-}
-
-func deriveKey(password, salt string) []byte {
-	return pbkdf2.Key([]byte(password), []byte(salt), 1300000, 32, sha256.New)
-}
-
-func encrypt(data []byte, encryptionKey, salt string) ([]byte, error) {
-	key := deriveKey(encryptionKey, salt)
-
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	iv := make([]byte, 12)
-	if _, err := rand.Read(iv); err != nil {
-		return nil, err
-	}
-
-	ciphertext := aesGCM.Seal(nil, iv, data, nil)
-
-	// Format: IV (12 bytes) + ciphertext (includes auth tag)
-	result := make([]byte, len(iv)+len(ciphertext))
-	copy(result, iv)
-	copy(result[len(iv):], ciphertext)
-
-	return result, nil
-}
-
-func uint8ArrayToObject(data []byte) map[string]int {
-	obj := make(map[string]int)
-	for i, b := range data {
-		obj[strconv.Itoa(i)] = int(b)
-	}
-	return obj
-}
-
-func createSecret(opts Options) (string, error) {
-	encryptionKey := opts.Password
-	if encryptionKey == "" {
-		encryptionKey = generateKey()
-	}
-	salt := generateSalt()
-
-	encryptedSecret, err := encrypt([]byte(opts.Secret), encryptionKey, salt)
-	if err != nil {
-		return "", fmt.Errorf("failed to encrypt secret: %w", err)
-	}
-
-	// Derive an access verifier so the password never reaches the server.
-	var passwordVerifier string
-	if opts.Password != "" {
-		key := deriveKey(opts.Password, salt)
-		sum := sha256.Sum256(key)
-		passwordVerifier = hex.EncodeToString(sum[:])
-	}
-
-	payload := map[string]interface{}{
-		"secret":     uint8ArrayToObject(encryptedSecret),
-		"salt":       salt,
-		"expiresAt":  expirationTimes[opts.Expires],
-		"views":      opts.Views,
-		"isBurnable": opts.Burnable,
-	}
-
-	if opts.Title != "" {
-		encryptedTitle, err := encrypt([]byte(opts.Title), encryptionKey, salt)
-		if err != nil {
-			return "", fmt.Errorf("failed to encrypt title: %w", err)
-		}
-		payload["title"] = uint8ArrayToObject(encryptedTitle)
-	}
-
-	if passwordVerifier != "" {
-		payload["passwordVerifier"] = passwordVerifier
-	}
-
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal payload: %w", err)
-	}
-
-	resp, err := http.Post(
-		opts.BaseURL+"/api/secrets",
-		"application/json",
-		bytes.NewBuffer(jsonData),
-	)
-	if err != nil {
-		return "", fmt.Errorf("failed to create secret: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", fmt.Errorf("failed to read response: %w", err)
-	}
-
-	var result SecretResponse
-	if err := json.Unmarshal(body, &result); err != nil {
-		return "", fmt.Errorf("failed to parse response: %w", err)
-	}
-
-	if resp.StatusCode != http.StatusCreated {
-		errMsg := result.Error
-		if errMsg == "" {
-			errMsg = "Unknown error"
-		}
-		return "", fmt.Errorf("failed to create secret: %s", errMsg)
-	}
-
-	var url string
-	if opts.Password != "" {
-		url = fmt.Sprintf("%s/secret/%s", opts.BaseURL, result.ID)
-	} else {
-		url = fmt.Sprintf("%s/secret/%s#decryptionKey=%s", opts.BaseURL, result.ID, encryptionKey)
-	}
-
-	return url, nil
-}
-
-func printHelp() {
-	fmt.Print(`
- _   _                               _ _
+const banner = ` _   _                               _ _
 | | | | ___ _ __ ___  _ __ ___   ___| (_) __ _
 | |_| |/ _ \ '_ ` + "`" + ` _ \| '_ ` + "`" + ` _ \ / _ \ | |/ _` + "`" + ` |
 |  _  |  __/ | | | | | | | | | |  __/ | | (_| |
 |_| |_|\___|_| |_| |_|_| |_| |_|\___|_|_|\__, |
-                                         |___/
-Create encrypted secrets from the command line
-
-Usage:
-  hemmelig <secret> [options]
-  echo "secret" | hemmelig [options]
-  hemmelig --help
-
-Options:
-  -t, --title <title>      Set a title for the secret
-  -p, --password <pass>    Protect with a password (if not set, key is in URL)
-  -e, --expires <time>     Expiration time (default: 1d)
-                           Valid: 5m, 30m, 1h, 4h, 12h, 1d, 3d, 7d, 14d, 28d
-  -v, --views <number>     Max views before deletion (default: 1, max: 9999)
-  -b, --burnable           Burn after first view (default: true)
-  --no-burnable            Don't burn after first view
-  -u, --url <url>          Base URL (default: https://hemmelig.app)
-  -h, --help, /?           Show this help message
-  --version                Show version number
-
-Examples:
-  # Create a simple secret
-  hemmelig "my secret message"
-
-  # Create a secret with a title and 7-day expiration
-  hemmelig "my secret" -t "API Key" -e 7d
-
-  # Create a password-protected secret
-  hemmelig "my secret" -p "mypassword123"
-
-  # Create a secret with 5 views allowed
-  hemmelig "my secret" -v 5
-
-  # Pipe content from a file
-  cat ~/.ssh/id_rsa.pub | hemmelig -t "SSH Public Key"
-
-  # Use a self-hosted instance
-  hemmelig "my secret" -u https://secrets.mycompany.com
-`)
-}
-
-func readStdin() string {
-	stat, _ := os.Stdin.Stat()
-	if (stat.Mode() & os.ModeCharDevice) != 0 {
-		return ""
-	}
-
-	data, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		return ""
-	}
-
-	return strings.TrimRight(string(data), "\n\r")
-}
-
-func parseArgs(args []string) (Options, bool, bool) {
-	opts := Options{
-		Expires:  "1d",
-		Views:    1,
-		Burnable: true,
-		BaseURL:  "https://hemmelig.app",
-	}
-
-	showHelp := false
-	showVersion := false
-
-	for i := 0; i < len(args); i++ {
-		arg := args[i]
-
-		switch arg {
-		case "-h", "--help", "/?":
-			showHelp = true
-		case "--version":
-			showVersion = true
-		case "-t", "--title":
-			if i+1 < len(args) {
-				i++
-				opts.Title = args[i]
-			}
-		case "-p", "--password":
-			if i+1 < len(args) {
-				i++
-				opts.Password = args[i]
-			}
-		case "-e", "--expires":
-			if i+1 < len(args) {
-				i++
-				opts.Expires = args[i]
-			}
-		case "-v", "--views":
-			if i+1 < len(args) {
-				i++
-				v, err := strconv.Atoi(args[i])
-				if err == nil {
-					opts.Views = v
-				}
-			}
-		case "-b", "--burnable":
-			opts.Burnable = true
-		case "--no-burnable":
-			opts.Burnable = false
-		case "-u", "--url":
-			if i+1 < len(args) {
-				i++
-				opts.BaseURL = args[i]
-			}
-		default:
-			if !strings.HasPrefix(arg, "-") && opts.Secret == "" {
-				opts.Secret = arg
-			}
-		}
-	}
-
-	return opts, showHelp, showVersion
-}
+                                         |___/`
 
 func main() {
-	opts, showHelp, showVersion := parseArgs(os.Args[1:])
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+	a := &app{
+		ctx:    ctx,
+		stdout: os.Stdout,
+		stderr: os.Stderr,
+		prompt: prompt.New(os.Stdin, os.Stderr),
+		getenv: os.Getenv,
+	}
+	os.Exit(a.run(os.Args[1:]))
+}
 
-	if showVersion {
-		fmt.Println(version)
-		os.Exit(0)
+type subcommand struct {
+	name    string
+	summary string
+	run     func(args []string) error
+}
+
+func (a *app) topCommands() []subcommand {
+	return []subcommand{
+		{"secrets", "Create, read, list and delete secrets", a.secretsCommand},
+		{"requests", "Ask for secrets with request links, and fill them in", a.requestsCommand},
+		{"account", "Your account, 2FA and API keys", a.accountCommand},
+		{"admin", "Users, invites, instance settings and analytics (admins)", a.adminCommand},
+		{"login", "Sign in and store a session", a.loginCommand},
+		{"logout", "End the session", a.logoutCommand},
+		{"whoami", "Show the URL, the credential and its user", a.whoamiCommand},
+		{"config", "Store the URL and the API key", a.configCommand},
+		{"mcp", "Run the local MCP server on stdio", a.mcpCommand},
+		{"health", "Check that the instance is ready", a.healthCommand},
+		{"version", "Print the CLI version", a.versionCommand},
+		{"help", "Show help for a command", a.helpCommand},
+	}
+}
+
+// globalWithValue lists the global flags that take a value.
+var globalWithValue = map[string]bool{"--url": true, "-u": true, "--api-key": true}
+
+// splitLeadingGlobals moves global flags in front of the command to the end,
+// so `hemmelig --json secrets list` works like `hemmelig secrets list --json`.
+func splitLeadingGlobals(args []string) (globals, rest []string) {
+	i := 0
+	for i < len(args) {
+		name, _, hasValue := strings.Cut(args[i], "=")
+		switch {
+		case name == "--json":
+			globals = append(globals, args[i])
+		case globalWithValue[name]:
+			globals = append(globals, args[i])
+			if !hasValue && i+1 < len(args) {
+				i++
+				globals = append(globals, args[i])
+			}
+		default:
+			return globals, args[i:]
+		}
+		i++
+	}
+	return globals, nil
+}
+
+func (a *app) run(args []string) int {
+	globals, rest := splitLeadingGlobals(args)
+	if len(rest) == 0 {
+		if a.prompt.Terminal() {
+			fmt.Fprint(a.stdout, a.usage())
+			return exitOK
+		}
+		// Legacy form: echo "secret" | hemmelig
+		return a.exitCode(a.secretsCreate(globals))
 	}
 
-	if showHelp {
-		printHelp()
-		os.Exit(0)
+	switch rest[0] {
+	case "--version":
+		return a.exitCode(a.versionCommand(nil))
+	case "-h", "--help", "/?":
+		fmt.Fprint(a.stdout, a.usage())
+		return exitOK
 	}
-
-	if opts.Secret == "" {
-		opts.Secret = readStdin()
+	for _, command := range a.topCommands() {
+		if command.name == rest[0] {
+			return a.exitCode(command.run(append(rest[1:], globals...)))
+		}
 	}
+	// Legacy form: hemmelig "secret" [flags]. It stays for scripts that use
+	// the first version of this CLI.
+	return a.exitCode(a.secretsCreate(append(rest, globals...)))
+}
 
-	if opts.Secret == "" {
-		fmt.Fprintln(os.Stderr, "Error: No secret provided. Use --help for usage information.")
-		os.Exit(1)
+func (a *app) usage() string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "%s\nEncrypted, self-destructing secrets from the command line. Version %s.\n\n", banner, version)
+	b.WriteString("Usage:\n  hemmelig <command> [subcommand] [flags]\n  hemmelig \"secret text\" [flags]      Short form of secrets create\n\nCommands:\n")
+	for _, command := range a.topCommands() {
+		fmt.Fprintf(&b, "  %-10s %s\n", command.name, command.summary)
 	}
+	b.WriteString(`
+Global flags:
+  -u, --url <url>      Hemmelig instance URL (env HEMMELIG_URL, default https://hemmelig.app)
+      --api-key <key>  API key (env HEMMELIG_API_KEY)
+      --json           Print the result as JSON
+  -h, --help           Show help
 
-	if _, ok := expirationTimes[opts.Expires]; !ok {
-		fmt.Fprintf(os.Stderr, "Error: Invalid expiration time \"%s\".\n", opts.Expires)
-		fmt.Fprintln(os.Stderr, "Valid options: 5m, 30m, 1h, 4h, 12h, 1d, 3d, 7d, 14d, 28d")
-		os.Exit(1)
+Examples:
+  hemmelig "db password: hunter2" -e 1h
+  hemmelig secrets get "https://hemmelig.app/s/<id>#<key>"
+  hemmelig login --url https://secrets.example.com
+  hemmelig admin users list --json
+
+Run hemmelig <command> --help for the flags of a command. Full guide: docs/cli.md.
+`)
+	return b.String()
+}
+
+// group runs a subcommand of a command group.
+func (a *app) group(name, summary string, args []string, commands []subcommand) error {
+	help := func() string {
+		var b strings.Builder
+		fmt.Fprintf(&b, "%s\n\nUsage:\n  hemmelig %s <subcommand> [flags]\n\nSubcommands:\n", summary, name)
+		for _, command := range commands {
+			fmt.Fprintf(&b, "  %-13s %s\n", command.name, command.summary)
+		}
+		fmt.Fprintf(&b, "\nRun hemmelig %s <subcommand> --help for the flags.\n", name)
+		return b.String()
 	}
-
-	if opts.Views < 1 || opts.Views > 9999 {
-		fmt.Fprintln(os.Stderr, "Error: Views must be between 1 and 9999.")
-		os.Exit(1)
+	globals, rest := splitLeadingGlobals(args)
+	if len(rest) == 0 || rest[0] == "-h" || rest[0] == "--help" || rest[0] == "help" {
+		if len(rest) == 0 {
+			fmt.Fprint(a.stderr, help())
+			return usagef("hemmelig %s needs a subcommand", name)
+		}
+		fmt.Fprint(a.stdout, help())
+		return nil
 	}
+	for _, command := range commands {
+		if command.name == rest[0] {
+			return command.run(append(rest[1:], globals...))
+		}
+	}
+	return usagef("unknown subcommand %q for hemmelig %s", rest[0], name)
+}
 
-	url, err := createSecret(opts)
+func (a *app) helpCommand(args []string) error {
+	if len(args) == 0 {
+		fmt.Fprint(a.stdout, a.usage())
+		return nil
+	}
+	for _, command := range a.topCommands() {
+		if command.name == args[0] && command.name != "help" {
+			return command.run(append(args[1:], "--help"))
+		}
+	}
+	return usagef("unknown command %q", args[0])
+}
+
+func (a *app) versionCommand(args []string) error {
+	fs := newFlagSet("hemmelig version", "Print the CLI version.", `hemmelig version`)
+	if done, err := a.parse(fs, args); done || err != nil {
+		return err
+	}
+	return a.output(map[string]string{"version": version}, func() { fmt.Fprintln(a.stdout, version) })
+}
+
+func (a *app) healthCommand(args []string) error {
+	fs := newFlagSet("hemmelig health", "Check that the instance is ready. The command exits with 1 when the instance is unhealthy.",
+		`hemmelig health --url https://secrets.example.com`)
+	if done, err := a.parse(fs, args); done || err != nil {
+		return err
+	}
+	svc, s, err := a.service()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return err
 	}
-
-	fmt.Println(url)
+	health, err := svc.GetHealth(a.ctx)
+	if health == nil {
+		return err
+	}
+	outErr := a.output(health, func() { fmt.Fprintf(a.stdout, "%s: %s\n", s.URL, health.Status) })
+	if err != nil {
+		return err
+	}
+	return outErr
 }

@@ -1,126 +1,62 @@
 # Hemmelig CLI (Go)
 
-A standalone Go binary for creating encrypted, self-destructing secrets via [Hemmelig](https://hemmelig.app).
+The `hemmelig` binary gives you the full Hemmelig app in the terminal and a local MCP server for AI assistants. It encrypts and decrypts on your machine, so the server gets only ciphertext.
 
-```
- _   _                               _ _
-| | | | ___ _ __ ___  _ __ ___   ___| (_) __ _
-| |_| |/ _ \ '_ ` _ \| '_ ` _ \ / _ \ | |/ _` |
-|  _  |  __/ | | | | | | | | | |  __/ | | (_| |
-|_| |_|\___|_| |_| |_|_| |_| |_|\___|_|_|\__, |
-                                         |___/
-```
+- [CLI documentation](../docs/cli.md): install, authentication, every command, JSON output and exit codes.
+- [MCP server](../docs/mcp.md): setup for Claude Desktop and Claude Code, the tools and the security model.
 
-## Installation
+## Build
 
-### Download Binary
-
-Download the pre-built binary for your platform from the [CLI releases](https://github.com/HemmeligOrg/Hemmelig.app/releases?q=cli-v&expanded=true).
-
-Replace `VERSION` below with the desired version (e.g., `1.0.0`):
-
-#### Linux (amd64)
-
-```bash
-VERSION=1.0.1
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-amd64 -o hemmelig
-chmod +x hemmelig
-sudo mv hemmelig /usr/local/bin/
-```
-
-#### Linux (arm64)
-
-```bash
-VERSION=1.0.1
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-linux-arm64 -o hemmelig
-chmod +x hemmelig
-sudo mv hemmelig /usr/local/bin/
-```
-
-#### macOS (Apple Silicon)
-
-```bash
-VERSION=1.0.1
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-arm64 -o hemmelig
-chmod +x hemmelig
-sudo mv hemmelig /usr/local/bin/
-```
-
-#### macOS (Intel)
-
-```bash
-VERSION=1.0.1
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/hemmelig-darwin-amd64 -o hemmelig
-chmod +x hemmelig
-sudo mv hemmelig /usr/local/bin/
-```
-
-#### Windows (PowerShell)
-
-```powershell
-$VERSION = "1.0.1"
-Invoke-WebRequest -Uri "https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v$VERSION/hemmelig-windows-amd64.exe" -OutFile "hemmelig.exe"
-# Move to a directory in your PATH, e.g.:
-Move-Item hemmelig.exe "$env:LOCALAPPDATA\Microsoft\WindowsApps\hemmelig.exe"
-```
-
-#### Verify Download
-
-```bash
-VERSION=1.0.1
-curl -L https://github.com/HemmeligOrg/Hemmelig.app/releases/download/cli-v${VERSION}/checksums.txt -o checksums.txt
-sha256sum -c checksums.txt --ignore-missing
-```
-
-### Build from Source
+Use Go 1.25 or later:
 
 ```bash
 go build -o hemmelig .
+./hemmelig --help
 ```
 
-## Usage
+## Test
+
+To run the unit tests, run this command. The tests include crypto vectors from the web code, argument parsing and the MCP tools on an in-memory transport:
 
 ```bash
-# Create a simple secret
-hemmelig "my secret message"
-
-# With a title and custom expiration
-hemmelig "API key: sk-1234" -t "Production API Key" -e 7d
-
-# Password protected
-hemmelig "sensitive data" -p "mypassword"
-
-# Multiple views allowed
-hemmelig "shared config" -v 5
-
-# Pipe from stdin
-cat config.json | hemmelig -t "Config file"
-
-# Use a self-hosted instance
-hemmelig "internal secret" -u https://secrets.company.com
+go test ./...
 ```
 
-## Options
+To make new crypto vectors from `src/lib/crypto.ts`, run this command from the repository root:
 
-| Option                  | Description                                            |
-| ----------------------- | ------------------------------------------------------ |
-| `-t, --title <title>`   | Set a title for the secret                             |
-| `-p, --password <pass>` | Protect with a password                                |
-| `-e, --expires <time>`  | Expiration: 5m, 30m, 1h, 4h, 12h, 1d, 3d, 7d, 14d, 28d |
-| `-v, --views <number>`  | Max views (1-9999, default: 1)                         |
-| `-b, --burnable`        | Burn after first view (default)                        |
-| `--no-burnable`         | Don't burn until all views used                        |
-| `-u, --url <url>`       | Base URL (default: https://hemmelig.app)               |
-| `-h, --help, /?`        | Show help                                              |
-| `--version`             | Show version                                           |
+```bash
+npx tsx cli-go/testdata/crypto-vectors.mts generate > cli-go/testdata/vectors.json
+```
 
-## Security
+To check that the web code decrypts data from the Go code, run these commands from the repository root:
 
-- All encryption happens locally using AES-256-GCM
-- Keys are derived using PBKDF2 with 1,300,000 iterations
-- Password-protected secrets send only a verifier of the derived key. The password never reaches the server
-- The decryption key is in the URL fragment (`#decryptionKey=...`), which is never sent to the server
-- The server only stores encrypted data
+```bash
+(cd cli-go && HEMMELIG_WRITE_GO_VECTORS=$PWD/go-vectors.json go test ./internal/hcrypto -run TestWriteGoVectors)
+npx tsx cli-go/testdata/crypto-vectors.mts verify cli-go/go-vectors.json
+rm cli-go/go-vectors.json
+```
+
+The end-to-end test runs every command and the MCP server against a real server. The top of `e2e/run.sh` shows how to start a test server:
+
+```bash
+HEMMELIG_E2E_URL=http://localhost:5194 ./e2e/run.sh
+```
+
+## Layout
+
+| Path                 | Content                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `*.go`               | The commands, the flag parser and the output              |
+| `internal/hcrypto`   | AES-256-GCM and PBKDF2, the same format as the web app    |
+| `internal/api`       | The HTTP client                                           |
+| `internal/service`   | The operations that the commands and the MCP server share |
+| `internal/mcpserver` | The MCP tools                                             |
+| `internal/config`    | The config file, the session and the delete tokens        |
+| `internal/links`     | Secret and request links                                  |
+| `internal/prompt`    | Prompts without echo                                      |
+| `internal/htmltext`  | Converts web app HTML to plain text                       |
+| `testdata`           | Crypto vectors and the script that makes them             |
+| `e2e`                | The end-to-end test and its helpers                       |
 
 ## License
 
