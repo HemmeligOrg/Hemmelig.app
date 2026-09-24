@@ -20,9 +20,19 @@ app.get('/', authMiddleware, async (c) => {
         return c.json({ error: 'Unauthorized' }, 401);
     }
 
+    // Read the role and the 2FA state from the database, because an API key
+    // request does not carry the full session user.
+    const account = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { id: true, role: true, twoFactorEnabled: true },
+    });
+
     return c.json({
+        id: user.id,
         username: user.username,
         email: user.email,
+        role: account?.role ?? 'user',
+        twoFactorEnabled: account?.twoFactorEnabled ?? false,
     });
 });
 

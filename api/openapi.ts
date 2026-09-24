@@ -740,8 +740,11 @@ const spec = {
                                 schema: {
                                     type: 'object',
                                     properties: {
+                                        id: { type: 'string' },
                                         username: { type: 'string' },
                                         email: { type: 'string' },
+                                        role: { type: 'string', enum: ['user', 'admin'] },
+                                        twoFactorEnabled: { type: 'boolean' },
                                     },
                                 },
                             },
