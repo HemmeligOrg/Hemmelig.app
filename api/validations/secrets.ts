@@ -48,7 +48,8 @@ const secretSchema = {
                 message: 'Invalid expiration time',
             }
         ),
-    views: z.number().int().min(1).max(9999).optional(),
+    // Null means no view limit: the secret lives until it expires.
+    views: z.number().int().min(1).max(9999).nullable().optional(),
     isBurnable: z.boolean().default(true).optional(),
     ipRange: ipRangeSchema,
     // Deprecated. Signed file attachments replace this field.

@@ -9,6 +9,35 @@
             "server": "Servertilgang",
             "credit_card": "Betalingskort",
             "email": "E-postkonto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Brukernavn",
+            "password": "Passord",
+            "url": "URL",
+            "notes": "Notater",
+            "service": "Tjeneste",
+            "api_key": "API-nøkkel",
+            "api_secret": "API-hemmelighet",
+            "environment": "Miljø",
+            "expires": "Utløper",
+            "host": "Vert",
+            "port": "Port",
+            "database": "Database",
+            "ssl": "SSL",
+            "hostname": "Vertsnavn",
+            "ip_address": "IP-adresse",
+            "ssh_port": "SSH-port",
+            "password_or_key": "Passord / nøkkel",
+            "cardholder_name": "Kortholders navn",
+            "card_number": "Kortnummer",
+            "expiry_date": "Utløpsdato",
+            "cvv": "CVV",
+            "billing_address": "Fakturaadresse",
+            "email": "E-post",
+            "imap_server": "IMAP-server",
+            "smtp_server": "SMTP-server",
+            "recovery_email": "Gjenopprettings-e-post"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endepunkt",
                 "description": "Prometheus henter data fra denne stien."
+            },
+            "logo_dark": {
+                "label": "Logo for mørk modus",
+                "description": "Vises når det mørke temaet er aktivt. Tom bruker logoen over."
+            },
+            "default_theme": {
+                "label": "Standardtema",
+                "description": "For besøkende som ikke har valgt et tema.",
+                "dark": "Mørk",
+                "light": "Lys",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standard maks. visninger",
+                "description": "Forhåndsvalgt når en hemmelighet opprettes. 1 til 9999."
             }
         },
         "note_saved": "Lagret. Endringene gjelder for nye hemmeligheter.",
-        "note_save_failed": "Ikke lagret. Les feilmeldingen og prøv igjen."
+        "note_save_failed": "Ikke lagret. Les feilmeldingen og prøv igjen.",
+        "env_locked": "Styres av {{variable}}. Endre miljøvariabelen for å endre denne innstillingen."
     },
     "secrets_page": {
         "title": "Hemmeligheter",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "Slette for alle?",
-        "wrong_password": "Feil passord."
+        "wrong_password": "Feil passord.",
+        "gate_burns_at_expiry": "Slettes ved utløp, uansett hvor mange ganger den åpnes."
     },
     "expiration": {
         "28_days": "28 dager",

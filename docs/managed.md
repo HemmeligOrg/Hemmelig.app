@@ -56,9 +56,12 @@ HEMMELIG_ALLOWED_EMAIL_DOMAINS="company.com,partner.com"
 | `HEMMELIG_INSTANCE_NAME`              | Display name for your instance                             | `""`    |
 | `HEMMELIG_INSTANCE_DESCRIPTION`       | Description shown on the homepage                          | `""`    |
 | `HEMMELIG_INSTANCE_LOGO`              | Base64-encoded logo image (max 512KB)                      | `""`    |
+| `HEMMELIG_INSTANCE_LOGO_DARK`         | Base64-encoded logo for the dark theme (max 512KB)         | `""`    |
+| `HEMMELIG_DEFAULT_THEME`              | Theme for new visitors: `dark`, `light` or `system`        | `dark`  |
 | `HEMMELIG_ALLOW_REGISTRATION`         | Allow new user signups                                     | `true`  |
 | `HEMMELIG_REQUIRE_EMAIL_VERIFICATION` | Accept only provider-verified emails for new registrations | `false` |
 | `HEMMELIG_DEFAULT_SECRET_EXPIRATION`  | Default expiration in hours                                | `72`    |
+| `HEMMELIG_DEFAULT_MAX_VIEWS`          | Default max views for a new secret, from 1 to 9999         | `1`     |
 | `HEMMELIG_MAX_SECRET_SIZE`            | Max secret size in KB                                      | `1024`  |
 | `HEMMELIG_IMPORTANT_MESSAGE`          | Alert banner shown to all users                            | `""`    |
 

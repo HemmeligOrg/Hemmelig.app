@@ -9,6 +9,35 @@
             "server": "服务器访问",
             "credit_card": "支付卡",
             "email": "电子邮件账户"
+        },
+        "field_line": "{{label}}：",
+        "fields": {
+            "username": "用户名",
+            "password": "密码",
+            "url": "网址",
+            "notes": "备注",
+            "service": "服务",
+            "api_key": "API 密钥",
+            "api_secret": "API Secret",
+            "environment": "环境",
+            "expires": "过期时间",
+            "host": "主机",
+            "port": "端口",
+            "database": "数据库",
+            "ssl": "SSL",
+            "hostname": "主机名",
+            "ip_address": "IP 地址",
+            "ssh_port": "SSH 端口",
+            "password_or_key": "密码 / 密钥",
+            "cardholder_name": "持卡人姓名",
+            "card_number": "卡号",
+            "expiry_date": "有效期",
+            "cvv": "CVV",
+            "billing_address": "账单地址",
+            "email": "电子邮件",
+            "imap_server": "IMAP 服务器",
+            "smtp_server": "SMTP 服务器",
+            "recovery_email": "恢复邮箱"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "端点",
                 "description": "Prometheus 抓取此路径。"
+            },
+            "logo_dark": {
+                "label": "深色模式徽标",
+                "description": "深色主题下显示。留空则使用上方的徽标。"
+            },
+            "default_theme": {
+                "label": "默认主题",
+                "description": "适用于尚未选择主题的访客。",
+                "dark": "深色",
+                "light": "浅色",
+                "system": "跟随系统"
+            },
+            "default_max_views": {
+                "label": "默认最大查看次数",
+                "description": "创建秘密时的预选值。1 到 9999。"
             }
         },
         "note_saved": "已保存。更改将应用于新的秘密。",
-        "note_save_failed": "未保存。请阅读错误信息后重试。"
+        "note_save_failed": "未保存。请阅读错误信息后重试。",
+        "env_locked": "由 {{variable}} 设置。请修改该环境变量来更改此设置。"
     },
     "secrets_page": {
         "title": "秘密",
@@ -847,7 +892,8 @@
         "copy_html": "HTML",
         "copy_base64": "Base64",
         "delete_confirm_question": "为所有人删除？",
-        "wrong_password": "密码错误。"
+        "wrong_password": "密码错误。",
+        "gate_burns_at_expiry": "到期时删除，无论被打开多少次。"
     },
     "expiration": {
         "28_days": "28 天",

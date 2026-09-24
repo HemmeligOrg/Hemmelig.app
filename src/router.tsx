@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { createBrowserRouter, type LoaderFunctionArgs, redirect } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { RootLayout } from './components/Layout/RootLayout';
@@ -97,12 +97,37 @@ const dashboardLoader = async () => {
     return { user: data.user, error };
 };
 
+// Loads the public status of a secret for both link forms.
+const secretLoader = async ({ params }: LoaderFunctionArgs) => {
+    if (!params.id) {
+        throw new Response('Not Found', { status: 404 });
+    }
+    trackPageView('/secret');
+    // A missing secret is the normal case here, so use the raw client and
+    // throw a 404 response instead of an error toast.
+    const res = await apiRaw.secrets[':id'].check.$get({
+        param: { id: params.id },
+    });
+    if (res.status === 404) {
+        throw new Response('Not Found', { status: 404 });
+    }
+    if (!res.ok) {
+        const data = await res.json();
+        throw new Error('error' in data ? data.error : 'Failed to check secret');
+    }
+    return res.json();
+};
+
+// Shown while the first route loaders run. React Router warns without it.
+const hydrateFallbackElement = <div className="min-h-screen bg-canvas" aria-busy="true" />;
+
 export const router = createBrowserRouter([
     // Setup page - only accessible when no users exist
     {
         path: '/setup',
         element: <SetupPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             const needsSetup = await checkSetupStatus();
             if (!needsSetup) {
@@ -116,12 +141,14 @@ export const router = createBrowserRouter([
         path: '/login',
         element: <LoginPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: instanceSettingsLoader,
     },
     {
         path: '/register',
         element: <RegisterPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             await instanceSettingsLoader();
             const { settings } = useHemmeligStore.getState();
@@ -135,12 +162,14 @@ export const router = createBrowserRouter([
         path: '/verify-2fa',
         element: <Verify2FAPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: instanceSettingsLoader,
     },
     // Pages with header/footer
     {
         element: <RootLayout />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             // First check setup status
             const needsSetup = await checkSetupStatus();
@@ -168,28 +197,18 @@ export const router = createBrowserRouter([
                 },
             },
             {
+                // Short link form: /s/:id#<key>
+                path: '/s/:id',
+                element: <SecretPage />,
+                errorElement: <SecretNotFoundPage />,
+                loader: secretLoader,
+            },
+            {
+                // Original link form: /secret/:id#decryptionKey=<key>
                 path: '/secret/:id',
                 element: <SecretPage />,
                 errorElement: <SecretNotFoundPage />,
-                loader: async ({ params }) => {
-                    if (!params.id) {
-                        throw new Response('Not Found', { status: 404 });
-                    }
-                    trackPageView('/secret');
-                    // A missing secret is the normal case here, so use the raw client and
-                    // throw a 404 response instead of an error toast.
-                    const res = await apiRaw.secrets[':id'].check.$get({
-                        param: { id: params.id },
-                    });
-                    if (res.status === 404) {
-                        throw new Response('Not Found', { status: 404 });
-                    }
-                    if (!res.ok) {
-                        const data = await res.json();
-                        throw new Error('error' in data ? data.error : 'Failed to check secret');
-                    }
-                    return res.json();
-                },
+                loader: secretLoader,
             },
             {
                 path: '/request/:id',
@@ -213,6 +232,7 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <DashboardLayout />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: dashboardLoader,
         children: [
             {

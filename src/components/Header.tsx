@@ -6,7 +6,7 @@ import { useUserStore } from '../store/userStore.ts';
 import { Avatar } from './Avatar.tsx';
 import { buttonClassName } from './Button.tsx';
 import { ImportantAlert } from './ImportantAlert.tsx';
-import Logo from './Logo.tsx';
+import { InstanceLogo } from './Logo.tsx';
 
 /** The public top bar: the notice banner, the instance brand and the account links. */
 export function Header() {
@@ -25,15 +25,10 @@ export function Header() {
                         onClick={resetSecret}
                         className="flex items-center gap-2.5 font-mono font-medium text-body text-fg hover:text-fg"
                     >
-                        {settings.instanceLogo ? (
-                            <img
-                                src={settings.instanceLogo}
-                                alt=""
-                                className="h-5 w-auto max-w-32 object-contain"
-                            />
-                        ) : (
-                            <Logo className="w-5 h-5 fill-current" aria-hidden="true" />
-                        )}
+                        <InstanceLogo
+                            imageClassName="h-5 w-auto max-w-32 object-contain"
+                            className="w-5 h-5 fill-current"
+                        />
                         <span>{settings.instanceName || 'hemmelig'}</span>
                     </Link>
 

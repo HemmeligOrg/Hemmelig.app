@@ -30,6 +30,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
+import type { TFunction } from 'i18next';
 import {
     createContext,
     FC,
@@ -105,7 +106,8 @@ interface Template {
     id: string;
     nameKey: string;
     icon: ReactNode;
-    content: string;
+    /** Keys under `template_selector.fields`, in the order of the template lines. */
+    fields: string[];
 }
 
 const templates: Template[] = [
@@ -113,70 +115,62 @@ const templates: Template[] = [
         id: 'credentials',
         nameKey: 'template_selector.templates.credentials',
         icon: <IconPassword size={16} />,
-        content: `<p><strong>Login Credentials</strong></p>
-<p>Username: </p>
-<p>Password: </p>
-<p>URL: </p>
-<p>Notes: </p>`,
+        fields: ['username', 'password', 'url', 'notes'],
     },
     {
         id: 'api_key',
         nameKey: 'template_selector.templates.api_key',
         icon: <IconKey size={16} />,
-        content: `<p><strong>API Key</strong></p>
-<p>Service: </p>
-<p>API Key: </p>
-<p>API Secret: </p>
-<p>Environment: </p>
-<p>Expires: </p>`,
+        fields: ['service', 'api_key', 'api_secret', 'environment', 'expires'],
     },
     {
         id: 'database',
         nameKey: 'template_selector.templates.database',
         icon: <IconDatabase size={16} />,
-        content: `<p><strong>Database Credentials</strong></p>
-<p>Host: </p>
-<p>Port: </p>
-<p>Database: </p>
-<p>Username: </p>
-<p>Password: </p>
-<p>SSL: </p>`,
+        fields: ['host', 'port', 'database', 'username', 'password', 'ssl'],
     },
     {
         id: 'server',
         nameKey: 'template_selector.templates.server',
         icon: <IconServer size={16} />,
-        content: `<p><strong>Server Access</strong></p>
-<p>Hostname: </p>
-<p>IP Address: </p>
-<p>SSH Port: </p>
-<p>Username: </p>
-<p>Password / Key: </p>
-<p>Notes: </p>`,
+        fields: ['hostname', 'ip_address', 'ssh_port', 'username', 'password_or_key', 'notes'],
     },
     {
         id: 'credit_card',
         nameKey: 'template_selector.templates.credit_card',
         icon: <IconCreditCard size={16} />,
-        content: `<p><strong>Payment Card</strong></p>
-<p>Cardholder Name: </p>
-<p>Card Number: </p>
-<p>Expiry Date: </p>
-<p>CVV: </p>
-<p>Billing Address: </p>`,
+        fields: ['cardholder_name', 'card_number', 'expiry_date', 'cvv', 'billing_address'],
     },
     {
         id: 'email',
         nameKey: 'template_selector.templates.email',
         icon: <IconMail size={16} />,
-        content: `<p><strong>Email Account</strong></p>
-<p>Email: </p>
-<p>Password: </p>
-<p>IMAP Server: </p>
-<p>SMTP Server: </p>
-<p>Recovery Email: </p>`,
+        fields: ['email', 'password', 'imap_server', 'smtp_server', 'recovery_email'],
     },
 ];
+
+/** Escapes text for use inside HTML. Translations are data, not markup. */
+const escapeHtml = (text: string) =>
+    text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+/** Builds the template HTML in the active language when the user inserts it. */
+const buildTemplateContent = (template: Template, t: TFunction) =>
+    [
+        `<p><strong>${escapeHtml(t(template.nameKey))}</strong></p>`,
+        ...template.fields.map(
+            (field) =>
+                `<p>${escapeHtml(
+                    t('template_selector.field_line', {
+                        label: t(`template_selector.fields.${field}`),
+                    })
+                )}</p>`
+        ),
+    ].join('\n');
 
 // Template Dropdown Component for toolbar
 interface TemplateDropdownProps {
@@ -189,7 +183,7 @@ const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled }) => 
     const { t } = useTranslation();
 
     const handleSelect = (template: Template) => {
-        onSelect(template.content);
+        onSelect(buildTemplateContent(template, t));
         setIsOpen(false);
     };
 

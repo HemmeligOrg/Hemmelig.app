@@ -57,7 +57,9 @@ const buildPlugins = () => {
     if (genericProviders.length > 0) {
         plugins.push(
             genericOAuth({
-                config: genericProviders.map((provider) => ({
+                // displayName, label and icon are UI-only fields. Better Auth does not get them.
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                config: genericProviders.map(({ displayName, label, icon, ...provider }) => ({
                     ...provider,
                     // Map profile to include username
                     mapProfileToUser: (profile: any) => ({
@@ -270,5 +272,32 @@ export const auth = betterAuth({
 export const getEnabledSocialProviders = (): string[] => {
     const standardProviders = Object.keys(config.getSocialProviders());
     const genericProviders = config.getGenericOAuthProviders().map((p) => p.providerId);
+    return [...standardProviders, ...genericProviders];
+};
+
+export interface SocialProviderDetails {
+    id: string;
+    /** True for providers of the generic OAuth plugin. */
+    generic: boolean;
+    displayName?: string;
+    label?: string;
+    icon?: string;
+}
+
+/** Returns the enabled providers with the optional button text and icon. */
+export const getSocialProviderDetails = (): SocialProviderDetails[] => {
+    const standardProviders = Object.keys(config.getSocialProviders()).map((id) => ({
+        id,
+        generic: false,
+    }));
+    const genericProviders = config
+        .getGenericOAuthProviders()
+        .map(({ providerId, displayName, label, icon }) => ({
+            id: providerId,
+            generic: true,
+            ...(displayName && { displayName }),
+            ...(label && { label }),
+            ...(icon && { icon }),
+        }));
     return [...standardProviders, ...genericProviders];
 };

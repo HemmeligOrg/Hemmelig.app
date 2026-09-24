@@ -49,22 +49,13 @@ app.get('/settings/public', async (c) => {
             });
         }
 
-        const configSettings = {
-            ...config.get('general'),
-            ...config.get('security'),
-        };
-        const filteredConfigSettings = Object.fromEntries(
-            Object.entries(configSettings).filter(
-                ([key, value]) => value !== undefined && key in PUBLIC_SETTINGS_FIELDS
-            )
+        // Environment variables that are set win over the database values.
+        const { values } = config.getEnvironmentOverrides();
+        const publicOverrides = Object.fromEntries(
+            Object.entries(values).filter(([key]) => key in PUBLIC_SETTINGS_FIELDS)
         );
 
-        const finalSettings = {
-            ...dbSettings,
-            ...filteredConfigSettings,
-        };
-
-        return c.json(finalSettings);
+        return c.json({ ...dbSettings, ...publicOverrides });
     } catch (error) {
         console.error('Failed to fetch public instance settings:', error);
         return c.json({ error: 'Failed to fetch instance settings' }, 500);
@@ -98,20 +89,11 @@ app.get('/settings', authMiddleware, checkAdmin, async (c) => {
             });
         }
 
-        const configSettings = {
-            ...config.get('general'),
-            ...config.get('security'),
-        };
-        const filteredConfigSettings = Object.fromEntries(
-            Object.entries(configSettings).filter(([, value]) => value !== undefined)
-        );
+        // Environment variables that are set win over the database values. The
+        // response names them, so the admin UI can show those rows as read-only.
+        const { values, variables } = config.getEnvironmentOverrides();
 
-        const finalSettings = {
-            ...dbSettings,
-            ...filteredConfigSettings,
-        };
-
-        return c.json(finalSettings);
+        return c.json({ ...dbSettings, ...values, lockedByEnvironment: variables });
     } catch (error) {
         console.error('Failed to fetch instance settings:', error);
         return c.json({ error: 'Failed to fetch instance settings' }, 500);
@@ -134,6 +116,27 @@ app.put(
         }
 
         const body = c.req.valid('json');
+        const { values, variables } = config.getEnvironmentOverrides();
+        const bodyValues: Record<string, unknown> = body;
+
+        // An environment variable controls these settings. A different value is
+        // rejected, so that a save cannot report success for a value that the
+        // environment replaces. An equal value is ignored.
+        const conflicts = Object.keys(variables).filter(
+            (key) => bodyValues[key] !== undefined && bodyValues[key] !== values[key]
+        );
+        if (conflicts.length > 0) {
+            return c.json(
+                {
+                    error: `Set by environment variable: ${conflicts.map((key) => variables[key]).join(', ')}`,
+                },
+                409
+            );
+        }
+        const data = { ...body };
+        for (const key of Object.keys(variables)) {
+            delete (data as Record<string, unknown>)[key];
+        }
 
         if (body.webhookUrl && body.webhookUrl !== '' && !(await isPublicUrl(body.webhookUrl))) {
             return c.json({ error: 'Webhook URL cannot point to private/internal addresses' }, 400);
@@ -148,7 +151,7 @@ app.put(
 
             const updatedSettings = await prisma.instanceSettings.update({
                 where: { id: settings.id },
-                data: body,
+                data,
                 select: ADMIN_SETTINGS_FIELDS,
             });
 
@@ -158,7 +161,7 @@ app.put(
                 ...updatedSettings,
             });
 
-            return c.json(updatedSettings);
+            return c.json({ ...updatedSettings, ...values, lockedByEnvironment: variables });
         } catch (error) {
             console.error('Failed to update instance settings:', error);
             return handleNotFound(error as Error & { code?: string }, c);

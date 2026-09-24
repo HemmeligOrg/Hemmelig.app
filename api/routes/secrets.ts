@@ -25,7 +25,8 @@ interface SecretCreateData {
     title?: Uint8Array | null;
     password: string | null;
     expiresAt: Date;
-    views?: number;
+    // Null means no view limit. The secret then lives until it expires.
+    views?: number | null;
     isBurnable?: boolean;
     ipRange?: string | null;
     files?: { connect: { id: string }[] };
@@ -153,27 +154,36 @@ const app = new Hono<{
                         }
                     }
 
-                    // Consume one view with a conditional update. The update applies only
-                    // while views remain, so two concurrent reveals cannot both use the
-                    // last view, whatever isolation the database gives the transaction.
-                    // The secret stays in the database because files may still need a
-                    // download. The cleanup job deletes secrets with no views left.
-                    const consumed = await tx.secrets.updateMany({
-                        where: { id, views: { gt: 0 } },
-                        data: { views: { decrement: 1 } },
-                    });
+                    // A secret with null views has no view limit and lives until it
+                    // expires, so a reveal does not consume a view.
+                    let newViews: number | null = null;
 
-                    if (consumed.count === 0) {
-                        return { error: 'Secret not found', status: 404 as const };
+                    if (item.views !== null) {
+                        // Consume one view with a conditional update. The update applies
+                        // only while views remain, so two concurrent reveals cannot both
+                        // use the last view, whatever isolation the database gives the
+                        // transaction. The secret stays in the database because files
+                        // may still need a download. The cleanup job deletes secrets
+                        // with no views left.
+                        const consumed = await tx.secrets.updateMany({
+                            where: { id, views: { gt: 0 } },
+                            data: { views: { decrement: 1 } },
+                        });
+
+                        if (consumed.count === 0) {
+                            return { error: 'Secret not found', status: 404 as const };
+                        }
+
+                        const remaining = await tx.secrets.findUnique({
+                            where: { id },
+                            select: { views: true },
+                        });
+                        newViews = remaining?.views ?? 0;
                     }
 
-                    const remaining = await tx.secrets.findUnique({
-                        where: { id },
-                        select: { views: true },
-                    });
-                    const newViews = remaining?.views ?? 0;
+                    const burned = item.isBurnable === true && newViews !== null && newViews <= 0;
 
-                    if (item.isBurnable && newViews <= 0) {
+                    if (burned) {
                         // Send webhook for burned secret
                         sendWebhook('secret.burned', {
                             secretId: id,
@@ -186,7 +196,7 @@ const app = new Hono<{
                             secretId: id,
                             hasPassword: !!item.password,
                             hasIpRestriction: !!item.ipRange,
-                            viewsRemaining: newViews,
+                            ...(newViews !== null && { viewsRemaining: newViews }),
                         });
                     }
 
@@ -195,7 +205,7 @@ const app = new Hono<{
                     return {
                         ...itemWithoutPassword,
                         views: newViews,
-                        burned: item.isBurnable && newViews <= 0,
+                        burned,
                         // Lets the viewer delete the secret after reading it.
                         deleteToken: createDeleteToken(id),
                         files: item.files.map((file) => ({

@@ -123,6 +123,18 @@ const largeBodyPaths = [
     /^\/(?:api\/)?files\/?$/,
 ];
 app.use('*', async (c, next) => {
+    // Raw file uploads stream to disk, and the files route checks the size
+    // against the instance limit before and while it reads the body. Multipart
+    // uploads are parsed in memory, so they keep this cap.
+    const isRawFileUpload =
+        c.req.method === 'POST' &&
+        /^\/(?:api\/)?files\/?$/.test(c.req.path) &&
+        (c.req.header('content-type') ?? '').toLowerCase().startsWith('application/octet-stream');
+
+    if (isRawFileUpload) {
+        return next();
+    }
+
     const isLargeBodyPath = largeBodyPaths.some((pattern) => pattern.test(c.req.path));
     const maxSize = isLargeBodyPath ? LARGE_JSON_BODY_LIMIT : SMALL_BODY_LIMIT;
 

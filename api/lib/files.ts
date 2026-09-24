@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'crypto';
-import { mkdir } from 'fs/promises';
+import { mkdir, unlink } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
 import { resolveSettings } from './settings';
@@ -8,8 +8,29 @@ import { signTokenPayload as sign, signToken, verifySignedToken } from './tokens
 /** Upload directory path */
 export const UPLOAD_DIR = resolve(process.cwd(), 'uploads');
 
-const UPLOAD_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const DOWNLOAD_TOKEN_TTL_MS = 30 * 60 * 1000;
+/**
+ * Lifetime of an upload token. The cleanup job keeps an unattached upload for
+ * the same time, so that a client can still attach it to a new secret.
+ */
+export const UPLOAD_TOKEN_TTL_MS = 60 * 60 * 1000;
+
+/**
+ * Lifetime of a download token. The cleanup job keeps a secret with files for
+ * the same time after its last view, so that the recipient can download them.
+ */
+export const DOWNLOAD_TOKEN_TTL_MS = 30 * 60 * 1000;
+
+/** Encrypted file names are hex strings with this maximum length. */
+const MAX_ENCRYPTED_NAME_LENGTH = 1024;
+
+/**
+ * Checks a client-encrypted file name. The name must be a non-empty hex string.
+ */
+export const isValidEncryptedName = (name: unknown): name is string =>
+    typeof name === 'string' &&
+    name.length > 0 &&
+    name.length <= MAX_ENCRYPTED_NAME_LENGTH &&
+    /^[a-f0-9]+$/i.test(name);
 
 /**
  * Creates a capability token that lets the uploader attach the file to a secret.
@@ -95,6 +116,23 @@ export async function getMaxFileSize(): Promise<number> {
     const settings = await resolveSettings();
     const maxSecretSizeKB = settings?.maxSecretSize ?? FILE.DEFAULT_MAX_SIZE_KB;
     return maxSecretSizeKB * 1024; // Convert KB to bytes
+}
+
+/**
+ * Removes a stored file from disk. A missing file counts as removed.
+ * @returns true when no file remains at the path.
+ */
+export async function removeStoredFile(filePath: string): Promise<boolean> {
+    try {
+        await unlink(filePath);
+        return true;
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+            return true;
+        }
+        console.error(`Failed to delete file from disk: ${filePath}`, error);
+        return false;
+    }
 }
 
 /**

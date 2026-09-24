@@ -1,3 +1,6 @@
+import { useHemmeligStore } from '../store/hemmeligStore';
+import { useThemeStore } from '../store/themeStore';
+
 const Logo = ({ className, ...rest }: React.SVGProps<SVGSVGElement>) => (
     <svg
         version="1.0"
@@ -26,3 +29,29 @@ const Logo = ({ className, ...rest }: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default Logo;
+
+interface InstanceLogoProps {
+    /** Classes for the uploaded logo image. */
+    imageClassName?: string;
+    /** Classes for the built-in logo. */
+    className?: string;
+}
+
+/**
+ * The logo of the instance. In the dark theme it uses the dark logo when one
+ * is set, then the normal logo, then the built-in logo.
+ */
+export function InstanceLogo({ imageClassName = '', className = '' }: InstanceLogoProps) {
+    const { settings } = useHemmeligStore();
+    const theme = useThemeStore((state) => state.theme);
+    const logo =
+        theme === 'dark' && settings.instanceLogoDark
+            ? settings.instanceLogoDark
+            : settings.instanceLogo;
+
+    if (logo) {
+        return <img src={logo} alt="" className={imageClassName} />;
+    }
+
+    return <Logo className={className} aria-hidden="true" />;
+}

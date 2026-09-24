@@ -8,7 +8,7 @@ import { useSecretStore } from '../../store/secretStore';
 import { useUserStore } from '../../store/userStore';
 import { Avatar } from '../Avatar';
 import { buttonClassName } from '../Button';
-import Logo from '../Logo';
+import { InstanceLogo } from '../Logo';
 
 interface NavItem {
     name: string;
@@ -81,7 +81,10 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 }}
                 className="flex items-center gap-2.5 px-2.5 py-1 font-mono font-medium text-body text-fg"
             >
-                <Logo className="w-5 h-5 fill-current" aria-hidden="true" />
+                <InstanceLogo
+                    imageClassName="h-5 w-auto max-w-32 object-contain"
+                    className="w-5 h-5 fill-current"
+                />
                 <span>{settings.instanceName || 'hemmelig'}</span>
             </Link>
 
@@ -158,7 +161,10 @@ export function DashboardLayout() {
             {/* Mobile top bar */}
             <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between h-14 px-4 bg-canvas border-b border-line-soft">
                 <Link to="/" className="flex items-center gap-2.5 font-mono font-medium text-body">
-                    <Logo className="w-5 h-5 fill-current" aria-hidden="true" />
+                    <InstanceLogo
+                        imageClassName="h-5 w-auto max-w-32 object-contain"
+                        className="w-5 h-5 fill-current"
+                    />
                     <span>{settings.instanceName || 'hemmelig'}</span>
                 </Link>
                 <button

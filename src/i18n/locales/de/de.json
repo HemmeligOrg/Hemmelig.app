@@ -9,6 +9,35 @@
             "server": "Serverzugang",
             "credit_card": "Zahlungskarte",
             "email": "E-Mail-Konto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Benutzername",
+            "password": "Passwort",
+            "url": "URL",
+            "notes": "Notizen",
+            "service": "Dienst",
+            "api_key": "API-Schlüssel",
+            "api_secret": "API-Geheimnis",
+            "environment": "Umgebung",
+            "expires": "Läuft ab",
+            "host": "Host",
+            "port": "Port",
+            "database": "Datenbank",
+            "ssl": "SSL",
+            "hostname": "Hostname",
+            "ip_address": "IP-Adresse",
+            "ssh_port": "SSH-Port",
+            "password_or_key": "Passwort / Schlüssel",
+            "cardholder_name": "Name des Karteninhabers",
+            "card_number": "Kartennummer",
+            "expiry_date": "Ablaufdatum",
+            "cvv": "CVV",
+            "billing_address": "Rechnungsadresse",
+            "email": "E-Mail",
+            "imap_server": "IMAP-Server",
+            "smtp_server": "SMTP-Server",
+            "recovery_email": "Wiederherstellungs-E-Mail"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endpunkt",
                 "description": "Prometheus liest diesen Pfad aus."
+            },
+            "logo_dark": {
+                "label": "Logo für den dunklen Modus",
+                "description": "Wird im dunklen Design angezeigt. Leer verwendet das Logo oben."
+            },
+            "default_theme": {
+                "label": "Standarddesign",
+                "description": "Für Besucher, die kein Design gewählt haben.",
+                "dark": "Dunkel",
+                "light": "Hell",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standardmäßige max. Ansichten",
+                "description": "Beim Erstellen eines Geheimnisses vorausgewählt. 1 bis 9999."
             }
         },
         "note_saved": "Gespeichert. Die Änderungen gelten für neue Geheimnisse.",
-        "note_save_failed": "Nicht gespeichert. Lies die Fehlermeldung und versuche es erneut."
+        "note_save_failed": "Nicht gespeichert. Lies die Fehlermeldung und versuche es erneut.",
+        "env_locked": "Festgelegt durch {{variable}}. Ändere die Umgebungsvariable, um diese Einstellung zu ändern."
     },
     "secrets_page": {
         "title": "Geheimnisse",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "Für alle löschen?",
-        "wrong_password": "Falsches Passwort."
+        "wrong_password": "Falsches Passwort.",
+        "gate_burns_at_expiry": "Wird bei Ablauf gelöscht, egal wie oft es geöffnet wird."
     },
     "expiration": {
         "28_days": "28 Tage",

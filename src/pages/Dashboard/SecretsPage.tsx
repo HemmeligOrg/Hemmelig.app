@@ -119,7 +119,9 @@ export function SecretsPage() {
         const tags: string[] = [];
         if (secret.isPasswordProtected) tags.push(t('secrets_page.tags.password'));
         if (secret.ipRange) tags.push(t('secrets_page.tags.ip'));
-        if (secret.isBurnable) tags.push(t('secrets_page.tags.burn'));
+        // A secret without a view limit burns at expiry. The API flag `isBurnable`
+        // controls only the webhook event, so it does not decide the tag.
+        if (secret.views === null) tags.push(t('secrets_page.tags.burn'));
         if (secret.fileCount > 0) {
             tags.push(t('secrets_page.tags.files', { count: secret.fileCount }));
         }

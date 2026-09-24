@@ -124,6 +124,30 @@ const spec = {
                                     type: 'object',
                                     properties: {
                                         providers: { type: 'array', items: { type: 'string' } },
+                                        providerDetails: {
+                                            type: 'array',
+                                            description:
+                                                'The enabled providers with the optional button text and icon. Generic OAuth providers set displayName, label and icon in HEMMELIG_AUTH_GENERIC_OAUTH.',
+                                            items: {
+                                                type: 'object',
+                                                properties: {
+                                                    id: { type: 'string' },
+                                                    generic: { type: 'boolean' },
+                                                    displayName: { type: 'string' },
+                                                    label: { type: 'string' },
+                                                    icon: {
+                                                        type: 'string',
+                                                        description:
+                                                            'Base64 data URI of a PNG, SVG or WebP image',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        hidePasswordLogin: {
+                                            type: 'boolean',
+                                            description:
+                                                'True when HEMMELIG_HIDE_PASSWORD_LOGIN is on and a social provider is enabled. This is a UI option only. The server still accepts password sign-in.',
+                                        },
                                         callbackBaseUrl: { type: 'string' },
                                     },
                                 },
@@ -297,7 +321,12 @@ const spec = {
                                 schema: {
                                     type: 'object',
                                     properties: {
-                                        views: { type: 'integer' },
+                                        views: {
+                                            type: 'integer',
+                                            nullable: true,
+                                            description:
+                                                'Views left. Null means no view limit until the secret expires.',
+                                        },
                                         title: { type: 'string', nullable: true },
                                         isPasswordProtected: { type: 'boolean' },
                                         passwordScheme: {
@@ -604,10 +633,24 @@ const spec = {
             post: {
                 tags: ['Files'],
                 summary: 'Upload a file',
-                description: 'Upload an encrypted file to attach to a secret',
+                description:
+                    'Upload an encrypted file to attach to a secret. Send the encrypted bytes as `application/octet-stream` with a `Content-Length` and the hex-encoded encrypted file name in `X-Hemmelig-File-Name`. The server streams this body to disk. The `multipart/form-data` form is still supported, but the server holds that body in memory, so use it only for small files.',
+                parameters: [
+                    {
+                        name: 'X-Hemmelig-File-Name',
+                        in: 'header',
+                        required: false,
+                        description:
+                            'Hex-encoded encrypted file name. Required for `application/octet-stream` uploads.',
+                        schema: { type: 'string' },
+                    },
+                ],
                 requestBody: {
                     required: true,
                     content: {
+                        'application/octet-stream': {
+                            schema: { type: 'string', format: 'binary' },
+                        },
                         'multipart/form-data': {
                             schema: {
                                 type: 'object',
@@ -630,12 +673,20 @@ const spec = {
                             'application/json': {
                                 schema: {
                                     type: 'object',
-                                    properties: { id: { type: 'string' } },
+                                    properties: {
+                                        id: { type: 'string' },
+                                        token: {
+                                            type: 'string',
+                                            description:
+                                                'Upload capability. Send it with the file id when you create the secret. It is valid for 1 hour.',
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
                     '400': { description: 'Invalid file' },
+                    '411': { description: 'A raw upload has no Content-Length' },
                     '413': { description: 'File too large' },
                 },
             },
@@ -882,6 +933,10 @@ const spec = {
                     '200': { description: 'Settings updated' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
                     '403': { $ref: '#/components/responses/Forbidden' },
+                    '409': {
+                        description:
+                            'An environment variable controls a setting in the request, and the value differs',
+                    },
                 },
             },
         },
@@ -1398,7 +1453,11 @@ const spec = {
                     id: { type: 'string' },
                     createdAt: { type: 'string', format: 'date-time' },
                     expiresAt: { type: 'string', format: 'date-time' },
-                    views: { type: 'integer' },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        description: 'Views left. Null means no view limit.',
+                    },
                     isPasswordProtected: { type: 'boolean' },
                     ipRange: { type: 'string', nullable: true },
                     isBurnable: { type: 'boolean' },
@@ -1412,7 +1471,11 @@ const spec = {
                     secret: { type: 'string', description: 'Encrypted secret content (base64)' },
                     title: { type: 'string', nullable: true },
                     salt: { type: 'string' },
-                    views: { type: 'integer' },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        description: 'Views left after this reveal. Null means no view limit.',
+                    },
                     expiresAt: { type: 'string', format: 'date-time' },
                     createdAt: { type: 'string', format: 'date-time' },
                     isBurnable: { type: 'boolean' },
@@ -1475,8 +1538,21 @@ const spec = {
                         type: 'integer',
                         description: 'Expiration time in seconds from now',
                     },
-                    views: { type: 'integer', default: 1, description: 'Number of allowed views' },
-                    isBurnable: { type: 'boolean', default: false },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        minimum: 1,
+                        maximum: 9999,
+                        default: 1,
+                        description:
+                            'Number of allowed views. Null removes the view limit, so the secret lives until it expires.',
+                    },
+                    isBurnable: {
+                        type: 'boolean',
+                        default: true,
+                        description:
+                            'When true, the last view sends the secret.burned webhook event instead of secret.viewed.',
+                    },
                     ipRange: {
                         type: 'string',
                         nullable: true,
@@ -1518,8 +1594,24 @@ const spec = {
                 properties: {
                     instanceName: { type: 'string' },
                     instanceDescription: { type: 'string' },
+                    instanceLogo: { type: 'string', description: 'Base64 data URL of the logo' },
+                    instanceLogoDark: {
+                        type: 'string',
+                        description: 'Base64 data URL of the logo for the dark theme',
+                    },
+                    defaultTheme: {
+                        type: 'string',
+                        enum: ['light', 'dark', 'system'],
+                        description: 'Theme for visitors who have not chosen one',
+                    },
                     allowRegistration: { type: 'boolean' },
                     defaultSecretExpiration: { type: 'integer' },
+                    defaultMaxViews: {
+                        type: 'integer',
+                        minimum: 1,
+                        maximum: 9999,
+                        description: 'Max views that the composer preselects',
+                    },
                     maxSecretSize: { type: 'integer' },
                     allowPasswordProtection: { type: 'boolean' },
                     allowIpRestriction: { type: 'boolean' },
@@ -1531,9 +1623,16 @@ const spec = {
                 properties: {
                     instanceName: { type: 'string' },
                     instanceDescription: { type: 'string' },
+                    instanceLogo: { type: 'string', description: 'Base64 data URL of the logo' },
+                    instanceLogoDark: {
+                        type: 'string',
+                        description: 'Base64 data URL of the logo for the dark theme',
+                    },
+                    defaultTheme: { type: 'string', enum: ['light', 'dark', 'system'] },
                     allowRegistration: { type: 'boolean' },
                     requireEmailVerification: { type: 'boolean' },
                     defaultSecretExpiration: { type: 'integer' },
+                    defaultMaxViews: { type: 'integer', minimum: 1, maximum: 9999 },
                     maxSecretSize: { type: 'integer' },
                     allowPasswordProtection: { type: 'boolean' },
                     allowIpRestriction: { type: 'boolean' },
@@ -1555,6 +1654,13 @@ const spec = {
                     metricsSecret: {
                         type: 'string',
                         description: 'Bearer token for authenticating metrics endpoint requests',
+                    },
+                    lockedByEnvironment: {
+                        type: 'object',
+                        additionalProperties: { type: 'string' },
+                        readOnly: true,
+                        description:
+                            'Settings that an environment variable controls outside managed mode, mapped to the variable name. An update with a different value for one of these settings returns 409.',
                     },
                 },
             },

@@ -9,6 +9,35 @@
             "server": "Acceso al servidor",
             "credit_card": "Tarjeta de pago",
             "email": "Cuenta de correo electrónico"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "url": "URL",
+            "notes": "Notas",
+            "service": "Servicio",
+            "api_key": "Clave de API",
+            "api_secret": "Secreto de API",
+            "environment": "Entorno",
+            "expires": "Caduca",
+            "host": "Host",
+            "port": "Puerto",
+            "database": "Base de datos",
+            "ssl": "SSL",
+            "hostname": "Nombre de host",
+            "ip_address": "Dirección IP",
+            "ssh_port": "Puerto SSH",
+            "password_or_key": "Contraseña / clave",
+            "cardholder_name": "Nombre del titular",
+            "card_number": "Número de tarjeta",
+            "expiry_date": "Fecha de caducidad",
+            "cvv": "CVV",
+            "billing_address": "Dirección de facturación",
+            "email": "Correo electrónico",
+            "imap_server": "Servidor IMAP",
+            "smtp_server": "Servidor SMTP",
+            "recovery_email": "Correo de recuperación"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endpoint",
                 "description": "Prometheus consulta esta ruta."
+            },
+            "logo_dark": {
+                "label": "Logotipo para el modo oscuro",
+                "description": "Se muestra con el tema oscuro. Vacío usa el logotipo de arriba."
+            },
+            "default_theme": {
+                "label": "Tema predeterminado",
+                "description": "Para los visitantes que no han elegido un tema.",
+                "dark": "Oscuro",
+                "light": "Claro",
+                "system": "Sistema"
+            },
+            "default_max_views": {
+                "label": "Vistas máximas predeterminadas",
+                "description": "Preseleccionado al crear un secreto. De 1 a 9999."
             }
         },
         "note_saved": "Guardado. Los cambios se aplican a los secretos nuevos.",
-        "note_save_failed": "No se guardó. Lee el mensaje de error e inténtalo de nuevo."
+        "note_save_failed": "No se guardó. Lee el mensaje de error e inténtalo de nuevo.",
+        "env_locked": "Definido por {{variable}}. Cambia la variable de entorno para cambiar este ajuste."
     },
     "secrets_page": {
         "title": "Secretos",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "¿Eliminar para todos?",
-        "wrong_password": "Contraseña incorrecta."
+        "wrong_password": "Contraseña incorrecta.",
+        "gate_burns_at_expiry": "Se borra al expirar, sin importar cuántas veces se abra."
     },
     "expiration": {
         "28_days": "28 Días",

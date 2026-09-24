@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthPageLayout } from '../components/AuthPageLayout';
 import { FormField } from '../components/FormField';
 import { LoadingButton } from '../components/LoadingButton';
 import { PasswordToggle } from '../components/PasswordToggle';
-import { SocialLoginButtons } from '../components/SocialLoginButtons';
+import { SocialLoginButtons, useSocialProviders } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
@@ -26,6 +26,14 @@ export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const errorModal = useErrorModal();
+    const [searchParams] = useSearchParams();
+    const socialProviders = useSocialProviders();
+
+    // HEMMELIG_HIDE_PASSWORD_LOGIN hides the form when a social provider is enabled.
+    // /login?showLogin=true shows it again, for example for an admin. The server
+    // accepts password sign-in either way.
+    const hidePasswordForm =
+        !!socialProviders?.hidePasswordLogin && searchParams.get('showLogin') !== 'true';
 
     // HomePage sends this state when the instance requires an account to create secrets.
     const requireAccount = !!(location.state as LoginLocationState | null)?.requireAccount;
@@ -75,40 +83,46 @@ export function LoginPage() {
                 <div className="text-sm text-warn">{t('login_page.require_account_notice')}</div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid gap-4">
-                <FormField
-                    label={t('login_page.username_label')}
-                    value={formData.username}
-                    onChange={(value) => setFormData((prev) => ({ ...prev, username: value }))}
-                    autoComplete="username"
-                    required
-                />
+            {socialProviders && !hidePasswordForm && (
+                <form onSubmit={handleSubmit} className="grid gap-4">
+                    <FormField
+                        label={t('login_page.username_label')}
+                        value={formData.username}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, username: value }))}
+                        autoComplete="username"
+                        required
+                    />
 
-                <FormField
-                    label={t('login_page.password_label')}
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={(value) => setFormData((prev) => ({ ...prev, password: value }))}
-                    autoComplete="current-password"
-                    required
-                    rightElement={
-                        <PasswordToggle
-                            visible={showPassword}
-                            onToggle={() => setShowPassword(!showPassword)}
-                            label={t('login_page.show_password')}
-                        />
-                    }
-                />
+                    <FormField
+                        label={t('login_page.password_label')}
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, password: value }))}
+                        autoComplete="current-password"
+                        required
+                        rightElement={
+                            <PasswordToggle
+                                visible={showPassword}
+                                onToggle={() => setShowPassword(!showPassword)}
+                                label={t('login_page.show_password')}
+                            />
+                        }
+                    />
 
-                <LoadingButton
-                    isLoading={isLoading}
-                    loadingText={t('login_page.signing_in_button')}
-                >
-                    {t('login_page.sign_in_button')}
-                </LoadingButton>
-            </form>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        loadingText={t('login_page.signing_in_button')}
+                    >
+                        {t('login_page.sign_in_button')}
+                    </LoadingButton>
+                </form>
+            )}
 
-            <SocialLoginButtons mode="login" />
+            <SocialLoginButtons
+                mode="login"
+                config={socialProviders}
+                showDivider={!hidePasswordForm}
+            />
 
             {settings.allowRegistration && (
                 <div className="text-sm text-muted">

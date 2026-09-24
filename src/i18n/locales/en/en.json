@@ -9,6 +9,35 @@
             "server": "Server Access",
             "credit_card": "Payment Card",
             "email": "Email Account"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Username",
+            "password": "Password",
+            "url": "URL",
+            "notes": "Notes",
+            "service": "Service",
+            "api_key": "API key",
+            "api_secret": "API secret",
+            "environment": "Environment",
+            "expires": "Expires",
+            "host": "Host",
+            "port": "Port",
+            "database": "Database",
+            "ssl": "SSL",
+            "hostname": "Hostname",
+            "ip_address": "IP address",
+            "ssh_port": "SSH port",
+            "password_or_key": "Password / key",
+            "cardholder_name": "Cardholder name",
+            "card_number": "Card number",
+            "expiry_date": "Expiry date",
+            "cvv": "CVV",
+            "billing_address": "Billing address",
+            "email": "Email",
+            "imap_server": "IMAP server",
+            "smtp_server": "SMTP server",
+            "recovery_email": "Recovery email"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endpoint",
                 "description": "Prometheus scrapes this path."
+            },
+            "logo_dark": {
+                "label": "Logo for dark mode",
+                "description": "Shown when the dark theme is active. Empty uses the logo above."
+            },
+            "default_theme": {
+                "label": "Default theme",
+                "description": "For visitors who have not chosen a theme.",
+                "dark": "Dark",
+                "light": "Light",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Default max views",
+                "description": "Preselected when creating a secret. 1 to 9999."
             }
         },
         "note_saved": "Saved. Changes apply to new secrets.",
-        "note_save_failed": "Not saved. Read the error message and try again."
+        "note_save_failed": "Not saved. Read the error message and try again.",
+        "env_locked": "Set by {{variable}}. Change the environment variable to change this setting."
     },
     "secrets_page": {
         "title": "Secrets",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "Delete for everyone?",
-        "wrong_password": "Wrong password."
+        "wrong_password": "Wrong password.",
+        "gate_burns_at_expiry": "Deleted at expiry, however many times it is opened."
     },
     "expiration": {
         "28_days": "28 days",

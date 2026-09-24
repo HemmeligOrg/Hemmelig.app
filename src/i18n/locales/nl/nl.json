@@ -9,6 +9,35 @@
             "server": "Servertoegang",
             "credit_card": "Betaalkaart",
             "email": "E-mailaccount"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Gebruikersnaam",
+            "password": "Wachtwoord",
+            "url": "URL",
+            "notes": "Notities",
+            "service": "Dienst",
+            "api_key": "API-sleutel",
+            "api_secret": "API-geheim",
+            "environment": "Omgeving",
+            "expires": "Verloopt",
+            "host": "Host",
+            "port": "Poort",
+            "database": "Database",
+            "ssl": "SSL",
+            "hostname": "Hostnaam",
+            "ip_address": "IP-adres",
+            "ssh_port": "SSH-poort",
+            "password_or_key": "Wachtwoord / sleutel",
+            "cardholder_name": "Naam kaarthouder",
+            "card_number": "Kaartnummer",
+            "expiry_date": "Vervaldatum",
+            "cvv": "CVV",
+            "billing_address": "Factuuradres",
+            "email": "E-mail",
+            "imap_server": "IMAP-server",
+            "smtp_server": "SMTP-server",
+            "recovery_email": "Herstel-e-mailadres"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endpoint",
                 "description": "Prometheus leest dit pad uit."
+            },
+            "logo_dark": {
+                "label": "Logo voor donkere modus",
+                "description": "Getoond bij het donkere thema. Leeg gebruikt het logo hierboven."
+            },
+            "default_theme": {
+                "label": "Standaardthema",
+                "description": "Voor bezoekers die geen thema hebben gekozen.",
+                "dark": "Donker",
+                "light": "Licht",
+                "system": "Systeem"
+            },
+            "default_max_views": {
+                "label": "Standaard max. weergaven",
+                "description": "Vooraf gekozen bij het maken van een geheim. 1 tot 9999."
             }
         },
         "note_saved": "Opgeslagen. De wijzigingen gelden voor nieuwe geheimen.",
-        "note_save_failed": "Niet opgeslagen. Lees de foutmelding en probeer het opnieuw."
+        "note_save_failed": "Niet opgeslagen. Lees de foutmelding en probeer het opnieuw.",
+        "env_locked": "Ingesteld door {{variable}}. Wijzig de omgevingsvariabele om deze instelling te wijzigen."
     },
     "secrets_page": {
         "title": "Geheimen",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "Voor iedereen verwijderen?",
-        "wrong_password": "Onjuist wachtwoord."
+        "wrong_password": "Onjuist wachtwoord.",
+        "gate_burns_at_expiry": "Verwijderd bij het verlopen, hoe vaak het ook wordt geopend."
     },
     "expiration": {
         "28_days": "28 dagen",

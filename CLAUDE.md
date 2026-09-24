@@ -553,9 +553,12 @@ When `HEMMELIG_MANAGED=true`, all instance settings are controlled via environme
 | `HEMMELIG_INSTANCE_NAME`                 | Display name for your instance              | `""`    |
 | `HEMMELIG_INSTANCE_DESCRIPTION`          | Description shown on the homepage           | `""`    |
 | `HEMMELIG_INSTANCE_LOGO`                 | Base64-encoded logo image (max 512KB)       | `""`    |
+| `HEMMELIG_INSTANCE_LOGO_DARK`            | Base64-encoded dark-theme logo (max 512KB)  | `""`    |
+| `HEMMELIG_DEFAULT_THEME`                 | Theme for new visitors: dark, light, system | `dark`  |
 | `HEMMELIG_ALLOW_REGISTRATION`            | Allow new user signups                      | `true`  |
 | `HEMMELIG_REQUIRE_EMAIL_VERIFICATION`    | Require email verification                  | `false` |
 | `HEMMELIG_DEFAULT_SECRET_EXPIRATION`     | Default expiration in hours                 | `72`    |
+| `HEMMELIG_DEFAULT_MAX_VIEWS`             | Default max views for a new secret (1-9999) | `1`     |
 | `HEMMELIG_MAX_SECRET_SIZE`               | Max secret size in KB                       | `1024`  |
 | `HEMMELIG_IMPORTANT_MESSAGE`             | Alert banner shown to all users             | `""`    |
 | `HEMMELIG_ALLOW_PASSWORD_PROTECTION`     | Allow password-protected secrets            | `true`  |

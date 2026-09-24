@@ -16,6 +16,20 @@ const parseInteger = (value: string | undefined): number | undefined => {
     return isNaN(parsed) ? undefined : parsed;
 };
 
+export type DefaultTheme = 'light' | 'dark' | 'system';
+
+const DEFAULT_THEMES: readonly DefaultTheme[] = ['light', 'dark', 'system'];
+
+// Returns the theme when the value is a known theme, otherwise undefined.
+const parseTheme = (value: string | undefined): DefaultTheme | undefined => {
+    const theme = value?.trim().toLowerCase();
+    return DEFAULT_THEMES.find((known) => known === theme);
+};
+
+// Keeps the default max views in the range that the secret API accepts.
+const clampViews = (value: number | undefined): number | undefined =>
+    value === undefined ? undefined : Math.min(9999, Math.max(1, value));
+
 // Social provider configuration type
 export interface SocialProviderConfig {
     clientId: string;
@@ -35,7 +49,56 @@ export interface GenericOAuthProviderConfig {
     clientSecret: string;
     scopes?: string[];
     pkce?: boolean;
+    /** Name in the login button text, for example "Company ID". UI only. */
+    displayName?: string;
+    /** Full login button text that replaces the default text. UI only. */
+    label?: string;
+    /** Button icon as a base64 data URI (PNG, SVG or WebP). UI only. */
+    icon?: string;
 }
+
+// Limits for the UI-only fields of a generic OAuth provider.
+const MAX_PROVIDER_TEXT_LENGTH = 64;
+// The same limit as the instance logo: 512 KB of image data in base64.
+const MAX_PROVIDER_ICON_LENGTH = 700000;
+const PROVIDER_ICON_PATTERN = /^data:image\/(png|svg\+xml|webp);base64,[A-Za-z0-9+/]+=*$/;
+
+/** Returns a trimmed text value, or undefined when the value is not usable. */
+const readProviderText = (value: unknown, field: string, providerId: string) => {
+    if (value === undefined) return undefined;
+    if (typeof value !== 'string' || !value.trim()) {
+        console.error(`Ignoring "${field}" for generic OAuth provider "${providerId}": not text`);
+        return undefined;
+    }
+    const text = value.trim();
+    if (text.length > MAX_PROVIDER_TEXT_LENGTH) {
+        console.error(
+            `Ignoring "${field}" for generic OAuth provider "${providerId}": longer than ${MAX_PROVIDER_TEXT_LENGTH} characters`
+        );
+        return undefined;
+    }
+    return text;
+};
+
+/**
+ * Returns the icon when it is a base64 data URI of an allowed image type.
+ * The CSP allows images only from the app itself and data URIs, so other
+ * values such as remote URLs are rejected.
+ */
+const readProviderIcon = (value: unknown, providerId: string) => {
+    if (value === undefined) return undefined;
+    if (
+        typeof value !== 'string' ||
+        value.length > MAX_PROVIDER_ICON_LENGTH ||
+        !PROVIDER_ICON_PATTERN.test(value)
+    ) {
+        console.error(
+            `Ignoring "icon" for generic OAuth provider "${providerId}": use a base64 data URI (PNG, SVG or WebP) smaller than 512 KB`
+        );
+        return undefined;
+    }
+    return value;
+};
 
 // Build social providers config dynamically from env vars
 const buildSocialProviders = () => {
@@ -118,7 +181,7 @@ const buildGenericOAuthProviders = (): GenericOAuthProviderConfig[] => {
         }
 
         // Validate each provider config
-        return parsed.filter((provider: any) => {
+        const valid = (parsed as Record<string, unknown>[]).filter((provider) => {
             if (!provider.providerId || !provider.clientId || !provider.clientSecret) {
                 console.error(
                     `Invalid generic OAuth provider config: missing required fields (providerId, clientId, or clientSecret)`
@@ -142,7 +205,26 @@ const buildGenericOAuthProviders = (): GenericOAuthProviderConfig[] => {
             }
 
             return true;
-        }) as GenericOAuthProviderConfig[];
+        }) as unknown as GenericOAuthProviderConfig[];
+
+        // Keep the UI-only fields only when they are valid. An invalid value
+        // does not disable the provider.
+        return valid.map((provider) => {
+            const { displayName, label, icon, ...rest } = provider;
+            const cleanDisplayName = readProviderText(
+                displayName,
+                'displayName',
+                provider.providerId
+            );
+            const cleanLabel = readProviderText(label, 'label', provider.providerId);
+            const cleanIcon = readProviderIcon(icon, provider.providerId);
+            return {
+                ...rest,
+                ...(cleanDisplayName && { displayName: cleanDisplayName }),
+                ...(cleanLabel && { label: cleanLabel }),
+                ...(cleanIcon && { icon: cleanIcon }),
+            };
+        });
     } catch (error) {
         console.error('Failed to parse HEMMELIG_AUTH_GENERIC_OAUTH:', error);
         return [];
@@ -151,6 +233,10 @@ const buildGenericOAuthProviders = (): GenericOAuthProviderConfig[] => {
 
 const socialProviders = buildSocialProviders();
 const genericOAuthProviders = buildGenericOAuthProviders();
+
+// UI option: hide the username and password form on the login page when a
+// social provider is enabled. The server still accepts password sign-in.
+const hidePasswordLogin = parseBoolean(process.env.HEMMELIG_HIDE_PASSWORD_LOGIN) ?? false;
 
 // Managed mode: all settings are controlled via environment variables
 const isManaged = parseBoolean(process.env.HEMMELIG_MANAGED) ?? false;
@@ -162,11 +248,14 @@ const managedSettings = isManaged
           instanceName: process.env.HEMMELIG_INSTANCE_NAME ?? '',
           instanceDescription: process.env.HEMMELIG_INSTANCE_DESCRIPTION ?? '',
           instanceLogo: process.env.HEMMELIG_INSTANCE_LOGO ?? '',
+          instanceLogoDark: process.env.HEMMELIG_INSTANCE_LOGO_DARK ?? '',
+          defaultTheme: parseTheme(process.env.HEMMELIG_DEFAULT_THEME) ?? 'dark',
           allowRegistration: parseBoolean(process.env.HEMMELIG_ALLOW_REGISTRATION) ?? true,
           requireEmailVerification:
               parseBoolean(process.env.HEMMELIG_REQUIRE_EMAIL_VERIFICATION) ?? false,
           defaultSecretExpiration:
               parseInteger(process.env.HEMMELIG_DEFAULT_SECRET_EXPIRATION) ?? 72,
+          defaultMaxViews: clampViews(parseInteger(process.env.HEMMELIG_DEFAULT_MAX_VIEWS)) ?? 1,
           maxSecretSize: parseInteger(process.env.HEMMELIG_MAX_SECRET_SIZE) ?? 1024,
           importantMessage: process.env.HEMMELIG_IMPORTANT_MESSAGE ?? '',
 
@@ -258,11 +347,54 @@ function get<T>(path: string, defaultValue?: T): T {
     return dlv(config, path, defaultValue) as T;
 }
 
+// Outside managed mode, these variables override the database value when they
+// are set. The admin settings API reports them so that the UI can lock the rows.
+const ENVIRONMENT_OVERRIDE_VARIABLES = {
+    instanceName: 'HEMMELIG_INSTANCE_NAME',
+    instanceDescription: 'HEMMELIG_INSTANCE_DESCRIPTION',
+    instanceLogo: 'HEMMELIG_INSTANCE_LOGO',
+    allowRegistration: 'HEMMELIG_ALLOW_REGISTRATION',
+    allowPasswordProtection: 'HEMMELIG_ALLOW_PASSWORD_PROTECTION',
+    allowIpRestriction: 'HEMMELIG_ALLOW_IP_RESTRICTION',
+} as const;
+
+export interface EnvironmentOverrides {
+    /** The setting values that environment variables set. */
+    values: Record<string, unknown>;
+    /** The environment variable name for each overridden setting. */
+    variables: Record<string, string>;
+}
+
+/**
+ * Returns the settings that environment variables override outside managed mode.
+ * In managed mode, all settings come from the environment, so the result is empty.
+ */
+function getEnvironmentOverrides(): EnvironmentOverrides {
+    const overrides: EnvironmentOverrides = { values: {}, variables: {} };
+
+    if (isManaged) {
+        return overrides;
+    }
+
+    const source: Record<string, unknown> = { ...config.general, ...config.security };
+
+    for (const [key, variable] of Object.entries(ENVIRONMENT_OVERRIDE_VARIABLES)) {
+        if (source[key] !== undefined) {
+            overrides.values[key] = source[key];
+            overrides.variables[key] = variable;
+        }
+    }
+
+    return overrides;
+}
+
 // Export the get function and social providers helper
 export default {
     get,
     getSocialProviders: () => config.socialProviders,
     getGenericOAuthProviders: () => genericOAuthProviders,
+    getHidePasswordLogin: () => hidePasswordLogin,
     isManaged: () => isManaged,
     getManagedSettings: () => managedSettings,
+    getEnvironmentOverrides,
 };

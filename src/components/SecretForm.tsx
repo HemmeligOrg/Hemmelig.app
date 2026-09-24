@@ -9,6 +9,7 @@ import {
     generateEncryptionKey,
     generateSalt,
 } from '../lib/crypto';
+import { uploadEncryptedFile } from '../lib/upload';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
 import { Button } from './Button';
@@ -61,22 +62,13 @@ export function SecretForm() {
                         encryptionKey,
                         salt
                     );
-                    const encryptedFileAsFile = new File([encryptedFile], file.name, {
-                        type: file.type,
-                    });
-
-                    const response = await api.files.$post({
-                        form: {
-                            file: encryptedFileAsFile,
-                            name: bytesToHex(await encrypt(file.name, encryptionKey, salt)),
-                        },
-                    });
-                    const data = await response.json();
-                    if (response.ok && 'token' in data) {
-                        attachedFiles.push({ id: data.id, token: data.token });
-                    } else {
-                        throw new Error(('error' in data && data.error) || 'File upload failed');
-                    }
+                    // A raw upload streams to disk on the server, so large files
+                    // do not fill the server memory.
+                    const uploaded = await uploadEncryptedFile(
+                        encryptedFile,
+                        bytesToHex(await encrypt(file.name, encryptionKey, salt))
+                    );
+                    attachedFiles.push(uploaded);
                 } catch (error) {
                     setErrorMessage(
                         t('secret_form.failed_to_upload_file', { fileName: file.name })
@@ -105,8 +97,11 @@ export function SecretForm() {
             salt,
             passwordVerifier,
             expiresAt,
-            views,
-            isBurnable,
+            // "Burn after time" removes the view limit, so the secret lives until it
+            // expires. The API flag `isBurnable` means "burn after the last view" for
+            // the CLIs, so the web form always sends false.
+            views: isBurnable ? null : views,
+            isBurnable: false,
             ipRange: ipRange === '' ? null : ipRange,
             files: attachedFiles,
         };

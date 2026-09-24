@@ -7,25 +7,33 @@ const sanitizedString = (maxLength: number) =>
 // Max logo size: 512KB in base64 (which is ~683KB as base64 string)
 const MAX_LOGO_BASE64_LENGTH = 700000;
 
+// An optional logo: empty, or a base64 data URL of a supported image type.
+const logoSchema = z
+    .string()
+    .max(MAX_LOGO_BASE64_LENGTH, 'Logo must be smaller than 512KB')
+    .refine(
+        (val) => {
+            if (!val || val === '') return true;
+            // Check if it's a valid base64 data URL for images
+            return /^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/.test(val);
+        },
+        { message: 'Logo must be a valid image (PNG, JPEG, GIF, SVG, or WebP)' }
+    );
+
 export const instanceSettingsSchema = z.object({
     instanceName: sanitizedString(100).optional(),
     instanceDescription: sanitizedString(500).optional(),
-    instanceLogo: z
-        .string()
-        .max(MAX_LOGO_BASE64_LENGTH, 'Logo must be smaller than 512KB')
-        .refine(
-            (val) => {
-                if (!val || val === '') return true;
-                // Check if it's a valid base64 data URL for images
-                return /^data:image\/(png|jpeg|jpg|gif|svg\+xml|webp);base64,/.test(val);
-            },
-            { message: 'Logo must be a valid image (PNG, JPEG, GIF, SVG, or WebP)' }
-        )
-        .optional(),
+    instanceLogo: logoSchema.optional(),
+    // Shown instead of instanceLogo when the dark theme is active.
+    instanceLogoDark: logoSchema.optional(),
+    // The theme for visitors who have not chosen one.
+    defaultTheme: z.enum(['light', 'dark', 'system']).optional(),
     allowRegistration: z.boolean().optional(),
     requireEmailVerification: z.boolean().optional(),
     maxSecretsPerUser: z.number().int().min(1).optional(),
     defaultSecretExpiration: z.number().int().min(1).optional(),
+    // The max views that the composer preselects for a new secret.
+    defaultMaxViews: z.number().int().min(1).max(9999).optional(),
     maxSecretSize: z.number().int().min(1).optional(),
 
     allowPasswordProtection: z.boolean().optional(),

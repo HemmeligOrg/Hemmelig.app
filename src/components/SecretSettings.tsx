@@ -34,8 +34,10 @@ export const SecretSettings = () => {
     const [showQr, setShowQr] = useState(false);
     const [isBurning, setIsBurning] = useState(false);
 
-    const linkBase = `${window.location.origin}/secret/${secretId}`;
-    const linkFragment = password ? '' : `#decryptionKey=${decryptionKey}`;
+    // The short link form carries the key as the whole fragment. Browsers never
+    // send the fragment to the server. Password-protected links carry no key.
+    const linkBase = `${window.location.origin}/s/${secretId}`;
+    const linkFragment = password ? '' : `#${decryptionKey}`;
     const secretUrl = linkBase + linkFragment;
 
     useEffect(() => {

@@ -15,15 +15,19 @@ import {
 import { Tabs } from '../../components/Tabs';
 import { ToggleSwitch } from '../../components/ToggleSwitch';
 import { useHemmeligStore } from '../../store/hemmeligStore';
+import { type DefaultTheme } from '../../store/themeStore';
 
 type InstanceSettings = {
     instanceName: string;
     instanceDescription: string;
     instanceLogo: string;
+    instanceLogoDark: string;
+    defaultTheme: DefaultTheme;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
     defaultSecretExpiration: number;
+    defaultMaxViews: number;
     maxSecretSize: number;
     importantMessage: string;
     enforceHttps: boolean;
@@ -46,9 +50,15 @@ type InstanceSettings = {
     webhookOnBurn: boolean;
     metricsEnabled: boolean;
     metricsSecret: string;
+    lockedByEnvironment?: Record<string, string>;
     error?: string;
     managed?: boolean;
 };
+
+type LogoKey = 'instanceLogo' | 'instanceLogoDark';
+
+const THEME_OPTIONS: DefaultTheme[] = ['dark', 'light', 'system'];
+const MAX_DEFAULT_VIEWS = 9999;
 
 type Tab = 'general' | 'security' | 'organization' | 'webhook' | 'metrics';
 
@@ -127,7 +137,11 @@ export function InstancePage() {
         setWebhookSetting,
         setMetricsSetting,
         saveSettings,
+        lockedByEnvironment,
     } = useHemmeligStore();
+
+    // Settings that an environment variable controls are read-only, like in managed mode.
+    const isLocked = (key: string) => isManaged || key in lockedByEnvironment;
 
     // Initialize store with loader data
     useEffect(() => {
@@ -136,7 +150,10 @@ export function InstancePage() {
         }
     }, [loaderData, initializeAdminSettings]);
 
-    const logoInputRef = useRef<HTMLInputElement>(null);
+    const logoInputRefs = {
+        instanceLogo: useRef<HTMLInputElement>(null),
+        instanceLogoDark: useRef<HTMLInputElement>(null),
+    };
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -160,7 +177,7 @@ export function InstancePage() {
         setLastSave({ snapshot, ok });
     };
 
-    const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLogoUpload = (key: LogoKey, event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
@@ -179,15 +196,16 @@ export function InstancePage() {
         const reader = new FileReader();
         reader.onloadend = () => {
             const base64String = reader.result as string;
-            setGeneralSetting('instanceLogo', base64String);
+            setGeneralSetting(key, base64String);
         };
         reader.readAsDataURL(file);
     };
 
-    const handleRemoveLogo = () => {
-        setGeneralSetting('instanceLogo', '');
-        if (logoInputRef.current) {
-            logoInputRef.current.value = '';
+    const handleRemoveLogo = (key: LogoKey) => {
+        setGeneralSetting(key, '');
+        const input = logoInputRefs[key].current;
+        if (input) {
+            input.value = '';
         }
     };
 
@@ -207,29 +225,93 @@ export function InstancePage() {
     const label = (name: string) => t(`instance_page.fields.${name}.label`);
     const describe = (name: string) => t(`instance_page.fields.${name}.description`);
 
+    // Outside managed mode, a locked row names the environment variable that sets it.
+    const lockNote = (key?: string) =>
+        key && !isManaged && lockedByEnvironment[key]
+            ? t('instance_page.env_locked', { variable: lockedByEnvironment[key] })
+            : undefined;
+
     const toggleRow = (
         name: string,
         checked: boolean,
         onChange: (checked: boolean) => void,
-        dim = false
+        dim = false,
+        settingKey?: string
     ) => {
         return (
-            <SettingRow label={label(name)} description={describe(name)} dim={dim}>
+            <SettingRow
+                label={label(name)}
+                description={lockNote(settingKey) ?? describe(name)}
+                dim={dim}
+            >
                 <ToggleSwitch
                     checked={checked}
                     onChange={onChange}
-                    disabled={isManaged}
+                    disabled={settingKey ? isLocked(settingKey) : isManaged}
                     label={label(name)}
                 />
             </SettingRow>
         );
     };
 
-    const controlRow = (name: string, control: ReactNode, dim = false, description?: string) => (
-        <SettingRow label={label(name)} description={description ?? describe(name)} dim={dim}>
+    const controlRow = (
+        name: string,
+        control: ReactNode,
+        dim = false,
+        description?: string,
+        settingKey?: string
+    ) => (
+        <SettingRow
+            label={label(name)}
+            description={lockNote(settingKey) ?? description ?? describe(name)}
+            dim={dim}
+        >
             {control}
         </SettingRow>
     );
+
+    const logoControl = (key: LogoKey) => {
+        const value = generalSettings[key];
+        const locked = isLocked(key);
+        return (
+            <>
+                {value ? (
+                    <img
+                        src={value}
+                        alt={t('instance_page.general_settings.logo_alt')}
+                        className="w-10 h-10 object-contain rounded-sm border border-line bg-surface"
+                    />
+                ) : (
+                    <span
+                        aria-hidden="true"
+                        className="w-10 h-10 rounded-sm border border-dashed border-line"
+                    />
+                )}
+                <input
+                    ref={logoInputRefs[key]}
+                    type="file"
+                    accept={LOGO_TYPES.join(',')}
+                    onChange={(event) => handleLogoUpload(key, event)}
+                    disabled={locked}
+                    className="hidden"
+                    data-testid={`${key}-input`}
+                />
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => logoInputRefs[key].current?.click()}
+                    disabled={locked}
+                >
+                    {t('instance_page.general_settings.logo_upload')}
+                </Button>
+                {value && !locked && (
+                    <Button variant="danger" size="inline" onClick={() => handleRemoveLogo(key)}>
+                        {t('instance_page.general_settings.logo_remove')}
+                    </Button>
+                )}
+            </>
+        );
+    };
 
     const expirationOptions = EXPIRATION_OPTIONS.some(
         (option) => option.hours === generalSettings.defaultSecretExpiration
@@ -271,53 +353,47 @@ export function InstancePage() {
                                 mono
                                 value={generalSettings.instanceName}
                                 onChange={(e) => setGeneralSetting('instanceName', e.target.value)}
-                                disabled={isManaged}
+                                disabled={isLocked('instanceName')}
                                 aria-label={label('instance_name')}
-                            />
+                            />,
+                            false,
+                            undefined,
+                            'instanceName'
                         )}
                         {controlRow(
                             'logo',
-                            <>
-                                {generalSettings.instanceLogo ? (
-                                    <img
-                                        src={generalSettings.instanceLogo}
-                                        alt={t('instance_page.general_settings.logo_alt')}
-                                        className="w-10 h-10 object-contain rounded-sm border border-line bg-surface"
-                                    />
-                                ) : (
-                                    <span
-                                        aria-hidden="true"
-                                        className="w-10 h-10 rounded-sm border border-dashed border-line"
-                                    />
-                                )}
-                                <input
-                                    ref={logoInputRef}
-                                    type="file"
-                                    accept={LOGO_TYPES.join(',')}
-                                    onChange={handleLogoUpload}
-                                    disabled={isManaged}
-                                    className="hidden"
-                                />
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    onClick={() => logoInputRef.current?.click()}
-                                    disabled={isManaged}
-                                >
-                                    {t('instance_page.general_settings.logo_upload')}
-                                </Button>
-                                {generalSettings.instanceLogo && !isManaged && (
-                                    <Button
-                                        variant="danger"
-                                        size="inline"
-                                        onClick={handleRemoveLogo}
-                                    >
-                                        {t('instance_page.general_settings.logo_remove')}
-                                    </Button>
-                                )}
-                            </>,
+                            logoControl('instanceLogo'),
                             false,
-                            t('instance_page.general_settings.logo_hint')
+                            t('instance_page.general_settings.logo_hint'),
+                            'instanceLogo'
+                        )}
+                        {controlRow(
+                            'logo_dark',
+                            logoControl('instanceLogoDark'),
+                            false,
+                            t('instance_page.fields.logo_dark.description')
+                        )}
+                        {controlRow(
+                            'default_theme',
+                            <Select
+                                mono
+                                className="min-w-40"
+                                value={generalSettings.defaultTheme}
+                                onChange={(e) =>
+                                    setGeneralSetting(
+                                        'defaultTheme',
+                                        e.target.value as DefaultTheme
+                                    )
+                                }
+                                disabled={isManaged}
+                                aria-label={label('default_theme')}
+                            >
+                                {THEME_OPTIONS.map((option) => (
+                                    <option key={option} value={option}>
+                                        {t(`instance_page.fields.default_theme.${option}`)}
+                                    </option>
+                                ))}
+                            </Select>
                         )}
                         {controlRow(
                             'instance_description',
@@ -327,9 +403,12 @@ export function InstancePage() {
                                 onChange={(e) =>
                                     setGeneralSetting('instanceDescription', e.target.value)
                                 }
-                                disabled={isManaged}
+                                disabled={isLocked('instanceDescription')}
                                 aria-label={label('instance_description')}
-                            />
+                            />,
+                            false,
+                            undefined,
+                            'instanceDescription'
                         )}
                         {controlRow(
                             'important_message',
@@ -369,6 +448,20 @@ export function InstancePage() {
                             </Select>
                         )}
                         {controlRow(
+                            'default_max_views',
+                            <NumberControl
+                                value={generalSettings.defaultMaxViews}
+                                onChange={(value) =>
+                                    setGeneralSetting(
+                                        'defaultMaxViews',
+                                        Math.min(MAX_DEFAULT_VIEWS, value)
+                                    )
+                                }
+                                disabled={isManaged}
+                                label={label('default_max_views')}
+                            />
+                        )}
+                        {controlRow(
                             'max_secret_size',
                             <NumberControl
                                 value={generalSettings.maxSecretSize}
@@ -389,12 +482,16 @@ export function InstancePage() {
                         {toggleRow(
                             'password_protection',
                             securitySettings.allowPasswordProtection,
-                            (checked) => setSecuritySetting('allowPasswordProtection', checked)
+                            (checked) => setSecuritySetting('allowPasswordProtection', checked),
+                            false,
+                            'allowPasswordProtection'
                         )}
                         {toggleRow(
                             'ip_restriction',
                             securitySettings.allowIpRestriction,
-                            (checked) => setSecuritySetting('allowIpRestriction', checked)
+                            (checked) => setSecuritySetting('allowIpRestriction', checked),
+                            false,
+                            'allowIpRestriction'
                         )}
                         {toggleRow('file_uploads', securitySettings.allowFileUploads, (checked) =>
                             setSecuritySetting('allowFileUploads', checked)

@@ -24,7 +24,8 @@ interface SecretFile {
 
 interface SecretLoaderData {
     isPasswordProtected: boolean;
-    views: number;
+    /** Views left. Null means no view limit. */
+    views: number | null;
     files: SecretFile[];
     passwordScheme?: 'derived' | 'legacy' | null;
     salt?: string | null;
@@ -80,19 +81,22 @@ export function SecretPage() {
     const [decryptionKeyInput, setDecryptionKeyInput] = useState('');
     const [isPasswordProtected, setIsPasswordProtected] = useState(false);
     const [showSecretContent, setShowSecretContent] = useState(false);
-    const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
+    // Null means the secret has no view limit and lives until it expires.
+    const [viewsRemaining, setViewsRemaining] = useState<number | null>(initialData?.views ?? null);
     const [salt, setSalt] = useState<string | null>(initialData?.salt ?? null);
     const { copy, isCopied } = useCopyFeedbackWithId<CopyFormat>();
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteToken, setDeleteToken] = useState<string | null>(null);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
-    const [isBurnable, setIsBurnable] = useState(false);
     const editorRef = useRef<EditorHandle | null>(null);
 
-    const decryptionKeyFromUrl = location.hash.startsWith('#decryptionKey=')
-        ? location.hash.substring('#decryptionKey='.length)
-        : '';
+    // Short links (/s/:id#<key>) carry the key as the whole fragment. Older links
+    // (/secret/:id#decryptionKey=<key>) name the key. Both forms work on both routes.
+    const fragment = location.hash.slice(1);
+    const decryptionKeyFromUrl = fragment.startsWith('decryptionKey=')
+        ? fragment.slice('decryptionKey='.length)
+        : fragment;
 
     // Use URL key if available, otherwise use manually entered key
     const decryptionKey = decryptionKeyFromUrl || decryptionKeyInput;
@@ -166,7 +170,6 @@ export function SecretPage() {
                     );
                     setSalt(data.salt);
                     setShowSecretContent(true);
-                    setIsBurnable(data.isBurnable ?? false);
 
                     // The server issues this token only after a successful reveal.
                     if ('deleteToken' in data && typeof data.deleteToken === 'string') {
@@ -267,7 +270,7 @@ export function SecretPage() {
 
     const viewsBadge =
         viewsRemaining === null
-            ? null
+            ? t('secret_page.after_burns_at_expiry')
             : t('secret_page.views_left', { count: Math.max(0, viewsRemaining) });
 
     // Loading state
@@ -285,9 +288,11 @@ export function SecretPage() {
     // Pre-reveal state (unlock form over placeholder bars)
     if (!showSecretContent) {
         const gateNote =
-            viewsRemaining === 1
-                ? t('secret_page.one_view_remaining')
-                : t('secret_page.views_remaining', { count: viewsRemaining ?? 0 });
+            viewsRemaining === null
+                ? t('secret_page.gate_burns_at_expiry')
+                : viewsRemaining === 1
+                  ? t('secret_page.one_view_remaining')
+                  : t('secret_page.views_remaining', { count: viewsRemaining });
 
         return (
             <main className="max-w-reading mx-auto px-6 py-14 grid gap-4">
@@ -408,11 +413,11 @@ export function SecretPage() {
 
     // Secret revealed state
     const afterNote =
-        viewsRemaining === 0
-            ? t('secret_page.after_last_view')
-            : isBurnable
-              ? t('secret_page.after_burns_at_expiry')
-              : t('secret_page.after_views_left', { count: viewsRemaining ?? 0 });
+        viewsRemaining === null
+            ? t('secret_page.after_burns_at_expiry')
+            : viewsRemaining === 0
+              ? t('secret_page.after_last_view')
+              : t('secret_page.after_views_left', { count: viewsRemaining });
 
     const copyButtons: { format: CopyFormat; label: string }[] = [
         { format: 'text', label: t('common.copy') },

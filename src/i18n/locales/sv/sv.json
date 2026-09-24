@@ -9,6 +9,35 @@
             "server": "Serveråtkomst",
             "credit_card": "Betalkort",
             "email": "E-postkonto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Användarnamn",
+            "password": "Lösenord",
+            "url": "URL",
+            "notes": "Anteckningar",
+            "service": "Tjänst",
+            "api_key": "API-nyckel",
+            "api_secret": "API-hemlighet",
+            "environment": "Miljö",
+            "expires": "Går ut",
+            "host": "Värd",
+            "port": "Port",
+            "database": "Databas",
+            "ssl": "SSL",
+            "hostname": "Värdnamn",
+            "ip_address": "IP-adress",
+            "ssh_port": "SSH-port",
+            "password_or_key": "Lösenord / nyckel",
+            "cardholder_name": "Kortinnehavarens namn",
+            "card_number": "Kortnummer",
+            "expiry_date": "Utgångsdatum",
+            "cvv": "CVV",
+            "billing_address": "Faktureringsadress",
+            "email": "E-post",
+            "imap_server": "IMAP-server",
+            "smtp_server": "SMTP-server",
+            "recovery_email": "Återställningsmejl"
         }
     },
     "editor": {
@@ -595,10 +624,26 @@
             "metrics_endpoint": {
                 "label": "Endpoint",
                 "description": "Prometheus hämtar data från den här sökvägen."
+            },
+            "logo_dark": {
+                "label": "Logotyp för mörkt läge",
+                "description": "Visas när det mörka temat är aktivt. Tomt använder logotypen ovan."
+            },
+            "default_theme": {
+                "label": "Standardtema",
+                "description": "För besökare som inte har valt ett tema.",
+                "dark": "Mörkt",
+                "light": "Ljust",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standard max visningar",
+                "description": "Förvalt när en hemlighet skapas. 1 till 9999."
             }
         },
         "note_saved": "Sparat. Ändringarna gäller för nya hemligheter.",
-        "note_save_failed": "Inte sparat. Läs felmeddelandet och försök igen."
+        "note_save_failed": "Inte sparat. Läs felmeddelandet och försök igen.",
+        "env_locked": "Styrs av {{variable}}. Ändra miljövariabeln för att ändra den här inställningen."
     },
     "secrets_page": {
         "title": "Hemligheter",
@@ -847,7 +892,8 @@
         "copy_html": "html",
         "copy_base64": "base64",
         "delete_confirm_question": "Radera för alla?",
-        "wrong_password": "Fel lösenord."
+        "wrong_password": "Fel lösenord.",
+        "gate_burns_at_expiry": "Raderas vid utgång, oavsett hur många gånger den öppnas."
     },
     "expiration": {
         "28_days": "28 dagar",
