@@ -58,11 +58,15 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
             }
         }
 
+        const emailChanged = email.toLowerCase() !== user.email.toLowerCase();
+
         const updatedUser = await prisma.user.update({
             where: { id: user.id },
             data: {
                 username,
                 email,
+                // Changing the address invalidates the previous verification.
+                ...(emailChanged && { emailVerified: false }),
             },
         });
 
