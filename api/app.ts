@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
@@ -16,6 +17,7 @@ import startJobs from './jobs';
 import prisma from './lib/db';
 import ratelimit from './middlewares/ratelimit';
 import routes from './routes';
+import { MAX_ENCRYPTED_SIZE } from './validations/secrets';
 
 // Initialize Hono app
 const app = new Hono<{
@@ -99,6 +101,28 @@ app.use(async (c, next) => {
 app.use(logger());
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
+
+// Reject oversized request bodies before any parser reads them. The JSON
+// representation of encrypted byte arrays is much larger than the raw bytes,
+// so secret payload routes get a larger cap. File uploads apply a tighter
+// limit based on the instance setting.
+const SMALL_BODY_LIMIT = 1024 * 1024;
+const LARGE_JSON_BODY_LIMIT = MAX_ENCRYPTED_SIZE * 16 + 128 * 1024;
+const largeBodyPaths = [
+    /^\/(?:api\/)?secrets\/?$/,
+    /^\/(?:api\/)?secret-requests\/[^/]+\/submit\/?$/,
+    /^\/(?:api\/)?files\/?$/,
+];
+app.use('*', async (c, next) => {
+    const isLargeBodyPath = largeBodyPaths.some((pattern) => pattern.test(c.req.path));
+    const maxSize = isLargeBodyPath ? LARGE_JSON_BODY_LIMIT : SMALL_BODY_LIMIT;
+
+    return bodyLimit({
+        maxSize,
+        onError: (context) => context.json({ error: 'Request body too large' }, 413),
+    })(c, next);
+});
+
 const requestTimeout = config.get<number>('server.requestTimeout', 15);
 if (requestTimeout > 0) {
     app.use(`/*`, timeout(requestTimeout * 1000));

@@ -1,6 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { createReadStream, createWriteStream } from 'fs';
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { stream } from 'hono/streaming';
 import { nanoid } from 'nanoid';
 import { Readable } from 'stream';
@@ -72,55 +73,68 @@ files.get('/:id', zValidator('param', idParamSchema), async (c) => {
     }
 });
 
-files.post('/', authMiddleware, async (c) => {
-    try {
-        // Check if file uploads are allowed
-        const instanceSettings = await resolveSettings();
-        const allowFileUploads = instanceSettings?.allowFileUploads ?? true;
-
-        if (!allowFileUploads) {
-            return c.json({ error: 'File uploads are disabled on this instance.' }, 403);
-        }
-
-        const body = await c.req.parseBody();
-        const file = body['file'];
-
-        if (!(file instanceof File)) {
-            return c.json({ error: 'File is required and must be a file.' }, 400);
-        }
-
+files.post(
+    '/',
+    authMiddleware,
+    async (c, next) => {
+        // Bound the multipart body before parsing it.
         const maxFileSize = await getMaxFileSize();
-        if (file.size > maxFileSize) {
-            return c.json(
-                { error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` },
-                413
-            );
+
+        return bodyLimit({
+            maxSize: maxFileSize + 64 * 1024,
+            onError: (context) => context.json({ error: 'File too large' }, 413),
+        })(c, next);
+    },
+    async (c) => {
+        try {
+            // Check if file uploads are allowed
+            const instanceSettings = await resolveSettings();
+            const allowFileUploads = instanceSettings?.allowFileUploads ?? true;
+
+            if (!allowFileUploads) {
+                return c.json({ error: 'File uploads are disabled on this instance.' }, 403);
+            }
+
+            const body = await c.req.parseBody();
+            const file = body['file'];
+
+            if (!(file instanceof File)) {
+                return c.json({ error: 'File is required and must be a file.' }, 400);
+            }
+
+            const maxFileSize = await getMaxFileSize();
+            if (file.size > maxFileSize) {
+                return c.json(
+                    { error: `File size exceeds the limit of ${maxFileSize / 1024 / 1024}MB.` },
+                    413
+                );
+            }
+
+            const id = nanoid();
+            const safePath = generateSafeFilePath(id, file.name);
+
+            if (!safePath) {
+                console.error(`Path traversal attempt in upload: ${file.name}`);
+                return c.json({ error: 'Invalid filename' }, 400);
+            }
+
+            // Stream the file to disk instead of loading it entirely into memory
+            const webStream = file.stream();
+            const nodeStream = Readable.fromWeb(webStream as import('stream/web').ReadableStream);
+            const writeStream = createWriteStream(safePath.path);
+
+            await pipeline(nodeStream, writeStream);
+
+            const newFile = await prisma.file.create({
+                data: { id, filename: safePath.filename, path: safePath.path },
+            });
+
+            return c.json({ id: newFile.id }, 201);
+        } catch (error) {
+            console.error('Failed to upload file:', error);
+            return c.json({ error: 'Failed to upload file' }, 500);
         }
-
-        const id = nanoid();
-        const safePath = generateSafeFilePath(id, file.name);
-
-        if (!safePath) {
-            console.error(`Path traversal attempt in upload: ${file.name}`);
-            return c.json({ error: 'Invalid filename' }, 400);
-        }
-
-        // Stream the file to disk instead of loading it entirely into memory
-        const webStream = file.stream();
-        const nodeStream = Readable.fromWeb(webStream as import('stream/web').ReadableStream);
-        const writeStream = createWriteStream(safePath.path);
-
-        await pipeline(nodeStream, writeStream);
-
-        const newFile = await prisma.file.create({
-            data: { id, filename: safePath.filename, path: safePath.path },
-        });
-
-        return c.json({ id: newFile.id }, 201);
-    } catch (error) {
-        console.error('Failed to upload file:', error);
-        return c.json({ error: 'Failed to upload file' }, 500);
     }
-});
+);
 
 export default files;

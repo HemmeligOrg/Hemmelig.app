@@ -25,7 +25,7 @@ export const secretsQuerySchema = paginationQuerySchema;
 const passwordVerifierSchema = z.string().regex(/^[a-f0-9]{64}$/, 'Invalid password verifier');
 
 const secretSchema = {
-    salt: z.string(),
+    salt: z.string().min(1).max(64),
     secret: uint8ArraySchema(
         MAX_ENCRYPTED_SIZE,
         `Encrypted payload (max ${MAX_ENCRYPTED_PAYLOAD_KB} KB)`
@@ -51,7 +51,7 @@ const secretSchema = {
     views: z.number().int().min(1).max(9999).optional(),
     isBurnable: z.boolean().default(true).optional(),
     ipRange: ipRangeSchema,
-    fileIds: z.array(z.string()).optional(),
+    fileIds: z.array(z.string().min(1).max(64)).max(20).optional(),
 };
 
 export const createSecretsSchema = z.object(secretSchema);
