@@ -40,6 +40,14 @@ async function authenticateApiKeyHeader(authHeader: string | undefined): Promise
             return { error: 'API key has expired', status: 401 };
         }
 
+        const user = apiKeyRecord.user;
+        const banActive =
+            user.banned === true && (!user.banExpires || new Date() < user.banExpires);
+
+        if (banActive) {
+            return { error: 'Account is banned', status: 401 };
+        }
+
         prisma.apiKey
             .update({
                 where: { id: apiKeyRecord.id },
