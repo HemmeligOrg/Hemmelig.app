@@ -42,7 +42,7 @@ export function SecretForm() {
         const encryptionKey = generateEncryptionKey(password);
         const salt = generateSalt();
 
-        const fileIds = [];
+        const attachedFiles: { id: string; token: string }[] = [];
         if (files.length > 0) {
             for (const file of files) {
                 try {
@@ -61,10 +61,10 @@ export function SecretForm() {
                         },
                     });
                     const data = await response.json();
-                    if (response.ok) {
-                        fileIds.push(data.id);
+                    if (response.ok && 'token' in data) {
+                        attachedFiles.push({ id: data.id, token: data.token });
                     } else {
-                        throw new Error(data.error || 'File upload failed');
+                        throw new Error(('error' in data && data.error) || 'File upload failed');
                     }
                 } catch (error) {
                     setErrorMessage(
@@ -97,7 +97,7 @@ export function SecretForm() {
             views,
             isBurnable,
             ipRange: ipRange === '' ? null : ipRange,
-            fileIds,
+            files: attachedFiles,
         };
 
         try {

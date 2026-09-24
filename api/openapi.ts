@@ -291,6 +291,14 @@ const spec = {
                                         views: { type: 'integer' },
                                         title: { type: 'string', nullable: true },
                                         isPasswordProtected: { type: 'boolean' },
+                                        passwordScheme: {
+                                            type: 'string',
+                                            nullable: true,
+                                            enum: ['derived', 'legacy', null],
+                                            description:
+                                                'Derived secrets accept a client-derived verifier. Legacy secrets require the raw password.',
+                                        },
+                                        salt: { type: 'string', nullable: true },
                                     },
                                 },
                             },
@@ -606,9 +614,16 @@ const spec = {
             get: {
                 tags: ['Files'],
                 summary: 'Download a file',
-                description: 'Download an encrypted file by ID',
+                description:
+                    'Download an encrypted file. Requires the download capability token returned when the secret is retrieved.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                    {
+                        name: 'X-Hemmelig-File-Token',
+                        in: 'header',
+                        required: true,
+                        schema: { type: 'string' },
+                    },
                 ],
                 responses: {
                     '200': {
@@ -1017,7 +1032,14 @@ const spec = {
                             'application/json': {
                                 schema: {
                                     type: 'object',
-                                    properties: { valid: { type: 'boolean' } },
+                                    properties: {
+                                        id: { type: 'string' },
+                                        token: {
+                                            type: 'string',
+                                            description:
+                                                'Upload capability token required to attach the file to a secret',
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -1372,6 +1394,11 @@ const spec = {
                             properties: {
                                 id: { type: 'string' },
                                 filename: { type: 'string' },
+                                token: {
+                                    type: 'string',
+                                    description:
+                                        'Short-lived download capability token for this file',
+                                },
                             },
                         },
                     },
@@ -1423,7 +1450,21 @@ const spec = {
                     fileIds: {
                         type: 'array',
                         items: { type: 'string' },
-                        description: 'IDs of uploaded files to attach',
+                        description: 'Deprecated. Use files instead.',
+                        deprecated: true,
+                    },
+                    files: {
+                        type: 'array',
+                        maxItems: 20,
+                        items: {
+                            type: 'object',
+                            required: ['id', 'token'],
+                            properties: {
+                                id: { type: 'string' },
+                                token: { type: 'string' },
+                            },
+                        },
+                        description: 'Signed file attachments',
                     },
                 },
             },

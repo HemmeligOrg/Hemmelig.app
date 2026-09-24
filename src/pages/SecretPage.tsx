@@ -24,6 +24,7 @@ import { decrypt, decryptFile, derivePasswordVerifier, generateEncryptionKey } f
 interface SecretFile {
     id: string;
     filename: string;
+    token: string;
 }
 
 interface SecretLoaderData {
@@ -153,7 +154,10 @@ export function SecretPage() {
         const finalDecryptionKey = passwordInput
             ? generateEncryptionKey(passwordInput)
             : decryptionKey;
-        const response = await api.files[':id'].$get({ param: { id: file.id } });
+        const response = await api.files[':id'].$get(
+            { param: { id: file.id } },
+            { headers: { 'x-hemmelig-file-token': file.token } }
+        );
         const encryptedFile = await response.arrayBuffer();
         const decryptedFile = await decryptFile(
             new Uint8Array(encryptedFile),

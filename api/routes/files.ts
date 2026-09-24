@@ -6,48 +6,53 @@ import { stream } from 'hono/streaming';
 import { nanoid } from 'nanoid';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
+import { auth } from '../auth';
 import prisma from '../lib/db';
-import { generateSafeFilePath, getMaxFileSize, isPathSafe } from '../lib/files';
+import {
+    createUploadToken,
+    generateSafeFilePath,
+    getMaxFileSize,
+    isPathSafe,
+    verifyDownloadToken,
+} from '../lib/files';
 import { resolveSettings } from '../lib/settings';
 import { authMiddleware } from '../middlewares/auth';
 import { idParamSchema } from '../validations/shared';
 
-const files = new Hono();
+const files = new Hono<{
+    Variables: {
+        user: typeof auth.$Infer.Session.user | null;
+    };
+}>();
 
 files.get('/:id', zValidator('param', idParamSchema), async (c) => {
     const { id } = c.req.valid('param');
+    const token = c.req.header('x-hemmelig-file-token');
+
+    // Files are only downloadable with a capability issued by a successful
+    // secret retrieval.
+    if (!token) {
+        return c.json({ error: 'File not found' }, 404);
+    }
+
+    const decoded = verifyDownloadToken(token);
+    if (!decoded || decoded.fileId !== id) {
+        return c.json({ error: 'File not found' }, 404);
+    }
 
     try {
-        // Fetch file with its associated secrets to verify access
+        // Verify the file is still attached to the secret that issued the token.
         const file = await prisma.file.findUnique({
             where: { id },
             include: {
                 secrets: {
-                    select: {
-                        id: true,
-                        views: true,
-                        expiresAt: true,
-                    },
+                    where: { id: decoded.secretId, expiresAt: { gt: new Date() } },
+                    select: { id: true },
                 },
             },
         });
 
-        if (!file) {
-            return c.json({ error: 'File not found' }, 404);
-        }
-
-        // Security: Verify the file is associated with at least one valid (non-expired) secret
-        // This prevents direct file access without going through the secret viewing flow
-        // We allow views >= 0 because files need to be downloadable after the last view is consumed
-        // (the secret view and file download are separate requests)
-        const hasValidSecret = file.secrets.some((secret) => {
-            const now = new Date();
-            const hasViewsRemaining = secret.views === null || secret.views >= 0;
-            const notExpired = secret.expiresAt > now;
-            return hasViewsRemaining && notExpired;
-        });
-
-        if (!hasValidSecret) {
+        if (!file || file.secrets.length === 0) {
             return c.json({ error: 'File not found' }, 404);
         }
 
@@ -129,7 +134,15 @@ files.post(
                 data: { id, filename: safePath.filename, path: safePath.path },
             });
 
-            return c.json({ id: newFile.id }, 201);
+            const user = c.get('user');
+
+            return c.json(
+                {
+                    id: newFile.id,
+                    token: createUploadToken(newFile.id, user?.id ?? null),
+                },
+                201
+            );
         } catch (error) {
             console.error('Failed to upload file:', error);
             return c.json({ error: 'Failed to upload file' }, 500);

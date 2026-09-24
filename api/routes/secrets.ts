@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
+import { createDownloadToken, verifyUploadToken } from '../lib/files';
 import { compare, compareVerifier } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
@@ -184,6 +185,11 @@ const app = new Hono<{
                         ...itemWithoutPassword,
                         views: newViews,
                         burned: item.isBurnable && newViews <= 0,
+                        files: item.files.map((file) => ({
+                            id: file.id,
+                            filename: file.filename,
+                            token: createDownloadToken(id, file.id),
+                        })),
                     };
                 });
 
@@ -274,8 +280,16 @@ const app = new Hono<{
                     return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
                 }
 
-                const { expiresAt, password, passwordVerifier, fileIds, salt, title, ...rest } =
-                    validatedData;
+                const {
+                    expiresAt,
+                    password,
+                    passwordVerifier,
+                    fileIds,
+                    files: attachedFiles,
+                    salt,
+                    title,
+                    ...rest
+                } = validatedData;
 
                 // Reject raw passwords so they never reach the server. Clients must
                 // derive a verifier and send that instead.
@@ -288,6 +302,25 @@ const app = new Hono<{
                     );
                 }
 
+                // Deprecated unsigned attachments are rejected so clients upgrade.
+                if (fileIds && fileIds.length > 0) {
+                    return c.json(
+                        {
+                            error: 'Deprecated fileIds field. Update your client to attach signed files.',
+                        },
+                        400
+                    );
+                }
+
+                // Attachments require the upload capability token issued at upload time.
+                if (attachedFiles) {
+                    for (const file of attachedFiles) {
+                        if (!verifyUploadToken(file.id, user?.id ?? null, file.token)) {
+                            return c.json({ error: 'Invalid file attachment token' }, 400);
+                        }
+                    }
+                }
+
                 const data: SecretCreateData = {
                     ...rest,
                     salt,
@@ -295,8 +328,8 @@ const app = new Hono<{
                     title: title ?? new Uint8Array(0),
                     password: passwordVerifier ? `v2:${passwordVerifier}` : null,
                     expiresAt: new Date(Date.now() + expiresAt * 1000),
-                    ...(fileIds && {
-                        files: { connect: fileIds.map((id: string) => ({ id })) },
+                    ...(attachedFiles && {
+                        files: { connect: attachedFiles.map((file) => ({ id: file.id })) },
                     }),
                 };
 

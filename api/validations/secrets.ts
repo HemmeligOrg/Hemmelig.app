@@ -51,7 +51,21 @@ const secretSchema = {
     views: z.number().int().min(1).max(9999).optional(),
     isBurnable: z.boolean().default(true).optional(),
     ipRange: ipRangeSchema,
+    // Deprecated. Signed file attachments replace this field.
     fileIds: z.array(z.string().min(1).max(64)).max(20).optional(),
+    files: z
+        .array(
+            z.object({
+                id: z
+                    .string()
+                    .min(1)
+                    .max(64)
+                    .regex(/^[a-zA-Z0-9_-]+$/, 'Invalid ID format'),
+                token: z.string().min(1).max(256),
+            })
+        )
+        .max(20)
+        .optional(),
 };
 
 export const createSecretsSchema = z.object(secretSchema);
