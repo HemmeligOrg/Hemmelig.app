@@ -23,6 +23,7 @@ export const SecretSettings = () => {
         isBurnable,
         ipRange,
         fileCount,
+        deleteToken,
         resetSecret,
     } = useSecretStore();
     const { t } = useTranslation();
@@ -57,7 +58,12 @@ export const SecretSettings = () => {
         if (!secretId) return;
         setIsBurning(true);
         try {
-            const response = await api.secrets[':id'].$delete({ param: { id: secretId } });
+            // The creator token works for everyone. A signed-in owner can also
+            // delete without it.
+            const response = await api.secrets[':id'].$delete(
+                { param: { id: secretId } },
+                deleteToken ? { headers: { 'x-hemmelig-delete-token': deleteToken } } : {}
+            );
             if (!response.ok) {
                 throw new Error(`Delete failed with status ${response.status}`);
             }

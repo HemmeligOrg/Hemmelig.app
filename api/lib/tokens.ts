@@ -46,6 +46,13 @@ export const createDeleteToken = (secretId: string): string =>
     signToken(`delete:${secretId}`, DELETE_TOKEN_TTL_MS);
 
 /**
+ * Creates a delete token for the creator of a secret. The server returns it
+ * once, when it creates the secret, and it stays valid until the secret expires.
+ */
+export const createCreatorDeleteToken = (secretId: string, expiresAt: Date): string =>
+    signToken(`delete:${secretId}`, Math.max(expiresAt.getTime() - Date.now(), 0));
+
+/**
  * Checks a delete token against the secret id.
  */
 export const verifyDeleteToken = (secretId: string, token: string): boolean =>

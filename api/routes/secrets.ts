@@ -6,7 +6,7 @@ import { createDownloadToken, verifyUploadToken } from '../lib/files';
 import { compare, compareVerifier } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
-import { createDeleteToken, verifyDeleteToken } from '../lib/tokens';
+import { createCreatorDeleteToken, createDeleteToken, verifyDeleteToken } from '../lib/tokens';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { apiKeyOrAuthMiddleware, optionalApiKeyOrAuthMiddleware } from '../middlewares/auth';
@@ -362,7 +362,15 @@ const app = new Hono<{
 
                 const item = await prisma.secrets.create({ data });
 
-                return c.json({ id: item.id }, 201);
+                // The creator gets a delete token, so the creator can burn the
+                // secret before anyone reveals it.
+                return c.json(
+                    {
+                        id: item.id,
+                        deleteToken: createCreatorDeleteToken(item.id, item.expiresAt),
+                    },
+                    201
+                );
             } catch (error: unknown) {
                 console.error('Failed to create secrets:', error);
 
@@ -391,50 +399,70 @@ const app = new Hono<{
             }
         }
     )
-    .delete('/:id', zValidator('param', secretsIdParamSchema), async (c) => {
-        try {
-            const { id } = c.req.valid('param');
-            const deleteToken = c.req.header('x-hemmelig-delete-token');
+    .delete(
+        '/:id',
+        optionalApiKeyOrAuthMiddleware,
+        zValidator('param', secretsIdParamSchema),
+        async (c) => {
+            try {
+                const { id } = c.req.valid('param');
+                const deleteToken = c.req.header('x-hemmelig-delete-token');
 
-            // Deletion requires a capability issued by a successful reveal, so
-            // an identifier alone cannot destroy a secret.
-            if (!deleteToken || !verifyDeleteToken(id, deleteToken)) {
-                return c.json(
-                    { error: 'A delete token from a successful reveal is required' },
-                    403
-                );
-            }
+                // An identifier alone cannot destroy a secret. Deletion needs a
+                // delete token (from creation or from a successful reveal), or the
+                // owner of the secret, signed in or with an API key.
+                const hasValidToken = !!deleteToken && verifyDeleteToken(id, deleteToken);
 
-            // Use transaction to prevent race conditions
-            const secret = await prisma.$transaction(async (tx) => {
-                // Get secret info before deleting for webhook
-                const secretData = await tx.secrets.findUnique({
-                    where: { id },
-                    select: { id: true, password: true, ipRange: true },
+                if (!hasValidToken) {
+                    const user = c.get('user');
+                    const owner = user
+                        ? await prisma.secrets.findUnique({
+                              where: { id },
+                              select: { userId: true },
+                          })
+                        : null;
+
+                    // The same response for a missing secret and a foreign secret,
+                    // so the route does not show which identifiers exist.
+                    if (!user || !owner || owner.userId !== user.id) {
+                        return c.json(
+                            { error: 'A delete token or the owner of the secret is required' },
+                            403
+                        );
+                    }
+                }
+
+                // Use transaction to prevent race conditions
+                const secret = await prisma.$transaction(async (tx) => {
+                    // Get secret info before deleting for webhook
+                    const secretData = await tx.secrets.findUnique({
+                        where: { id },
+                        select: { id: true, password: true, ipRange: true },
+                    });
+
+                    await tx.secrets.delete({ where: { id } });
+
+                    return secretData;
                 });
 
-                await tx.secrets.delete({ where: { id } });
+                // Send webhook for manually burned secret
+                if (secret) {
+                    sendWebhook('secret.burned', {
+                        secretId: id,
+                        hasPassword: !!secret.password,
+                        hasIpRestriction: !!secret.ipRange,
+                    });
+                }
 
-                return secretData;
-            });
-
-            // Send webhook for manually burned secret
-            if (secret) {
-                sendWebhook('secret.burned', {
-                    secretId: id,
-                    hasPassword: !!secret.password,
-                    hasIpRestriction: !!secret.ipRange,
+                return c.json({
+                    success: true,
+                    message: 'Secret deleted successfully',
                 });
+            } catch (error) {
+                console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
+                return handleNotFound(error as Error & { code?: string }, c);
             }
-
-            return c.json({
-                success: true,
-                message: 'Secret deleted successfully',
-            });
-        } catch (error) {
-            console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
-            return handleNotFound(error as Error & { code?: string }, c);
         }
-    });
+    );
 
 export default app;

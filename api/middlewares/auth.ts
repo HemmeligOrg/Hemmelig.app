@@ -4,10 +4,14 @@ import { createMiddleware } from 'hono/factory';
 import { auth } from '../auth';
 import prisma from '../lib/db';
 
+/** How the current request authenticated. */
+export type AuthMethod = 'session' | 'apiKey';
+
 type Env = {
     Variables: {
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null;
+        authMethod: AuthMethod | null;
     };
 };
 
@@ -70,16 +74,46 @@ async function setApiKeyUserFromHeader(c: AuthContext, authHeader: string | unde
 
     c.set('user', result.user);
     c.set('session', null);
+    c.set('authMethod', 'apiKey');
 
     return null;
 }
 
+/**
+ * Requires an authenticated user. A session cookie or an
+ * `Authorization: Bearer <api key>` header is accepted. An API key acts with
+ * the role of its owner.
+ */
 export const authMiddleware = createMiddleware<Env>(async (c, next) => {
-    const user = c.get('user');
-    if (!user) {
+    if (c.get('user')) {
+        c.set('authMethod', 'session');
+        return next();
+    }
+
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader) {
         return c.json({ error: 'Unauthorized' }, 401);
     }
-    await next();
+
+    const authResponse = await setApiKeyUserFromHeader(c, authHeader);
+    if (authResponse) {
+        return authResponse;
+    }
+
+    return next();
+});
+
+/**
+ * Rejects requests that authenticate with an API key. Use it after
+ * `authMiddleware` on routes that change credentials, so a leaked key cannot
+ * take over the account.
+ */
+export const sessionOnly = createMiddleware<Env>(async (c, next) => {
+    if (c.get('authMethod') !== 'session') {
+        return c.json({ error: 'This action requires a signed-in session.' }, 403);
+    }
+
+    return next();
 });
 
 export const checkAdmin = createMiddleware<Env>(async (c, next) => {
@@ -99,26 +133,14 @@ export const checkAdmin = createMiddleware<Env>(async (c, next) => {
     await next();
 });
 
-// Middleware that accepts either session auth OR API key auth
-export const apiKeyOrAuthMiddleware = createMiddleware<Env>(async (c, next) => {
-    // First check if user is already authenticated via session
-    const sessionUser = c.get('user');
-    if (sessionUser) {
-        return next();
-    }
-
-    const authResponse = await setApiKeyUserFromHeader(c, c.req.header('Authorization'));
-    if (authResponse) {
-        return authResponse;
-    }
-
-    return next();
-});
+// Kept for existing imports. `authMiddleware` accepts sessions and API keys.
+export const apiKeyOrAuthMiddleware = authMiddleware;
 
 // Middleware that accepts session auth OR API key auth, but also allows anonymous access
 export const optionalApiKeyOrAuthMiddleware = createMiddleware<Env>(async (c, next) => {
     const sessionUser = c.get('user');
     if (sessionUser) {
+        c.set('authMethod', 'session');
         return next();
     }
 

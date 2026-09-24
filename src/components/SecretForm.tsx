@@ -112,7 +112,12 @@ export function SecretForm() {
 
             if (response.ok && data?.id) {
                 setSecretData({ fileCount: attachedFiles.length });
-                setSecretIdAndKeys(data.id, encryptionKey, secretPassword);
+                // The creator token lets "Burn now" delete the secret, also without a session.
+                const deleteToken =
+                    'deleteToken' in data && typeof data.deleteToken === 'string'
+                        ? data.deleteToken
+                        : null;
+                setSecretIdAndKeys(data.id, encryptionKey, secretPassword, deleteToken);
             } else {
                 const errorMessage =
                     data?.error?.issues?.[0]?.message ||

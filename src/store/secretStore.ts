@@ -19,10 +19,13 @@ interface SecretState {
     ipRange: string | null;
     /** The number of files attached to the created secret. */
     fileCount: number;
+    /** The creator's delete token for the created secret. */
+    deleteToken: string | null;
     setSecretIdAndKeys: (
         secretId: string | null,
         decryptionKey: string | null,
-        password: string | null
+        password: string | null,
+        deleteToken?: string | null
     ) => void;
     setSecretData: (
         data: Partial<
@@ -71,12 +74,13 @@ const defaultState = {
     isBurnable: false,
     ipRange: null,
     fileCount: 0,
+    deleteToken: null,
 };
 
 export const useSecretStore = create<SecretState>((set) => ({
     ...defaultState,
-    setSecretIdAndKeys: (secretId, decryptionKey, password) =>
-        set({ secretId, decryptionKey, password }),
+    setSecretIdAndKeys: (secretId, decryptionKey, password, deleteToken = null) =>
+        set({ secretId, decryptionKey, password, deleteToken }),
     setSecretData: (data) => set((state) => ({ ...state, ...data })),
     resetSecret: () => {
         const settingsStore = useSecretSettingsStore.getState();

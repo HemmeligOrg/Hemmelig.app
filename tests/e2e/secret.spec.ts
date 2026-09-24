@@ -226,6 +226,26 @@ test.describe('Secret Creation and Viewing', () => {
         await expect(page.getByText(/404 · secret not found/i)).toBeVisible({ timeout: 10000 });
     });
 
+    test('burns a secret from the created screen without a session', async ({ page }) => {
+        // An anonymous creator has no session, so "Burn now" must use the creator token.
+        await page.goto('/');
+
+        await page.locator('.ProseMirror').click();
+        await page.locator('.ProseMirror').fill(`Burn now ${Date.now()}`);
+        await page
+            .getByRole('button', { name: /create/i })
+            .first()
+            .click();
+        await expect(page.getByText(/secret.*created/i)).toBeVisible({ timeout: 10000 });
+        const secretUrl = (await page.getByTestId('secret-url').textContent()) ?? '';
+
+        await page.getByRole('button', { name: /burn now/i }).click();
+        await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 10000 });
+
+        await page.goto(secretUrl);
+        await expect(page.getByText(/404 · secret not found/i)).toBeVisible({ timeout: 10000 });
+    });
+
     test('opens a secret from an old-format link', async ({ authenticatedPage: page }) => {
         await page.goto('/');
 

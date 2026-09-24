@@ -171,6 +171,17 @@ app.use('/*', async (c, next) => {
     if (c.req.path.startsWith('/auth/')) {
         return next();
     }
+
+    // CSRF abuses cookies that the browser sends on its own. A request with no
+    // cookie and an API key or a delete token header cannot come from a
+    // cross-site form, because a form cannot set these headers. A CLI sends no
+    // Origin header, so it needs this exemption.
+    const authorization = c.req.header('authorization') ?? '';
+    const hasCliCredential =
+        authorization.startsWith('Bearer hemmelig_') || !!c.req.header('x-hemmelig-delete-token');
+    if (hasCliCredential && !c.req.header('cookie')) {
+        return next();
+    }
     return csrf({
         origin: trustedOrigins,
     })(c, next);

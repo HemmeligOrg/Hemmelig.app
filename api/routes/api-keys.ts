@@ -6,7 +6,7 @@ import { auth } from '../auth';
 import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
-import { authMiddleware } from '../middlewares/auth';
+import { authMiddleware, sessionOnly } from '../middlewares/auth';
 import { idParamSchema } from '../validations/shared';
 
 const createApiKeySchema = z.object({
@@ -56,7 +56,8 @@ const app = new Hono<{
             return c.json({ error: 'Failed to list API keys' }, 500);
         }
     })
-    .post('/', zValidator('json', createApiKeySchema), async (c) => {
+    // A new key needs a signed-in session, so a leaked key cannot create more keys.
+    .post('/', sessionOnly, zValidator('json', createApiKeySchema), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ error: 'Unauthorized' }, 401);
