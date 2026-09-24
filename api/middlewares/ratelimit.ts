@@ -1,13 +1,13 @@
 import { Context, Next } from 'hono';
 import { rateLimiter } from 'hono-rate-limiter';
-import settingsCache from '../lib/settings';
+import { resolveSettings } from '../lib/settings';
 import { getClientIp } from '../lib/utils';
 
 let rateLimitInstance: ReturnType<typeof rateLimiter> | null = null;
 let lastConfigKey: string | null = null;
 
 const ratelimit = async (c: Context, next: Next) => {
-    const instanceSettings = settingsCache.get('instanceSettings');
+    const instanceSettings = await resolveSettings();
 
     if (instanceSettings?.enableRateLimiting) {
         const configKey = `${instanceSettings.rateLimitRequests}:${instanceSettings.rateLimitWindow}`;
