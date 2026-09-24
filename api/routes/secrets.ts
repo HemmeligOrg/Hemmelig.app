@@ -105,8 +105,9 @@ const app = new Hono<{
 
                 // Atomically retrieve secret and consume view in a single transaction
                 const result = await prisma.$transaction(async (tx) => {
-                    const item = await tx.secrets.findUnique({
-                        where: { id },
+                    // Expired secrets are inaccessible even before the cleanup job runs.
+                    const item = await tx.secrets.findFirst({
+                        where: { id, expiresAt: { gt: new Date() } },
                         select: {
                             id: true,
                             secret: true,
@@ -206,8 +207,8 @@ const app = new Hono<{
         try {
             const { id } = c.req.valid('param');
 
-            const item = await prisma.secrets.findUnique({
-                where: { id },
+            const item = await prisma.secrets.findFirst({
+                where: { id, expiresAt: { gt: new Date() } },
                 select: {
                     id: true,
                     views: true,
