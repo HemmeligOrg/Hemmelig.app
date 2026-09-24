@@ -6,6 +6,7 @@ import { genericOAuth } from 'better-auth/plugins/generic-oauth';
 import { randomBytes } from 'crypto';
 import config, { type SocialProviderConfig } from './config';
 import prisma from './lib/db';
+import { resolveSettings } from './lib/settings';
 import { validatePassword } from './validations/password';
 
 // Generate a unique username from email
@@ -72,6 +73,32 @@ const buildPlugins = () => {
     return plugins;
 };
 
+// Atomically consume an invite code. The conditional update on `uses` makes
+// concurrent signups safe: only one request can claim a given use count.
+const consumeInviteCode = async (code: string): Promise<void> => {
+    const invite = await prisma.inviteCode.findUnique({ where: { code } });
+
+    if (
+        !invite ||
+        !invite.isActive ||
+        (invite.expiresAt && new Date() > invite.expiresAt) ||
+        (invite.maxUses !== null && invite.uses >= invite.maxUses)
+    ) {
+        throw new APIError('BAD_REQUEST', { message: 'Invalid or expired invite code' });
+    }
+
+    const updated = await prisma.inviteCode.updateMany({
+        where: { id: invite.id, isActive: true, uses: invite.uses },
+        data: { uses: { increment: 1 } },
+    });
+
+    if (updated.count === 0) {
+        throw new APIError('CONFLICT', {
+            message: 'Invite code was used by another registration. Try again.',
+        });
+    }
+};
+
 export const auth = betterAuth({
     appName: 'Hemmelig',
     baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
@@ -112,12 +139,7 @@ export const auth = betterAuth({
             }
 
             const body = context.body as { email?: string; password?: string };
-            const email = body?.email;
             const password = body?.password;
-
-            if (!email) {
-                return;
-            }
 
             // Validate password strength for sign-up
             if (password) {
@@ -127,10 +149,7 @@ export const auth = betterAuth({
                 }
             }
 
-            // Get instance settings
-            const settings = await prisma.instanceSettings.findFirst({
-                select: { allowedEmailDomains: true, disableEmailPasswordSignup: true },
-            });
+            const settings = await resolveSettings();
 
             // Check if email/password signup is disabled
             if (settings?.disableEmailPasswordSignup) {
@@ -138,32 +157,89 @@ export const auth = betterAuth({
                     message: 'Email/password registration is disabled. Please use social login.',
                 });
             }
+        },
+    },
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (user, context) => {
+                    // Admin-created users are not self-service registrations.
+                    if (context?.path?.startsWith('/admin/')) {
+                        return;
+                    }
 
-            const allowedDomains = settings?.allowedEmailDomains?.trim();
+                    const settings = await resolveSettings();
 
-            // If no domains configured, allow all
-            if (!allowedDomains) {
-                return;
-            }
+                    if (settings?.allowRegistration === false) {
+                        throw new APIError('FORBIDDEN', {
+                            message: 'Registration is disabled on this instance.',
+                        });
+                    }
 
-            // Parse comma-separated domains
-            const domains = allowedDomains
-                .split(',')
-                .map((d) => d.trim().toLowerCase())
-                .filter((d) => d.length > 0);
+                    // This instance has no email transport. Only an email that an
+                    // identity provider already verified can satisfy this setting.
+                    if (settings?.requireEmailVerification && user.emailVerified !== true) {
+                        throw new APIError('FORBIDDEN', {
+                            message:
+                                'Email verification is required. Register with a provider that verifies your email.',
+                        });
+                    }
 
-            if (domains.length === 0) {
-                return;
-            }
+                    const allowedDomains = settings?.allowedEmailDomains?.trim();
 
-            // Extract domain from email
-            const emailDomain = email.split('@')[1]?.toLowerCase();
+                    if (allowedDomains) {
+                        const domains = allowedDomains
+                            .split(',')
+                            .map((domain) => domain.trim().toLowerCase())
+                            .filter((domain) => domain.length > 0);
+                        const emailDomain = String(user.email).split('@')[1]?.toLowerCase();
 
-            if (!emailDomain || !domains.includes(emailDomain)) {
-                throw new APIError('FORBIDDEN', {
-                    message: 'Email domain not allowed',
-                });
-            }
+                        if (
+                            domains.length > 0 &&
+                            (!emailDomain || !domains.includes(emailDomain))
+                        ) {
+                            throw new APIError('FORBIDDEN', {
+                                message: 'Email domain not allowed',
+                            });
+                        }
+                    }
+
+                    if (settings?.requireInviteCode) {
+                        const rawCode = context?.body?.inviteCode;
+                        const code =
+                            typeof rawCode === 'string' ? rawCode.trim().toUpperCase() : '';
+
+                        if (!code) {
+                            throw new APIError('BAD_REQUEST', {
+                                message: 'Invite code is required',
+                            });
+                        }
+
+                        await consumeInviteCode(code);
+                    }
+                },
+                after: async (user, context) => {
+                    if (context?.path?.startsWith('/admin/')) {
+                        return;
+                    }
+
+                    const rawCode = context?.body?.inviteCode;
+                    const code = typeof rawCode === 'string' ? rawCode.trim().toUpperCase() : '';
+
+                    if (!code) {
+                        return;
+                    }
+
+                    try {
+                        await prisma.user.update({
+                            where: { id: user.id },
+                            data: { inviteCodeUsed: code },
+                        });
+                    } catch (error) {
+                        console.error('Failed to record invite code usage:', error);
+                    }
+                },
+            },
         },
     },
 });

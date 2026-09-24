@@ -9,7 +9,6 @@ import { LoadingButton } from '../components/LoadingButton';
 import { PasswordToggle } from '../components/PasswordToggle';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
-import { apiRaw } from '../lib/api';
 import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { getPasswordStrength } from '../utils/password';
@@ -32,32 +31,6 @@ export function RegisterPage() {
     const errorModal = useErrorModal();
 
     const isEmailPasswordDisabled = settings.disableEmailPasswordSignup;
-
-    const validateInviteCode = async (): Promise<boolean> => {
-        if (!settings.requireInviteCode) return true;
-
-        if (!formData.inviteCode) {
-            setInviteCodeError(t('register_page.invite_code_required'));
-            return false;
-        }
-
-        try {
-            const res = await apiRaw.invites.public.validate.$post({
-                json: { code: formData.inviteCode },
-            });
-            const result = await res.json();
-            if (!result.valid) {
-                setInviteCodeError(
-                    'error' in result ? result.error : t('register_page.invalid_invite_code')
-                );
-                return false;
-            }
-            return true;
-        } catch {
-            setInviteCodeError(t('register_page.failed_to_validate_invite'));
-            return false;
-        }
-    };
 
     const parseRegistrationError = (error: unknown): string => {
         const errorObj = error as {
@@ -95,18 +68,6 @@ export function RegisterPage() {
         return t('register_page.unexpected_error');
     };
 
-    const markInviteCodeUsed = async () => {
-        if (!formData.inviteCode) return;
-
-        try {
-            await apiRaw.invites.public.use.$post({
-                json: { code: formData.inviteCode },
-            });
-        } catch (e) {
-            console.error('Failed to mark invite code as used:', e);
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -115,7 +76,11 @@ export function RegisterPage() {
             return;
         }
 
-        if (!(await validateInviteCode())) return;
+        // The server enforces and consumes the invite code during sign-up.
+        if (settings.requireInviteCode && !formData.inviteCode) {
+            setInviteCodeError(t('register_page.invite_code_required'));
+            return;
+        }
 
         setIsLoading(true);
         setInviteCodeError('');
@@ -129,6 +94,7 @@ export function RegisterPage() {
                     password: formData.password,
                     username: formData.username,
                     name: formData.username,
+                    ...(formData.inviteCode ? { inviteCode: formData.inviteCode } : {}),
                 },
                 {
                     onError: (ctx) => {
@@ -153,7 +119,6 @@ export function RegisterPage() {
             }
 
             if (data?.user?.id) {
-                await markInviteCodeUsed();
                 navigate('/dashboard');
             }
         } catch {
