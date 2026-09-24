@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { Hono } from 'hono';
 import api, { securityHeadersMiddleware } from './api/app';
 import config from './api/config';
+import { buildSecurityTxt } from './api/lib/security-txt';
 
 const port = config.get('server.port')!;
 
@@ -14,6 +15,9 @@ app.use('*', securityHeadersMiddleware);
 
 // Mount the API first (before static files)
 app.route('/api', api);
+
+// Tell people where to report a security issue (RFC 9116).
+app.get('/.well-known/security.txt', (c) => c.text(buildSecurityTxt()));
 
 // Serve static files from the 'dist' directory
 app.use('/*', serveStatic({ root: './dist' }));

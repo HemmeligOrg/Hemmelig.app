@@ -102,6 +102,48 @@ Then update the following:
 | `/app/database` | SQLite database storage | Yes      |
 | `/app/uploads`  | File upload storage     | Yes      |
 
+## Read-Only Root Filesystem
+
+The image can run with a read-only root filesystem. The image contains the Prisma schema engine, so the migrations at start do not download anything.
+
+Keep these paths writable:
+
+- `/app/database` and `/app/uploads`, as volumes.
+- `/tmp`, as a `tmpfs` or an `emptyDir`. The TypeScript runtime and npm write temporary files there.
+
+With Docker:
+
+```bash
+docker run -d \
+  --name hemmelig \
+  --read-only \
+  --tmpfs /tmp \
+  -v hemmelig-data:/app/database \
+  -v hemmelig-uploads:/app/uploads \
+  -e BETTER_AUTH_SECRET="$(openssl rand -base64 32)" \
+  -e BETTER_AUTH_URL=https://secrets.example.com \
+  -p 3000:3000 \
+  hemmeligapp/hemmelig:v7
+```
+
+With Kubernetes:
+
+```yaml
+containers:
+    - name: hemmelig
+      image: hemmeligapp/hemmelig:v7
+      securityContext:
+          readOnlyRootFilesystem: true
+      volumeMounts:
+          - { name: data, mountPath: /app/database }
+          - { name: uploads, mountPath: /app/uploads }
+          - { name: tmp, mountPath: /tmp }
+volumes:
+    - { name: data, persistentVolumeClaim: { claimName: hemmelig-data } }
+    - { name: uploads, persistentVolumeClaim: { claimName: hemmelig-uploads } }
+    - { name: tmp, emptyDir: { medium: Memory } }
+```
+
 ## Environment Variables
 
 See [Environment Variables](./env.md) for a complete reference.

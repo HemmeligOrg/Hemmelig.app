@@ -38,10 +38,15 @@ COPY --from=builder /app/prisma.config.ts ./
 # Copy pre-generated Prisma client from native build
 COPY --from=prisma-gen /app/prisma/generated ./prisma/generated
 ENV NODE_ENV=production
+# The Prisma engines postinstall script downloads the schema engine for this
+# platform. `prisma migrate deploy` needs it at start, and a read-only root
+# filesystem cannot download it at runtime.
 RUN npm ci --omit=dev --ignore-scripts && \
     npm rebuild better-sqlite3 && \
+    node node_modules/@prisma/engines/scripts/postinstall.js && \
+    ls node_modules/@prisma/engines/schema-engine-* && \
     npm cache clean --force && \
-    rm -rf /root/.npm /tmp/*
+    rm -rf /root/.npm /root/.cache /tmp/*
 
 # Final image
 FROM node:25-slim
@@ -65,6 +70,13 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV DATABASE_URL=file:/app/database/hemmelig.db
+# Keep runtime writes out of the root filesystem, so the container can run
+# with a read-only root filesystem. npm and npx write their cache and logs to
+# /tmp, and the npm update check and the Prisma telemetry check are off.
+ENV NPM_CONFIG_CACHE=/tmp/.npm \
+    NPM_CONFIG_UPDATE_NOTIFIER=false \
+    CHECKPOINT_DISABLE=1 \
+    PRISMA_HIDE_UPDATE_MESSAGE=1
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health/ready || exit 1
