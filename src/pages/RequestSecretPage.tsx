@@ -77,7 +77,7 @@ export function RequestSecretPage() {
         };
 
         fetchRequestInfo();
-    }, [id, token, t]);
+    }, [id, legacyToken, token, t]);
 
     const handleSubmit = async () => {
         if (!id || !token || !secret.trim()) return;

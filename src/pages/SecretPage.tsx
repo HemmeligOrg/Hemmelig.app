@@ -125,9 +125,11 @@ export function SecretPage() {
                 });
                 const data = await response.json();
 
-                if (response.status === 200 && data.secret) {
+                if (response.status === 200 && 'secret' in data) {
                     const decryptedSecret = await decrypt(
-                        new Uint8Array(Object.values(data.secret)),
+                        new Uint8Array(
+                            Object.values(data.secret as unknown as Record<string, number>)
+                        ),
                         finalDecryptionKey,
                         data.salt
                     );
@@ -135,7 +137,9 @@ export function SecretPage() {
                     const titleHasData = data.title && Object.keys(data.title).length > 0;
                     const decryptedTitle = titleHasData
                         ? await decrypt(
-                              new Uint8Array(Object.values(data.title)),
+                              new Uint8Array(
+                                  Object.values(data.title as unknown as Record<string, number>)
+                              ),
                               finalDecryptionKey,
                               data.salt
                           )
@@ -175,7 +179,7 @@ export function SecretPage() {
                 setIsLoading(false);
             }
         },
-        [decryptionKey, id, t]
+        [decryptionKey, id, initialData?.passwordScheme, isPasswordProtected, salt, t]
     );
 
     useEffect(() => {

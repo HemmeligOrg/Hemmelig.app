@@ -136,8 +136,12 @@ export const auth = betterAuth({
     trustedOrigins: config.get('trustedOrigins'),
     hooks: {
         before: async (context) => {
-            if (context.path === '/sign-up/email') {
-                const body = context.body as { email?: string; password?: string };
+            const { path, body } = context as unknown as {
+                path?: string;
+                body?: { email?: string; password?: string; newPassword?: string };
+            };
+
+            if (path === '/sign-up/email') {
                 const password = body?.password;
 
                 // Validate password strength for sign-up
@@ -162,9 +166,7 @@ export const auth = betterAuth({
             }
 
             // Password changes and resets must meet the same strength rules.
-            if (context.path === '/change-password' || context.path === '/reset-password') {
-                const body = context.body as { newPassword?: string } | undefined;
-
+            if (path === '/change-password' || path === '/reset-password') {
                 if (body?.newPassword) {
                     const passwordError = validatePassword(body.newPassword);
                     if (passwordError) {
@@ -210,8 +212,8 @@ export const auth = betterAuth({
                     if (allowedDomains) {
                         const domains = allowedDomains
                             .split(',')
-                            .map((domain) => domain.trim().toLowerCase())
-                            .filter((domain) => domain.length > 0);
+                            .map((domain: string) => domain.trim().toLowerCase())
+                            .filter((domain: string) => domain.length > 0);
                         const emailDomain = String(user.email).split('@')[1]?.toLowerCase();
 
                         if (
