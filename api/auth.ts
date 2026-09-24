@@ -73,6 +73,10 @@ const buildPlugins = () => {
     return plugins;
 };
 
+// Set while the initial setup creates the first administrator. Clients cannot
+// set this flag, because no request path writes to it.
+export const bootstrap = { inProgress: false };
+
 // Atomically consume an invite code. The conditional update on `uses` makes
 // concurrent signups safe: only one request can claim a given use count.
 const consumeInviteCode = async (code: string): Promise<void> => {
@@ -163,6 +167,11 @@ export const auth = betterAuth({
         user: {
             create: {
                 before: async (user, context) => {
+                    // The initial setup may always create the first administrator.
+                    if (bootstrap.inProgress) {
+                        return;
+                    }
+
                     // Admin-created users are not self-service registrations.
                     if (context?.path?.startsWith('/admin/')) {
                         return;
