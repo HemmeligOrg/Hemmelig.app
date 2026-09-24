@@ -51,6 +51,34 @@ async function getDerivedKey(userKeyString: string, salt: string): Promise<Crypt
 }
 
 /**
+ * Converts a byte array to a lowercase hex string.
+ * @param {Uint8Array} bytes - The bytes to convert.
+ * @returns {string} - A hex-encoded string.
+ */
+export const bytesToHex = (bytes: Uint8Array): string =>
+    Array.from(bytes)
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('');
+
+/**
+ * Converts a hex string to bytes.
+ * @param {string} hex - The hex string to convert.
+ * @returns {Uint8Array | null} - The bytes, or null when the input is not valid hex.
+ */
+export const hexToBytes = (hex: string): Uint8Array | null => {
+    if (hex.length === 0 || hex.length % 2 !== 0 || !/^[0-9a-f]+$/i.test(hex)) {
+        return null;
+    }
+
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let index = 0; index < bytes.length; index++) {
+        bytes[index] = parseInt(hex.slice(index * 2, index * 2 + 2), 16);
+    }
+
+    return bytes;
+};
+
+/**
  * Derives the access verifier for a password-protected secret.
  * The verifier is the hex-encoded SHA-256 digest of the derived AES key.
  * The server stores only this verifier and never receives the password or key.
@@ -63,9 +91,7 @@ export const derivePasswordVerifier = async (password: string, salt: string): Pr
     const rawKey = await window.crypto.subtle.exportKey('raw', key);
     const digest = await window.crypto.subtle.digest('SHA-256', rawKey);
 
-    return Array.from(new Uint8Array(digest))
-        .map((byte) => byte.toString(16).padStart(2, '0'))
-        .join('');
+    return bytesToHex(new Uint8Array(digest));
 };
 
 /**

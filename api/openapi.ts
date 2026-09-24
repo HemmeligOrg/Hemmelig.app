@@ -604,6 +604,11 @@ const spec = {
                                 type: 'object',
                                 properties: {
                                     file: { type: 'string', format: 'binary' },
+                                    name: {
+                                        type: 'string',
+                                        description:
+                                            'Hex-encoded encrypted filename. Legacy clients may omit it.',
+                                    },
                                 },
                             },
                         },

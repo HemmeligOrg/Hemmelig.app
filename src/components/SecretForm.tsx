@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 import {
+    bytesToHex,
     derivePasswordVerifier,
     encrypt,
     encryptFile,
@@ -58,6 +59,7 @@ export function SecretForm() {
                     const response = await api.files.$post({
                         form: {
                             file: encryptedFileAsFile,
+                            name: bytesToHex(await encrypt(file.name, encryptionKey, salt)),
                         },
                     });
                     const data = await response.json();

@@ -116,7 +116,26 @@ files.post(
             }
 
             const id = nanoid();
-            const safePath = generateSafeFilePath(id, file.name);
+
+            // Clients encrypt file names. Legacy clients send no name and keep
+            // the original plaintext name.
+            const encryptedNameRaw = body['name'];
+            let encryptedName: string | undefined;
+
+            if (encryptedNameRaw !== undefined) {
+                if (
+                    typeof encryptedNameRaw !== 'string' ||
+                    encryptedNameRaw.length === 0 ||
+                    encryptedNameRaw.length > 1024 ||
+                    !/^[a-f0-9]+$/i.test(encryptedNameRaw)
+                ) {
+                    return c.json({ error: 'Invalid encrypted filename' }, 400);
+                }
+
+                encryptedName = encryptedNameRaw;
+            }
+
+            const safePath = generateSafeFilePath(id, file.name, encryptedName);
 
             if (!safePath) {
                 console.error(`Path traversal attempt in upload: ${file.name}`);

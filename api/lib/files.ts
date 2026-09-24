@@ -145,12 +145,25 @@ async function ensureUploadDir(): Promise<void> {
  * Generates a safe file path within the upload directory.
  * @param id - Unique identifier for the file
  * @param originalFilename - Original filename to sanitize
+ * @param encryptedName - Client-encrypted filename. When set, it is stored as
+ * the file name and the on-disk path uses only the id.
  * @returns Object with sanitized filename and full path, or null if invalid
  */
 export function generateSafeFilePath(
     id: string,
-    originalFilename: string
+    originalFilename: string,
+    encryptedName?: string
 ): { filename: string; path: string } | null {
+    if (encryptedName) {
+        const path = join(UPLOAD_DIR, id);
+
+        if (!isPathSafe(path)) {
+            return null;
+        }
+
+        return { filename: encryptedName, path };
+    }
+
     const safeFilename = sanitizeFilename(originalFilename);
     if (!safeFilename) {
         return null;

@@ -102,6 +102,8 @@ Legacy password-protected secrets, created before verifier-based access, still r
 
 Files are encrypted using the same AES-256-GCM scheme. The file buffer is encrypted directly, and the output format is identical: `IV || Ciphertext`.
 
+File names are encrypted with the same key and salt before upload, so the server stores opaque values instead of the original names. Files uploaded by clients older than version 7 keep their plaintext names.
+
 ## What the Server Stores
 
 - Encrypted secret (ciphertext)

@@ -19,12 +19,19 @@ import Editor from '../components/Editor';
 import { Modal } from '../components/Modal';
 import { useCopyFeedback } from '../hooks/useCopyFeedback';
 import { api } from '../lib/api';
-import { decrypt, decryptFile, derivePasswordVerifier, generateEncryptionKey } from '../lib/crypto';
+import {
+    decrypt,
+    decryptFile,
+    derivePasswordVerifier,
+    generateEncryptionKey,
+    hexToBytes,
+} from '../lib/crypto';
 
 interface SecretFile {
     id: string;
     filename: string;
     token: string;
+    displayName?: string;
 }
 
 interface SecretLoaderData {
@@ -34,6 +41,28 @@ interface SecretLoaderData {
     passwordScheme?: 'derived' | 'legacy' | null;
     salt?: string | null;
 }
+
+/**
+ * Resolves the file name for display. New files store an encrypted name.
+ * Legacy files store the plaintext name with the id as a prefix.
+ */
+const resolveDisplayName = async (
+    file: SecretFile,
+    encryptionKey: string,
+    secretSalt: string
+): Promise<string> => {
+    const encryptedBytes = hexToBytes(file.filename);
+
+    if (encryptedBytes) {
+        try {
+            return await decrypt(encryptedBytes, encryptionKey, secretSalt);
+        } catch {
+            // Fall through to the legacy format.
+        }
+    }
+
+    return file.filename.split('-').slice(1).join('-') || file.filename;
+};
 
 export function SecretPage() {
     const { t } = useTranslation();
@@ -113,7 +142,18 @@ export function SecretPage() {
                         : null;
                     setSecretContent(decryptedSecret);
                     setTitle(decryptedTitle);
-                    setFiles(data.files);
+                    setFiles(
+                        await Promise.all(
+                            (data.files ?? []).map(async (file: SecretFile) => ({
+                                ...file,
+                                displayName: await resolveDisplayName(
+                                    file,
+                                    finalDecryptionKey,
+                                    data.salt
+                                ),
+                            }))
+                        )
+                    );
                     setSalt(data.salt);
                     setShowSecretContent(true);
                     setIsBurnable(data.isBurnable ?? false);
@@ -167,7 +207,7 @@ export function SecretPage() {
         const blob = new Blob([decryptedFile]);
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = file.filename.split('-').slice(1).join('-');
+        link.download = file.displayName ?? file.filename;
         link.click();
         URL.revokeObjectURL(link.href);
     };
@@ -362,7 +402,7 @@ export function SecretPage() {
                                                 <FileIcon className="w-4 h-4" />
                                             </div>
                                             <span className="text-sm text-gray-700 dark:text-slate-300">
-                                                {file.filename.split('-').slice(1).join('-')}
+                                                {file.displayName ?? file.filename}
                                             </span>
                                         </div>
                                         <button
