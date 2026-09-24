@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import dlv from 'dlv';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -227,16 +228,22 @@ const config = {
     },
     analytics: {
         enabled: parseBoolean(process.env.HEMMELIG_ANALYTICS_ENABLED) ?? true,
+        // Fall back to another instance secret, then to a random per-process
+        // value. Never use a public constant, which would make visitor IDs
+        // predictable.
         hmacSecret:
-            process.env.HEMMELIG_ANALYTICS_HMAC_SECRET || 'default-analytics-secret-change-me',
+            process.env.HEMMELIG_ANALYTICS_HMAC_SECRET ||
+            process.env.BETTER_AUTH_SECRET ||
+            randomBytes(32).toString('hex'),
     },
     socialProviders,
 };
 
 if (!process.env.HEMMELIG_ANALYTICS_HMAC_SECRET && config.analytics.enabled) {
     console.warn(
-        'WARNING: HEMMELIG_ANALYTICS_HMAC_SECRET is not set. Analytics visitor IDs are generated ' +
-            'with a default secret, making them predictable. Set a random secret for production use.'
+        'WARNING: HEMMELIG_ANALYTICS_HMAC_SECRET is not set. Visitor IDs use another ' +
+            'instance secret, or a random value that changes on every restart. Set ' +
+            'HEMMELIG_ANALYTICS_HMAC_SECRET to keep visitor IDs stable.'
     );
 }
 

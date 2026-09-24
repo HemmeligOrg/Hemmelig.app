@@ -41,10 +41,10 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Analytics
 
-| Variable                         | Description                             | Default        |
-| -------------------------------- | --------------------------------------- | -------------- |
-| `HEMMELIG_ANALYTICS_ENABLED`     | Enable privacy-focused analytics        | `true`         |
-| `HEMMELIG_ANALYTICS_HMAC_SECRET` | HMAC secret for anonymizing visitor IDs | auto-generated |
+| Variable                         | Description                             | Default         |
+| -------------------------------- | --------------------------------------- | --------------- |
+| `HEMMELIG_ANALYTICS_ENABLED`     | Enable privacy-focused analytics        | `true`          |
+| `HEMMELIG_ANALYTICS_HMAC_SECRET` | HMAC secret for anonymizing visitor IDs | instance secret |
 
 ## Social Login Providers
 
