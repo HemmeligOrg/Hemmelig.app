@@ -475,11 +475,19 @@ const spec = {
                         schema: { type: 'string', format: 'uuid' },
                     },
                     {
+                        name: 'X-Secret-Request-Token',
+                        in: 'header',
+                        required: false,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description:
+                            'Request token from the creator link fragment. Legacy links may pass token in the query instead.',
+                    },
+                    {
                         name: 'token',
                         in: 'query',
-                        required: true,
+                        required: false,
                         schema: { type: 'string', minLength: 64, maxLength: 64 },
-                        description: 'Request token from the creator link',
+                        description: 'Legacy request token from the creator link',
                     },
                 ],
                 responses: {
@@ -517,11 +525,19 @@ const spec = {
                         schema: { type: 'string', format: 'uuid' },
                     },
                     {
+                        name: 'X-Secret-Request-Token',
+                        in: 'header',
+                        required: false,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description:
+                            'Request token from the creator link fragment. Legacy links may pass token in the query instead.',
+                    },
+                    {
                         name: 'token',
                         in: 'query',
-                        required: true,
+                        required: false,
                         schema: { type: 'string', minLength: 64, maxLength: 64 },
-                        description: 'Request token from the creator link',
+                        description: 'Legacy request token from the creator link',
                     },
                 ],
                 requestBody: {

@@ -51,7 +51,9 @@ export const secretRequestIdParamSchema = z.object({
 });
 
 export const secretRequestTokenQuerySchema = z.object({
-    token: z.string().length(64),
+    // Legacy links pass the token in the query string. New links use the URL
+    // fragment and the X-Secret-Request-Token header.
+    token: z.string().length(64).optional(),
 });
 
 // Max encrypted secret size: 1MB (1,048,576 bytes)

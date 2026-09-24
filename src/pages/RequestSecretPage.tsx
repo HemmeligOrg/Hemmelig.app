@@ -1,7 +1,7 @@
 import { Copy, Lock, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Card } from '../components/Card';
 import Editor from '../components/Editor';
@@ -25,7 +25,15 @@ export function RequestSecretPage() {
     const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const [searchParams] = useSearchParams();
-    const token = searchParams.get('token');
+    const location = useLocation();
+
+    // New links carry the token in the URL fragment, which browsers never send
+    // to the server. Query tokens are only read for legacy links.
+    const legacyToken = searchParams.get('token');
+    const fragmentToken = location.hash.startsWith('#token=')
+        ? location.hash.slice('#token='.length)
+        : null;
+    const token = fragmentToken || legacyToken;
 
     const [requestInfo, setRequestInfo] = useState<RequestInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -45,10 +53,10 @@ export function RequestSecretPage() {
             }
 
             try {
-                const res = await api['secret-requests'][':id'].info.$get({
-                    param: { id },
-                    query: { token },
-                });
+                const res = await api['secret-requests'][':id'].info.$get(
+                    { param: { id }, query: legacyToken ? { token: legacyToken } : {} },
+                    token ? { headers: { 'x-secret-request-token': token } } : {}
+                );
 
                 if (res.ok) {
                     const data = await res.json();
@@ -87,15 +95,18 @@ export function RequestSecretPage() {
             const encryptedTitle = title ? await encrypt(title, encryptionKey, salt) : null;
 
             // Submit to backend
-            const res = await api['secret-requests'][':id'].submit.$post({
-                param: { id },
-                query: { token },
-                json: {
-                    secret: encryptedSecret,
-                    title: encryptedTitle,
-                    salt,
+            const res = await api['secret-requests'][':id'].submit.$post(
+                {
+                    param: { id },
+                    query: legacyToken ? { token: legacyToken } : {},
+                    json: {
+                        secret: encryptedSecret,
+                        title: encryptedTitle,
+                        salt,
+                    },
                 },
-            });
+                token ? { headers: { 'x-secret-request-token': token } } : {}
+            );
 
             if (res.ok) {
                 // Clear sensitive data from state

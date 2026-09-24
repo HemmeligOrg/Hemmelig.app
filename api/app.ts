@@ -5,7 +5,6 @@ import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import { timeout } from 'hono/timeout';
@@ -100,7 +99,15 @@ export const securityHeadersMiddleware = createMiddleware(async (c, next) => {
     })(c, next);
 });
 app.use(securityHeadersMiddleware);
-app.use(logger());
+app.use(async (c, next) => {
+    // Log only the pathname. Query strings can carry access tokens.
+    const method = c.req.method;
+    const path = new URL(c.req.url).pathname;
+    console.log(`<-- ${method} ${path}`);
+    const start = Date.now();
+    await next();
+    console.log(`--> ${method} ${path} ${c.res.status} ${Date.now() - start}ms`);
+});
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
 
