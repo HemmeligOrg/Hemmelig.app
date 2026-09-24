@@ -22,6 +22,26 @@ helm install hemmelig ./helm/hemmelig \
 
 ## Installation
 
+### From the OCI Registry
+
+Each server release publishes the chart to GitHub Container Registry. The chart version matches the release, without the `v` prefix:
+
+```bash
+helm install hemmelig oci://ghcr.io/hemmeligorg/charts/hemmelig \
+  --version 7.5.0 \
+  -f my-values.yaml
+```
+
+To see the default values of a version:
+
+```bash
+helm show values oci://ghcr.io/hemmeligorg/charts/hemmelig --version 7.5.0
+```
+
+Flux and other GitOps tools can use the same `oci://ghcr.io/hemmeligorg/charts` address as an OCI Helm repository.
+
+The chart keeps `image.tag: v7` by default, so it follows the latest v7 image. To run exactly the image of the chart version, set `image.tag: ""`.
+
 ### From Local Chart
 
 ```bash
@@ -84,18 +104,21 @@ resources:
 
 ### Common Values
 
-| Parameter                     | Description                     | Default             |
-| ----------------------------- | ------------------------------- | ------------------- |
-| `replicaCount`                | Number of replicas              | `1`                 |
-| `image.repository`            | Image repository                | `hemmelig/hemmelig` |
-| `image.tag`                   | Image tag                       | `v7`                |
-| `service.type`                | Kubernetes service type         | `ClusterIP`         |
-| `service.port`                | Service port                    | `3000`              |
-| `ingress.enabled`             | Enable ingress                  | `false`             |
-| `persistence.data.enabled`    | Enable persistence for database | `true`              |
-| `persistence.data.size`       | Database PVC size               | `1Gi`               |
-| `persistence.uploads.enabled` | Enable persistence for uploads  | `true`              |
-| `persistence.uploads.size`    | Uploads PVC size                | `5Gi`               |
+| Parameter                     | Description                                                                                                                  | Default                |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `replicaCount`                | Number of replicas                                                                                                           | `1`                    |
+| `image.repository`            | Image repository                                                                                                             | `hemmeligapp/hemmelig` |
+| `image.tag`                   | Image tag                                                                                                                    | `v7`                   |
+| `service.type`                | Kubernetes service type                                                                                                      | `ClusterIP`            |
+| `service.port`                | Service port                                                                                                                 | `3000`                 |
+| `ingress.enabled`             | Enable ingress                                                                                                               | `false`                |
+| `persistence.data.enabled`    | Enable persistence for database                                                                                              | `true`                 |
+| `persistence.data.size`       | Database PVC size                                                                                                            | `1Gi`                  |
+| `persistence.uploads.enabled` | Enable persistence for uploads                                                                                               | `true`                 |
+| `persistence.uploads.size`    | Uploads PVC size                                                                                                             | `5Gi`                  |
+| `config.trustedProxies`       | IPs or CIDR ranges of the proxies in front of Hemmelig, for example the ingress controller. Sets `HEMMELIG_TRUSTED_PROXIES`. | `""`                   |
+| `env`                         | Extra environment variables                                                                                                  | `[]`                   |
+| `extraEnvFrom`                | Secrets or ConfigMaps to load as environment variables                                                                       | `[]`                   |
 
 ### Using Existing Secrets
 
@@ -109,15 +132,43 @@ Create the secret:
 
 ```bash
 kubectl create secret generic my-hemmelig-secret \
-  --from-literal=BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
+  --from-literal=BETTER_AUTH_SECRET="$(openssl rand -base64 32)" \
+  --from-literal=HEMMELIG_ANALYTICS_HMAC_SECRET="$(openssl rand -base64 32)"
 ```
 
+The chart reads `HEMMELIG_ANALYTICS_HMAC_SECRET` from the secret when the key exists.
+
 ### Additional Environment Variables
+
+Use `env` for single variables:
 
 ```yaml
 env:
     - name: HEMMELIG_ANALYTICS_ENABLED
       value: 'true'
+```
+
+Use `extraEnvFrom` to load every key of a Secret or a ConfigMap as a variable. This works for any `HEMMELIG_*` setting, for example all OAuth settings in one Secret:
+
+```bash
+kubectl create secret generic hemmelig-oauth \
+  --from-literal=HEMMELIG_AUTH_GITHUB_ID=your-client-id \
+  --from-literal=HEMMELIG_AUTH_GITHUB_SECRET=your-client-secret
+```
+
+```yaml
+extraEnvFrom:
+    - secretRef:
+          name: hemmelig-oauth
+```
+
+### Behind an Ingress
+
+Hemmelig trusts forwarded client IP headers only from trusted proxies. Set the address range of your ingress controller, or IP restrictions and rate limits see the proxy address for every client:
+
+```yaml
+config:
+    trustedProxies: '10.0.0.0/8'
 ```
 
 ## OAuth Configuration
@@ -127,6 +178,7 @@ The Hemmelig Helm Chart supports comprehensive OAuth provider configuration. For
 **[OAuth Configuration with Helm](helm-oauth.md)**
 
 This guide covers:
+
 - All supported OAuth providers (GitHub, Google, Microsoft, Discord, GitLab, Apple, Twitter/X)
 - Generic OAuth providers (Authentik, Authelia, Keycloak, etc.)
 - Default secret vs existing secret management
@@ -167,6 +219,10 @@ ingress:
 ## Upgrading
 
 ```bash
+# From the OCI registry
+helm upgrade hemmelig oci://ghcr.io/hemmeligorg/charts/hemmelig --version 7.5.0 -f my-values.yaml
+
+# From the local chart
 helm upgrade hemmelig ./helm/hemmelig -f my-values.yaml
 ```
 

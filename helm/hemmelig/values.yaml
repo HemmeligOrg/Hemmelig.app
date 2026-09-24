@@ -19,17 +19,33 @@ config:
   betterAuthUrl: ""
   # Base URL for OAuth callbacks (required for social login)
   baseUrl: ""
+  # Comma-separated IPs or CIDR ranges of the proxies in front of Hemmelig,
+  # for example the ingress controller pods. Hemmelig trusts forwarded client
+  # IP headers only from these addresses. Without this value, IP restrictions
+  # and rate limits see the proxy address for every client.
+  # Example: "10.0.0.0/8"
+  trustedProxies: ""
 
-# Additional environment variables
+# Additional environment variables, added after the chart's own variables.
+# Use it for any HEMMELIG_* setting that the chart has no value for.
 env: []
   # - name: HEMMELIG_ANALYTICS_ENABLED
   #   value: "true"
+
+# Load all keys of a Secret or a ConfigMap as environment variables.
+# Each key becomes a variable with the same name, for example all
+# HEMMELIG_AUTH_* OAuth settings from one Secret.
+extraEnvFrom: []
+  # - secretRef:
+  #     name: hemmelig-oauth
+  # - configMapRef:
+  #     name: hemmelig-settings
 
 # Use existing secret for sensitive values
 existingSecret: ""
 # Keys expected in the secret:
 #   BETTER_AUTH_SECRET
-#   HEMMELIG_ANALYTICS_HMAC_SECRET (optional)
+#   HEMMELIG_ANALYTICS_HMAC_SECRET (optional, read when the key exists)
 #   HEMMELIG_AUTH_GITHUB_ID, HEMMELIG_AUTH_GITHUB_SECRET (optional)
 #   HEMMELIG_AUTH_GOOGLE_ID, HEMMELIG_AUTH_GOOGLE_SECRET (optional)
 #   HEMMELIG_AUTH_MICROSOFT_ID, HEMMELIG_AUTH_MICROSOFT_SECRET, HEMMELIG_AUTH_MICROSOFT_TENANT_ID (optional)
