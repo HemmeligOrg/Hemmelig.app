@@ -1,7 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { createReadStream, createWriteStream } from 'fs';
 import { Hono } from 'hono';
-import { bodyLimit } from 'hono/body-limit';
 import { stream } from 'hono/streaming';
 import { nanoid } from 'nanoid';
 import { Readable } from 'stream';
@@ -17,6 +16,7 @@ import {
 } from '../lib/files';
 import { resolveSettings } from '../lib/settings';
 import { authMiddleware } from '../middlewares/auth';
+import { enforceBodyLimit } from '../middlewares/body-limit';
 import { idParamSchema } from '../validations/shared';
 
 const files = new Hono<{
@@ -85,10 +85,7 @@ files.post(
         // Bound the multipart body before parsing it.
         const maxFileSize = await getMaxFileSize();
 
-        return bodyLimit({
-            maxSize: maxFileSize + 64 * 1024,
-            onError: (context) => context.json({ error: 'File too large' }, 413),
-        })(c, next);
+        return enforceBodyLimit(maxFileSize + 64 * 1024)(c, next);
     },
     async (c) => {
         try {

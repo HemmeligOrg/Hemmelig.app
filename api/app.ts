@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
@@ -15,6 +14,7 @@ import { auth } from './auth';
 import config from './config';
 import startJobs from './jobs';
 import prisma from './lib/db';
+import { enforceBodyLimit } from './middlewares/body-limit';
 import ratelimit from './middlewares/ratelimit';
 import routes from './routes';
 import { MAX_ENCRYPTED_SIZE } from './validations/secrets';
@@ -126,10 +126,7 @@ app.use('*', async (c, next) => {
     const isLargeBodyPath = largeBodyPaths.some((pattern) => pattern.test(c.req.path));
     const maxSize = isLargeBodyPath ? LARGE_JSON_BODY_LIMIT : SMALL_BODY_LIMIT;
 
-    return bodyLimit({
-        maxSize,
-        onError: (context) => context.json({ error: 'Request body too large' }, 413),
-    })(c, next);
+    return enforceBodyLimit(maxSize)(c, next);
 });
 
 const requestTimeout = config.get<number>('server.requestTimeout', 15);
