@@ -21,6 +21,9 @@ export const secretsIdParamSchema = idParamSchema;
 
 export const secretsQuerySchema = paginationQuerySchema;
 
+// The access verifier is a hex-encoded SHA-256 digest derived client-side.
+const passwordVerifierSchema = z.string().regex(/^[a-f0-9]{64}$/, 'Invalid password verifier');
+
 const secretSchema = {
     salt: z.string(),
     secret: uint8ArraySchema(
@@ -33,7 +36,9 @@ const secretSchema = {
     )
         .optional()
         .nullable(),
-    password: z.string().optional(),
+    // Deprecated. Raw passwords are rejected on creation so they never reach the server.
+    password: z.string().max(1024).optional(),
+    passwordVerifier: passwordVerifierSchema.optional(),
     expiresAt: z
         .number()
         .refine(
@@ -52,7 +57,9 @@ const secretSchema = {
 export const createSecretsSchema = z.object(secretSchema);
 
 export const getSecretSchema = z.object({
-    password: z.string().optional(),
+    // Legacy path for secrets created before verifier-based access.
+    password: z.string().max(1024).optional(),
+    passwordVerifier: passwordVerifierSchema.optional(),
 });
 
 export const processSecretsQueryParams = (

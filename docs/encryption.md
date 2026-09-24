@@ -76,7 +76,9 @@ Hemmelig uses **AES-256-GCM** via the **Web Crypto API** for several important r
 
 When you set a password on a secret:
 
-- The password is used directly as the encryption key instead of a randomly generated key
+- The password is used to derive the encryption key with PBKDF2 and the secret's unique salt
+- The client sends only a verifier, the SHA-256 digest of the derived key, to the server
+- The server stores the verifier and compares it on retrieval without ever seeing the password or key
 - The URL does **not** include the `#decryptionKey=...` fragment
 - The recipient must enter the password manually to decrypt the secret
 - This allows you to share the URL and password through separate channels for additional security
@@ -86,6 +88,8 @@ When you set a password on a secret:
 1. **Parse**: Extract the 12-byte IV from the beginning of the encrypted data
 2. **Key Derivation**: PBKDF2 derives the same AES key using the password/key and salt
 3. **Decryption**: AES-GCM decrypts and authenticates the ciphertext
+
+Legacy password-protected secrets, created before verifier-based access, still require the raw password for server-side Argon2 comparison. New secrets never send the password or key to the server.
 
 ## Security Properties
 

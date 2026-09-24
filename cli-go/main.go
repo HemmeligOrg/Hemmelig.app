@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -114,6 +115,14 @@ func createSecret(opts Options) (string, error) {
 		return "", fmt.Errorf("failed to encrypt secret: %w", err)
 	}
 
+	// Derive an access verifier so the password never reaches the server.
+	var passwordVerifier string
+	if opts.Password != "" {
+		key := deriveKey(opts.Password, salt)
+		sum := sha256.Sum256(key)
+		passwordVerifier = hex.EncodeToString(sum[:])
+	}
+
 	payload := map[string]interface{}{
 		"secret":     uint8ArrayToObject(encryptedSecret),
 		"salt":       salt,
@@ -130,8 +139,8 @@ func createSecret(opts Options) (string, error) {
 		payload["title"] = uint8ArrayToObject(encryptedTitle)
 	}
 
-	if opts.Password != "" {
-		payload["password"] = opts.Password
+	if passwordVerifier != "" {
+		payload["passwordVerifier"] = passwordVerifier
 	}
 
 	jsonData, err := json.Marshal(payload)

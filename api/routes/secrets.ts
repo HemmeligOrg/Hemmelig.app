@@ -2,7 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
-import { compare, hash } from '../lib/password';
+import { compare, compareVerifier } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
 import { handleNotFound } from '../lib/utils';
@@ -133,10 +133,19 @@ const app = new Hono<{
                         return { error: 'Secret not found', status: 404 as const };
                     }
 
-                    // Verify password if required
+                    // Verify access if the secret is password-protected.
+                    // - v2 (derived): compare the client-side verifier. The password and
+                    //   encryption key never reach the server.
+                    // - legacy: compare the raw password submitted by old clients against
+                    //   the stored Argon2 hash.
                     if (item.password) {
-                        const isValidPassword = await compare(data.password!, item.password);
-                        if (!isValidPassword) {
+                        const isDerived = item.password.startsWith('v2:');
+                        const isValid = isDerived
+                            ? !!data.passwordVerifier &&
+                              compareVerifier(data.passwordVerifier, item.password.slice(3))
+                            : !!data.password && (await compare(data.password, item.password));
+
+                        if (!isValid) {
                             return { error: 'Invalid password', status: 401 as const };
                         }
                     }
@@ -204,6 +213,7 @@ const app = new Hono<{
                     views: true,
                     title: true,
                     password: true,
+                    salt: true,
                 },
             });
 
@@ -216,10 +226,19 @@ const app = new Hono<{
                 return c.json({ error: 'Secret not found' }, 404);
             }
 
+            const passwordScheme = item.password
+                ? item.password.startsWith('v2:')
+                    ? 'derived'
+                    : 'legacy'
+                : null;
+
             return c.json({
                 views: item.views,
                 title: item.title,
                 isPasswordProtected: !!item.password,
+                passwordScheme,
+                // The salt is required to derive the verifier before retrieval.
+                ...(passwordScheme === 'derived' ? { salt: item.salt } : {}),
             });
         } catch (error) {
             console.error(`Failed to check secret ${c.req.param('id')}:`, error);
@@ -254,14 +273,26 @@ const app = new Hono<{
                     return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
                 }
 
-                const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
+                const { expiresAt, password, passwordVerifier, fileIds, salt, title, ...rest } =
+                    validatedData;
+
+                // Reject raw passwords so they never reach the server. Clients must
+                // derive a verifier and send that instead.
+                if (password) {
+                    return c.json(
+                        {
+                            error: 'Plaintext passwords are no longer accepted. Update your client to send a password verifier.',
+                        },
+                        400
+                    );
+                }
 
                 const data: SecretCreateData = {
                     ...rest,
                     salt,
                     // Title is required by the database, default to empty Uint8Array if not provided
                     title: title ?? new Uint8Array(0),
-                    password: password ? await hash(password) : null,
+                    password: passwordVerifier ? `v2:${passwordVerifier}` : null,
                     expiresAt: new Date(Date.now() + expiresAt * 1000),
                     ...(fileIds && {
                         files: { connect: fileIds.map((id: string) => ({ id })) },

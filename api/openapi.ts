@@ -208,7 +208,7 @@ const spec = {
                 tags: ['Secrets'],
                 summary: 'Get a secret',
                 description:
-                    'Retrieve an encrypted secret by ID. Atomically consumes a view and burns the secret if burnable and last view. Password required if secret is password-protected.',
+                    'Retrieve an encrypted secret by ID. Atomically consumes a view and burns the secret if burnable and last view. Send a password verifier if the secret is password-protected.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -217,7 +217,18 @@ const spec = {
                         'application/json': {
                             schema: {
                                 type: 'object',
-                                properties: { password: { type: 'string' } },
+                                properties: {
+                                    passwordVerifier: {
+                                        type: 'string',
+                                        description:
+                                            'Hex-encoded SHA-256 verifier derived from the password on the client',
+                                    },
+                                    password: {
+                                        type: 'string',
+                                        description: 'Raw password for legacy secrets only',
+                                        deprecated: true,
+                                    },
+                                },
                             },
                         },
                     },
@@ -1393,7 +1404,11 @@ const spec = {
                         example: { '0': 78, '1': 111, '2': 116, '3': 101 },
                     },
                     salt: { type: 'string', description: 'Salt used for encryption' },
-                    password: { type: 'string', description: 'Optional password protection' },
+                    passwordVerifier: {
+                        type: 'string',
+                        description:
+                            'Hex-encoded SHA-256 verifier derived from the password on the client. The password never leaves the browser.',
+                    },
                     expiresAt: {
                         type: 'integer',
                         description: 'Expiration time in seconds from now',

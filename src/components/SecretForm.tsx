@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
-import { encrypt, encryptFile, generateEncryptionKey, generateSalt } from '../lib/crypto';
+import {
+    derivePasswordVerifier,
+    encrypt,
+    encryptFile,
+    generateEncryptionKey,
+    generateSalt,
+} from '../lib/crypto';
 import { useSecretStore } from '../store/secretStore';
 import { Card } from './Card';
 import { CreateButton } from './CreateButton';
@@ -75,12 +81,18 @@ export function SecretForm() {
         const encryptedSecret = await encrypt(secret, encryptionKey, salt);
         const encryptedTitle = await encrypt(title, encryptionKey, salt);
 
+        // Derive a verifier so the server can gate access without ever seeing
+        // the password or the encryption key.
+        const passwordVerifier = password
+            ? await derivePasswordVerifier(password, salt)
+            : undefined;
+
         // Transform empty strings to null for nullable fields
         const dataToSend = {
             secret: encryptedSecret,
             title: encryptedTitle,
             salt,
-            password: password ? encryptionKey : '',
+            passwordVerifier,
             expiresAt,
             views,
             isBurnable,

@@ -19,7 +19,7 @@ import Editor from '../components/Editor';
 import { Modal } from '../components/Modal';
 import { useCopyFeedback } from '../hooks/useCopyFeedback';
 import { api } from '../lib/api';
-import { decrypt, decryptFile, generateEncryptionKey } from '../lib/crypto';
+import { decrypt, decryptFile, derivePasswordVerifier, generateEncryptionKey } from '../lib/crypto';
 
 interface SecretFile {
     id: string;
@@ -30,6 +30,8 @@ interface SecretLoaderData {
     isPasswordProtected: boolean;
     views: number;
     files: SecretFile[];
+    passwordScheme?: 'derived' | 'legacy' | null;
+    salt?: string | null;
 }
 
 export function SecretPage() {
@@ -47,7 +49,7 @@ export function SecretPage() {
     const [isPasswordProtected, setIsPasswordProtected] = useState(false);
     const [showSecretContent, setShowSecretContent] = useState(false);
     const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
-    const [salt, setSalt] = useState<string | null>(null);
+    const [salt, setSalt] = useState<string | null>(initialData?.salt ?? null);
     const { copied, copy: copyToClipboard } = useCopyFeedback();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -72,9 +74,24 @@ export function SecretPage() {
                 const finalDecryptionKey = password
                     ? generateEncryptionKey(password)
                     : decryptionKey;
+
+                // Send only the access verifier for derived secrets. The password and
+                // the decryption key never leave the browser.
+                let json: { password?: string; passwordVerifier?: string } = {};
+                if (isPasswordProtected) {
+                    if (initialData?.passwordScheme === 'derived') {
+                        if (!salt) {
+                            throw new Error('Missing salt for password verification');
+                        }
+                        json = { passwordVerifier: await derivePasswordVerifier(password, salt) };
+                    } else {
+                        json = { password };
+                    }
+                }
+
                 const response = await api.secrets[':id'].$post({
                     param: { id: id! },
-                    json: { password: finalDecryptionKey },
+                    json,
                 });
                 const data = await response.json();
 
