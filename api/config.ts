@@ -205,6 +205,11 @@ const config = {
     server: {
         port: Number(process.env.HEMMELIG_PORT) || 3000,
         requestTimeout: parseInteger(process.env.HEMMELIG_REQUEST_TIMEOUT) ?? 15,
+        // Proxy addresses that may set forwarded client IP headers.
+        trustedProxies: (process.env.HEMMELIG_TRUSTED_PROXIES || '')
+            .split(',')
+            .map((proxy) => proxy.trim())
+            .filter(Boolean),
     },
     trustedOrigins: [
         ...(!isProduction ? ['http://localhost:5173'] : []),

@@ -216,6 +216,12 @@ server {
 }
 ```
 
+Forwarded client IP headers are trusted only from addresses listed in `HEMMELIG_TRUSTED_PROXIES`. With the configuration above, set it to the proxy address:
+
+```bash
+HEMMELIG_TRUSTED_PROXIES=127.0.0.1
+```
+
 3. Enable the site:
 
 ```bash

@@ -1,6 +1,8 @@
 import dns from 'dns/promises';
 import { type Context } from 'hono';
+import ipRangeCheck from 'ip-range-check';
 import { isIP } from 'is-ip';
+import config from '../config';
 
 /**
  * Handle not found error from Prisma
@@ -24,26 +26,71 @@ export const handleNotFound = (error: Error & { code?: string }, c: Context) => 
 };
 
 /**
- * Get client IP from request headers
+ * Get the address of the peer that opened the socket.
+ * Returns null when the runtime does not expose a socket (for example, tests).
+ */
+const getPeerAddress = (c: Context): string | null => {
+    const incoming = (c.env as { incoming?: { socket?: { remoteAddress?: string } } } | undefined)
+        ?.incoming;
+    const remoteAddress = incoming?.socket?.remoteAddress;
+
+    if (!remoteAddress) {
+        return null;
+    }
+
+    // Normalize IPv4-mapped IPv6 addresses (::ffff:127.0.0.1).
+    if (remoteAddress.startsWith('::ffff:')) {
+        return remoteAddress.slice(7);
+    }
+
+    return remoteAddress;
+};
+
+const getTrustedProxies = (): string[] => config.get<string[]>('server.trustedProxies', []);
+
+const isTrustedProxy = (ip: string): boolean => {
+    const trustedProxies = getTrustedProxies();
+    return trustedProxies.length > 0 && trustedProxies.some((proxy) => ipRangeCheck(ip, proxy));
+};
+
+/**
+ * Get client IP from the connection.
+ *
+ * The socket address is authoritative. Forwarded headers are trusted only
+ * when the peer is a configured trusted proxy, and the chain is walked from
+ * right to left while skipping trusted proxies. Configure
+ * `HEMMELIG_TRUSTED_PROXIES` when the instance runs behind a reverse proxy.
  * @param c Hono context
  * @returns Client IP address
  */
 export const getClientIp = (c: Context): string => {
+    const peer = getPeerAddress(c);
+
+    if (!peer || !isTrustedProxy(peer)) {
+        return peer || '127.0.0.1';
+    }
+
     const forwardedFor = c.req.header('x-forwarded-for');
     if (forwardedFor) {
-        return forwardedFor.split(',')[0].trim();
+        const chain = forwardedFor
+            .split(',')
+            .map((entry) => entry.trim())
+            .filter(Boolean);
+
+        for (let index = chain.length - 1; index >= 0; index--) {
+            const candidate = chain[index];
+            if (isIP(candidate) && !isTrustedProxy(candidate)) {
+                return candidate;
+            }
+        }
     }
-    return (
-        c.req.header('x-real-ip') ||
-        c.req.header('cf-connecting-ip') ||
-        c.req.header('client-ip') ||
-        c.req.header('x-client-ip') ||
-        c.req.header('x-cluster-client-ip') ||
-        c.req.header('forwarded-for') ||
-        c.req.header('forwarded') ||
-        c.req.header('via') ||
-        '127.0.0.1'
-    );
+
+    const realIp = c.req.header('x-real-ip');
+    if (realIp && isIP(realIp) && !isTrustedProxy(realIp)) {
+        return realIp;
+    }
+
+    return peer;
 };
 
 // Patterns for private/internal IP addresses

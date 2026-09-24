@@ -19,6 +19,7 @@ Complete reference for all environment variables supported by Hemmelig.
 | `HEMMELIG_REQUEST_TIMEOUT` | API request timeout in seconds (zero or negative disables the app timeout) | `15`          |
 | `HEMMELIG_BASE_URL`        | Public URL of your instance (required for OAuth)                           | -             |
 | `HEMMELIG_TRUSTED_ORIGIN`  | Additional trusted origin for CORS                                         | -             |
+| `HEMMELIG_TRUSTED_PROXIES` | Comma-separated IPs or CIDRs allowed to set forwarded client IP headers    | -             |
 
 ## General Settings
 
