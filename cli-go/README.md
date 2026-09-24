@@ -117,7 +117,8 @@ hemmelig "internal secret" -u https://secrets.company.com
 ## Security
 
 - All encryption happens locally using AES-256-GCM
-- Keys are derived using PBKDF2 with 600,000 iterations
+- Keys are derived using PBKDF2 with 1,300,000 iterations
+- Password-protected secrets send only a verifier of the derived key. The password never reaches the server
 - The decryption key is in the URL fragment (`#decryptionKey=...`), which is never sent to the server
 - The server only stores encrypted data
 
