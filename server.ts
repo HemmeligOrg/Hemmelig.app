@@ -2,12 +2,15 @@ import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import 'dotenv/config';
 import { Hono } from 'hono';
-import api from './api/app';
+import api, { securityHeadersMiddleware } from './api/app';
 import config from './api/config';
 
 const port = config.get('server.port')!;
 
 const app = new Hono();
+
+// Apply security headers to API responses and to frontend documents.
+app.use('*', securityHeadersMiddleware);
 
 // Mount the API first (before static files)
 app.route('/api', api);

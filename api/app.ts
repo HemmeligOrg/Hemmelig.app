@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
+import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
@@ -73,7 +74,7 @@ startJobs();
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
-app.use(async (c, next) => {
+export const securityHeadersMiddleware = createMiddleware(async (c, next) => {
     // Skip CSP for Swagger UI docs page (it loads scripts/styles from cdn.jsdelivr.net)
     if (c.req.path.endsWith('/api/docs')) {
         return next();
@@ -98,6 +99,7 @@ app.use(async (c, next) => {
         },
     })(c, next);
 });
+app.use(securityHeadersMiddleware);
 app.use(logger());
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
