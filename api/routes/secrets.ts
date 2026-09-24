@@ -153,15 +153,25 @@ const app = new Hono<{
                         }
                     }
 
-                    // Consume the view atomically with retrieval
-                    const newViews = item.views! - 1;
-
-                    // Decrement views (don't delete yet — files may still need downloading)
-                    // The cleanup job handles deletion of secrets with views=0
-                    await tx.secrets.update({
-                        where: { id },
-                        data: { views: newViews },
+                    // Consume one view with a conditional update. The update applies only
+                    // while views remain, so two concurrent reveals cannot both use the
+                    // last view, whatever isolation the database gives the transaction.
+                    // The secret stays in the database because files may still need a
+                    // download. The cleanup job deletes secrets with no views left.
+                    const consumed = await tx.secrets.updateMany({
+                        where: { id, views: { gt: 0 } },
+                        data: { views: { decrement: 1 } },
                     });
+
+                    if (consumed.count === 0) {
+                        return { error: 'Secret not found', status: 404 as const };
+                    }
+
+                    const remaining = await tx.secrets.findUnique({
+                        where: { id },
+                        select: { views: true },
+                    });
+                    const newViews = remaining?.views ?? 0;
 
                     if (item.isBurnable && newViews <= 0) {
                         // Send webhook for burned secret
