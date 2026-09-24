@@ -93,25 +93,28 @@ export const getClientIp = (c: Context): string => {
     return peer;
 };
 
-// Patterns for private/internal IP addresses
-const privateIpPatterns = [
-    // Localhost variants
-    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-    /^0\.0\.0\.0$/,
-    // Private IPv4 ranges
-    /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-    /^192\.168\.\d{1,3}\.\d{1,3}$/,
-    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/,
-    // Link-local IPv4
-    /^169\.254\.\d{1,3}\.\d{1,3}$/,
-    // IPv6 localhost
-    /^::1$/,
-    /^\[::1\]$/,
-    // IPv6 link-local
-    /^fe80:/i,
-    // IPv6 private (unique local addresses)
-    /^fc00:/i,
-    /^fd[0-9a-f]{2}:/i,
+// CIDR ranges that must never be reachable from server-side requests.
+const blockedIpRanges = [
+    '0.0.0.0/8',
+    '10.0.0.0/8',
+    '100.64.0.0/10',
+    '127.0.0.0/8',
+    '169.254.0.0/16',
+    '172.16.0.0/12',
+    '192.0.0.0/24',
+    '192.168.0.0/16',
+    '198.18.0.0/15',
+    '224.0.0.0/4',
+    '240.0.0.0/4',
+    '255.255.255.255/32',
+    '::/128',
+    '::1/128',
+    '::ffff:0:0/96',
+    '64:ff9b::/96',
+    '100::/64',
+    'fc00::/7',
+    'fe80::/10',
+    'ff00::/8',
 ];
 
 // Patterns for special domains that should always be blocked
@@ -124,13 +127,12 @@ const blockedHostnamePatterns = [
 ];
 
 /**
- * Check if an IP address is private/internal
+ * Check if an IP address is public and routable.
  * @param ip IP address to check
- * @returns true if IP is private/internal
+ * @returns true if the address is public
  */
-const isPrivateIp = (ip: string): boolean => {
-    return privateIpPatterns.some((pattern) => pattern.test(ip));
-};
+export const isPublicIpAddress = (ip: string): boolean =>
+    !blockedIpRanges.some((range) => ipRangeCheck(ip, range));
 
 /**
  * Check if a URL points to a private/internal address (SSRF protection)
@@ -141,7 +143,7 @@ const isPrivateIp = (ip: string): boolean => {
 export const isPublicUrl = async (url: string): Promise<boolean> => {
     try {
         const parsed = new URL(url);
-        const hostname = parsed.hostname.toLowerCase();
+        const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '');
 
         // Block special domain patterns (e.g., .local, .localhost)
         if (blockedHostnamePatterns.some((pattern) => pattern.test(hostname))) {
@@ -150,7 +152,7 @@ export const isPublicUrl = async (url: string): Promise<boolean> => {
 
         // If hostname is already an IP address, check it directly
         if (isIP(hostname)) {
-            return !isPrivateIp(hostname);
+            return isPublicIpAddress(hostname);
         }
 
         // Resolve DNS to get actual IP addresses
@@ -170,7 +172,7 @@ export const isPublicUrl = async (url: string): Promise<boolean> => {
         }
 
         // Check all resolved IPs - reject if ANY resolve to private addresses
-        return !addresses.some((ip) => isPrivateIp(ip));
+        return addresses.every((ip) => isPublicIpAddress(ip));
     } catch {
         return false;
     }
