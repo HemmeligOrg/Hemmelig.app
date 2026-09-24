@@ -58,7 +58,8 @@ services:
             - ./uploads:/app/uploads
         environment:
             - DATABASE_URL=file:/app/database/hemmelig.db
-            - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+            # Required. Compose stops when this variable is unset.
+            - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET to a random 32+ character value}
             - BETTER_AUTH_URL=https://secrets.example.com
             - NODE_ENV=production
             - HEMMELIG_BASE_URL=https://secrets.example.com
@@ -80,9 +81,14 @@ services:
             start_period: 10s
 ```
 
-**Important:** Before starting, update the following:
+**Important:** Before starting, export the required secret:
 
-- `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32`
+```bash
+export BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
+```
+
+Then update the following:
+
 - `HEMMELIG_BASE_URL` - Your public domain URL
 
 ## Volume Mounts
