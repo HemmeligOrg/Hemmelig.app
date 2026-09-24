@@ -1,48 +1,15 @@
-import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
+import { timingSafeEqual } from 'crypto';
 import { mkdir } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
 import { resolveSettings } from './settings';
+import { signTokenPayload as sign, signToken, verifySignedToken } from './tokens';
 
 /** Upload directory path */
 export const UPLOAD_DIR = resolve(process.cwd(), 'uploads');
 
-/**
- * Signing key for file capability tokens. Tokens are scoped to an uploader,
- * or to a revealed secret for downloads.
- */
-const TOKEN_SECRET = process.env.BETTER_AUTH_SECRET || randomBytes(32).toString('hex');
 const UPLOAD_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const DOWNLOAD_TOKEN_TTL_MS = 30 * 60 * 1000;
-
-const sign = (payload: string): string =>
-    createHmac('sha256', TOKEN_SECRET).update(payload).digest('hex');
-
-const signToken = (payload: string, ttlMs: number): string => {
-    const expiresAt = Date.now() + ttlMs;
-    return `${expiresAt}.${sign(`${payload}:${expiresAt}`)}`;
-};
-
-const verifySignedToken = (payload: string, token: string): boolean => {
-    const separator = token.indexOf('.');
-    if (separator === -1) {
-        return false;
-    }
-
-    const expiresAt = Number(token.slice(0, separator));
-    if (!Number.isFinite(expiresAt) || Date.now() > expiresAt) {
-        return false;
-    }
-
-    const expected = Buffer.from(sign(`${payload}:${expiresAt}`), 'utf8');
-    const provided = Buffer.from(token.slice(separator + 1), 'utf8');
-
-    if (expected.length !== provided.length) {
-        return false;
-    }
-
-    return timingSafeEqual(expected, provided);
-};
 
 /**
  * Creates a capability token that lets the uploader attach the file to a secret.

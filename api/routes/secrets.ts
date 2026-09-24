@@ -6,6 +6,7 @@ import { createDownloadToken, verifyUploadToken } from '../lib/files';
 import { compare, compareVerifier } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
+import { createDeleteToken, verifyDeleteToken } from '../lib/tokens';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { apiKeyOrAuthMiddleware, optionalApiKeyOrAuthMiddleware } from '../middlewares/auth';
@@ -185,6 +186,8 @@ const app = new Hono<{
                         ...itemWithoutPassword,
                         views: newViews,
                         burned: item.isBurnable && newViews <= 0,
+                        // Lets the viewer delete the secret after reading it.
+                        deleteToken: createDeleteToken(id),
                         files: item.files.map((file) => ({
                             id: file.id,
                             filename: file.filename,
@@ -371,6 +374,16 @@ const app = new Hono<{
     .delete('/:id', zValidator('param', secretsIdParamSchema), async (c) => {
         try {
             const { id } = c.req.valid('param');
+            const deleteToken = c.req.header('x-hemmelig-delete-token');
+
+            // Deletion requires a capability issued by a successful reveal, so
+            // an identifier alone cannot destroy a secret.
+            if (!deleteToken || !verifyDeleteToken(id, deleteToken)) {
+                return c.json(
+                    { error: 'A delete token from a successful reveal is required' },
+                    403
+                );
+            }
 
             // Use transaction to prevent race conditions
             const secret = await prisma.$transaction(async (tx) => {

@@ -83,6 +83,7 @@ export function SecretPage() {
     const { copied, copy: copyToClipboard } = useCopyFeedback();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteToken, setDeleteToken] = useState<string | null>(null);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
     const [isBurnable, setIsBurnable] = useState(false);
 
@@ -162,6 +163,11 @@ export function SecretPage() {
                     setShowSecretContent(true);
                     setIsBurnable(data.isBurnable ?? false);
 
+                    // The server issues this token only after a successful reveal.
+                    if ('deleteToken' in data && typeof data.deleteToken === 'string') {
+                        setDeleteToken(data.deleteToken);
+                    }
+
                     // View consumption now happens atomically on the server during retrieval
                     // Update views from the response
                     if ('views' in data) {
@@ -221,9 +227,17 @@ export function SecretPage() {
     };
 
     const handleDeleteSecret = async () => {
+        if (!deleteToken) {
+            setShowDeleteModal(false);
+            return;
+        }
+
         setIsDeleting(true);
         try {
-            const response = await api.secrets[':id'].$delete({ param: { id: id! } });
+            const response = await api.secrets[':id'].$delete(
+                { param: { id: id! } },
+                { headers: { 'x-hemmelig-delete-token': deleteToken } }
+            );
             if (response.ok) {
                 navigate('/');
             }
@@ -434,7 +448,8 @@ export function SecretPage() {
                     </Link>
                     <button
                         onClick={() => setShowDeleteModal(true)}
-                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200"
+                        disabled={!deleteToken}
+                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-red-500 hover:bg-red-400 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-all duration-200"
                     >
                         <Trash2 className="w-4 h-4" />
                         {t('secret_page.delete_secret')}

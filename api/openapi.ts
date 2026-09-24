@@ -249,9 +249,17 @@ const spec = {
             delete: {
                 tags: ['Secrets'],
                 summary: 'Delete a secret',
-                description: 'Manually burn/delete a secret',
+                description:
+                    'Manually burn/delete a secret. Requires the delete token returned by a successful retrieval.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                    {
+                        name: 'X-Hemmelig-Delete-Token',
+                        in: 'header',
+                        required: true,
+                        schema: { type: 'string' },
+                        description: 'Delete capability token from the secret retrieval response',
+                    },
                 ],
                 responses: {
                     '200': {
@@ -268,6 +276,7 @@ const spec = {
                             },
                         },
                     },
+                    '403': { description: 'Missing or invalid delete token' },
                     '404': { description: 'Secret not found' },
                 },
             },
@@ -1408,6 +1417,11 @@ const spec = {
                     createdAt: { type: 'string', format: 'date-time' },
                     isBurnable: { type: 'boolean' },
                     ipRange: { type: 'string', nullable: true },
+                    deleteToken: {
+                        type: 'string',
+                        description:
+                            'Capability token that allows deleting the secret after reading it',
+                    },
                     files: {
                         type: 'array',
                         items: {
