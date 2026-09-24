@@ -68,13 +68,13 @@
         "@playwright/test": "^1.57.0",
         "@tabler/icons-react": "^3.35.0",
         "@tailwindcss/typography": "^0.5.19",
-        "@tiptap/extension-character-count": "^3.13.0",
-        "@tiptap/extension-color": "^3.13.0",
-        "@tiptap/extension-link": "^3.13.0",
-        "@tiptap/extension-list-item": "^3.13.0",
-        "@tiptap/extension-text-style": "^3.13.0",
-        "@tiptap/react": "^3.13.0",
-        "@tiptap/starter-kit": "^3.13.0",
+        "@tiptap/extension-character-count": "^3.31.3",
+        "@tiptap/extension-color": "^3.31.3",
+        "@tiptap/extension-link": "^3.31.3",
+        "@tiptap/extension-list-item": "^3.31.3",
+        "@tiptap/extension-text-style": "^3.31.3",
+        "@tiptap/react": "^3.31.3",
+        "@tiptap/starter-kit": "^3.31.3",
         "@types/dlv": "^1.1.5",
         "@types/node": "^25.0.1",
         "@types/react": "^19.2.7",
@@ -109,5 +109,10 @@
     },
     "prisma": {
         "schema": "prisma/schema.prisma"
+    },
+    "overrides": {
+        "@humanfs/node": "^0.17.0",
+        "deepmerge-ts": "^8.0.2",
+        "mysql2": "^3.24.4"
     }
 }
