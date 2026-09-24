@@ -98,34 +98,18 @@ test.describe('Secret Creation and Viewing', () => {
         await editor.click();
         await editor.fill(secretText);
 
-        // Look for password protection toggle in security settings section
-        // The toggle might be in a section that needs to be scrolled to
-        const passwordSection = page.locator('text=Password Protection');
+        // Enable password protection
+        const passwordRow = page
+            .locator('div.flex.items-center.justify-between')
+            .filter({ hasText: 'Password Protection' });
+        await passwordRow.locator('button').click();
 
-        if (await passwordSection.isVisible({ timeout: 2000 }).catch(() => false)) {
-            // Click the toggle switch near "Password Protection"
-            const toggleSwitch = passwordSection
-                .locator('xpath=..')
-                .locator('button[role="switch"], input[type="checkbox"]');
-            if (await toggleSwitch.isVisible()) {
-                await toggleSwitch.click();
-
-                // Wait for password input to appear
-                await page.waitForTimeout(500);
-
-                // Find the password input that appeared
-                const passwordInput = page
-                    .locator('input[placeholder*="password" i], input[type="password"]')
-                    .first();
-                if (await passwordInput.isVisible()) {
-                    await passwordInput.fill(password);
-                }
-            }
-        } else {
-            // Password protection not available, skip this assertion
-            test.skip();
-            return;
-        }
+        // Fill the password input that appears
+        const passwordInput = page
+            .locator('input[placeholder*="password" i], input[type="password"]')
+            .first();
+        await expect(passwordInput).toBeVisible({ timeout: 5000 });
+        await passwordInput.fill(password);
 
         // Create the secret
         await page
@@ -140,16 +124,22 @@ test.describe('Secret Creation and Viewing', () => {
         const urlInput = page.locator('input[readonly]').first();
         const secretUrl = await urlInput.inputValue();
 
+        // Password-protected links must not carry the decryption key.
+        expect(secretUrl).not.toContain('#decryptionKey=');
+
         // Navigate to the secret
         await page.goto(secretUrl);
 
-        // If password was set, the secret page should prompt for password
-        // (URL might still have decryptionKey depending on implementation)
+        // The secret page must prompt for the password
+        const passwordPrompt = page.locator('input[type="password"]').first();
+        await expect(passwordPrompt).toBeVisible({ timeout: 5000 });
+        await passwordPrompt.fill(password);
+
         const unlockButton = page.getByRole('button', { name: /unlock|view/i });
         await expect(unlockButton).toBeVisible({ timeout: 5000 });
         await unlockButton.click();
 
-        // Verify content is visible (secret should decrypt with the key in URL)
+        // Verify content is visible after the password is verified
         await expect(page.locator('.ProseMirror')).toContainText(secretText, { timeout: 10000 });
     });
 

@@ -4,7 +4,8 @@ import { TEST_USER } from './global-setup';
 const WEAK_PASSWORD_USER = {
     email: 'weakpass@hemmelig.local',
     username: 'weakpassuser',
-    password: 'pass',
+    // Meets the 8 character minimum but not the uppercase complexity rule.
+    password: 'weakpass1',
     name: 'Weak Password User',
 };
 
@@ -48,9 +49,10 @@ test.describe('Password Change', () => {
             TEST_USER.password
         );
 
-        // Use better-auth admin endpoint to create a user with a weak password.
-        // This bypasses the sign-up hook (which only runs on /sign-up/email),
-        // and since minPasswordLength is 1, better-auth accepts it.
+        // Use the better-auth admin endpoint to create a user with a weak password.
+        // Admin creation does not enforce the full password policy, which mirrors
+        // accounts that predate that policy. The user must still be able to sign
+        // in and upgrade to a strong password.
         const createRes = await fetch(`${baseURL}/api/auth/admin/create-user`, {
             method: 'POST',
             headers: {
