@@ -77,7 +77,10 @@
         "uploading": "正在上传...",
         "upload_file": "上传文件",
         "file_too_large": "文件 \"{{fileName}}\"（{{fileSize}} MB）超过最大大小 {{maxSize}} MB",
-        "max_size_exceeded": "文件总大小超过最大限制 {{maxSize}} MB"
+        "max_size_exceeded": "文件总大小超过最大限制 {{maxSize}} MB",
+        "attach": "+ 附加文件",
+        "max_size": "最大 {{size}} MB",
+        "remove": "移除 {{fileName}}"
     },
     "footer": {
         "tagline": "Hemmelig，[heˈm(ɛ)li]，在挪威语中意为「秘密」",
@@ -104,7 +107,12 @@
         "invites": "邀请",
         "instance": "实例",
         "sign_out": "退出登录",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ 新建秘密",
+        "workspace": "工作区",
+        "admin": "管理",
+        "open_menu": "打开菜单",
+        "close_menu": "关闭菜单"
     },
     "secret_settings": {
         "secret_created_title": "秘密已创建！",
@@ -116,7 +124,27 @@
         "copy_url_button": "复制 URL",
         "burn_secret_button": "销毁秘密",
         "max_secrets_per_user_info": "您最多可以创建 {{count}} 个秘密。",
-        "failed_to_burn": "销毁秘密失败。请重试。"
+        "failed_to_burn": "销毁秘密失败。请重试。",
+        "facts": {
+            "expires": "过期",
+            "expires_in": "{{duration}}后",
+            "views": "查看次数",
+            "burn_at_expiry": "到期销毁",
+            "password": "密码",
+            "password_required": "必需",
+            "none": "无",
+            "ip": "IP",
+            "any_ip": "任意",
+            "files": "文件"
+        },
+        "show_password": "显示",
+        "hide_password": "隐藏",
+        "show_qr": "二维码",
+        "hide_qr": "隐藏二维码",
+        "qr_title": "完整链接的二维码",
+        "qr_description": "扫描以在其他设备上打开。其中包含密钥——请像对待链接一样对待它。",
+        "password_warning": "密钥由密码派生，因此仅凭链接无法解密。请通过其他渠道发送密码。",
+        "your_secrets": "你的秘密"
     },
     "security_settings": {
         "security_title": "安全",
@@ -131,18 +159,19 @@
         "burn_after_time_mode_title": "定时销毁模式",
         "burn_after_time_mode_description": "秘密将在时间到期后销毁，无论被查看了多少次。",
         "password_protection_title": "密码保护",
-        "password_protection_description": "使用密码添加额外的安全层",
+        "password_protection_description": "密钥由密码派生，而不是来自链接。",
         "enter_password_label": "输入密码",
-        "password_placeholder": "输入安全密码...",
-        "password_hint": "最少5个字符。接收者需要此密码才能查看秘密",
+        "password_placeholder": "至少 5 个字符",
+        "password_hint": "接收者也需要此密码。请单独发送。",
         "password_error": "密码必须至少包含5个字符",
         "ip_restriction_title": "IP 或 CIDR 限制",
-        "ip_restriction_description": "CIDR 输入将允许用户指定可以访问秘密的 IP 地址范围。",
+        "ip_restriction_description": "仅允许从某个 IP 或 CIDR 范围访问。",
         "ip_address_cidr_label": "IP 地址或 CIDR 范围",
-        "ip_address_cidr_placeholder": "192.168.1.0/24 或 203.0.113.5",
+        "ip_address_cidr_placeholder": "203.0.113.7 或 10.0.0.0/24",
         "ip_address_cidr_hint": "只有来自这些 IP 地址的请求才能访问秘密",
         "burn_after_time_title": "过期后销毁",
-        "burn_after_time_description": "仅在时间到期后销毁秘密"
+        "burn_after_time_description": "仅在时间到期后销毁秘密",
+        "remember_description": "为下次保留过期时间、查看次数和销毁设置（仅限此浏览器）。"
     },
     "title_field": {
         "placeholder": "标题",
@@ -151,11 +180,13 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "次查看"
+        "views_label": "次查看",
+        "decrease": "减少查看次数",
+        "increase": "增加查看次数"
     },
     "account_page": {
-        "title": "账户设置",
-        "description": "管理您的账户偏好和安全设置",
+        "title": "账户",
+        "description": "个人资料、安全和 API 访问。",
         "tabs": {
             "profile": "个人资料",
             "security": "安全",
@@ -168,12 +199,18 @@
             "first_name_label": "名",
             "last_name_label": "姓",
             "username_label": "用户名",
-            "email_label": "电子邮件地址",
+            "email_label": "电子邮件",
             "saving_button": "正在保存...",
-            "save_changes_button": "保存更改"
+            "save_changes_button": "保存更改",
+            "username_description": "用于登录。",
+            "email_description": "用于登录和找回账户。",
+            "save_button": "保存",
+            "saved": "个人资料已保存。",
+            "save_error": "无法保存个人资料。请重试。"
         },
         "profile_settings": {
-            "username_taken": "用户名已被使用"
+            "username_taken": "用户名已被使用",
+            "email_taken": "该电子邮件已被使用"
         },
         "security_settings": {
             "title": "安全设置",
@@ -189,7 +226,10 @@
             "changing_password_button": "正在更改...",
             "change_password_button": "更改密码",
             "password_change_success": "密码更改成功！",
-            "password_change_error": "密码更改失败。请重试。"
+            "password_change_error": "密码更改失败。请重试。",
+            "new_password_description": "至少 8 个字符，包含一个大写字母、一个小写字母和一个数字。",
+            "show_password": "显示密码",
+            "hide_password": "隐藏密码"
         },
         "two_factor": {
             "title": "双因素身份验证",
@@ -216,7 +256,14 @@
             "backup_codes_title": "备用码",
             "backup_codes_description": "将这些备用码保存在安全的地方。如果您无法访问身份验证应用，可以使用它们访问您的账户。",
             "backup_codes_warning": "每个代码只能使用一次。请妥善保管！",
-            "backup_codes_saved": "我已保存我的备用码"
+            "backup_codes_saved": "我已保存我的备用码",
+            "status_on": "已开启。登录时需要输入身份验证器中的代码。",
+            "status_off": "已关闭。添加 TOTP 身份验证器用于登录。",
+            "enable": "启用",
+            "disable": "停用",
+            "scan_and_verify": "使用身份验证器应用扫描，然后输入 6 位代码。",
+            "verify_button": "验证",
+            "backup_codes_shown_once": "备用代码仅显示一次。请妥善保存。"
         },
         "danger_zone": {
             "title": "危险区域",
@@ -229,7 +276,10 @@
             "delete_account_bullet4": "此操作无法撤销",
             "delete_account_confirm": "您确定要删除您的账户吗？此操作无法撤销。",
             "delete_account_button": "删除账户",
-            "deleting_account_button": "正在删除账户..."
+            "deleting_account_button": "正在删除账户...",
+            "delete_account_summary": "删除你的账户、API 密钥以及你创建的所有秘密。链接将失效。",
+            "confirm_placeholder": "输入 {{username}} 以确认",
+            "delete_error": "无法删除账户。请重试。"
         },
         "developer": {
             "title": "API 密钥",
@@ -237,7 +287,7 @@
             "create_key": "创建密钥",
             "create_key_title": "创建 API 密钥",
             "key_name": "密钥名称",
-            "key_name_placeholder": "例如：我的集成",
+            "key_name_placeholder": "密钥名称，例如 ci-deploy",
             "expiration": "过期时间",
             "never_expires": "永不过期",
             "expires_30_days": "30 天",
@@ -247,19 +297,25 @@
             "name_required": "密钥名称为必填项",
             "create_error": "创建 API 密钥失败",
             "key_created": "API 密钥已创建！",
-            "key_warning": "请立即复制此密钥。您将无法再次查看它。",
+            "key_warning": "请立即复制。它不会再次显示。",
             "dismiss": "我已复制密钥",
             "no_keys": "还没有 API 密钥。创建一个开始使用。",
             "created": "创建时间",
             "last_used": "最后使用",
             "expires": "过期时间",
             "docs_hint": "了解如何使用 API 密钥，请查看",
-            "api_docs": "API 文档"
+            "api_docs": "API 文档",
+            "copy": "复制",
+            "copied": "已复制",
+            "revoke": "撤销",
+            "used": "上次使用：{{time}}",
+            "never_used": "从未使用",
+            "expired": "已过期"
         }
     },
     "analytics_page": {
         "title": "分析",
-        "description": "跟踪您的秘密分享活动和洞察",
+        "description": "整个实例的使用情况。从不包含内容。",
         "time_range": {
             "last_7_days": "最近 7 天",
             "last_14_days": "最近 14 天",
@@ -280,7 +336,8 @@
             "date": "日期",
             "trend": "变化",
             "vs_previous": "对比前一天",
-            "no_data": "暂无活动数据。"
+            "no_data": "暂无活动数据。",
+            "per_day": "每天"
         },
         "locale": "zh-CN",
         "top_countries": {
@@ -289,18 +346,18 @@
             "views": "查看"
         },
         "secret_types": {
-            "title": "秘密类型",
+            "title": "使用的保护方式",
             "description": "按保护级别分布",
             "password_protected": "密码保护",
             "ip_restricted": "IP 限制",
             "burn_after_time": "定时销毁"
         },
         "expiration_stats": {
-            "title": "过期统计",
+            "title": "过期时间",
             "description": "秘密通常持续多长时间",
-            "one_hour": "1 小时",
-            "one_day": "1 天",
-            "one_week_plus": "1 周以上"
+            "one_hour": "1 小时或更短",
+            "one_day": "1 小时至 1 天",
+            "one_week_plus": "超过 1 天"
         },
         "visitor_analytics": {
             "title": "访客分析",
@@ -310,7 +367,9 @@
             "date": "日期",
             "trend": "变化",
             "vs_previous": "对比前一天",
-            "no_data": "暂无访客数据。"
+            "no_data": "暂无访客数据。",
+            "unique_visitors": "独立访客",
+            "page_views": "页面浏览量"
         },
         "secret_requests": {
             "total": "密钥请求",
@@ -318,11 +377,24 @@
         },
         "loading": "正在加载分析...",
         "no_permission": "您没有权限查看分析。",
-        "failed_to_fetch": "获取分析数据失败。"
+        "failed_to_fetch": "获取分析数据失败。",
+        "range": {
+            "label": "时间范围",
+            "7d": "7天",
+            "14d": "14天",
+            "30d": "30天"
+        },
+        "chart": {
+            "keyboard_hint": "使用左右方向键查看每天的数值。"
+        },
+        "daily_table": {
+            "show": "显示每日数据",
+            "hide": "隐藏每日数据"
+        }
     },
     "instance_page": {
-        "title": "实例设置",
-        "description": "配置您的 Hemmelig 实例",
+        "title": "实例",
+        "description": "适用于此实例上所有用户的设置。",
         "managed_mode": {
             "title": "托管模式",
             "description": "此实例通过环境变量进行管理。设置为只读。"
@@ -366,7 +438,7 @@
             "email_verification_description": "需要邮箱验证"
         },
         "saving_button": "正在保存...",
-        "save_settings_button": "保存设置",
+        "save_settings_button": "保存",
         "security_settings": {
             "title": "安全设置",
             "description": "配置安全和访问控制",
@@ -414,17 +486,130 @@
             "restart_service_button": "重启服务",
             "clear_cache_button": "清除缓存",
             "export_logs_button": "导出日志"
-        }
+        },
+        "managed_notice": "托管模式 — 设置来自环境变量，此处为只读。",
+        "note_default": "更改适用于新的秘密。",
+        "note_managed": "托管模式下为只读。",
+        "headings": {
+            "secret_options": "秘密选项",
+            "rate_limiting": "速率限制"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "秒"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "实例名称",
+                "description": "显示在徽标旁和页面标题中。"
+            },
+            "logo": {
+                "label": "徽标"
+            },
+            "instance_description": {
+                "label": "描述",
+                "description": "显示在首页上。"
+            },
+            "important_message": {
+                "label": "重要消息",
+                "description": "显示在每个公开页面上的横幅。支持 Markdown。留空则隐藏。",
+                "placeholder": "周日 02:00 UTC 维护"
+            },
+            "default_expiration": {
+                "label": "默认过期时间",
+                "description": "创建秘密时的预选值。",
+                "hours": "{{count}} 小时"
+            },
+            "max_secret_size": {
+                "label": "秘密最大大小",
+                "description": "适用于秘密文本和附件。"
+            },
+            "password_protection": {
+                "label": "密码保护",
+                "description": "创建者可以要求密码。"
+            },
+            "ip_restriction": {
+                "label": "IP 限制",
+                "description": "创建者可以将访问限制为某个 IP 或 CIDR。"
+            },
+            "file_uploads": {
+                "label": "文件上传",
+                "description": "已登录用户可添加加密附件。"
+            },
+            "rate_limiting": {
+                "label": "速率限制",
+                "description": "按客户端 IP 计算。"
+            },
+            "rate_limit_requests": {
+                "label": "请求数",
+                "description": "每个时间窗口。"
+            },
+            "rate_limit_window": {
+                "label": "时间窗口",
+                "description": "一个时间窗口的长度。"
+            },
+            "require_invite_code": {
+                "label": "需要邀请码",
+                "description": "注册需要邀请码。菜单中会显示“邀请”。"
+            },
+            "allowed_email_domains": {
+                "label": "允许的邮箱域名",
+                "description": "用逗号分隔。留空则允许所有域名。"
+            },
+            "require_registered_user": {
+                "label": "仅限注册用户",
+                "description": "只有已登录用户可以创建。持有链接的任何人仍然可以查看。"
+            },
+            "social_login_only": {
+                "label": "仅限社交登录",
+                "description": "禁用邮箱和密码注册。"
+            },
+            "webhooks": {
+                "label": "Webhook",
+                "description": "以 POST 方式将事件发送到您的端点。"
+            },
+            "webhook_url": {
+                "label": "端点",
+                "description": "每个事件都会收到一个 POST 请求。"
+            },
+            "webhook_secret": {
+                "label": "签名密钥",
+                "description": "使用此密钥对负载进行 HMAC 签名。签名位于 X-Hemmelig-Signature 请求头中。"
+            },
+            "webhook_on_view": {
+                "label": "查看时",
+                "description": "打开秘密时触发。"
+            },
+            "webhook_on_burn": {
+                "label": "销毁时",
+                "description": "删除秘密时触发。"
+            },
+            "metrics": {
+                "label": "Prometheus 指标",
+                "description": "开放 /api/metrics。"
+            },
+            "metrics_secret": {
+                "label": "Bearer 令牌",
+                "description": "抓取程序发送 Authorization: Bearer <token>。留空则关闭身份验证。"
+            },
+            "metrics_endpoint": {
+                "label": "端点",
+                "description": "Prometheus 抓取此路径。"
+            }
+        },
+        "note_saved": "已保存。更改将应用于新的秘密。",
+        "note_save_failed": "未保存。请阅读错误信息后重试。"
     },
     "secrets_page": {
-        "title": "您的秘密",
-        "description": "管理和监控您共享的秘密",
-        "create_secret_button": "创建秘密",
+        "title": "秘密",
+        "description": "你在此实例上创建的所有内容。",
+        "create_secret_button": "新建秘密",
         "search_placeholder": "搜索秘密...",
         "filter": {
             "all_secrets": "所有秘密",
             "active": "活跃",
-            "expired": "已过期"
+            "expired": "已过期",
+            "all": "全部"
         },
         "total_secrets": "秘密总数",
         "active_secrets": "活跃",
@@ -452,14 +637,37 @@
             "delete_confirmation_title": "确定吗？",
             "delete_confirmation_text": "此操作无法撤销。秘密将被永久删除。",
             "delete_confirm_button": "是的，删除",
-            "delete_cancel_button": "取消"
+            "delete_cancel_button": "取消",
+            "id_header": "ID",
+            "protection_header": "保护",
+            "views_left_header": "剩余查看次数",
+            "expires_header": "过期时间"
+        },
+        "stats": {
+            "total": "总计",
+            "active": "有效",
+            "expired": "已过期"
+        },
+        "filter_label": "筛选秘密",
+        "empty": "这里什么都没有。",
+        "footnote": "标题和内容均已加密，因此只列出 ID 和元数据。链接无法再次复制，因为密钥从未被存储。",
+        "tags": {
+            "password": "密码",
+            "ip": "ip",
+            "burn": "定时销毁",
+            "files_one": "{{count}} 个文件",
+            "files_other": "{{count}} 个文件",
+            "link_key": "链接密钥"
+        },
+        "toast": {
+            "delete_error": "无法删除该秘密。"
         }
     },
     "users_page": {
-        "title": "用户管理",
-        "description": "管理用户及其权限",
+        "title": "用户",
+        "description": "在此实例上拥有账户的用户。",
         "add_user_button": "添加用户",
-        "search_placeholder": "搜索用户...",
+        "search_placeholder": "搜索用户名或邮箱",
         "filter": {
             "all_roles": "所有角色",
             "admin": "管理员",
@@ -483,7 +691,8 @@
             "activity_header": "活动",
             "last_login_header": "最后登录",
             "actions_header": "操作",
-            "created_at": "创建时间"
+            "created_at": "创建时间",
+            "joined_header": "加入时间"
         },
         "status": {
             "active": "活跃",
@@ -513,6 +722,11 @@
             "role_label": "角色",
             "save_button": "添加用户",
             "cancel_button": "取消"
+        },
+        "actions": {
+            "edit": "编辑",
+            "ban": "封禁",
+            "unban": "解除封禁"
         }
     },
     "forgot_password_page": {
@@ -548,7 +762,12 @@
         "continue_with_github": "使用 GitHub 继续",
         "no_account_question": "没有账户？",
         "sign_up_link": "注册",
-        "unexpected_error": "发生意外错误。请重试。"
+        "unexpected_error": "发生意外错误。请重试。",
+        "sign_in_to": "登录 {{name}}",
+        "require_account_notice": "此实例需要账户才能创建机密。",
+        "or": "或",
+        "login_failed": "登录失败：{{message}}",
+        "show_password": "显示密码"
     },
     "register_page": {
         "back_to_hemmelig": "返回 Hemmelig",
@@ -605,8 +824,8 @@
         "files_title": "附件",
         "secret_waiting_title": "有人与您分享了一个秘密",
         "secret_waiting_description": "此秘密已加密，只有点击下方按钮才能查看。",
-        "one_view_remaining": "此秘密只能再查看 1 次",
-        "views_remaining": "此秘密还可以查看 {{count}} 次",
+        "one_view_remaining": "仅剩一次查看。解锁后将从服务器删除。",
+        "views_remaining": "解锁将消耗 {{count}} 次查看中的一次。",
         "view_warning": "一旦查看，此操作无法撤销",
         "secret_revealed": "秘密",
         "copy_secret": "复制到剪贴板",
@@ -618,7 +837,17 @@
         "delete_modal_title": "删除秘密",
         "delete_modal_message": "您确定要删除此秘密吗？此操作无法撤消。",
         "decryption_failed": "解密秘密失败。请检查您的密码或解密密钥。",
-        "fetch_error": "获取秘密时发生错误。请重试。"
+        "fetch_error": "获取秘密时发生错误。请重试。",
+        "after_burns_at_expiry": "到期销毁",
+        "after_last_view": "最后一次查看 · 已从服务器删除",
+        "after_views_left_one": "剩余 {{count}} 次",
+        "after_views_left_other": "剩余 {{count}} 次",
+        "views_left_one": "剩余 {{count}} 次查看",
+        "views_left_other": "剩余 {{count}} 次查看",
+        "copy_html": "HTML",
+        "copy_base64": "Base64",
+        "delete_confirm_question": "为所有人删除？",
+        "wrong_password": "密码错误。"
     },
     "expiration": {
         "28_days": "28 天",
@@ -630,16 +859,18 @@
         "4_hours": "4 小时",
         "1_hour": "1 小时",
         "30_minutes": "30 分钟",
-        "5_minutes": "5 分钟"
+        "5_minutes": "5 分钟",
+        "default_hours": "{{hours}} 小时"
     },
     "error_display": {
         "clear_errors_button_title": "清除错误"
     },
     "secret_not_found_page": {
-        "title": "秘密未找到",
-        "message": "您查找的秘密不存在、已过期或已被销毁。",
+        "title": "这里什么都没有。",
+        "message": "它已被查看、已过期或已删除。无法恢复——服务器从未拥有密钥。",
         "error_details": "错误详情：",
-        "go_home_button": "返回首页"
+        "go_home_button": "创建秘密",
+        "kicker": "404 · 未找到秘密"
     },
     "organization_page": {
         "title": "组织设置",
@@ -692,8 +923,8 @@
         "save_settings_button": "保存设置"
     },
     "invites_page": {
-        "title": "邀请码",
-        "description": "管理新用户注册的邀请码",
+        "title": "邀请",
+        "description": "需要邀请时用于注册的邀请码。",
         "create_invite_button": "创建邀请",
         "loading": "正在加载邀请码...",
         "table": {
@@ -728,7 +959,19 @@
             "fetch_error": "获取邀请码失败",
             "create_error": "创建邀请码失败",
             "delete_error": "停用邀请码失败"
-        }
+        },
+        "close": "关闭",
+        "invites_off": "邀请码已关闭。任何允许注册的人都可以注册。",
+        "require_invite_code": "需要邀请码 →",
+        "form": {
+            "max_uses": "最大使用次数",
+            "expires_in": "有效期",
+            "days": "{{count}} 天",
+            "never": "永不",
+            "generate": "生成"
+        },
+        "copy": "复制",
+        "copied": "已复制"
     },
     "social_login": {
         "continue_with": "使用 {{provider}} 继续",
@@ -790,13 +1033,19 @@
     },
     "verify_2fa_page": {
         "back_to_login": "返回登录",
-        "title": "双因素身份验证",
+        "title": "双重验证码",
         "description": "输入身份验证应用中的 6 位数代码",
         "enter_code_hint": "输入身份验证应用中的代码",
         "verifying": "正在验证...",
         "verify_button": "验证",
         "invalid_code": "验证码无效。请重试。",
-        "unexpected_error": "发生意外错误。请重试。"
+        "unexpected_error": "发生意外错误。请重试。",
+        "invalid_backup_code": "备用代码无效，请重试。",
+        "backup_description": "输入您在启用双重身份验证时保存的备用代码之一。",
+        "code_label": "验证码",
+        "backup_code_label": "备用代码",
+        "use_backup_code": "设备丢失？请改用备用代码。",
+        "use_totp_code": "使用身份验证器应用中的代码"
     },
     "common": {
         "error": "错误",
@@ -805,19 +1054,24 @@
         "ok": "确定",
         "delete": "删除",
         "deleting": "删除中...",
-        "loading": "加载中..."
+        "loading": "加载中...",
+        "copy": "复制",
+        "copied": "已复制"
     },
     "pagination": {
         "showing": "显示第 {{start}} 至 {{end}} 条，共 {{total}} 条结果",
         "previous_page": "上一页",
-        "next_page": "下一页"
+        "next_page": "下一页",
+        "summary": "第 {{start}}–{{end}} 条，共 {{total}} 条 · 第 {{page}}/{{pages}} 页",
+        "label": "分页"
     },
     "not_found_page": {
-        "title": "页面未找到",
+        "title": "这里什么都没有。",
         "message": "这个页面已经消失了，就像我们的秘密一样。",
         "hint": "您要查找的页面不存在或已被移动。",
         "go_home_button": "返回首页",
-        "create_secret_button": "创建秘密"
+        "create_secret_button": "创建秘密",
+        "kicker": "404 · 页面未找到"
     },
     "error_boundary": {
         "title": "出错了",
@@ -826,12 +1080,13 @@
         "error_details": "错误详情：",
         "unknown_error": "发生了未知错误",
         "try_again_button": "重试",
-        "go_home_button": "返回首页"
+        "go_home_button": "返回首页",
+        "kicker": "意外错误"
     },
     "secret_requests_page": {
         "title": "秘密请求",
-        "description": "通过安全链接向他人请求秘密",
-        "create_request_button": "创建请求",
+        "description": "请别人给你发送一个秘密。",
+        "create_request_button": "新建请求",
         "no_requests": "暂无秘密请求。创建一个开始吧。",
         "table": {
             "title_header": "标题",
@@ -840,7 +1095,15 @@
             "link_expires_header": "链接过期",
             "copy_link_tooltip": "复制创建者链接",
             "view_secret_tooltip": "查看秘密",
-            "cancel_tooltip": "取消请求"
+            "cancel_tooltip": "取消请求",
+            "request_header": "请求",
+            "created_header": "创建时间",
+            "meta": "{{views}} · 提交后 {{expiry}}",
+            "views_one": "{{count}} 次查看",
+            "views_other": "{{count}} 次查看",
+            "copy_link": "复制链接",
+            "cancel": "取消",
+            "open_with_key": "用密钥打开"
         },
         "status": {
             "pending": "待处理",
@@ -874,11 +1137,12 @@
             "cancelled": "请求已取消",
             "fetch_error": "获取请求详情失败",
             "cancel_error": "取消请求失败"
-        }
+        },
+        "footnote": "被请求的人在自己的浏览器中提交，并把密钥发送给你。你在这里用该密钥打开秘密。"
     },
     "create_request_page": {
-        "title": "创建秘密请求",
-        "description": "通过生成安全链接向他人请求秘密，他们可以使用该链接提交秘密",
+        "title": "新建请求",
+        "description": "设定规则，对方只需粘贴。",
         "back_button": "返回秘密请求",
         "form": {
             "title_label": "请求标题",
@@ -922,12 +1186,38 @@
             "webhook_secret_warning": "现在保存此密钥！它不会再次显示。使用它来验证 webhook 签名。",
             "expires_at": "链接过期时间：{{date}}",
             "create_another_button": "创建另一个请求",
-            "view_all_button": "查看所有请求"
+            "view_all_button": "查看所有请求",
+            "link_label": "请求链接：分享给持有秘密的人",
+            "copy": "复制",
+            "copied": "已复制",
+            "open_as_creator": "以创建者身份打开",
+            "back_to_requests": "返回请求列表"
         },
         "toast": {
             "created": "秘密请求创建成功",
             "create_error": "创建秘密请求失败",
             "copied": "已复制到剪贴板"
+        },
+        "fields": {
+            "title_label": "标题",
+            "title_hint": "显示给被请求的人。",
+            "title_placeholder": "项目 X 的 API 凭据",
+            "description_label": "描述",
+            "description_hint": "可选的背景说明。",
+            "valid_for_label": "链接有效期",
+            "valid_for_hint": "请求链接的有效时长。",
+            "expires_in_label": "秘密过期时间",
+            "expires_in_hint": "从提交时开始计算。",
+            "max_views_label": "最大查看次数",
+            "max_views_hint": "1 – 9999",
+            "ip_label": "IP 限制",
+            "ip_hint": "可选的 IP 或 CIDR。",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "防止销毁",
+            "prevent_burn_hint": "达到最大查看次数后保留；到期时删除。",
+            "webhook_label": "Webhook",
+            "webhook_hint": "提交时发送通知。",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
@@ -946,20 +1236,73 @@
             "password_protected_note": "此秘密将受密码保护",
             "encryption_note": "您的秘密将在浏览器中加密后再发送。解密密钥仅包含在您分享的最终 URL 中。",
             "submitting_button": "加密并提交中...",
-            "submit_button": "提交秘密"
+            "submit_button": "加密并提交",
+            "placeholder": "粘贴秘密。上传前加密。",
+            "settings_note": "设置由请求者决定"
         },
         "success": {
             "title": "秘密已创建！",
             "description": "您的秘密已加密并安全存储",
-            "decryption_key_label": "解密密钥",
+            "decryption_key_label": "解密密钥——请发送给请求者",
             "warning": "重要：现在复制此解密密钥并发送给请求者。这是您唯一一次看到它！",
-            "manual_send_note": "您必须手动将此解密密钥发送给请求秘密的人。他们的仪表板中已经有秘密 URL。",
+            "manual_send_note": "请求者已有链接。没有此密钥就无法读取。",
             "create_own_button": "创建您自己的秘密"
         },
         "toast": {
             "created": "秘密提交成功",
             "create_error": "提交秘密失败",
             "copied": "已复制到剪贴板"
+        },
+        "kicker": "// 秘密请求"
+    },
+    "composer": {
+        "title_placeholder": "标题（可选，已加密）",
+        "placeholder": "粘贴密码、密钥、配置…",
+        "options_show": "选项 ▾",
+        "options_hide": "选项 ▴",
+        "create_link": "创建链接",
+        "shortcut_hint": "创建链接（{{shortcut}}）",
+        "summary": {
+            "burn_after_time": "到期销毁",
+            "views_one": "{{count}} 次查看",
+            "views_other": "{{count}} 次查看",
+            "password": "密码",
+            "ip": "IP {{range}}",
+            "files_one": "{{count}} 个文件",
+            "files_other": "{{count}} 个文件"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — 挪威语中的“秘密”",
+        "title": "分享阅后即焚的秘密。",
+        "subtitle": "上传前在此标签页中加密。服务器只存储它没有密钥的密文。",
+        "features": {
+            "encrypted_title": "在此加密",
+            "encrypted_body": "AES-256-GCM 在你的浏览器中运行。明文永远不会离开此标签页。",
+            "fragment_title": "密钥位于 #片段",
+            "fragment_body": "浏览器不会发送 <mono>#</mono> 之后的内容。服务器永远看不到密钥。",
+            "gone_title": "阅后即焚",
+            "gone_body": "在最后一次查看或到期时删除，以先到者为准。"
+        }
+    },
+    "important_alert": {
+        "label": "通知",
+        "dismiss": "关闭"
+    },
+    "language_picker": {
+        "label": "选择语言"
+    },
+    "expiration_short": {
+        "5m": "5分钟",
+        "30m": "30分钟",
+        "1h": "1小时",
+        "4h": "4小时",
+        "12h": "12小时",
+        "1d": "1天",
+        "3d": "3天",
+        "7d": "7天",
+        "14d": "14天",
+        "28d": "28天",
+        "hours": "{{hours}}小时"
     }
 }

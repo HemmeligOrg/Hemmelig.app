@@ -3,18 +3,96 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-    --color-dark-900: #0a0a0a;
-    --color-dark-800: #111111;
-    --color-dark-700: #1a1a1a;
-    --color-dark-600: #222222;
-    --color-dark-500: #2a2a2a;
+/* Self-hosted fonts. See src/assets/fonts/OFL-*.txt for the licenses. */
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('./assets/fonts/ibm-plex-sans-latin-ext.woff2') format('woff2');
+    unicode-range:
+        U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+        U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+        U+2C60-2C7F, U+A720-A7FF;
+}
 
-    --color-light-900: #ffffff;
-    --color-light-800: #f8fafc;
-    --color-light-700: #f1f5f9;
-    --color-light-600: #e2e8f0;
-    --color-light-500: #cbd5e1;
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url('./assets/fonts/ibm-plex-sans-latin.woff2') format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url('./assets/fonts/jetbrains-mono-latin-ext.woff2') format('woff2');
+    unicode-range:
+        U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+        U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+        U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url('./assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+        U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * Semantic design tokens. The values below are the light theme.
+ * The .dark block in the base layer sets the dark theme.
+ */
+@theme {
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --text-2xs: 0.6875rem;
+    --text-2xs--line-height: 1rem;
+    --text-ui: 0.8125rem;
+    --text-ui--line-height: 1.25rem;
+    --text-body: 0.9375rem;
+    --text-body--line-height: 1.5rem;
+
+    --container-page: 70rem;
+    --container-content: 51.25rem;
+    --container-reading: 45rem;
+
+    /* Surfaces */
+    --color-canvas: #f6f7f9;
+    --color-surface: #ffffff;
+    --color-raised: #eef0f3;
+
+    /* Lines */
+    --color-line-faint: #eef0f3;
+    --color-line-soft: #e4e7eb;
+    --color-line: #d6dbe0;
+    --color-line-strong: #b9c0c8;
+
+    /* Text */
+    --color-fg: #14171b;
+    --color-fg-2: #30363d;
+    --color-fg-3: #4a525b;
+    --color-muted: #646c75;
+    --color-faint: #8b929b;
+
+    /* Status */
+    --color-accent: oklch(0.52 0.12 160);
+    --color-on-accent: #ffffff;
+    --color-danger: oklch(0.55 0.19 25);
+    --color-on-danger: #ffffff;
+    --color-warn: oklch(0.55 0.12 70);
 
     --breakpoint-xs: 475px;
 
@@ -22,64 +100,60 @@
 }
 
 @layer base {
+    :root {
+        color-scheme: light;
+    }
+
+    .dark {
+        color-scheme: dark;
+
+        --color-canvas: #101317;
+        --color-surface: #14181d;
+        --color-raised: #1b1f25;
+
+        --color-line-faint: #1b1f25;
+        --color-line-soft: #22272e;
+        --color-line: #2a3038;
+        --color-line-strong: #3a414a;
+
+        --color-fg: #e6e8ea;
+        --color-fg-2: #c4cad1;
+        --color-fg-3: #a3aab3;
+        --color-muted: #8b929b;
+        --color-faint: #5d646d;
+
+        --color-accent: oklch(0.82 0.13 160);
+        --color-on-accent: #0c100e;
+        --color-danger: oklch(0.72 0.16 25);
+        --color-on-danger: #101317;
+        --color-warn: oklch(0.85 0.12 80);
+    }
+
     html {
-        font-family: system-ui, sans-serif;
+        font-family: var(--font-sans);
     }
 
     body {
-        @apply bg-light-800 text-gray-900;
+        @apply bg-canvas text-fg text-body antialiased;
     }
 
-    .dark body {
-        @apply bg-dark-900 text-slate-100;
-    }
-}
-
-@layer components {
-    .bg-grid-pattern {
-        background-image: radial-gradient(
-            circle at 1px 1px,
-            rgba(255, 255, 255, 0.15) 1px,
-            transparent 0
-        );
-        background-size: 20px 20px;
+    ::selection {
+        background: var(--color-accent);
+        color: var(--color-on-accent);
     }
 
-    .bg-grid-pattern-light {
-        background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.1) 1px, transparent 0);
-        background-size: 20px 20px;
+    ::placeholder {
+        color: var(--color-faint);
     }
 
-    .slider::-webkit-slider-thumb {
-        appearance: none;
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        background: #14b8a6;
-        cursor: pointer;
-        border: 2px solid #e2e8f0;
-        transition: all 0.3s ease;
+    :where(a, button, [role='button'], [role='switch'], summary):focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
     }
 
-    .dark .slider::-webkit-slider-thumb {
-        border: 2px solid #0f172a;
-    }
-
-    .slider::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
-    }
-
-    .slider::-moz-range-thumb {
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        background: #14b8a6;
-        cursor: pointer;
-        border: 2px solid #e2e8f0;
-    }
-
-    .dark .slider::-moz-range-thumb {
-        border: 2px solid #0f172a;
+    select option {
+        background: var(--color-surface);
+        color: var(--color-fg);
     }
 }
 

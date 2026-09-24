@@ -1,9 +1,8 @@
-import { type LucideIcon } from 'lucide-react';
-import { type ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
+import { Input } from './Input';
 
 interface FormFieldProps {
     label: string;
-    icon: LucideIcon;
     type?: string;
     value: string;
     onChange: (value: string) => void;
@@ -12,14 +11,16 @@ interface FormFieldProps {
     minLength?: number;
     maxLength?: number;
     name?: string;
+    autoComplete?: string;
     className?: string;
     error?: string;
+    hint?: string;
     rightElement?: ReactNode;
 }
 
+/** A labelled text input for the sign-in, registration and setup forms. */
 export function FormField({
     label,
-    icon: Icon,
     type = 'text',
     value,
     onChange,
@@ -28,22 +29,24 @@ export function FormField({
     minLength,
     maxLength,
     name,
+    autoComplete,
     className = '',
     error,
+    hint,
     rightElement,
 }: FormFieldProps) {
-    const hasRightElement = !!rightElement;
+    const id = useId();
 
+    // The label points at the input with htmlFor, so the toggle button next to
+    // the input does not become part of the input's accessible name.
     return (
-        <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-600 dark:text-slate-300">
+        <div className="grid gap-1.5">
+            <label htmlFor={id} className="text-ui text-muted">
                 {label}
             </label>
             <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500">
-                    <Icon className="w-4 h-4" />
-                </div>
-                <input
+                <Input
+                    id={id}
                     type={type}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -52,15 +55,22 @@ export function FormField({
                     minLength={minLength}
                     maxLength={maxLength}
                     name={name}
-                    className={`w-full pl-10 ${hasRightElement ? 'pr-10' : 'pr-4'} py-3 bg-gray-50 dark:bg-dark-700/50 border ${error ? 'border-red-500' : 'border-gray-200 dark:border-dark-500/50'} text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 ${className}`}
+                    autoComplete={autoComplete}
+                    controlSize="lg"
+                    invalid={!!error}
+                    className={`${rightElement ? 'pr-10' : ''} ${className}`}
                 />
                 {rightElement && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex">
                         {rightElement}
                     </div>
                 )}
             </div>
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error ? (
+                <span className="text-xs text-danger">{error}</span>
+            ) : (
+                hint && <span className="text-xs text-muted">{hint}</span>
+            )}
         </div>
     );
 }

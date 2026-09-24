@@ -85,8 +85,8 @@ test.describe('Password Change', () => {
     }) => {
         // Log in as the weak-password user
         await page.goto('/login');
-        await page.getByPlaceholder(/username/i).fill(WEAK_PASSWORD_USER.username);
-        await page.getByPlaceholder(/password/i).fill(WEAK_PASSWORD_USER.password);
+        await page.getByLabel('Username', { exact: true }).fill(WEAK_PASSWORD_USER.username);
+        await page.getByLabel('Password', { exact: true }).fill(WEAK_PASSWORD_USER.password);
         await page.getByRole('button', { name: /sign in/i }).click();
 
         // Wait for login to complete
@@ -96,7 +96,7 @@ test.describe('Password Change', () => {
         await page.goto('/dashboard/account');
 
         // Click on the Security tab
-        await page.getByRole('button', { name: /security/i }).click();
+        await page.getByRole('tab', { name: /security/i }).click();
 
         // Fill in the password change form
         await page.getByPlaceholder(/enter current password/i).fill(WEAK_PASSWORD_USER.password);
@@ -116,8 +116,8 @@ test.describe('Password Change', () => {
         await page.goto('/login');
 
         // Log in with the new password
-        await page.getByPlaceholder(/username/i).fill(WEAK_PASSWORD_USER.username);
-        await page.getByPlaceholder(/password/i).fill(NEW_STRONG_PASSWORD);
+        await page.getByLabel('Username', { exact: true }).fill(WEAK_PASSWORD_USER.username);
+        await page.getByLabel('Password', { exact: true }).fill(NEW_STRONG_PASSWORD);
         await page.getByRole('button', { name: /sign in/i }).click();
 
         // Verify login succeeds

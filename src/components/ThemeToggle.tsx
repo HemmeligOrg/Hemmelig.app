@@ -8,15 +8,16 @@ export function ThemeToggle() {
 
     return (
         <button
+            type="button"
             onClick={toggleTheme}
-            className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+            className="p-1 text-muted hover:text-fg transition-colors cursor-pointer"
             aria-label={
                 theme === 'dark'
                     ? t('theme_toggle.switch_to_light')
                     : t('theme_toggle.switch_to_dark')
             }
         >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
         </button>
     );
 }

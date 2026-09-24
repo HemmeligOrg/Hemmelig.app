@@ -1,22 +1,15 @@
-import { Ban, Mail, Shield, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { type UserUpdate } from '../store/usersStore';
 import { Modal } from './Modal';
 import { ModalInput } from './ModalInput';
-
-interface UserData {
-    id: string;
-    username: string;
-    email: string;
-    role: string;
-    banned: boolean;
-}
+import { ToggleSwitch } from './ToggleSwitch';
 
 interface EditUserModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (user: UserData) => void;
-    user: UserData | null;
+    onSave: (user: UserUpdate) => void;
+    user: UserUpdate | null;
 }
 
 export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalProps) {
@@ -26,19 +19,23 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
     const [role, setRole] = useState(user?.role);
     const [banned, setBanned] = useState(user?.banned);
 
-    useEffect(() => {
+    const [previousUser, setPreviousUser] = useState(user);
+
+    // Load the fields again when the dialog opens for another user.
+    if (user !== previousUser) {
+        setPreviousUser(user);
         if (user) {
             setUsername(user.username);
             setEmail(user.email);
             setRole(user.role);
             setBanned(user.banned);
         }
-    }, [user]);
+    }
 
     const handleSave = () => {
         if (user) {
             onSave({
-                ...user,
+                id: user.id,
                 username: username ?? '',
                 email: email ?? '',
                 role: role ?? 'user',
@@ -59,46 +56,42 @@ export function EditUserModal({ isOpen, onClose, onSave, user }: EditUserModalPr
             title={t('users_page.edit_user_modal.title', { username: user.username })}
             confirmText={t('users_page.edit_user_modal.save_button')}
             cancelText={t('users_page.edit_user_modal.cancel_button')}
+            confirmVariant="primary"
         >
-            <div className="space-y-3">
+            <div className="grid gap-3">
                 <ModalInput
                     label={t('users_page.edit_user_modal.username_label')}
-                    icon={User}
                     type="text"
+                    autoComplete="off"
                     value={username}
                     onChange={setUsername}
                 />
                 <ModalInput
                     label={t('users_page.edit_user_modal.email_label')}
-                    icon={Mail}
                     type="email"
+                    autoComplete="off"
                     value={email}
                     onChange={setEmail}
                 />
                 <ModalInput
                     label={t('users_page.edit_user_modal.role_label')}
-                    icon={Shield}
                     as="select"
                     value={role}
                     onChange={setRole}
                     options={[
-                        { value: 'user', label: 'User' },
-                        { value: 'admin', label: 'Admin' },
+                        { value: 'user', label: t('users_page.filter.user') },
+                        { value: 'admin', label: t('users_page.filter.admin') },
                     ]}
                 />
-                <div>
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            checked={banned}
-                            onChange={(e) => setBanned(e.target.checked)}
-                            className="h-3.5 w-3.5 border-gray-300 text-teal-600 focus:ring-teal-500"
-                        />
-                        <span className="text-xs text-gray-600 dark:text-slate-300 flex items-center gap-1.5">
-                            <Ban className="w-3.5 h-3.5" />
-                            {t('users_page.edit_user_modal.banned_label')}
-                        </span>
-                    </label>
+                <div className="flex items-center justify-between gap-3 pt-1">
+                    <span className="text-ui text-fg">
+                        {t('users_page.edit_user_modal.banned_label')}
+                    </span>
+                    <ToggleSwitch
+                        checked={banned ?? false}
+                        onChange={setBanned}
+                        label={t('users_page.edit_user_modal.banned_label')}
+                    />
                 </div>
             </div>
         </Modal>

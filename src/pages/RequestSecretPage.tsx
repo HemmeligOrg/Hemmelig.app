@@ -1,19 +1,17 @@
-import { Copy, Lock, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Card } from '../components/Card';
+import { Button, buttonClassName } from '../components/Button';
 import Editor from '../components/Editor';
-import { TitleField } from '../components/TitleField';
+import { useCopyFeedback } from '../hooks/useCopyFeedback';
 import { api } from '../lib/api';
 import { encrypt, generateEncryptionKey, generateSalt } from '../lib/crypto';
-import { copyToClipboard as copyText } from '../utils/clipboard';
 
 interface RequestInfo {
     id: string;
     title: string;
-    description?: string;
+    description?: string | null;
 }
 
 interface CreatedSecret {
@@ -43,6 +41,7 @@ export function RequestSecretPage() {
     const [title, setTitle] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [createdSecret, setCreatedSecret] = useState<CreatedSecret | null>(null);
+    const { copied, copy } = useCopyFeedback();
 
     useEffect(() => {
         const fetchRequestInfo = async () => {
@@ -134,163 +133,119 @@ export function RequestSecretPage() {
         }
     };
 
-    const handleCopyToClipboard = async (text: string) => {
-        const success = await copyText(text);
-        if (success) {
-            toast.success(t('request_secret_page.toast.copied'));
-        }
-    };
+    const kicker = (
+        <div className="font-mono text-ui text-accent">{t('request_secret_page.kicker')}</div>
+    );
 
     if (isLoading) {
         return (
-            <div className="py-12 flex justify-center">
-                <div className="text-gray-500 dark:text-slate-400">
-                    {t('request_secret_page.loading')}
-                </div>
-            </div>
+            <main className="max-w-content mx-auto px-6 py-24 text-center font-mono text-ui text-muted">
+                {t('request_secret_page.loading')}
+            </main>
         );
     }
 
     if (error) {
         return (
-            <div className="py-12">
-                <div className="max-w-lg mx-auto text-center">
-                    <Card noPadding className="p-8">
-                        <Lock className="w-12 h-12 mx-auto mb-4 text-red-400" />
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                            {t('request_secret_page.error.title')}
-                        </h2>
-                        <p className="text-gray-500 dark:text-slate-400 mb-6">{error}</p>
-                        <Link
-                            to="/"
-                            className="inline-block px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white transition-colors"
-                        >
-                            {t('request_secret_page.error.go_home_button')}
-                        </Link>
-                    </Card>
+            <main className="max-w-reading mx-auto px-6 py-28 grid gap-4.5">
+                <div className="font-mono text-ui text-faint">
+                    {t('request_secret_page.kicker')}
                 </div>
-            </div>
+                <h1 className="m-0 text-[44px] leading-tight font-medium tracking-[-0.035em]">
+                    {t('request_secret_page.error.title')}
+                </h1>
+                <p className="m-0 text-fg-3 text-lg text-pretty">{error}</p>
+                <Link
+                    to="/"
+                    className={buttonClassName({
+                        variant: 'secondary',
+                        size: 'lg',
+                        className: 'justify-self-start text-fg',
+                    })}
+                >
+                    {t('request_secret_page.error.go_home_button')}
+                </Link>
+            </main>
         );
     }
 
     if (createdSecret) {
         return (
-            <div className="py-12">
-                <div className="max-w-2xl mx-auto">
-                    <Card noPadding className="p-6 sm:p-8">
-                        <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-green-500/20 mx-auto mb-4 flex items-center justify-center">
-                                <Send className="w-8 h-8 text-green-400" />
-                            </div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                                {t('request_secret_page.success.title')}
-                            </h2>
-                            <p className="text-gray-500 dark:text-slate-400">
-                                {t('request_secret_page.success.description')}
-                            </p>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                                    {t('request_secret_page.success.decryption_key_label')}
-                                </label>
-                                <div className="flex items-center gap-2">
-                                    <div className="flex-1 bg-gray-100 dark:bg-dark-700 p-3 overflow-x-auto">
-                                        <code className="text-sm text-gray-900 dark:text-white break-all">
-                                            {createdSecret.decryptionKey}
-                                        </code>
-                                    </div>
-                                    <button
-                                        onClick={() =>
-                                            handleCopyToClipboard(createdSecret.decryptionKey)
-                                        }
-                                        className="p-3 bg-teal-500 hover:bg-teal-600 text-white transition-colors"
-                                    >
-                                        <Copy className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="bg-yellow-500/10 border border-yellow-500/30 p-4">
-                                <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                                    {t('request_secret_page.success.warning')}
-                                </p>
-                            </div>
-
-                            <p className="text-sm text-gray-500 dark:text-slate-400">
-                                {t('request_secret_page.success.manual_send_note')}
-                            </p>
-
-                            <div className="pt-4">
-                                <Link
-                                    to="/"
-                                    className="block w-full px-4 py-3 bg-gray-200 dark:bg-dark-600 hover:bg-gray-300 dark:hover:bg-dark-500 text-gray-900 dark:text-white text-center transition-colors"
-                                >
-                                    {t('request_secret_page.success.create_own_button')}
-                                </Link>
-                            </div>
-                        </div>
-                    </Card>
+            <main className="max-w-content mx-auto px-6 py-12 grid gap-4">
+                {kicker}
+                <h1 className="m-0 text-[28px] font-medium tracking-tight">
+                    {t('request_secret_page.success.title')}
+                </h1>
+                <div className="border border-line rounded-md bg-surface overflow-hidden">
+                    <div className="p-4.5 grid gap-1.5">
+                        <span className="text-ui text-muted">
+                            {t('request_secret_page.success.decryption_key_label')}
+                        </span>
+                        <span className="font-mono text-base text-accent break-all">
+                            {createdSecret.decryptionKey}
+                        </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2.5 items-center p-3 border-t border-line-soft">
+                        <Button variant="primary" onClick={() => copy(createdSecret.decryptionKey)}>
+                            {copied ? t('common.copied') : t('common.copy')}
+                        </Button>
+                        <span className="text-ui text-muted">
+                            {t('request_secret_page.success.manual_send_note')}
+                        </span>
+                    </div>
                 </div>
-            </div>
+                <p className="m-0 text-sm text-warn">{t('request_secret_page.success.warning')}</p>
+                <Link to="/" className="justify-self-start text-sm text-accent hover:underline">
+                    {t('request_secret_page.success.create_own_button')}
+                </Link>
+            </main>
         );
     }
 
     return (
-        <div className="py-6 sm:py-8">
-            <div className="max-w-2xl mx-auto">
-                <Card noPadding className="p-6 sm:p-8">
-                    <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                            {t('request_secret_page.form.title')}
-                        </h1>
-                        <p className="text-gray-500 dark:text-slate-400">
-                            {t('request_secret_page.form.description')}
-                        </p>
-                    </div>
+        <main className="max-w-content mx-auto px-6 py-12 grid gap-4">
+            {kicker}
+            <h1 className="m-0 text-[28px] font-medium tracking-tight">
+                {requestInfo?.title || t('request_secret_page.form.title')}
+            </h1>
+            <p className="m-0 max-w-155 text-fg-3">
+                {requestInfo?.description || t('request_secret_page.form.description')}
+            </p>
 
-                    {requestInfo && (
-                        <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4 mb-6">
-                            <h3 className="font-medium text-gray-900 dark:text-white mb-1">
-                                {requestInfo.title}
-                            </h3>
-                            {requestInfo.description && (
-                                <p className="text-sm text-gray-500 dark:text-slate-400">
-                                    {requestInfo.description}
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="space-y-6">
-                        <Editor value={secret} onChange={setSecret} />
-
-                        <TitleField value={title} onChange={setTitle} />
-
-                        <div className="bg-blue-500/10 border border-blue-500/30 p-4">
-                            <p className="text-sm text-blue-600 dark:text-blue-400">
-                                {t('request_secret_page.form.encryption_note')}
-                            </p>
-                        </div>
-
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isSubmitting || !secret.trim()}
-                            className="w-full px-4 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium transition-colors flex items-center justify-center space-x-2"
-                        >
-                            {isSubmitting ? (
-                                <span>{t('request_secret_page.form.submitting_button')}</span>
-                            ) : (
-                                <>
-                                    <Send className="w-4 h-4" />
-                                    <span>{t('request_secret_page.form.submit_button')}</span>
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </Card>
+            <div className="border border-line rounded-md bg-surface overflow-hidden">
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={t('composer.title_placeholder')}
+                    aria-label={t('title_field.placeholder')}
+                    className="w-full bg-transparent border-0 border-b border-line-soft px-4.5 py-3.5 text-sm text-fg placeholder:text-faint outline-none"
+                />
+                <Editor
+                    value={secret}
+                    onChange={setSecret}
+                    placeholder={t('request_secret_page.form.placeholder')}
+                    minHeightClassName="min-h-55"
+                />
+                <div className="flex flex-wrap items-center gap-2.5 py-2.5 pl-4.5 pr-3 border-t border-line-soft">
+                    <span className="flex-1 font-mono text-xs text-muted">
+                        {t('request_secret_page.form.settings_note')}
+                    </span>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit}
+                        loading={isSubmitting}
+                        disabled={!secret.trim()}
+                    >
+                        {isSubmitting
+                            ? t('request_secret_page.form.submitting_button')
+                            : t('request_secret_page.form.submit_button')}
+                    </Button>
+                </div>
             </div>
-        </div>
+            <p className="m-0 text-ui text-faint">
+                {t('request_secret_page.form.encryption_note')}
+            </p>
+        </main>
     );
 }

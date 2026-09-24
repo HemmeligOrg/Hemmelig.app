@@ -41,14 +41,12 @@ const checkSetupStatus = async () => {
     return false;
 };
 
-// Loader to fetch instance settings
-const instanceSettingsLoader = async () => {
-    // Check if setup is needed first
-    const needsSetup = await checkSetupStatus();
-    if (needsSetup) {
-        return redirect('/setup');
-    }
+// True after the first successful load of the public instance settings.
+let publicSettingsLoaded = false;
 
+// Loads the public instance settings into the store and returns them.
+// Errors are logged, not thrown. The function returns null on an error.
+const loadPublicSettings = async () => {
     try {
         const res = await api.instance.settings.public.$get();
         if (!res.ok) {
@@ -57,11 +55,23 @@ const instanceSettingsLoader = async () => {
         }
         const settings = await res.json();
         useHemmeligStore.getState().setSettings(settings);
+        publicSettingsLoaded = true;
         return settings;
     } catch (error) {
         console.error('Error fetching instance settings:', error);
         return null;
     }
+};
+
+// Loader to fetch instance settings
+const instanceSettingsLoader = async () => {
+    // Check if setup is needed first
+    const needsSetup = await checkSetupStatus();
+    if (needsSetup) {
+        return redirect('/setup');
+    }
+
+    return loadPublicSettings();
 };
 
 // Loader to fetch user session and update store
@@ -74,7 +84,12 @@ const userSessionLoader = async () => {
 
 // Combined loader for dashboard layout
 const dashboardLoader = async () => {
-    const { data, error } = await authClient.getSession();
+    const [{ data, error }] = await Promise.all([
+        authClient.getSession(),
+        // The sidebar needs the instance name and the invite setting. Load them
+        // only when no earlier page has loaded them.
+        publicSettingsLoaded ? null : loadPublicSettings(),
+    ]);
     if (!data?.user) {
         return redirect('/login');
     }
@@ -134,15 +149,7 @@ export const router = createBrowserRouter([
             }
 
             // Fetch instance settings
-            try {
-                const res = await api.instance.settings.public.$get();
-                if (res.ok) {
-                    const settings = await res.json();
-                    useHemmeligStore.getState().setSettings(settings);
-                }
-            } catch (error) {
-                console.error('Error fetching instance settings:', error);
-            }
+            await loadPublicSettings();
 
             // Fetch user session
             const { data } = await authClient.getSession();
@@ -169,7 +176,18 @@ export const router = createBrowserRouter([
                         throw new Response('Not Found', { status: 404 });
                     }
                     trackPageView('/secret');
-                    const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
+                    // A missing secret is the normal case here, so use the raw client and
+                    // throw a 404 response instead of an error toast.
+                    const res = await apiRaw.secrets[':id'].check.$get({
+                        param: { id: params.id },
+                    });
+                    if (res.status === 404) {
+                        throw new Response('Not Found', { status: 404 });
+                    }
+                    if (!res.ok) {
+                        const data = await res.json();
+                        throw new Error('error' in data ? data.error : 'Failed to check secret');
+                    }
                     return res.json();
                 },
             },

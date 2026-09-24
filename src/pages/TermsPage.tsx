@@ -1,14 +1,24 @@
-export function TermsPage() {
-    return (
-        <div className="min-h-screen bg-gray-50 dark:bg-dark-900 py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                    Terms & Conditions
-                </h1>
+import { useTranslation } from 'react-i18next';
 
-                <div className="space-y-8 text-gray-700 dark:text-slate-300">
+export function TermsPage() {
+    const { t } = useTranslation();
+
+    return (
+        <div className="px-6 pt-12 pb-4">
+            <div className="max-w-reading mx-auto">
+                <div className="grid gap-2.5 mb-10">
+                    <div className="font-mono text-ui text-accent lowercase">
+                        {'// '}
+                        {t('footer.terms')}
+                    </div>
+                    <h1 className="m-0 text-4xl font-medium tracking-tight text-fg">
+                        Terms & Conditions
+                    </h1>
+                </div>
+
+                <div className="grid gap-9 text-fg-3 leading-relaxed [&_strong]:font-medium [&_strong]:text-fg">
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Agreement to Terms
                         </h2>
                         <p>
@@ -22,7 +32,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             User Registration
                         </h2>
                         <p>
@@ -35,7 +45,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Prohibited Activities
                         </h2>
                         <p className="mb-4">
@@ -44,7 +54,7 @@ export function TermsPage() {
                             with any commercial endeavors except those that are specifically
                             endorsed or approved by us. As a user of the Site, you agree not to:
                         </p>
-                        <ul className="list-disc pl-6 space-y-2">
+                        <ul className="list-disc pl-5 space-y-2 marker:text-faint">
                             <li>
                                 Systematically retrieve data or other content from the Site to
                                 create or compile, directly or indirectly, a collection,
@@ -155,7 +165,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Term and Termination
                         </h2>
                         <p>
@@ -168,7 +178,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Disclaimer
                         </h2>
                         <p>
@@ -178,7 +188,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Limitations of Liability
                         </h2>
                         <p>
@@ -189,7 +199,7 @@ export function TermsPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Indemnification
                         </h2>
                         <p>

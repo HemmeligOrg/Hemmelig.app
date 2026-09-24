@@ -1,12 +1,22 @@
-export function PrivacyPage() {
-    return (
-        <div className="py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Privacy</h1>
+import { useTranslation } from 'react-i18next';
 
-                <div className="space-y-8 text-gray-700 dark:text-slate-300">
+export function PrivacyPage() {
+    const { t } = useTranslation();
+
+    return (
+        <div className="px-6 pt-12 pb-4">
+            <div className="max-w-reading mx-auto">
+                <div className="grid gap-2.5 mb-10">
+                    <div className="font-mono text-ui text-accent lowercase">
+                        {'// '}
+                        {t('footer.privacy')}
+                    </div>
+                    <h1 className="m-0 text-4xl font-medium tracking-tight text-fg">Privacy</h1>
+                </div>
+
+                <div className="grid gap-9 text-fg-3 leading-relaxed [&_strong]:font-medium [&_strong]:text-fg">
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Is my data secure?
                         </h2>
                         <p className="mb-4">
@@ -17,14 +27,14 @@ export function PrivacyPage() {
                             your device.
                         </p>
                         <p className="mb-4">Here's how it works:</p>
-                        <ul className="list-disc list-inside space-y-2 ml-4 mb-4">
+                        <ul className="list-disc pl-5 space-y-2 mb-4 marker:text-faint">
                             <li>
                                 A unique 32-character encryption key is generated for each secret
                                 (or you can provide your own password)
                             </li>
                             <li>
                                 A unique 32-character salt is generated per secret and used with{' '}
-                                <strong>PBKDF2</strong> (100,000 iterations, SHA-256) to derive a
+                                <strong>PBKDF2</strong> (1,300,000 iterations, SHA-256) to derive a
                                 256-bit AES key
                             </li>
                             <li>
@@ -45,14 +55,14 @@ export function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Do you track me?
                         </h2>
                         <p className="mb-4">
                             We use privacy-focused analytics to understand how Hemmelig is being
                             used. Our analytics system is designed with privacy in mind:
                         </p>
-                        <ul className="list-disc list-inside space-y-2 ml-4">
+                        <ul className="list-disc pl-5 space-y-2 marker:text-faint">
                             <li>
                                 We use HMAC-SHA256 hashing to create anonymous visitor IDs — your
                                 actual IP address is never stored
@@ -71,7 +81,7 @@ export function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             I still don't trust this application.
                         </h2>
                         <p>
@@ -81,13 +91,13 @@ export function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             What data is stored?
                         </h2>
                         <p className="mb-4">
                             We only store the minimum data necessary to provide the service:
                         </p>
-                        <ul className="list-disc list-inside space-y-2 ml-4">
+                        <ul className="list-disc pl-5 space-y-2 marker:text-faint">
                             <li>
                                 <strong>Secrets:</strong> Encrypted content (as binary data), salt,
                                 expiration time, view count, and optional settings (password hash,
@@ -113,7 +123,7 @@ export function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                        <h2 className="m-0 mb-2.5 text-lg font-medium tracking-tight text-fg">
                             Contact Information
                         </h2>
                         <p>
@@ -123,7 +133,7 @@ export function PrivacyPage() {
                                 href="https://github.com/HemmeligOrg/Hemmelig.app"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-orange-500 hover:text-orange-600 underline"
+                                className="text-accent hover:underline"
                             >
                                 GitHub repository
                             </a>

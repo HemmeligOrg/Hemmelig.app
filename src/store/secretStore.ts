@@ -17,6 +17,8 @@ interface SecretState {
     views: number;
     isBurnable: boolean;
     ipRange: string | null;
+    /** The number of files attached to the created secret. */
+    fileCount: number;
     setSecretIdAndKeys: (
         secretId: string | null,
         decryptionKey: string | null,
@@ -24,7 +26,17 @@ interface SecretState {
     ) => void;
     setSecretData: (
         data: Partial<
-            Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>
+            Pick<
+                SecretState,
+                | 'secret'
+                | 'title'
+                | 'password'
+                | 'expiresAt'
+                | 'views'
+                | 'isBurnable'
+                | 'ipRange'
+                | 'fileCount'
+            >
         >
     ) => void;
     resetSecret: () => void;
@@ -49,6 +61,7 @@ const defaultState = {
     views: 1,
     isBurnable: false,
     ipRange: null,
+    fileCount: 0,
 };
 
 export const useSecretStore = create<SecretState>((set) => ({

@@ -1,11 +1,17 @@
-import { Copy, Plus, Ticket, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Button, buttonClassName } from '../../components/Button';
+import { Chip } from '../../components/Chip';
+import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal';
+import { Notice } from '../../components/Notice';
+import { PageHeader } from '../../components/PageHeader';
+import { Table, TableEmpty, TableHead, TableRow } from '../../components/Table';
+import { useCopyFeedbackWithId } from '../../hooks/useCopyFeedback';
 import { api } from '../../lib/api';
-import { copyToClipboard as copyText } from '../../utils/clipboard';
+import { useHemmeligStore } from '../../store/hemmeligStore';
 
 type InviteCode = {
     id: string;
@@ -17,31 +23,60 @@ type InviteCode = {
     isActive: boolean;
 };
 
+const COLUMNS = 'grid-cols-[minmax(0,1.4fr)_90px_120px_90px_160px]';
+
+/** Expiry choices in days. `null` means that the code does not expire. */
+const EXPIRY_DAYS: (number | null)[] = [1, 7, 30, null];
+
+const MAX_USES_LIMIT = 100;
+
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+/** Formats a date relative to now, for example "in 6 days", in the active language. */
+const formatRelative = (iso: string, language: string) => {
+    const diff = new Date(iso).getTime() - Date.now();
+    const format = new Intl.RelativeTimeFormat(language, { numeric: 'auto' });
+    if (Math.abs(diff) < DAY_MS) {
+        return format.format(Math.round(diff / HOUR_MS), 'hour');
+    }
+    return format.format(Math.round(diff / DAY_MS), 'day');
+};
+
 export function InvitesPage() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const initialInvites = useLoaderData() as InviteCode[];
+    const requireInviteCode = useHemmeligStore((state) => state.settings.requireInviteCode);
     const [invites, setInvites] = useState<InviteCode[]>(initialInvites || []);
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [maxUses, setMaxUses] = useState('1');
+    const [expiresInDays, setExpiresInDays] = useState<number | null>(7);
+    const [isCreating, setIsCreating] = useState(false);
     const [inviteToDelete, setInviteToDelete] = useState<InviteCode | null>(null);
-    const [newInviteSettings, setNewInviteSettings] = useState({
-        maxUses: 1,
-        expiresInDays: 7,
-    });
+    const { copy, isCopied } = useCopyFeedbackWithId();
+
+    const language = i18n.resolvedLanguage ?? i18n.language;
 
     const createInvite = async () => {
+        const uses = Math.min(MAX_USES_LIMIT, Math.max(1, parseInt(maxUses, 10) || 1));
+        setIsCreating(true);
         try {
             const res = await api.invites.$post({
-                json: newInviteSettings,
+                json: { maxUses: uses, ...(expiresInDays ? { expiresInDays } : {}) },
             });
             if (res.ok) {
                 const newInvite = await res.json();
                 setInvites([newInvite, ...invites]);
-                setIsCreateModalOpen(false);
+                setShowForm(false);
                 toast.success(t('invites_page.toast.created'));
+            } else {
+                toast.error(t('invites_page.toast.create_error'));
             }
         } catch (error) {
             console.error('Failed to create invite:', error);
             toast.error(t('invites_page.toast.create_error'));
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -62,197 +97,138 @@ export function InvitesPage() {
         }
     };
 
-    const handleCopyToClipboard = async (code: string) => {
-        const success = await copyText(code);
-        if (success) {
-            toast.success(t('invites_page.toast.copied'));
-        }
-    };
-
     return (
-        <div className="p-4 sm:p-6">
-            <div className="mb-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                        {t('invites_page.title')}
-                    </h1>
-                    <p className="text-gray-500 dark:text-slate-400 text-xs mt-0.5">
-                        {t('invites_page.description')}
-                    </p>
-                </div>
-                <button
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors w-fit"
-                >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>{t('invites_page.create_invite_button')}</span>
-                </button>
-            </div>
+        <div className="grid gap-5 content-start">
+            <PageHeader
+                title={t('invites_page.title')}
+                description={t('invites_page.description')}
+                action={
+                    requireInviteCode && (
+                        <Button variant="primary" onClick={() => setShowForm(!showForm)}>
+                            {showForm
+                                ? t('invites_page.close')
+                                : t('invites_page.create_invite_button')}
+                        </Button>
+                    )
+                }
+            />
 
-            <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-600">
-                        <thead className="bg-gray-50 dark:bg-dark-700/50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="py-2.5 pl-4 pr-3 text-left text-xs font-medium text-gray-600 dark:text-slate-400 sm:pl-4"
+            {!requireInviteCode && (
+                <Notice className="flex flex-wrap gap-4 items-center justify-between">
+                    <span>{t('invites_page.invites_off')}</span>
+                    <Link
+                        to="/dashboard/instance?tab=organization"
+                        className={buttonClassName({ variant: 'link', size: 'inline' })}
+                    >
+                        {t('invites_page.require_invite_code')}
+                    </Link>
+                </Notice>
+            )}
+
+            {showForm && requireInviteCode && (
+                <div className="border border-line rounded-md p-3.5 flex flex-wrap gap-2.5 items-center">
+                    <span className="text-ui text-muted">{t('invites_page.form.max_uses')}</span>
+                    <div className="w-[70px]">
+                        <Input
+                            mono
+                            inputMode="numeric"
+                            value={maxUses}
+                            onChange={(e) => setMaxUses(e.target.value.replace(/\D/g, ''))}
+                            aria-label={t('invites_page.form.max_uses')}
+                            className="text-right"
+                        />
+                    </div>
+                    <span className="text-ui text-muted">{t('invites_page.form.expires_in')}</span>
+                    <div className="flex gap-1">
+                        {EXPIRY_DAYS.map((days) => (
+                            <Chip
+                                key={days ?? 'never'}
+                                selected={expiresInDays === days}
+                                onClick={() => setExpiresInDays(days)}
+                            >
+                                {days
+                                    ? t('invites_page.form.days', { count: days })
+                                    : t('invites_page.form.never')}
+                            </Chip>
+                        ))}
+                    </div>
+                    <Button
+                        variant="primary"
+                        className="ml-auto"
+                        loading={isCreating}
+                        onClick={createInvite}
+                    >
+                        {t('invites_page.form.generate')}
+                    </Button>
+                </div>
+            )}
+
+            <Table minWidthClassName="min-w-[640px]">
+                <TableHead className={COLUMNS}>
+                    <span>{t('invites_page.table.code_header')}</span>
+                    <span>{t('invites_page.table.uses_header')}</span>
+                    <span>{t('invites_page.table.expires_header')}</span>
+                    <span>{t('invites_page.table.status_header')}</span>
+                    <span />
+                </TableHead>
+                {invites.length === 0 ? (
+                    <TableEmpty>{t('invites_page.no_invites')}</TableEmpty>
+                ) : (
+                    invites.map((invite) => {
+                        const isExpired =
+                            !!invite.expiresAt && new Date(invite.expiresAt) < new Date();
+                        const isMaxedOut = !!invite.maxUses && invite.uses >= invite.maxUses;
+                        const isValid = invite.isActive && !isExpired && !isMaxedOut;
+                        const status = isValid
+                            ? t('invites_page.status.active')
+                            : !invite.isActive
+                              ? t('invites_page.status.inactive')
+                              : isExpired
+                                ? t('invites_page.status.expired')
+                                : t('invites_page.status.used');
+
+                        return (
+                            <TableRow key={invite.id} className={COLUMNS} dim={!isValid}>
+                                <span className="font-mono text-sm truncate">{invite.code}</span>
+                                <span className="font-mono text-ui text-fg-3">
+                                    {invite.uses} / {invite.maxUses ?? '∞'}
+                                </span>
+                                <span className="text-ui text-muted">
+                                    {invite.expiresAt
+                                        ? formatRelative(invite.expiresAt, language)
+                                        : t('invites_page.table.never')}
+                                </span>
+                                <span
+                                    className={`font-mono text-xs ${isValid ? 'text-accent' : 'text-faint'}`}
                                 >
-                                    {t('invites_page.table.code_header')}
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-                                >
-                                    {t('invites_page.table.uses_header')}
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400 hidden sm:table-cell"
-                                >
-                                    {t('invites_page.table.expires_header')}
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-3 py-2.5 text-left text-xs font-medium text-gray-600 dark:text-slate-400"
-                                >
-                                    {t('invites_page.table.status_header')}
-                                </th>
-                                <th scope="col" className="relative py-2.5 pl-3 pr-4 sm:pr-4">
-                                    <span className="sr-only">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-dark-600">
-                            {invites.length === 0 ? (
-                                <tr>
-                                    <td
-                                        colSpan={5}
-                                        className="py-6 text-center text-gray-500 dark:text-slate-400"
+                                    {status}
+                                </span>
+                                <div className="flex gap-3.5 justify-end">
+                                    <Button
+                                        variant="link"
+                                        size="inline"
+                                        onClick={() => copy(invite.code, invite.id)}
                                     >
-                                        <Ticket className="w-8 h-8 mx-auto mb-1.5 opacity-50" />
-                                        <p className="text-xs">{t('invites_page.no_invites')}</p>
-                                    </td>
-                                </tr>
-                            ) : (
-                                invites.map((invite) => {
-                                    const isExpired =
-                                        invite.expiresAt && new Date(invite.expiresAt) < new Date();
-                                    const isMaxedOut =
-                                        invite.maxUses && invite.uses >= invite.maxUses;
-                                    const isValid = invite.isActive && !isExpired && !isMaxedOut;
-
-                                    return (
-                                        <tr
-                                            key={invite.id}
-                                            className="hover:bg-gray-50 dark:hover:bg-dark-700/30"
+                                        {isCopied(invite.id)
+                                            ? t('invites_page.copied')
+                                            : t('invites_page.copy')}
+                                    </Button>
+                                    {invite.isActive && (
+                                        <Button
+                                            variant="ghost"
+                                            size="inline"
+                                            onClick={() => setInviteToDelete(invite)}
                                         >
-                                            <td className="whitespace-nowrap py-2.5 pl-4 pr-3 text-xs sm:pl-4">
-                                                <div className="flex items-center gap-1.5">
-                                                    <code className="font-mono text-gray-900 dark:text-white bg-gray-100 dark:bg-dark-700 px-1.5 py-0.5">
-                                                        {invite.code}
-                                                    </code>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleCopyToClipboard(invite.code)
-                                                        }
-                                                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                                    >
-                                                        <Copy className="w-3.5 h-3.5" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400">
-                                                {invite.uses} / {invite.maxUses ?? '∞'}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden sm:table-cell">
-                                                {invite.expiresAt
-                                                    ? new Date(
-                                                          invite.expiresAt
-                                                      ).toLocaleDateString()
-                                                    : t('invites_page.table.never')}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-2.5 text-xs">
-                                                <span
-                                                    className={`px-1.5 py-0.5 inline-flex text-xs font-medium ${isValid ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}
-                                                >
-                                                    {isValid
-                                                        ? t('invites_page.status.active')
-                                                        : isExpired
-                                                          ? t('invites_page.status.expired')
-                                                          : isMaxedOut
-                                                            ? t('invites_page.status.used')
-                                                            : t('invites_page.status.inactive')}
-                                                </span>
-                                            </td>
-                                            <td className="relative whitespace-nowrap py-2.5 pl-3 pr-4 text-right sm:pr-4">
-                                                <button
-                                                    onClick={() => setInviteToDelete(invite)}
-                                                    disabled={!invite.isActive}
-                                                    className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50 transition-colors"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                            {t('invites_page.delete_modal.confirm_text')}
+                                        </Button>
+                                    )}
+                                </div>
+                            </TableRow>
+                        );
+                    })
+                )}
+            </Table>
 
-            {/* Create Modal */}
-            <Modal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                onConfirm={createInvite}
-                title={t('invites_page.create_modal.title')}
-                confirmText={t('invites_page.create_invite_button')}
-                cancelText={t('invites_page.delete_modal.cancel_text')}
-            >
-                <div className="space-y-3">
-                    <div>
-                        <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                            {t('invites_page.create_modal.max_uses_label')}
-                        </label>
-                        <input
-                            type="number"
-                            min={1}
-                            max={100}
-                            value={newInviteSettings.maxUses}
-                            onChange={(e) =>
-                                setNewInviteSettings({
-                                    ...newInviteSettings,
-                                    maxUses: parseInt(e.target.value),
-                                })
-                            }
-                            className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                            {t('invites_page.create_modal.expires_in_label')}
-                        </label>
-                        <input
-                            type="number"
-                            min={1}
-                            max={365}
-                            value={newInviteSettings.expiresInDays}
-                            onChange={(e) =>
-                                setNewInviteSettings({
-                                    ...newInviteSettings,
-                                    expiresInDays: parseInt(e.target.value),
-                                })
-                            }
-                            className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500"
-                        />
-                    </div>
-                </div>
-            </Modal>
-
-            {/* Delete Modal */}
             <Modal
                 isOpen={!!inviteToDelete}
                 onClose={() => setInviteToDelete(null)}
@@ -261,9 +237,7 @@ export function InvitesPage() {
                 confirmText={t('invites_page.delete_modal.confirm_text')}
                 cancelText={t('invites_page.delete_modal.cancel_text')}
             >
-                <p className="text-xs text-gray-600 dark:text-slate-300">
-                    {t('invites_page.delete_modal.message', { code: inviteToDelete?.code })}
-                </p>
+                <p>{t('invites_page.delete_modal.message', { code: inviteToDelete?.code })}</p>
             </Modal>
         </div>
     );

@@ -1,88 +1,75 @@
-import { AlertTriangle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from '../../../components/Modal';
+import { Button } from '../../../components/Button';
+import { Input } from '../../../components/Input';
 import { api } from '../../../lib/api';
+import { useAccountStore } from '../../../store/accountStore';
+import { useUserStore } from '../../../store/userStore';
 
 export function DangerZoneTab() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const sessionUsername = useUserStore((s) => s.user?.username);
+    const profileUsername = useAccountStore((s) => s.profileData.username);
     const [isLoading, setIsLoading] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [confirmText, setConfirmText] = useState('');
+    const [error, setError] = useState('');
+
+    // Use the saved username. The profile form can hold unsaved edits.
+    const username = sessionUsername || profileUsername;
+    const canDelete = !!username && confirmText === username && !isLoading;
 
     const handleDeleteAccount = async () => {
+        if (!canDelete) return;
         setIsLoading(true);
+        setError('');
         try {
             const res = await api.account.$delete();
             if (res.ok) {
                 navigate('/login');
             } else {
-                console.error('Failed to delete account');
+                setError(t('account_page.danger_zone.delete_error'));
             }
-        } catch (error) {
-            console.error('An error occurred', error);
+        } catch (err) {
+            console.error('An error occurred', err);
+            setError(t('account_page.danger_zone.delete_error'));
         } finally {
             setIsLoading(false);
-            setIsDeleteModalOpen(false);
         }
     };
 
     return (
-        <>
-            <div className="bg-white dark:bg-dark-800 border border-red-500/30 p-4">
-                <div className="flex items-center gap-2.5 mb-4">
-                    <div className="p-1.5 bg-red-500/10">
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
-                    </div>
-                    <div>
-                        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {t('account_page.danger_zone.title')}
-                        </h2>
-                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                            {t('account_page.danger_zone.description')}
-                        </p>
-                    </div>
-                </div>
-
-                <div className="p-3 bg-red-500/5 border border-red-500/20">
-                    <h3 className="text-xs font-medium text-red-500 mb-1.5">
-                        {t('account_page.danger_zone.delete_account_title')}
-                    </h3>
-                    <p className="text-xs text-red-400/80 mb-2">
-                        {t('account_page.danger_zone.delete_account_description')}
-                    </p>
-                    <ul className="text-xs text-red-400/70 space-y-0.5 mb-3">
-                        <li>• {t('account_page.danger_zone.delete_account_bullet1')}</li>
-                        <li>• {t('account_page.danger_zone.delete_account_bullet2')}</li>
-                        <li>• {t('account_page.danger_zone.delete_account_bullet3')}</li>
-                        <li>• {t('account_page.danger_zone.delete_account_bullet4')}</li>
-                    </ul>
-                    <button
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        disabled={isLoading}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>
-                            {isLoading
-                                ? t('account_page.danger_zone.deleting_account_button')
-                                : t('account_page.danger_zone.delete_account_button')}
-                        </span>
-                    </button>
+        <div className="border border-danger/45 rounded-md p-4.5 grid gap-3 max-w-content">
+            <div>
+                <div className="text-sm">{t('account_page.danger_zone.delete_account_title')}</div>
+                <div className="text-ui text-muted">
+                    {t('account_page.danger_zone.delete_account_summary')}
                 </div>
             </div>
-
-            <Modal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={handleDeleteAccount}
-                title={t('account_page.danger_zone.delete_account_title')}
-                confirmText={t('account_page.danger_zone.delete_account_button')}
-                cancelText={t('secrets_page.table.delete_cancel_button')}
-            >
-                <p>{t('account_page.danger_zone.delete_account_confirm')}</p>
-            </Modal>
-        </>
+            <div className="flex flex-wrap gap-2">
+                <Input
+                    mono
+                    value={confirmText}
+                    onChange={(e) => setConfirmText(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleDeleteAccount()}
+                    placeholder={t('account_page.danger_zone.confirm_placeholder', { username })}
+                    aria-label={t('account_page.danger_zone.confirm_placeholder', { username })}
+                    autoComplete="off"
+                    className="flex-1 min-w-[200px]"
+                />
+                <Button
+                    variant="danger-solid"
+                    onClick={handleDeleteAccount}
+                    disabled={!canDelete}
+                    loading={isLoading}
+                >
+                    {isLoading
+                        ? t('account_page.danger_zone.deleting_account_button')
+                        : t('account_page.danger_zone.delete_account_button')}
+                </Button>
+            </div>
+            {error && <div className="text-ui text-danger">{error}</div>}
+        </div>
     );
 }

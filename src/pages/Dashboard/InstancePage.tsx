@@ -1,21 +1,19 @@
-import {
-    Activity,
-    Building2,
-    ChevronDown,
-    ImageIcon,
-    Lock,
-    Save,
-    Settings,
-    Shield,
-    Trash2,
-    Upload,
-    Webhook,
-} from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useSearchParams } from 'react-router-dom';
+import { Button } from '../../components/Button';
+import { Input, Select, Textarea } from '../../components/Input';
 import { Modal } from '../../components/Modal';
-import { ToggleSwitchRow } from '../../components/ToggleSwitchRow';
+import { Notice } from '../../components/Notice';
+import { PageHeader } from '../../components/PageHeader';
+import {
+    SettingRow,
+    SettingsFooter,
+    SettingsHeading,
+    SettingsPanel,
+} from '../../components/Settings';
+import { Tabs } from '../../components/Tabs';
+import { ToggleSwitch } from '../../components/ToggleSwitch';
 import { useHemmeligStore } from '../../store/hemmeligStore';
 
 type InstanceSettings = {
@@ -52,24 +50,65 @@ type InstanceSettings = {
     managed?: boolean;
 };
 
+type Tab = 'general' | 'security' | 'organization' | 'webhook' | 'metrics';
+
+const TAB_IDS: Tab[] = ['general', 'security', 'organization', 'webhook', 'metrics'];
+
+const isTab = (value: string | null): value is Tab => TAB_IDS.includes(value as Tab);
+
+// The API stores the default expiration as whole hours, so the list starts at 1 hour.
 const EXPIRATION_OPTIONS = [
-    { seconds: 2419200, hours: 672, labelKey: 'expiration.28_days' },
-    { seconds: 1209600, hours: 336, labelKey: 'expiration.14_days' },
-    { seconds: 604800, hours: 168, labelKey: 'expiration.7_days' },
-    { seconds: 259200, hours: 72, labelKey: 'expiration.3_days' },
-    { seconds: 86400, hours: 24, labelKey: 'expiration.1_day' },
-    { seconds: 43200, hours: 12, labelKey: 'expiration.12_hours' },
-    { seconds: 14400, hours: 4, labelKey: 'expiration.4_hours' },
-    { seconds: 3600, hours: 1, labelKey: 'expiration.1_hour' },
-    { seconds: 1800, hours: 0.5, labelKey: 'expiration.30_minutes' },
-    { seconds: 300, hours: 5 / 60, labelKey: 'expiration.5_minutes' },
+    { hours: 672, labelKey: 'expiration.28_days' },
+    { hours: 336, labelKey: 'expiration.14_days' },
+    { hours: 168, labelKey: 'expiration.7_days' },
+    { hours: 72, labelKey: 'expiration.3_days' },
+    { hours: 24, labelKey: 'expiration.1_day' },
+    { hours: 12, labelKey: 'expiration.12_hours' },
+    { hours: 4, labelKey: 'expiration.4_hours' },
+    { hours: 1, labelKey: 'expiration.1_hour' },
 ];
 
+const LOGO_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
+const MAX_LOGO_BYTES = 512 * 1024;
+
+/** Keeps the digits of an input value. An empty value becomes 0. */
+const toNumber = (raw: string) => Number(raw.replace(/\D/g, ''));
+
+interface NumberControlProps {
+    value: number;
+    onChange: (value: number) => void;
+    disabled: boolean;
+    suffix?: string;
+    label: string;
+}
+
+function NumberControl({ value, onChange, disabled, suffix, label }: NumberControlProps) {
+    return (
+        <>
+            <div className="w-[110px]">
+                <Input
+                    mono
+                    inputMode="numeric"
+                    value={value ? String(value) : ''}
+                    onChange={(e) => onChange(toNumber(e.target.value))}
+                    disabled={disabled}
+                    aria-label={label}
+                    className="text-right"
+                />
+            </div>
+            <span className="font-mono text-xs text-muted min-w-7">{suffix}</span>
+        </>
+    );
+}
+
 export function InstancePage() {
-    const [activeTab, setActiveTab] = useState<
-        'general' | 'security' | 'organization' | 'webhook' | 'metrics'
-    >('general');
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    // Read the tab from the URL once. Local state keeps unsaved edits when the tab changes.
+    const [activeTab, setActiveTab] = useState<Tab>(() => {
+        const tab = searchParams.get('tab');
+        return isTab(tab) ? tab : 'general';
+    });
     const loaderData = useLoaderData() as InstanceSettings;
     const isManaged = loaderData?.managed ?? false;
 
@@ -101,28 +140,37 @@ export function InstancePage() {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSaveSettings = (
-        section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
-    ) => {
-        if (isManaged) return;
-        saveSettings(section);
+    const sectionSettings: Record<Tab, object> = {
+        general: generalSettings,
+        security: securitySettings,
+        organization: organizationSettings,
+        webhook: webhookSettings,
+        metrics: metricsSettings,
     };
 
-    const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // The result of the last save and the settings object it saved. Each edit
+    // makes a new settings object, so the result hides again after an edit.
+    const [lastSave, setLastSave] = useState<{ snapshot: object; ok: boolean } | null>(null);
+    const saveResult = lastSave?.snapshot === sectionSettings[activeTab] ? lastSave : null;
+
+    const handleSaveSettings = async (section: Tab) => {
+        if (isManaged) return;
+        const snapshot = sectionSettings[section];
+        const ok = await saveSettings(section);
+        setLastSave({ snapshot, ok });
+    };
+
+    const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Validate file type
-        const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
-        if (!validTypes.includes(file.type)) {
+        if (!LOGO_TYPES.includes(file.type)) {
             setErrorMessage(t('instance_page.general_settings.logo_invalid_type'));
             setIsErrorModalOpen(true);
             return;
         }
 
-        // Validate file size (max 512KB)
-        const maxSize = 512 * 1024;
-        if (file.size > maxSize) {
+        if (file.size > MAX_LOGO_BYTES) {
             setErrorMessage(t('instance_page.general_settings.logo_too_large'));
             setIsErrorModalOpen(true);
             return;
@@ -143,858 +191,380 @@ export function InstancePage() {
         }
     };
 
+    const header = (
+        <PageHeader title={t('instance_page.title')} description={t('instance_page.description')} />
+    );
+
     if (error || loaderData?.error) {
         return (
-            <div className="p-8 text-center">
-                <h2 className="text-2xl font-bold text-red-500">Error</h2>
-                <p className="text-gray-500 dark:text-slate-400 mt-2">
-                    {error || loaderData?.error}
-                </p>
+            <div className="grid gap-5 content-start">
+                {header}
+                <Notice tone="danger">{error || loaderData?.error}</Notice>
             </div>
         );
     }
 
-    const tabs = [
-        { id: 'general', name: t('instance_page.tabs.general'), icon: Settings },
-        { id: 'security', name: t('instance_page.tabs.security'), icon: Shield },
-        { id: 'organization', name: t('instance_page.tabs.organization'), icon: Building2 },
-        { id: 'webhook', name: t('instance_page.tabs.webhook'), icon: Webhook },
-        { id: 'metrics', name: t('instance_page.tabs.metrics'), icon: Activity },
-    ];
+    const label = (name: string) => t(`instance_page.fields.${name}.label`);
+    const describe = (name: string) => t(`instance_page.fields.${name}.description`);
+
+    const toggleRow = (
+        name: string,
+        checked: boolean,
+        onChange: (checked: boolean) => void,
+        dim = false
+    ) => {
+        return (
+            <SettingRow label={label(name)} description={describe(name)} dim={dim}>
+                <ToggleSwitch
+                    checked={checked}
+                    onChange={onChange}
+                    disabled={isManaged}
+                    label={label(name)}
+                />
+            </SettingRow>
+        );
+    };
+
+    const controlRow = (name: string, control: ReactNode, dim = false, description?: string) => (
+        <SettingRow label={label(name)} description={description ?? describe(name)} dim={dim}>
+            {control}
+        </SettingRow>
+    );
+
+    const expirationOptions = EXPIRATION_OPTIONS.some(
+        (option) => option.hours === generalSettings.defaultSecretExpiration
+    )
+        ? EXPIRATION_OPTIONS.map((option) => ({ hours: option.hours, label: t(option.labelKey) }))
+        : [
+              {
+                  hours: generalSettings.defaultSecretExpiration,
+                  label: t('instance_page.fields.default_expiration.hours', {
+                      count: generalSettings.defaultSecretExpiration,
+                  }),
+              },
+              ...EXPIRATION_OPTIONS.map((option) => ({
+                  hours: option.hours,
+                  label: t(option.labelKey),
+              })),
+          ];
+
+    const tabs = TAB_IDS.map((id) => ({ id, label: t(`instance_page.tabs.${id}`) }));
+
+    const rateLimitOff = !securitySettings.enableRateLimiting;
+    const webhooksOff = !webhookSettings.webhookEnabled;
+    const metricsOff = !metricsSettings.metricsEnabled;
 
     return (
-        <div className="p-4 sm:p-6">
-            {/* Header */}
-            <div className="mb-5">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    {t('instance_page.title')}
-                </h1>
-                <p className="text-gray-500 dark:text-slate-400 text-xs mt-0.5">
-                    {t('instance_page.description')}
-                </p>
-            </div>
+        <div className="grid gap-5 content-start">
+            {header}
 
-            {/* Managed Mode Banner */}
-            {isManaged && (
-                <div className="mb-5 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-                    <div>
-                        <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                            {t('instance_page.managed_mode.title')}
-                        </p>
-                        <p className="text-xs text-amber-600 dark:text-amber-400">
-                            {t('instance_page.managed_mode.description')}
-                        </p>
-                    </div>
-                </div>
-            )}
+            {isManaged && <Notice tone="warn">{t('instance_page.managed_notice')}</Notice>}
 
-            {/* Tabs */}
-            <div className="mb-5">
-                <div className="border-b border-gray-200 dark:border-dark-600 overflow-x-auto">
-                    <nav className="flex space-x-4 sm:space-x-6 min-w-max px-0.5">
-                        {tabs.map((tab) => {
-                            const Icon = tab.icon;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() =>
-                                        setActiveTab(
-                                            tab.id as
-                                                | 'general'
-                                                | 'security'
-                                                | 'organization'
-                                                | 'webhook'
-                                                | 'metrics'
-                                        )
-                                    }
-                                    className={`flex items-center gap-1.5 py-2.5 px-0.5 border-b-2 font-medium text-xs whitespace-nowrap transition-colors ${
-                                        activeTab === tab.id
-                                            ? 'border-teal-500 text-teal-500 dark:text-teal-400'
-                                            : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300'
-                                    }`}
-                                >
-                                    <Icon className="w-3.5 h-3.5" />
-                                    <span>{tab.name}</span>
-                                </button>
-                            );
-                        })}
-                    </nav>
-                </div>
-            </div>
+            <Tabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
-            {/* Tab Content */}
-            <div className="max-w-xl">
+            <SettingsPanel>
                 {activeTab === 'general' && (
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
-                        <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 bg-blue-500/10">
-                                <Settings className="w-4 h-4 text-blue-500" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {t('instance_page.general_settings.title')}
-                                </h2>
-                                <p className="text-xs text-gray-500 dark:text-slate-400">
-                                    {t('instance_page.general_settings.description')}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 gap-3">
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('instance_page.general_settings.instance_name_label')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={generalSettings.instanceName}
-                                        onChange={(e) =>
-                                            setGeneralSetting('instanceName', e.target.value)
-                                        }
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    <>
+                        {controlRow(
+                            'instance_name',
+                            <Input
+                                mono
+                                value={generalSettings.instanceName}
+                                onChange={(e) => setGeneralSetting('instanceName', e.target.value)}
+                                disabled={isManaged}
+                                aria-label={label('instance_name')}
+                            />
+                        )}
+                        {controlRow(
+                            'logo',
+                            <>
+                                {generalSettings.instanceLogo ? (
+                                    <img
+                                        src={generalSettings.instanceLogo}
+                                        alt={t('instance_page.general_settings.logo_alt')}
+                                        className="w-10 h-10 object-contain rounded-sm border border-line bg-surface"
                                     />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('instance_page.general_settings.logo_label')}
-                                    </label>
-                                    <div className="flex items-start gap-3">
-                                        {generalSettings.instanceLogo ? (
-                                            <div className="relative">
-                                                <img
-                                                    src={generalSettings.instanceLogo}
-                                                    alt={t(
-                                                        'instance_page.general_settings.logo_alt'
-                                                    )}
-                                                    className="w-16 h-16 object-contain bg-gray-100 dark:bg-dark-700 border border-gray-200 dark:border-dark-600"
-                                                />
-                                                {!isManaged && (
-                                                    <button
-                                                        onClick={handleRemoveLogo}
-                                                        className="absolute -top-2 -right-2 p-1 bg-red-500 hover:bg-red-600 text-white transition-colors"
-                                                        title={t(
-                                                            'instance_page.general_settings.logo_remove'
-                                                        )}
-                                                    >
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <div className="w-16 h-16 flex items-center justify-center bg-gray-100 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 border-dashed">
-                                                <ImageIcon className="w-6 h-6 text-gray-400 dark:text-slate-500" />
-                                            </div>
-                                        )}
-                                        <div className="flex-1">
-                                            <input
-                                                ref={logoInputRef}
-                                                type="file"
-                                                accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp"
-                                                onChange={handleLogoUpload}
-                                                disabled={isManaged}
-                                                className="hidden"
-                                                id="logo-upload"
-                                            />
-                                            <label
-                                                htmlFor="logo-upload"
-                                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
-                                                    isManaged
-                                                        ? 'bg-gray-200 dark:bg-dark-600 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                                                        : 'bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-700 dark:text-slate-300 cursor-pointer'
-                                                }`}
-                                            >
-                                                <Upload className="w-3.5 h-3.5" />
-                                                {t('instance_page.general_settings.logo_upload')}
-                                            </label>
-                                            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                                                {t('instance_page.general_settings.logo_hint')}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t(
-                                            'instance_page.general_settings.default_expiration_label'
-                                        )}
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            value={generalSettings.defaultSecretExpiration}
-                                            onChange={(e) =>
-                                                setGeneralSetting(
-                                                    'defaultSecretExpiration',
-                                                    parseFloat(e.target.value)
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="w-full appearance-none px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                                        >
-                                            {EXPIRATION_OPTIONS.map((option) => (
-                                                <option
-                                                    key={option.seconds}
-                                                    value={option.hours}
-                                                    className="bg-gray-50 dark:bg-dark-700"
-                                                >
-                                                    {t(option.labelKey)}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none">
-                                            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('instance_page.general_settings.max_secret_size_label')}
-                                    </label>
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        min="0.1"
-                                        value={(generalSettings.maxSecretSize / 1024).toFixed(1)}
-                                        onChange={(e) =>
-                                            setGeneralSetting(
-                                                'maxSecretSize',
-                                                Math.round(parseFloat(e.target.value) * 1024)
-                                            )
-                                        }
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                ) : (
+                                    <span
+                                        aria-hidden="true"
+                                        className="w-10 h-10 rounded-sm border border-dashed border-line"
                                     />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                    {t('instance_page.general_settings.instance_description_label')}
-                                </label>
-                                <textarea
-                                    value={generalSettings.instanceDescription}
-                                    onChange={(e) =>
-                                        setGeneralSetting('instanceDescription', e.target.value)
-                                    }
-                                    rows={2}
+                                )}
+                                <input
+                                    ref={logoInputRef}
+                                    type="file"
+                                    accept={LOGO_TYPES.join(',')}
+                                    onChange={handleLogoUpload}
                                     disabled={isManaged}
-                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="hidden"
                                 />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                    {t('instance_page.general_settings.important_message_label')}
-                                </label>
-                                <textarea
-                                    value={generalSettings.importantMessage}
-                                    onChange={(e) =>
-                                        setGeneralSetting('importantMessage', e.target.value)
-                                    }
-                                    rows={2}
-                                    placeholder={t(
-                                        'instance_page.general_settings.important_message_placeholder'
-                                    )}
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => logoInputRef.current?.click()}
                                     disabled={isManaged}
-                                    className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                />
-                                <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                    {t('instance_page.general_settings.important_message_hint')}
-                                </p>
-                            </div>
-
-                            {!isManaged && (
-                                <button
-                                    onClick={() => handleSaveSettings('general')}
-                                    disabled={isLoading}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Save className="w-3.5 h-3.5" />
-                                    <span>
-                                        {isLoading
-                                            ? t('instance_page.saving_button')
-                                            : t('instance_page.save_settings_button')}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                                    {t('instance_page.general_settings.logo_upload')}
+                                </Button>
+                                {generalSettings.instanceLogo && !isManaged && (
+                                    <Button
+                                        variant="danger"
+                                        size="inline"
+                                        onClick={handleRemoveLogo}
+                                    >
+                                        {t('instance_page.general_settings.logo_remove')}
+                                    </Button>
+                                )}
+                            </>,
+                            false,
+                            t('instance_page.general_settings.logo_hint')
+                        )}
+                        {controlRow(
+                            'instance_description',
+                            <Textarea
+                                rows={2}
+                                value={generalSettings.instanceDescription}
+                                onChange={(e) =>
+                                    setGeneralSetting('instanceDescription', e.target.value)
+                                }
+                                disabled={isManaged}
+                                aria-label={label('instance_description')}
+                            />
+                        )}
+                        {controlRow(
+                            'important_message',
+                            <Textarea
+                                rows={2}
+                                value={generalSettings.importantMessage}
+                                onChange={(e) =>
+                                    setGeneralSetting('importantMessage', e.target.value)
+                                }
+                                placeholder={t(
+                                    'instance_page.fields.important_message.placeholder'
+                                )}
+                                disabled={isManaged}
+                                aria-label={label('important_message')}
+                            />
+                        )}
+                        {controlRow(
+                            'default_expiration',
+                            <Select
+                                mono
+                                className="min-w-40"
+                                value={generalSettings.defaultSecretExpiration}
+                                onChange={(e) =>
+                                    setGeneralSetting(
+                                        'defaultSecretExpiration',
+                                        Number(e.target.value)
+                                    )
+                                }
+                                disabled={isManaged}
+                                aria-label={label('default_expiration')}
+                            >
+                                {expirationOptions.map((option) => (
+                                    <option key={option.hours} value={option.hours}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </Select>
+                        )}
+                        {controlRow(
+                            'max_secret_size',
+                            <NumberControl
+                                value={generalSettings.maxSecretSize}
+                                onChange={(value) => setGeneralSetting('maxSecretSize', value)}
+                                disabled={isManaged}
+                                suffix={t('instance_page.units.kb')}
+                                label={label('max_secret_size')}
+                            />
+                        )}
+                    </>
                 )}
 
                 {activeTab === 'security' && (
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
-                        <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 bg-orange-500/10">
-                                <Shield className="w-4 h-4 text-orange-500" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    Security Settings
-                                </h2>
-                                <p className="text-xs text-gray-500 dark:text-slate-400">
-                                    Configure security and access controls
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 gap-3">
-                                <ToggleSwitchRow
-                                    title="Rate Limiting"
-                                    description="Enable request rate limiting"
-                                    checked={securitySettings.enableRateLimiting}
-                                    onChange={(checked) =>
-                                        setSecuritySetting('enableRateLimiting', checked)
-                                    }
-                                    disabled={isManaged}
-                                />
-
-                                <ToggleSwitchRow
-                                    title="Allow Password Protection"
-                                    description="Allow users to password protect secrets"
-                                    checked={securitySettings.allowPasswordProtection}
-                                    onChange={(checked) =>
-                                        setSecuritySetting('allowPasswordProtection', checked)
-                                    }
-                                    disabled={isManaged}
-                                />
-
-                                <ToggleSwitchRow
-                                    title="Allow IP Restriction"
-                                    description="Allow users to restrict secrets by IP"
-                                    checked={securitySettings.allowIpRestriction}
-                                    onChange={(checked) =>
-                                        setSecuritySetting('allowIpRestriction', checked)
-                                    }
-                                    disabled={isManaged}
-                                />
-
-                                <ToggleSwitchRow
-                                    title={t(
-                                        'instance_page.security_settings.allow_file_uploads_title'
-                                    )}
-                                    description={t(
-                                        'instance_page.security_settings.allow_file_uploads_description'
-                                    )}
-                                    checked={securitySettings.allowFileUploads}
-                                    onChange={(checked) =>
-                                        setSecuritySetting('allowFileUploads', checked)
-                                    }
-                                    disabled={isManaged}
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        Rate Limit Requests
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={securitySettings.rateLimitRequests}
-                                        onChange={(e) =>
-                                            setSecuritySetting(
-                                                'rateLimitRequests',
-                                                parseInt(e.target.value)
-                                            )
-                                        }
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        Rate Limit Window (seconds)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={securitySettings.rateLimitWindow}
-                                        onChange={(e) =>
-                                            setSecuritySetting(
-                                                'rateLimitWindow',
-                                                parseInt(e.target.value)
-                                            )
-                                        }
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                </div>
-                            </div>
-
-                            {!isManaged && (
-                                <button
-                                    onClick={() => handleSaveSettings('security')}
-                                    disabled={isLoading}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Save className="w-3.5 h-3.5" />
-                                    <span>
-                                        {isLoading
-                                            ? t('instance_page.saving_button')
-                                            : t('instance_page.save_settings_button')}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <>
+                        <SettingsHeading>
+                            {t('instance_page.headings.secret_options')}
+                        </SettingsHeading>
+                        {toggleRow(
+                            'password_protection',
+                            securitySettings.allowPasswordProtection,
+                            (checked) => setSecuritySetting('allowPasswordProtection', checked)
+                        )}
+                        {toggleRow(
+                            'ip_restriction',
+                            securitySettings.allowIpRestriction,
+                            (checked) => setSecuritySetting('allowIpRestriction', checked)
+                        )}
+                        {toggleRow('file_uploads', securitySettings.allowFileUploads, (checked) =>
+                            setSecuritySetting('allowFileUploads', checked)
+                        )}
+                        <SettingsHeading>
+                            {t('instance_page.headings.rate_limiting')}
+                        </SettingsHeading>
+                        {toggleRow(
+                            'rate_limiting',
+                            securitySettings.enableRateLimiting,
+                            (checked) => setSecuritySetting('enableRateLimiting', checked)
+                        )}
+                        {controlRow(
+                            'rate_limit_requests',
+                            <NumberControl
+                                value={securitySettings.rateLimitRequests}
+                                onChange={(value) => setSecuritySetting('rateLimitRequests', value)}
+                                disabled={isManaged}
+                                label={label('rate_limit_requests')}
+                            />,
+                            rateLimitOff
+                        )}
+                        {controlRow(
+                            'rate_limit_window',
+                            <NumberControl
+                                value={securitySettings.rateLimitWindow}
+                                onChange={(value) => setSecuritySetting('rateLimitWindow', value)}
+                                disabled={isManaged}
+                                suffix={t('instance_page.units.seconds')}
+                                label={label('rate_limit_window')}
+                            />,
+                            rateLimitOff
+                        )}
+                    </>
                 )}
 
                 {activeTab === 'organization' && (
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
-                        <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 bg-purple-500/10">
-                                <Building2 className="w-4 h-4 text-purple-500" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {t('organization_page.title')}
-                                </h2>
-                                <p className="text-xs text-gray-500 dark:text-slate-400">
-                                    {t('organization_page.description')}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 gap-3">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t(
-                                                'organization_page.registration_settings.invite_only_title'
-                                            )}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t(
-                                                'organization_page.registration_settings.invite_only_description'
-                                            )}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={organizationSettings.requireInviteCode}
-                                            onChange={(e) =>
-                                                setOrganizationSetting(
-                                                    'requireInviteCode',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t(
-                                                'organization_page.registration_settings.require_registered_user_title'
-                                            )}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t(
-                                                'organization_page.registration_settings.require_registered_user_description'
-                                            )}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={organizationSettings.requireRegisteredUser}
-                                            onChange={(e) =>
-                                                setOrganizationSetting(
-                                                    'requireRegisteredUser',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t(
-                                                'organization_page.registration_settings.disable_email_password_signup_title'
-                                            )}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t(
-                                                'organization_page.registration_settings.disable_email_password_signup_description'
-                                            )}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={
-                                                organizationSettings.disableEmailPasswordSignup
-                                            }
-                                            onChange={(e) =>
-                                                setOrganizationSetting(
-                                                    'disableEmailPasswordSignup',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 gap-3">
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t(
-                                            'organization_page.registration_settings.allowed_domains_title'
-                                        )}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={organizationSettings.allowedEmailDomains}
-                                        onChange={(e) =>
-                                            setOrganizationSetting(
-                                                'allowedEmailDomains',
-                                                e.target.value
-                                            )
-                                        }
-                                        placeholder={t(
-                                            'organization_page.registration_settings.allowed_domains_placeholder'
-                                        )}
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                        {t(
-                                            'organization_page.registration_settings.allowed_domains_hint'
-                                        )}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {!isManaged && (
-                                <button
-                                    onClick={() => handleSaveSettings('organization')}
-                                    disabled={isLoading}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Save className="w-3.5 h-3.5" />
-                                    <span>
-                                        {isLoading
-                                            ? t('organization_page.saving_button')
-                                            : t('organization_page.save_settings_button')}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <>
+                        {toggleRow(
+                            'require_invite_code',
+                            organizationSettings.requireInviteCode,
+                            (checked) => setOrganizationSetting('requireInviteCode', checked)
+                        )}
+                        {controlRow(
+                            'allowed_email_domains',
+                            <Input
+                                mono
+                                value={organizationSettings.allowedEmailDomains}
+                                onChange={(e) =>
+                                    setOrganizationSetting('allowedEmailDomains', e.target.value)
+                                }
+                                placeholder={t(
+                                    'organization_page.registration_settings.allowed_domains_placeholder'
+                                )}
+                                disabled={isManaged}
+                                aria-label={label('allowed_email_domains')}
+                            />
+                        )}
+                        {toggleRow(
+                            'require_registered_user',
+                            organizationSettings.requireRegisteredUser,
+                            (checked) => setOrganizationSetting('requireRegisteredUser', checked)
+                        )}
+                        {toggleRow(
+                            'social_login_only',
+                            organizationSettings.disableEmailPasswordSignup,
+                            (checked) =>
+                                setOrganizationSetting('disableEmailPasswordSignup', checked)
+                        )}
+                    </>
                 )}
 
                 {activeTab === 'webhook' && (
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
-                        <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 bg-green-500/10">
-                                <Webhook className="w-4 h-4 text-green-500" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {t('webhook_settings.title')}
-                                </h2>
-                                <p className="text-xs text-gray-500 dark:text-slate-400">
-                                    {t('webhook_settings.description')}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 gap-3">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t('webhook_settings.enable_webhooks_title')}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t('webhook_settings.enable_webhooks_description')}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={webhookSettings.webhookEnabled}
-                                            onChange={(e) =>
-                                                setWebhookSetting(
-                                                    'webhookEnabled',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('webhook_settings.webhook_url_label')}
-                                    </label>
-                                    <input
-                                        type="url"
-                                        value={webhookSettings.webhookUrl}
-                                        onChange={(e) =>
-                                            setWebhookSetting('webhookUrl', e.target.value)
-                                        }
-                                        placeholder={t('webhook_settings.webhook_url_placeholder')}
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                        {t('webhook_settings.webhook_url_hint')}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('webhook_settings.webhook_secret_label')}
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={webhookSettings.webhookSecret}
-                                        onChange={(e) =>
-                                            setWebhookSetting('webhookSecret', e.target.value)
-                                        }
-                                        placeholder={t(
-                                            'webhook_settings.webhook_secret_placeholder'
-                                        )}
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                        {t('webhook_settings.webhook_secret_hint')}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="border-t border-gray-200 dark:border-dark-600 pt-3">
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
-                                    {t('webhook_settings.events_title')}
-                                </h3>
-                                <div className="grid grid-cols-1 gap-3">
-                                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                        <div className="flex-1 min-w-0 mr-3">
-                                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                                {t('webhook_settings.on_view_title')}
-                                            </h3>
-                                            <p className="text-xs text-gray-500 dark:text-slate-400">
-                                                {t('webhook_settings.on_view_description')}
-                                            </p>
-                                        </div>
-                                        <label
-                                            className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                checked={webhookSettings.webhookOnView}
-                                                onChange={(e) =>
-                                                    setWebhookSetting(
-                                                        'webhookOnView',
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                disabled={isManaged}
-                                                className="sr-only peer"
-                                            />
-                                            <div
-                                                className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                            ></div>
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                        <div className="flex-1 min-w-0 mr-3">
-                                            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                                {t('webhook_settings.on_burn_title')}
-                                            </h3>
-                                            <p className="text-xs text-gray-500 dark:text-slate-400">
-                                                {t('webhook_settings.on_burn_description')}
-                                            </p>
-                                        </div>
-                                        <label
-                                            className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                checked={webhookSettings.webhookOnBurn}
-                                                onChange={(e) =>
-                                                    setWebhookSetting(
-                                                        'webhookOnBurn',
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                disabled={isManaged}
-                                                className="sr-only peer"
-                                            />
-                                            <div
-                                                className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                            ></div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {!isManaged && (
-                                <button
-                                    onClick={() => handleSaveSettings('webhook')}
-                                    disabled={isLoading}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Save className="w-3.5 h-3.5" />
-                                    <span>
-                                        {isLoading
-                                            ? t('instance_page.saving_button')
-                                            : t('instance_page.save_settings_button')}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <>
+                        {toggleRow('webhooks', webhookSettings.webhookEnabled, (checked) =>
+                            setWebhookSetting('webhookEnabled', checked)
+                        )}
+                        {controlRow(
+                            'webhook_url',
+                            <Input
+                                mono
+                                type="url"
+                                value={webhookSettings.webhookUrl}
+                                onChange={(e) => setWebhookSetting('webhookUrl', e.target.value)}
+                                placeholder={t('webhook_settings.webhook_url_placeholder')}
+                                disabled={isManaged}
+                                aria-label={label('webhook_url')}
+                            />,
+                            webhooksOff
+                        )}
+                        {controlRow(
+                            'webhook_secret',
+                            <Input
+                                mono
+                                type="password"
+                                value={webhookSettings.webhookSecret}
+                                onChange={(e) => setWebhookSetting('webhookSecret', e.target.value)}
+                                placeholder={t('webhook_settings.webhook_secret_placeholder')}
+                                disabled={isManaged}
+                                autoComplete="off"
+                                aria-label={label('webhook_secret')}
+                            />,
+                            webhooksOff
+                        )}
+                        {toggleRow(
+                            'webhook_on_view',
+                            webhookSettings.webhookOnView,
+                            (checked) => setWebhookSetting('webhookOnView', checked),
+                            webhooksOff
+                        )}
+                        {toggleRow(
+                            'webhook_on_burn',
+                            webhookSettings.webhookOnBurn,
+                            (checked) => setWebhookSetting('webhookOnBurn', checked),
+                            webhooksOff
+                        )}
+                    </>
                 )}
 
                 {activeTab === 'metrics' && (
-                    <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-4">
-                        <div className="flex items-center gap-2.5 mb-4">
-                            <div className="p-1.5 bg-cyan-500/10">
-                                <Activity className="w-4 h-4 text-cyan-500" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                                    {t('metrics_settings.title')}
-                                </h2>
-                                <p className="text-xs text-gray-500 dark:text-slate-400">
-                                    {t('metrics_settings.description')}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-1 gap-3">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <div className="flex-1 min-w-0 mr-3">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                                            {t('metrics_settings.enable_metrics_title')}
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400">
-                                            {t('metrics_settings.enable_metrics_description')}
-                                        </p>
-                                    </div>
-                                    <label
-                                        className={`relative inline-flex items-center flex-shrink-0 ${isManaged ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={metricsSettings.metricsEnabled}
-                                            onChange={(e) =>
-                                                setMetricsSetting(
-                                                    'metricsEnabled',
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isManaged}
-                                            className="sr-only peer"
-                                        />
-                                        <div
-                                            className={`w-9 h-5 bg-gray-300 dark:bg-dark-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/50 peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-500 ${isManaged ? 'opacity-60' : ''}`}
-                                        ></div>
-                                    </label>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-600 dark:text-slate-300 mb-1">
-                                        {t('metrics_settings.metrics_secret_label')}
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={metricsSettings.metricsSecret}
-                                        onChange={(e) =>
-                                            setMetricsSetting('metricsSecret', e.target.value)
-                                        }
-                                        placeholder={t(
-                                            'metrics_settings.metrics_secret_placeholder'
-                                        )}
-                                        disabled={isManaged}
-                                        className="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                        {t('metrics_settings.metrics_secret_hint')}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="border-t border-gray-200 dark:border-dark-600 pt-3">
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                                    {t('metrics_settings.endpoint_info_title')}
-                                </h3>
-                                <div className="p-3 bg-gray-50 dark:bg-dark-700/30">
-                                    <p className="text-xs text-gray-600 dark:text-slate-300 mb-1.5">
-                                        {t('metrics_settings.endpoint_info_description')}
-                                    </p>
-                                    <code className="block p-1.5 bg-gray-100 dark:bg-dark-600 text-xs font-mono text-gray-800 dark:text-slate-200">
-                                        GET /api/metrics
-                                    </code>
-                                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">
-                                        {t('metrics_settings.endpoint_auth_hint')}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {!isManaged && (
-                                <button
-                                    onClick={() => handleSaveSettings('metrics')}
-                                    disabled={isLoading}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Save className="w-3.5 h-3.5" />
-                                    <span>
-                                        {isLoading
-                                            ? t('instance_page.saving_button')
-                                            : t('instance_page.save_settings_button')}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <>
+                        {toggleRow('metrics', metricsSettings.metricsEnabled, (checked) =>
+                            setMetricsSetting('metricsEnabled', checked)
+                        )}
+                        {controlRow(
+                            'metrics_secret',
+                            <Input
+                                mono
+                                type="password"
+                                value={metricsSettings.metricsSecret}
+                                onChange={(e) => setMetricsSetting('metricsSecret', e.target.value)}
+                                placeholder={t('metrics_settings.metrics_secret_placeholder')}
+                                disabled={isManaged}
+                                autoComplete="off"
+                                aria-label={label('metrics_secret')}
+                            />,
+                            metricsOff
+                        )}
+                        {controlRow(
+                            'metrics_endpoint',
+                            <code className="font-mono text-ui text-fg-3">GET /api/metrics</code>,
+                            metricsOff
+                        )}
+                    </>
                 )}
-            </div>
+
+                <SettingsFooter
+                    note={
+                        isManaged
+                            ? t('instance_page.note_managed')
+                            : saveResult
+                              ? saveResult.ok
+                                  ? t('instance_page.note_saved')
+                                  : t('instance_page.note_save_failed')
+                              : t('instance_page.note_default')
+                    }
+                    tone={saveResult ? (saveResult.ok ? 'accent' : 'danger') : 'muted'}
+                >
+                    <Button
+                        variant="primary"
+                        loading={isLoading}
+                        disabled={isManaged}
+                        onClick={() => handleSaveSettings(activeTab)}
+                    >
+                        {isLoading
+                            ? t('instance_page.saving_button')
+                            : t('instance_page.save_settings_button')}
+                    </Button>
+                </SettingsFooter>
+            </SettingsPanel>
 
             <Modal
                 isOpen={isErrorModalOpen}
@@ -1002,7 +572,7 @@ export function InstancePage() {
                 title={t('common.error')}
                 confirmText={t('common.ok')}
                 onConfirm={() => setIsErrorModalOpen(false)}
-                confirmButtonClass="bg-teal-500 hover:bg-teal-600"
+                confirmVariant="primary"
             >
                 <p>{errorMessage}</p>
             </Modal>

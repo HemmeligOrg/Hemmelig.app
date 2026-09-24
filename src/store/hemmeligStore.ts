@@ -107,9 +107,13 @@ type HemmeligState = {
     ) => void;
     setWebhookSetting: <K extends keyof WebhookSettings>(key: K, value: WebhookSettings[K]) => void;
     setMetricsSetting: <K extends keyof MetricsSettings>(key: K, value: MetricsSettings[K]) => void;
+    /**
+     * Saves one settings section. Returns true when the save succeeds.
+     * The API client shows the error message when the save fails.
+     */
     saveSettings: (
         section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
-    ) => Promise<void>;
+    ) => Promise<boolean>;
 };
 
 export const useHemmeligStore = create<HemmeligState>((set, get) => ({
@@ -282,13 +286,12 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
                 metrics: state.metricsSettings,
             };
 
+            // The API client throws on an error status and shows the error message.
             await api.instance.settings.$put({ json: settingsMap[section] });
-            toast.success(
-                `${section.charAt(0).toUpperCase() + section.slice(1)} settings saved successfully.`
-            );
+            return true;
         } catch (error) {
             console.error(`Failed to save ${section} settings:`, error);
-            toast.error(`Failed to save ${section} settings.`);
+            return false;
         } finally {
             set({ isLoading: false });
         }

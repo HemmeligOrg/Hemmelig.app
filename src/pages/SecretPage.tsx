@@ -1,24 +1,12 @@
-import {
-    Check,
-    Copy,
-    Download,
-    Eye,
-    File as FileIcon,
-    Loader2,
-    Lock,
-    LockOpen,
-    Plus,
-    ShieldCheck,
-    Trash2,
-} from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Card } from '../components/Card';
-import Editor from '../components/Editor';
-import { Modal } from '../components/Modal';
-import { useCopyFeedback } from '../hooks/useCopyFeedback';
-import { api } from '../lib/api';
+import { Button, buttonClassName } from '../components/Button';
+import Editor, { type EditorHandle } from '../components/Editor';
+import { inputClassName } from '../components/Input';
+import { useCopyFeedbackWithId } from '../hooks/useCopyFeedback';
+import { api, apiRaw } from '../lib/api';
 import {
     decrypt,
     decryptFile,
@@ -42,6 +30,11 @@ interface SecretLoaderData {
     salt?: string | null;
 }
 
+type CopyFormat = 'text' | 'html' | 'base64';
+
+/** The widths of the placeholder bars behind the unlock form. */
+const REDACTED_WIDTHS = ['72%', '94%', '58%', '86%', '40%', '90%', '66%'];
+
 /**
  * Resolves the file name for display. New files store an encrypted name.
  * Legacy files store the plaintext name with the id as a prefix.
@@ -64,6 +57,15 @@ const resolveDisplayName = async (
     return file.filename.split('-').slice(1).join('-') || file.filename;
 };
 
+/** Encodes UTF-8 text as Base64 in a way that is safe for large strings. */
+const toBase64 = (text: string) => {
+    let binary = '';
+    for (const byte of new TextEncoder().encode(text)) {
+        binary += String.fromCharCode(byte);
+    }
+    return btoa(binary);
+};
+
 export function SecretPage() {
     const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
@@ -80,12 +82,13 @@ export function SecretPage() {
     const [showSecretContent, setShowSecretContent] = useState(false);
     const [viewsRemaining, setViewsRemaining] = useState<number | null>(null);
     const [salt, setSalt] = useState<string | null>(initialData?.salt ?? null);
-    const { copied, copy: copyToClipboard } = useCopyFeedback();
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const { copy, isCopied } = useCopyFeedbackWithId<CopyFormat>();
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteToken, setDeleteToken] = useState<string | null>(null);
     const [decryptionError, setDecryptionError] = useState<string | null>(null);
     const [isBurnable, setIsBurnable] = useState(false);
+    const editorRef = useRef<EditorHandle | null>(null);
 
     const decryptionKeyFromUrl = location.hash.startsWith('#decryptionKey=')
         ? location.hash.substring('#decryptionKey='.length)
@@ -120,7 +123,9 @@ export function SecretPage() {
                     }
                 }
 
-                const response = await api.secrets[':id'].$post({
+                // The raw client returns error statuses instead of throwing, so the
+                // unlock form can show the error in place.
+                const response = await apiRaw.secrets[':id'].$post({
                     param: { id: id! },
                     json,
                 });
@@ -173,6 +178,10 @@ export function SecretPage() {
                     if ('views' in data) {
                         setViewsRemaining(data.views);
                     }
+                } else if (response.status === 401) {
+                    setDecryptionError(t('secret_page.wrong_password'));
+                } else {
+                    setDecryptionError(t('secret_page.fetch_error'));
                 }
             } catch (err: unknown) {
                 console.error('Error fetching secret:', err);
@@ -196,7 +205,10 @@ export function SecretPage() {
         }
     }, [initialData]);
 
+    const canUnlock = !(needsManualKeyEntry && !decryptionKeyInput);
+
     const handleViewSecret = () => {
+        if (!canUnlock) return;
         fetchSecretContent(passwordInput);
     };
 
@@ -222,13 +234,17 @@ export function SecretPage() {
         URL.revokeObjectURL(link.href);
     };
 
-    const handleCopyToClipboard = () => {
-        copyToClipboard(secretContent || '');
+    const handleCopy = (format: CopyFormat) => {
+        const editor = editorRef.current;
+        const html = editor?.getHTML() ?? secretContent ?? '';
+        const text = editor?.getText() ?? '';
+        const value = format === 'html' ? html : format === 'base64' ? toBase64(text) : text;
+        copy(value, format);
     };
 
     const handleDeleteSecret = async () => {
         if (!deleteToken) {
-            setShowDeleteModal(false);
+            setConfirmDelete(false);
             return;
         }
 
@@ -245,228 +261,262 @@ export function SecretPage() {
             console.error('Error deleting secret:', err);
         } finally {
             setIsDeleting(false);
-            setShowDeleteModal(false);
+            setConfirmDelete(false);
         }
     };
+
+    const viewsBadge =
+        viewsRemaining === null
+            ? null
+            : t('secret_page.views_left', { count: Math.max(0, viewsRemaining) });
 
     // Loading state
     if (isLoading) {
         return (
-            <main className="py-8">
-                <div className="flex flex-col items-center justify-center py-16">
-                    <Loader2 className="h-10 w-10 animate-spin text-teal-500 mb-4" />
-                    <p className="text-gray-500 dark:text-slate-400">
-                        {t('secret_page.loading_message')}
-                    </p>
-                </div>
+            <main className="max-w-reading mx-auto px-6 py-24 flex flex-col items-center gap-3">
+                <Loader2 className="h-6 w-6 animate-spin text-accent" />
+                <p className="m-0 font-mono text-ui text-muted">
+                    {t('secret_page.loading_message')}
+                </p>
             </main>
         );
     }
 
-    // Pre-reveal state (view secret button)
+    // Pre-reveal state (unlock form over placeholder bars)
     if (!showSecretContent) {
+        const gateNote =
+            viewsRemaining === 1
+                ? t('secret_page.one_view_remaining')
+                : t('secret_page.views_remaining', { count: viewsRemaining ?? 0 });
+
         return (
-            <main className="py-6 sm:py-8">
-                <Card noPadding>
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-dark-600">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 flex items-center justify-center bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
-                                <Lock className="w-5 h-5" />
-                            </div>
-                            <span className="font-semibold text-gray-900 dark:text-white">
-                                {t('secret_page.encrypted_secret')}
-                            </span>
-                        </div>
-                        {viewsRemaining !== null && (
-                            <span className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1.5 bg-gray-100 dark:bg-dark-700 px-2.5 py-1.5">
-                                <Eye className="w-3.5 h-3.5" />
-                                {viewsRemaining}
+            <main className="max-w-reading mx-auto px-6 py-14 grid gap-4">
+                <div className="border border-line rounded-md bg-surface overflow-hidden">
+                    <div className="flex justify-between items-center gap-3 px-4.5 py-3.5 border-b border-line-soft">
+                        <span className="font-mono text-ui">
+                            {t('secret_page.encrypted_secret')}
+                        </span>
+                        {viewsBadge && (
+                            <span className="font-mono text-xs text-muted border border-line px-2 py-0.5 rounded-[3px]">
+                                {viewsBadge}
                             </span>
                         )}
                     </div>
 
-                    {/* Blurred content preview with overlay */}
-                    <div className="relative">
-                        {/* Fake blurred content */}
+                    <div className="grid">
                         <div
-                            className="p-5 sm:p-8 select-none pointer-events-none"
+                            className="[grid-area:1/1] p-7 grid gap-3 content-start"
                             aria-hidden="true"
                         >
-                            <div className="blur-sm opacity-40 space-y-3">
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-3/4"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-full"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-5/6"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-2/3"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-full"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-4/5"></div>
-                                <div className="h-4 bg-gray-300 dark:bg-dark-600 w-1/2"></div>
-                            </div>
+                            {REDACTED_WIDTHS.map((width, index) => (
+                                <div
+                                    key={index}
+                                    className="h-3 rounded-xs bg-raised"
+                                    style={{ width }}
+                                />
+                            ))}
                         </div>
 
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-white/90 dark:bg-dark-800/90 backdrop-blur-[2px] flex flex-col items-center justify-center p-6">
-                            {needsManualKeyEntry && (
-                                <div className="w-full max-w-xs mb-5">
-                                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2 text-center">
-                                        {t('secret_page.decryption_key_label')}
+                        <form
+                            className="[grid-area:1/1] bg-surface/85 grid place-items-center px-6 py-9"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleViewSecret();
+                            }}
+                        >
+                            <div className="w-full max-w-85 grid gap-3">
+                                {needsManualKeyEntry && (
+                                    <label className="grid gap-1.5">
+                                        <span className="text-ui text-muted">
+                                            {t('secret_page.decryption_key_label')}
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={decryptionKeyInput}
+                                            onChange={(e) => {
+                                                setDecryptionKeyInput(e.target.value);
+                                                setDecryptionError(null);
+                                            }}
+                                            placeholder={t(
+                                                'secret_page.decryption_key_placeholder'
+                                            )}
+                                            autoComplete="off"
+                                            spellCheck={false}
+                                            autoFocus
+                                            className={inputClassName({
+                                                mono: true,
+                                                controlSize: 'lg',
+                                                invalid: !!decryptionError,
+                                                className: 'bg-canvas text-ui',
+                                            })}
+                                        />
                                     </label>
-                                    <input
-                                        type="text"
-                                        value={decryptionKeyInput}
-                                        onChange={(e) => setDecryptionKeyInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center font-mono text-sm"
-                                        placeholder={t('secret_page.decryption_key_placeholder')}
-                                        autoFocus
-                                    />
-                                </div>
-                            )}
+                                )}
 
-                            {isPasswordProtected && (
-                                <div className="w-full max-w-xs mb-5">
-                                    <input
-                                        type="password"
-                                        value={passwordInput}
-                                        onChange={(e) => setPasswordInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleViewSecret()}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-500 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all duration-200 text-center"
-                                        placeholder={t('secret_page.password_placeholder')}
-                                        autoFocus={!needsManualKeyEntry}
-                                    />
-                                </div>
-                            )}
+                                {isPasswordProtected && (
+                                    <label className="grid gap-1.5">
+                                        <span className="text-ui text-muted">
+                                            {t('secret_page.password_label')}
+                                        </span>
+                                        <input
+                                            type="password"
+                                            value={passwordInput}
+                                            onChange={(e) => {
+                                                setPasswordInput(e.target.value);
+                                                setDecryptionError(null);
+                                            }}
+                                            placeholder={t('secret_page.password_placeholder')}
+                                            autoFocus={!needsManualKeyEntry}
+                                            className={inputClassName({
+                                                controlSize: 'lg',
+                                                invalid: !!decryptionError,
+                                                className: 'bg-canvas',
+                                            })}
+                                        />
+                                    </label>
+                                )}
 
-                            <button
-                                onClick={handleViewSecret}
-                                disabled={needsManualKeyEntry && !decryptionKeyInput}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200"
-                            >
-                                <LockOpen className="w-5 h-5" />
-                                {t('secret_page.unlock_secret')}
-                            </button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    size="lg"
+                                    disabled={!canUnlock}
+                                    className="w-full py-2.75"
+                                >
+                                    {t('secret_page.unlock_secret')}
+                                </Button>
 
-                            {decryptionError && (
-                                <p className="text-sm text-red-500 mt-4 text-center">
-                                    {decryptionError}
+                                {decryptionError && (
+                                    <p
+                                        role="alert"
+                                        className="m-0 font-mono text-ui text-danger text-center"
+                                    >
+                                        {decryptionError}
+                                    </p>
+                                )}
+
+                                <p className="m-0 text-ui text-muted text-center text-pretty">
+                                    {gateNote}
                                 </p>
-                            )}
-
-                            <p className="text-xs text-gray-500 dark:text-slate-400 mt-5 text-center">
-                                {viewsRemaining === 1
-                                    ? t('secret_page.one_view_remaining')
-                                    : t('secret_page.views_remaining', { count: viewsRemaining })}
-                            </p>
-                        </div>
+                            </div>
+                        </form>
                     </div>
-                </Card>
+                </div>
             </main>
         );
     }
 
     // Secret revealed state
+    const afterNote =
+        viewsRemaining === 0
+            ? t('secret_page.after_last_view')
+            : isBurnable
+              ? t('secret_page.after_burns_at_expiry')
+              : t('secret_page.after_views_left', { count: viewsRemaining ?? 0 });
+
+    const copyButtons: { format: CopyFormat; label: string }[] = [
+        { format: 'text', label: t('common.copy') },
+        { format: 'html', label: t('secret_page.copy_html') },
+        { format: 'base64', label: t('secret_page.copy_base64') },
+    ];
+
     return (
-        <main className="py-6 sm:py-8">
-            <Card noPadding>
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-dark-600">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 flex items-center justify-center bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400">
-                            <ShieldCheck className="w-5 h-5" />
-                        </div>
-                        <span className="font-semibold text-gray-900 dark:text-white">
-                            {title || t('secret_page.secret_revealed')}
+        <main className="max-w-reading mx-auto px-6 py-14 grid gap-4">
+            <div className="border border-line rounded-md bg-surface overflow-hidden">
+                <div className="flex flex-wrap justify-between items-center gap-3 px-4.5 py-3.5 border-b border-line-soft">
+                    <span className="font-medium min-w-0 break-words">
+                        {title || t('secret_page.secret_revealed')}
+                    </span>
+                    <div className="flex gap-3 items-center font-mono text-xs">
+                        {viewsBadge && <span className="text-muted">{viewsBadge}</span>}
+                        {copyButtons.map(({ format, label }) => (
+                            <button
+                                key={format}
+                                type="button"
+                                onClick={() => handleCopy(format)}
+                                className={`cursor-pointer hover:underline ${
+                                    format === 'text' ? 'text-accent' : 'text-muted hover:text-fg'
+                                }`}
+                            >
+                                {isCopied(format) ? t('common.copied') : label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <Editor
+                    value={secretContent || ''}
+                    editable={false}
+                    onEditorReady={(editor) => {
+                        editorRef.current = editor;
+                    }}
+                />
+
+                {files && files.length > 0 && (
+                    <div className="border-t border-line-soft px-4.5 py-3 grid gap-2">
+                        <span className="text-xs text-muted">
+                            {t('secret_page.files_title')} ({files.length})
                         </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        {viewsRemaining !== null && viewsRemaining > 0 && (
-                            <span className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1.5 bg-gray-100 dark:bg-dark-700 px-2.5 py-1.5">
-                                <Eye className="w-3.5 h-3.5" />
-                                {viewsRemaining}
-                            </span>
-                        )}
-                        <button
-                            onClick={handleCopyToClipboard}
-                            className="p-2.5 text-gray-500 dark:text-slate-400 hover:text-teal-500 dark:hover:text-teal-400 hover:bg-gray-100 dark:hover:bg-dark-700 transition-all duration-200"
-                            title={t('secret_page.copy_secret')}
-                        >
-                            {copied ? (
-                                <Check className="w-4 h-4 text-green-500" />
-                            ) : (
-                                <Copy className="w-4 h-4" />
-                            )}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 sm:p-8">
-                    <Editor value={secretContent || ''} editable={false} />
-
-                    {/* Files */}
-                    {files && files.length > 0 && (
-                        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600">
-                            <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300 mb-3">
-                                {t('secret_page.files_title')} ({files.length})
-                            </h3>
-                            <div className="space-y-2">
-                                {files.map((file) => (
-                                    <div
-                                        key={file.id}
-                                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-100 dark:border-dark-600/50 hover:border-teal-500/50 transition-all duration-200"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 flex items-center justify-center bg-gray-200 dark:bg-dark-600 text-gray-500 dark:text-slate-400">
-                                                <FileIcon className="w-4 h-4" />
-                                            </div>
-                                            <span className="text-sm text-gray-700 dark:text-slate-300">
-                                                {file.displayName ?? file.filename}
-                                            </span>
-                                        </div>
-                                        <button
-                                            onClick={() => handleDownload(file)}
-                                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-teal-600 dark:text-teal-400 hover:bg-teal-500/10 transition-all duration-200"
-                                        >
-                                            <Download className="w-4 h-4" />
-                                            {t('secret_page.download')}
-                                        </button>
-                                    </div>
-                                ))}
+                        {files.map((file) => (
+                            <div
+                                key={file.id}
+                                className="flex justify-between items-center gap-3 px-2.5 py-2 border border-line-soft rounded-sm"
+                            >
+                                <span className="font-mono text-ui min-w-0 break-all">
+                                    {file.displayName ?? file.filename}
+                                </span>
+                                <Button
+                                    variant="link"
+                                    size="inline"
+                                    onClick={() => handleDownload(file)}
+                                >
+                                    {t('secret_page.download')}
+                                </Button>
                             </div>
-                        </div>
-                    )}
-                </div>
+                        ))}
+                    </div>
+                )}
 
-                {/* Footer */}
-                <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-dark-600 bg-gray-50 dark:bg-dark-700/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <Link
-                        to="/"
-                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium transition-all duration-200"
-                    >
-                        <Plus className="w-4 h-4" />
+                <div className="flex flex-wrap gap-2.5 items-center p-3 border-t border-line-soft">
+                    <Link to="/" className={buttonClassName({ variant: 'secondary' })}>
                         {t('secret_page.create_your_own')}
                     </Link>
-                    <button
-                        onClick={() => setShowDeleteModal(true)}
-                        disabled={!deleteToken}
-                        className="w-full sm:w-auto inline-flex items-center gap-2 justify-center px-5 py-2.5 bg-red-500 hover:bg-red-400 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium transition-all duration-200"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                        {t('secret_page.delete_secret')}
-                    </button>
+                    <span className="flex-1 font-mono text-xs text-muted text-right">
+                        {afterNote}
+                    </span>
+                    {deleteToken &&
+                        (confirmDelete ? (
+                            <>
+                                <span className="text-ui text-fg-3">
+                                    {t('secret_page.delete_confirm_question')}
+                                </span>
+                                <Button
+                                    variant="danger-solid"
+                                    onClick={handleDeleteSecret}
+                                    loading={isDeleting}
+                                    className="px-3"
+                                >
+                                    {t('common.delete')}
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="inline"
+                                    onClick={() => setConfirmDelete(false)}
+                                >
+                                    {t('common.cancel')}
+                                </Button>
+                            </>
+                        ) : (
+                            <Button
+                                variant="danger"
+                                className="px-3"
+                                onClick={() => setConfirmDelete(true)}
+                            >
+                                {t('secret_page.delete_secret')}
+                            </Button>
+                        ))}
                 </div>
-            </Card>
-
-            <Modal
-                isOpen={showDeleteModal}
-                onClose={() => setShowDeleteModal(false)}
-                title={t('secret_page.delete_modal_title')}
-                confirmText={isDeleting ? t('common.deleting') : t('common.delete')}
-                cancelText={t('common.cancel')}
-                onConfirm={handleDeleteSecret}
-            >
-                <p>{t('secret_page.delete_modal_message')}</p>
-            </Modal>
+            </div>
         </main>
     );
 }

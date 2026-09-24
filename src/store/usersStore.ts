@@ -2,23 +2,23 @@ import { create } from 'zustand';
 import { api } from '../lib/api';
 import { authClient } from '../lib/auth';
 
-interface User {
+/** A user row as the admin user list returns it. */
+export interface ManagedUser {
     id: string;
-    name: string;
     username: string;
-    displayUsername: string;
     email: string;
-    emailVerified: boolean;
-    image: string | null;
     role: string;
     banned: boolean;
-    banReason: string | null;
-    banExpires: string | null;
     createdAt: string;
-    updatedAt: string;
 }
 
-interface NewUser {
+/** The fields that the edit dialog can change. */
+export type UserUpdate = Pick<ManagedUser, 'id' | 'username' | 'email' | 'role' | 'banned'>;
+
+/** Maps a role value from a form to a role that the auth client accepts. */
+const toRole = (role: string): 'user' | 'admin' => (role === 'admin' ? 'admin' : 'user');
+
+export interface NewUser {
     name: string;
     username: string;
     email: string;
@@ -27,14 +27,15 @@ interface NewUser {
 }
 
 interface UsersStore {
-    userToDelete: User | null;
-    userToEdit: User | null;
+    userToDelete: ManagedUser | null;
+    userToEdit: ManagedUser | null;
     isAddUserModalOpen: boolean;
     addUser: (newUser: NewUser) => Promise<void>;
-    editUser: (user: User & { password?: string }) => Promise<void>;
+    editUser: (user: UserUpdate) => Promise<void>;
+    setBanned: (userId: string, banned: boolean) => Promise<void>;
     deleteUser: () => Promise<void>;
-    setUserToDelete: (user: User | null) => void;
-    setUserToEdit: (user: User | null) => void;
+    setUserToDelete: (user: ManagedUser | null) => void;
+    setUserToEdit: (user: ManagedUser | null) => void;
     setIsAddUserModalOpen: (isOpen: boolean) => void;
 }
 
@@ -47,7 +48,7 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
             name: newUser.name,
             email: newUser.email,
             password: newUser.password,
-            role: newUser.role,
+            role: toRole(newUser.role),
             data: {
                 username: newUser.username,
                 displayUsername: newUser.username,
@@ -60,13 +61,16 @@ export const useUsersStore = create<UsersStore>((set, get) => ({
             param: { id: user.id },
             json: { username: user.username, email: user.email },
         });
-        await authClient.admin.setRole({ userId: user.id, role: user.role });
-        if (user.banned) {
-            await authClient.admin.banUser({ userId: user.id });
-        } else {
-            await authClient.admin.unbanUser({ userId: user.id });
-        }
+        await authClient.admin.setRole({ userId: user.id, role: toRole(user.role) });
+        await get().setBanned(user.id, user.banned);
         set({ userToEdit: null });
+    },
+    setBanned: async (userId, banned) => {
+        if (banned) {
+            await authClient.admin.banUser({ userId });
+        } else {
+            await authClient.admin.unbanUser({ userId });
+        }
     },
     deleteUser: async () => {
         const { userToDelete } = get();

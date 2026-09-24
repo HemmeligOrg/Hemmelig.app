@@ -21,10 +21,10 @@ test.describe('Secret Creation and Viewing', () => {
         await expect(page.getByText(/secret.*created/i)).toBeVisible({ timeout: 10000 });
 
         // Verify the secret URL is displayed
-        const urlInput = page.locator('input[readonly]').first();
-        await expect(urlInput).toBeVisible();
+        const secretLink = page.getByTestId('secret-url');
+        await expect(secretLink).toBeVisible();
 
-        const secretUrl = await urlInput.inputValue();
+        const secretUrl = (await secretLink.textContent()) ?? '';
         expect(secretUrl).toContain('/secret/');
         expect(secretUrl).toContain('#decryptionKey=');
     });
@@ -72,8 +72,7 @@ test.describe('Secret Creation and Viewing', () => {
         await expect(page.getByText(/secret.*created/i)).toBeVisible({ timeout: 10000 });
 
         // Get the secret URL
-        const urlInput = page.locator('input[readonly]').first();
-        const secretUrl = await urlInput.inputValue();
+        const secretUrl = (await page.getByTestId('secret-url').textContent()) ?? '';
 
         // Navigate to the secret URL
         await page.goto(secretUrl);
@@ -98,16 +97,12 @@ test.describe('Secret Creation and Viewing', () => {
         await editor.click();
         await editor.fill(secretText);
 
-        // Enable password protection
-        const passwordRow = page
-            .locator('div.flex.items-center.justify-between')
-            .filter({ hasText: 'Password Protection' });
-        await passwordRow.locator('button').click();
+        // Open the options panel and enable password protection
+        await page.getByRole('button', { name: /options/i }).click();
+        await page.getByRole('switch', { name: 'Password', exact: true }).click();
 
         // Fill the password input that appears
-        const passwordInput = page
-            .locator('input[placeholder*="password" i], input[type="password"]')
-            .first();
+        const passwordInput = page.getByRole('textbox', { name: 'Password', exact: true });
         await expect(passwordInput).toBeVisible({ timeout: 5000 });
         await passwordInput.fill(password);
 
@@ -121,8 +116,7 @@ test.describe('Secret Creation and Viewing', () => {
         await expect(page.getByText(/secret.*created/i)).toBeVisible({ timeout: 10000 });
 
         // Get the secret URL
-        const urlInput = page.locator('input[readonly]').first();
-        const secretUrl = await urlInput.inputValue();
+        const secretUrl = (await page.getByTestId('secret-url').textContent()) ?? '';
 
         // Password-protected links must not carry the decryption key.
         expect(secretUrl).not.toContain('#decryptionKey=');
@@ -158,8 +152,7 @@ test.describe('Secret Creation and Viewing', () => {
 
         // Wait for success and get URL
         await expect(page.getByText(/secret.*created/i)).toBeVisible({ timeout: 10000 });
-        const urlInput = page.locator('input[readonly]').first();
-        const secretUrl = await urlInput.inputValue();
+        const secretUrl = (await page.getByTestId('secret-url').textContent()) ?? '';
 
         // View the secret
         await page.goto(secretUrl);
