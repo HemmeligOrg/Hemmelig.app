@@ -155,8 +155,8 @@
         "max_secrets_per_user_info": "Můžete vytvořit až {{count}} secretů.",
         "failed_to_burn": "Secret se nepodařilo zničit. Zkuste to znovu.",
         "facts": {
-            "expires": "Platnost do",
-            "expires_in": "za {{duration}}",
+            "expires": "Zbývající platnost",
+            "expires_in": "{{duration}}",
             "views": "Zobrazení",
             "burn_at_expiry": "smazat po vypršení platnosti",
             "password": "Heslo",
@@ -173,7 +173,7 @@
         "qr_title": "QR kód úplného odkazu",
         "qr_description": "Naskenujte jej pro otevření na jiném zařízení. Obsahuje klíč, proto s ním zacházejte stejně jako s odkazem.",
         "password_warning": "Klíč se odvozuje z hesla, takže samotný odkaz k dešifrování nestačí. Heslo pošlete jiným kanálem.",
-        "your_secrets": "Vaše secrets"
+        "your_secrets": "Vaše secrety"
     },
     "security_settings": {
         "security_title": "Zabezpečení",
@@ -306,7 +306,7 @@
             "delete_account_confirm": "Jste si jisti, že chcete smazat svůj účet? Tuto akci nelze zrušit.",
             "delete_account_button": "Smazat účet",
             "deleting_account_button": "Smazání účtu...",
-            "delete_account_summary": "Smaže váš účet, API klíče a všechny secrets, které jste vytvořili. Odkazy přestanou fungovat.",
+            "delete_account_summary": "Smaže váš účet, API klíče a všechny secrety, které jste vytvořili. Odkazy přestanou fungovat.",
             "confirm_placeholder": "pro potvrzení zadejte {{username}}",
             "delete_error": "Účet se nepodařilo smazat. Zkuste to znovu."
         },
@@ -517,10 +517,10 @@
             "export_logs_button": "Exportovat záznamy"
         },
         "managed_notice": "Spravovaný režim — nastavení pochází z proměnných prostředí a zde je nelze měnit.",
-        "note_default": "Změny se projeví u nových secrets.",
+        "note_default": "Změny se projeví u nových secretů.",
         "note_managed": "Ve spravovaném režimu nelze měnit.",
         "headings": {
-            "secret_options": "Nastavení secrets",
+            "secret_options": "Nastavení secretů",
             "rate_limiting": "Omezení požadavků"
         },
         "units": {
@@ -641,7 +641,7 @@
                 "description": "Předvyplní se při vytváření secretu. 1 až 9999."
             }
         },
-        "note_saved": "Uloženo. Změny se projeví u nových secrets.",
+        "note_saved": "Uloženo. Změny se projeví u nových secretů.",
         "note_save_failed": "Neuloženo. Přečtěte si chybu a zkuste to znovu.",
         "env_locked": "Nastaveno proměnnou {{variable}}. Změňte ji v prostředí, pokud chcete upravit toto nastavení."
     },
@@ -693,7 +693,7 @@
             "active": "Aktivní",
             "expired": "Prošlé"
         },
-        "filter_label": "Filtrovat secrets",
+        "filter_label": "Filtrovat secrety",
         "empty": "Nic tu není.",
         "footnote": "Názvy i obsah jsou šifrované, proto se zobrazují jen ID a metadata. Odkazy nelze znovu zkopírovat — klíč se neukládá.",
         "tags": {
@@ -810,7 +810,7 @@
         "sign_up_link": "Registrovat se",
         "unexpected_error": "Došlo k neočekávané chybě. Zkuste to znovu.",
         "sign_in_to": "Přihlásit se do {{name}}",
-        "require_account_notice": "Pro vytváření secrets je v této instanci nutný účet.",
+        "require_account_notice": "Pro vytváření secretů je v této instanci nutný účet.",
         "or": "nebo",
         "login_failed": "Přihlášení se nezdařilo: {{message}}",
         "show_password": "Zobrazit heslo"
@@ -1329,7 +1329,7 @@
     },
     "home_page": {
         "kicker": "// hemmelig [heˈm(ɛ)li] — norsky „secret“",
-        "title": "Sdílejte secrets, které se po přečtení samy smažou.",
+        "title": "Sdílejte secrety, které se po přečtení samy smažou.",
         "subtitle": "Obsah se před odesláním šifruje v tomto panelu. Server ukládá pouze šifrovaná data bez klíče.",
         "features": {
             "encrypted_title": "šifrováno zde",

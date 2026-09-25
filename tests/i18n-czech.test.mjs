@@ -46,6 +46,7 @@ test('Czech locale keeps Secret and Dashboard as product terms', async () => {
 
     assert.match(dictionaryMeaning, /tajemství/u);
     assert.doesNotMatch(productCopy, /tajemstv|tajemn/u);
+    assert.doesNotMatch(productCopy, /\bsecrets\b/u);
 });
 
 test('Czech locale renders one, few, and other count plurals', async () => {
