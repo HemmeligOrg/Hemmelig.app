@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import React from 'react';
+import { Button, type ButtonVariant } from './Button';
 
 interface ModalProps {
     isOpen: boolean;
@@ -9,7 +10,8 @@ interface ModalProps {
     onConfirm?: () => void;
     confirmText?: string;
     cancelText?: string;
-    confirmButtonClass?: string;
+    /** The style of the confirm button. The default is `danger-solid`. */
+    confirmVariant?: ButtonVariant;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -20,41 +22,48 @@ export const Modal: React.FC<ModalProps> = ({
     children,
     confirmText,
     cancelText,
-    confirmButtonClass = 'bg-red-500 hover:bg-red-600',
+    confirmVariant = 'danger-solid',
 }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4">
-            <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-xl p-4 w-full max-w-sm">
-                <div className="flex justify-between items-center mb-3">
-                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h2>
+        <div
+            className="fixed inset-0 bg-black/60 z-50 flex justify-center items-center p-4"
+            onClick={onClose}
+        >
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label={title}
+                className="bg-surface border border-line rounded-md shadow-2xl w-full max-w-sm"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="flex justify-between items-center gap-3 px-4.5 py-3.5 border-b border-line-soft">
+                    <h2 className="m-0 text-sm font-medium">{title}</h2>
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                        aria-label="Close"
+                        className="p-1 text-muted hover:text-fg transition-colors cursor-pointer"
                     >
                         <X className="w-4 h-4" />
                     </button>
                 </div>
-                <div className="text-gray-600 dark:text-slate-300 text-xs mb-4">{children}</div>
-                <div className="flex justify-end gap-2">
-                    {cancelText && (
-                        <button
-                            onClick={onClose}
-                            className="px-3 py-1.5 text-xs font-medium bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-600 transition-colors"
-                        >
-                            {cancelText}
-                        </button>
-                    )}
-                    {onConfirm && confirmText && (
-                        <button
-                            onClick={onConfirm}
-                            className={`px-3 py-1.5 text-xs font-medium text-white transition-colors ${confirmButtonClass}`}
-                        >
-                            {confirmText}
-                        </button>
-                    )}
-                </div>
+                <div className="px-4.5 py-4 text-ui text-fg-3">{children}</div>
+                {(cancelText || (onConfirm && confirmText)) && (
+                    <div className="flex justify-end gap-2 px-4.5 pb-4">
+                        {cancelText && (
+                            <Button variant="secondary" size="sm" onClick={onClose}>
+                                {cancelText}
+                            </Button>
+                        )}
+                        {onConfirm && confirmText && (
+                            <Button variant={confirmVariant} size="sm" onClick={onConfirm}>
+                                {confirmText}
+                            </Button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

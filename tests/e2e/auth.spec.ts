@@ -17,10 +17,11 @@ test.describe('Authentication', () => {
             await page.goto('/setup');
 
             // Fill in the setup form
-            await page.getByPlaceholder(/email/i).fill(TEST_USER.email);
-            await page.getByPlaceholder(/username/i).fill(TEST_USER.username);
-            await page.getByPlaceholder(/name/i).first().fill(TEST_USER.name);
-            await page.getByPlaceholder(/create.*password/i).fill(TEST_USER.password);
+            await page.getByLabel('Email address', { exact: true }).fill(TEST_USER.email);
+            await page.getByLabel('Username', { exact: true }).fill(TEST_USER.username);
+            await page.getByLabel('Full name', { exact: true }).fill(TEST_USER.name);
+            await page.getByLabel('Password', { exact: true }).fill(TEST_USER.password);
+            await page.getByLabel('Confirm password', { exact: true }).fill(TEST_USER.password);
 
             // Submit setup
             await page.getByRole('button', { name: /create|setup|submit/i }).click();
@@ -49,25 +50,25 @@ test.describe('Authentication', () => {
         await page.goto('/register');
 
         // Check that registration form is visible
-        await expect(page.getByPlaceholder(/email/i)).toBeVisible();
-        await expect(page.getByPlaceholder(/username/i)).toBeVisible();
-        await expect(page.getByPlaceholder(/create.*password/i)).toBeVisible();
+        await expect(page.getByLabel('Email', { exact: true })).toBeVisible();
+        await expect(page.getByLabel('Username', { exact: true })).toBeVisible();
+        await expect(page.getByLabel('Password', { exact: true })).toBeVisible();
     });
 
     test('should show login page', async ({ page }) => {
         await page.goto('/login');
 
         // Check that login form is visible
-        await expect(page.getByPlaceholder(/username/i)).toBeVisible();
-        await expect(page.getByPlaceholder(/password/i)).toBeVisible();
+        await expect(page.getByLabel('Username', { exact: true })).toBeVisible();
+        await expect(page.getByLabel('Password', { exact: true })).toBeVisible();
         await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
     });
 
     test('should show error for invalid credentials', async ({ page }) => {
         await page.goto('/login');
 
-        await page.getByPlaceholder(/username/i).fill('nonexistent@test.com');
-        await page.getByPlaceholder(/password/i).fill('wrongpassword');
+        await page.getByLabel('Username', { exact: true }).fill('nonexistent@test.com');
+        await page.getByLabel('Password', { exact: true }).fill('wrongpassword');
         await page.getByRole('button', { name: /sign in/i }).click();
 
         // Should stay on login page or show error

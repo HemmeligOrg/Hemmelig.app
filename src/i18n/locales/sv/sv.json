@@ -9,6 +9,35 @@
             "server": "Serveråtkomst",
             "credit_card": "Betalkort",
             "email": "E-postkonto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Användarnamn",
+            "password": "Lösenord",
+            "url": "URL",
+            "notes": "Anteckningar",
+            "service": "Tjänst",
+            "api_key": "API-nyckel",
+            "api_secret": "API-hemlighet",
+            "environment": "Miljö",
+            "expires": "Går ut",
+            "host": "Värd",
+            "port": "Port",
+            "database": "Databas",
+            "ssl": "SSL",
+            "hostname": "Värdnamn",
+            "ip_address": "IP-adress",
+            "ssh_port": "SSH-port",
+            "password_or_key": "Lösenord / nyckel",
+            "cardholder_name": "Kortinnehavarens namn",
+            "card_number": "Kortnummer",
+            "expiry_date": "Utgångsdatum",
+            "cvv": "CVV",
+            "billing_address": "Faktureringsadress",
+            "email": "E-post",
+            "imap_server": "IMAP-server",
+            "smtp_server": "SMTP-server",
+            "recovery_email": "Återställningsmejl"
         }
     },
     "editor": {
@@ -77,7 +106,10 @@
         "uploading": "Laddar upp...",
         "upload_file": "Ladda upp fil",
         "file_too_large": "Filen \"{{fileName}}\" ({{fileSize}} MB) överskrider maximal storlek på {{maxSize}} MB",
-        "max_size_exceeded": "Total filstorlek överskrider maximum på {{maxSize}} MB"
+        "max_size_exceeded": "Total filstorlek överskrider maximum på {{maxSize}} MB",
+        "attach": "+ Bifoga fil",
+        "max_size": "max {{size}} MB",
+        "remove": "Ta bort {{fileName}}"
     },
     "footer": {
         "tagline": "Hemmelig, [heˈm(ɛ)li], betyder 'secret' på norska",
@@ -104,7 +136,12 @@
         "invites": "Inbjudningar",
         "instance": "Instans",
         "sign_out": "Logga ut",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ Ny hemlighet",
+        "workspace": "arbetsyta",
+        "admin": "admin",
+        "open_menu": "Öppna meny",
+        "close_menu": "Stäng meny"
     },
     "secret_settings": {
         "secret_created_title": "Hemlighet skapad!",
@@ -116,7 +153,27 @@
         "copy_url_button": "Kopiera URL",
         "burn_secret_button": "Bränn hemlighet",
         "max_secrets_per_user_info": "Du kan skapa upp till {{count}} hemligheter.",
-        "failed_to_burn": "Misslyckades med att bränna hemligheten. Försök igen."
+        "failed_to_burn": "Misslyckades med att bränna hemligheten. Försök igen.",
+        "facts": {
+            "expires": "Går ut",
+            "expires_in": "om {{duration}}",
+            "views": "Visningar",
+            "burn_at_expiry": "radera vid utgång",
+            "password": "Lösenord",
+            "password_required": "krävs",
+            "none": "ingen",
+            "ip": "IP",
+            "any_ip": "alla",
+            "files": "Filer"
+        },
+        "show_password": "Visa",
+        "hide_password": "Dölj",
+        "show_qr": "QR-kod",
+        "hide_qr": "Dölj QR",
+        "qr_title": "QR-kod för hela länken",
+        "qr_description": "Skanna för att öppna på en annan enhet. Innehåller nyckeln — behandla den som länken.",
+        "password_warning": "Nyckeln härleds från lösenordet, så länken ensam kan inte dekryptera. Skicka lösenordet via en annan kanal.",
+        "your_secrets": "Dina hemligheter"
     },
     "security_settings": {
         "security_title": "Säkerhet",
@@ -131,18 +188,19 @@
         "burn_after_time_mode_title": "Bränn efter tid-läge",
         "burn_after_time_mode_description": "Hemligheten kommer att förstöras efter att tiden går ut, oavsett hur många gånger den visas.",
         "password_protection_title": "Lösenordsskydd",
-        "password_protection_description": "Lägg till ett extra säkerhetslager med ett lösenord",
+        "password_protection_description": "Nyckeln härleds från ett lösenord i stället för länken.",
         "enter_password_label": "Ange lösenord",
-        "password_placeholder": "Ange ett säkert lösenord...",
-        "password_hint": "Minst 5 tecken. Mottagare behöver detta lösenord för att se hemligheten",
+        "password_placeholder": "minst 5 tecken",
+        "password_hint": "Mottagaren behöver det också. Skicka det separat.",
         "password_error": "Lösenordet måste vara minst 5 tecken",
         "ip_restriction_title": "Begränsa efter IP eller CIDR",
-        "ip_restriction_description": "CIDR-inmatning låter användare ange IP-adressintervall som kan komma åt hemligheten.",
+        "ip_restriction_description": "Endast åtkomlig från en IP-adress eller ett CIDR-intervall.",
         "ip_address_cidr_label": "IP-adress eller CIDR-intervall",
-        "ip_address_cidr_placeholder": "192.168.1.0/24 eller 203.0.113.5",
+        "ip_address_cidr_placeholder": "203.0.113.7 eller 10.0.0.0/24",
         "ip_address_cidr_hint": "Endast förfrågningar från dessa IP-adresser kommer att kunna komma åt hemligheten",
         "burn_after_time_title": "Bränn efter att tiden går ut",
-        "burn_after_time_description": "Bränn hemligheten endast efter att tiden går ut"
+        "burn_after_time_description": "Bränn hemligheten endast efter att tiden går ut",
+        "remember_description": "Spara utgång, visningar och radering till nästa gång (den här webbläsaren)."
     },
     "title_field": {
         "placeholder": "Titel",
@@ -151,11 +209,13 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "visningar"
+        "views_label": "visningar",
+        "decrease": "Färre visningar",
+        "increase": "Fler visningar"
     },
     "account_page": {
-        "title": "Kontoinställningar",
-        "description": "Hantera dina kontopreferenser och säkerhet",
+        "title": "Konto",
+        "description": "Profil, säkerhet och API-åtkomst.",
         "tabs": {
             "profile": "Profil",
             "security": "Säkerhet",
@@ -168,12 +228,18 @@
             "first_name_label": "Förnamn",
             "last_name_label": "Efternamn",
             "username_label": "Användarnamn",
-            "email_label": "E-postadress",
+            "email_label": "E-post",
             "saving_button": "Sparar...",
-            "save_changes_button": "Spara ändringar"
+            "save_changes_button": "Spara ändringar",
+            "username_description": "Används för att logga in.",
+            "email_description": "För inloggning och återställning.",
+            "save_button": "Spara",
+            "saved": "Profilen har sparats.",
+            "save_error": "Det gick inte att spara profilen. Försök igen."
         },
         "profile_settings": {
-            "username_taken": "Användarnamnet är redan upptaget"
+            "username_taken": "Användarnamnet är redan upptaget",
+            "email_taken": "E-postadressen används redan"
         },
         "security_settings": {
             "title": "Säkerhetsinställningar",
@@ -189,7 +255,10 @@
             "changing_password_button": "Ändrar...",
             "change_password_button": "Byt lösenord",
             "password_change_success": "Lösenordet ändrades!",
-            "password_change_error": "Misslyckades med att ändra lösenord. Försök igen."
+            "password_change_error": "Misslyckades med att ändra lösenord. Försök igen.",
+            "new_password_description": "Minst 8 tecken, med en versal, en gemen och en siffra.",
+            "show_password": "Visa lösenord",
+            "hide_password": "Dölj lösenord"
         },
         "two_factor": {
             "title": "Tvåfaktorsautentisering",
@@ -216,7 +285,14 @@
             "backup_codes_title": "Säkerhetskoder",
             "backup_codes_description": "Spara dessa säkerhetskoder på ett säkert ställe. Du kan använda dem för att komma åt ditt konto om du förlorar åtkomsten till din autentiseringsapp.",
             "backup_codes_warning": "Varje kod kan endast användas en gång. Spara dem säkert!",
-            "backup_codes_saved": "Jag har sparat mina säkerhetskoder"
+            "backup_codes_saved": "Jag har sparat mina säkerhetskoder",
+            "status_on": "På. Inloggningen kräver en kod från din autentiseringsapp.",
+            "status_off": "Av. Lägg till en TOTP-autentiseringsapp för inloggning.",
+            "enable": "Aktivera",
+            "disable": "Inaktivera",
+            "scan_and_verify": "Skanna med en autentiseringsapp och ange sedan den 6-siffriga koden.",
+            "verify_button": "Verifiera",
+            "backup_codes_shown_once": "Reservkoder visas bara en gång. Förvara dem på ett säkert ställe."
         },
         "danger_zone": {
             "title": "Farozon",
@@ -229,7 +305,10 @@
             "delete_account_bullet4": "Denna åtgärd kan inte ångras",
             "delete_account_confirm": "Är du säker på att du vill ta bort ditt konto? Denna åtgärd kan inte ångras.",
             "delete_account_button": "Ta bort konto",
-            "deleting_account_button": "Tar bort konto..."
+            "deleting_account_button": "Tar bort konto...",
+            "delete_account_summary": "Tar bort ditt konto, dina API-nycklar och alla hemligheter du har skapat. Länkar slutar fungera.",
+            "confirm_placeholder": "skriv {{username}} för att bekräfta",
+            "delete_error": "Det gick inte att ta bort kontot. Försök igen."
         },
         "developer": {
             "title": "API-nycklar",
@@ -237,7 +316,7 @@
             "create_key": "Skapa nyckel",
             "create_key_title": "Skapa API-nyckel",
             "key_name": "Nyckelnamn",
-            "key_name_placeholder": "t.ex., Min integration",
+            "key_name_placeholder": "Nyckelnamn, t.ex. ci-deploy",
             "expiration": "Utgångsdatum",
             "never_expires": "Går aldrig ut",
             "expires_30_days": "30 dagar",
@@ -247,19 +326,25 @@
             "name_required": "Nyckelnamn krävs",
             "create_error": "Misslyckades med att skapa API-nyckel",
             "key_created": "API-nyckel skapad!",
-            "key_warning": "Kopiera denna nyckel nu. Du kommer inte att kunna se den igen.",
+            "key_warning": "Kopiera den nu. Den visas inte igen.",
             "dismiss": "Jag har kopierat nyckeln",
             "no_keys": "Inga API-nycklar än. Skapa en för att komma igång.",
             "created": "Skapad",
             "last_used": "Senast använd",
             "expires": "Går ut",
             "docs_hint": "Lär dig hur du använder API-nycklar i",
-            "api_docs": "API-dokumentationen"
+            "api_docs": "API-dokumentationen",
+            "copy": "Kopiera",
+            "copied": "Kopierad",
+            "revoke": "Återkalla",
+            "used": "använd {{time}}",
+            "never_used": "aldrig använd",
+            "expired": "har gått ut"
         }
     },
     "analytics_page": {
         "title": "Analys",
-        "description": "Spåra din hemlighetsdelningsaktivitet och insikter",
+        "description": "Användning för hela instansen. Aldrig innehåll.",
         "time_range": {
             "last_7_days": "Senaste 7 dagarna",
             "last_14_days": "Senaste 14 dagarna",
@@ -280,7 +365,8 @@
             "date": "Datum",
             "trend": "Förändring",
             "vs_previous": "vs föregående dag",
-            "no_data": "Ingen aktivitetsdata tillgänglig än."
+            "no_data": "Ingen aktivitetsdata tillgänglig än.",
+            "per_day": "per dag"
         },
         "locale": "sv-SE",
         "top_countries": {
@@ -289,18 +375,18 @@
             "views": "visningar"
         },
         "secret_types": {
-            "title": "Hemlighetstyper",
+            "title": "Använt skydd",
             "description": "Fördelning efter skyddsnivå",
             "password_protected": "Lösenordsskyddad",
             "ip_restricted": "IP-begränsad",
             "burn_after_time": "Bränn efter tid"
         },
         "expiration_stats": {
-            "title": "Utgångsstatistik",
+            "title": "Utgång",
             "description": "Hur länge hemligheter vanligtvis varar",
-            "one_hour": "1 timme",
-            "one_day": "1 dag",
-            "one_week_plus": "1 vecka+"
+            "one_hour": "1 timme eller mindre",
+            "one_day": "1 timme till 1 dygn",
+            "one_week_plus": "Mer än 1 dygn"
         },
         "visitor_analytics": {
             "title": "Besöksanalys",
@@ -310,7 +396,9 @@
             "date": "Datum",
             "trend": "Förändring",
             "vs_previous": "vs föregående dag",
-            "no_data": "Ingen besöksdata tillgänglig än."
+            "no_data": "Ingen besöksdata tillgänglig än.",
+            "unique_visitors": "Unika besökare",
+            "page_views": "Sidvisningar"
         },
         "secret_requests": {
             "total": "Hemlighetsförfrågningar",
@@ -318,11 +406,24 @@
         },
         "loading": "Laddar analys...",
         "no_permission": "Du har inte behörighet att se analys.",
-        "failed_to_fetch": "Misslyckades med att hämta analysdata."
+        "failed_to_fetch": "Misslyckades med att hämta analysdata.",
+        "range": {
+            "label": "Tidsperiod",
+            "7d": "7d",
+            "14d": "14d",
+            "30d": "30d"
+        },
+        "chart": {
+            "keyboard_hint": "Använd vänster och höger piltangent för att läsa värdet för varje dag."
+        },
+        "daily_table": {
+            "show": "Visa siffror per dag",
+            "hide": "Dölj siffror per dag"
+        }
     },
     "instance_page": {
-        "title": "Instansinställningar",
-        "description": "Konfigurera din Hemmelig-instans",
+        "title": "Instans",
+        "description": "Inställningar för alla på den här instansen.",
         "managed_mode": {
             "title": "Hanterat läge",
             "description": "Denna instans hanteras via miljövariabler. Inställningarna är skrivskyddade."
@@ -366,7 +467,7 @@
             "email_verification_description": "Kräv e-postverifiering"
         },
         "saving_button": "Sparar...",
-        "save_settings_button": "Spara inställningar",
+        "save_settings_button": "Spara",
         "security_settings": {
             "title": "Säkerhetsinställningar",
             "description": "Konfigurera säkerhet och åtkomstkontroller",
@@ -414,17 +515,146 @@
             "restart_service_button": "Starta om tjänsten",
             "clear_cache_button": "Rensa cache",
             "export_logs_button": "Exportera loggar"
-        }
+        },
+        "managed_notice": "Hanterat läge — inställningarna kommer från miljövariabler och är skrivskyddade här.",
+        "note_default": "Ändringar gäller för nya hemligheter.",
+        "note_managed": "Skrivskyddat i hanterat läge.",
+        "headings": {
+            "secret_options": "Alternativ för hemligheter",
+            "rate_limiting": "Hastighetsbegränsning"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "s"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "Instansnamn",
+                "description": "Visas bredvid logotypen och i sidans titel."
+            },
+            "logo": {
+                "label": "Logotyp"
+            },
+            "instance_description": {
+                "label": "Beskrivning",
+                "description": "Visas på startsidan."
+            },
+            "important_message": {
+                "label": "Viktigt meddelande",
+                "description": "Banner på alla offentliga sidor. Stöder Markdown. Tomt döljer den.",
+                "placeholder": "Underhåll söndag kl. 02:00 UTC"
+            },
+            "default_expiration": {
+                "label": "Standardutgång",
+                "description": "Förvald när du skapar en hemlighet.",
+                "hours": "{{count}} timmar"
+            },
+            "max_secret_size": {
+                "label": "Maxstorlek för hemlighet",
+                "description": "Gäller för texten och för bifogade filer."
+            },
+            "password_protection": {
+                "label": "Lösenordsskydd",
+                "description": "Den som skapar kan kräva ett lösenord."
+            },
+            "ip_restriction": {
+                "label": "IP-begränsning",
+                "description": "Den som skapar kan begränsa åtkomsten till en IP eller CIDR."
+            },
+            "file_uploads": {
+                "label": "Filuppladdning",
+                "description": "Krypterade bilagor för inloggade användare."
+            },
+            "rate_limiting": {
+                "label": "Hastighetsbegränsning",
+                "description": "Per klient-IP."
+            },
+            "rate_limit_requests": {
+                "label": "Förfrågningar",
+                "description": "Per fönster."
+            },
+            "rate_limit_window": {
+                "label": "Fönster",
+                "description": "Längden på ett fönster."
+            },
+            "require_invite_code": {
+                "label": "Kräv inbjudningskod",
+                "description": "Registrering kräver en kod. Lägger till Inbjudningar i menyn."
+            },
+            "allowed_email_domains": {
+                "label": "Tillåtna e-postdomäner",
+                "description": "Kommaseparerade. Tomt tillåter alla."
+            },
+            "require_registered_user": {
+                "label": "Endast registrerade användare",
+                "description": "Endast inloggade användare kan skapa. Alla med en länk kan fortfarande läsa."
+            },
+            "social_login_only": {
+                "label": "Endast social inloggning",
+                "description": "Stäng av registrering med e-post och lösenord."
+            },
+            "webhooks": {
+                "label": "Webhooks",
+                "description": "Skickar en händelse med POST till din endpoint."
+            },
+            "webhook_url": {
+                "label": "Endpoint",
+                "description": "Tar emot en POST-förfrågan för varje händelse."
+            },
+            "webhook_secret": {
+                "label": "Signeringsnyckel",
+                "description": "Payloads signeras med HMAC med den här nyckeln. Signaturen finns i headern X-Hemmelig-Signature."
+            },
+            "webhook_on_view": {
+                "label": "Vid visning",
+                "description": "Utlöses när en hemlighet öppnas."
+            },
+            "webhook_on_burn": {
+                "label": "Vid radering",
+                "description": "Utlöses när en hemlighet raderas."
+            },
+            "metrics": {
+                "label": "Prometheus-mätvärden",
+                "description": "Exponerar /api/metrics."
+            },
+            "metrics_secret": {
+                "label": "Bearer-token",
+                "description": "Scrapers skickar Authorization: Bearer <token>. Tomt stänger av autentisering."
+            },
+            "metrics_endpoint": {
+                "label": "Endpoint",
+                "description": "Prometheus hämtar data från den här sökvägen."
+            },
+            "logo_dark": {
+                "label": "Logotyp för mörkt läge",
+                "description": "Visas när det mörka temat är aktivt. Tomt använder logotypen ovan."
+            },
+            "default_theme": {
+                "label": "Standardtema",
+                "description": "För besökare som inte har valt ett tema.",
+                "dark": "Mörkt",
+                "light": "Ljust",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standard max visningar",
+                "description": "Förvalt när en hemlighet skapas. 1 till 9999."
+            }
+        },
+        "note_saved": "Sparat. Ändringarna gäller för nya hemligheter.",
+        "note_save_failed": "Inte sparat. Läs felmeddelandet och försök igen.",
+        "env_locked": "Styrs av {{variable}}. Ändra miljövariabeln för att ändra den här inställningen."
     },
     "secrets_page": {
-        "title": "Dina hemligheter",
-        "description": "Hantera och övervaka dina delade hemligheter",
-        "create_secret_button": "Skapa hemlighet",
+        "title": "Hemligheter",
+        "description": "Allt du har skapat på den här instansen.",
+        "create_secret_button": "Ny hemlighet",
         "search_placeholder": "Sök hemligheter...",
         "filter": {
             "all_secrets": "Alla hemligheter",
             "active": "Aktiva",
-            "expired": "Utgångna"
+            "expired": "Utgångna",
+            "all": "Alla"
         },
         "total_secrets": "Totalt antal hemligheter",
         "active_secrets": "Aktiva",
@@ -452,14 +682,37 @@
             "delete_confirmation_title": "Är du säker?",
             "delete_confirmation_text": "Denna åtgärd kan inte ångras. Detta kommer permanent att radera hemligheten.",
             "delete_confirm_button": "Ja, ta bort den",
-            "delete_cancel_button": "Avbryt"
+            "delete_cancel_button": "Avbryt",
+            "id_header": "ID",
+            "protection_header": "Skydd",
+            "views_left_header": "Visningar kvar",
+            "expires_header": "Går ut"
+        },
+        "stats": {
+            "total": "Totalt",
+            "active": "Aktiva",
+            "expired": "Utgångna"
+        },
+        "filter_label": "Filtrera hemligheter",
+        "empty": "Inget här.",
+        "footnote": "Titlar och innehåll är krypterade, så bara ID:n och metadata visas. Länkar kan inte kopieras igen eftersom nyckeln aldrig sparades.",
+        "tags": {
+            "password": "lösenord",
+            "ip": "ip",
+            "burn": "bränn",
+            "files_one": "{{count}} fil",
+            "files_other": "{{count}} filer",
+            "link_key": "länknyckel"
+        },
+        "toast": {
+            "delete_error": "Det gick inte att ta bort hemligheten."
         }
     },
     "users_page": {
-        "title": "Användarhantering",
-        "description": "Hantera användare och deras behörigheter",
+        "title": "Användare",
+        "description": "Personer med ett konto på den här instansen.",
         "add_user_button": "Lägg till användare",
-        "search_placeholder": "Sök efter användare...",
+        "search_placeholder": "Sök användarnamn eller e-post",
         "filter": {
             "all_roles": "Alla roller",
             "admin": "Admin",
@@ -483,7 +736,8 @@
             "activity_header": "Aktivitet",
             "last_login_header": "Senaste inloggning",
             "actions_header": "Åtgärder",
-            "created_at": "Skapad den"
+            "created_at": "Skapad den",
+            "joined_header": "Gick med"
         },
         "status": {
             "active": "Aktiv",
@@ -513,6 +767,11 @@
             "role_label": "Roll",
             "save_button": "Lägg till användare",
             "cancel_button": "Avbryt"
+        },
+        "actions": {
+            "edit": "Redigera",
+            "ban": "Spärra",
+            "unban": "Häv spärr"
         }
     },
     "forgot_password_page": {
@@ -548,7 +807,12 @@
         "continue_with_github": "Fortsätt med GitHub",
         "no_account_question": "Har du inget konto?",
         "sign_up_link": "Registrera dig",
-        "unexpected_error": "Ett oväntat fel inträffade. Försök igen."
+        "unexpected_error": "Ett oväntat fel inträffade. Försök igen.",
+        "sign_in_to": "Logga in på {{name}}",
+        "require_account_notice": "Den här instansen kräver ett konto för att skapa hemligheter.",
+        "or": "eller",
+        "login_failed": "Inloggningen misslyckades: {{message}}",
+        "show_password": "Visa lösenord"
     },
     "register_page": {
         "back_to_hemmelig": "Tillbaka till Hemmelig",
@@ -605,8 +869,8 @@
         "files_title": "Bifogade filer",
         "secret_waiting_title": "Någon delade en hemlighet med dig",
         "secret_waiting_description": "Denna hemlighet är krypterad och kan endast visas när du klickar på knappen nedan.",
-        "one_view_remaining": "Denna hemlighet kan endast visas 1 gång till",
-        "views_remaining": "Denna hemlighet kan visas {{count}} gånger till",
+        "one_view_remaining": "En visning kvar. När du låser upp raderas den från servern.",
+        "views_remaining": "När du låser upp används en av {{count}} visningar.",
         "view_warning": "När den har visats kan denna åtgärd inte ångras",
         "secret_revealed": "Hemlighet",
         "copy_secret": "Kopiera till urklipp",
@@ -618,7 +882,18 @@
         "delete_modal_title": "Ta bort hemlighet",
         "delete_modal_message": "Är du säker på att du vill ta bort denna hemlighet? Denna åtgärd kan inte ångras.",
         "decryption_failed": "Misslyckades med att dekryptera hemligheten. Kontrollera ditt lösenord eller dekrypteringsnyckel.",
-        "fetch_error": "Ett fel inträffade vid hämtning av hemligheten. Försök igen."
+        "fetch_error": "Ett fel inträffade vid hämtning av hemligheten. Försök igen.",
+        "after_burns_at_expiry": "raderas vid utgång",
+        "after_last_view": "sista visningen · raderad från servern",
+        "after_views_left_one": "{{count}} kvar",
+        "after_views_left_other": "{{count}} kvar",
+        "views_left_one": "{{count}} visning kvar",
+        "views_left_other": "{{count}} visningar kvar",
+        "copy_html": "html",
+        "copy_base64": "base64",
+        "delete_confirm_question": "Radera för alla?",
+        "wrong_password": "Fel lösenord.",
+        "gate_burns_at_expiry": "Raderas vid utgång, oavsett hur många gånger den öppnas."
     },
     "expiration": {
         "28_days": "28 dagar",
@@ -630,16 +905,18 @@
         "4_hours": "4 timmar",
         "1_hour": "1 timme",
         "30_minutes": "30 minuter",
-        "5_minutes": "5 minuter"
+        "5_minutes": "5 minuter",
+        "default_hours": "{{hours}} timmar"
     },
     "error_display": {
         "clear_errors_button_title": "Rensa fel"
     },
     "secret_not_found_page": {
-        "title": "Hemlighet hittades inte",
-        "message": "Hemligheten du letar efter finns inte, har gått ut, eller har bränts.",
+        "title": "Här finns inget.",
+        "message": "Den har visats, gått ut eller raderats. Den kan inte återställas — servern hade aldrig nyckeln.",
         "error_details": "Felinformation:",
-        "go_home_button": "Gå till hemsidan"
+        "go_home_button": "Skapa en hemlighet",
+        "kicker": "404 · hemligheten hittades inte"
     },
     "organization_page": {
         "title": "Organisationsinställningar",
@@ -692,8 +969,8 @@
         "save_settings_button": "Spara inställningar"
     },
     "invites_page": {
-        "title": "Inbjudningskoder",
-        "description": "Hantera inbjudningskoder för nya användarregistreringar",
+        "title": "Inbjudningar",
+        "description": "Koder för registrering när inbjudningar krävs.",
         "create_invite_button": "Skapa inbjudan",
         "loading": "Laddar inbjudningskoder...",
         "table": {
@@ -728,7 +1005,19 @@
             "fetch_error": "Misslyckades med att hämta inbjudningskoder",
             "create_error": "Misslyckades med att skapa inbjudningskod",
             "delete_error": "Misslyckades med att inaktivera inbjudningskod"
-        }
+        },
+        "close": "Stäng",
+        "invites_off": "Inbjudningskoder är avstängda. Alla som får registrera sig kan registrera sig.",
+        "require_invite_code": "Kräv inbjudningskod →",
+        "form": {
+            "max_uses": "Max användningar",
+            "expires_in": "Går ut om",
+            "days": "{{count}} d",
+            "never": "aldrig",
+            "generate": "Generera"
+        },
+        "copy": "Kopiera",
+        "copied": "Kopierad"
     },
     "social_login": {
         "continue_with": "Fortsätt med {{provider}}",
@@ -790,13 +1079,19 @@
     },
     "verify_2fa_page": {
         "back_to_login": "Tillbaka till inloggning",
-        "title": "Tvåfaktorsautentisering",
+        "title": "Tvåfaktorskod",
         "description": "Ange den 6-siffriga koden från din autentiseringsapp",
         "enter_code_hint": "Ange koden från din autentiseringsapp",
         "verifying": "Verifierar...",
         "verify_button": "Verifiera",
         "invalid_code": "Ogiltig verifieringskod. Försök igen.",
-        "unexpected_error": "Ett oväntat fel inträffade. Försök igen."
+        "unexpected_error": "Ett oväntat fel inträffade. Försök igen.",
+        "invalid_backup_code": "Ogiltig reservkod. Försök igen.",
+        "backup_description": "Ange en av reservkoderna som du sparade när du aktiverade tvåfaktorsautentisering.",
+        "code_label": "Autentiseringskod",
+        "backup_code_label": "Reservkod",
+        "use_backup_code": "Tappat bort enheten? Använd en reservkod i stället.",
+        "use_totp_code": "Använd en kod från autentiseringsappen"
     },
     "common": {
         "error": "Fel",
@@ -805,19 +1100,24 @@
         "ok": "OK",
         "delete": "Ta bort",
         "deleting": "Tar bort...",
-        "loading": "Laddar..."
+        "loading": "Laddar...",
+        "copy": "Kopiera",
+        "copied": "Kopierat"
     },
     "pagination": {
         "showing": "Visar {{start}} till {{end}} av {{total}} resultat",
         "previous_page": "Föregående sida",
-        "next_page": "Nästa sida"
+        "next_page": "Nästa sida",
+        "summary": "{{start}}–{{end}} av {{total}} · sida {{page}} av {{pages}}",
+        "label": "Sidnumrering"
     },
     "not_found_page": {
-        "title": "Sidan hittades inte",
+        "title": "Här finns inget.",
         "message": "Denna sida har försvunnit i tomma intet, precis som våra hemligheter gör.",
         "hint": "Sidan du letar efter finns inte eller har flyttats.",
         "go_home_button": "Gå hem",
-        "create_secret_button": "Skapa hemlighet"
+        "create_secret_button": "Skapa en hemlighet",
+        "kicker": "404 · sidan hittades inte"
     },
     "error_boundary": {
         "title": "Något gick fel",
@@ -826,12 +1126,13 @@
         "error_details": "Felinformation:",
         "unknown_error": "Ett okänt fel inträffade",
         "try_again_button": "Försök igen",
-        "go_home_button": "Gå hem"
+        "go_home_button": "Gå hem",
+        "kicker": "oväntat fel"
     },
     "secret_requests_page": {
-        "title": "Hemlighetsförfrågningar",
-        "description": "Begär hemligheter från andra via säkra länkar",
-        "create_request_button": "Skapa förfrågan",
+        "title": "Förfrågningar om hemligheter",
+        "description": "Be någon att skicka en hemlighet till dig.",
+        "create_request_button": "Ny förfrågan",
         "no_requests": "Inga hemlighetsförfrågningar ännu. Skapa en för att komma igång.",
         "table": {
             "title_header": "Titel",
@@ -840,7 +1141,15 @@
             "link_expires_header": "Länk upphör",
             "copy_link_tooltip": "Kopiera skaparlänk",
             "view_secret_tooltip": "Visa hemlighet",
-            "cancel_tooltip": "Avbryt förfrågan"
+            "cancel_tooltip": "Avbryt förfrågan",
+            "request_header": "Förfrågan",
+            "created_header": "Skapad",
+            "meta": "{{views}} · {{expiry}} efter inskick",
+            "views_one": "{{count}} visning",
+            "views_other": "{{count}} visningar",
+            "copy_link": "Kopiera länk",
+            "cancel": "Avbryt",
+            "open_with_key": "Öppna med nyckel"
         },
         "status": {
             "pending": "Väntande",
@@ -874,11 +1183,12 @@
             "cancelled": "Förfrågan avbruten",
             "fetch_error": "Kunde inte hämta förfrågningsdetaljer",
             "cancel_error": "Kunde inte avbryta förfrågan"
-        }
+        },
+        "footnote": "Personen du frågar skickar in i sin webbläsare och skickar nyckeln till dig. Med den öppnar du hemligheten här."
     },
     "create_request_page": {
-        "title": "Skapa hemlighetsförfrågan",
-        "description": "Begär en hemlighet från någon genom att generera en säker länk som de kan använda för att skicka in den",
+        "title": "Ny förfrågan",
+        "description": "Välj reglerna. De klistrar bara in.",
         "back_button": "Tillbaka till hemlighetsförfrågningar",
         "form": {
             "title_label": "Förfrågantitel",
@@ -922,12 +1232,38 @@
             "webhook_secret_warning": "Spara denna hemlighet nu! Den visas inte igen. Använd den för att verifiera webhook-signaturer.",
             "expires_at": "Länk upphör: {{date}}",
             "create_another_button": "Skapa en ny förfrågan",
-            "view_all_button": "Visa alla förfrågningar"
+            "view_all_button": "Visa alla förfrågningar",
+            "link_label": "Förfrågningslänk – dela den med den som har hemligheten",
+            "copy": "Kopiera",
+            "copied": "Kopierad",
+            "open_as_creator": "Öppna som skapare",
+            "back_to_requests": "Tillbaka till förfrågningar"
         },
         "toast": {
             "created": "Hemlighetsförfrågan skapad",
             "create_error": "Kunde inte skapa hemlighetsförfrågan",
             "copied": "Kopierat till urklipp"
+        },
+        "fields": {
+            "title_label": "Titel",
+            "title_hint": "Visas för personen du frågar.",
+            "title_placeholder": "API-uppgifter för Projekt X",
+            "description_label": "Beskrivning",
+            "description_hint": "Valfritt sammanhang.",
+            "valid_for_label": "Länken gäller i",
+            "valid_for_hint": "Hur länge förfrågningslänken fungerar.",
+            "expires_in_label": "Hemligheten går ut efter",
+            "expires_in_hint": "Räknas från inskicket.",
+            "max_views_label": "Max visningar",
+            "max_views_hint": "1 – 9999",
+            "ip_label": "IP-begränsning",
+            "ip_hint": "Valfri IP eller CIDR.",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "Förhindra bränning",
+            "prevent_burn_hint": "Behåll efter max visningar; ta bort när den går ut.",
+            "webhook_label": "Webhook",
+            "webhook_hint": "Aviseras vid inskick.",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
@@ -946,20 +1282,73 @@
             "password_protected_note": "Denna hemlighet kommer att vara lösenordsskyddad",
             "encryption_note": "Din hemlighet krypteras i din webbläsare innan den skickas. Dekrypteringsnyckeln inkluderas endast i den slutliga URL:en du delar.",
             "submitting_button": "Krypterar och skickar in...",
-            "submit_button": "Skicka in hemlighet"
+            "submit_button": "Kryptera och skicka",
+            "placeholder": "Klistra in hemligheten. Den krypteras före uppladdning.",
+            "settings_note": "inställningar valda av den som frågar"
         },
         "success": {
             "title": "Hemlighet skapad!",
             "description": "Din hemlighet har krypterats och lagrats säkert",
-            "decryption_key_label": "Dekrypteringsnyckel",
+            "decryption_key_label": "Dekrypteringsnyckel — skicka den till den som frågade",
             "warning": "Viktigt: Kopiera denna dekrypteringsnyckel nu och skicka den till den som begärde den. Detta är den enda gången du kommer att se den!",
-            "manual_send_note": "Du måste manuellt skicka denna dekrypteringsnyckel till personen som begärde hemligheten. De har redan hemlighetens URL i sin instrumentpanel.",
+            "manual_send_note": "Den som frågade har länken. Utan den här nyckeln går den inte att läsa.",
             "create_own_button": "Skapa din egen hemlighet"
         },
         "toast": {
             "created": "Hemlighet skickad",
             "create_error": "Kunde inte skicka in hemlighet",
             "copied": "Kopierad till urklipp"
+        },
+        "kicker": "// begäran om hemlighet"
+    },
+    "composer": {
+        "title_placeholder": "Titel (valfri, krypterad)",
+        "placeholder": "Klistra in ett lösenord, en nyckel, en konfiguration…",
+        "options_show": "Alternativ ▾",
+        "options_hide": "Alternativ ▴",
+        "create_link": "Skapa länk",
+        "shortcut_hint": "Skapa länken ({{shortcut}})",
+        "summary": {
+            "burn_after_time": "radera efter tid",
+            "views_one": "{{count}} visning",
+            "views_other": "{{count}} visningar",
+            "password": "lösenord",
+            "ip": "ip {{range}}",
+            "files_one": "{{count}} fil",
+            "files_other": "{{count}} filer"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — norska för ”hemlig”",
+        "title": "Dela hemligheter som självförstörs efter att de har lästs.",
+        "subtitle": "Krypteras i den här fliken före uppladdning. Servern lagrar chiffertext som den saknar nyckel till.",
+        "features": {
+            "encrypted_title": "krypterat här",
+            "encrypted_body": "AES-256-GCM körs i din webbläsare. Klartexten lämnar aldrig fliken.",
+            "fragment_title": "nyckel i #fragmentet",
+            "fragment_body": "Webbläsare skickar inte det som står efter <mono>#</mono>. Servern ser aldrig nyckeln.",
+            "gone_title": "borta efter läsning",
+            "gone_body": "Raderas vid sista visningen eller vid utgång, beroende på vad som sker först."
+        }
+    },
+    "important_alert": {
+        "label": "meddelande",
+        "dismiss": "Stäng"
+    },
+    "language_picker": {
+        "label": "Välj språk"
+    },
+    "expiration_short": {
+        "5m": "5m",
+        "30m": "30m",
+        "1h": "1h",
+        "4h": "4h",
+        "12h": "12h",
+        "1d": "1d",
+        "3d": "3d",
+        "7d": "7d",
+        "14d": "14d",
+        "28d": "28d",
+        "hours": "{{hours}}h"
     }
 }

@@ -2,9 +2,11 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
-import { compare, hash } from '../lib/password';
+import { createDownloadToken, verifyUploadToken } from '../lib/files';
+import { compare, compareVerifier } from '../lib/password';
 import { buildPaginationMeta } from '../lib/route-utils';
 import { resolveSettings } from '../lib/settings';
+import { createCreatorDeleteToken, createDeleteToken, verifyDeleteToken } from '../lib/tokens';
 import { handleNotFound } from '../lib/utils';
 import { sendWebhook } from '../lib/webhook';
 import { apiKeyOrAuthMiddleware, optionalApiKeyOrAuthMiddleware } from '../middlewares/auth';
@@ -23,7 +25,8 @@ interface SecretCreateData {
     title?: Uint8Array | null;
     password: string | null;
     expiresAt: Date;
-    views?: number;
+    // Null means no view limit. The secret then lives until it expires.
+    views?: number | null;
     isBurnable?: boolean;
     ipRange?: string | null;
     files?: { connect: { id: string }[] };
@@ -105,8 +108,9 @@ const app = new Hono<{
 
                 // Atomically retrieve secret and consume view in a single transaction
                 const result = await prisma.$transaction(async (tx) => {
-                    const item = await tx.secrets.findUnique({
-                        where: { id },
+                    // Expired secrets are inaccessible even before the cleanup job runs.
+                    const item = await tx.secrets.findFirst({
+                        where: { id, expiresAt: { gt: new Date() } },
                         select: {
                             id: true,
                             secret: true,
@@ -133,25 +137,53 @@ const app = new Hono<{
                         return { error: 'Secret not found', status: 404 as const };
                     }
 
-                    // Verify password if required
+                    // Verify access if the secret is password-protected.
+                    // - v2 (derived): compare the client-side verifier. The password and
+                    //   encryption key never reach the server.
+                    // - legacy: compare the raw password submitted by old clients against
+                    //   the stored Argon2 hash.
                     if (item.password) {
-                        const isValidPassword = await compare(data.password!, item.password);
-                        if (!isValidPassword) {
+                        const isDerived = item.password.startsWith('v2:');
+                        const isValid = isDerived
+                            ? !!data.passwordVerifier &&
+                              compareVerifier(data.passwordVerifier, item.password.slice(3))
+                            : !!data.password && (await compare(data.password, item.password));
+
+                        if (!isValid) {
                             return { error: 'Invalid password', status: 401 as const };
                         }
                     }
 
-                    // Consume the view atomically with retrieval
-                    const newViews = item.views! - 1;
+                    // A secret with null views has no view limit and lives until it
+                    // expires, so a reveal does not consume a view.
+                    let newViews: number | null = null;
 
-                    // Decrement views (don't delete yet — files may still need downloading)
-                    // The cleanup job handles deletion of secrets with views=0
-                    await tx.secrets.update({
-                        where: { id },
-                        data: { views: newViews },
-                    });
+                    if (item.views !== null) {
+                        // Consume one view with a conditional update. The update applies
+                        // only while views remain, so two concurrent reveals cannot both
+                        // use the last view, whatever isolation the database gives the
+                        // transaction. The secret stays in the database because files
+                        // may still need a download. The cleanup job deletes secrets
+                        // with no views left.
+                        const consumed = await tx.secrets.updateMany({
+                            where: { id, views: { gt: 0 } },
+                            data: { views: { decrement: 1 } },
+                        });
 
-                    if (item.isBurnable && newViews <= 0) {
+                        if (consumed.count === 0) {
+                            return { error: 'Secret not found', status: 404 as const };
+                        }
+
+                        const remaining = await tx.secrets.findUnique({
+                            where: { id },
+                            select: { views: true },
+                        });
+                        newViews = remaining?.views ?? 0;
+                    }
+
+                    const burned = item.isBurnable === true && newViews !== null && newViews <= 0;
+
+                    if (burned) {
                         // Send webhook for burned secret
                         sendWebhook('secret.burned', {
                             secretId: id,
@@ -164,7 +196,7 @@ const app = new Hono<{
                             secretId: id,
                             hasPassword: !!item.password,
                             hasIpRestriction: !!item.ipRange,
-                            viewsRemaining: newViews,
+                            ...(newViews !== null && { viewsRemaining: newViews }),
                         });
                     }
 
@@ -173,7 +205,14 @@ const app = new Hono<{
                     return {
                         ...itemWithoutPassword,
                         views: newViews,
-                        burned: item.isBurnable && newViews <= 0,
+                        burned,
+                        // Lets the viewer delete the secret after reading it.
+                        deleteToken: createDeleteToken(id),
+                        files: item.files.map((file) => ({
+                            id: file.id,
+                            filename: file.filename,
+                            token: createDownloadToken(id, file.id),
+                        })),
                     };
                 });
 
@@ -197,13 +236,14 @@ const app = new Hono<{
         try {
             const { id } = c.req.valid('param');
 
-            const item = await prisma.secrets.findUnique({
-                where: { id },
+            const item = await prisma.secrets.findFirst({
+                where: { id, expiresAt: { gt: new Date() } },
                 select: {
                     id: true,
                     views: true,
                     title: true,
                     password: true,
+                    salt: true,
                 },
             });
 
@@ -216,10 +256,19 @@ const app = new Hono<{
                 return c.json({ error: 'Secret not found' }, 404);
             }
 
+            const passwordScheme = item.password
+                ? item.password.startsWith('v2:')
+                    ? 'derived'
+                    : 'legacy'
+                : null;
+
             return c.json({
                 views: item.views,
                 title: item.title,
                 isPasswordProtected: !!item.password,
+                passwordScheme,
+                // The salt is required to derive the verifier before retrieval.
+                ...(passwordScheme === 'derived' ? { salt: item.salt } : {}),
             });
         } catch (error) {
             console.error(`Failed to check secret ${c.req.param('id')}:`, error);
@@ -254,17 +303,56 @@ const app = new Hono<{
                     return c.json({ error: `Secret exceeds maximum size of ${maxSizeKB} KB` }, 413);
                 }
 
-                const { expiresAt, password, fileIds, salt, title, ...rest } = validatedData;
+                const {
+                    expiresAt,
+                    password,
+                    passwordVerifier,
+                    fileIds,
+                    files: attachedFiles,
+                    salt,
+                    title,
+                    ...rest
+                } = validatedData;
+
+                // Reject raw passwords so they never reach the server. Clients must
+                // derive a verifier and send that instead.
+                if (password) {
+                    return c.json(
+                        {
+                            error: 'Plaintext passwords are no longer accepted. Update your client to send a password verifier.',
+                        },
+                        400
+                    );
+                }
+
+                // Deprecated unsigned attachments are rejected so clients upgrade.
+                if (fileIds && fileIds.length > 0) {
+                    return c.json(
+                        {
+                            error: 'Deprecated fileIds field. Update your client to attach signed files.',
+                        },
+                        400
+                    );
+                }
+
+                // Attachments require the upload capability token issued at upload time.
+                if (attachedFiles) {
+                    for (const file of attachedFiles) {
+                        if (!verifyUploadToken(file.id, user?.id ?? null, file.token)) {
+                            return c.json({ error: 'Invalid file attachment token' }, 400);
+                        }
+                    }
+                }
 
                 const data: SecretCreateData = {
                     ...rest,
                     salt,
                     // Title is required by the database, default to empty Uint8Array if not provided
                     title: title ?? new Uint8Array(0),
-                    password: password ? await hash(password) : null,
+                    password: passwordVerifier ? `v2:${passwordVerifier}` : null,
                     expiresAt: new Date(Date.now() + expiresAt * 1000),
-                    ...(fileIds && {
-                        files: { connect: fileIds.map((id: string) => ({ id })) },
+                    ...(attachedFiles && {
+                        files: { connect: attachedFiles.map((file) => ({ id: file.id })) },
                     }),
                 };
 
@@ -274,7 +362,15 @@ const app = new Hono<{
 
                 const item = await prisma.secrets.create({ data });
 
-                return c.json({ id: item.id }, 201);
+                // The creator gets a delete token, so the creator can burn the
+                // secret before anyone reveals it.
+                return c.json(
+                    {
+                        id: item.id,
+                        deleteToken: createCreatorDeleteToken(item.id, item.expiresAt),
+                    },
+                    201
+                );
             } catch (error: unknown) {
                 console.error('Failed to create secrets:', error);
 
@@ -303,40 +399,70 @@ const app = new Hono<{
             }
         }
     )
-    .delete('/:id', zValidator('param', secretsIdParamSchema), async (c) => {
-        try {
-            const { id } = c.req.valid('param');
+    .delete(
+        '/:id',
+        optionalApiKeyOrAuthMiddleware,
+        zValidator('param', secretsIdParamSchema),
+        async (c) => {
+            try {
+                const { id } = c.req.valid('param');
+                const deleteToken = c.req.header('x-hemmelig-delete-token');
 
-            // Use transaction to prevent race conditions
-            const secret = await prisma.$transaction(async (tx) => {
-                // Get secret info before deleting for webhook
-                const secretData = await tx.secrets.findUnique({
-                    where: { id },
-                    select: { id: true, password: true, ipRange: true },
+                // An identifier alone cannot destroy a secret. Deletion needs a
+                // delete token (from creation or from a successful reveal), or the
+                // owner of the secret, signed in or with an API key.
+                const hasValidToken = !!deleteToken && verifyDeleteToken(id, deleteToken);
+
+                if (!hasValidToken) {
+                    const user = c.get('user');
+                    const owner = user
+                        ? await prisma.secrets.findUnique({
+                              where: { id },
+                              select: { userId: true },
+                          })
+                        : null;
+
+                    // The same response for a missing secret and a foreign secret,
+                    // so the route does not show which identifiers exist.
+                    if (!user || !owner || owner.userId !== user.id) {
+                        return c.json(
+                            { error: 'A delete token or the owner of the secret is required' },
+                            403
+                        );
+                    }
+                }
+
+                // Use transaction to prevent race conditions
+                const secret = await prisma.$transaction(async (tx) => {
+                    // Get secret info before deleting for webhook
+                    const secretData = await tx.secrets.findUnique({
+                        where: { id },
+                        select: { id: true, password: true, ipRange: true },
+                    });
+
+                    await tx.secrets.delete({ where: { id } });
+
+                    return secretData;
                 });
 
-                await tx.secrets.delete({ where: { id } });
+                // Send webhook for manually burned secret
+                if (secret) {
+                    sendWebhook('secret.burned', {
+                        secretId: id,
+                        hasPassword: !!secret.password,
+                        hasIpRestriction: !!secret.ipRange,
+                    });
+                }
 
-                return secretData;
-            });
-
-            // Send webhook for manually burned secret
-            if (secret) {
-                sendWebhook('secret.burned', {
-                    secretId: id,
-                    hasPassword: !!secret.password,
-                    hasIpRestriction: !!secret.ipRange,
+                return c.json({
+                    success: true,
+                    message: 'Secret deleted successfully',
                 });
+            } catch (error) {
+                console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
+                return handleNotFound(error as Error & { code?: string }, c);
             }
-
-            return c.json({
-                success: true,
-                message: 'Secret deleted successfully',
-            });
-        } catch (error) {
-            console.error(`Failed to delete secret ${c.req.param('id')}:`, error);
-            return handleNotFound(error as Error & { code?: string }, c);
         }
-    });
+    );
 
 export default app;

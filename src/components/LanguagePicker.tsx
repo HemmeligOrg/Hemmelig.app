@@ -16,7 +16,7 @@ const LANGUAGES = [
 ] as const;
 
 export function LanguagePicker() {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         i18n.changeLanguage(e.target.value);
@@ -26,15 +26,11 @@ export function LanguagePicker() {
         <select
             value={i18n.resolvedLanguage ?? i18n.language}
             onChange={handleLanguageChange}
-            className="bg-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 text-xs cursor-pointer border-none outline-none appearance-none pr-1"
-            aria-label="Select language"
+            className="bg-transparent font-mono text-xs text-muted hover:text-fg cursor-pointer border-none outline-none appearance-none focus-visible:outline-2 focus-visible:outline-accent"
+            aria-label={t('language_picker.label')}
         >
             {LANGUAGES.map((lang) => (
-                <option
-                    key={lang.code}
-                    value={lang.code}
-                    className="bg-white dark:bg-dark-800 text-gray-900 dark:text-white"
-                >
+                <option key={lang.code} value={lang.code}>
                     {lang.label}
                 </option>
             ))}

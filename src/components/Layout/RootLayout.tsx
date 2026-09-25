@@ -4,11 +4,11 @@ import { Header } from '../Header';
 
 export function RootLayout() {
     return (
-        <div className="flex flex-col min-h-screen bg-light-800 dark:bg-dark-900 text-gray-900 dark:text-white">
+        <div className="flex flex-col min-h-screen bg-canvas text-fg">
             <Header />
-            <main className="flex-grow w-full max-w-4xl mx-auto px-4">
+            <div className="flex-grow w-full">
                 <Outlet />
-            </main>
+            </div>
             <Footer />
         </div>
     );

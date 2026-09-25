@@ -1,9 +1,7 @@
-import { Lock, Mail, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Card } from '../components/Card';
 import { FormField } from '../components/FormField';
 import { LoadingButton } from '../components/LoadingButton';
 import Logo from '../components/Logo';
@@ -62,90 +60,78 @@ export function SetupPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
-                <Card noPadding className="p-8">
-                    <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center mb-4">
-                            <Logo className="w-16 h-16 fill-gray-900 dark:fill-white" />
-                        </div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                            {t('setup_page.title')}
-                        </h1>
-                        <p className="text-gray-500 dark:text-slate-400 mt-2">
-                            {t('setup_page.description')}
-                        </p>
-                    </div>
+        <div className="min-h-screen bg-canvas text-fg">
+            <main className="max-w-[380px] mx-auto px-6 py-20 grid gap-4">
+                <div className="flex items-center gap-2.5 font-mono font-medium text-body">
+                    <Logo className="w-5 h-5 fill-current" aria-hidden="true" />
+                    hemmelig
+                </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <FormField
-                            label={t('setup_page.name_label')}
-                            icon={User}
-                            value={formData.name}
-                            onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
-                            placeholder={t('setup_page.name_placeholder')}
-                            required
-                        />
+                <div className="grid gap-1">
+                    <h1 className="m-0 text-2xl font-medium tracking-tight">
+                        {t('setup_page.title')}
+                    </h1>
+                    <p className="m-0 text-sm text-fg-3">{t('setup_page.description')}</p>
+                </div>
 
-                        <FormField
-                            label={t('setup_page.username_label')}
-                            icon={User}
-                            value={formData.username}
-                            onChange={(value) =>
-                                setFormData((prev) => ({ ...prev, username: value }))
-                            }
-                            placeholder={t('setup_page.username_placeholder')}
-                            required
-                            minLength={3}
-                            maxLength={32}
-                        />
+                <form onSubmit={handleSubmit} className="grid gap-4">
+                    <FormField
+                        label={t('setup_page.name_label')}
+                        value={formData.name}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
+                        autoComplete="name"
+                        required
+                    />
 
-                        <FormField
-                            label={t('setup_page.email_label')}
-                            icon={Mail}
-                            type="email"
-                            value={formData.email}
-                            onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
-                            placeholder={t('setup_page.email_placeholder')}
-                            required
-                        />
+                    <FormField
+                        label={t('setup_page.username_label')}
+                        value={formData.username}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, username: value }))}
+                        autoComplete="username"
+                        required
+                        minLength={3}
+                        maxLength={32}
+                    />
 
-                        <FormField
-                            label={t('setup_page.password_label')}
-                            icon={Lock}
-                            type="password"
-                            value={formData.password}
-                            onChange={(value) =>
-                                setFormData((prev) => ({ ...prev, password: value }))
-                            }
-                            placeholder={t('setup_page.password_placeholder')}
-                            required
-                            minLength={8}
-                        />
+                    <FormField
+                        label={t('setup_page.email_label')}
+                        type="email"
+                        value={formData.email}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
+                        autoComplete="email"
+                        required
+                    />
 
-                        <FormField
-                            label={t('setup_page.confirm_password_label')}
-                            icon={Lock}
-                            type="password"
-                            value={formData.confirmPassword}
-                            onChange={(value) =>
-                                setFormData((prev) => ({ ...prev, confirmPassword: value }))
-                            }
-                            placeholder={t('setup_page.confirm_password_placeholder')}
-                            required
-                            minLength={8}
-                        />
+                    <FormField
+                        label={t('setup_page.password_label')}
+                        type="password"
+                        value={formData.password}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, password: value }))}
+                        placeholder={t('setup_page.password_placeholder')}
+                        autoComplete="new-password"
+                        required
+                        minLength={8}
+                    />
 
-                        <LoadingButton isLoading={isLoading} loadingText={t('setup_page.creating')}>
-                            <span>{t('setup_page.create_admin')}</span>
-                        </LoadingButton>
-                    </form>
+                    <FormField
+                        label={t('setup_page.confirm_password_label')}
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={(value) =>
+                            setFormData((prev) => ({ ...prev, confirmPassword: value }))
+                        }
+                        autoComplete="new-password"
+                        required
+                        minLength={8}
+                    />
 
-                    <p className="text-xs text-gray-500 dark:text-slate-400 text-center mt-6">
-                        {t('setup_page.note')}
-                    </p>
-                </Card>
-            </div>
+                    <LoadingButton isLoading={isLoading} loadingText={t('setup_page.creating')}>
+                        {t('setup_page.create_admin')}
+                    </LoadingButton>
+                </form>
+
+                <p className="m-0 text-ui text-muted">{t('setup_page.note')}</p>
+            </main>
         </div>
     );
 }

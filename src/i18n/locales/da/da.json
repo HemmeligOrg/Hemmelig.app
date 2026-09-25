@@ -9,6 +9,35 @@
             "server": "Serveradgang",
             "credit_card": "Betalingskort",
             "email": "E-mail-konto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Brugernavn",
+            "password": "Adgangskode",
+            "url": "URL",
+            "notes": "Noter",
+            "service": "Tjeneste",
+            "api_key": "API-nøgle",
+            "api_secret": "API-hemmelighed",
+            "environment": "Miljø",
+            "expires": "Udløber",
+            "host": "Vært",
+            "port": "Port",
+            "database": "Database",
+            "ssl": "SSL",
+            "hostname": "Værtsnavn",
+            "ip_address": "IP-adresse",
+            "ssh_port": "SSH-port",
+            "password_or_key": "Adgangskode / nøgle",
+            "cardholder_name": "Kortholders navn",
+            "card_number": "Kortnummer",
+            "expiry_date": "Udløbsdato",
+            "cvv": "CVV",
+            "billing_address": "Faktureringsadresse",
+            "email": "E-mail",
+            "imap_server": "IMAP-server",
+            "smtp_server": "SMTP-server",
+            "recovery_email": "Gendannelsesmail"
         }
     },
     "editor": {
@@ -77,7 +106,10 @@
         "uploading": "Uploader...",
         "upload_file": "Upload fil",
         "file_too_large": "Filen \"{{fileName}}\" ({{fileSize}} MB) overstiger den maksimale størrelse på {{maxSize}} MB",
-        "max_size_exceeded": "Samlet filstørrelse overstiger maksimum på {{maxSize}} MB"
+        "max_size_exceeded": "Samlet filstørrelse overstiger maksimum på {{maxSize}} MB",
+        "attach": "+ Vedhæft fil",
+        "max_size": "maks. {{size}} MB",
+        "remove": "Fjern {{fileName}}"
     },
     "footer": {
         "tagline": "Hemmelig, [heˈm(ɛ)li], betyder 'secret' på norsk",
@@ -104,7 +136,12 @@
         "invites": "Invitationer",
         "instance": "Instans",
         "sign_out": "Log ud",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ Ny hemmelighed",
+        "workspace": "arbejdsområde",
+        "admin": "admin",
+        "open_menu": "Åbn menu",
+        "close_menu": "Luk menu"
     },
     "secret_settings": {
         "secret_created_title": "Hemmelighed oprettet!",
@@ -116,7 +153,27 @@
         "copy_url_button": "Kopier URL",
         "burn_secret_button": "Brænd hemmelighed",
         "max_secrets_per_user_info": "Du kan oprette op til {{count}} hemmeligheder.",
-        "failed_to_burn": "Kunne ikke brænde hemmeligheden. Prøv venligst igen."
+        "failed_to_burn": "Kunne ikke brænde hemmeligheden. Prøv venligst igen.",
+        "facts": {
+            "expires": "Udløber",
+            "expires_in": "om {{duration}}",
+            "views": "Visninger",
+            "burn_at_expiry": "slettes ved udløb",
+            "password": "Adgangskode",
+            "password_required": "påkrævet",
+            "none": "ingen",
+            "ip": "IP",
+            "any_ip": "alle",
+            "files": "Filer"
+        },
+        "show_password": "Vis",
+        "hide_password": "Skjul",
+        "show_qr": "QR-kode",
+        "hide_qr": "Skjul QR",
+        "qr_title": "QR-kode med hele linket",
+        "qr_description": "Scan for at åbne på en anden enhed. Indeholder nøglen — behandl den som linket.",
+        "password_warning": "Nøglen udledes af adgangskoden, så linket alene kan ikke dekryptere. Send adgangskoden via en anden kanal.",
+        "your_secrets": "Dine hemmeligheder"
     },
     "security_settings": {
         "security_title": "Sikkerhed",
@@ -131,18 +188,19 @@
         "burn_after_time_mode_title": "Brænd efter tid-tilstand",
         "burn_after_time_mode_description": "Hemmeligheden vil blive destrueret, når tiden udløber, uanset hvor mange gange den er blevet vist.",
         "password_protection_title": "Adgangskodebeskyttelse",
-        "password_protection_description": "Tilføj et ekstra lag af sikkerhed med en adgangskode",
+        "password_protection_description": "Nøglen udledes af en adgangskode i stedet for linket.",
         "enter_password_label": "Indtast adgangskode",
-        "password_placeholder": "Indtast en sikker adgangskode...",
-        "password_hint": "Minimum 5 tegn. Modtagere skal bruge denne adgangskode for at se hemmeligheden",
+        "password_placeholder": "mindst 5 tegn",
+        "password_hint": "Modtageren skal også bruge den. Send den separat.",
         "password_error": "Adgangskoden skal være på mindst 5 tegn",
         "ip_restriction_title": "Begræns efter IP eller CIDR",
-        "ip_restriction_description": "CIDR-input giver brugere mulighed for at angive IP-adresseområder, der kan få adgang til hemmeligheden.",
+        "ip_restriction_description": "Kun tilgængelig fra en IP-adresse eller et CIDR-interval.",
         "ip_address_cidr_label": "IP-adresse eller CIDR-område",
-        "ip_address_cidr_placeholder": "192.168.1.0/24 eller 203.0.113.5",
+        "ip_address_cidr_placeholder": "203.0.113.7 eller 10.0.0.0/24",
         "ip_address_cidr_hint": "Kun anmodninger fra disse IP-adresser vil kunne få adgang til hemmeligheden",
         "burn_after_time_title": "Brænd efter tiden udløber",
-        "burn_after_time_description": "Brænd kun hemmeligheden efter tiden udløber"
+        "burn_after_time_description": "Brænd kun hemmeligheden efter tiden udløber",
+        "remember_description": "Gem udløb, visninger og sletning til næste gang (denne browser)."
     },
     "title_field": {
         "placeholder": "Titel",
@@ -151,11 +209,13 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "visninger"
+        "views_label": "visninger",
+        "decrease": "Færre visninger",
+        "increase": "Flere visninger"
     },
     "account_page": {
-        "title": "Kontoindstillinger",
-        "description": "Administrer dine kontopræferencer og sikkerhed",
+        "title": "Konto",
+        "description": "Profil, sikkerhed og API-adgang.",
         "tabs": {
             "profile": "Profil",
             "security": "Sikkerhed",
@@ -168,12 +228,18 @@
             "first_name_label": "Fornavn",
             "last_name_label": "Efternavn",
             "username_label": "Brugernavn",
-            "email_label": "E-mailadresse",
+            "email_label": "E-mail",
             "saving_button": "Gemmer...",
-            "save_changes_button": "Gem ændringer"
+            "save_changes_button": "Gem ændringer",
+            "username_description": "Bruges til at logge ind.",
+            "email_description": "Til login og gendannelse.",
+            "save_button": "Gem",
+            "saved": "Profil gemt.",
+            "save_error": "Profilen kunne ikke gemmes. Prøv igen."
         },
         "profile_settings": {
-            "username_taken": "Brugernavnet er allerede optaget"
+            "username_taken": "Brugernavnet er allerede optaget",
+            "email_taken": "E-mailen er allerede i brug"
         },
         "security_settings": {
             "title": "Sikkerhedsindstillinger",
@@ -189,7 +255,10 @@
             "changing_password_button": "Ændrer...",
             "change_password_button": "Skift adgangskode",
             "password_change_success": "Adgangskoden blev ændret!",
-            "password_change_error": "Kunne ikke ændre adgangskode. Prøv venligst igen."
+            "password_change_error": "Kunne ikke ændre adgangskode. Prøv venligst igen.",
+            "new_password_description": "Mindst 8 tegn med et stort bogstav, et lille bogstav og et tal.",
+            "show_password": "Vis adgangskode",
+            "hide_password": "Skjul adgangskode"
         },
         "two_factor": {
             "title": "Totrinsbekræftelse",
@@ -216,7 +285,14 @@
             "backup_codes_title": "Sikkerhedskoder",
             "backup_codes_description": "Gem disse sikkerhedskoder et sikkert sted. Du kan bruge dem til at få adgang til din konto, hvis du mister adgangen til din autentificeringsapp.",
             "backup_codes_warning": "Hver kode kan kun bruges én gang. Gem dem sikkert!",
-            "backup_codes_saved": "Jeg har gemt mine sikkerhedskoder"
+            "backup_codes_saved": "Jeg har gemt mine sikkerhedskoder",
+            "status_on": "Til. Login kræver en kode fra din godkendelsesapp.",
+            "status_off": "Fra. Tilføj en TOTP-godkendelsesapp til login.",
+            "enable": "Aktivér",
+            "disable": "Deaktivér",
+            "scan_and_verify": "Scan med en godkendelsesapp, og indtast derefter den 6-cifrede kode.",
+            "verify_button": "Bekræft",
+            "backup_codes_shown_once": "Backupkoder vises kun én gang. Gem dem et sikkert sted."
         },
         "danger_zone": {
             "title": "Farezone",
@@ -229,7 +305,10 @@
             "delete_account_bullet4": "Denne handling kan ikke omgøres",
             "delete_account_confirm": "Er du sikker på, at du vil slette din konto? Denne handling kan ikke fortrydes.",
             "delete_account_button": "Slet konto",
-            "deleting_account_button": "Sletter konto..."
+            "deleting_account_button": "Sletter konto...",
+            "delete_account_summary": "Fjerner din konto, dine API-nøgler og alle hemmeligheder, du har oprettet. Links holder op med at virke.",
+            "confirm_placeholder": "skriv {{username}} for at bekræfte",
+            "delete_error": "Kontoen kunne ikke slettes. Prøv igen."
         },
         "developer": {
             "title": "API-nøgler",
@@ -237,7 +316,7 @@
             "create_key": "Opret nøgle",
             "create_key_title": "Opret API-nøgle",
             "key_name": "Nøglenavn",
-            "key_name_placeholder": "f.eks., Min integration",
+            "key_name_placeholder": "Nøglenavn, f.eks. ci-deploy",
             "expiration": "Udløb",
             "never_expires": "Udløber aldrig",
             "expires_30_days": "30 dage",
@@ -247,19 +326,25 @@
             "name_required": "Nøglenavn er påkrævet",
             "create_error": "Kunne ikke oprette API-nøgle",
             "key_created": "API-nøgle oprettet!",
-            "key_warning": "Kopier denne nøgle nu. Du vil ikke kunne se den igen.",
+            "key_warning": "Kopiér den nu. Den vises ikke igen.",
             "dismiss": "Jeg har kopieret nøglen",
             "no_keys": "Ingen API-nøgler endnu. Opret en for at komme i gang.",
             "created": "Oprettet",
             "last_used": "Sidst brugt",
             "expires": "Udløber",
             "docs_hint": "Lær hvordan du bruger API-nøgler i",
-            "api_docs": "API-dokumentationen"
+            "api_docs": "API-dokumentationen",
+            "copy": "Kopiér",
+            "copied": "Kopieret",
+            "revoke": "Tilbagekald",
+            "used": "brugt {{time}}",
+            "never_used": "aldrig brugt",
+            "expired": "udløbet"
         }
     },
     "analytics_page": {
         "title": "Analyse",
-        "description": "Spor din hemmelighedsdelingsaktivitet og indsigt",
+        "description": "Brug på tværs af instansen. Aldrig indhold.",
         "time_range": {
             "last_7_days": "Sidste 7 dage",
             "last_14_days": "Sidste 14 dage",
@@ -280,7 +365,8 @@
             "date": "Dato",
             "trend": "Ændring",
             "vs_previous": "vs forrige dag",
-            "no_data": "Ingen aktivitetsdata tilgængelige endnu."
+            "no_data": "Ingen aktivitetsdata tilgængelige endnu.",
+            "per_day": "pr. dag"
         },
         "locale": "da-DK",
         "top_countries": {
@@ -289,18 +375,18 @@
             "views": "visninger"
         },
         "secret_types": {
-            "title": "Hemmelighedstyper",
+            "title": "Anvendt beskyttelse",
             "description": "Fordeling efter beskyttelsesniveau",
             "password_protected": "Adgangskodebeskyttet",
             "ip_restricted": "IP-begrænset",
             "burn_after_time": "Brænd efter tid"
         },
         "expiration_stats": {
-            "title": "Udløbsstatistik",
+            "title": "Udløb",
             "description": "Hvor længe hemmeligheder typisk varer",
-            "one_hour": "1 time",
-            "one_day": "1 dag",
-            "one_week_plus": "1 uge+"
+            "one_hour": "1 time eller mindre",
+            "one_day": "1 time til 1 dag",
+            "one_week_plus": "Mere end 1 dag"
         },
         "visitor_analytics": {
             "title": "Besøgsanalyse",
@@ -310,7 +396,9 @@
             "date": "Dato",
             "trend": "Ændring",
             "vs_previous": "vs forrige dag",
-            "no_data": "Ingen besøgsdata tilgængelige endnu."
+            "no_data": "Ingen besøgsdata tilgængelige endnu.",
+            "unique_visitors": "Unikke besøgende",
+            "page_views": "Sidevisninger"
         },
         "secret_requests": {
             "total": "Hemmelighedsanmodninger",
@@ -318,11 +406,24 @@
         },
         "loading": "Indlæser analyse...",
         "no_permission": "Du har ikke tilladelse til at se analyser.",
-        "failed_to_fetch": "Kunne ikke hente analysedata."
+        "failed_to_fetch": "Kunne ikke hente analysedata.",
+        "range": {
+            "label": "Tidsinterval",
+            "7d": "7d",
+            "14d": "14d",
+            "30d": "30d"
+        },
+        "chart": {
+            "keyboard_hint": "Brug venstre og højre piletast for at læse værdien for hver dag."
+        },
+        "daily_table": {
+            "show": "Vis tal pr. dag",
+            "hide": "Skjul tal pr. dag"
+        }
     },
     "instance_page": {
-        "title": "Instansindstillinger",
-        "description": "Konfigurer din Hemmelig-instans",
+        "title": "Instans",
+        "description": "Indstillinger for alle på denne instans.",
         "managed_mode": {
             "title": "Administreret tilstand",
             "description": "Denne instans administreres via miljøvariabler. Indstillinger er skrivebeskyttede."
@@ -366,7 +467,7 @@
             "email_verification_description": "Kræv e-mailbekræftelse"
         },
         "saving_button": "Gemmer...",
-        "save_settings_button": "Gem indstillinger",
+        "save_settings_button": "Gem",
         "security_settings": {
             "title": "Sikkerhedsindstillinger",
             "description": "Konfigurer sikkerhed og adgangskontroller",
@@ -414,17 +515,146 @@
             "restart_service_button": "Genstart service",
             "clear_cache_button": "Ryd cache",
             "export_logs_button": "Eksporter logs"
-        }
+        },
+        "managed_notice": "Administreret tilstand — indstillingerne kommer fra miljøvariabler og kan kun læses her.",
+        "note_default": "Ændringer gælder for nye hemmeligheder.",
+        "note_managed": "Skrivebeskyttet i administreret tilstand.",
+        "headings": {
+            "secret_options": "Indstillinger for hemmeligheder",
+            "rate_limiting": "Hastighedsbegrænsning"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "s"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "Instansnavn",
+                "description": "Vises ved siden af logoet og i sidens titel."
+            },
+            "logo": {
+                "label": "Logo"
+            },
+            "instance_description": {
+                "label": "Beskrivelse",
+                "description": "Vises på forsiden."
+            },
+            "important_message": {
+                "label": "Vigtig besked",
+                "description": "Banner på alle offentlige sider. Understøtter Markdown. Tom skjuler det.",
+                "placeholder": "Vedligeholdelse søndag kl. 02:00 UTC"
+            },
+            "default_expiration": {
+                "label": "Standardudløb",
+                "description": "Forvalgt, når du opretter en hemmelighed.",
+                "hours": "{{count}} timer"
+            },
+            "max_secret_size": {
+                "label": "Maks. størrelse på hemmelighed",
+                "description": "Gælder for teksten og for vedhæftede filer."
+            },
+            "password_protection": {
+                "label": "Adgangskodebeskyttelse",
+                "description": "Opretteren kan kræve en adgangskode."
+            },
+            "ip_restriction": {
+                "label": "IP-begrænsning",
+                "description": "Opretteren kan begrænse adgangen til en IP eller CIDR."
+            },
+            "file_uploads": {
+                "label": "Filupload",
+                "description": "Krypterede vedhæftninger for brugere, der er logget ind."
+            },
+            "rate_limiting": {
+                "label": "Hastighedsbegrænsning",
+                "description": "Pr. klient-IP."
+            },
+            "rate_limit_requests": {
+                "label": "Forespørgsler",
+                "description": "Pr. vindue."
+            },
+            "rate_limit_window": {
+                "label": "Vindue",
+                "description": "Længden af ét vindue."
+            },
+            "require_invite_code": {
+                "label": "Kræv invitationskode",
+                "description": "Tilmelding kræver en kode. Tilføjer Invitationer til menuen."
+            },
+            "allowed_email_domains": {
+                "label": "Tilladte e-maildomæner",
+                "description": "Kommasepareret. Tom tillader alle."
+            },
+            "require_registered_user": {
+                "label": "Kun registrerede brugere",
+                "description": "Kun brugere, der er logget ind, kan oprette. Alle med et link kan stadig læse."
+            },
+            "social_login_only": {
+                "label": "Kun socialt login",
+                "description": "Deaktiver tilmelding med e-mail og adgangskode."
+            },
+            "webhooks": {
+                "label": "Webhooks",
+                "description": "Send en hændelse som POST til dit endpoint."
+            },
+            "webhook_url": {
+                "label": "Endpoint",
+                "description": "Modtager en POST-forespørgsel for hver hændelse."
+            },
+            "webhook_secret": {
+                "label": "Signeringsnøgle",
+                "description": "Payloads signeres med HMAC med denne nøgle. Signaturen står i headeren X-Hemmelig-Signature."
+            },
+            "webhook_on_view": {
+                "label": "Ved visning",
+                "description": "Udløses, når en hemmelighed åbnes."
+            },
+            "webhook_on_burn": {
+                "label": "Ved sletning",
+                "description": "Udløses, når en hemmelighed slettes."
+            },
+            "metrics": {
+                "label": "Prometheus-metrikker",
+                "description": "Udstil /api/metrics."
+            },
+            "metrics_secret": {
+                "label": "Bearer-token",
+                "description": "Scrapere sender Authorization: Bearer <token>. Tom slår godkendelse fra."
+            },
+            "metrics_endpoint": {
+                "label": "Endpoint",
+                "description": "Prometheus henter data fra denne sti."
+            },
+            "logo_dark": {
+                "label": "Logo til mørk tilstand",
+                "description": "Vises, når det mørke tema er aktivt. Tom bruger logoet ovenfor."
+            },
+            "default_theme": {
+                "label": "Standardtema",
+                "description": "Til besøgende, der ikke har valgt et tema.",
+                "dark": "Mørk",
+                "light": "Lys",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standard maks. visninger",
+                "description": "Forvalgt, når en hemmelighed oprettes. 1 til 9999."
+            }
+        },
+        "note_saved": "Gemt. Ændringerne gælder for nye hemmeligheder.",
+        "note_save_failed": "Ikke gemt. Læs fejlmeddelelsen, og prøv igen.",
+        "env_locked": "Styres af {{variable}}. Skift miljøvariablen for at ændre denne indstilling."
     },
     "secrets_page": {
-        "title": "Dine hemmeligheder",
-        "description": "Administrer og overvåg dine delte hemmeligheder",
-        "create_secret_button": "Opret hemmelighed",
+        "title": "Hemmeligheder",
+        "description": "Alt, du har oprettet på denne instans.",
+        "create_secret_button": "Ny hemmelighed",
         "search_placeholder": "Søg i hemmeligheder...",
         "filter": {
             "all_secrets": "Alle hemmeligheder",
             "active": "Aktive",
-            "expired": "Udløbne"
+            "expired": "Udløbne",
+            "all": "Alle"
         },
         "total_secrets": "Samlet antal hemmeligheder",
         "active_secrets": "Aktive",
@@ -452,14 +682,37 @@
             "delete_confirmation_title": "Er du sikker?",
             "delete_confirmation_text": "Denne handling kan ikke fortrydes. Dette vil permanent slette hemmeligheden.",
             "delete_confirm_button": "Ja, slet den",
-            "delete_cancel_button": "Annuller"
+            "delete_cancel_button": "Annuller",
+            "id_header": "ID",
+            "protection_header": "Beskyttelse",
+            "views_left_header": "Visninger tilbage",
+            "expires_header": "Udløber"
+        },
+        "stats": {
+            "total": "I alt",
+            "active": "Aktive",
+            "expired": "Udløbet"
+        },
+        "filter_label": "Filtrér hemmeligheder",
+        "empty": "Intet her.",
+        "footnote": "Titler og indhold er krypteret, så kun ID'er og metadata vises. Links kan ikke kopieres igen, da nøglen aldrig blev gemt.",
+        "tags": {
+            "password": "adgangskode",
+            "ip": "ip",
+            "burn": "brænd",
+            "files_one": "{{count}} fil",
+            "files_other": "{{count}} filer",
+            "link_key": "linknøgle"
+        },
+        "toast": {
+            "delete_error": "Hemmeligheden kunne ikke slettes."
         }
     },
     "users_page": {
-        "title": "Brugeradministration",
-        "description": "Administrer brugere og deres tilladelser",
+        "title": "Brugere",
+        "description": "Personer med en konto på denne instans.",
         "add_user_button": "Tilføj bruger",
-        "search_placeholder": "Søg efter brugere...",
+        "search_placeholder": "Søg efter brugernavn eller e-mail",
         "filter": {
             "all_roles": "Alle roller",
             "admin": "Admin",
@@ -483,7 +736,8 @@
             "activity_header": "Aktivitet",
             "last_login_header": "Sidste login",
             "actions_header": "Handlinger",
-            "created_at": "Oprettet den"
+            "created_at": "Oprettet den",
+            "joined_header": "Oprettet"
         },
         "status": {
             "active": "Aktiv",
@@ -513,6 +767,11 @@
             "role_label": "Rolle",
             "save_button": "Tilføj bruger",
             "cancel_button": "Annuller"
+        },
+        "actions": {
+            "edit": "Rediger",
+            "ban": "Bloker",
+            "unban": "Fjern blokering"
         }
     },
     "forgot_password_page": {
@@ -548,7 +807,12 @@
         "continue_with_github": "Fortsæt med GitHub",
         "no_account_question": "Har du ikke en konto?",
         "sign_up_link": "Tilmeld",
-        "unexpected_error": "Der opstod en uventet fejl. Prøv venligst igen."
+        "unexpected_error": "Der opstod en uventet fejl. Prøv venligst igen.",
+        "sign_in_to": "Log ind på {{name}}",
+        "require_account_notice": "Denne instans kræver en konto for at oprette hemmeligheder.",
+        "or": "eller",
+        "login_failed": "Login mislykkedes: {{message}}",
+        "show_password": "Vis adgangskode"
     },
     "register_page": {
         "back_to_hemmelig": "Tilbage til Hemmelig",
@@ -605,8 +869,8 @@
         "files_title": "Vedhæftede filer",
         "secret_waiting_title": "Nogen delte en hemmelighed med dig",
         "secret_waiting_description": "Denne hemmelighed er krypteret og kan kun ses, når du klikker på knappen nedenfor.",
-        "one_view_remaining": "Denne hemmelighed kan kun ses 1 gang mere",
-        "views_remaining": "Denne hemmelighed kan ses {{count}} gange mere",
+        "one_view_remaining": "Én visning tilbage. Når du låser op, slettes den fra serveren.",
+        "views_remaining": "Når du låser op, bruges én af {{count}} visninger.",
         "view_warning": "Når den er vist, kan denne handling ikke fortrydes",
         "secret_revealed": "Hemmelighed",
         "copy_secret": "Kopier til udklipsholder",
@@ -618,7 +882,18 @@
         "delete_modal_title": "Slet hemmelighed",
         "delete_modal_message": "Er du sikker på, at du vil slette denne hemmelighed? Denne handling kan ikke fortrydes.",
         "decryption_failed": "Kunne ikke dekryptere hemmeligheden. Tjek venligst din adgangskode eller dekrypteringsnøgle.",
-        "fetch_error": "Der opstod en fejl ved hentning af hemmeligheden. Prøv venligst igen."
+        "fetch_error": "Der opstod en fejl ved hentning af hemmeligheden. Prøv venligst igen.",
+        "after_burns_at_expiry": "slettes ved udløb",
+        "after_last_view": "sidste visning · slettet fra serveren",
+        "after_views_left_one": "{{count}} tilbage",
+        "after_views_left_other": "{{count}} tilbage",
+        "views_left_one": "{{count}} visning tilbage",
+        "views_left_other": "{{count}} visninger tilbage",
+        "copy_html": "html",
+        "copy_base64": "base64",
+        "delete_confirm_question": "Slet for alle?",
+        "wrong_password": "Forkert adgangskode.",
+        "gate_burns_at_expiry": "Slettes ved udløb, uanset hvor mange gange den åbnes."
     },
     "expiration": {
         "28_days": "28 dage",
@@ -630,16 +905,18 @@
         "4_hours": "4 timer",
         "1_hour": "1 time",
         "30_minutes": "30 minutter",
-        "5_minutes": "5 minutter"
+        "5_minutes": "5 minutter",
+        "default_hours": "{{hours}} timer"
     },
     "error_display": {
         "clear_errors_button_title": "Ryd fejl"
     },
     "secret_not_found_page": {
-        "title": "Hemmelighed ikke fundet",
-        "message": "Hemmeligheden du leder efter eksisterer ikke, er udløbet, eller er blevet brændt.",
+        "title": "Her er intet.",
+        "message": "Den er blevet vist, er udløbet eller slettet. Den kan ikke gendannes — serveren havde aldrig nøglen.",
         "error_details": "Fejldetaljer:",
-        "go_home_button": "Gå til hjemmesiden"
+        "go_home_button": "Opret en hemmelighed",
+        "kicker": "404 · hemmeligheden blev ikke fundet"
     },
     "organization_page": {
         "title": "Organisationsindstillinger",
@@ -692,8 +969,8 @@
         "save_settings_button": "Gem indstillinger"
     },
     "invites_page": {
-        "title": "Invitationskoder",
-        "description": "Administrer invitationskoder for nye brugerregistreringer",
+        "title": "Invitationer",
+        "description": "Koder til tilmelding, når invitationer er påkrævet.",
         "create_invite_button": "Opret invitation",
         "loading": "Indlæser invitationskoder...",
         "table": {
@@ -728,7 +1005,19 @@
             "fetch_error": "Kunne ikke hente invitationskoder",
             "create_error": "Kunne ikke oprette invitationskode",
             "delete_error": "Kunne ikke deaktivere invitationskode"
-        }
+        },
+        "close": "Luk",
+        "invites_off": "Invitationskoder er slået fra. Alle, der må registrere sig, kan tilmelde sig.",
+        "require_invite_code": "Kræv invitationskode →",
+        "form": {
+            "max_uses": "Maks. brug",
+            "expires_in": "Udløber om",
+            "days": "{{count}}d",
+            "never": "aldrig",
+            "generate": "Generér"
+        },
+        "copy": "Kopiér",
+        "copied": "Kopieret"
     },
     "social_login": {
         "continue_with": "Fortsæt med {{provider}}",
@@ -790,13 +1079,19 @@
     },
     "verify_2fa_page": {
         "back_to_login": "Tilbage til login",
-        "title": "Totrinsbekræftelse",
+        "title": "Totrinskode",
         "description": "Indtast den 6-cifrede kode fra din autentificeringsapp",
         "enter_code_hint": "Indtast koden fra din autentificeringsapp",
         "verifying": "Bekræfter...",
         "verify_button": "Bekræft",
         "invalid_code": "Ugyldig bekreftelseskode. Prøv venligst igen.",
-        "unexpected_error": "Der opstod en uventet fejl. Prøv venligst igen."
+        "unexpected_error": "Der opstod en uventet fejl. Prøv venligst igen.",
+        "invalid_backup_code": "Ugyldig backupkode. Prøv igen.",
+        "backup_description": "Indtast en af de backupkoder, du gemte, da du slog totrinsbekræftelse til.",
+        "code_label": "Godkendelseskode",
+        "backup_code_label": "Backupkode",
+        "use_backup_code": "Mistet din enhed? Brug en backupkode i stedet.",
+        "use_totp_code": "Brug en kode fra din godkendelsesapp"
     },
     "common": {
         "error": "Fejl",
@@ -805,19 +1100,24 @@
         "ok": "OK",
         "delete": "Slet",
         "deleting": "Sletter...",
-        "loading": "Indlæser..."
+        "loading": "Indlæser...",
+        "copy": "Kopiér",
+        "copied": "Kopieret"
     },
     "pagination": {
         "showing": "Viser {{start}} til {{end}} af {{total}} resultater",
         "previous_page": "Forrige side",
-        "next_page": "Næste side"
+        "next_page": "Næste side",
+        "summary": "{{start}}–{{end}} af {{total}} · side {{page}} af {{pages}}",
+        "label": "Sideinddeling"
     },
     "not_found_page": {
-        "title": "Side ikke fundet",
+        "title": "Her er intet.",
         "message": "Denne side er forsvundet i den blå luft, ligesom vores hemmeligheder gør.",
         "hint": "Siden du leder efter eksisterer ikke eller er blevet flyttet.",
         "go_home_button": "Gå hjem",
-        "create_secret_button": "Opret hemmelighed"
+        "create_secret_button": "Opret en hemmelighed",
+        "kicker": "404 · siden blev ikke fundet"
     },
     "error_boundary": {
         "title": "Noget gik galt",
@@ -826,12 +1126,13 @@
         "error_details": "Fejldetaljer:",
         "unknown_error": "Der opstod en ukendt fejl",
         "try_again_button": "Prøv igen",
-        "go_home_button": "Gå hjem"
+        "go_home_button": "Gå hjem",
+        "kicker": "uventet fejl"
     },
     "secret_requests_page": {
-        "title": "Hemmelighedsanmodninger",
-        "description": "Anmod om hemmeligheder fra andre via sikre links",
-        "create_request_button": "Opret anmodning",
+        "title": "Anmodninger om hemmeligheder",
+        "description": "Bed nogen om at sende dig en hemmelighed.",
+        "create_request_button": "Ny anmodning",
         "no_requests": "Ingen hemmelighedsanmodninger endnu. Opret en for at komme i gang.",
         "table": {
             "title_header": "Titel",
@@ -840,7 +1141,15 @@
             "link_expires_header": "Link udløber",
             "copy_link_tooltip": "Kopier opretterlink",
             "view_secret_tooltip": "Vis hemmelighed",
-            "cancel_tooltip": "Annuller anmodning"
+            "cancel_tooltip": "Annuller anmodning",
+            "request_header": "Anmodning",
+            "created_header": "Oprettet",
+            "meta": "{{views}} · {{expiry}} efter indsendelse",
+            "views_one": "{{count}} visning",
+            "views_other": "{{count}} visninger",
+            "copy_link": "Kopiér link",
+            "cancel": "Annullér",
+            "open_with_key": "Åbn med nøgle"
         },
         "status": {
             "pending": "Afventer",
@@ -874,11 +1183,12 @@
             "cancelled": "Anmodning annulleret",
             "fetch_error": "Kunne ikke hente anmodningsdetaljer",
             "cancel_error": "Kunne ikke annullere anmodning"
-        }
+        },
+        "footnote": "Personen, du spørger, indsender i sin browser og sender dig nøglen. Du åbner hemmeligheden her med den."
     },
     "create_request_page": {
-        "title": "Opret hemmelighedsanmodning",
-        "description": "Anmod om en hemmelighed fra nogen ved at generere et sikkert link, de kan bruge til at indsende den",
+        "title": "Ny anmodning",
+        "description": "Vælg reglerne. De indsætter bare.",
         "back_button": "Tilbage til hemmelighedsanmodninger",
         "form": {
             "title_label": "Anmodningstitel",
@@ -922,12 +1232,38 @@
             "webhook_secret_warning": "Gem denne hemmelighed nu! Den vises ikke igen. Brug den til at verificere webhook-signaturer.",
             "expires_at": "Link udløber: {{date}}",
             "create_another_button": "Opret endnu en anmodning",
-            "view_all_button": "Se alle anmodninger"
+            "view_all_button": "Se alle anmodninger",
+            "link_label": "Anmodningslink – del det med den, der har hemmeligheden",
+            "copy": "Kopiér",
+            "copied": "Kopieret",
+            "open_as_creator": "Åbn som opretter",
+            "back_to_requests": "Tilbage til anmodninger"
         },
         "toast": {
             "created": "Hemmelighedsanmodning oprettet",
             "create_error": "Kunne ikke oprette hemmelighedsanmodning",
             "copied": "Kopieret til udklipsholder"
+        },
+        "fields": {
+            "title_label": "Titel",
+            "title_hint": "Vises for den person, du spørger.",
+            "title_placeholder": "API-legitimationsoplysninger til Projekt X",
+            "description_label": "Beskrivelse",
+            "description_hint": "Valgfri kontekst.",
+            "valid_for_label": "Link gyldigt i",
+            "valid_for_hint": "Hvor længe anmodningslinket virker.",
+            "expires_in_label": "Hemmelighed udløber efter",
+            "expires_in_hint": "Regnes fra indsendelse.",
+            "max_views_label": "Maks. visninger",
+            "max_views_hint": "1 – 9999",
+            "ip_label": "IP-begrænsning",
+            "ip_hint": "Valgfri IP eller CIDR.",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "Forhindr brænding",
+            "prevent_burn_hint": "Behold efter maks. visninger; slet ved udløb.",
+            "webhook_label": "Webhook",
+            "webhook_hint": "Får besked ved indsendelse.",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
@@ -946,20 +1282,73 @@
             "password_protected_note": "Denne hemmelighed vil være adgangskodebeskyttet",
             "encryption_note": "Din hemmelighed krypteres i din browser, før den sendes. Dekrypteringsnøglen inkluderes kun i den endelige URL, du deler.",
             "submitting_button": "Krypterer og indsender...",
-            "submit_button": "Indsend hemmelighed"
+            "submit_button": "Kryptér og send",
+            "placeholder": "Indsæt hemmeligheden. Den krypteres før upload.",
+            "settings_note": "indstillinger valgt af anmoderen"
         },
         "success": {
             "title": "Hemmelighed oprettet!",
             "description": "Din hemmelighed er blevet krypteret og gemt sikkert",
-            "decryption_key_label": "Dekrypteringsnøgle",
+            "decryption_key_label": "Dekrypteringsnøgle — send den til anmoderen",
             "warning": "Vigtigt: Kopier denne dekrypteringsnøgle nu og send den til anmoderen. Dette er den eneste gang, du vil se den!",
-            "manual_send_note": "Du skal manuelt sende denne dekrypteringsnøgle til den person, der anmodede om hemmeligheden. De har allerede hemmelighedens URL i deres dashboard.",
+            "manual_send_note": "Anmoderen har linket. Uden denne nøgle kan det ikke læses.",
             "create_own_button": "Opret din egen hemmelighed"
         },
         "toast": {
             "created": "Hemmelighed indsendt",
             "create_error": "Kunne ikke indsende hemmelighed",
             "copied": "Kopieret til udklipsholder"
+        },
+        "kicker": "// anmodning om hemmelighed"
+    },
+    "composer": {
+        "title_placeholder": "Titel (valgfri, krypteret)",
+        "placeholder": "Indsæt en adgangskode, nøgle, konfiguration…",
+        "options_show": "Indstillinger ▾",
+        "options_hide": "Indstillinger ▴",
+        "create_link": "Opret link",
+        "shortcut_hint": "Opret linket ({{shortcut}})",
+        "summary": {
+            "burn_after_time": "slet efter tid",
+            "views_one": "{{count}} visning",
+            "views_other": "{{count}} visninger",
+            "password": "adgangskode",
+            "ip": "ip {{range}}",
+            "files_one": "{{count}} fil",
+            "files_other": "{{count}} filer"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — norsk for “hemmelig”",
+        "title": "Del hemmeligheder, der destruerer sig selv, når de er læst.",
+        "subtitle": "Krypteret i denne fane før upload. Serveren gemmer krypteret tekst, som den ikke har nøglen til.",
+        "features": {
+            "encrypted_title": "krypteret her",
+            "encrypted_body": "AES-256-GCM kører i din browser. Klarteksten forlader aldrig fanen.",
+            "fragment_title": "nøgle i #fragmentet",
+            "fragment_body": "Browsere sender ikke det, der står efter <mono>#</mono>. Serveren ser aldrig nøglen.",
+            "gone_title": "væk efter læsning",
+            "gone_body": "Slettes ved sidste visning eller ved udløb, alt efter hvad der kommer først."
+        }
+    },
+    "important_alert": {
+        "label": "besked",
+        "dismiss": "Luk"
+    },
+    "language_picker": {
+        "label": "Vælg sprog"
+    },
+    "expiration_short": {
+        "5m": "5m",
+        "30m": "30m",
+        "1h": "1t",
+        "4h": "4t",
+        "12h": "12t",
+        "1d": "1d",
+        "3d": "3d",
+        "7d": "7d",
+        "14d": "14d",
+        "28d": "28d",
+        "hours": "{{hours}}t"
     }
 }

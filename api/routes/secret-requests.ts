@@ -176,7 +176,7 @@ const app = new Hono<{
             return c.json(
                 {
                     id: request.id,
-                    creatorLink: `${origin}/request/${request.id}?token=${token}`,
+                    creatorLink: `${origin}/request/${request.id}#token=${token}`,
                     webhookSecret, // Return once so requester can configure their webhook receiver
                     expiresAt: request.expiresAt,
                 },
@@ -227,7 +227,7 @@ const app = new Hono<{
 
             return c.json({
                 ...request,
-                creatorLink: `${origin}/request/${request.id}?token=${request.token}`,
+                creatorLink: `${origin}/request/${request.id}#token=${request.token}`,
             });
         } catch (error) {
             console.error('Failed to retrieve secret request:', error);
@@ -277,7 +277,7 @@ const app = new Hono<{
         async (c) => {
             try {
                 const { id } = c.req.valid('param');
-                const { token } = c.req.valid('query');
+                const token = c.req.header('x-secret-request-token') || c.req.valid('query').token;
 
                 const request = await prisma.secretRequest.findUnique({
                     where: { id },
@@ -291,7 +291,7 @@ const app = new Hono<{
                     },
                 });
 
-                if (!request || !validateToken(token, request.token)) {
+                if (!request || !token || !validateToken(token, request.token)) {
                     return c.json({ error: 'Invalid or expired request' }, 404);
                 }
 
@@ -328,7 +328,7 @@ const app = new Hono<{
         async (c) => {
             try {
                 const { id } = c.req.valid('param');
-                const { token } = c.req.valid('query');
+                const token = c.req.header('x-secret-request-token') || c.req.valid('query').token;
                 const { secret, title, salt } = c.req.valid('json');
 
                 // Use interactive transaction to prevent race conditions
@@ -337,7 +337,7 @@ const app = new Hono<{
                         where: { id },
                     });
 
-                    if (!request || !validateToken(token, request.token)) {
+                    if (!request || !token || !validateToken(token, request.token)) {
                         return { error: 'Invalid request', status: 404 };
                     }
 

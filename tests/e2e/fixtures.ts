@@ -5,8 +5,8 @@ async function loginUser(page: Page, username: string, password: string): Promis
     await page.goto('/login');
 
     // Fill login form
-    await page.getByPlaceholder(/username/i).fill(username);
-    await page.getByPlaceholder(/password/i).fill(password);
+    await page.getByLabel('Username', { exact: true }).fill(username);
+    await page.getByLabel('Password', { exact: true }).fill(password);
     await page.getByRole('button', { name: /sign in/i }).click();
 
     await page.waitForURL((url) => url.pathname.startsWith('/dashboard'), { timeout: 10000 });

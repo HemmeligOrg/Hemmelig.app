@@ -129,9 +129,12 @@ model InstanceSettings {
     instanceName               String?  @default("")
     instanceDescription        String?  @default("")
     instanceLogo               String?  @default("") // Base64 encoded logo image
+    instanceLogoDark           String?  @default("") // Base64 encoded logo for the dark theme
+    defaultTheme               String?  @default("dark") // light, dark or system
     allowRegistration          Boolean? @default(true)
     requireEmailVerification   Boolean? @default(false)
     defaultSecretExpiration    Int?     @default(72) // hours
+    defaultMaxViews            Int?     @default(1) // preselected max views for a new secret
     maxSecretSize              Int?     @default(1024) // KB
     allowPasswordProtection    Boolean? @default(true)
     allowIpRestriction         Boolean? @default(true)

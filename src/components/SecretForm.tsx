@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
-import { encrypt, encryptFile, generateEncryptionKey, generateSalt } from '../lib/crypto';
+import {
+    bytesToHex,
+    derivePasswordVerifier,
+    encrypt,
+    encryptFile,
+    generateEncryptionKey,
+    generateSalt,
+} from '../lib/crypto';
+import { uploadEncryptedFile } from '../lib/upload';
+import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
-import { Card } from './Card';
-import { CreateButton } from './CreateButton';
+import { Button } from './Button';
 import Editor from './Editor';
-import { FileUpload } from './FileUpload';
+import { AttachmentRow, useAttachments } from './FileUpload';
 import { Modal } from './Modal';
-import { SecuritySettings } from './SecuritySettings';
-import { TitleField } from './TitleField';
+import { EXPIRATION_OPTIONS, MIN_PASSWORD_LENGTH, SecuritySettings } from './SecuritySettings';
+
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent);
 
 export function SecretForm() {
     const {
@@ -23,20 +32,28 @@ export function SecretForm() {
         setSecretIdAndKeys,
         setSecretData,
     } = useSecretStore();
+    const { settings } = useHemmeligStore();
     const { t } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+    const [showOptions, setShowOptions] = useState(false);
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const attachments = useAttachments(setFiles);
+
+    const passwordInvalid = password !== null && password.length < MIN_PASSWORD_LENGTH;
+    const isFormValid = secret.trim().length > 0 && !passwordInvalid;
 
     const handleSubmit = async () => {
+        if (!isFormValid || isLoading) return;
         setIsLoading(true);
 
-        const encryptionKey = generateEncryptionKey(password);
+        const secretPassword = password || null;
+        const encryptionKey = generateEncryptionKey(secretPassword ?? undefined);
         const salt = generateSalt();
 
-        const fileIds = [];
+        const attachedFiles: { id: string; token: string }[] = [];
         if (files.length > 0) {
             for (const file of files) {
                 try {
@@ -45,21 +62,13 @@ export function SecretForm() {
                         encryptionKey,
                         salt
                     );
-                    const encryptedFileAsFile = new File([encryptedFile], file.name, {
-                        type: file.type,
-                    });
-
-                    const response = await api.files.$post({
-                        form: {
-                            file: encryptedFileAsFile,
-                        },
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        fileIds.push(data.id);
-                    } else {
-                        throw new Error(data.error || 'File upload failed');
-                    }
+                    // A raw upload streams to disk on the server, so large files
+                    // do not fill the server memory.
+                    const uploaded = await uploadEncryptedFile(
+                        encryptedFile,
+                        bytesToHex(await encrypt(file.name, encryptionKey, salt))
+                    );
+                    attachedFiles.push(uploaded);
                 } catch (error) {
                     setErrorMessage(
                         t('secret_form.failed_to_upload_file', { fileName: file.name })
@@ -75,17 +84,26 @@ export function SecretForm() {
         const encryptedSecret = await encrypt(secret, encryptionKey, salt);
         const encryptedTitle = await encrypt(title, encryptionKey, salt);
 
+        // Derive a verifier so the server can gate access without ever seeing
+        // the password or the encryption key.
+        const passwordVerifier = secretPassword
+            ? await derivePasswordVerifier(secretPassword, salt)
+            : undefined;
+
         // Transform empty strings to null for nullable fields
         const dataToSend = {
             secret: encryptedSecret,
             title: encryptedTitle,
             salt,
-            password: password ? encryptionKey : '',
+            passwordVerifier,
             expiresAt,
-            views,
-            isBurnable,
+            // "Burn after time" removes the view limit, so the secret lives until it
+            // expires. The API flag `isBurnable` means "burn after the last view" for
+            // the CLIs, so the web form always sends false.
+            views: isBurnable ? null : views,
+            isBurnable: false,
             ipRange: ipRange === '' ? null : ipRange,
-            fileIds,
+            files: attachedFiles,
         };
 
         try {
@@ -93,7 +111,13 @@ export function SecretForm() {
             const data = await response.json();
 
             if (response.ok && data?.id) {
-                setSecretIdAndKeys(data.id, encryptionKey, password);
+                setSecretData({ fileCount: attachedFiles.length });
+                // The creator token lets "Burn now" delete the secret, also without a session.
+                const deleteToken =
+                    'deleteToken' in data && typeof data.deleteToken === 'string'
+                        ? data.deleteToken
+                        : null;
+                setSecretIdAndKeys(data.id, encryptionKey, secretPassword, deleteToken);
             } else {
                 const errorMessage =
                     data?.error?.issues?.[0]?.message ||
@@ -112,50 +136,94 @@ export function SecretForm() {
             );
             setIsErrorModalOpen(true);
             console.error('Failed to create secret:', errorMessage);
-            // Handle error, e.g., show a toast notification
         } finally {
             setIsLoading(false);
         }
     };
 
-    const isFormValid = secret.trim().length > 0;
+    // Capture Mod+Enter before the editor sees it, because the editor maps it to a line break.
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSubmit();
+        }
+    };
+
+    const expiration = EXPIRATION_OPTIONS.find((option) => option.value === expiresAt);
+    const summary = [
+        expiration
+            ? t(`expiration.${expiration.key}`)
+            : t('expiration.default_hours', { hours: Math.round(expiresAt / 3600) }),
+        isBurnable
+            ? t('composer.summary.burn_after_time')
+            : t('composer.summary.views', { count: views }),
+        password ? t('composer.summary.password') : null,
+        ipRange ? t('composer.summary.ip', { range: ipRange }) : null,
+        files.length ? t('composer.summary.files', { count: files.length }) : null,
+    ]
+        .filter(Boolean)
+        .join(' · ');
 
     return (
-        <div className="space-y-6">
-            <Card hover>
-                <Editor value={secret} onChange={(value) => setSecretData({ secret: value })} />
-
-                <div className="mt-5">
-                    <TitleField
-                        value={title}
-                        onChange={(value) => setSecretData({ title: value })}
-                    />
+        <div className="grid gap-4" onKeyDownCapture={handleKeyDown}>
+            <div
+                {...attachments.getRootProps()}
+                className={`border rounded-md bg-surface overflow-hidden transition-colors ${
+                    attachments.isDragActive ? 'border-accent' : 'border-line'
+                }`}
+            >
+                <input {...attachments.getInputProps()} />
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setSecretData({ title: e.target.value })}
+                    placeholder={t('composer.title_placeholder')}
+                    aria-label={t('title_field.placeholder')}
+                    className="w-full bg-transparent border-0 border-b border-line-soft px-4.5 py-3.5 text-sm text-fg placeholder:text-faint outline-none"
+                />
+                <Editor
+                    value={secret}
+                    onChange={(value) => setSecretData({ secret: value })}
+                    placeholder={t('composer.placeholder')}
+                />
+                {settings.allowFileUploads !== false && <AttachmentRow attachments={attachments} />}
+                <div className="flex flex-wrap items-center gap-2.5 py-2.5 pl-4.5 pr-3 border-t border-line-soft">
+                    <span className="flex-1 min-w-50 font-mono text-xs text-muted">{summary}</span>
+                    <Button
+                        variant="secondary"
+                        onClick={() => setShowOptions(!showOptions)}
+                        aria-expanded={showOptions}
+                    >
+                        {showOptions ? t('composer.options_hide') : t('composer.options_show')}
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit}
+                        loading={isLoading}
+                        disabled={!isFormValid}
+                        title={t('composer.shortcut_hint', { shortcut: isMac ? '⌘↵' : 'Ctrl+↵' })}
+                    >
+                        {isLoading ? (
+                            t('create_button.creating_secret')
+                        ) : (
+                            <>
+                                {t('composer.create_link')}
+                                <span className="opacity-70">{isMac ? '⌘↵' : 'Ctrl ↵'}</span>
+                            </>
+                        )}
+                    </Button>
                 </div>
+            </div>
 
-                {/* File upload and quick create button */}
-                <div className="mt-5 flex flex-col sm:flex-row gap-4 sm:items-start">
-                    <div className="flex-1">
-                        <FileUpload onFileChange={setFiles} compact />
-                    </div>
-                    <div className="sm:flex-shrink-0">
-                        <CreateButton
-                            onSubmit={handleSubmit}
-                            isLoading={isLoading}
-                            disabled={!isFormValid}
-                        />
-                    </div>
-                </div>
-            </Card>
+            {showOptions && <SecuritySettings />}
 
-            <SecuritySettings />
-
-            {/* Create button */}
-            <CreateButton onSubmit={handleSubmit} isLoading={isLoading} disabled={!isFormValid} />
             <Modal
                 isOpen={isErrorModalOpen}
                 onClose={() => setIsErrorModalOpen(false)}
                 title={t('common.error')}
                 confirmText={t('common.ok')}
+                confirmVariant="primary"
                 onConfirm={() => setIsErrorModalOpen(false)}
             >
                 <p>{errorMessage}</p>

@@ -1,4 +1,5 @@
 import * as argon2 from 'argon2';
+import { timingSafeEqual } from 'crypto';
 
 /**
  * Hashes a password using Argon2id.
@@ -44,6 +45,29 @@ export async function compare(password: string, storedHash: string): Promise<boo
         return await argon2.verify(storedHash, password);
     } catch (error) {
         console.error('Error during password comparison:', error);
+        return false;
+    }
+}
+
+/**
+ * Compares a client-derived password verifier with the stored value.
+ * The server never receives the password or the encryption key, only a
+ * SHA-256 digest derived from them on the client.
+ * @param submitted The verifier submitted by the client.
+ * @param stored The verifier stored for the secret.
+ * @returns True if the verifiers match.
+ */
+export function compareVerifier(submitted: string, stored: string): boolean {
+    try {
+        const submittedBuffer = Buffer.from(submitted, 'utf8');
+        const storedBuffer = Buffer.from(stored, 'utf8');
+
+        if (submittedBuffer.length !== storedBuffer.length) {
+            return false;
+        }
+
+        return timingSafeEqual(submittedBuffer, storedBuffer);
+    } catch {
         return false;
     }
 }

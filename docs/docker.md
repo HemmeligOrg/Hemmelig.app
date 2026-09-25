@@ -58,7 +58,8 @@ services:
             - ./uploads:/app/uploads
         environment:
             - DATABASE_URL=file:/app/database/hemmelig.db
-            - BETTER_AUTH_SECRET=change-this-to-a-secure-secret-min-32-chars
+            # Required. Compose stops when this variable is unset.
+            - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET to a random 32+ character value}
             - BETTER_AUTH_URL=https://secrets.example.com
             - NODE_ENV=production
             - HEMMELIG_BASE_URL=https://secrets.example.com
@@ -80,10 +81,19 @@ services:
             start_period: 10s
 ```
 
-**Important:** Before starting, update the following:
+**Important:** Before starting, export the required secret:
 
-- `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32`
+```bash
+export BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
+```
+
+Then update the following:
+
 - `HEMMELIG_BASE_URL` - Your public domain URL
+
+## Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform, and Hemmelig has a one-click deployment template there: https://easypanel.io/templates/hemmelig - it generates `BETTER_AUTH_SECRET` and sets up the database/uploads volumes for you automatically.
 
 ## Volume Mounts
 
@@ -91,6 +101,48 @@ services:
 | --------------- | ----------------------- | -------- |
 | `/app/database` | SQLite database storage | Yes      |
 | `/app/uploads`  | File upload storage     | Yes      |
+
+## Read-Only Root Filesystem
+
+The image can run with a read-only root filesystem. The image contains the Prisma schema engine, so the migrations at start do not download anything.
+
+Keep these paths writable:
+
+- `/app/database` and `/app/uploads`, as volumes.
+- `/tmp`, as a `tmpfs` or an `emptyDir`. The TypeScript runtime and npm write temporary files there.
+
+With Docker:
+
+```bash
+docker run -d \
+  --name hemmelig \
+  --read-only \
+  --tmpfs /tmp \
+  -v hemmelig-data:/app/database \
+  -v hemmelig-uploads:/app/uploads \
+  -e BETTER_AUTH_SECRET="$(openssl rand -base64 32)" \
+  -e BETTER_AUTH_URL=https://secrets.example.com \
+  -p 3000:3000 \
+  hemmeligapp/hemmelig:v7
+```
+
+With Kubernetes:
+
+```yaml
+containers:
+    - name: hemmelig
+      image: hemmeligapp/hemmelig:v7
+      securityContext:
+          readOnlyRootFilesystem: true
+      volumeMounts:
+          - { name: data, mountPath: /app/database }
+          - { name: uploads, mountPath: /app/uploads }
+          - { name: tmp, mountPath: /tmp }
+volumes:
+    - { name: data, persistentVolumeClaim: { claimName: hemmelig-data } }
+    - { name: uploads, persistentVolumeClaim: { claimName: hemmelig-uploads } }
+    - { name: tmp, emptyDir: { medium: Memory } }
+```
 
 ## Environment Variables
 
@@ -214,6 +266,12 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
+```
+
+Forwarded client IP headers are trusted only from addresses listed in `HEMMELIG_TRUSTED_PROXIES`. With the configuration above, set it to the proxy address:
+
+```bash
+HEMMELIG_TRUSTED_PROXIES=127.0.0.1
 ```
 
 3. Enable the site:

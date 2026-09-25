@@ -1,15 +1,12 @@
-import { ArrowLeft } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Header } from './Header';
 import { Modal } from './Modal';
 
 interface AuthPageLayoutProps {
     children: ReactNode;
     title: string;
-    subtitle: string;
-    backTo: string;
-    backLabel: string;
+    subtitle?: ReactNode;
     errorModal?: {
         isOpen: boolean;
         message: string;
@@ -17,34 +14,20 @@ interface AuthPageLayoutProps {
     };
 }
 
-export function AuthPageLayout({
-    children,
-    title,
-    subtitle,
-    backTo,
-    backLabel,
-    errorModal,
-}: AuthPageLayoutProps) {
+/** The public top bar and a narrow centered column for the sign-in forms. */
+export function AuthPageLayout({ children, title, subtitle, errorModal }: AuthPageLayoutProps) {
     const { t } = useTranslation();
 
     return (
-        <div className="min-h-screen bg-light-800 dark:bg-dark-900 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-md">
-                <Link
-                    to={backTo}
-                    className="inline-flex items-center space-x-2 text-gray-500 dark:text-slate-400 hover:text-teal-400 transition-colors duration-300 mb-8 group"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-                    <span>{backLabel}</span>
-                </Link>
-
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h1>
-                    <p className="text-gray-500 dark:text-slate-400 mt-1">{subtitle}</p>
+        <div className="min-h-screen bg-canvas text-fg">
+            <Header />
+            <main className="max-w-[380px] mx-auto px-6 py-20 grid gap-4">
+                <div className="grid gap-1">
+                    <h1 className="m-0 text-2xl font-medium tracking-tight">{title}</h1>
+                    {subtitle && <p className="m-0 text-sm text-fg-3">{subtitle}</p>}
                 </div>
-
                 {children}
-            </div>
+            </main>
             {errorModal && (
                 <Modal
                     isOpen={errorModal.isOpen}
@@ -52,9 +35,9 @@ export function AuthPageLayout({
                     title={t('common.error')}
                     confirmText={t('common.ok')}
                     onConfirm={errorModal.close}
-                    confirmButtonClass="bg-blue-600 hover:bg-blue-700"
+                    confirmVariant="primary"
                 >
-                    <p>{errorModal.message}</p>
+                    <p className="m-0">{errorModal.message}</p>
                 </Modal>
             )}
         </div>

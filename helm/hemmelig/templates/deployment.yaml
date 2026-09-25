@@ -49,12 +49,22 @@ spec:
             - name: HEMMELIG_BASE_URL
               value: {{ .Values.config.baseUrl | quote }}
             {{- end }}
+            {{- if .Values.config.trustedProxies }}
+            - name: HEMMELIG_TRUSTED_PROXIES
+              value: {{ .Values.config.trustedProxies | quote }}
+            {{- end }}
             {{- if .Values.existingSecret }}
             - name: BETTER_AUTH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.existingSecret }}
                   key: BETTER_AUTH_SECRET
+            - name: HEMMELIG_ANALYTICS_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: HEMMELIG_ANALYTICS_HMAC_SECRET
+                  optional: true
             {{- else if .Values.config.betterAuthSecret }}
             - name: BETTER_AUTH_SECRET
               valueFrom:
@@ -278,6 +288,10 @@ spec:
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               mountPath: /app/database

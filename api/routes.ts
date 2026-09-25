@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
-import { getEnabledSocialProviders } from './auth';
+import { getEnabledSocialProviders, getSocialProviderDetails } from './auth';
+import config from './config';
 import openapi from './openapi';
 import accountRoute from './routes/account';
 import analyticsRoute from './routes/analytics';
@@ -39,6 +40,10 @@ const routes = new Hono()
 
         return c.json({
             providers,
+            // Button text and icons for each provider. `providers` stays for older clients.
+            providerDetails: getSocialProviderDetails(),
+            // UI option only: the server still accepts password sign-in.
+            hidePasswordLogin: config.getHidePasswordLogin() && providers.length > 0,
             callbackBaseUrl,
         });
     });

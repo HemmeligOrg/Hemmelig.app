@@ -43,7 +43,7 @@ For endpoints requiring admin access, the authenticated user must have the `admi
 | ------ | ------------------------------- | ------------------------------------------------- |
 | GET    | `/api/healthz`                  | Health check                                      |
 | POST   | `/api/secrets`                  | Create a new secret                               |
-| POST   | `/api/secrets/:id`              | Retrieve a secret (password in body if protected) |
+| POST   | `/api/secrets/:id`              | Retrieve a secret (verifier in body if protected) |
 | GET    | `/api/secrets/:id/check`        | Check if secret exists and requires password      |
 | POST   | `/api/files`                    | Upload a file                                     |
 | GET    | `/api/files/:id`                | Download a file                                   |

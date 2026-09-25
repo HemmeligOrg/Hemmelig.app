@@ -2,7 +2,6 @@ import {
     IconBold,
     IconBrandCodesandbox,
     IconCode,
-    IconCopy,
     IconCreditCard,
     IconDatabase,
     IconFileText,
@@ -17,12 +16,10 @@ import {
     IconList,
     IconListNumbers,
     IconMail,
-    IconNumber64Small,
     IconPassword,
     IconQuote,
     IconRefresh,
     IconServer,
-    IconSourceCode,
     IconStrikethrough,
 } from '@tabler/icons-react';
 import CharacterCount from '@tiptap/extension-character-count';
@@ -33,6 +30,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { generate } from 'generate-password-browser';
+import type { TFunction } from 'i18next';
 import {
     createContext,
     FC,
@@ -45,6 +43,8 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { Button } from './Button';
+import { inputClassName } from './Input';
 
 // Context for passing onChange to MenuBar
 const EditorOnChangeContext = createContext<((content: string) => void) | undefined>(undefined);
@@ -71,6 +71,14 @@ const generatePassword = (
     return password;
 };
 
+const toolButtonClass =
+    'flex items-center justify-center w-7 h-7 rounded-sm text-muted hover:text-fg hover:bg-raised transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation';
+const activeToolButtonClass =
+    'flex items-center justify-center w-7 h-7 rounded-sm text-accent bg-accent/12 transition-colors cursor-pointer touch-manipulation';
+const popoverClass =
+    'absolute left-0 top-full mt-1 z-20 bg-surface border border-line rounded-md shadow-2xl';
+const iconProps = { size: 16, stroke: 1.5 };
+
 // Tooltip component for buttons
 interface TooltipProps {
     text: string;
@@ -85,9 +93,8 @@ const Tooltip: FC<TooltipProps> = ({ text, children }) => {
                 {children}
             </div>
             {isVisible && (
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-gray-900 dark:text-white bg-white dark:bg-dark-800 shadow-sm whitespace-nowrap z-10">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded-sm text-2xs font-mono text-canvas bg-fg whitespace-nowrap z-30 pointer-events-none">
                     {text}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-dark-800"></div>
                 </div>
             )}
         </div>
@@ -99,7 +106,8 @@ interface Template {
     id: string;
     nameKey: string;
     icon: ReactNode;
-    content: string;
+    /** Keys under `template_selector.fields`, in the order of the template lines. */
+    fields: string[];
 }
 
 const templates: Template[] = [
@@ -107,84 +115,75 @@ const templates: Template[] = [
         id: 'credentials',
         nameKey: 'template_selector.templates.credentials',
         icon: <IconPassword size={16} />,
-        content: `<p><strong>Login Credentials</strong></p>
-<p>Username: </p>
-<p>Password: </p>
-<p>URL: </p>
-<p>Notes: </p>`,
+        fields: ['username', 'password', 'url', 'notes'],
     },
     {
         id: 'api_key',
         nameKey: 'template_selector.templates.api_key',
         icon: <IconKey size={16} />,
-        content: `<p><strong>API Key</strong></p>
-<p>Service: </p>
-<p>API Key: </p>
-<p>API Secret: </p>
-<p>Environment: </p>
-<p>Expires: </p>`,
+        fields: ['service', 'api_key', 'api_secret', 'environment', 'expires'],
     },
     {
         id: 'database',
         nameKey: 'template_selector.templates.database',
         icon: <IconDatabase size={16} />,
-        content: `<p><strong>Database Credentials</strong></p>
-<p>Host: </p>
-<p>Port: </p>
-<p>Database: </p>
-<p>Username: </p>
-<p>Password: </p>
-<p>SSL: </p>`,
+        fields: ['host', 'port', 'database', 'username', 'password', 'ssl'],
     },
     {
         id: 'server',
         nameKey: 'template_selector.templates.server',
         icon: <IconServer size={16} />,
-        content: `<p><strong>Server Access</strong></p>
-<p>Hostname: </p>
-<p>IP Address: </p>
-<p>SSH Port: </p>
-<p>Username: </p>
-<p>Password / Key: </p>
-<p>Notes: </p>`,
+        fields: ['hostname', 'ip_address', 'ssh_port', 'username', 'password_or_key', 'notes'],
     },
     {
         id: 'credit_card',
         nameKey: 'template_selector.templates.credit_card',
         icon: <IconCreditCard size={16} />,
-        content: `<p><strong>Payment Card</strong></p>
-<p>Cardholder Name: </p>
-<p>Card Number: </p>
-<p>Expiry Date: </p>
-<p>CVV: </p>
-<p>Billing Address: </p>`,
+        fields: ['cardholder_name', 'card_number', 'expiry_date', 'cvv', 'billing_address'],
     },
     {
         id: 'email',
         nameKey: 'template_selector.templates.email',
         icon: <IconMail size={16} />,
-        content: `<p><strong>Email Account</strong></p>
-<p>Email: </p>
-<p>Password: </p>
-<p>IMAP Server: </p>
-<p>SMTP Server: </p>
-<p>Recovery Email: </p>`,
+        fields: ['email', 'password', 'imap_server', 'smtp_server', 'recovery_email'],
     },
 ];
+
+/** Escapes text for use inside HTML. Translations are data, not markup. */
+const escapeHtml = (text: string) =>
+    text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+/** Builds the template HTML in the active language when the user inserts it. */
+const buildTemplateContent = (template: Template, t: TFunction) =>
+    [
+        `<p><strong>${escapeHtml(t(template.nameKey))}</strong></p>`,
+        ...template.fields.map(
+            (field) =>
+                `<p>${escapeHtml(
+                    t('template_selector.field_line', {
+                        label: t(`template_selector.fields.${field}`),
+                    })
+                )}</p>`
+        ),
+    ].join('\n');
 
 // Template Dropdown Component for toolbar
 interface TemplateDropdownProps {
     onSelect: (content: string) => void;
     disabled?: boolean;
-    buttonClass: string;
 }
 
-const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled, buttonClass }) => {
+const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { t } = useTranslation();
 
     const handleSelect = (template: Template) => {
-        onSelect(template.content);
+        onSelect(buildTemplateContent(template, t));
         setIsOpen(false);
     };
 
@@ -195,36 +194,30 @@ const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled, butto
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
                     disabled={disabled}
-                    className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
+                    aria-label={t('template_selector.button')}
+                    aria-expanded={isOpen}
+                    className={toolButtonClass}
                 >
-                    <IconFileText
-                        size={18}
-                        stroke={1.5}
-                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                    />
+                    <IconFileText {...iconProps} />
                 </button>
             </Tooltip>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-                    <div className="absolute left-0 top-full mt-1 z-20 w-56 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
-                        <div className="p-2 border-b border-gray-200 dark:border-dark-600">
-                            <p className="text-xs text-gray-500 dark:text-slate-400">
-                                {t('template_selector.description')}
-                            </p>
-                        </div>
+                    <div className={`${popoverClass} w-56`}>
+                        <p className="px-3 py-2 border-b border-line-soft text-xs text-muted">
+                            {t('template_selector.description')}
+                        </p>
                         <div className="py-1">
                             {templates.map((template) => (
                                 <button
                                     key={template.id}
                                     type="button"
                                     onClick={() => handleSelect(template)}
-                                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors text-left"
+                                    className="w-full flex items-center gap-3 px-3 py-2 text-ui text-fg-2 hover:bg-raised hover:text-fg transition-colors text-left cursor-pointer"
                                 >
-                                    <span className="text-gray-500 dark:text-slate-400">
-                                        {template.icon}
-                                    </span>
+                                    <span className="text-muted">{template.icon}</span>
                                     <span>{t(template.nameKey)}</span>
                                 </button>
                             ))}
@@ -239,10 +232,9 @@ const TemplateDropdown: FC<TemplateDropdownProps> = ({ onSelect, disabled, butto
 // Password Dropdown Component for toolbar
 interface PasswordDropdownProps {
     onInsert: (password: string) => void;
-    buttonClass: string;
 }
 
-const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) => {
+const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [passwordLength, setPasswordLength] = useState(16);
     const [options, setOptions] = useState<PasswordOptions>({
@@ -271,32 +263,40 @@ const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) 
         setIsOpen(false);
     };
 
+    const optionKeys: { key: keyof PasswordOptions; label: string }[] = [
+        { key: 'numbers', label: t('editor.password_modal.include_numbers') },
+        { key: 'symbols', label: t('editor.password_modal.include_symbols') },
+        { key: 'uppercase', label: t('editor.password_modal.include_uppercase') },
+        { key: 'lowercase', label: t('editor.password_modal.include_lowercase') },
+    ];
+
     return (
         <div className="relative">
             <Tooltip text={t('editor.tooltips.insert_password')}>
-                <button type="button" onClick={() => setIsOpen(!isOpen)} className={buttonClass}>
-                    <IconKey
-                        size={18}
-                        stroke={1.5}
-                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                    />
+                <button
+                    type="button"
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label={t('editor.tooltips.insert_password')}
+                    aria-expanded={isOpen}
+                    className={toolButtonClass}
+                >
+                    <IconKey {...iconProps} />
                 </button>
             </Tooltip>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-                    <div className="absolute left-0 top-full mt-1 z-20 w-72 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
-                        <div className="p-3 border-b border-gray-200 dark:border-dark-600">
-                            <p className="text-xs font-medium text-gray-700 dark:text-slate-300">
-                                {t('editor.password_modal.title')}
-                            </p>
-                        </div>
-                        <div className="p-3 space-y-3">
-                            <div>
-                                <label className="block text-xs text-gray-600 dark:text-slate-400 mb-1">
-                                    {t('editor.password_modal.length_label')}: {passwordLength}
-                                </label>
+                    <div className={`${popoverClass} w-72`}>
+                        <p className="px-3 py-2 border-b border-line-soft text-ui font-medium">
+                            {t('editor.password_modal.title')}
+                        </p>
+                        <div className="p-3 grid gap-3">
+                            <label className="grid gap-1 text-xs text-muted">
+                                <span>
+                                    {t('editor.password_modal.length_label')}:{' '}
+                                    <span className="font-mono text-fg">{passwordLength}</span>
+                                </span>
                                 <input
                                     type="range"
                                     min="8"
@@ -307,47 +307,25 @@ const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) 
                                         setPasswordLength(newLength);
                                         setPassword(generatePassword(newLength, options));
                                     }}
-                                    className="w-full accent-teal-500"
+                                    className="w-full accent-accent"
                                 />
-                            </div>
+                            </label>
 
                             <div className="grid grid-cols-2 gap-1">
-                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
-                                    <input
-                                        type="checkbox"
-                                        checked={options.numbers}
-                                        onChange={() => handleOptionChange('numbers')}
-                                        className="mr-1.5 accent-teal-500"
-                                    />
-                                    {t('editor.password_modal.include_numbers')}
-                                </label>
-                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
-                                    <input
-                                        type="checkbox"
-                                        checked={options.symbols}
-                                        onChange={() => handleOptionChange('symbols')}
-                                        className="mr-1.5 accent-teal-500"
-                                    />
-                                    {t('editor.password_modal.include_symbols')}
-                                </label>
-                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
-                                    <input
-                                        type="checkbox"
-                                        checked={options.uppercase}
-                                        onChange={() => handleOptionChange('uppercase')}
-                                        className="mr-1.5 accent-teal-500"
-                                    />
-                                    {t('editor.password_modal.include_uppercase')}
-                                </label>
-                                <label className="flex items-center text-xs text-gray-600 dark:text-slate-400">
-                                    <input
-                                        type="checkbox"
-                                        checked={options.lowercase}
-                                        onChange={() => handleOptionChange('lowercase')}
-                                        className="mr-1.5 accent-teal-500"
-                                    />
-                                    {t('editor.password_modal.include_lowercase')}
-                                </label>
+                                {optionKeys.map(({ key, label }) => (
+                                    <label
+                                        key={key}
+                                        className="flex items-center gap-1.5 text-xs text-fg-3"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={options[key]}
+                                            onChange={() => handleOptionChange(key)}
+                                            className="accent-accent"
+                                        />
+                                        {label}
+                                    </label>
+                                ))}
                             </div>
 
                             <div className="flex gap-1">
@@ -355,25 +333,26 @@ const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) 
                                     type="text"
                                     value={password}
                                     readOnly
-                                    className="flex-1 px-2 py-1.5 text-xs bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 font-mono"
+                                    aria-label={t('editor.password_modal.generated_password')}
+                                    className={inputClassName({
+                                        mono: true,
+                                        className: 'flex-1 !py-1.5 text-xs',
+                                    })}
                                 />
-                                <button
-                                    type="button"
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
                                     onClick={regeneratePassword}
-                                    className="px-2 py-1.5 bg-gray-100 dark:bg-dark-600 border border-gray-200 dark:border-dark-600 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-500"
                                     title={t('editor.password_modal.refresh')}
+                                    aria-label={t('editor.password_modal.refresh')}
                                 >
                                     <IconRefresh size={14} />
-                                </button>
+                                </Button>
                             </div>
 
-                            <button
-                                type="button"
-                                onClick={handleInsert}
-                                className="w-full px-3 py-1.5 bg-teal-500 text-white text-xs font-medium hover:bg-teal-600 transition-colors"
-                            >
+                            <Button variant="primary" size="sm" onClick={handleInsert}>
                                 {t('editor.password_modal.insert')}
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </>
@@ -385,19 +364,11 @@ const PasswordDropdown: FC<PasswordDropdownProps> = ({ onInsert, buttonClass }) 
 // Link Dropdown Component for toolbar
 interface LinkDropdownProps {
     onSubmit: (url: string) => void;
-    buttonClass: string;
-    activeButtonClass: string;
     isActive: boolean;
     initialUrl?: string;
 }
 
-const LinkDropdown: FC<LinkDropdownProps> = ({
-    onSubmit,
-    buttonClass,
-    activeButtonClass,
-    isActive,
-    initialUrl = '',
-}) => {
+const LinkDropdown: FC<LinkDropdownProps> = ({ onSubmit, isActive, initialUrl = '' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [url, setUrl] = useState(initialUrl);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -411,12 +382,6 @@ const LinkDropdown: FC<LinkDropdownProps> = ({
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        if (isOpen) {
-            setUrl(initialUrl);
-        }
-    }, [isOpen, initialUrl]);
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(url);
@@ -429,48 +394,43 @@ const LinkDropdown: FC<LinkDropdownProps> = ({
             <Tooltip text={t('editor.tooltips.link')}>
                 <button
                     type="button"
-                    onClick={() => setIsOpen(!isOpen)}
-                    className={isActive ? activeButtonClass : buttonClass}
+                    onClick={() => {
+                        // Start from the current link each time the dropdown opens.
+                        if (!isOpen) setUrl(initialUrl);
+                        setIsOpen(!isOpen);
+                    }}
+                    aria-label={t('editor.tooltips.link')}
+                    aria-expanded={isOpen}
+                    className={isActive ? activeToolButtonClass : toolButtonClass}
                 >
-                    <IconLink
-                        size={18}
-                        stroke={1.5}
-                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                    />
+                    <IconLink {...iconProps} />
                 </button>
             </Tooltip>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-                    <div className="absolute left-0 top-full mt-1 z-20 w-72 bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 shadow-lg">
-                        <div className="p-3 border-b border-gray-200 dark:border-dark-600">
-                            <p className="text-xs font-medium text-gray-700 dark:text-slate-300">
-                                {t('editor.link_modal.title')}
-                            </p>
-                        </div>
-                        <form onSubmit={handleSubmit} className="p-3 space-y-3">
-                            <div>
-                                <label className="block text-xs text-gray-600 dark:text-slate-400 mb-1">
-                                    {t('editor.link_modal.url_label')}
-                                </label>
+                    <div className={`${popoverClass} w-72`}>
+                        <p className="px-3 py-2 border-b border-line-soft text-ui font-medium">
+                            {t('editor.link_modal.title')}
+                        </p>
+                        <form onSubmit={handleSubmit} className="p-3 grid gap-3">
+                            <label className="grid gap-1 text-xs text-muted">
+                                {t('editor.link_modal.url_label')}
                                 <input
                                     ref={inputRef}
                                     type="text"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
                                     placeholder={t('editor.link_modal.url_placeholder')}
-                                    className="w-full px-2 py-1.5 text-xs bg-gray-50 dark:bg-dark-700 border border-gray-200 dark:border-dark-600 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                                    className={inputClassName({ mono: true, className: 'text-xs' })}
                                 />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full px-3 py-1.5 bg-teal-500 text-white text-xs font-medium hover:bg-teal-600 transition-colors"
-                            >
+                            </label>
+                            <Button type="submit" variant="primary" size="sm">
                                 {initialUrl
                                     ? t('editor.link_modal.update')
                                     : t('editor.link_modal.insert')}
-                            </button>
+                            </Button>
                         </form>
                     </div>
                 </>
@@ -479,112 +439,11 @@ const LinkDropdown: FC<LinkDropdownProps> = ({
     );
 };
 
-// ReadOnlyMenuBar component for non-editable mode
-const ReadOnlyMenuBar: FC = () => {
-    const { editor } = useCurrentEditor();
-    const [copySuccess, setCopySuccess] = useState('');
-    const { t } = useTranslation();
-
-    if (!editor) {
-        return null;
-    }
-
-    const copyAsHTML = () => {
-        const html = editor.getHTML();
-        navigator.clipboard
-            .writeText(html)
-            .then(() => {
-                setCopySuccess(t('editor.copy_success.html'));
-                setTimeout(() => setCopySuccess(''), 2000);
-            })
-            .catch((err) => {
-                console.error('Failed to copy: ', err);
-            });
-    };
-
-    const copyAsPlainText = () => {
-        const text = editor.getText();
-        navigator.clipboard
-            .writeText(text)
-            .then(() => {
-                setCopySuccess(t('editor.copy_success.text'));
-                setTimeout(() => setCopySuccess(''), 2000);
-            })
-            .catch((err) => {
-                console.error('Failed to copy: ', err);
-            });
-    };
-
-    const copyAsBase64 = () => {
-        const text = editor.getText();
-        // Convert to Base64 in a way that is safe for large strings
-        const uint8Array = new TextEncoder().encode(text);
-        let binaryString = '';
-        for (const byte of uint8Array) {
-            binaryString += String.fromCharCode(byte);
-        }
-        const base64Content = btoa(binaryString);
-
-        navigator.clipboard
-            .writeText(base64Content)
-            .then(() => {
-                setCopySuccess(t('editor.copy_success.base64'));
-                setTimeout(() => setCopySuccess(''), 2000);
-            })
-            .catch((err) => {
-                console.error('Failed to copy: ', err);
-            });
-    };
-
-    const buttonClass =
-        'p-2 bg-gray-200 dark:bg-dark-600/50 hover:bg-gray-300 dark:hover:bg-dark-500/50 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:scale-105';
-    const groupClass = 'flex items-center gap-1';
-
-    return (
-        <div className="mb-4 flex w-full p-3 sm:p-4 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30">
-            <div className="flex gap-2">
-                <div className={groupClass}>
-                    <Tooltip text={t('editor.tooltips.copy_text')}>
-                        <button onClick={copyAsPlainText} className={buttonClass}>
-                            <IconCopy
-                                size={20}
-                                stroke={1.5}
-                                className="text-gray-600 dark:text-slate-300"
-                            />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text={t('editor.tooltips.copy_html')}>
-                        <button onClick={copyAsHTML} className={buttonClass}>
-                            <IconSourceCode
-                                size={20}
-                                className="text-gray-600 dark:text-slate-300"
-                            />
-                        </button>
-                    </Tooltip>
-                    <Tooltip text={t('editor.tooltips.copy_base64')}>
-                        <button onClick={copyAsBase64} className={buttonClass}>
-                            <IconNumber64Small
-                                size={20}
-                                stroke={1.5}
-                                className="text-gray-600 dark:text-slate-300"
-                            />
-                        </button>
-                    </Tooltip>
-                </div>
-            </div>
-            {copySuccess && (
-                <div className="text-sm text-gray-700 dark:text-slate-200 animate-fade-in-out p-2">
-                    {copySuccess}
-                </div>
-            )}
-        </div>
-    );
-};
+const Divider = () => <span aria-hidden="true" className="w-px h-4 bg-line-soft mx-1" />;
 
 const MenuBar: FC = () => {
     const { editor } = useCurrentEditor();
     const onChange = useContext(EditorOnChangeContext);
-    const [menuOpen, setMenuOpen] = useState(false);
     const { t } = useTranslation();
 
     const handleLinkSubmit = useCallback(
@@ -631,291 +490,136 @@ const MenuBar: FC = () => {
         return null;
     }
 
-    // Check if editor has content (templates disabled when there's existing content)
+    // Templates replace the content, so they are only available in an empty editor.
     const editorHasContent = !editor.isEmpty;
 
-    const buttonClass =
-        'p-1.5 bg-gray-200 dark:bg-dark-600/50 hover:bg-gray-300 dark:hover:bg-dark-500/50 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:scale-105 min-w-[32px] touch-manipulation';
-    const activeButtonClass =
-        'p-1.5 bg-teal-500 text-white transition-all duration-200 min-w-[32px] touch-manipulation';
-
-    const groupClass = 'flex items-center gap-0.5';
-
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
+    const tool = (
+        label: string,
+        icon: ReactNode,
+        onClick: () => void,
+        isActive: boolean,
+        disabled = false
+    ) => (
+        <Tooltip text={label}>
+            <button
+                type="button"
+                onClick={onClick}
+                disabled={disabled}
+                aria-label={label}
+                aria-pressed={isActive}
+                className={isActive ? activeToolButtonClass : toolButtonClass}
+            >
+                {icon}
+            </button>
+        </Tooltip>
+    );
 
     return (
-        <>
-            <div className="md:mb-4">
-                <div className="sm:hidden mb-2 flex justify-end">
-                    <button
-                        onClick={toggleMenu}
-                        className="flex items-center justify-between w-full p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
-                    >
-                        <span className="text-sm font-medium">{t('editor.formatting_tools')}</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d={menuOpen ? 'M19 9l-7 7-7-7' : 'M4 6h16M4 12h16M4 18h16'}
-                            />
-                        </svg>
-                    </button>
-                </div>
+        <div
+            role="toolbar"
+            aria-label={t('editor.formatting_tools')}
+            className="flex flex-wrap items-center gap-0.5 px-2.5 py-1.5 border-b border-line-soft"
+        >
+            {tool(
+                t('editor.tooltips.bold'),
+                <IconBold {...iconProps} />,
+                () => editor.chain().focus().toggleBold().run(),
+                editor.isActive('bold'),
+                !editor.can().chain().focus().toggleBold().run()
+            )}
+            {tool(
+                t('editor.tooltips.italic'),
+                <IconItalic {...iconProps} />,
+                () => editor.chain().focus().toggleItalic().run(),
+                editor.isActive('italic'),
+                !editor.can().chain().focus().toggleItalic().run()
+            )}
+            {tool(
+                t('editor.tooltips.strikethrough'),
+                <IconStrikethrough {...iconProps} />,
+                () => editor.chain().focus().toggleStrike().run(),
+                editor.isActive('strike'),
+                !editor.can().chain().focus().toggleStrike().run()
+            )}
+            {tool(
+                t('editor.tooltips.inline_code'),
+                <IconCode {...iconProps} />,
+                () => editor.chain().focus().toggleCode().run(),
+                editor.isActive('code'),
+                !editor.can().chain().focus().toggleCode().run()
+            )}
+            <LinkDropdown
+                onSubmit={handleLinkSubmit}
+                isActive={editor.isActive('link')}
+                initialUrl={editor.getAttributes('link').href || ''}
+            />
+            {tool(
+                t('editor.tooltips.remove_link'),
+                <IconLinkOff {...iconProps} />,
+                () => editor.chain().focus().unsetLink().run(),
+                false,
+                !editor.isActive('link')
+            )}
 
-                <div
-                    className={`${menuOpen ? 'block' : 'hidden'} sm:block p-2 sm:p-3 bg-gray-50 dark:bg-dark-700/30 border border-gray-200 dark:border-dark-500/30`}
-                >
-                    <div className="flex flex-col sm:flex-row sm:flex-nowrap gap-2 sm:gap-1 sm:items-center">
-                        <div className={groupClass}>
-                            <Tooltip text={t('editor.tooltips.bold')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleBold().run()}
-                                    disabled={!editor.can().chain().focus().toggleBold().run()}
-                                    className={
-                                        editor.isActive('bold') ? activeButtonClass : buttonClass
-                                    }
-                                >
-                                    <IconBold
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.italic')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                                    disabled={!editor.can().chain().focus().toggleItalic().run()}
-                                    className={
-                                        editor.isActive('italic') ? activeButtonClass : buttonClass
-                                    }
-                                >
-                                    <IconItalic
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.strikethrough')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleStrike().run()}
-                                    disabled={!editor.can().chain().focus().toggleStrike().run()}
-                                    className={
-                                        editor.isActive('strike') ? activeButtonClass : buttonClass
-                                    }
-                                >
-                                    <IconStrikethrough
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.inline_code')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleCode().run()}
-                                    disabled={!editor.can().chain().focus().toggleCode().run()}
-                                    className={
-                                        editor.isActive('code') ? activeButtonClass : buttonClass
-                                    }
-                                >
-                                    <IconCode
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <LinkDropdown
-                                onSubmit={handleLinkSubmit}
-                                buttonClass={buttonClass}
-                                activeButtonClass={activeButtonClass}
-                                isActive={editor.isActive('link')}
-                                initialUrl={editor.getAttributes('link').href || ''}
-                            />
-                            <Tooltip text={t('editor.tooltips.remove_link')}>
-                                <button
-                                    onClick={() => editor.chain().focus().unsetLink().run()}
-                                    disabled={!editor.isActive('link')}
-                                    className={`${buttonClass} disabled:opacity-40 disabled:cursor-not-allowed`}
-                                >
-                                    <IconLinkOff
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <PasswordDropdown
-                                onInsert={handlePasswordSubmit}
-                                buttonClass={buttonClass}
-                            />
-                            <TemplateDropdown
-                                onSelect={handleTemplateSubmit}
-                                disabled={editorHasContent}
-                                buttonClass={buttonClass}
-                            />
-                        </div>
+            <Divider />
 
-                        <div className="hidden sm:block w-px h-6 bg-gray-300 dark:bg-dark-600 mx-1"></div>
-                        <div className="block sm:hidden w-full h-px bg-gray-300 dark:bg-dark-600 my-1"></div>
+            {tool(
+                t('editor.tooltips.paragraph'),
+                <IconLetterP {...iconProps} />,
+                () => editor.chain().focus().setParagraph().run(),
+                editor.isActive('paragraph')
+            )}
+            {tool(
+                t('editor.tooltips.heading1'),
+                <IconH1 {...iconProps} />,
+                () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+                editor.isActive('heading', { level: 1 })
+            )}
+            {tool(
+                t('editor.tooltips.heading2'),
+                <IconH2 {...iconProps} />,
+                () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+                editor.isActive('heading', { level: 2 })
+            )}
+            {tool(
+                t('editor.tooltips.heading3'),
+                <IconH3 {...iconProps} />,
+                () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+                editor.isActive('heading', { level: 3 })
+            )}
 
-                        <div className={groupClass}>
-                            <Tooltip text={t('editor.tooltips.paragraph')}>
-                                <button
-                                    onClick={() => editor.chain().focus().setParagraph().run()}
-                                    className={
-                                        editor.isActive('paragraph')
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconLetterP
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.heading1')}>
-                                <button
-                                    onClick={() =>
-                                        editor.chain().focus().toggleHeading({ level: 1 }).run()
-                                    }
-                                    className={
-                                        editor.isActive('heading', { level: 1 })
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconH1
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.heading2')}>
-                                <button
-                                    onClick={() =>
-                                        editor.chain().focus().toggleHeading({ level: 2 }).run()
-                                    }
-                                    className={
-                                        editor.isActive('heading', { level: 2 })
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconH2
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.heading3')}>
-                                <button
-                                    onClick={() =>
-                                        editor.chain().focus().toggleHeading({ level: 3 }).run()
-                                    }
-                                    className={
-                                        editor.isActive('heading', { level: 3 })
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconH3
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                        </div>
+            <Divider />
 
-                        <div className="hidden sm:block w-px h-6 bg-gray-300 dark:bg-dark-600 mx-1"></div>
-                        <div className="block sm:hidden w-full h-px bg-gray-300 dark:bg-dark-600 my-1"></div>
+            {tool(
+                t('editor.tooltips.bullet_list'),
+                <IconList {...iconProps} />,
+                () => editor.chain().focus().toggleBulletList().run(),
+                editor.isActive('bulletList')
+            )}
+            {tool(
+                t('editor.tooltips.numbered_list'),
+                <IconListNumbers {...iconProps} />,
+                () => editor.chain().focus().toggleOrderedList().run(),
+                editor.isActive('orderedList')
+            )}
+            {tool(
+                t('editor.tooltips.blockquote'),
+                <IconQuote {...iconProps} />,
+                () => editor.chain().focus().toggleBlockquote().run(),
+                editor.isActive('blockquote')
+            )}
+            {tool(
+                t('editor.tooltips.code_block'),
+                <IconBrandCodesandbox {...iconProps} />,
+                () => editor.chain().focus().toggleCodeBlock().run(),
+                editor.isActive('codeBlock')
+            )}
 
-                        <div className={groupClass}>
-                            <Tooltip text={t('editor.tooltips.bullet_list')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                                    className={
-                                        editor.isActive('bulletList')
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconList
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.numbered_list')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                                    className={
-                                        editor.isActive('orderedList')
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconListNumbers
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.blockquote')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                                    className={
-                                        editor.isActive('blockquote')
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconQuote
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                            <Tooltip text={t('editor.tooltips.code_block')}>
-                                <button
-                                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                                    className={
-                                        editor.isActive('codeBlock')
-                                            ? activeButtonClass
-                                            : buttonClass
-                                    }
-                                >
-                                    <IconBrandCodesandbox
-                                        size={18}
-                                        stroke={1.5}
-                                        className="text-gray-600 dark:text-slate-300 mx-auto"
-                                    />
-                                </button>
-                            </Tooltip>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+            <Divider />
+
+            <PasswordDropdown onInsert={handlePasswordSubmit} />
+            <TemplateDropdown onSelect={handleTemplateSubmit} disabled={editorHasContent} />
+        </div>
     );
 };
 
@@ -943,27 +647,70 @@ const extensions = [
     CharacterCount,
 ];
 
+interface DocState {
+    doc: {
+        childCount: number;
+        firstChild: { isTextblock: boolean; content: { size: number } } | null;
+    };
+}
+
+/** The document is empty when it has one text block without content. */
+const isDocEmpty = (state: DocState) => {
+    const first = state.doc.firstChild;
+    return state.doc.childCount === 1 && !!first?.isTextblock && first.content.size === 0;
+};
+
+const contentClass = [
+    'relative w-full outline-none font-mono text-sm leading-relaxed text-fg',
+    'prose prose-sm max-w-none',
+    'prose-p:my-0 prose-p:text-fg prose-p:leading-relaxed',
+    'prose-headings:text-fg prose-headings:font-medium prose-headings:mt-4 prose-headings:mb-2 prose-headings:first:mt-0',
+    'prose-h1:text-xl prose-h2:text-lg prose-h3:text-base',
+    'prose-strong:text-fg prose-strong:font-semibold prose-em:text-fg',
+    'prose-ul:my-2 prose-ul:pl-5 prose-ol:my-2 prose-ol:pl-5 prose-li:my-0.5 prose-li:text-fg prose-li:marker:text-muted',
+    'prose-a:text-accent prose-a:underline',
+    'prose-code:text-fg prose-code:bg-raised prose-code:px-1 prose-code:py-0.5 prose-code:rounded-xs prose-code:font-mono prose-code:font-normal prose-code:before:content-none prose-code:after:content-none',
+    'prose-pre:bg-raised prose-pre:text-fg prose-pre:rounded-sm prose-pre:my-3 prose-pre:p-3',
+    'prose-blockquote:border-l-2 prose-blockquote:border-line-strong prose-blockquote:text-fg-3 prose-blockquote:not-italic prose-blockquote:my-3 prose-blockquote:pl-3',
+    'prose-hr:border-line-soft',
+    'before:absolute before:top-4.5 before:left-4.5 before:text-faint before:pointer-events-none',
+    'data-[empty=true]:before:content-[attr(data-placeholder)]',
+].join(' ');
+
+export interface EditorHandle {
+    setContent: (content: string) => void;
+    /** Returns the text content with one line break between blocks. */
+    getText: () => string;
+    getHTML: () => string;
+}
+
 interface EditorProps {
     value?: string;
     onChange?: (content: string) => void;
     editable?: boolean;
-    onEditorReady?: (editor: { setContent: (content: string) => void }) => void;
+    placeholder?: string;
+    /** The minimum height class of the editable area, for example `min-h-60`. */
+    minHeightClassName?: string;
+    onEditorReady?: (editor: EditorHandle) => void;
 }
 
 export default function Editor({
     value = '',
     onChange,
     editable = true,
+    placeholder = '',
+    minHeightClassName = 'min-h-60',
     onEditorReady,
     ...props
 }: EditorProps) {
     const [characterCount, setCharacterCount] = useState(0);
     const { t } = useTranslation();
+
     return (
         <EditorOnChangeContext.Provider value={onChange}>
-            <div className="space-y-3 sm:space-y-4 relative">
+            <div className="relative">
                 <EditorProvider
-                    slotBefore={editable ? <MenuBar /> : <ReadOnlyMenuBar />}
+                    slotBefore={editable ? <MenuBar /> : undefined}
                     extensions={extensions}
                     editable={editable}
                     content={value}
@@ -987,19 +734,25 @@ export default function Editor({
                                         onChange(content);
                                     }
                                 },
+                                getText: () => editor.getText({ blockSeparator: '\n' }),
+                                getHTML: () => editor.getHTML(),
                             });
                         }
                     }}
                     editorProps={{
-                        attributes: {
-                            class: 'w-full min-h-[12rem] sm:min-h-[16rem] p-4 sm:p-6 bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300 text-sm sm:text-base prose prose-sm max-w-none prose-headings:mt-6 prose-headings:first:mt-0 prose-headings:text-gray-900 dark:prose-headings:text-slate-100 prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-xl prose-h2:font-bold prose-h2:mb-3 prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-p:my-3 prose-p:leading-relaxed prose-p:text-gray-800 dark:prose-p:text-slate-200 prose-strong:text-gray-900 dark:prose-strong:text-slate-200 prose-strong:font-bold prose-em:text-gray-800 dark:prose-em:text-slate-200 prose-ul:pl-5 prose-ul:my-3 prose-ol:pl-5 prose-ol:my-3 prose-li:my-1 prose-li:leading-normal prose-li:text-gray-800 dark:prose-li:text-slate-200 prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:underline prose-a:font-medium hover:prose-a:text-teal-500 dark:hover:prose-a:text-teal-300 prose-code:bg-gray-200 dark:prose-code:bg-dark-800 prose-code:text-gray-800 dark:prose-code:text-slate-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:font-mono prose-pre:bg-gray-200 dark:prose-pre:bg-dark-900 prose-pre:text-gray-900 dark:prose-pre:text-white prose-pre:p-4 prose-pre:my-4 prose-pre:overflow-auto prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-sm prose-pre:code:font-mono prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-dark-500 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:italic prose-blockquote:text-gray-600 dark:prose-blockquote:text-slate-300 prose-hr:my-6 prose-hr:border-gray-300 dark:prose-hr:border-dark-600',
-                        },
+                        attributes: (state) => ({
+                            class: `${contentClass} ${editable ? `${minHeightClassName} p-4.5 pb-8` : 'px-4.5 py-5'}`,
+                            'data-placeholder': placeholder,
+                            'data-empty': String(editable && isDocEmpty(state)),
+                        }),
                     }}
                     {...props}
                 >
-                    <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-xs text-gray-500 dark:text-slate-400 bg-white dark:bg-dark-800/80 px-2 py-1">
-                        {characterCount} {t('editor.character_count')}
-                    </div>
+                    {editable && (
+                        <div className="absolute bottom-2 right-3 font-mono text-2xs text-faint pointer-events-none">
+                            {characterCount} {t('editor.character_count')}
+                        </div>
+                    )}
                 </EditorProvider>
             </div>
         </EditorOnChangeContext.Provider>

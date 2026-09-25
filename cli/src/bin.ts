@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'node:fs';
 import { createSecret, EXPIRATION_TIMES, type ExpirationKey, type SecretOptions } from './index.js';
 
-const VERSION = '1.0.0';
+// Read the version from the package manifest so it cannot drift from the
+// published package version.
+const VERSION = (
+    JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as {
+        version: string;
+    }
+).version;
 
 /**
  * Prints help message

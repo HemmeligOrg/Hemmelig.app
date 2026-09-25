@@ -20,6 +20,13 @@ function getVisiblePages(current: number, total: number): (number | null)[] {
     return [1, null, current - 1, current, current + 1, null, total];
 }
 
+const pageButton =
+    'min-w-7 h-7 px-1.5 grid place-items-center rounded-sm font-mono text-xs transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
+
+/**
+ * Shows the item range and the page count. Shows page buttons when the
+ * list has more than one page.
+ */
 export function Pagination({
     currentPage,
     totalPages,
@@ -29,57 +36,70 @@ export function Pagination({
 }: PaginationProps) {
     const { t } = useTranslation();
 
-    if (totalPages <= 1) return null;
+    if (totalItems === 0) return null;
 
+    const pages = Math.max(1, totalPages);
     const startItem = (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, totalItems);
-    const pages = getVisiblePages(currentPage, totalPages);
+    const visiblePages = getVisiblePages(currentPage, pages);
 
     return (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
-            <span className="text-xs text-gray-500 dark:text-slate-400">
-                {t('pagination.showing', { start: startItem, end: endItem, total: totalItems })}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="font-mono text-xs text-faint">
+                {t('pagination.summary', {
+                    start: startItem,
+                    end: endItem,
+                    total: totalItems,
+                    page: currentPage,
+                    pages,
+                })}
             </span>
 
-            <div className="flex items-center gap-1">
-                <button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="p-1.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title={t('pagination.previous_page')}
-                >
-                    <ChevronLeft className="w-4 h-4" />
-                </button>
+            {pages > 1 && (
+                <nav aria-label={t('pagination.label')} className="flex items-center gap-1">
+                    <button
+                        type="button"
+                        onClick={() => onPageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`${pageButton} text-muted hover:text-fg`}
+                        aria-label={t('pagination.previous_page')}
+                    >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
 
-                {pages.map((page, i) =>
-                    page === null ? (
-                        <span key={`ellipsis-${i}`} className="px-1 text-xs text-gray-400">
-                            …
-                        </span>
-                    ) : (
-                        <button
-                            key={page}
-                            onClick={() => onPageChange(page)}
-                            className={`min-w-[28px] p-1.5 text-xs transition-colors ${
-                                page === currentPage
-                                    ? 'bg-teal-500 text-white'
-                                    : 'text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-dark-700'
-                            }`}
-                        >
-                            {page}
-                        </button>
-                    )
-                )}
+                    {visiblePages.map((page, i) =>
+                        page === null ? (
+                            <span key={`ellipsis-${i}`} className="px-1 text-xs text-faint">
+                                …
+                            </span>
+                        ) : (
+                            <button
+                                type="button"
+                                key={page}
+                                onClick={() => onPageChange(page)}
+                                aria-current={page === currentPage ? 'page' : undefined}
+                                className={`${pageButton} ${
+                                    page === currentPage
+                                        ? 'bg-line text-fg'
+                                        : 'text-muted hover:text-fg'
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        )
+                    )}
 
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="p-1.5 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title={t('pagination.next_page')}
-                >
-                    <ChevronRight className="w-4 h-4" />
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        onClick={() => onPageChange(currentPage + 1)}
+                        disabled={currentPage === pages}
+                        className={`${pageButton} text-muted hover:text-fg`}
+                        aria-label={t('pagination.next_page')}
+                    >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                </nav>
+            )}
         </div>
     );
 }

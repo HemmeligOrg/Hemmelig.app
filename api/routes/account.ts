@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { auth } from '../auth';
 import prisma from '../lib/db';
 import { handleNotFound } from '../lib/utils';
-import { authMiddleware } from '../middlewares/auth';
+import { authMiddleware, sessionOnly } from '../middlewares/auth';
 import { updateAccountSchema, updatePasswordSchema } from '../validations/account';
 
 const app = new Hono<{
@@ -20,9 +20,19 @@ app.get('/', authMiddleware, async (c) => {
         return c.json({ error: 'Unauthorized' }, 401);
     }
 
+    // Read the role and the 2FA state from the database, because an API key
+    // request does not carry the full session user.
+    const account = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { id: true, role: true, twoFactorEnabled: true },
+    });
+
     return c.json({
+        id: user.id,
         username: user.username,
         email: user.email,
+        role: account?.role ?? 'user',
+        twoFactorEnabled: account?.twoFactorEnabled ?? false,
     });
 });
 
@@ -58,11 +68,15 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
             }
         }
 
+        const emailChanged = email.toLowerCase() !== user.email.toLowerCase();
+
         const updatedUser = await prisma.user.update({
             where: { id: user.id },
             data: {
                 username,
                 email,
+                // Changing the address invalidates the previous verification.
+                ...(emailChanged && { emailVerified: false }),
             },
         });
 
@@ -77,38 +91,45 @@ app.put('/', authMiddleware, zValidator('json', updateAccountSchema), async (c) 
 });
 
 // Update user password
-app.put('/password', authMiddleware, zValidator('json', updatePasswordSchema), async (c) => {
-    const user = c.get('user');
-    const { currentPassword, newPassword } = c.req.valid('json');
+// Credential changes need a signed-in session, not an API key.
+app.put(
+    '/password',
+    authMiddleware,
+    sessionOnly,
+    zValidator('json', updatePasswordSchema),
+    async (c) => {
+        const user = c.get('user');
+        const { currentPassword, newPassword } = c.req.valid('json');
 
-    if (!user) {
-        return c.json({ error: 'Unauthorized' }, 401);
-    }
-
-    try {
-        // Use better-auth's changePassword API
-        const result = await auth.api.changePassword({
-            body: {
-                currentPassword,
-                newPassword,
-            },
-            headers: c.req.raw.headers,
-        });
-
-        if (!result) {
-            return c.json({ error: 'Failed to change password' }, 500);
+        if (!user) {
+            return c.json({ error: 'Unauthorized' }, 401);
         }
 
-        return c.json({ message: 'Password updated successfully' });
-    } catch (error) {
-        console.error('Failed to update password:', error);
-        const message = error instanceof Error ? error.message : 'Failed to update password';
-        return c.json({ error: message }, 500);
-    }
-});
+        try {
+            // Use better-auth's changePassword API
+            const result = await auth.api.changePassword({
+                body: {
+                    currentPassword,
+                    newPassword,
+                },
+                headers: c.req.raw.headers,
+            });
 
-// Delete user account
-app.delete('/', authMiddleware, async (c) => {
+            if (!result) {
+                return c.json({ error: 'Failed to change password' }, 500);
+            }
+
+            return c.json({ message: 'Password updated successfully' });
+        } catch (error) {
+            console.error('Failed to update password:', error);
+            const message = error instanceof Error ? error.message : 'Failed to update password';
+            return c.json({ error: message }, 500);
+        }
+    }
+);
+
+// Delete user account. This needs a signed-in session, not an API key.
+app.delete('/', authMiddleware, sessionOnly, async (c) => {
     const user = c.get('user');
 
     if (!user) {

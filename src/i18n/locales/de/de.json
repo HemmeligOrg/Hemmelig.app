@@ -9,6 +9,35 @@
             "server": "Serverzugang",
             "credit_card": "Zahlungskarte",
             "email": "E-Mail-Konto"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Benutzername",
+            "password": "Passwort",
+            "url": "URL",
+            "notes": "Notizen",
+            "service": "Dienst",
+            "api_key": "API-Schlüssel",
+            "api_secret": "API-Geheimnis",
+            "environment": "Umgebung",
+            "expires": "Läuft ab",
+            "host": "Host",
+            "port": "Port",
+            "database": "Datenbank",
+            "ssl": "SSL",
+            "hostname": "Hostname",
+            "ip_address": "IP-Adresse",
+            "ssh_port": "SSH-Port",
+            "password_or_key": "Passwort / Schlüssel",
+            "cardholder_name": "Name des Karteninhabers",
+            "card_number": "Kartennummer",
+            "expiry_date": "Ablaufdatum",
+            "cvv": "CVV",
+            "billing_address": "Rechnungsadresse",
+            "email": "E-Mail",
+            "imap_server": "IMAP-Server",
+            "smtp_server": "SMTP-Server",
+            "recovery_email": "Wiederherstellungs-E-Mail"
         }
     },
     "editor": {
@@ -77,7 +106,10 @@
         "uploading": "Wird hochgeladen...",
         "upload_file": "Datei hochladen",
         "file_too_large": "Datei \"{{fileName}}\" ({{fileSize}} MB) überschreitet die maximale Größe von {{maxSize}} MB",
-        "max_size_exceeded": "Gesamtdateigröße überschreitet das Maximum von {{maxSize}} MB"
+        "max_size_exceeded": "Gesamtdateigröße überschreitet das Maximum von {{maxSize}} MB",
+        "attach": "+ Datei anhängen",
+        "max_size": "max. {{size}} MB",
+        "remove": "{{fileName}} entfernen"
     },
     "footer": {
         "tagline": "Hemmelig, [heˈm(ɛ)li], bedeutet 'Geheimnis' auf Norwegisch",
@@ -104,7 +136,12 @@
         "invites": "Einladungen",
         "instance": "Instanz",
         "sign_out": "Abmelden",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ Neues Geheimnis",
+        "workspace": "Arbeitsbereich",
+        "admin": "Admin",
+        "open_menu": "Menü öffnen",
+        "close_menu": "Menü schließen"
     },
     "secret_settings": {
         "secret_created_title": "Geheimnis erstellt!",
@@ -116,7 +153,27 @@
         "copy_url_button": "URL kopieren",
         "burn_secret_button": "Geheimnis vernichten",
         "max_secrets_per_user_info": "Sie können bis zu {{count}} Geheimnisse erstellen.",
-        "failed_to_burn": "Geheimnis konnte nicht vernichtet werden. Bitte versuchen Sie es erneut."
+        "failed_to_burn": "Geheimnis konnte nicht vernichtet werden. Bitte versuchen Sie es erneut.",
+        "facts": {
+            "expires": "Läuft ab",
+            "expires_in": "noch {{duration}}",
+            "views": "Ansichten",
+            "burn_at_expiry": "Löschen bei Ablauf",
+            "password": "Passwort",
+            "password_required": "erforderlich",
+            "none": "keins",
+            "ip": "IP",
+            "any_ip": "alle",
+            "files": "Dateien"
+        },
+        "show_password": "Anzeigen",
+        "hide_password": "Verbergen",
+        "show_qr": "QR-Code",
+        "hide_qr": "QR ausblenden",
+        "qr_title": "QR-Code des vollständigen Links",
+        "qr_description": "Scannen, um es auf einem anderen Gerät zu öffnen. Enthält den Schlüssel — behandle ihn wie den Link.",
+        "password_warning": "Der Schlüssel wird aus dem Passwort abgeleitet, daher kann der Link allein nicht entschlüsseln. Sende das Passwort über einen anderen Kanal.",
+        "your_secrets": "Deine Geheimnisse"
     },
     "security_settings": {
         "security_title": "Sicherheit",
@@ -131,18 +188,19 @@
         "burn_after_time_mode_title": "Zeitgesteuerte Vernichtung",
         "burn_after_time_mode_description": "Das Geheimnis wird nach Ablauf der Zeit zerstört, unabhängig davon, wie oft es angesehen wurde.",
         "password_protection_title": "Passwortschutz",
-        "password_protection_description": "Fügen Sie eine zusätzliche Sicherheitsebene mit einem Passwort hinzu",
+        "password_protection_description": "Schlüssel aus einem Passwort statt aus dem Link abgeleitet.",
         "enter_password_label": "Passwort eingeben",
-        "password_placeholder": "Geben Sie ein sicheres Passwort ein...",
-        "password_hint": "Mindestens 5 Zeichen. Empfänger benötigen dieses Passwort, um das Geheimnis anzuzeigen",
+        "password_placeholder": "mind. 5 Zeichen",
+        "password_hint": "Der Empfänger braucht es auch. Sende es separat.",
         "password_error": "Das Passwort muss mindestens 5 Zeichen lang sein",
         "ip_restriction_title": "Nach IP oder CIDR einschränken",
-        "ip_restriction_description": "Die CIDR-Eingabe ermöglicht es Benutzern, IP-Adressbereiche anzugeben, die auf das Geheimnis zugreifen können.",
+        "ip_restriction_description": "Nur von einer IP-Adresse oder einem CIDR-Bereich abrufbar.",
         "ip_address_cidr_label": "IP-Adresse oder CIDR-Bereich",
-        "ip_address_cidr_placeholder": "192.168.1.0/24 oder 203.0.113.5",
+        "ip_address_cidr_placeholder": "203.0.113.7 oder 10.0.0.0/24",
         "ip_address_cidr_hint": "Nur Anfragen von diesen IP-Adressen können auf das Geheimnis zugreifen",
         "burn_after_time_title": "Nach Zeitablauf vernichten",
-        "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten"
+        "burn_after_time_description": "Das Geheimnis erst nach Ablauf der Zeit vernichten",
+        "remember_description": "Ablauf, Ansichten und Löschen für das nächste Mal merken (dieser Browser)."
     },
     "title_field": {
         "placeholder": "Titel",
@@ -151,11 +209,13 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "Aufrufe"
+        "views_label": "Aufrufe",
+        "decrease": "Weniger Ansichten",
+        "increase": "Mehr Ansichten"
     },
     "account_page": {
-        "title": "Kontoeinstellungen",
-        "description": "Verwalten Sie Ihre Kontoeinstellungen und Sicherheit",
+        "title": "Konto",
+        "description": "Profil, Sicherheit und API-Zugriff.",
         "tabs": {
             "profile": "Profil",
             "security": "Sicherheit",
@@ -168,12 +228,18 @@
             "first_name_label": "Vorname",
             "last_name_label": "Nachname",
             "username_label": "Benutzername",
-            "email_label": "E-Mail-Adresse",
+            "email_label": "E-Mail",
             "saving_button": "Wird gespeichert...",
-            "save_changes_button": "Änderungen speichern"
+            "save_changes_button": "Änderungen speichern",
+            "username_description": "Wird für die Anmeldung verwendet.",
+            "email_description": "Für Anmeldung und Wiederherstellung.",
+            "save_button": "Speichern",
+            "saved": "Profil gespeichert.",
+            "save_error": "Das Profil konnte nicht gespeichert werden. Versuchen Sie es erneut."
         },
         "profile_settings": {
-            "username_taken": "Benutzername ist bereits vergeben"
+            "username_taken": "Benutzername ist bereits vergeben",
+            "email_taken": "Diese E-Mail wird bereits verwendet"
         },
         "security_settings": {
             "title": "Sicherheitseinstellungen",
@@ -189,7 +255,10 @@
             "changing_password_button": "Wird geändert...",
             "change_password_button": "Passwort ändern",
             "password_change_success": "Passwort erfolgreich geändert!",
-            "password_change_error": "Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+            "password_change_error": "Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+            "new_password_description": "Mindestens 8 Zeichen mit einem Großbuchstaben, einem Kleinbuchstaben und einer Zahl.",
+            "show_password": "Passwort anzeigen",
+            "hide_password": "Passwort verbergen"
         },
         "two_factor": {
             "title": "Zwei-Faktor-Authentifizierung",
@@ -216,7 +285,14 @@
             "backup_codes_title": "Backup-Codes",
             "backup_codes_description": "Speichern Sie diese Backup-Codes an einem sicheren Ort. Sie können sie verwenden, um auf Ihr Konto zuzugreifen, wenn Sie den Zugang zu Ihrer Authenticator-App verlieren.",
             "backup_codes_warning": "Jeder Code kann nur einmal verwendet werden. Bewahren Sie sie sicher auf!",
-            "backup_codes_saved": "Ich habe meine Backup-Codes gespeichert"
+            "backup_codes_saved": "Ich habe meine Backup-Codes gespeichert",
+            "status_on": "An. Die Anmeldung fragt nach einem Code aus Ihrer Authenticator-App.",
+            "status_off": "Aus. Fügen Sie einen TOTP-Authenticator für die Anmeldung hinzu.",
+            "enable": "Aktivieren",
+            "disable": "Deaktivieren",
+            "scan_and_verify": "Scannen Sie mit einer Authenticator-App und geben Sie dann den 6-stelligen Code ein.",
+            "verify_button": "Bestätigen",
+            "backup_codes_shown_once": "Backup-Codes werden nur einmal angezeigt. Bewahren Sie sie sicher auf."
         },
         "danger_zone": {
             "title": "Gefahrenzone",
@@ -229,7 +305,10 @@
             "delete_account_bullet4": "Diese Aktion kann nicht rückgängig gemacht werden",
             "delete_account_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
             "delete_account_button": "Konto löschen",
-            "deleting_account_button": "Konto wird gelöscht..."
+            "deleting_account_button": "Konto wird gelöscht...",
+            "delete_account_summary": "Entfernt Ihr Konto, Ihre API-Schlüssel und alle Geheimnisse, die Sie erstellt haben. Links funktionieren danach nicht mehr.",
+            "confirm_placeholder": "{{username}} eingeben, um zu bestätigen",
+            "delete_error": "Das Konto konnte nicht gelöscht werden. Versuchen Sie es erneut."
         },
         "developer": {
             "title": "API-Schlüssel",
@@ -237,7 +316,7 @@
             "create_key": "Schlüssel erstellen",
             "create_key_title": "API-Schlüssel erstellen",
             "key_name": "Schlüsselname",
-            "key_name_placeholder": "z.B. Meine Integration",
+            "key_name_placeholder": "Schlüsselname, z. B. ci-deploy",
             "expiration": "Ablauf",
             "never_expires": "Läuft nie ab",
             "expires_30_days": "30 Tage",
@@ -247,19 +326,25 @@
             "name_required": "Schlüsselname ist erforderlich",
             "create_error": "API-Schlüssel konnte nicht erstellt werden",
             "key_created": "API-Schlüssel erstellt!",
-            "key_warning": "Kopieren Sie diesen Schlüssel jetzt. Sie können ihn nicht erneut sehen.",
+            "key_warning": "Jetzt kopieren. Der Schlüssel wird nicht erneut angezeigt.",
             "dismiss": "Ich habe den Schlüssel kopiert",
             "no_keys": "Noch keine API-Schlüssel. Erstellen Sie einen, um loszulegen.",
             "created": "Erstellt",
             "last_used": "Zuletzt verwendet",
             "expires": "Läuft ab",
             "docs_hint": "Erfahren Sie, wie Sie API-Schlüssel verwenden in der",
-            "api_docs": "API-Dokumentation"
+            "api_docs": "API-Dokumentation",
+            "copy": "Kopieren",
+            "copied": "Kopiert",
+            "revoke": "Widerrufen",
+            "used": "verwendet {{time}}",
+            "never_used": "nie verwendet",
+            "expired": "abgelaufen"
         }
     },
     "analytics_page": {
         "title": "Analysen",
-        "description": "Verfolgen Sie Ihre Geheimnis-Sharing-Aktivitäten und Einblicke",
+        "description": "Nutzung der gesamten Instanz. Niemals Inhalte.",
         "time_range": {
             "last_7_days": "Letzte 7 Tage",
             "last_14_days": "Letzte 14 Tage",
@@ -280,7 +365,8 @@
             "date": "Datum",
             "trend": "Änderung",
             "vs_previous": "ggü. Vortag",
-            "no_data": "Noch keine Aktivitätsdaten verfügbar."
+            "no_data": "Noch keine Aktivitätsdaten verfügbar.",
+            "per_day": "pro Tag"
         },
         "locale": "de-DE",
         "top_countries": {
@@ -289,18 +375,18 @@
             "views": "Aufrufe"
         },
         "secret_types": {
-            "title": "Geheimnis-Typen",
+            "title": "Verwendeter Schutz",
             "description": "Verteilung nach Schutzstufe",
             "password_protected": "Passwortgeschützt",
             "ip_restricted": "IP-beschränkt",
             "burn_after_time": "Zeitgesteuerte Vernichtung"
         },
         "expiration_stats": {
-            "title": "Ablaufstatistiken",
+            "title": "Ablauf",
             "description": "Wie lange Geheimnisse typischerweise bestehen",
-            "one_hour": "1 Stunde",
-            "one_day": "1 Tag",
-            "one_week_plus": "1 Woche+"
+            "one_hour": "1 Stunde oder weniger",
+            "one_day": "1 Stunde bis 1 Tag",
+            "one_week_plus": "Mehr als 1 Tag"
         },
         "visitor_analytics": {
             "title": "Besucheranalysen",
@@ -310,7 +396,9 @@
             "date": "Datum",
             "trend": "Änderung",
             "vs_previous": "ggü. Vortag",
-            "no_data": "Noch keine Besucherdaten verfügbar."
+            "no_data": "Noch keine Besucherdaten verfügbar.",
+            "unique_visitors": "Eindeutige Besucher",
+            "page_views": "Seitenaufrufe"
         },
         "secret_requests": {
             "total": "Geheimnis-Anfragen",
@@ -318,11 +406,24 @@
         },
         "loading": "Analysen werden geladen...",
         "no_permission": "Sie haben keine Berechtigung, Analysen anzuzeigen.",
-        "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden."
+        "failed_to_fetch": "Analysedaten konnten nicht abgerufen werden.",
+        "range": {
+            "label": "Zeitraum",
+            "7d": "7T",
+            "14d": "14T",
+            "30d": "30T"
+        },
+        "chart": {
+            "keyboard_hint": "Mit den Pfeiltasten links und rechts lesen Sie den Wert für jeden Tag."
+        },
+        "daily_table": {
+            "show": "Tageswerte anzeigen",
+            "hide": "Tageswerte ausblenden"
+        }
     },
     "instance_page": {
-        "title": "Instanzeinstellungen",
-        "description": "Konfigurieren Sie Ihre Hemmelig-Instanz",
+        "title": "Instanz",
+        "description": "Einstellungen für alle auf dieser Instanz.",
         "managed_mode": {
             "title": "Verwalteter Modus",
             "description": "Diese Instanz wird über Umgebungsvariablen verwaltet. Einstellungen sind schreibgeschützt."
@@ -366,7 +467,7 @@
             "email_verification_description": "E-Mail-Verifizierung erforderlich"
         },
         "saving_button": "Wird gespeichert...",
-        "save_settings_button": "Einstellungen speichern",
+        "save_settings_button": "Speichern",
         "security_settings": {
             "title": "Sicherheitseinstellungen",
             "description": "Sicherheits- und Zugriffskontrollen konfigurieren",
@@ -414,17 +515,146 @@
             "restart_service_button": "Dienst neu starten",
             "clear_cache_button": "Cache leeren",
             "export_logs_button": "Protokolle exportieren"
-        }
+        },
+        "managed_notice": "Verwalteter Modus — die Einstellungen kommen aus Umgebungsvariablen und sind hier schreibgeschützt.",
+        "note_default": "Änderungen gelten für neue Geheimnisse.",
+        "note_managed": "Im verwalteten Modus schreibgeschützt.",
+        "headings": {
+            "secret_options": "Optionen für Geheimnisse",
+            "rate_limiting": "Ratenbegrenzung"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "s"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "Instanzname",
+                "description": "Wird neben dem Logo und im Seitentitel angezeigt."
+            },
+            "logo": {
+                "label": "Logo"
+            },
+            "instance_description": {
+                "label": "Beschreibung",
+                "description": "Wird auf der Startseite angezeigt."
+            },
+            "important_message": {
+                "label": "Wichtige Nachricht",
+                "description": "Banner auf jeder öffentlichen Seite. Unterstützt Markdown. Leer blendet es aus.",
+                "placeholder": "Wartung Sonntag 02:00 UTC"
+            },
+            "default_expiration": {
+                "label": "Standardablauf",
+                "description": "Vorausgewählt beim Erstellen eines Geheimnisses.",
+                "hours": "{{count}} Stunden"
+            },
+            "max_secret_size": {
+                "label": "Maximale Geheimnisgröße",
+                "description": "Gilt für den Text und für angehängte Dateien."
+            },
+            "password_protection": {
+                "label": "Passwortschutz",
+                "description": "Ersteller können ein Passwort verlangen."
+            },
+            "ip_restriction": {
+                "label": "IP-Beschränkung",
+                "description": "Ersteller können den Zugriff auf eine IP oder ein CIDR beschränken."
+            },
+            "file_uploads": {
+                "label": "Datei-Uploads",
+                "description": "Verschlüsselte Anhänge für angemeldete Benutzer."
+            },
+            "rate_limiting": {
+                "label": "Ratenbegrenzung",
+                "description": "Pro Client-IP."
+            },
+            "rate_limit_requests": {
+                "label": "Anfragen",
+                "description": "Pro Zeitfenster."
+            },
+            "rate_limit_window": {
+                "label": "Zeitfenster",
+                "description": "Länge eines Zeitfensters."
+            },
+            "require_invite_code": {
+                "label": "Einladungscode verlangen",
+                "description": "Die Registrierung braucht einen Code. Fügt Einladungen zum Menü hinzu."
+            },
+            "allowed_email_domains": {
+                "label": "Erlaubte E-Mail-Domains",
+                "description": "Durch Kommas getrennt. Leer erlaubt alle."
+            },
+            "require_registered_user": {
+                "label": "Nur registrierte Benutzer",
+                "description": "Nur angemeldete Benutzer können erstellen. Jeder mit einem Link kann weiterhin lesen."
+            },
+            "social_login_only": {
+                "label": "Nur Social Login",
+                "description": "Registrierung mit E-Mail und Passwort deaktivieren."
+            },
+            "webhooks": {
+                "label": "Webhooks",
+                "description": "Sendet ein Ereignis per POST an deinen Endpunkt."
+            },
+            "webhook_url": {
+                "label": "Endpunkt",
+                "description": "Empfängt für jedes Ereignis eine POST-Anfrage."
+            },
+            "webhook_secret": {
+                "label": "Signaturschlüssel",
+                "description": "Payloads werden damit per HMAC signiert. Die Signatur steht im Header X-Hemmelig-Signature."
+            },
+            "webhook_on_view": {
+                "label": "Beim Ansehen",
+                "description": "Wird ausgelöst, wenn ein Geheimnis geöffnet wird."
+            },
+            "webhook_on_burn": {
+                "label": "Beim Löschen",
+                "description": "Wird ausgelöst, wenn ein Geheimnis gelöscht wird."
+            },
+            "metrics": {
+                "label": "Prometheus-Metriken",
+                "description": "Stellt /api/metrics bereit."
+            },
+            "metrics_secret": {
+                "label": "Bearer-Token",
+                "description": "Scraper senden Authorization: Bearer <token>. Leer schaltet die Authentifizierung aus."
+            },
+            "metrics_endpoint": {
+                "label": "Endpunkt",
+                "description": "Prometheus liest diesen Pfad aus."
+            },
+            "logo_dark": {
+                "label": "Logo für den dunklen Modus",
+                "description": "Wird im dunklen Design angezeigt. Leer verwendet das Logo oben."
+            },
+            "default_theme": {
+                "label": "Standarddesign",
+                "description": "Für Besucher, die kein Design gewählt haben.",
+                "dark": "Dunkel",
+                "light": "Hell",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Standardmäßige max. Ansichten",
+                "description": "Beim Erstellen eines Geheimnisses vorausgewählt. 1 bis 9999."
+            }
+        },
+        "note_saved": "Gespeichert. Die Änderungen gelten für neue Geheimnisse.",
+        "note_save_failed": "Nicht gespeichert. Lies die Fehlermeldung und versuche es erneut.",
+        "env_locked": "Festgelegt durch {{variable}}. Ändere die Umgebungsvariable, um diese Einstellung zu ändern."
     },
     "secrets_page": {
-        "title": "Ihre Geheimnisse",
-        "description": "Verwalten und überwachen Sie Ihre geteilten Geheimnisse",
-        "create_secret_button": "Geheimnis erstellen",
+        "title": "Geheimnisse",
+        "description": "Alles, was du auf dieser Instanz erstellt hast.",
+        "create_secret_button": "Neues Geheimnis",
         "search_placeholder": "Geheimnisse suchen...",
         "filter": {
             "all_secrets": "Alle Geheimnisse",
             "active": "Aktiv",
-            "expired": "Abgelaufen"
+            "expired": "Abgelaufen",
+            "all": "Alle"
         },
         "total_secrets": "Geheimnisse gesamt",
         "active_secrets": "Aktiv",
@@ -452,14 +682,37 @@
             "delete_confirmation_title": "Sind Sie sicher?",
             "delete_confirmation_text": "Diese Aktion kann nicht rückgängig gemacht werden. Das Geheimnis wird dauerhaft gelöscht.",
             "delete_confirm_button": "Ja, löschen",
-            "delete_cancel_button": "Abbrechen"
+            "delete_cancel_button": "Abbrechen",
+            "id_header": "ID",
+            "protection_header": "Schutz",
+            "views_left_header": "Verbleibende Aufrufe",
+            "expires_header": "Läuft ab"
+        },
+        "stats": {
+            "total": "Gesamt",
+            "active": "Aktiv",
+            "expired": "Abgelaufen"
+        },
+        "filter_label": "Geheimnisse filtern",
+        "empty": "Nichts hier.",
+        "footnote": "Titel und Inhalte sind verschlüsselt, daher werden nur IDs und Metadaten angezeigt. Links können nicht erneut kopiert werden, da der Schlüssel nie gespeichert wurde.",
+        "tags": {
+            "password": "passwort",
+            "ip": "ip",
+            "burn": "verbrennen",
+            "files_one": "{{count}} Datei",
+            "files_other": "{{count}} Dateien",
+            "link_key": "link-schlüssel"
+        },
+        "toast": {
+            "delete_error": "Das Geheimnis konnte nicht gelöscht werden."
         }
     },
     "users_page": {
-        "title": "Benutzerverwaltung",
-        "description": "Benutzer und deren Berechtigungen verwalten",
+        "title": "Benutzer",
+        "description": "Personen mit einem Konto auf dieser Instanz.",
         "add_user_button": "Benutzer hinzufügen",
-        "search_placeholder": "Benutzer suchen...",
+        "search_placeholder": "Nach Benutzername oder E-Mail suchen",
         "filter": {
             "all_roles": "Alle Rollen",
             "admin": "Administrator",
@@ -483,7 +736,8 @@
             "activity_header": "Aktivität",
             "last_login_header": "Letzte Anmeldung",
             "actions_header": "Aktionen",
-            "created_at": "Erstellt am"
+            "created_at": "Erstellt am",
+            "joined_header": "Beigetreten"
         },
         "status": {
             "active": "Aktiv",
@@ -513,6 +767,11 @@
             "role_label": "Rolle",
             "save_button": "Benutzer hinzufügen",
             "cancel_button": "Abbrechen"
+        },
+        "actions": {
+            "edit": "Bearbeiten",
+            "ban": "Sperren",
+            "unban": "Entsperren"
         }
     },
     "forgot_password_page": {
@@ -548,7 +807,12 @@
         "continue_with_github": "Mit GitHub fortfahren",
         "no_account_question": "Noch kein Konto?",
         "sign_up_link": "Registrieren",
-        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+        "sign_in_to": "Bei {{name}} anmelden",
+        "require_account_notice": "Diese Instanz erfordert ein Konto, um Geheimnisse zu erstellen.",
+        "or": "oder",
+        "login_failed": "Anmeldung fehlgeschlagen: {{message}}",
+        "show_password": "Passwort anzeigen"
     },
     "register_page": {
         "back_to_hemmelig": "Zurück zu Hemmelig",
@@ -605,8 +869,8 @@
         "files_title": "Angehängte Dateien",
         "secret_waiting_title": "Jemand hat ein Geheimnis mit Ihnen geteilt",
         "secret_waiting_description": "Dieses Geheimnis ist verschlüsselt und kann erst angezeigt werden, wenn Sie auf die Schaltfläche unten klicken.",
-        "one_view_remaining": "Dieses Geheimnis kann nur noch 1 Mal angezeigt werden",
-        "views_remaining": "Dieses Geheimnis kann noch {{count}} Mal angezeigt werden",
+        "one_view_remaining": "Noch eine Ansicht. Das Entsperren löscht es vom Server.",
+        "views_remaining": "Das Entsperren verbraucht eine von {{count}} Ansichten.",
         "view_warning": "Einmal angezeigt, kann diese Aktion nicht rückgängig gemacht werden",
         "secret_revealed": "Geheimnis",
         "copy_secret": "In Zwischenablage kopieren",
@@ -618,7 +882,18 @@
         "delete_modal_title": "Geheimnis löschen",
         "delete_modal_message": "Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
         "decryption_failed": "Das Geheimnis konnte nicht entschlüsselt werden. Bitte überprüfen Sie Ihr Passwort oder den Entschlüsselungsschlüssel.",
-        "fetch_error": "Beim Abrufen des Geheimnisses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        "fetch_error": "Beim Abrufen des Geheimnisses ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        "after_burns_at_expiry": "wird bei Ablauf gelöscht",
+        "after_last_view": "letzte Ansicht · vom Server gelöscht",
+        "after_views_left_one": "{{count}} übrig",
+        "after_views_left_other": "{{count}} übrig",
+        "views_left_one": "{{count}} Ansicht übrig",
+        "views_left_other": "{{count}} Ansichten übrig",
+        "copy_html": "html",
+        "copy_base64": "base64",
+        "delete_confirm_question": "Für alle löschen?",
+        "wrong_password": "Falsches Passwort.",
+        "gate_burns_at_expiry": "Wird bei Ablauf gelöscht, egal wie oft es geöffnet wird."
     },
     "expiration": {
         "28_days": "28 Tage",
@@ -630,16 +905,18 @@
         "4_hours": "4 Stunden",
         "1_hour": "1 Stunde",
         "30_minutes": "30 Minuten",
-        "5_minutes": "5 Minuten"
+        "5_minutes": "5 Minuten",
+        "default_hours": "{{hours}} Stunden"
     },
     "error_display": {
         "clear_errors_button_title": "Fehler löschen"
     },
     "secret_not_found_page": {
-        "title": "Geheimnis nicht gefunden",
-        "message": "Das Geheimnis, das Sie suchen, existiert nicht, ist abgelaufen oder wurde vernichtet.",
+        "title": "Hier ist nichts.",
+        "message": "Es wurde angesehen, ist abgelaufen oder wurde gelöscht. Es lässt sich nicht wiederherstellen — der Server hatte nie den Schlüssel.",
         "error_details": "Fehlerdetails:",
-        "go_home_button": "Zur Startseite"
+        "go_home_button": "Geheimnis erstellen",
+        "kicker": "404 · Geheimnis nicht gefunden"
     },
     "organization_page": {
         "title": "Organisationseinstellungen",
@@ -692,8 +969,8 @@
         "save_settings_button": "Einstellungen speichern"
     },
     "invites_page": {
-        "title": "Einladungscodes",
-        "description": "Einladungscodes für die Registrierung neuer Benutzer verwalten",
+        "title": "Einladungen",
+        "description": "Codes für die Registrierung, wenn Einladungen erforderlich sind.",
         "create_invite_button": "Einladung erstellen",
         "loading": "Einladungscodes werden geladen...",
         "table": {
@@ -728,7 +1005,19 @@
             "fetch_error": "Einladungscodes konnten nicht abgerufen werden",
             "create_error": "Einladungscode konnte nicht erstellt werden",
             "delete_error": "Einladungscode konnte nicht deaktiviert werden"
-        }
+        },
+        "close": "Schließen",
+        "invites_off": "Einladungscodes sind aus. Jeder, der sich registrieren darf, kann sich anmelden.",
+        "require_invite_code": "Einladungscode verlangen →",
+        "form": {
+            "max_uses": "Max. Nutzungen",
+            "expires_in": "Läuft ab in",
+            "days": "{{count}} T.",
+            "never": "nie",
+            "generate": "Erzeugen"
+        },
+        "copy": "Kopieren",
+        "copied": "Kopiert"
     },
     "social_login": {
         "continue_with": "Fortfahren mit {{provider}}",
@@ -790,13 +1079,19 @@
     },
     "verify_2fa_page": {
         "back_to_login": "Zurück zur Anmeldung",
-        "title": "Zwei-Faktor-Authentifizierung",
+        "title": "Zwei-Faktor-Code",
         "description": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein",
         "enter_code_hint": "Geben Sie den Code aus Ihrer Authenticator-App ein",
         "verifying": "Wird überprüft...",
         "verify_button": "Bestätigen",
         "invalid_code": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
-        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+        "unexpected_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+        "invalid_backup_code": "Ungültiger Backup-Code. Bitte erneut versuchen.",
+        "backup_description": "Gib einen der Backup-Codes ein, die du beim Aktivieren der Zwei-Faktor-Authentifizierung gespeichert hast.",
+        "code_label": "Authentifizierungscode",
+        "backup_code_label": "Backup-Code",
+        "use_backup_code": "Gerät verloren? Verwende stattdessen einen Backup-Code.",
+        "use_totp_code": "Code aus der Authenticator-App verwenden"
     },
     "common": {
         "error": "Fehler",
@@ -805,19 +1100,24 @@
         "ok": "OK",
         "delete": "Löschen",
         "deleting": "Wird gelöscht...",
-        "loading": "Wird geladen..."
+        "loading": "Wird geladen...",
+        "copy": "Kopieren",
+        "copied": "Kopiert"
     },
     "pagination": {
         "showing": "Zeige {{start}} bis {{end}} von {{total}} Ergebnissen",
         "previous_page": "Vorherige Seite",
-        "next_page": "Nächste Seite"
+        "next_page": "Nächste Seite",
+        "summary": "{{start}}–{{end}} von {{total}} · Seite {{page}} von {{pages}}",
+        "label": "Seitennavigation"
     },
     "not_found_page": {
-        "title": "Seite nicht gefunden",
+        "title": "Hier ist nichts.",
         "message": "Diese Seite ist verschwunden, genau wie unsere Geheimnisse es tun.",
         "hint": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
         "go_home_button": "Zur Startseite",
-        "create_secret_button": "Geheimnis erstellen"
+        "create_secret_button": "Geheimnis erstellen",
+        "kicker": "404 · Seite nicht gefunden"
     },
     "error_boundary": {
         "title": "Etwas ist schiefgelaufen",
@@ -826,12 +1126,13 @@
         "error_details": "Fehlerdetails:",
         "unknown_error": "Ein unbekannter Fehler ist aufgetreten",
         "try_again_button": "Erneut versuchen",
-        "go_home_button": "Zur Startseite"
+        "go_home_button": "Zur Startseite",
+        "kicker": "unerwarteter Fehler"
     },
     "secret_requests_page": {
         "title": "Geheimnis-Anfragen",
-        "description": "Fordern Sie Geheimnisse von anderen über sichere Links an",
-        "create_request_button": "Anfrage erstellen",
+        "description": "Bitte jemanden, dir ein Geheimnis zu senden.",
+        "create_request_button": "Neue Anfrage",
         "no_requests": "Noch keine Geheimnis-Anfragen. Erstellen Sie eine, um zu beginnen.",
         "table": {
             "title_header": "Titel",
@@ -840,7 +1141,15 @@
             "link_expires_header": "Link läuft ab",
             "copy_link_tooltip": "Ersteller-Link kopieren",
             "view_secret_tooltip": "Geheimnis anzeigen",
-            "cancel_tooltip": "Anfrage abbrechen"
+            "cancel_tooltip": "Anfrage abbrechen",
+            "request_header": "Anfrage",
+            "created_header": "Erstellt",
+            "meta": "{{views}} · {{expiry}} nach Übermittlung",
+            "views_one": "{{count}} Aufruf",
+            "views_other": "{{count}} Aufrufe",
+            "copy_link": "Link kopieren",
+            "cancel": "Abbrechen",
+            "open_with_key": "Mit Schlüssel öffnen"
         },
         "status": {
             "pending": "Ausstehend",
@@ -874,11 +1183,12 @@
             "cancelled": "Anfrage abgebrochen",
             "fetch_error": "Anfrage-Details konnten nicht abgerufen werden",
             "cancel_error": "Anfrage konnte nicht abgebrochen werden"
-        }
+        },
+        "footnote": "Die angefragte Person übermittelt im eigenen Browser und sendet dir den Schlüssel. Damit öffnest du das Geheimnis hier."
     },
     "create_request_page": {
-        "title": "Geheimnis-Anfrage erstellen",
-        "description": "Fordern Sie ein Geheimnis von jemandem an, indem Sie einen sicheren Link generieren, über den es übermittelt werden kann",
+        "title": "Neue Anfrage",
+        "description": "Lege die Regeln fest. Die andere Person fügt nur noch ein.",
         "back_button": "Zurück zu Geheimnis-Anfragen",
         "form": {
             "title_label": "Anfrage-Titel",
@@ -922,12 +1232,38 @@
             "webhook_secret_warning": "Speichern Sie dieses Geheimnis jetzt! Es wird nicht erneut angezeigt. Verwenden Sie es zur Überprüfung von Webhook-Signaturen.",
             "expires_at": "Link läuft ab: {{date}}",
             "create_another_button": "Weitere Anfrage erstellen",
-            "view_all_button": "Alle Anfragen anzeigen"
+            "view_all_button": "Alle Anfragen anzeigen",
+            "link_label": "Anfragelink – teile ihn mit der Person, die das Geheimnis hat",
+            "copy": "Kopieren",
+            "copied": "Kopiert",
+            "open_as_creator": "Als Ersteller öffnen",
+            "back_to_requests": "Zurück zu Anfragen"
         },
         "toast": {
             "created": "Geheimnis-Anfrage erfolgreich erstellt",
             "create_error": "Geheimnis-Anfrage konnte nicht erstellt werden",
             "copied": "In Zwischenablage kopiert"
+        },
+        "fields": {
+            "title_label": "Titel",
+            "title_hint": "Wird der angefragten Person angezeigt.",
+            "title_placeholder": "API-Zugangsdaten für Projekt X",
+            "description_label": "Beschreibung",
+            "description_hint": "Optionaler Kontext.",
+            "valid_for_label": "Link gültig für",
+            "valid_for_hint": "Wie lange der Anfragelink funktioniert.",
+            "expires_in_label": "Geheimnis läuft ab nach",
+            "expires_in_hint": "Ab der Übermittlung gerechnet.",
+            "max_views_label": "Max. Aufrufe",
+            "max_views_hint": "1 – 9999",
+            "ip_label": "IP-Beschränkung",
+            "ip_hint": "Optionale IP oder CIDR.",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "Verbrennen verhindern",
+            "prevent_burn_hint": "Nach max. Aufrufen behalten; bei Ablauf löschen.",
+            "webhook_label": "Webhook",
+            "webhook_hint": "Wird bei Übermittlung benachrichtigt.",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
@@ -946,20 +1282,73 @@
             "password_protected_note": "Dieses Geheimnis wird passwortgeschützt sein",
             "encryption_note": "Ihr Geheimnis wird in Ihrem Browser verschlüsselt, bevor es gesendet wird. Der Entschlüsselungsschlüssel wird nur in der endgültigen URL enthalten sein, die Sie teilen.",
             "submitting_button": "Verschlüsseln & Übermitteln...",
-            "submit_button": "Geheimnis übermitteln"
+            "submit_button": "Verschlüsseln und senden",
+            "placeholder": "Geheimnis einfügen. Es wird vor dem Hochladen verschlüsselt.",
+            "settings_note": "Einstellungen von der anfragenden Person"
         },
         "success": {
             "title": "Geheimnis erstellt!",
             "description": "Ihr Geheimnis wurde verschlüsselt und sicher gespeichert",
-            "decryption_key_label": "Entschlüsselungsschlüssel",
+            "decryption_key_label": "Entschlüsselungsschlüssel — sende ihn an die anfragende Person",
             "warning": "Wichtig: Kopieren Sie diesen Entschlüsselungsschlüssel jetzt und senden Sie ihn an den Anforderer. Dies ist das einzige Mal, dass Sie ihn sehen werden!",
-            "manual_send_note": "Sie müssen diesen Entschlüsselungsschlüssel manuell an die Person senden, die das Geheimnis angefordert hat. Sie haben die Geheimnis-URL bereits in ihrem Dashboard.",
+            "manual_send_note": "Die anfragende Person hat den Link. Ohne diesen Schlüssel ist er unlesbar.",
             "create_own_button": "Eigenes Geheimnis erstellen"
         },
         "toast": {
             "created": "Geheimnis erfolgreich übermittelt",
             "create_error": "Geheimnis konnte nicht übermittelt werden",
             "copied": "In Zwischenablage kopiert"
+        },
+        "kicker": "// Geheimnis-Anfrage"
+    },
+    "composer": {
+        "title_placeholder": "Titel (optional, verschlüsselt)",
+        "placeholder": "Passwort, Schlüssel, Konfiguration einfügen…",
+        "options_show": "Optionen ▾",
+        "options_hide": "Optionen ▴",
+        "create_link": "Link erstellen",
+        "shortcut_hint": "Link erstellen ({{shortcut}})",
+        "summary": {
+            "burn_after_time": "nach Ablauf löschen",
+            "views_one": "{{count}} Ansicht",
+            "views_other": "{{count}} Ansichten",
+            "password": "Passwort",
+            "ip": "ip {{range}}",
+            "files_one": "{{count}} Datei",
+            "files_other": "{{count}} Dateien"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — norwegisch für „geheim“",
+        "title": "Teile Geheimnisse, die sich nach dem Lesen selbst zerstören.",
+        "subtitle": "Vor dem Hochladen in diesem Tab verschlüsselt. Der Server speichert Chiffretext, für den er keinen Schlüssel hat.",
+        "features": {
+            "encrypted_title": "hier verschlüsselt",
+            "encrypted_body": "AES-256-GCM läuft in deinem Browser. Der Klartext verlässt nie den Tab.",
+            "fragment_title": "Schlüssel im #Fragment",
+            "fragment_body": "Browser senden nicht, was nach <mono>#</mono> steht. Der Server sieht den Schlüssel nie.",
+            "gone_title": "weg nach dem Lesen",
+            "gone_body": "Gelöscht bei der letzten Ansicht oder beim Ablauf, je nachdem, was zuerst eintritt."
+        }
+    },
+    "important_alert": {
+        "label": "Hinweis",
+        "dismiss": "Ausblenden"
+    },
+    "language_picker": {
+        "label": "Sprache wählen"
+    },
+    "expiration_short": {
+        "5m": "5m",
+        "30m": "30m",
+        "1h": "1h",
+        "4h": "4h",
+        "12h": "12h",
+        "1d": "1T",
+        "3d": "3T",
+        "7d": "7T",
+        "14d": "14T",
+        "28d": "28T",
+        "hours": "{{hours}}h"
     }
 }

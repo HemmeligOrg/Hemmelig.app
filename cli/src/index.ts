@@ -1,4 +1,4 @@
-import { createCipheriv, pbkdf2Sync, randomBytes } from 'node:crypto';
+import { createCipheriv, createHash, pbkdf2Sync, randomBytes } from 'node:crypto';
 
 /**
  * Valid expiration times in seconds
@@ -159,6 +159,11 @@ export async function createSecret(options: SecretOptions): Promise<CreateSecret
     const encryptedSecret = encryptText(secret, encryptionKey, salt);
     const encryptedTitle = title ? encryptText(title, encryptionKey, salt) : null;
 
+    // Derive an access verifier so the password never reaches the server.
+    const passwordVerifier = password
+        ? createHash('sha256').update(deriveKey(password, salt)).digest('hex')
+        : null;
+
     // Prepare the request payload
     const payload: Record<string, unknown> = {
         secret: uint8ArrayToObject(encryptedSecret),
@@ -172,10 +177,9 @@ export async function createSecret(options: SecretOptions): Promise<CreateSecret
         payload.title = uint8ArrayToObject(encryptedTitle);
     }
 
-    // If password is provided, send it for server-side hashing
-    // Otherwise, leave it empty (key will be in URL fragment)
-    if (password) {
-        payload.password = password;
+    // Password-protected secrets send only the verifier, never the password.
+    if (passwordVerifier) {
+        payload.passwordVerifier = passwordVerifier;
     }
 
     // Make the API request

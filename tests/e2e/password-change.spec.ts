@@ -4,7 +4,8 @@ import { TEST_USER } from './global-setup';
 const WEAK_PASSWORD_USER = {
     email: 'weakpass@hemmelig.local',
     username: 'weakpassuser',
-    password: 'pass',
+    // Meets the 8 character minimum but not the uppercase complexity rule.
+    password: 'weakpass1',
     name: 'Weak Password User',
 };
 
@@ -48,9 +49,10 @@ test.describe('Password Change', () => {
             TEST_USER.password
         );
 
-        // Use better-auth admin endpoint to create a user with a weak password.
-        // This bypasses the sign-up hook (which only runs on /sign-up/email),
-        // and since minPasswordLength is 1, better-auth accepts it.
+        // Use the better-auth admin endpoint to create a user with a weak password.
+        // Admin creation does not enforce the full password policy, which mirrors
+        // accounts that predate that policy. The user must still be able to sign
+        // in and upgrade to a strong password.
         const createRes = await fetch(`${baseURL}/api/auth/admin/create-user`, {
             method: 'POST',
             headers: {
@@ -83,8 +85,8 @@ test.describe('Password Change', () => {
     }) => {
         // Log in as the weak-password user
         await page.goto('/login');
-        await page.getByPlaceholder(/username/i).fill(WEAK_PASSWORD_USER.username);
-        await page.getByPlaceholder(/password/i).fill(WEAK_PASSWORD_USER.password);
+        await page.getByLabel('Username', { exact: true }).fill(WEAK_PASSWORD_USER.username);
+        await page.getByLabel('Password', { exact: true }).fill(WEAK_PASSWORD_USER.password);
         await page.getByRole('button', { name: /sign in/i }).click();
 
         // Wait for login to complete
@@ -94,7 +96,7 @@ test.describe('Password Change', () => {
         await page.goto('/dashboard/account');
 
         // Click on the Security tab
-        await page.getByRole('button', { name: /security/i }).click();
+        await page.getByRole('tab', { name: /security/i }).click();
 
         // Fill in the password change form
         await page.getByPlaceholder(/enter current password/i).fill(WEAK_PASSWORD_USER.password);
@@ -114,8 +116,8 @@ test.describe('Password Change', () => {
         await page.goto('/login');
 
         // Log in with the new password
-        await page.getByPlaceholder(/username/i).fill(WEAK_PASSWORD_USER.username);
-        await page.getByPlaceholder(/password/i).fill(NEW_STRONG_PASSWORD);
+        await page.getByLabel('Username', { exact: true }).fill(WEAK_PASSWORD_USER.username);
+        await page.getByLabel('Password', { exact: true }).fill(NEW_STRONG_PASSWORD);
         await page.getByRole('button', { name: /sign in/i }).click();
 
         // Verify login succeeds

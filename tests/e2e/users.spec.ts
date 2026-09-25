@@ -19,9 +19,9 @@ test.describe('User management', () => {
         await page.getByRole('button', { name: 'Add User' }).last().click();
 
         await expect(page.getByRole('heading', { name: 'Add User' })).toBeHidden();
-        await expect(page.getByRole('row').filter({ hasText: 'seconduser' })).toContainText(
-            'second@example.com'
-        );
+        // The user list is a grid of divs, so find the new user by its text.
+        await expect(page.getByText('seconduser', { exact: true })).toBeVisible();
+        await expect(page.getByText('second@example.com', { exact: true })).toBeVisible();
         await page.getByRole('button', { name: 'Add User' }).click();
 
         await expect(nameInput).toHaveValue('');

@@ -1,16 +1,23 @@
 import { toast } from 'sonner';
 import { create } from 'zustand';
 import { api } from '../lib/api';
+import { type DefaultTheme, useThemeStore } from './themeStore';
 
 // Public settings available to all users
 export type HemmeligSettings = {
     instanceName: string;
     instanceDescription: string;
     instanceLogo: string;
+    /** The logo for the dark theme. Empty uses instanceLogo. */
+    instanceLogoDark: string;
+    /** The theme for visitors who have not chosen one. */
+    defaultTheme: DefaultTheme;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
     defaultSecretExpiration: number;
+    /** The max views that the composer preselects. */
+    defaultMaxViews: number;
     maxSecretSize: number;
     enforceHttps: boolean;
     allowPasswordProtection: boolean;
@@ -33,10 +40,13 @@ type GeneralSettings = {
     instanceName: string;
     instanceDescription: string;
     instanceLogo: string;
+    instanceLogoDark: string;
+    defaultTheme: DefaultTheme;
     allowRegistration: boolean;
     requireEmailVerification: boolean;
     maxSecretsPerUser: number;
     defaultSecretExpiration: number;
+    defaultMaxViews: number;
     maxSecretSize: number;
     importantMessage: string;
 };
@@ -77,7 +87,10 @@ type AllSettings = GeneralSettings &
     SecuritySettings &
     OrganizationSettings &
     WebhookSettings &
-    MetricsSettings;
+    MetricsSettings & {
+        /** Settings that an environment variable controls, mapped to the variable name. */
+        lockedByEnvironment?: Record<string, string>;
+    };
 
 type HemmeligState = {
     // Public settings (read-only for most components)
@@ -90,6 +103,8 @@ type HemmeligState = {
     organizationSettings: OrganizationSettings;
     webhookSettings: WebhookSettings;
     metricsSettings: MetricsSettings;
+    /** Settings that an environment variable controls, mapped to the variable name. */
+    lockedByEnvironment: Record<string, string>;
     isLoading: boolean;
     error: string | null;
 
@@ -107,9 +122,13 @@ type HemmeligState = {
     ) => void;
     setWebhookSetting: <K extends keyof WebhookSettings>(key: K, value: WebhookSettings[K]) => void;
     setMetricsSetting: <K extends keyof MetricsSettings>(key: K, value: MetricsSettings[K]) => void;
+    /**
+     * Saves one settings section. Returns true when the save succeeds.
+     * The API client shows the error message when the save fails.
+     */
     saveSettings: (
         section: 'general' | 'security' | 'organization' | 'webhook' | 'metrics'
-    ) => Promise<void>;
+    ) => Promise<boolean>;
 };
 
 export const useHemmeligStore = create<HemmeligState>((set, get) => ({
@@ -130,6 +149,8 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
         if (settings.instanceName) {
             document.title = settings.instanceName;
         }
+        // The instance default applies only until the visitor picks a theme.
+        useThemeStore.getState().applyDefaultTheme(settings.defaultTheme);
     },
 
     // Admin settings (categorized)
@@ -137,10 +158,13 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
         instanceName: '',
         instanceDescription: '',
         instanceLogo: '',
+        instanceLogoDark: '',
+        defaultTheme: 'dark',
         allowRegistration: true,
         requireEmailVerification: false,
         maxSecretsPerUser: 1000,
         defaultSecretExpiration: 72,
+        defaultMaxViews: 1,
         maxSecretSize: 1024,
         importantMessage: '',
     },
@@ -172,6 +196,7 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
         metricsEnabled: false,
         metricsSecret: '',
     },
+    lockedByEnvironment: {},
     isLoading: false,
     error: null,
 
@@ -181,10 +206,13 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
                 instanceName: settings.instanceName,
                 instanceDescription: settings.instanceDescription,
                 instanceLogo: settings.instanceLogo ?? '',
+                instanceLogoDark: settings.instanceLogoDark ?? '',
+                defaultTheme: settings.defaultTheme ?? 'dark',
                 allowRegistration: settings.allowRegistration,
                 requireEmailVerification: settings.requireEmailVerification,
                 maxSecretsPerUser: settings.maxSecretsPerUser,
                 defaultSecretExpiration: settings.defaultSecretExpiration,
+                defaultMaxViews: settings.defaultMaxViews ?? 1,
                 maxSecretSize: settings.maxSecretSize,
                 importantMessage: settings.importantMessage ?? '',
             },
@@ -216,6 +244,7 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
                 metricsEnabled: settings.metricsEnabled ?? false,
                 metricsSecret: settings.metricsSecret ?? '',
             },
+            lockedByEnvironment: settings.lockedByEnvironment ?? {},
             isLoading: false,
         });
     },
@@ -282,13 +311,20 @@ export const useHemmeligStore = create<HemmeligState>((set, get) => ({
                 metrics: state.metricsSettings,
             };
 
-            await api.instance.settings.$put({ json: settingsMap[section] });
-            toast.success(
-                `${section.charAt(0).toUpperCase() + section.slice(1)} settings saved successfully.`
+            // Leave out the settings that an environment variable controls. The
+            // server keeps the environment value for them.
+            const payload = Object.fromEntries(
+                Object.entries(settingsMap[section]).filter(
+                    ([key]) => !(key in state.lockedByEnvironment)
+                )
             );
+
+            // The API client throws on an error status and shows the error message.
+            await api.instance.settings.$put({ json: payload });
+            return true;
         } catch (error) {
             console.error(`Failed to save ${section} settings:`, error);
-            toast.error(`Failed to save ${section} settings.`);
+            return false;
         } finally {
             set({ isLoading: false });
         }

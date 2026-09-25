@@ -6,10 +6,10 @@ test('should resolve regional Portuguese and render translated labels', async ({
     });
     await page.goto('/');
 
-    await expect(page.getByLabel('Select language')).toHaveValue('pt');
+    await expect(page.getByLabel('Selecionar idioma')).toHaveValue('pt');
 
     await page.goto('/register');
-    const passwordInput = page.getByPlaceholder('Crie uma senha');
+    const passwordInput = page.getByLabel('Senha', { exact: true });
     await expect(passwordInput).toBeVisible();
     await passwordInput.fill('a');
 

@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { createBrowserRouter, type LoaderFunctionArgs, redirect } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DashboardLayout } from './components/Layout/DashboardLayout';
 import { RootLayout } from './components/Layout/RootLayout';
@@ -41,14 +41,12 @@ const checkSetupStatus = async () => {
     return false;
 };
 
-// Loader to fetch instance settings
-const instanceSettingsLoader = async () => {
-    // Check if setup is needed first
-    const needsSetup = await checkSetupStatus();
-    if (needsSetup) {
-        return redirect('/setup');
-    }
+// True after the first successful load of the public instance settings.
+let publicSettingsLoaded = false;
 
+// Loads the public instance settings into the store and returns them.
+// Errors are logged, not thrown. The function returns null on an error.
+const loadPublicSettings = async () => {
     try {
         const res = await api.instance.settings.public.$get();
         if (!res.ok) {
@@ -57,11 +55,23 @@ const instanceSettingsLoader = async () => {
         }
         const settings = await res.json();
         useHemmeligStore.getState().setSettings(settings);
+        publicSettingsLoaded = true;
         return settings;
     } catch (error) {
         console.error('Error fetching instance settings:', error);
         return null;
     }
+};
+
+// Loader to fetch instance settings
+const instanceSettingsLoader = async () => {
+    // Check if setup is needed first
+    const needsSetup = await checkSetupStatus();
+    if (needsSetup) {
+        return redirect('/setup');
+    }
+
+    return loadPublicSettings();
 };
 
 // Loader to fetch user session and update store
@@ -74,7 +84,12 @@ const userSessionLoader = async () => {
 
 // Combined loader for dashboard layout
 const dashboardLoader = async () => {
-    const { data, error } = await authClient.getSession();
+    const [{ data, error }] = await Promise.all([
+        authClient.getSession(),
+        // The sidebar needs the instance name and the invite setting. Load them
+        // only when no earlier page has loaded them.
+        publicSettingsLoaded ? null : loadPublicSettings(),
+    ]);
     if (!data?.user) {
         return redirect('/login');
     }
@@ -82,12 +97,37 @@ const dashboardLoader = async () => {
     return { user: data.user, error };
 };
 
+// Loads the public status of a secret for both link forms.
+const secretLoader = async ({ params }: LoaderFunctionArgs) => {
+    if (!params.id) {
+        throw new Response('Not Found', { status: 404 });
+    }
+    trackPageView('/secret');
+    // A missing secret is the normal case here, so use the raw client and
+    // throw a 404 response instead of an error toast.
+    const res = await apiRaw.secrets[':id'].check.$get({
+        param: { id: params.id },
+    });
+    if (res.status === 404) {
+        throw new Response('Not Found', { status: 404 });
+    }
+    if (!res.ok) {
+        const data = await res.json();
+        throw new Error('error' in data ? data.error : 'Failed to check secret');
+    }
+    return res.json();
+};
+
+// Shown while the first route loaders run. React Router warns without it.
+const hydrateFallbackElement = <div className="min-h-screen bg-canvas" aria-busy="true" />;
+
 export const router = createBrowserRouter([
     // Setup page - only accessible when no users exist
     {
         path: '/setup',
         element: <SetupPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             const needsSetup = await checkSetupStatus();
             if (!needsSetup) {
@@ -101,12 +141,14 @@ export const router = createBrowserRouter([
         path: '/login',
         element: <LoginPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: instanceSettingsLoader,
     },
     {
         path: '/register',
         element: <RegisterPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             await instanceSettingsLoader();
             const { settings } = useHemmeligStore.getState();
@@ -120,12 +162,14 @@ export const router = createBrowserRouter([
         path: '/verify-2fa',
         element: <Verify2FAPage />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: instanceSettingsLoader,
     },
     // Pages with header/footer
     {
         element: <RootLayout />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: async () => {
             // First check setup status
             const needsSetup = await checkSetupStatus();
@@ -134,15 +178,7 @@ export const router = createBrowserRouter([
             }
 
             // Fetch instance settings
-            try {
-                const res = await api.instance.settings.public.$get();
-                if (res.ok) {
-                    const settings = await res.json();
-                    useHemmeligStore.getState().setSettings(settings);
-                }
-            } catch (error) {
-                console.error('Error fetching instance settings:', error);
-            }
+            await loadPublicSettings();
 
             // Fetch user session
             const { data } = await authClient.getSession();
@@ -161,17 +197,18 @@ export const router = createBrowserRouter([
                 },
             },
             {
+                // Short link form: /s/:id#<key>
+                path: '/s/:id',
+                element: <SecretPage />,
+                errorElement: <SecretNotFoundPage />,
+                loader: secretLoader,
+            },
+            {
+                // Original link form: /secret/:id#decryptionKey=<key>
                 path: '/secret/:id',
                 element: <SecretPage />,
                 errorElement: <SecretNotFoundPage />,
-                loader: async ({ params }) => {
-                    if (!params.id) {
-                        throw new Response('Not Found', { status: 404 });
-                    }
-                    trackPageView('/secret');
-                    const res = await api.secrets[':id'].check.$get({ param: { id: params.id } });
-                    return res.json();
-                },
+                loader: secretLoader,
             },
             {
                 path: '/request/:id',
@@ -195,6 +232,7 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <DashboardLayout />,
         errorElement: <ErrorBoundary />,
+        hydrateFallbackElement,
         loader: dashboardLoader,
         children: [
             {

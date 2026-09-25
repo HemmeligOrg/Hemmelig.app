@@ -1,10 +1,92 @@
-import { mkdir } from 'fs/promises';
+import { timingSafeEqual } from 'crypto';
+import { mkdir, unlink } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import { FILE } from './constants';
 import { resolveSettings } from './settings';
+import { signTokenPayload as sign, signToken, verifySignedToken } from './tokens';
 
 /** Upload directory path */
 export const UPLOAD_DIR = resolve(process.cwd(), 'uploads');
+
+/**
+ * Lifetime of an upload token. The cleanup job keeps an unattached upload for
+ * the same time, so that a client can still attach it to a new secret.
+ */
+export const UPLOAD_TOKEN_TTL_MS = 60 * 60 * 1000;
+
+/**
+ * Lifetime of a download token. The cleanup job keeps a secret with files for
+ * the same time after its last view, so that the recipient can download them.
+ */
+export const DOWNLOAD_TOKEN_TTL_MS = 30 * 60 * 1000;
+
+/** Encrypted file names are hex strings with this maximum length. */
+const MAX_ENCRYPTED_NAME_LENGTH = 1024;
+
+/**
+ * Checks a client-encrypted file name. The name must be a non-empty hex string.
+ */
+export const isValidEncryptedName = (name: unknown): name is string =>
+    typeof name === 'string' &&
+    name.length > 0 &&
+    name.length <= MAX_ENCRYPTED_NAME_LENGTH &&
+    /^[a-f0-9]+$/i.test(name);
+
+/**
+ * Creates a capability token that lets the uploader attach the file to a secret.
+ */
+export const createUploadToken = (fileId: string, userId: string | null): string =>
+    signToken(`upload:${fileId}:${userId ?? 'anonymous'}`, UPLOAD_TOKEN_TTL_MS);
+
+/**
+ * Checks an upload token against the file and the current uploader.
+ */
+export const verifyUploadToken = (fileId: string, userId: string | null, token: string): boolean =>
+    verifySignedToken(`upload:${fileId}:${userId ?? 'anonymous'}`, token);
+
+/**
+ * Creates a short-lived capability token for downloading a file attached to a
+ * secret. The token is issued only after a successful secret retrieval.
+ */
+export const createDownloadToken = (secretId: string, fileId: string): string => {
+    const expiresAt = Date.now() + DOWNLOAD_TOKEN_TTL_MS;
+    const signature = sign(`download:${secretId}:${fileId}:${expiresAt}`);
+    return `${expiresAt}.${secretId}:${fileId}:${signature}`;
+};
+
+/**
+ * Verifies a download token and returns the bound secret and file ids.
+ */
+export const verifyDownloadToken = (token: string): { secretId: string; fileId: string } | null => {
+    const separator = token.indexOf('.');
+    if (separator === -1) {
+        return null;
+    }
+
+    const expiresAt = Number(token.slice(0, separator));
+    if (!Number.isFinite(expiresAt) || Date.now() > expiresAt) {
+        return null;
+    }
+
+    const parts = token.slice(separator + 1).split(':');
+    if (parts.length !== 3) {
+        return null;
+    }
+
+    const [secretId, fileId, signature] = parts;
+    if (!secretId || !fileId || !signature) {
+        return null;
+    }
+
+    const expected = Buffer.from(sign(`download:${secretId}:${fileId}:${expiresAt}`), 'utf8');
+    const provided = Buffer.from(signature, 'utf8');
+
+    if (expected.length !== provided.length || !timingSafeEqual(expected, provided)) {
+        return null;
+    }
+
+    return { secretId, fileId };
+};
 
 /**
  * Sanitizes a filename by removing path traversal sequences and directory separators.
@@ -37,6 +119,23 @@ export async function getMaxFileSize(): Promise<number> {
 }
 
 /**
+ * Removes a stored file from disk. A missing file counts as removed.
+ * @returns true when no file remains at the path.
+ */
+export async function removeStoredFile(filePath: string): Promise<boolean> {
+    try {
+        await unlink(filePath);
+        return true;
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+            return true;
+        }
+        console.error(`Failed to delete file from disk: ${filePath}`, error);
+        return false;
+    }
+}
+
+/**
  * Ensures the upload directory exists, creating it if necessary.
  */
 async function ensureUploadDir(): Promise<void> {
@@ -51,12 +150,25 @@ async function ensureUploadDir(): Promise<void> {
  * Generates a safe file path within the upload directory.
  * @param id - Unique identifier for the file
  * @param originalFilename - Original filename to sanitize
+ * @param encryptedName - Client-encrypted filename. When set, it is stored as
+ * the file name and the on-disk path uses only the id.
  * @returns Object with sanitized filename and full path, or null if invalid
  */
 export function generateSafeFilePath(
     id: string,
-    originalFilename: string
+    originalFilename: string,
+    encryptedName?: string
 ): { filename: string; path: string } | null {
+    if (encryptedName) {
+        const path = join(UPLOAD_DIR, id);
+
+        if (!isPathSafe(path)) {
+            return null;
+        }
+
+        return { filename: encryptedName, path };
+    }
+
     const safeFilename = sanitizeFilename(originalFilename);
     if (!safeFilename) {
         return null;

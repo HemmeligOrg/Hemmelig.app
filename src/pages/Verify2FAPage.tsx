@@ -1,67 +1,61 @@
-import { Shield } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthPageLayout } from '../components/AuthPageLayout';
+import { Button } from '../components/Button';
+import { Input } from '../components/Input';
 import { LoadingButton } from '../components/LoadingButton';
 import { useErrorModal } from '../hooks/useModalState';
 import { authClient } from '../lib/auth';
 
+type CodeMode = 'totp' | 'backup';
+
+interface LoginLocationState {
+    requireAccount?: boolean;
+}
+
 export function Verify2FAPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [code, setCode] = useState(['', '', '', '', '', '']);
+    const location = useLocation();
+    const [mode, setMode] = useState<CodeMode>('totp');
+    const [code, setCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const errorModal = useErrorModal();
-    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    const handleChange = (index: number, value: string) => {
-        if (!/^\d*$/.test(value)) return;
+    // The login page passes this state on when the user came from the home page.
+    const requireAccount = !!(location.state as LoginLocationState | null)?.requireAccount;
+    const isTotp = mode === 'totp';
+    const isComplete = isTotp ? code.length === 6 : code.trim().length > 0;
 
-        const newCode = [...code];
-        newCode[index] = value.slice(-1);
-        setCode(newCode);
-
-        // Auto-focus next input
-        if (value && index < 5) {
-            inputRefs.current[index + 1]?.focus();
-        }
+    const handleChange = (value: string) => {
+        // A TOTP code has 6 digits. A backup code has letters, digits and a dash.
+        setCode(isTotp ? value.replace(/\D/g, '').slice(0, 6) : value.trim());
     };
 
-    const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Backspace' && !code[index] && index > 0) {
-            inputRefs.current[index - 1]?.focus();
-        }
-    };
-
-    const handlePaste = (e: React.ClipboardEvent) => {
-        e.preventDefault();
-        const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-        const newCode = [...code];
-        for (let i = 0; i < pastedData.length; i++) {
-            newCode[i] = pastedData[i];
-        }
-        setCode(newCode);
-        if (pastedData.length === 6) {
-            inputRefs.current[5]?.focus();
-        }
+    const switchMode = () => {
+        setMode(isTotp ? 'backup' : 'totp');
+        setCode('');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const totpCode = code.join('');
-        if (totpCode.length !== 6) return;
+        if (!isComplete) return;
 
         setIsLoading(true);
         try {
-            const { error } = await authClient.twoFactor.verifyTotp({
-                code: totpCode,
-            });
+            const { error } = isTotp
+                ? await authClient.twoFactor.verifyTotp({ code })
+                : await authClient.twoFactor.verifyBackupCode({ code });
 
             if (error) {
-                errorModal.showError(t('verify_2fa_page.invalid_code'));
+                errorModal.showError(
+                    isTotp
+                        ? t('verify_2fa_page.invalid_code')
+                        : t('verify_2fa_page.invalid_backup_code')
+                );
             } else {
-                navigate('/dashboard');
+                navigate(requireAccount ? '/' : '/dashboard');
             }
         } catch (error) {
             console.error('2FA verification error:', error);
@@ -72,52 +66,57 @@ export function Verify2FAPage() {
     };
 
     return (
-        <AuthPageLayout
-            title={t('verify_2fa_page.title')}
-            subtitle={t('verify_2fa_page.description')}
-            backTo="/login"
-            backLabel={t('verify_2fa_page.back_to_login')}
-            errorModal={errorModal}
-        >
-            <div className="bg-white dark:bg-dark-800/80 backdrop-blur-sm border border-gray-200 dark:border-dark-600 p-6 shadow-xl">
-                <div className="flex justify-center mb-6">
-                    <div className="p-3 bg-teal-500/20">
-                        <Shield className="w-8 h-8 text-teal-400" />
-                    </div>
-                </div>
+        <AuthPageLayout title={t('verify_2fa_page.title')} errorModal={errorModal}>
+            <p className="m-0 text-sm text-fg-3">
+                {isTotp
+                    ? t('verify_2fa_page.description')
+                    : t('verify_2fa_page.backup_description')}
+            </p>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="flex justify-center gap-2" onPaste={handlePaste}>
-                        {code.map((digit, index) => (
-                            <input
-                                key={index}
-                                ref={(el) => {
-                                    inputRefs.current[index] = el;
-                                }}
-                                type="text"
-                                inputMode="numeric"
-                                maxLength={1}
-                                value={digit}
-                                onChange={(e) => handleChange(index, e.target.value)}
-                                onKeyDown={(e) => handleKeyDown(index, e)}
-                                className="w-12 h-14 text-center text-xl font-semibold bg-gray-100 dark:bg-dark-700/50 border border-gray-300 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all duration-300"
-                            />
-                        ))}
-                    </div>
+            <form onSubmit={handleSubmit} className="grid gap-4">
+                {isTotp ? (
+                    <Input
+                        value={code}
+                        onChange={(e) => handleChange(e.target.value)}
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        placeholder="000000"
+                        maxLength={6}
+                        aria-label={t('verify_2fa_page.code_label')}
+                        autoFocus
+                        mono
+                        className="py-3! text-2xl! tracking-[0.4em] text-center"
+                    />
+                ) : (
+                    <Input
+                        value={code}
+                        onChange={(e) => handleChange(e.target.value)}
+                        autoComplete="one-time-code"
+                        placeholder="xxxxx-xxxxx"
+                        aria-label={t('verify_2fa_page.backup_code_label')}
+                        autoFocus
+                        mono
+                        className="py-3! text-lg! tracking-widest text-center"
+                    />
+                )}
 
-                    <p className="text-center text-sm text-gray-500 dark:text-slate-400">
-                        {t('verify_2fa_page.enter_code_hint')}
-                    </p>
+                <LoadingButton
+                    isLoading={isLoading}
+                    disabled={!isComplete}
+                    loadingText={t('verify_2fa_page.verifying')}
+                >
+                    {t('verify_2fa_page.verify_button')}
+                </LoadingButton>
+            </form>
 
-                    <LoadingButton
-                        isLoading={isLoading}
-                        disabled={code.join('').length !== 6}
-                        loadingText={t('verify_2fa_page.verifying')}
-                    >
-                        <span>{t('verify_2fa_page.verify_button')}</span>
-                    </LoadingButton>
-                </form>
-            </div>
+            <Button
+                variant="ghost"
+                size="inline"
+                className="justify-self-start"
+                onClick={switchMode}
+            >
+                {isTotp ? t('verify_2fa_page.use_backup_code') : t('verify_2fa_page.use_totp_code')}
+            </Button>
         </AuthPageLayout>
     );
 }

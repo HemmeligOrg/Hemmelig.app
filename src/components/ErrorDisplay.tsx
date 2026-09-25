@@ -20,18 +20,23 @@ const ErrorDisplay = () => {
     }
 
     return (
-        <div className="fixed top-4 right-4 z-50 space-y-2 w-full max-w-sm">
+        <div className="fixed top-4 right-4 z-50 grid gap-2 w-[calc(100%-2rem)] max-w-sm">
             {errors.map((error, index) => (
                 <div
                     key={index}
-                    className="bg-red-500 text-gray-900 dark:text-white p-3 shadow-lg flex justify-between items-center"
+                    className="flex justify-between items-start gap-3 px-4 py-3 bg-surface border border-danger/45 rounded-md shadow-2xl text-ui text-fg"
                     role="alert"
                 >
-                    <span>{error}</span>
+                    <span className="flex gap-2.5">
+                        <span className="mt-1.5 flex-none w-2 h-2 bg-danger" aria-hidden="true" />
+                        {error}
+                    </span>
                     <button
+                        type="button"
                         onClick={clearErrors}
-                        className="ml-4 text-gray-900 dark:text-white hover:text-red-100 focus:outline-none"
+                        className="text-muted hover:text-fg transition-colors cursor-pointer"
                         title={t('error_display.clear_errors_button_title')}
+                        aria-label={t('error_display.clear_errors_button_title')}
                     >
                         &times;
                     </button>

@@ -12,13 +12,15 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Server Configuration
 
-| Variable                   | Description                                                                | Default       |
-| -------------------------- | -------------------------------------------------------------------------- | ------------- |
-| `NODE_ENV`                 | Environment mode (`production` or `development`)                           | `development` |
-| `HEMMELIG_PORT`            | Port the server listens on                                                 | `3000`        |
-| `HEMMELIG_REQUEST_TIMEOUT` | API request timeout in seconds (zero or negative disables the app timeout) | `15`          |
-| `HEMMELIG_BASE_URL`        | Public URL of your instance (required for OAuth)                           | -             |
-| `HEMMELIG_TRUSTED_ORIGIN`  | Additional trusted origin for CORS                                         | -             |
+| Variable                    | Description                                                                               | Default                        |
+| --------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------ |
+| `NODE_ENV`                  | Environment mode (`production` or `development`)                                          | `development`                  |
+| `HEMMELIG_PORT`             | Port the server listens on                                                                | `3000`                         |
+| `HEMMELIG_REQUEST_TIMEOUT`  | API request timeout in seconds (zero or negative disables the app timeout)                | `15`                           |
+| `HEMMELIG_BASE_URL`         | Public URL of your instance (required for OAuth)                                          | -                              |
+| `HEMMELIG_TRUSTED_ORIGIN`   | Additional trusted origin for CORS                                                        | -                              |
+| `HEMMELIG_TRUSTED_PROXIES`  | Comma-separated IPs or CIDRs allowed to set forwarded client IP headers                   | -                              |
+| `HEMMELIG_SECURITY_CONTACT` | Comma-separated contacts for `/.well-known/security.txt`. An email address gets `mailto:` | GitHub security advisories URL |
 
 ## General Settings
 
@@ -26,7 +28,12 @@ Complete reference for all environment variables supported by Hemmelig.
 | ------------------------------- | --------------------------------------------- | ------- |
 | `HEMMELIG_INSTANCE_NAME`        | Custom name for your instance                 | -       |
 | `HEMMELIG_INSTANCE_DESCRIPTION` | Custom description for your instance          | -       |
+| `HEMMELIG_INSTANCE_LOGO`        | Base64-encoded logo image (max 512KB)         | -       |
 | `HEMMELIG_ALLOW_REGISTRATION`   | Allow new user registrations (`true`/`false`) | `true`  |
+
+Outside managed mode, a set variable from this table, or `HEMMELIG_ALLOW_PASSWORD_PROTECTION` or `HEMMELIG_ALLOW_IP_RESTRICTION`, overrides the value in the admin dashboard. The dashboard shows these settings as read-only and names the variable. To edit a setting in the dashboard again, unset the variable and restart the instance.
+
+The default max views, the dark-mode logo and the default theme are dashboard settings. In managed mode, set them with `HEMMELIG_DEFAULT_MAX_VIEWS`, `HEMMELIG_INSTANCE_LOGO_DARK` and `HEMMELIG_DEFAULT_THEME`. See [Managed Mode](./managed.md).
 
 ## Security Settings
 
@@ -40,10 +47,10 @@ Complete reference for all environment variables supported by Hemmelig.
 
 ## Analytics
 
-| Variable                         | Description                             | Default        |
-| -------------------------------- | --------------------------------------- | -------------- |
-| `HEMMELIG_ANALYTICS_ENABLED`     | Enable privacy-focused analytics        | `true`         |
-| `HEMMELIG_ANALYTICS_HMAC_SECRET` | HMAC secret for anonymizing visitor IDs | auto-generated |
+| Variable                         | Description                             | Default         |
+| -------------------------------- | --------------------------------------- | --------------- |
+| `HEMMELIG_ANALYTICS_ENABLED`     | Enable privacy-focused analytics        | `true`          |
+| `HEMMELIG_ANALYTICS_HMAC_SECRET` | HMAC secret for anonymizing visitor IDs | instance secret |
 
 ## Social Login Providers
 
@@ -103,9 +110,10 @@ See [Social Login Documentation](./social-login.md) for detailed setup instructi
 
 Hemmelig supports any OAuth 2.0 / OpenID Connect provider through generic OAuth configuration.
 
-| Variable                      | Description                                                                                                  |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `HEMMELIG_AUTH_GENERIC_OAUTH` | JSON array of generic OAuth provider configurations. See [Social Login docs](./social-login.md) for details. |
+| Variable                       | Description                                                                                                                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HEMMELIG_AUTH_GENERIC_OAUTH`  | JSON array of generic OAuth provider configurations. See [Social Login docs](./social-login.md) for details.                                                                                 |
+| `HEMMELIG_HIDE_PASSWORD_LOGIN` | Hide the username and password form on the login page when a social provider is enabled. `/login?showLogin=true` shows it again. The server still accepts password sign-in. Default: `false` |
 
 **Example**:
 

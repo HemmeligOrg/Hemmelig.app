@@ -2,8 +2,8 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { etag, RETAINED_304_HEADERS } from 'hono/etag';
+import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import { timeout } from 'hono/timeout';
@@ -14,8 +14,10 @@ import { auth } from './auth';
 import config from './config';
 import startJobs from './jobs';
 import prisma from './lib/db';
+import { enforceBodyLimit } from './middlewares/body-limit';
 import ratelimit from './middlewares/ratelimit';
 import routes from './routes';
+import { MAX_ENCRYPTED_SIZE } from './validations/secrets';
 
 // Initialize Hono app
 const app = new Hono<{
@@ -71,7 +73,7 @@ startJobs();
 // Add the middlewares
 // More middlewares can be found here:
 // https://hono.dev/docs/middleware/builtin/basic-auth
-app.use(async (c, next) => {
+export const securityHeadersMiddleware = createMiddleware(async (c, next) => {
     // Skip CSP for Swagger UI docs page (it loads scripts/styles from cdn.jsdelivr.net)
     if (c.req.path.endsWith('/api/docs')) {
         return next();
@@ -96,9 +98,49 @@ app.use(async (c, next) => {
         },
     })(c, next);
 });
-app.use(logger());
+app.use(securityHeadersMiddleware);
+app.use(async (c, next) => {
+    // Log only the pathname. Query strings can carry access tokens.
+    const method = c.req.method;
+    const path = new URL(c.req.url).pathname;
+    console.log(`<-- ${method} ${path}`);
+    const start = Date.now();
+    await next();
+    console.log(`--> ${method} ${path} ${c.res.status} ${Date.now() - start}ms`);
+});
 app.use(trimTrailingSlash());
 app.use(`/*`, requestId());
+
+// Reject oversized request bodies before any parser reads them. The JSON
+// representation of encrypted byte arrays is much larger than the raw bytes,
+// so secret payload routes get a larger cap. File uploads apply a tighter
+// limit based on the instance setting.
+const SMALL_BODY_LIMIT = 1024 * 1024;
+const LARGE_JSON_BODY_LIMIT = MAX_ENCRYPTED_SIZE * 16 + 128 * 1024;
+const largeBodyPaths = [
+    /^\/(?:api\/)?secrets\/?$/,
+    /^\/(?:api\/)?secret-requests\/[^/]+\/submit\/?$/,
+    /^\/(?:api\/)?files\/?$/,
+];
+app.use('*', async (c, next) => {
+    // Raw file uploads stream to disk, and the files route checks the size
+    // against the instance limit before and while it reads the body. Multipart
+    // uploads are parsed in memory, so they keep this cap.
+    const isRawFileUpload =
+        c.req.method === 'POST' &&
+        /^\/(?:api\/)?files\/?$/.test(c.req.path) &&
+        (c.req.header('content-type') ?? '').toLowerCase().startsWith('application/octet-stream');
+
+    if (isRawFileUpload) {
+        return next();
+    }
+
+    const isLargeBodyPath = largeBodyPaths.some((pattern) => pattern.test(c.req.path));
+    const maxSize = isLargeBodyPath ? LARGE_JSON_BODY_LIMIT : SMALL_BODY_LIMIT;
+
+    return enforceBodyLimit(maxSize)(c, next);
+});
+
 const requestTimeout = config.get<number>('server.requestTimeout', 15);
 if (requestTimeout > 0) {
     app.use(`/*`, timeout(requestTimeout * 1000));
@@ -127,6 +169,17 @@ app.use(
 app.use('/*', async (c, next) => {
     // Skip CSRF for auth routes (OAuth callbacks come from external origins)
     if (c.req.path.startsWith('/auth/')) {
+        return next();
+    }
+
+    // CSRF abuses cookies that the browser sends on its own. A request with no
+    // cookie and an API key or a delete token header cannot come from a
+    // cross-site form, because a form cannot set these headers. A CLI sends no
+    // Origin header, so it needs this exemption.
+    const authorization = c.req.header('authorization') ?? '';
+    const hasCliCredential =
+        authorization.startsWith('Bearer hemmelig_') || !!c.req.header('x-hemmelig-delete-token');
+    if (hasCliCredential && !c.req.header('cookie')) {
         return next();
     }
     return csrf({

@@ -124,6 +124,30 @@ const spec = {
                                     type: 'object',
                                     properties: {
                                         providers: { type: 'array', items: { type: 'string' } },
+                                        providerDetails: {
+                                            type: 'array',
+                                            description:
+                                                'The enabled providers with the optional button text and icon. Generic OAuth providers set displayName, label and icon in HEMMELIG_AUTH_GENERIC_OAUTH.',
+                                            items: {
+                                                type: 'object',
+                                                properties: {
+                                                    id: { type: 'string' },
+                                                    generic: { type: 'boolean' },
+                                                    displayName: { type: 'string' },
+                                                    label: { type: 'string' },
+                                                    icon: {
+                                                        type: 'string',
+                                                        description:
+                                                            'Base64 data URI of a PNG, SVG or WebP image',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        hidePasswordLogin: {
+                                            type: 'boolean',
+                                            description:
+                                                'True when HEMMELIG_HIDE_PASSWORD_LOGIN is on and a social provider is enabled. This is a UI option only. The server still accepts password sign-in.',
+                                        },
                                         callbackBaseUrl: { type: 'string' },
                                     },
                                 },
@@ -193,7 +217,14 @@ const spec = {
                             'application/json': {
                                 schema: {
                                     type: 'object',
-                                    properties: { id: { type: 'string' } },
+                                    properties: {
+                                        id: { type: 'string' },
+                                        deleteToken: {
+                                            type: 'string',
+                                            description:
+                                                'Creator delete token. Send it as X-Hemmelig-Delete-Token to burn the secret before anyone reveals it. It is valid until the secret expires. The server shows it only once.',
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -208,7 +239,7 @@ const spec = {
                 tags: ['Secrets'],
                 summary: 'Get a secret',
                 description:
-                    'Retrieve an encrypted secret by ID. Atomically consumes a view and burns the secret if burnable and last view. Password required if secret is password-protected.',
+                    'Retrieve an encrypted secret by ID. Atomically consumes a view and burns the secret if burnable and last view. Send a password verifier if the secret is password-protected.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -217,7 +248,18 @@ const spec = {
                         'application/json': {
                             schema: {
                                 type: 'object',
-                                properties: { password: { type: 'string' } },
+                                properties: {
+                                    passwordVerifier: {
+                                        type: 'string',
+                                        description:
+                                            'Hex-encoded SHA-256 verifier derived from the password on the client',
+                                    },
+                                    password: {
+                                        type: 'string',
+                                        description: 'Raw password for legacy secrets only',
+                                        deprecated: true,
+                                    },
+                                },
                             },
                         },
                     },
@@ -238,9 +280,19 @@ const spec = {
             delete: {
                 tags: ['Secrets'],
                 summary: 'Delete a secret',
-                description: 'Manually burn/delete a secret',
+                description:
+                    'Burn a secret. Send a delete token from the create response or from a successful retrieval, or authenticate as the owner of the secret with a session or an API key.',
+                security: [{}, { cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                    {
+                        name: 'X-Hemmelig-Delete-Token',
+                        in: 'header',
+                        required: false,
+                        schema: { type: 'string' },
+                        description:
+                            'Delete token from the create response or from a retrieval. Not needed when the owner is authenticated.',
+                    },
                 ],
                 responses: {
                     '200': {
@@ -256,6 +308,9 @@ const spec = {
                                 },
                             },
                         },
+                    },
+                    '403': {
+                        description: 'No valid delete token, and the caller is not the owner',
                     },
                     '404': { description: 'Secret not found' },
                 },
@@ -277,9 +332,22 @@ const spec = {
                                 schema: {
                                     type: 'object',
                                     properties: {
-                                        views: { type: 'integer' },
+                                        views: {
+                                            type: 'integer',
+                                            nullable: true,
+                                            description:
+                                                'Views left. Null means no view limit until the secret expires.',
+                                        },
                                         title: { type: 'string', nullable: true },
                                         isPasswordProtected: { type: 'boolean' },
+                                        passwordScheme: {
+                                            type: 'string',
+                                            nullable: true,
+                                            enum: ['derived', 'legacy', null],
+                                            description:
+                                                'Derived secrets accept a client-derived verifier. Legacy secrets require the raw password.',
+                                        },
+                                        salt: { type: 'string', nullable: true },
                                     },
                                 },
                             },
@@ -456,11 +524,19 @@ const spec = {
                         schema: { type: 'string', format: 'uuid' },
                     },
                     {
+                        name: 'X-Secret-Request-Token',
+                        in: 'header',
+                        required: false,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description:
+                            'Request token from the creator link fragment. Legacy links may pass token in the query instead.',
+                    },
+                    {
                         name: 'token',
                         in: 'query',
-                        required: true,
+                        required: false,
                         schema: { type: 'string', minLength: 64, maxLength: 64 },
-                        description: 'Request token from the creator link',
+                        description: 'Legacy request token from the creator link',
                     },
                 ],
                 responses: {
@@ -498,11 +574,19 @@ const spec = {
                         schema: { type: 'string', format: 'uuid' },
                     },
                     {
+                        name: 'X-Secret-Request-Token',
+                        in: 'header',
+                        required: false,
+                        schema: { type: 'string', minLength: 64, maxLength: 64 },
+                        description:
+                            'Request token from the creator link fragment. Legacy links may pass token in the query instead.',
+                    },
+                    {
                         name: 'token',
                         in: 'query',
-                        required: true,
+                        required: false,
                         schema: { type: 'string', minLength: 64, maxLength: 64 },
-                        description: 'Request token from the creator link',
+                        description: 'Legacy request token from the creator link',
                     },
                 ],
                 requestBody: {
@@ -560,15 +644,35 @@ const spec = {
             post: {
                 tags: ['Files'],
                 summary: 'Upload a file',
-                description: 'Upload an encrypted file to attach to a secret',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                description:
+                    'Upload an encrypted file to attach to a secret. Send the encrypted bytes as `application/octet-stream` with a `Content-Length` and the hex-encoded encrypted file name in `X-Hemmelig-File-Name`. The server streams this body to disk. The `multipart/form-data` form is still supported, but the server holds that body in memory, so use it only for small files.',
+                parameters: [
+                    {
+                        name: 'X-Hemmelig-File-Name',
+                        in: 'header',
+                        required: false,
+                        description:
+                            'Hex-encoded encrypted file name. Required for `application/octet-stream` uploads.',
+                        schema: { type: 'string' },
+                    },
+                ],
                 requestBody: {
                     required: true,
                     content: {
+                        'application/octet-stream': {
+                            schema: { type: 'string', format: 'binary' },
+                        },
                         'multipart/form-data': {
                             schema: {
                                 type: 'object',
                                 properties: {
                                     file: { type: 'string', format: 'binary' },
+                                    name: {
+                                        type: 'string',
+                                        description:
+                                            'Hex-encoded encrypted filename. Legacy clients may omit it.',
+                                    },
                                 },
                             },
                         },
@@ -581,12 +685,20 @@ const spec = {
                             'application/json': {
                                 schema: {
                                     type: 'object',
-                                    properties: { id: { type: 'string' } },
+                                    properties: {
+                                        id: { type: 'string' },
+                                        token: {
+                                            type: 'string',
+                                            description:
+                                                'Upload capability. Send it with the file id when you create the secret. It is valid for 1 hour.',
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
                     '400': { description: 'Invalid file' },
+                    '411': { description: 'A raw upload has no Content-Length' },
                     '413': { description: 'File too large' },
                 },
             },
@@ -595,9 +707,16 @@ const spec = {
             get: {
                 tags: ['Files'],
                 summary: 'Download a file',
-                description: 'Download an encrypted file by ID',
+                description:
+                    'Download an encrypted file. Requires the download capability token returned when the secret is retrieved.',
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                    {
+                        name: 'X-Hemmelig-File-Token',
+                        in: 'header',
+                        required: true,
+                        schema: { type: 'string' },
+                    },
                 ],
                 responses: {
                     '200': {
@@ -612,7 +731,7 @@ const spec = {
             get: {
                 tags: ['Account'],
                 summary: 'Get account info',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': {
                         description: 'Account information',
@@ -621,8 +740,11 @@ const spec = {
                                 schema: {
                                     type: 'object',
                                     properties: {
+                                        id: { type: 'string' },
                                         username: { type: 'string' },
                                         email: { type: 'string' },
+                                        role: { type: 'string', enum: ['user', 'admin'] },
+                                        twoFactorEnabled: { type: 'boolean' },
                                     },
                                 },
                             },
@@ -634,7 +756,7 @@ const spec = {
             put: {
                 tags: ['Account'],
                 summary: 'Update account info',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -658,10 +780,14 @@ const spec = {
             delete: {
                 tags: ['Account'],
                 summary: 'Delete account',
+                description:
+                    'Needs a signed-in session. A request with an API key gets 403, so a leaked key cannot change credentials.',
                 security: [{ cookieAuth: [] }],
+                'x-session-only': true,
                 responses: {
                     '200': { description: 'Account deleted' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/SessionOnly' },
                 },
             },
         },
@@ -669,7 +795,10 @@ const spec = {
             put: {
                 tags: ['Account'],
                 summary: 'Update password',
+                description:
+                    'Needs a signed-in session. A request with an API key gets 403, so a leaked key cannot change credentials.',
                 security: [{ cookieAuth: [] }],
+                'x-session-only': true,
                 requestBody: {
                     required: true,
                     content: {
@@ -689,6 +818,7 @@ const spec = {
                     '200': { description: 'Password updated' },
                     '400': { description: 'Invalid current password' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/SessionOnly' },
                 },
             },
         },
@@ -697,7 +827,7 @@ const spec = {
                 tags: ['API Keys'],
                 summary: 'List API keys',
                 description: 'Get all API keys for the authenticated user',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': {
                         description: 'List of API keys',
@@ -716,8 +846,10 @@ const spec = {
             post: {
                 tags: ['API Keys'],
                 summary: 'Create API key',
-                description: 'Create a new API key. The full key is only shown once upon creation.',
+                description:
+                    'Create a new API key. The full key is only shown once upon creation. Needs a signed-in session. A request with an API key gets 403, so a leaked key cannot change credentials.',
                 security: [{ cookieAuth: [] }],
+                'x-session-only': true,
                 requestBody: {
                     required: true,
                     content: {
@@ -758,6 +890,7 @@ const spec = {
                     },
                     '400': { description: 'Maximum API key limit reached (5)' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/SessionOnly' },
                 },
             },
         },
@@ -765,7 +898,7 @@ const spec = {
             delete: {
                 tags: ['API Keys'],
                 summary: 'Delete API key',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -796,7 +929,7 @@ const spec = {
             get: {
                 tags: ['Instance'],
                 summary: 'Get all instance settings (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': {
                         description: 'Instance settings',
@@ -813,7 +946,7 @@ const spec = {
             put: {
                 tags: ['Instance'],
                 summary: 'Update instance settings (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -826,6 +959,10 @@ const spec = {
                     '200': { description: 'Settings updated' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
                     '403': { $ref: '#/components/responses/Forbidden' },
+                    '409': {
+                        description:
+                            'An environment variable controls a setting in the request, and the value differs',
+                    },
                 },
             },
         },
@@ -833,7 +970,7 @@ const spec = {
             get: {
                 tags: ['Analytics'],
                 summary: 'Get secret analytics (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     {
                         name: 'timeRange',
@@ -878,7 +1015,7 @@ const spec = {
             get: {
                 tags: ['Analytics'],
                 summary: 'Get visitor analytics (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': { description: 'Visitor data' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
@@ -890,7 +1027,7 @@ const spec = {
             get: {
                 tags: ['Analytics'],
                 summary: 'Get unique visitor analytics (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': { description: 'Unique visitor data' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
@@ -902,7 +1039,7 @@ const spec = {
             get: {
                 tags: ['Analytics'],
                 summary: 'Get daily visitor stats (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': { description: 'Daily visitor statistics' },
                     '401': { $ref: '#/components/responses/Unauthorized' },
@@ -914,7 +1051,7 @@ const spec = {
             get: {
                 tags: ['Invites'],
                 summary: 'List invite codes (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 responses: {
                     '200': {
                         description: 'List of invite codes',
@@ -934,7 +1071,7 @@ const spec = {
             post: {
                 tags: ['Invites'],
                 summary: 'Create invite code (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -972,7 +1109,7 @@ const spec = {
             delete: {
                 tags: ['Invites'],
                 summary: 'Deactivate invite code (admin)',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -1006,36 +1143,18 @@ const spec = {
                             'application/json': {
                                 schema: {
                                     type: 'object',
-                                    properties: { valid: { type: 'boolean' } },
+                                    properties: {
+                                        id: { type: 'string' },
+                                        token: {
+                                            type: 'string',
+                                            description:
+                                                'Upload capability token required to attach the file to a secret',
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
-                    '400': { description: 'Invalid invite code' },
-                },
-            },
-        },
-        '/invites/public/use': {
-            post: {
-                tags: ['Invites'],
-                summary: 'Use invite code',
-                requestBody: {
-                    required: true,
-                    content: {
-                        'application/json': {
-                            schema: {
-                                type: 'object',
-                                required: ['code', 'userId'],
-                                properties: {
-                                    code: { type: 'string' },
-                                    userId: { type: 'string' },
-                                },
-                            },
-                        },
-                    },
-                },
-                responses: {
-                    '200': { description: 'Invite code used' },
                     '400': { description: 'Invalid invite code' },
                 },
             },
@@ -1045,7 +1164,7 @@ const spec = {
                 tags: ['Users'],
                 summary: 'List users (admin)',
                 description: 'Get paginated list of users with optional search',
-                security: [{ cookieAuth: [] }],
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     {
                         name: 'page',
@@ -1089,12 +1208,51 @@ const spec = {
                     '403': { $ref: '#/components/responses/Forbidden' },
                 },
             },
+            post: {
+                tags: ['Users'],
+                summary: 'Create a user (admin)',
+                description:
+                    'Create a user with a password. The password policy applies. Registration settings do not apply to users that an admin creates.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['username', 'email', 'password'],
+                                properties: {
+                                    username: { type: 'string', minLength: 3, maxLength: 50 },
+                                    email: { type: 'string', format: 'email' },
+                                    password: { type: 'string', minLength: 8 },
+                                    name: { type: 'string' },
+                                    role: { type: 'string', enum: ['user', 'admin'] },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '201': {
+                        description: 'User created',
+                        content: {
+                            'application/json': { schema: { $ref: '#/components/schemas/User' } },
+                        },
+                    },
+                    '400': { description: 'Invalid input or weak password' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '409': { description: 'Username or email already exists' },
+                },
+            },
         },
         '/user/{id}': {
             put: {
                 tags: ['Users'],
-                summary: 'Update user (admin)',
-                security: [{ cookieAuth: [] }],
+                summary: 'Update a user (admin)',
+                description:
+                    'Change the username, email or role. An admin cannot remove their own admin role.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
                 ],
@@ -1107,6 +1265,7 @@ const spec = {
                                 properties: {
                                     username: { type: 'string' },
                                     email: { type: 'string', format: 'email' },
+                                    role: { type: 'string', enum: ['user', 'admin'] },
                                 },
                             },
                         },
@@ -1116,13 +1275,118 @@ const spec = {
                     '200': {
                         description: 'User updated',
                         content: {
-                            'application/json': {
-                                schema: { $ref: '#/components/schemas/User' },
+                            'application/json': { schema: { $ref: '#/components/schemas/User' } },
+                        },
+                    },
+                    '400': { description: 'Invalid input or a change to your own role' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                },
+            },
+            delete: {
+                tags: ['Users'],
+                summary: 'Delete a user (admin)',
+                description:
+                    'Delete a user, their sessions, API keys and secret requests. Their secrets stay until they expire. An admin cannot delete their own account here.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': { description: 'User deleted' },
+                    '400': { description: 'You tried to delete your own account' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'User not found' },
+                },
+            },
+        },
+        '/user/{id}/ban': {
+            post: {
+                tags: ['Users'],
+                summary: 'Ban a user (admin)',
+                description:
+                    'Ban a user and end all their sessions. Their API keys stop working at once. Without expiresInSeconds, the ban has no end.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    reason: { type: 'string', maxLength: 500 },
+                                    expiresInSeconds: { type: 'integer', minimum: 60 },
+                                },
                             },
+                        },
+                    },
+                },
+                responses: {
+                    '200': {
+                        description: 'User banned',
+                        content: {
+                            'application/json': { schema: { $ref: '#/components/schemas/User' } },
+                        },
+                    },
+                    '400': { description: 'You tried to ban yourself' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'User not found' },
+                },
+            },
+        },
+        '/user/{id}/unban': {
+            post: {
+                tags: ['Users'],
+                summary: 'Unban a user (admin)',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                responses: {
+                    '200': {
+                        description: 'User unbanned',
+                        content: {
+                            'application/json': { schema: { $ref: '#/components/schemas/User' } },
                         },
                     },
                     '401': { $ref: '#/components/responses/Unauthorized' },
                     '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'User not found' },
+                },
+            },
+        },
+        '/user/{id}/password': {
+            put: {
+                tags: ['Users'],
+                summary: 'Set the password of a user (admin)',
+                description:
+                    'Set a new password. The password policy applies. A user with only social logins gets a password login.',
+                security: [{ cookieAuth: [] }, { bearerAuth: [] }],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['password'],
+                                properties: { password: { type: 'string', minLength: 8 } },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': { description: 'Password set' },
+                    '400': { description: 'Weak password' },
+                    '401': { $ref: '#/components/responses/Unauthorized' },
+                    '403': { $ref: '#/components/responses/Forbidden' },
+                    '404': { description: 'User not found' },
                 },
             },
         },
@@ -1230,7 +1494,8 @@ const spec = {
             bearerAuth: {
                 type: 'http',
                 scheme: 'bearer',
-                description: 'API key authentication. Use your API key as the bearer token.',
+                description:
+                    'API key authentication. Send `Authorization: Bearer hemmelig_...`. A key acts with the role of its owner, so an admin key can use the admin routes. Changing the password, deleting the account and creating API keys need a signed-in session.',
             },
             metricsAuth: {
                 type: 'http',
@@ -1335,7 +1600,11 @@ const spec = {
                     id: { type: 'string' },
                     createdAt: { type: 'string', format: 'date-time' },
                     expiresAt: { type: 'string', format: 'date-time' },
-                    views: { type: 'integer' },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        description: 'Views left. Null means no view limit.',
+                    },
                     isPasswordProtected: { type: 'boolean' },
                     ipRange: { type: 'string', nullable: true },
                     isBurnable: { type: 'boolean' },
@@ -1349,11 +1618,20 @@ const spec = {
                     secret: { type: 'string', description: 'Encrypted secret content (base64)' },
                     title: { type: 'string', nullable: true },
                     salt: { type: 'string' },
-                    views: { type: 'integer' },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        description: 'Views left after this reveal. Null means no view limit.',
+                    },
                     expiresAt: { type: 'string', format: 'date-time' },
                     createdAt: { type: 'string', format: 'date-time' },
                     isBurnable: { type: 'boolean' },
                     ipRange: { type: 'string', nullable: true },
+                    deleteToken: {
+                        type: 'string',
+                        description:
+                            'Capability token that allows deleting the secret after reading it',
+                    },
                     files: {
                         type: 'array',
                         items: {
@@ -1361,6 +1639,11 @@ const spec = {
                             properties: {
                                 id: { type: 'string' },
                                 filename: { type: 'string' },
+                                token: {
+                                    type: 'string',
+                                    description:
+                                        'Short-lived download capability token for this file',
+                                },
                             },
                         },
                     },
@@ -1393,13 +1676,30 @@ const spec = {
                         example: { '0': 78, '1': 111, '2': 116, '3': 101 },
                     },
                     salt: { type: 'string', description: 'Salt used for encryption' },
-                    password: { type: 'string', description: 'Optional password protection' },
+                    passwordVerifier: {
+                        type: 'string',
+                        description:
+                            'Hex-encoded SHA-256 verifier derived from the password on the client. The password never leaves the browser.',
+                    },
                     expiresAt: {
                         type: 'integer',
                         description: 'Expiration time in seconds from now',
                     },
-                    views: { type: 'integer', default: 1, description: 'Number of allowed views' },
-                    isBurnable: { type: 'boolean', default: false },
+                    views: {
+                        type: 'integer',
+                        nullable: true,
+                        minimum: 1,
+                        maximum: 9999,
+                        default: 1,
+                        description:
+                            'Number of allowed views. Null removes the view limit, so the secret lives until it expires.',
+                    },
+                    isBurnable: {
+                        type: 'boolean',
+                        default: true,
+                        description:
+                            'When true, the last view sends the secret.burned webhook event instead of secret.viewed.',
+                    },
                     ipRange: {
                         type: 'string',
                         nullable: true,
@@ -1408,7 +1708,21 @@ const spec = {
                     fileIds: {
                         type: 'array',
                         items: { type: 'string' },
-                        description: 'IDs of uploaded files to attach',
+                        description: 'Deprecated. Use files instead.',
+                        deprecated: true,
+                    },
+                    files: {
+                        type: 'array',
+                        maxItems: 20,
+                        items: {
+                            type: 'object',
+                            required: ['id', 'token'],
+                            properties: {
+                                id: { type: 'string' },
+                                token: { type: 'string' },
+                            },
+                        },
+                        description: 'Signed file attachments',
                     },
                 },
             },
@@ -1427,8 +1741,24 @@ const spec = {
                 properties: {
                     instanceName: { type: 'string' },
                     instanceDescription: { type: 'string' },
+                    instanceLogo: { type: 'string', description: 'Base64 data URL of the logo' },
+                    instanceLogoDark: {
+                        type: 'string',
+                        description: 'Base64 data URL of the logo for the dark theme',
+                    },
+                    defaultTheme: {
+                        type: 'string',
+                        enum: ['light', 'dark', 'system'],
+                        description: 'Theme for visitors who have not chosen one',
+                    },
                     allowRegistration: { type: 'boolean' },
                     defaultSecretExpiration: { type: 'integer' },
+                    defaultMaxViews: {
+                        type: 'integer',
+                        minimum: 1,
+                        maximum: 9999,
+                        description: 'Max views that the composer preselects',
+                    },
                     maxSecretSize: { type: 'integer' },
                     allowPasswordProtection: { type: 'boolean' },
                     allowIpRestriction: { type: 'boolean' },
@@ -1440,9 +1770,16 @@ const spec = {
                 properties: {
                     instanceName: { type: 'string' },
                     instanceDescription: { type: 'string' },
+                    instanceLogo: { type: 'string', description: 'Base64 data URL of the logo' },
+                    instanceLogoDark: {
+                        type: 'string',
+                        description: 'Base64 data URL of the logo for the dark theme',
+                    },
+                    defaultTheme: { type: 'string', enum: ['light', 'dark', 'system'] },
                     allowRegistration: { type: 'boolean' },
                     requireEmailVerification: { type: 'boolean' },
                     defaultSecretExpiration: { type: 'integer' },
+                    defaultMaxViews: { type: 'integer', minimum: 1, maximum: 9999 },
                     maxSecretSize: { type: 'integer' },
                     allowPasswordProtection: { type: 'boolean' },
                     allowIpRestriction: { type: 'boolean' },
@@ -1464,6 +1801,13 @@ const spec = {
                     metricsSecret: {
                         type: 'string',
                         description: 'Bearer token for authenticating metrics endpoint requests',
+                    },
+                    lockedByEnvironment: {
+                        type: 'object',
+                        additionalProperties: { type: 'string' },
+                        readOnly: true,
+                        description:
+                            'Settings that an environment variable controls outside managed mode, mapped to the variable name. An update with a different value for one of these settings returns 409.',
                     },
                 },
             },
@@ -1567,6 +1911,23 @@ const spec = {
                         schema: {
                             type: 'object',
                             properties: { error: { type: 'string' } },
+                        },
+                    },
+                },
+            },
+            SessionOnly: {
+                description:
+                    'Forbidden - this action needs a signed-in session. API keys cannot change credentials.',
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                error: {
+                                    type: 'string',
+                                    example: 'This action requires a signed-in session.',
+                                },
+                            },
                         },
                     },
                 },

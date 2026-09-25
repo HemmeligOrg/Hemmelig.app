@@ -1,168 +1,237 @@
-import { Check, Copy, Eye, EyeOff, Plus } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { api } from '../lib/api';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { useSecretStore } from '../store/secretStore';
+import { useThemeStore } from '../store/themeStore';
+import { useUserStore } from '../store/userStore';
 import { copyToClipboard as copyText } from '../utils/clipboard';
-import { Card } from './Card';
+import { Button } from './Button';
+import { EXPIRATION_OPTIONS } from './SecuritySettings';
 
+/** The screen after a secret is created: the link, the password, the QR code and the facts. */
 export const SecretSettings = () => {
-    const { secretId, decryptionKey, password, resetSecret } = useSecretStore();
+    const {
+        secretId,
+        decryptionKey,
+        password,
+        expiresAt,
+        views,
+        isBurnable,
+        ipRange,
+        fileCount,
+        deleteToken,
+        resetSecret,
+    } = useSecretStore();
     const { t } = useTranslation();
     const { settings: instanceSettings } = useHemmeligStore();
-    const secretUrl = `${window.location.origin}/secret/${secretId}${!password ? `#decryptionKey=${decryptionKey}` : ''}`;
+    const { user } = useUserStore();
+    const { theme } = useThemeStore();
     const [copied, setCopied] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+    const [showQr, setShowQr] = useState(false);
+    const [isBurning, setIsBurning] = useState(false);
+
+    // The short link form carries the key as the whole fragment. Browsers never
+    // send the fragment to the server. Password-protected links carry no key.
+    const linkBase = `${window.location.origin}/s/${secretId}`;
+    const linkFragment = password ? '' : `#${decryptionKey}`;
+    const secretUrl = linkBase + linkFragment;
 
     useEffect(() => {
         if (copied) {
-            const timer = setTimeout(() => setCopied(null), 2000);
+            const timer = setTimeout(() => setCopied(null), 1600);
             return () => clearTimeout(timer);
         }
     }, [copied]);
 
-    const handleCopyToClipboard = async (text: string, field: string) => {
-        const success = await copyText(text);
-        if (success) {
+    const handleCopy = async (text: string, field: string) => {
+        if (await copyText(text)) {
             setCopied(field);
         }
     };
 
     const handleBurnSecret = async () => {
+        if (!secretId) return;
+        setIsBurning(true);
         try {
-            await api.secrets[':id'].$delete({ param: { id: secretId } });
+            // The creator token works for everyone. A signed-in owner can also
+            // delete without it.
+            const response = await api.secrets[':id'].$delete(
+                { param: { id: secretId } },
+                deleteToken ? { headers: { 'x-hemmelig-delete-token': deleteToken } } : {}
+            );
+            if (!response.ok) {
+                throw new Error(`Delete failed with status ${response.status}`);
+            }
             resetSecret();
         } catch (error) {
             console.error('Failed to burn secret:', error);
             toast.error(t('secret_settings.failed_to_burn'));
+        } finally {
+            setIsBurning(false);
         }
     };
 
+    const expiration = EXPIRATION_OPTIONS.find((option) => option.value === expiresAt);
+    const facts = [
+        {
+            label: t('secret_settings.facts.expires'),
+            value: t('secret_settings.facts.expires_in', {
+                duration: expiration
+                    ? t(`expiration.${expiration.key}`)
+                    : t('expiration.default_hours', { hours: Math.round(expiresAt / 3600) }),
+            }),
+        },
+        {
+            label: t('secret_settings.facts.views'),
+            value: isBurnable ? t('secret_settings.facts.burn_at_expiry') : String(views),
+        },
+        {
+            label: t('secret_settings.facts.password'),
+            value: password
+                ? t('secret_settings.facts.password_required')
+                : t('secret_settings.facts.none'),
+        },
+        {
+            label: t('secret_settings.facts.ip'),
+            value: ipRange || t('secret_settings.facts.any_ip'),
+        },
+        { label: t('secret_settings.facts.files'), value: String(fileCount) },
+    ];
+
+    const qrColors =
+        theme === 'dark' ? { bg: '#14181d', fg: '#e6e8ea' } : { bg: '#ffffff', fg: '#14171b' };
+
     return (
-        <Card className="mt-6">
-            {/* Success header */}
-            <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 dark:bg-green-500/20 mb-4">
-                    <Check className="w-8 h-8 text-green-500" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <main className="max-w-content mx-auto px-6 py-12 grid gap-5">
+            <div className="flex items-center gap-3">
+                <span aria-hidden="true" className="w-2.5 h-2.5 bg-accent" />
+                <h1 className="m-0 text-2xl font-medium tracking-tight">
                     {t('secret_settings.secret_created_title')}
-                </h2>
-                <p className="text-gray-500 dark:text-slate-400 mt-2 max-w-md mx-auto">
-                    {t('secret_settings.secret_created_description')}
-                </p>
+                </h1>
             </div>
 
-            {/* QR Code */}
-            <div className="flex justify-center mb-6">
-                <div className="p-4 bg-slate-800 dark:bg-dark-900 shadow-lg">
-                    <QRCodeCanvas
-                        value={secretUrl}
-                        size={180}
-                        bgColor="#1e293b"
-                        fgColor="#ffffff"
-                    />
+            <div className="border border-line rounded-md bg-surface overflow-hidden">
+                <div
+                    data-testid="secret-url"
+                    className="p-5.5 font-mono text-body leading-relaxed break-all"
+                >
+                    <span>{linkBase}</span>
+                    <span className="text-accent">{linkFragment}</span>
                 </div>
-            </div>
 
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
-                        {t('secret_settings.secret_url_label')}
-                    </label>
-                    <div className="relative group">
-                        <input
-                            type="text"
-                            readOnly
-                            value={secretUrl}
-                            className="w-full pl-4 pr-12 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30 transition-all duration-200 text-sm"
-                        />
-                        <button
-                            onClick={() => handleCopyToClipboard(secretUrl, 'url')}
-                            className="absolute inset-y-0 right-0 flex items-center pr-4 transition-transform duration-200 hover:scale-110"
-                        >
-                            {copied === 'url' ? (
-                                <Check className="h-5 w-5 text-green-500" />
-                            ) : (
-                                <Copy className="h-5 w-5 text-gray-400 dark:text-slate-400 hover:text-teal-500 dark:hover:text-teal-400" />
-                            )}
-                        </button>
-                    </div>
-                </div>
                 {password && (
-                    <div>
-                        <label className="block text-sm font-medium text-gray-600 dark:text-slate-300 mb-2">
+                    <div className="flex flex-wrap gap-3 items-center px-5.5 py-3 border-t border-line-soft">
+                        <span className="w-20 text-ui text-muted">
                             {t('secret_settings.password_label')}
-                        </label>
-                        <div className="relative">
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                readOnly
-                                value={password}
-                                className="w-full pl-4 pr-24 py-3 bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-500/50 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30 transition-all duration-200 text-sm"
-                            />
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-4 space-x-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-white transition-colors duration-200"
-                                >
-                                    {showPassword ? (
-                                        <EyeOff className="h-5 w-5" />
-                                    ) : (
-                                        <Eye className="h-5 w-5" />
-                                    )}
-                                </button>
-                                <button
-                                    onClick={() => handleCopyToClipboard(password, 'password')}
-                                    className="transition-transform duration-200 hover:scale-110"
-                                >
-                                    {copied === 'password' ? (
-                                        <Check className="h-5 w-5 text-green-500" />
-                                    ) : (
-                                        <Copy className="h-5 w-5 text-gray-400 dark:text-slate-400 hover:text-teal-500 dark:hover:text-teal-400" />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
+                        </span>
+                        <span className="flex-1 min-w-0 font-mono text-sm break-all">
+                            {showPassword ? password : '•'.repeat(Math.max(5, password.length))}
+                        </span>
+                        <Button
+                            variant="ghost"
+                            size="inline"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword
+                                ? t('secret_settings.hide_password')
+                                : t('secret_settings.show_password')}
+                        </Button>
+                        <Button
+                            variant="link"
+                            size="inline"
+                            onClick={() => handleCopy(password, 'password')}
+                        >
+                            {copied === 'password' ? t('common.copied') : t('common.copy')}
+                        </Button>
                     </div>
+                )}
+
+                {showQr && (
+                    <div className="flex flex-wrap gap-5 items-center p-5.5 border-t border-line-soft">
+                        <div className="p-2 border border-line rounded-sm bg-surface">
+                            <QRCodeCanvas
+                                value={secretUrl}
+                                size={150}
+                                bgColor={qrColors.bg}
+                                fgColor={qrColors.fg}
+                                title={t('secret_settings.qr_title')}
+                            />
+                        </div>
+                        <p className="m-0 max-w-70 text-ui text-muted">
+                            {t('secret_settings.qr_description')}
+                        </p>
+                    </div>
+                )}
+
+                <div className="flex flex-wrap gap-2.5 p-3 border-t border-line-soft">
+                    <Button
+                        variant="primary"
+                        className="px-4 py-2.25"
+                        onClick={() => handleCopy(secretUrl, 'url')}
+                    >
+                        {copied === 'url'
+                            ? t('common.copied')
+                            : t('secret_settings.copy_url_button')}
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        className="py-2.25"
+                        onClick={() => setShowQr(!showQr)}
+                        aria-expanded={showQr}
+                    >
+                        {showQr ? t('secret_settings.hide_qr') : t('secret_settings.show_qr')}
+                    </Button>
+                    <Button
+                        variant="danger"
+                        className="ml-auto py-2.25"
+                        onClick={handleBurnSecret}
+                        loading={isBurning}
+                    >
+                        {t('secret_settings.burn_secret_button')}
+                    </Button>
+                </div>
+            </div>
+
+            <dl className="m-0 grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-px bg-line-soft border border-line-soft rounded-md overflow-hidden">
+                {facts.map((fact) => (
+                    <div key={fact.label} className="px-4 py-3.5 bg-canvas">
+                        <dt className="text-xs text-muted">{fact.label}</dt>
+                        <dd className="m-0 font-mono text-sm break-all">{fact.value}</dd>
+                    </div>
+                ))}
+            </dl>
+
+            {password && (
+                <p className="m-0 text-sm text-warn">{t('secret_settings.password_warning')}</p>
+            )}
+
+            <div className="flex flex-wrap gap-5 text-sm">
+                <button
+                    type="button"
+                    onClick={resetSecret}
+                    className="text-accent hover:underline cursor-pointer"
+                >
+                    {t('secret_settings.create_new_secret_button')}
+                </button>
+                {user && (
+                    <Link to="/dashboard" className="text-muted hover:text-fg">
+                        {t('secret_settings.your_secrets')}
+                    </Link>
                 )}
             </div>
 
-            {/* Action buttons */}
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-600 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <button
-                    onClick={resetSecret}
-                    className="w-full sm:w-auto inline-flex items-center gap-2 justify-center bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-                >
-                    <Plus className="h-4 w-4" />
-                    {t('secret_settings.create_new_secret_button')}
-                </button>
-                <div className="w-full sm:w-auto flex gap-3">
-                    <button
-                        onClick={() => handleCopyToClipboard(secretUrl, 'url')}
-                        className="flex-1 sm:flex-none px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-white text-sm font-medium transition-all duration-200"
-                    >
-                        {t('secret_settings.copy_url_button')}
-                    </button>
-                    <button
-                        onClick={handleBurnSecret}
-                        className="flex-1 sm:flex-none px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-medium transition-all duration-200"
-                    >
-                        {t('secret_settings.burn_secret_button')}
-                    </button>
-                </div>
-            </div>
             {instanceSettings?.maxSecretsPerUser && (
-                <p className="text-gray-500 dark:text-slate-400 text-xs mt-4 text-center">
+                <p className="m-0 text-xs text-faint">
                     {t('secret_settings.max_secrets_per_user_info', {
                         count: instanceSettings.maxSecretsPerUser,
                     })}
                 </p>
             )}
-        </Card>
+        </main>
     );
 };

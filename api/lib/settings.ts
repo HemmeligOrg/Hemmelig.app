@@ -26,13 +26,22 @@ async function getInstanceSettings() {
 /**
  * Resolves instance settings from the appropriate source.
  * In managed mode, returns environment-based settings; otherwise fetches from database.
- * This eliminates the repeated config.isManaged() ternary pattern across routes.
+ * Outside managed mode, a set environment override wins over the database value,
+ * so that enforcement uses the same values that the settings API shows.
  */
 export async function resolveSettings() {
     if (config.isManaged()) {
         return config.getManagedSettings();
     }
-    return getInstanceSettings();
+
+    const settings = await getInstanceSettings();
+    const { values } = config.getEnvironmentOverrides();
+
+    if (!settings || Object.keys(values).length === 0) {
+        return settings;
+    }
+
+    return { ...settings, ...values };
 }
 
 /**

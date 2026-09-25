@@ -9,6 +9,35 @@
             "server": "Server Access",
             "credit_card": "Payment Card",
             "email": "Email Account"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Username",
+            "password": "Password",
+            "url": "URL",
+            "notes": "Notes",
+            "service": "Service",
+            "api_key": "API key",
+            "api_secret": "API secret",
+            "environment": "Environment",
+            "expires": "Expires",
+            "host": "Host",
+            "port": "Port",
+            "database": "Database",
+            "ssl": "SSL",
+            "hostname": "Hostname",
+            "ip_address": "IP address",
+            "ssh_port": "SSH port",
+            "password_or_key": "Password / key",
+            "cardholder_name": "Cardholder name",
+            "card_number": "Card number",
+            "expiry_date": "Expiry date",
+            "cvv": "CVV",
+            "billing_address": "Billing address",
+            "email": "Email",
+            "imap_server": "IMAP server",
+            "smtp_server": "SMTP server",
+            "recovery_email": "Recovery email"
         }
     },
     "editor": {
@@ -19,18 +48,18 @@
             "bold": "Bold",
             "italic": "Italic",
             "strikethrough": "Strikethrough",
-            "inline_code": "Inline Code",
+            "inline_code": "Inline code",
             "link": "Link",
-            "remove_link": "Remove Link",
-            "insert_password": "Insert Password",
+            "remove_link": "Remove link",
+            "insert_password": "Insert password",
             "paragraph": "Paragraph",
             "heading1": "Heading 1",
             "heading2": "Heading 2",
             "heading3": "Heading 3",
-            "bullet_list": "Bullet List",
-            "numbered_list": "Numbered List",
+            "bullet_list": "Bullet list",
+            "numbered_list": "Numbered list",
             "blockquote": "Blockquote",
-            "code_block": "Code Block",
+            "code_block": "Code block",
             "undo": "Undo",
             "redo": "Redo"
         },
@@ -40,7 +69,7 @@
             "base64": "Base64 copied!"
         },
         "link_modal": {
-            "title": "Add Link",
+            "title": "Add link",
             "url_label": "URL",
             "url_placeholder": "Enter URL",
             "cancel": "Cancel",
@@ -48,39 +77,42 @@
             "insert": "Insert"
         },
         "password_modal": {
-            "title": "Generate Password",
-            "length_label": "Password Length",
+            "title": "Generate password",
+            "length_label": "Password length",
             "options_label": "Options",
             "include_numbers": "Numbers",
             "include_symbols": "Symbols",
             "include_uppercase": "Uppercase",
             "include_lowercase": "Lowercase",
-            "generated_password": "Generated Password",
+            "generated_password": "Generated password",
             "refresh": "Refresh",
             "cancel": "Cancel",
             "insert": "Insert",
             "copied_and_added": "Password added and copied to clipboard",
             "added": "Password added"
         },
-        "formatting_tools": "Formatting Tools",
+        "formatting_tools": "Formatting tools",
         "character_count": "characters"
     },
     "create_button": {
-        "creating_secret": "Creating Secret...",
+        "creating_secret": "Creating…",
         "create": "Create"
     },
     "file_upload": {
-        "sign_in_to_upload": "Sign in to upload files",
+        "sign_in_to_upload": "Sign in to attach files",
         "sign_in": "Sign In",
         "drop_files_here": "Drop files here",
         "drag_and_drop": "Drag and drop a file, or click to select a file",
         "uploading": "Uploading...",
         "upload_file": "Upload File",
         "file_too_large": "File \"{{fileName}}\" ({{fileSize}} MB) exceeds the maximum size of {{maxSize}} MB",
-        "max_size_exceeded": "Total file size exceeds the maximum of {{maxSize}} MB"
+        "max_size_exceeded": "Total file size exceeds the maximum of {{maxSize}} MB",
+        "attach": "+ Attach file",
+        "max_size": "max {{size}} MB",
+        "remove": "Remove {{fileName}}"
     },
     "footer": {
-        "tagline": "Hemmelig, [heˈm(ɛ)li], means 'secret' in Norwegian",
+        "tagline": "Hemmelig, [heˈm(ɛ)li], means “secret” in Norwegian",
         "privacy": "Privacy",
         "terms": "Terms",
         "api": "API",
@@ -88,8 +120,8 @@
     },
     "header": {
         "home": "Home",
-        "sign_in": "Sign In",
-        "sign_up": "Sign Up",
+        "sign_in": "Sign in",
+        "sign_up": "Sign up",
         "dashboard": "Dashboard",
         "hero_text_part1": "Share secrets securely with encrypted messages that automatically",
         "hero_text_part2": " self-destruct",
@@ -97,26 +129,51 @@
     },
     "dashboard_layout": {
         "secrets": "Secrets",
-        "secret_requests": "Secret Requests",
+        "secret_requests": "Secret requests",
         "account": "Account",
         "analytics": "Analytics",
         "users": "Users",
         "invites": "Invites",
         "instance": "Instance",
         "sign_out": "Sign out",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ New secret",
+        "workspace": "workspace",
+        "admin": "admin",
+        "open_menu": "Open menu",
+        "close_menu": "Close menu"
     },
     "secret_settings": {
-        "secret_created_title": "Secret Created!",
+        "secret_created_title": "Secret created",
         "secret_created_description": "Your secret is now available at the following URL. Keep your decryption key safe, as it cannot be recovered.",
         "secret_url_label": "Secret URL",
         "decryption_key_label": "Decryption Key",
         "password_label": "Password",
-        "create_new_secret_button": "Create New Secret",
-        "copy_url_button": "Copy URL",
-        "burn_secret_button": "Burn Secret",
+        "create_new_secret_button": "+ New secret",
+        "copy_url_button": "Copy",
+        "burn_secret_button": "Burn now",
         "max_secrets_per_user_info": "You can create up to {{count}} secrets.",
-        "failed_to_burn": "Failed to burn secret. Please try again."
+        "failed_to_burn": "Failed to burn secret. Please try again.",
+        "facts": {
+            "expires": "Expires",
+            "expires_in": "in {{duration}}",
+            "views": "Views",
+            "burn_at_expiry": "burn at expiry",
+            "password": "Password",
+            "password_required": "required",
+            "none": "none",
+            "ip": "IP",
+            "any_ip": "any",
+            "files": "Files"
+        },
+        "show_password": "Show",
+        "hide_password": "Hide",
+        "show_qr": "QR code",
+        "hide_qr": "Hide QR",
+        "qr_title": "QR code of the full link",
+        "qr_description": "Scan to open on another device. Contains the key — treat it like the link.",
+        "password_warning": "The key is derived from the password, so the link alone can't decrypt. Send the password over a different channel.",
+        "your_secrets": "Your secrets"
     },
     "security_settings": {
         "security_title": "Security",
@@ -124,25 +181,26 @@
         "remember_settings": "Remember",
         "private_title": "Private",
         "private_description": "Private secrets are encrypted and can only be viewed with the decryption key, and/or password.",
-        "expiration_title": "Expiration",
+        "expiration_title": "Expires after",
         "expiration_burn_after_time_description": "Set when the secret should be destroyed",
         "expiration_default_description": "Set how long the secret should be available",
         "max_views_title": "Max views",
         "burn_after_time_mode_title": "Burn After Time Mode",
         "burn_after_time_mode_description": "The secret will be destroyed after the time expires, regardless of how many times it's viewed.",
-        "password_protection_title": "Password Protection",
-        "password_protection_description": "Add an additional layer of security with a password",
+        "password_protection_title": "Password",
+        "password_protection_description": "Key derived from a password instead of the link.",
         "enter_password_label": "Enter Password",
-        "password_placeholder": "Enter a secure password...",
-        "password_hint": "Minimum 5 characters. Recipients will need this password to view the secret",
-        "password_error": "Password must be at least 5 characters",
-        "ip_restriction_title": "Restrict by IP or CIDR",
-        "ip_restriction_description": "The CIDR input will allow users to specify IP address ranges that can access the secret.",
+        "password_placeholder": "min. 5 characters",
+        "password_hint": "Recipient needs this too. Send it separately.",
+        "password_error": "Minimum 5 characters.",
+        "ip_restriction_title": "IP restriction",
+        "ip_restriction_description": "Only resolve from an IP or CIDR range.",
         "ip_address_cidr_label": "IP Address or CIDR Range",
-        "ip_address_cidr_placeholder": "192.168.1.0/24 or 203.0.113.5",
+        "ip_address_cidr_placeholder": "203.0.113.7 or 10.0.0.0/24",
         "ip_address_cidr_hint": "Only requests from these IP addresses will be able to access the secret",
-        "burn_after_time_title": "Burn after time expires",
-        "burn_after_time_description": "Burn the secret only after the time expires"
+        "burn_after_time_title": "Burn after time",
+        "burn_after_time_description": "Destroy at expiry. View count is ignored.",
+        "remember_description": "Keep expiry, views and burn for next time (this browser)."
     },
     "title_field": {
         "placeholder": "Title",
@@ -151,16 +209,18 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "views"
+        "views_label": "views",
+        "decrease": "Fewer views",
+        "increase": "More views"
     },
     "account_page": {
-        "title": "Account Settings",
-        "description": "Manage your account preferences and security",
+        "title": "Account",
+        "description": "Profile, security and API access.",
         "tabs": {
             "profile": "Profile",
             "security": "Security",
             "developer": "Developer",
-            "danger_zone": "Danger Zone"
+            "danger_zone": "Danger zone"
         },
         "profile_info": {
             "title": "Profile Information",
@@ -168,31 +228,40 @@
             "first_name_label": "First Name",
             "last_name_label": "Last Name",
             "username_label": "Username",
-            "email_label": "Email Address",
+            "email_label": "Email",
             "saving_button": "Saving...",
-            "save_changes_button": "Save Changes"
+            "save_changes_button": "Save Changes",
+            "username_description": "Used to sign in.",
+            "email_description": "For sign-in and recovery.",
+            "save_button": "Save",
+            "saved": "Profile saved.",
+            "save_error": "Could not save the profile. Try again."
         },
         "profile_settings": {
-            "username_taken": "Username is already taken"
+            "username_taken": "Username is already taken",
+            "email_taken": "Email is already taken"
         },
         "security_settings": {
             "title": "Security Settings",
             "description": "Manage your password and security preferences",
             "change_password_title": "Change Password",
-            "current_password_label": "Current Password",
+            "current_password_label": "Current password",
             "current_password_placeholder": "Enter current password",
-            "new_password_label": "New Password",
+            "new_password_label": "New password",
             "new_password_placeholder": "Enter new password",
-            "confirm_new_password_label": "Confirm New Password",
+            "confirm_new_password_label": "Confirm new password",
             "confirm_new_password_placeholder": "Confirm new password",
             "password_mismatch_alert": "New passwords do not match",
             "changing_password_button": "Changing...",
-            "change_password_button": "Change Password",
+            "change_password_button": "Change password",
             "password_change_success": "Password changed successfully!",
-            "password_change_error": "Failed to change password. Please try again."
+            "password_change_error": "Failed to change password. Please try again.",
+            "new_password_description": "At least 8 characters, with an uppercase letter, a lowercase letter and a number.",
+            "show_password": "Show password",
+            "hide_password": "Hide password"
         },
         "two_factor": {
-            "title": "Two-Factor Authentication",
+            "title": "Two-factor authentication",
             "description": "Add an extra layer of security to your account",
             "enabled": "Enabled",
             "disabled": "Not enabled",
@@ -203,10 +272,10 @@
             "scan_qr_code": "Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.).",
             "manual_entry_hint": "Or manually enter this code in your authenticator app:",
             "enter_verification_code": "Enter the 6-digit code from your authenticator app to verify setup.",
-            "verification_code": "Verification Code",
+            "verification_code": "Verification code",
             "verify_and_enable": "Verify & Enable",
             "back": "Back",
-            "disable_title": "Disable Two-Factor Authentication",
+            "disable_title": "Disable two-factor authentication",
             "disable_warning": "Disabling 2FA will make your account less secure. You'll need to enter your password to confirm.",
             "invalid_password": "Invalid password. Please try again.",
             "invalid_code": "Invalid verification code. Please try again.",
@@ -216,28 +285,38 @@
             "backup_codes_title": "Backup Codes",
             "backup_codes_description": "Save these backup codes in a safe place. You can use them to access your account if you lose access to your authenticator app.",
             "backup_codes_warning": "Each code can only be used once. Store them securely!",
-            "backup_codes_saved": "I've saved my backup codes"
+            "backup_codes_saved": "I've saved my backup codes",
+            "status_on": "On. Sign-in asks for a code from your authenticator.",
+            "status_off": "Off. Add a TOTP authenticator for sign-in.",
+            "enable": "Enable",
+            "disable": "Disable",
+            "scan_and_verify": "Scan with an authenticator app, then enter the 6-digit code.",
+            "verify_button": "Verify",
+            "backup_codes_shown_once": "Backup codes — shown once. Store them somewhere safe."
         },
         "danger_zone": {
             "title": "Danger Zone",
             "description": "Irreversible and destructive actions",
-            "delete_account_title": "Delete Account",
+            "delete_account_title": "Delete account",
             "delete_account_description": "Once you delete your account, there is no going back. This will permanently delete your account, all your secrets, and remove all associated data. This action cannot be undone.",
             "delete_account_bullet1": "All your secrets will be permanently deleted",
             "delete_account_bullet2": "Your account data will be removed from our servers",
             "delete_account_bullet3": "Any shared secret links will become invalid",
             "delete_account_bullet4": "This action cannot be reversed",
             "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone.",
-            "delete_account_button": "Delete Account",
-            "deleting_account_button": "Deleting Account..."
+            "delete_account_button": "Delete account",
+            "deleting_account_button": "Deleting account...",
+            "delete_account_summary": "Removes your account, API keys and every secret you created. Links stop working.",
+            "confirm_placeholder": "type {{username}} to confirm",
+            "delete_error": "Could not delete the account. Try again."
         },
         "developer": {
             "title": "API Keys",
             "description": "Manage API keys for programmatic access",
-            "create_key": "Create Key",
+            "create_key": "Create key",
             "create_key_title": "Create API Key",
-            "key_name": "Key Name",
-            "key_name_placeholder": "e.g., My Integration",
+            "key_name": "Key name",
+            "key_name_placeholder": "Key name, e.g. ci-deploy",
             "expiration": "Expiration",
             "never_expires": "Never expires",
             "expires_30_days": "30 days",
@@ -247,19 +326,25 @@
             "name_required": "Key name is required",
             "create_error": "Failed to create API key",
             "key_created": "API Key Created!",
-            "key_warning": "Copy this key now. You won't be able to see it again.",
+            "key_warning": "Copy now — it won't be shown again.",
             "dismiss": "I've copied the key",
             "no_keys": "No API keys yet. Create one to get started.",
             "created": "Created",
             "last_used": "Last used",
             "expires": "Expires",
             "docs_hint": "Learn how to use API keys in the",
-            "api_docs": "API Documentation"
+            "api_docs": "API documentation",
+            "copy": "Copy",
+            "copied": "Copied",
+            "revoke": "Revoke",
+            "used": "used {{time}}",
+            "never_used": "never used",
+            "expired": "expired"
         }
     },
     "analytics_page": {
         "title": "Analytics",
-        "description": "Track your secret sharing activity and insights",
+        "description": "Instance-wide usage. No content, ever.",
         "time_range": {
             "last_7_days": "Last 7 days",
             "last_14_days": "Last 14 days",
@@ -267,20 +352,21 @@
         },
         "total_secrets": "Total Secrets",
         "from_last_period": "+{{percentage}}% from last period",
-        "total_views": "Total Views",
-        "avg_views_per_secret": "Avg Views/Secret",
-        "active_secrets": "Active Secrets",
+        "total_views": "Total views",
+        "avg_views_per_secret": "Avg. views per secret",
+        "active_secrets": "Active secrets",
         "daily_activity": {
             "title": "Daily Activity",
             "description": "Secrets created and views over time",
             "secrets": "Secrets",
             "views": "Views",
-            "secrets_created": "Secrets Created",
+            "secrets_created": "Secrets created",
             "secret_views": "Secret Views",
             "date": "Date",
             "trend": "Change",
             "vs_previous": "vs previous day",
-            "no_data": "No activity data available yet."
+            "no_data": "No activity data available yet.",
+            "per_day": "per day"
         },
         "locale": "en-US",
         "top_countries": {
@@ -289,18 +375,18 @@
             "views": "views"
         },
         "secret_types": {
-            "title": "Secret Types",
+            "title": "Protection used",
             "description": "Distribution by protection level",
-            "password_protected": "Password Protected",
-            "ip_restricted": "IP Restricted",
-            "burn_after_time": "Burn After Time"
+            "password_protected": "Password protected",
+            "ip_restricted": "IP restricted",
+            "burn_after_time": "Burn after time"
         },
         "expiration_stats": {
-            "title": "Expiration Stats",
+            "title": "Expiration",
             "description": "How long secrets typically last",
-            "one_hour": "1 Hour",
-            "one_day": "1 Day",
-            "one_week_plus": "1 Week+"
+            "one_hour": "1 hour or less",
+            "one_day": "1 hour to 1 day",
+            "one_week_plus": "More than 1 day"
         },
         "visitor_analytics": {
             "title": "Visitor Analytics",
@@ -310,19 +396,34 @@
             "date": "Date",
             "trend": "Change",
             "vs_previous": "vs previous day",
-            "no_data": "No visitor data available yet."
+            "no_data": "No visitor data available yet.",
+            "unique_visitors": "Unique visitors",
+            "page_views": "Page views"
         },
         "secret_requests": {
-            "total": "Secret Requests",
-            "fulfilled": "Fulfilled Requests"
+            "total": "Secret requests",
+            "fulfilled": "Fulfilled requests"
         },
         "loading": "Loading analytics...",
         "no_permission": "You don't have permission to view analytics.",
-        "failed_to_fetch": "Failed to fetch analytics data."
+        "failed_to_fetch": "Failed to fetch analytics data.",
+        "range": {
+            "label": "Time range",
+            "7d": "7d",
+            "14d": "14d",
+            "30d": "30d"
+        },
+        "chart": {
+            "keyboard_hint": "Use the left and right arrow keys to read the value of each day."
+        },
+        "daily_table": {
+            "show": "Show daily numbers",
+            "hide": "Hide daily numbers"
+        }
     },
     "instance_page": {
-        "title": "Instance Settings",
-        "description": "Configure your Hemmelig instance",
+        "title": "Instance",
+        "description": "Settings for everyone on this instance.",
         "managed_mode": {
             "title": "Managed Mode",
             "description": "This instance is managed via environment variables. Settings are read-only."
@@ -347,7 +448,7 @@
             "description": "Basic instance configuration",
             "instance_name_label": "Instance Name",
             "logo_label": "Instance Logo",
-            "logo_upload": "Upload Logo",
+            "logo_upload": "Upload logo",
             "logo_remove": "Remove logo",
             "logo_hint": "PNG, JPEG, GIF, SVG, or WebP. Max 512KB.",
             "logo_alt": "Instance logo",
@@ -366,11 +467,10 @@
             "email_verification_description": "Require email verification"
         },
         "saving_button": "Saving...",
-        "save_settings_button": "Save Settings",
+        "save_settings_button": "Save",
         "security_settings": {
             "title": "Security Settings",
             "description": "Configure security and access controls",
-
             "rate_limiting_title": "Rate Limiting",
             "rate_limiting_description": "Enable request rate limiting",
             "max_password_attempts_label": "Max Password Attempts",
@@ -415,17 +515,146 @@
             "restart_service_button": "Restart Service",
             "clear_cache_button": "Clear Cache",
             "export_logs_button": "Export Logs"
-        }
+        },
+        "managed_notice": "Managed mode — settings come from environment variables and are read-only here.",
+        "note_default": "Changes apply to new secrets.",
+        "note_managed": "Read-only in managed mode.",
+        "headings": {
+            "secret_options": "Secret options",
+            "rate_limiting": "Rate limiting"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "s"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "Instance name",
+                "description": "Shown next to the logo and in the page title."
+            },
+            "logo": {
+                "label": "Logo"
+            },
+            "instance_description": {
+                "label": "Description",
+                "description": "Shown on the home page."
+            },
+            "important_message": {
+                "label": "Important message",
+                "description": "Banner on every public page. Supports Markdown. Empty hides it.",
+                "placeholder": "Maintenance Sunday 02:00 UTC"
+            },
+            "default_expiration": {
+                "label": "Default expiration",
+                "description": "Preselected when creating a secret.",
+                "hours": "{{count}} hours"
+            },
+            "max_secret_size": {
+                "label": "Max secret size",
+                "description": "Applies to the secret text and to attached files."
+            },
+            "password_protection": {
+                "label": "Password protection",
+                "description": "Creators can require a password."
+            },
+            "ip_restriction": {
+                "label": "IP restriction",
+                "description": "Creators can limit access to an IP or CIDR."
+            },
+            "file_uploads": {
+                "label": "File uploads",
+                "description": "Encrypted attachments for signed-in users."
+            },
+            "rate_limiting": {
+                "label": "Rate limiting",
+                "description": "Per client IP."
+            },
+            "rate_limit_requests": {
+                "label": "Requests",
+                "description": "Per window."
+            },
+            "rate_limit_window": {
+                "label": "Window",
+                "description": "Length of one window."
+            },
+            "require_invite_code": {
+                "label": "Require invite code",
+                "description": "Sign-up needs a code. Adds Invites to the menu."
+            },
+            "allowed_email_domains": {
+                "label": "Allowed email domains",
+                "description": "Comma-separated. Empty allows any."
+            },
+            "require_registered_user": {
+                "label": "Registered users only",
+                "description": "Only signed-in users can create. Anyone with a link can still read."
+            },
+            "social_login_only": {
+                "label": "Social login only",
+                "description": "Disable email + password sign-up."
+            },
+            "webhooks": {
+                "label": "Webhooks",
+                "description": "POST an event to your endpoint."
+            },
+            "webhook_url": {
+                "label": "Endpoint",
+                "description": "Receives a POST request for each event."
+            },
+            "webhook_secret": {
+                "label": "Signing secret",
+                "description": "Payloads are HMAC-signed with this. The signature is in the X-Hemmelig-Signature header."
+            },
+            "webhook_on_view": {
+                "label": "On view",
+                "description": "Fires when a secret is opened."
+            },
+            "webhook_on_burn": {
+                "label": "On burn",
+                "description": "Fires when a secret is deleted."
+            },
+            "metrics": {
+                "label": "Prometheus metrics",
+                "description": "Expose /api/metrics."
+            },
+            "metrics_secret": {
+                "label": "Bearer token",
+                "description": "Scrapers send Authorization: Bearer <token>. Empty turns off authentication."
+            },
+            "metrics_endpoint": {
+                "label": "Endpoint",
+                "description": "Prometheus scrapes this path."
+            },
+            "logo_dark": {
+                "label": "Logo for dark mode",
+                "description": "Shown when the dark theme is active. Empty uses the logo above."
+            },
+            "default_theme": {
+                "label": "Default theme",
+                "description": "For visitors who have not chosen a theme.",
+                "dark": "Dark",
+                "light": "Light",
+                "system": "System"
+            },
+            "default_max_views": {
+                "label": "Default max views",
+                "description": "Preselected when creating a secret. 1 to 9999."
+            }
+        },
+        "note_saved": "Saved. Changes apply to new secrets.",
+        "note_save_failed": "Not saved. Read the error message and try again.",
+        "env_locked": "Set by {{variable}}. Change the environment variable to change this setting."
     },
     "secrets_page": {
-        "title": "Your Secrets",
-        "description": "Manage and monitor your shared secrets",
-        "create_secret_button": "Create Secret",
+        "title": "Secrets",
+        "description": "Everything you created on this instance.",
+        "create_secret_button": "New secret",
         "search_placeholder": "Search secrets...",
         "filter": {
             "all_secrets": "All Secrets",
             "active": "Active",
-            "expired": "Expired"
+            "expired": "Expired",
+            "all": "All"
         },
         "total_secrets": "Total Secrets",
         "active_secrets": "Active",
@@ -449,18 +678,41 @@
             "views_left": "views left",
             "copy_url_tooltip": "Copy URL",
             "open_secret_tooltip": "Open Secret",
-            "delete_secret_tooltip": "Delete Secret",
+            "delete_secret_tooltip": "Delete secret",
             "delete_confirmation_title": "Are you sure?",
             "delete_confirmation_text": "This action cannot be undone. This will permanently delete the secret.",
             "delete_confirm_button": "Yes, delete it",
-            "delete_cancel_button": "Cancel"
+            "delete_cancel_button": "Cancel",
+            "id_header": "ID",
+            "protection_header": "Protection",
+            "views_left_header": "Views left",
+            "expires_header": "Expires"
+        },
+        "stats": {
+            "total": "Total",
+            "active": "Active",
+            "expired": "Expired"
+        },
+        "filter_label": "Filter secrets",
+        "empty": "Nothing here.",
+        "footnote": "Titles and content are encrypted, so only IDs and metadata are listed. Links can't be re-copied — the key was never stored.",
+        "tags": {
+            "password": "password",
+            "ip": "ip",
+            "burn": "burn",
+            "files_one": "{{count}} file",
+            "files_other": "{{count}} files",
+            "link_key": "link key"
+        },
+        "toast": {
+            "delete_error": "Could not delete the secret."
         }
     },
     "users_page": {
-        "title": "User Management",
-        "description": "Manage users and their permissions",
-        "add_user_button": "Add User",
-        "search_placeholder": "Search users...",
+        "title": "Users",
+        "description": "People with an account on this instance.",
+        "add_user_button": "Add user",
+        "search_placeholder": "Search username or email",
         "filter": {
             "all_roles": "All Roles",
             "admin": "Admin",
@@ -484,20 +736,21 @@
             "activity_header": "Activity",
             "last_login_header": "Last Login",
             "actions_header": "Actions",
-            "created_at": "Created At"
+            "created_at": "Created At",
+            "joined_header": "Joined"
         },
         "status": {
             "active": "Active",
             "banned": "Banned"
         },
         "delete_user_modal": {
-            "title": "Delete User",
+            "title": "Delete user",
             "confirmation_message": "Are you sure you want to delete the user {{username}}? This action cannot be undone.",
             "confirm_button": "Delete",
             "cancel_button": "Cancel"
         },
         "edit_user_modal": {
-            "title": "Edit User: {{username}}",
+            "title": "Edit user: {{username}}",
             "username_label": "Username",
             "email_label": "Email",
             "role_label": "Role",
@@ -506,14 +759,19 @@
             "cancel_button": "Cancel"
         },
         "add_user_modal": {
-            "title": "Add New User",
+            "title": "Add new user",
             "name_label": "Name",
             "username_label": "Username",
             "email_label": "Email",
             "password_label": "Password",
             "role_label": "Role",
-            "save_button": "Add User",
+            "save_button": "Add user",
             "cancel_button": "Cancel"
+        },
+        "actions": {
+            "edit": "Edit",
+            "ban": "Ban",
+            "unban": "Unban"
         }
     },
     "forgot_password_page": {
@@ -544,12 +802,17 @@
         "password_placeholder": "Enter your password",
         "forgot_password_link": "Forgot your password?",
         "signing_in_button": "Signing in...",
-        "sign_in_button": "Sign In",
+        "sign_in_button": "Sign in",
         "or_continue_with": "Or continue with",
         "continue_with_github": "Continue with GitHub",
-        "no_account_question": "Don't have an account?",
+        "no_account_question": "No account?",
         "sign_up_link": "Sign up",
-        "unexpected_error": "An unexpected error occurred. Please try again."
+        "unexpected_error": "An unexpected error occurred. Please try again.",
+        "sign_in_to": "Sign in to {{name}}",
+        "require_account_notice": "This instance requires an account to create secrets.",
+        "or": "or",
+        "login_failed": "Sign-in failed: {{message}}",
+        "show_password": "Show password"
     },
     "register_page": {
         "back_to_hemmelig": "Back to Hemmelig",
@@ -565,24 +828,24 @@
         "password_placeholder": "Create a password",
         "password_strength_label": "Password strength",
         "password_strength_levels": {
-            "very_weak": "Very Weak",
+            "very_weak": "Very weak",
             "weak": "Weak",
             "fair": "Fair",
             "good": "Good",
             "strong": "Strong"
         },
-        "confirm_password_label": "Confirm Password",
+        "confirm_password_label": "Confirm password",
         "confirm_password_placeholder": "Confirm your password",
         "passwords_match": "Passwords match",
         "passwords_do_not_match": "Passwords do not match",
         "password_mismatch_alert": "Passwords do not match",
         "creating_account_button": "Creating account...",
-        "create_account_button": "Create Account",
+        "create_account_button": "Create account",
         "or_continue_with": "Or continue with",
         "continue_with_github": "Continue with GitHub",
         "already_have_account_question": "Already have an account?",
         "sign_in_link": "Sign in",
-        "invite_code_label": "Invite Code",
+        "invite_code_label": "Invite code",
         "invite_code_placeholder": "Enter your invite code",
         "invite_code_required": "Invite code is required",
         "invalid_invite_code": "Invalid invite code",
@@ -598,49 +861,62 @@
     "secret_page": {
         "password_label": "Password",
         "password_placeholder": "Enter password to view secret",
-        "decryption_key_label": "Decryption Key",
-        "decryption_key_placeholder": "Enter the decryption key",
+        "decryption_key_label": "Decryption key",
+        "decryption_key_placeholder": "paste the key you were sent",
         "view_secret_button": "View Secret",
         "views_remaining_tooltip": "Views remaining: {{count}}",
-        "loading_message": "Decrypting secret...",
-        "files_title": "Attached Files",
+        "loading_message": "Decrypting secret…",
+        "files_title": "Files",
         "secret_waiting_title": "Someone shared a secret with you",
         "secret_waiting_description": "This secret is encrypted and can only be viewed once you click the button below.",
-        "one_view_remaining": "This secret can only be viewed 1 more time",
-        "views_remaining": "This secret can be viewed {{count}} more times",
+        "one_view_remaining": "One view left. Unlocking deletes it from the server.",
+        "views_remaining": "Unlocking uses one of {{count}} views.",
         "view_warning": "Once viewed, this action cannot be undone",
         "secret_revealed": "Secret",
         "copy_secret": "Copy to clipboard",
         "download": "Download",
-        "create_your_own": "Create your own secret",
-        "encrypted_secret": "Encrypted Secret",
-        "unlock_secret": "Unlock Secret",
-        "delete_secret": "Delete Secret",
+        "create_your_own": "+ Create your own",
+        "encrypted_secret": "encrypted secret",
+        "unlock_secret": "Unlock secret",
+        "delete_secret": "Delete secret",
         "delete_modal_title": "Delete Secret",
         "delete_modal_message": "Are you sure you want to delete this secret? This action cannot be undone.",
         "decryption_failed": "Failed to decrypt the secret. Please check your password or decryption key.",
-        "fetch_error": "An error occurred while fetching the secret. Please try again."
+        "fetch_error": "An error occurred while fetching the secret. Please try again.",
+        "after_burns_at_expiry": "burns at expiry",
+        "after_last_view": "last view · deleted from server",
+        "after_views_left_one": "{{count}} left",
+        "after_views_left_other": "{{count}} left",
+        "views_left_one": "{{count}} view left",
+        "views_left_other": "{{count}} views left",
+        "copy_html": "html",
+        "copy_base64": "base64",
+        "delete_confirm_question": "Delete for everyone?",
+        "wrong_password": "Wrong password.",
+        "gate_burns_at_expiry": "Deleted at expiry, however many times it is opened."
     },
     "expiration": {
-        "28_days": "28 Days",
-        "14_days": "14 Days",
-        "7_days": "7 Days",
-        "3_days": "3 Days",
-        "1_day": "1 Day",
-        "12_hours": "12 Hours",
-        "4_hours": "4 Hours",
-        "1_hour": "1 Hour",
-        "30_minutes": "30 Minutes",
-        "5_minutes": "5 Minutes"
+        "28_days": "28 days",
+        "14_days": "14 days",
+        "7_days": "7 days",
+        "3_days": "3 days",
+        "1_day": "1 day",
+        "12_hours": "12 hours",
+        "4_hours": "4 hours",
+        "1_hour": "1 hour",
+        "30_minutes": "30 minutes",
+        "5_minutes": "5 minutes",
+        "default_hours": "{{hours}} hours"
     },
     "error_display": {
         "clear_errors_button_title": "Clear errors"
     },
     "secret_not_found_page": {
-        "title": "Secret Not Found",
-        "message": "The secret you are looking for does not exist, has expired, or has been burned.",
+        "title": "Nothing here.",
+        "message": "It was viewed, expired, or deleted. It can't be recovered — the server never had the key.",
         "error_details": "Error details:",
-        "go_home_button": "Go to Homepage"
+        "go_home_button": "Create a secret",
+        "kicker": "404 · secret not found"
     },
     "organization_page": {
         "title": "Organization Settings",
@@ -682,9 +958,9 @@
             "expiration_label": "Expiration",
             "expiration_options": {
                 "never": "Never",
-                "24_hours": "24 Hours",
-                "7_days": "7 Days",
-                "30_days": "30 Days"
+                "24_hours": "24 hours",
+                "7_days": "7 days",
+                "30_days": "30 days"
             },
             "cancel_button": "Cancel",
             "create_button": "Create"
@@ -693,9 +969,9 @@
         "save_settings_button": "Save Settings"
     },
     "invites_page": {
-        "title": "Invite Codes",
-        "description": "Manage invite codes for new user registrations",
-        "create_invite_button": "Create Invite",
+        "title": "Invites",
+        "description": "Codes for sign-up when invites are required.",
+        "create_invite_button": "Create invite",
         "loading": "Loading invite codes...",
         "table": {
             "code_header": "Code",
@@ -717,7 +993,7 @@
             "expires_in_label": "Expires In (days)"
         },
         "delete_modal": {
-            "title": "Deactivate Invite Code",
+            "title": "Deactivate invite code",
             "confirm_text": "Deactivate",
             "cancel_text": "Cancel",
             "message": "Are you sure you want to deactivate invite code {{code}}? This action cannot be undone."
@@ -729,7 +1005,19 @@
             "fetch_error": "Failed to fetch invite codes",
             "create_error": "Failed to create invite code",
             "delete_error": "Failed to deactivate invite code"
-        }
+        },
+        "close": "Close",
+        "invites_off": "Invite codes are off. Anyone allowed to register can sign up.",
+        "require_invite_code": "Require invite code →",
+        "form": {
+            "max_uses": "Max uses",
+            "expires_in": "Expires in",
+            "days": "{{count}}d",
+            "never": "never",
+            "generate": "Generate"
+        },
+        "copy": "Copy",
+        "copied": "Copied"
     },
     "social_login": {
         "continue_with": "Continue with {{provider}}",
@@ -738,17 +1026,17 @@
     "setup_page": {
         "title": "Welcome to Hemmelig",
         "description": "Create your admin account to get started",
-        "name_label": "Full Name",
+        "name_label": "Full name",
         "name_placeholder": "Enter your full name",
         "username_label": "Username",
         "username_placeholder": "Choose a username",
-        "email_label": "Email Address",
+        "email_label": "Email address",
         "email_placeholder": "Enter your email",
         "password_label": "Password",
         "password_placeholder": "Create a password (min 8 characters)",
-        "confirm_password_label": "Confirm Password",
+        "confirm_password_label": "Confirm password",
         "confirm_password_placeholder": "Confirm your password",
-        "create_admin": "Create Admin Account",
+        "create_admin": "Create admin account",
         "creating": "Creating account...",
         "success": "Admin account created successfully! Please log in.",
         "error": "Failed to create admin account",
@@ -791,13 +1079,19 @@
     },
     "verify_2fa_page": {
         "back_to_login": "Back to Login",
-        "title": "Two-Factor Authentication",
-        "description": "Enter the 6-digit code from your authenticator app",
+        "title": "Two-factor code",
+        "description": "Enter the 6-digit code from your authenticator app.",
         "enter_code_hint": "Enter the code from your authenticator app",
         "verifying": "Verifying...",
         "verify_button": "Verify",
         "invalid_code": "Invalid verification code. Please try again.",
-        "unexpected_error": "An unexpected error occurred. Please try again."
+        "unexpected_error": "An unexpected error occurred. Please try again.",
+        "invalid_backup_code": "Invalid backup code. Try again.",
+        "backup_description": "Enter one of the backup codes that you saved when you turned on two-factor authentication.",
+        "code_label": "Authentication code",
+        "backup_code_label": "Backup code",
+        "use_backup_code": "Lost your device? Use a backup code instead.",
+        "use_totp_code": "Use a code from your authenticator app"
     },
     "common": {
         "error": "Error",
@@ -806,42 +1100,56 @@
         "ok": "OK",
         "delete": "Delete",
         "deleting": "Deleting...",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "copy": "Copy",
+        "copied": "Copied"
     },
     "pagination": {
         "showing": "Showing {{start}} to {{end}} of {{total}} results",
         "previous_page": "Previous page",
-        "next_page": "Next page"
+        "next_page": "Next page",
+        "summary": "{{start}}–{{end}} of {{total}} · page {{page}} of {{pages}}",
+        "label": "Pagination"
     },
     "not_found_page": {
-        "title": "Page Not Found",
+        "title": "Nothing here.",
         "message": "This page has vanished into thin air, just like our secrets do.",
         "hint": "The page you're looking for doesn't exist or has been moved.",
         "go_home_button": "Go Home",
-        "create_secret_button": "Create Secret"
+        "create_secret_button": "Create a secret",
+        "kicker": "404 · page not found"
     },
     "error_boundary": {
-        "title": "Something Went Wrong",
+        "title": "Something went wrong.",
         "message": "An unexpected error occurred while processing your request.",
         "hint": "Don't worry, your secrets are still safe. Try refreshing the page.",
         "error_details": "Error details:",
         "unknown_error": "An unknown error occurred",
-        "try_again_button": "Try Again",
-        "go_home_button": "Go Home"
+        "try_again_button": "Try again",
+        "go_home_button": "Go home",
+        "kicker": "unexpected error"
     },
     "secret_requests_page": {
-        "title": "Secret Requests",
-        "description": "Request secrets from others via secure links",
-        "create_request_button": "Create Request",
+        "title": "Secret requests",
+        "description": "Ask someone to send you a secret.",
+        "create_request_button": "New request",
         "no_requests": "No secret requests yet. Create one to get started.",
         "table": {
             "title_header": "Title",
             "status_header": "Status",
             "secret_expiry_header": "Secret Expiry",
-            "link_expires_header": "Link Expires",
-            "copy_link_tooltip": "Copy Creator Link",
-            "view_secret_tooltip": "View Secret",
-            "cancel_tooltip": "Cancel Request"
+            "link_expires_header": "Link expires",
+            "copy_link_tooltip": "Copy creator link",
+            "view_secret_tooltip": "View secret",
+            "cancel_tooltip": "Cancel request",
+            "request_header": "Request",
+            "created_header": "Created",
+            "meta": "{{views}} · {{expiry}} after submit",
+            "views_one": "{{count}} view",
+            "views_other": "{{count}} views",
+            "copy_link": "Copy link",
+            "cancel": "Cancel",
+            "open_with_key": "Open with key"
         },
         "status": {
             "pending": "Pending",
@@ -858,29 +1166,30 @@
             "minutes_other": "{{count}} minutes"
         },
         "link_modal": {
-            "title": "Creator Link",
+            "title": "Creator link",
             "description": "Send this link to the person who should provide the secret. They will be able to enter and encrypt the secret using this link.",
-            "copy_button": "Copy Link",
+            "copy_button": "Copy link",
             "close_button": "Close",
             "warning": "This link can only be used once. Once a secret is submitted, the link will no longer work."
         },
         "cancel_modal": {
-            "title": "Cancel Request",
+            "title": "Cancel request",
             "message": "Are you sure you want to cancel the request \"{{title}}\"? This action cannot be undone.",
-            "confirm_text": "Cancel Request",
-            "cancel_text": "Keep Request"
+            "confirm_text": "Cancel request",
+            "cancel_text": "Keep request"
         },
         "toast": {
             "copied": "Link copied to clipboard",
             "cancelled": "Request cancelled",
             "fetch_error": "Failed to fetch request details",
             "cancel_error": "Failed to cancel request"
-        }
+        },
+        "footnote": "The person you ask submits in their browser and sends you the key. You open the secret here with it."
     },
     "create_request_page": {
-        "title": "Create Secret Request",
-        "description": "Request a secret from someone by generating a secure link they can use to submit it",
-        "back_button": "Back to Secret Requests",
+        "title": "New request",
+        "description": "Pick the rules. They just paste.",
+        "back_button": "Back to secret requests",
         "form": {
             "title_label": "Request Title",
             "title_placeholder": "e.g., AWS Credentials for Project X",
@@ -904,63 +1213,142 @@
             "webhook_url_placeholder": "https://your-server.com/webhook",
             "webhook_url_hint": "HTTPS recommended. A notification will be sent when the secret is created.",
             "creating_button": "Creating...",
-            "create_button": "Create Request"
+            "create_button": "Create request"
         },
         "validity": {
-            "30_days": "30 Days",
-            "14_days": "14 Days",
-            "7_days": "7 Days",
-            "3_days": "3 Days",
-            "1_day": "1 Day",
-            "12_hours": "12 Hours",
-            "1_hour": "1 Hour"
+            "30_days": "30 days",
+            "14_days": "14 days",
+            "7_days": "7 days",
+            "3_days": "3 days",
+            "1_day": "1 day",
+            "12_hours": "12 hours",
+            "1_hour": "1 hour"
         },
         "success": {
             "title": "Request Created!",
             "description": "Share the creator link with the person who should provide the secret",
             "creator_link_label": "Creator Link",
-            "webhook_secret_label": "Webhook Secret",
+            "webhook_secret_label": "Webhook secret",
             "webhook_secret_warning": "Save this secret now! It won't be shown again. Use it to verify webhook signatures.",
             "expires_at": "Link expires: {{date}}",
-            "create_another_button": "Create Another Request",
-            "view_all_button": "View All Requests"
+            "create_another_button": "Create another request",
+            "view_all_button": "View All Requests",
+            "link_label": "Request link — share with whoever holds the secret",
+            "copy": "Copy",
+            "copied": "Copied",
+            "open_as_creator": "Open as creator",
+            "back_to_requests": "Back to requests"
         },
         "toast": {
             "created": "Secret request created successfully",
             "create_error": "Failed to create secret request",
             "copied": "Copied to clipboard"
+        },
+        "fields": {
+            "title_label": "Title",
+            "title_hint": "Shown to the person you ask.",
+            "title_placeholder": "API credentials for Project X",
+            "description_label": "Description",
+            "description_hint": "Optional context.",
+            "valid_for_label": "Link valid for",
+            "valid_for_hint": "How long the request link works.",
+            "expires_in_label": "Secret expires after",
+            "expires_in_hint": "Counted from submission.",
+            "max_views_label": "Max views",
+            "max_views_hint": "1 – 9999",
+            "ip_label": "IP restriction",
+            "ip_hint": "Optional IP or CIDR.",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "Prevent burn",
+            "prevent_burn_hint": "Keep after max views; delete at expiry.",
+            "webhook_label": "Webhook",
+            "webhook_hint": "Notified on submission.",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
-        "loading": "Loading request...",
+        "loading": "Loading request…",
         "error": {
-            "title": "Request Unavailable",
+            "title": "Request unavailable",
             "invalid_link": "This link is invalid or has been tampered with.",
             "not_found": "This request was not found or the link is invalid.",
             "already_fulfilled": "This request has already been fulfilled or has expired.",
             "generic": "An error occurred while loading the request.",
-            "go_home_button": "Go to Homepage"
+            "go_home_button": "Go to homepage"
         },
         "form": {
-            "title": "Submit a Secret",
+            "title": "Submit a secret",
             "description": "Someone has requested that you share a secret with them securely",
             "password_protected_note": "This secret will be password protected",
             "encryption_note": "Your secret will be encrypted in your browser before being sent. The decryption key will only be included in the final URL you share.",
-            "submitting_button": "Encrypting & Submitting...",
-            "submit_button": "Submit Secret"
+            "submitting_button": "Encrypting…",
+            "submit_button": "Encrypt & submit",
+            "placeholder": "Paste the secret. Encrypted before upload.",
+            "settings_note": "settings set by requester"
         },
         "success": {
-            "title": "Secret Created!",
+            "title": "Secret submitted",
             "description": "Your secret has been encrypted and stored securely",
-            "decryption_key_label": "Decryption Key",
+            "decryption_key_label": "Decryption key — send this to the requester",
             "warning": "Important: Copy this decryption key now and send it to the requester. This is the only time you will see it!",
-            "manual_send_note": "You must manually send this decryption key to the person who requested the secret. They already have the secret URL in their dashboard.",
-            "create_own_button": "Create Your Own Secret"
+            "manual_send_note": "The requester has the link. Without this key it's unreadable.",
+            "create_own_button": "+ Create your own secret"
         },
         "toast": {
             "created": "Secret submitted successfully",
             "create_error": "Failed to submit secret",
             "copied": "Copied to clipboard"
+        },
+        "kicker": "// secret request"
+    },
+    "composer": {
+        "title_placeholder": "Title (optional, encrypted)",
+        "placeholder": "Paste a password, key, config…",
+        "options_show": "Options ▾",
+        "options_hide": "Options ▴",
+        "create_link": "Create link",
+        "shortcut_hint": "Create the link ({{shortcut}})",
+        "summary": {
+            "burn_after_time": "burn after time",
+            "views_one": "{{count}} view",
+            "views_other": "{{count}} views",
+            "password": "password",
+            "ip": "ip {{range}}",
+            "files_one": "{{count}} file",
+            "files_other": "{{count}} files"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — norwegian for “secret”",
+        "title": "Share secrets that self-destruct after being read.",
+        "subtitle": "Encrypted in this tab before upload. The server stores ciphertext it has no key for.",
+        "features": {
+            "encrypted_title": "encrypted here",
+            "encrypted_body": "AES-256-GCM runs in your browser. Plaintext never leaves the tab.",
+            "fragment_title": "key in the #fragment",
+            "fragment_body": "Browsers don't send what follows <mono>#</mono>. The server never sees the key.",
+            "gone_title": "gone after reading",
+            "gone_body": "Deleted at the last view or at expiry, whichever comes first."
+        }
+    },
+    "important_alert": {
+        "label": "notice",
+        "dismiss": "Dismiss"
+    },
+    "language_picker": {
+        "label": "Select language"
+    },
+    "expiration_short": {
+        "5m": "5m",
+        "30m": "30m",
+        "1h": "1h",
+        "4h": "4h",
+        "12h": "12h",
+        "1d": "1d",
+        "3d": "3d",
+        "7d": "7d",
+        "14d": "14d",
+        "28d": "28d",
+        "hours": "{{hours}}h"
     }
 }

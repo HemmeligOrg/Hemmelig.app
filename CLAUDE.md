@@ -186,7 +186,11 @@ export function MyComponent({ prop1, prop2 }: MyComponentProps) {
         // Event handler logic
     };
 
-    return <div className="bg-white dark:bg-dark-800">{/* Always support light/dark mode */}</div>;
+    return (
+        <div className="bg-surface text-fg">
+            {/* Semantic tokens support light and dark mode */}
+        </div>
+    );
 }
 ```
 
@@ -194,47 +198,44 @@ export function MyComponent({ prop1, prop2 }: MyComponentProps) {
 
 Our UI follows these principles:
 
-- **Compact design** with minimal padding
-- **Sharp corners** - no `rounded-*` classes
-- **Light and dark mode** support is mandatory
-- **Mobile-first** responsive design
+- **Compact design** with minimal padding.
+- **Small corner radii**: use `rounded-sm` (4px) for controls and `rounded-md` (6px) for panels.
+- **Light and dark mode** support is mandatory. The semantic color tokens switch between the two themes.
+- **Mobile-first** responsive design.
+- **Two typefaces**: IBM Plex Sans for text and JetBrains Mono (`font-mono`) for labels, links, keys and metadata. The fonts are self-hosted in `src/assets/fonts`.
 
 ### Styling with Tailwind
 
+The design tokens are CSS variables in the `@theme` block of `src/index.css`. The `.dark` block in the same file sets the dark values. Use the semantic tokens. Do not add a `dark:` variant for a color that a token already covers.
+
 ```tsx
-// GOOD: Light mode first, then dark variant, sharp corners
-className =
-    'bg-white dark:bg-dark-800 text-gray-900 dark:text-white border border-gray-200 dark:border-dark-600';
+// GOOD: Semantic tokens. They work in light and dark mode.
+className = 'bg-surface text-fg border border-line rounded-md';
 
-// BAD: Missing light mode variant
-className = 'dark:bg-dark-800';
+// BAD: Raw palette colors with a manual dark variant
+className = 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white';
 
-// BAD: Using rounded corners
-className = 'rounded-lg';
-
-// BAD: Using arbitrary values when design tokens exist
-className = 'bg-[#111111]'; // Use bg-dark-800 instead
+// BAD: Arbitrary color values when a token exists
+className = 'bg-[#14181d]'; // Use bg-surface instead
 ```
 
-### Custom Color Palette
+### Color Tokens
 
-```javascript
-// tailwind.config.js defines these colors:
-dark: {
-    900: '#0a0a0a',  // Darkest background
-    800: '#111111',  // Card backgrounds
-    700: '#1a1a1a',  // Input backgrounds
-    600: '#222222',  // Borders
-    500: '#2a2a2a',  // Lighter borders
-}
-light: {
-    900: '#ffffff',
-    800: '#f8fafc',
-    700: '#f1f5f9',
-    600: '#e2e8f0',
-    500: '#cbd5e1',
-}
-```
+| Token                                            | Use                                                    |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| `canvas`                                         | Page background                                        |
+| `surface`                                        | Panels, cards and inputs                               |
+| `raised`                                         | Hover states, the active nav item and inline code      |
+| `line-faint`, `line-soft`, `line`, `line-strong` | Borders and dividers, from the lightest to the darkest |
+| `fg`, `fg-2`, `fg-3`                             | Primary, secondary and body text                       |
+| `muted`, `faint`                                 | Labels, hints and metadata                             |
+| `accent`, `on-accent`                            | Primary actions, links and the text on them            |
+| `danger`, `on-danger`                            | Destructive actions and errors                         |
+| `warn`                                           | Notices and warnings                                   |
+
+The custom text sizes are `text-2xs` (11px), `text-ui` (13px) and `text-body` (15px). The container widths are `max-w-page` (1120px), `max-w-content` (820px) and `max-w-reading` (720px).
+
+Shared primitives live in `src/components`: `Button`, `Input`, `Chip`, `Segmented`, `Tabs`, `Tag`, `Table`, `StatGrid`, `Settings`, `PageHeader`, `Avatar`, `Notice`, `Modal` and `ToggleSwitch`. Use them before you write new styles.
 
 ### State Management with Zustand
 
@@ -513,7 +514,7 @@ These are hard rules - no exceptions:
 | Client-side encryption | `src/lib/crypto.ts`    |
 | API client             | `src/lib/api.ts`       |
 | Backend setup          | `api/app.ts`           |
-| Design tokens          | `tailwind.config.js`   |
+| Design tokens          | `src/index.css`        |
 
 ### Environment Variables
 
@@ -552,9 +553,12 @@ When `HEMMELIG_MANAGED=true`, all instance settings are controlled via environme
 | `HEMMELIG_INSTANCE_NAME`                 | Display name for your instance              | `""`    |
 | `HEMMELIG_INSTANCE_DESCRIPTION`          | Description shown on the homepage           | `""`    |
 | `HEMMELIG_INSTANCE_LOGO`                 | Base64-encoded logo image (max 512KB)       | `""`    |
+| `HEMMELIG_INSTANCE_LOGO_DARK`            | Base64-encoded dark-theme logo (max 512KB)  | `""`    |
+| `HEMMELIG_DEFAULT_THEME`                 | Theme for new visitors: dark, light, system | `dark`  |
 | `HEMMELIG_ALLOW_REGISTRATION`            | Allow new user signups                      | `true`  |
 | `HEMMELIG_REQUIRE_EMAIL_VERIFICATION`    | Require email verification                  | `false` |
 | `HEMMELIG_DEFAULT_SECRET_EXPIRATION`     | Default expiration in hours                 | `72`    |
+| `HEMMELIG_DEFAULT_MAX_VIEWS`             | Default max views for a new secret (1-9999) | `1`     |
 | `HEMMELIG_MAX_SECRET_SIZE`               | Max secret size in KB                       | `1024`  |
 | `HEMMELIG_IMPORTANT_MESSAGE`             | Alert banner shown to all users             | `""`    |
 | `HEMMELIG_ALLOW_PASSWORD_PROTECTION`     | Allow password-protected secrets            | `true`  |

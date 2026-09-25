@@ -1,15 +1,13 @@
-import { Check, Lock, Mail, Ticket, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthPageLayout } from '../components/AuthPageLayout';
-import { Card } from '../components/Card';
 import { FormField } from '../components/FormField';
 import { LoadingButton } from '../components/LoadingButton';
+import { Notice } from '../components/Notice';
 import { PasswordToggle } from '../components/PasswordToggle';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { useErrorModal } from '../hooks/useModalState';
-import { apiRaw } from '../lib/api';
 import { authClient } from '../lib/auth';
 import { useHemmeligStore } from '../store/hemmeligStore';
 import { getPasswordStrength } from '../utils/password';
@@ -32,32 +30,6 @@ export function RegisterPage() {
     const errorModal = useErrorModal();
 
     const isEmailPasswordDisabled = settings.disableEmailPasswordSignup;
-
-    const validateInviteCode = async (): Promise<boolean> => {
-        if (!settings.requireInviteCode) return true;
-
-        if (!formData.inviteCode) {
-            setInviteCodeError(t('register_page.invite_code_required'));
-            return false;
-        }
-
-        try {
-            const res = await apiRaw.invites.public.validate.$post({
-                json: { code: formData.inviteCode },
-            });
-            const result = await res.json();
-            if (!result.valid) {
-                setInviteCodeError(
-                    'error' in result ? result.error : t('register_page.invalid_invite_code')
-                );
-                return false;
-            }
-            return true;
-        } catch {
-            setInviteCodeError(t('register_page.failed_to_validate_invite'));
-            return false;
-        }
-    };
 
     const parseRegistrationError = (error: unknown): string => {
         const errorObj = error as {
@@ -95,18 +67,6 @@ export function RegisterPage() {
         return t('register_page.unexpected_error');
     };
 
-    const markInviteCodeUsed = async () => {
-        if (!formData.inviteCode) return;
-
-        try {
-            await apiRaw.invites.public.use.$post({
-                json: { code: formData.inviteCode },
-            });
-        } catch (e) {
-            console.error('Failed to mark invite code as used:', e);
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -115,7 +75,11 @@ export function RegisterPage() {
             return;
         }
 
-        if (!(await validateInviteCode())) return;
+        // The server enforces and consumes the invite code during sign-up.
+        if (settings.requireInviteCode && !formData.inviteCode) {
+            setInviteCodeError(t('register_page.invite_code_required'));
+            return;
+        }
 
         setIsLoading(true);
         setInviteCodeError('');
@@ -129,6 +93,7 @@ export function RegisterPage() {
                     password: formData.password,
                     username: formData.username,
                     name: formData.username,
+                    ...(formData.inviteCode ? { inviteCode: formData.inviteCode } : {}),
                 },
                 {
                     onError: (ctx) => {
@@ -153,7 +118,6 @@ export function RegisterPage() {
             }
 
             if (data?.user?.id) {
-                await markInviteCodeUsed();
                 navigate('/dashboard');
             }
         } catch {
@@ -164,13 +128,11 @@ export function RegisterPage() {
     };
 
     const passwordStrength = getPasswordStrength(formData.password);
-    const strengthColors = [
-        'bg-red-500',
-        'bg-orange-500',
-        'bg-yellow-500',
-        'bg-blue-500',
-        'bg-green-500',
-    ];
+    // Weak passwords show the danger color, fair ones warn, good ones the accent.
+    const strengthColor =
+        passwordStrength >= 4 ? 'bg-accent' : passwordStrength >= 3 ? 'bg-warn' : 'bg-danger';
+    const strengthText =
+        passwordStrength >= 4 ? 'text-accent' : passwordStrength >= 3 ? 'text-warn' : 'text-danger';
     const strengthLabels = [
         t('register_page.password_strength_levels.very_weak'),
         t('register_page.password_strength_levels.weak'),
@@ -181,171 +143,141 @@ export function RegisterPage() {
 
     return (
         <AuthPageLayout
-            title={t('register_page.create_account_button')}
+            title={t('register_page.create_account_title')}
             subtitle={t('register_page.join_hemmelig')}
-            backTo="/"
-            backLabel={t('register_page.back_to_hemmelig')}
             errorModal={errorModal}
         >
-            <Card noPadding className="p-6 sm:p-8">
-                {isEmailPasswordDisabled && (
-                    <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                        <p className="text-sm text-blue-800 dark:text-blue-200">
-                            {t('register_page.email_password_disabled_message')}
-                        </p>
-                    </div>
-                )}
+            {isEmailPasswordDisabled && (
+                <Notice>{t('register_page.email_password_disabled_message')}</Notice>
+            )}
 
-                {!isEmailPasswordDisabled && (
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {settings.requireInviteCode && (
-                            <FormField
-                                label={t('register_page.invite_code_label')}
-                                icon={Ticket}
-                                value={formData.inviteCode}
-                                onChange={(value) => {
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        inviteCode: value.toUpperCase(),
-                                    }));
-                                    setInviteCodeError('');
-                                }}
-                                placeholder={t('register_page.invite_code_placeholder')}
-                                required
-                                error={inviteCodeError}
-                            />
-                        )}
-
+            {!isEmailPasswordDisabled && (
+                <form onSubmit={handleSubmit} className="grid gap-4">
+                    {settings.requireInviteCode && (
                         <FormField
-                            label={t('register_page.username_label')}
-                            icon={User}
-                            value={formData.username}
+                            label={t('register_page.invite_code_label')}
+                            value={formData.inviteCode}
+                            onChange={(value) => {
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    inviteCode: value.toUpperCase(),
+                                }));
+                                setInviteCodeError('');
+                            }}
+                            placeholder={t('register_page.invite_code_placeholder')}
+                            className="font-mono"
+                            required
+                            error={inviteCodeError}
+                        />
+                    )}
+
+                    <FormField
+                        label={t('register_page.username_label')}
+                        value={formData.username}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, username: value }))}
+                        autoComplete="username"
+                        required
+                    />
+
+                    <FormField
+                        label={t('register_page.email_label')}
+                        type="email"
+                        value={formData.email}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
+                        autoComplete="email"
+                        required
+                    />
+
+                    <div className="grid gap-2">
+                        <FormField
+                            label={t('register_page.password_label')}
+                            type={showPassword ? 'text' : 'password'}
+                            value={formData.password}
                             onChange={(value) =>
-                                setFormData((prev) => ({ ...prev, username: value }))
+                                setFormData((prev) => ({ ...prev, password: value }))
                             }
-                            placeholder={t('register_page.username_placeholder')}
+                            autoComplete="new-password"
                             required
+                            rightElement={
+                                <PasswordToggle
+                                    visible={showPassword}
+                                    onToggle={() => setShowPassword(!showPassword)}
+                                    label={t('login_page.show_password')}
+                                />
+                            }
                         />
 
-                        <FormField
-                            label={t('register_page.email_label')}
-                            icon={Mail}
-                            type="email"
-                            value={formData.email}
-                            onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
-                            placeholder={t('register_page.email_placeholder')}
-                            required
-                        />
-
-                        <div className="space-y-2">
-                            <FormField
-                                label={t('register_page.password_label')}
-                                icon={Lock}
-                                type={showPassword ? 'text' : 'password'}
-                                value={formData.password}
-                                onChange={(value) =>
-                                    setFormData((prev) => ({ ...prev, password: value }))
-                                }
-                                placeholder={t('register_page.password_placeholder')}
-                                required
-                                rightElement={
-                                    <PasswordToggle
-                                        visible={showPassword}
-                                        onToggle={() => setShowPassword(!showPassword)}
-                                    />
-                                }
-                            />
-
-                            {formData.password && (
-                                <div className="space-y-2">
-                                    <div className="flex space-x-1">
-                                        {[...Array(5)].map((_, i) => (
-                                            <div
-                                                key={i}
-                                                className={`h-1.5 flex-1 transition-all duration-200 ${
-                                                    i < passwordStrength
-                                                        ? strengthColors[passwordStrength - 1]
-                                                        : 'bg-gray-200 dark:bg-dark-600'
-                                                }`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <p
-                                        className={`text-xs ${passwordStrength >= 3 ? 'text-green-500' : passwordStrength >= 2 ? 'text-yellow-500' : 'text-red-500'}`}
-                                    >
-                                        {t('register_page.password_strength_label')}:{' '}
-                                        {strengthLabels[passwordStrength - 1]}
-                                    </p>
+                        {formData.password && (
+                            <div className="grid gap-1.5">
+                                <div className="flex gap-1">
+                                    {[...Array(5)].map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className={`h-1 flex-1 rounded-full transition-colors ${
+                                                i < passwordStrength ? strengthColor : 'bg-line'
+                                            }`}
+                                        />
+                                    ))}
                                 </div>
-                            )}
-                        </div>
+                                <p className={`m-0 text-xs ${strengthText}`}>
+                                    {t('register_page.password_strength_label')}:{' '}
+                                    {strengthLabels[passwordStrength - 1]}
+                                </p>
+                            </div>
+                        )}
+                    </div>
 
-                        <div className="space-y-2">
-                            <FormField
-                                label={t('register_page.confirm_password_label')}
-                                icon={Lock}
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                value={formData.confirmPassword}
-                                onChange={(value) =>
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        confirmPassword: value,
-                                    }))
-                                }
-                                placeholder={t('register_page.confirm_password_placeholder')}
-                                required
-                                rightElement={
-                                    <PasswordToggle
-                                        visible={showConfirmPassword}
-                                        onToggle={() =>
-                                            setShowConfirmPassword(!showConfirmPassword)
-                                        }
-                                    />
-                                }
+                    <FormField
+                        label={t('register_page.confirm_password_label')}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={formData.confirmPassword}
+                        onChange={(value) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                confirmPassword: value,
+                            }))
+                        }
+                        autoComplete="new-password"
+                        required
+                        error={
+                            formData.confirmPassword &&
+                            formData.password !== formData.confirmPassword
+                                ? t('register_page.passwords_do_not_match')
+                                : undefined
+                        }
+                        hint={
+                            formData.confirmPassword &&
+                            formData.password === formData.confirmPassword
+                                ? t('register_page.passwords_match')
+                                : undefined
+                        }
+                        rightElement={
+                            <PasswordToggle
+                                visible={showConfirmPassword}
+                                onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
+                                label={t('login_page.show_password')}
                             />
+                        }
+                    />
 
-                            {formData.confirmPassword && (
-                                <div className="flex items-center space-x-2">
-                                    {formData.password === formData.confirmPassword ? (
-                                        <>
-                                            <Check className="w-4 h-4 text-green-500" />
-                                            <span className="text-xs text-green-500">
-                                                {t('register_page.passwords_match')}
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <span className="text-xs text-red-500">
-                                            {t('register_page.passwords_do_not_match')}
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-                        </div>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        disabled={formData.password !== formData.confirmPassword}
+                        loadingText={t('register_page.creating_account_button')}
+                    >
+                        {t('register_page.create_account_button')}
+                    </LoadingButton>
+                </form>
+            )}
 
-                        <LoadingButton
-                            isLoading={isLoading}
-                            disabled={formData.password !== formData.confirmPassword}
-                            loadingText={t('register_page.creating_account_button')}
-                        >
-                            <span>{t('register_page.create_account_button')}</span>
-                        </LoadingButton>
-                    </form>
-                )}
+            <SocialLoginButtons mode="register" />
 
-                <SocialLoginButtons mode="register" />
-
-                <div className="text-center mt-6 pt-5 border-t border-gray-200 dark:border-dark-600">
-                    <p className="text-gray-500 dark:text-slate-400">
-                        {t('register_page.already_have_account_question')}{' '}
-                        <Link
-                            to="/login"
-                            className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200"
-                        >
-                            {t('register_page.sign_in_link')}
-                        </Link>
-                    </p>
-                </div>
-            </Card>
+            <div className="text-sm text-muted">
+                {t('register_page.already_have_account_question')}{' '}
+                <Link to="/login" className="text-accent hover:underline">
+                    {t('register_page.sign_in_link')}
+                </Link>
+            </div>
         </AuthPageLayout>
     );
 }

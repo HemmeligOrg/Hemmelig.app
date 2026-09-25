@@ -1,0 +1,49 @@
+{
+    "text": [
+        {
+            "key": "GPwsu2Xvy0VDM6qzlHI8lhVo0EhmkNFd",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintext": "Hello, Hemmelig!",
+            "ciphertextHex": "1691a55dc47047995c188ac38e5d8de4316b8998df1cb6a1941cc4ca02aaba01de09760d05be3e1d570b1353"
+        },
+        {
+            "key": "GPwsu2Xvy0VDM6qzlHI8lhVo0EhmkNFd",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintext": "",
+            "ciphertextHex": "d273334883ecdc733bbeb87ac82aaeafc521d497a610c35326d493fa"
+        },
+        {
+            "key": "GPwsu2Xvy0VDM6qzlHI8lhVo0EhmkNFd",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintext": "Unicode: æøå ÆØÅ 秘密 🔐",
+            "ciphertextHex": "924f886e77da005ce4411e3fcf6f37f0329d7363d12f037dd150804162e0e55a3caddb24625d5852497ed0a3c1abc1661b48c1d29683fe7bbac14359e08e"
+        },
+        {
+            "key": "GPwsu2Xvy0VDM6qzlHI8lhVo0EhmkNFd",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintext": "<p>line one</p><p>line two</p>",
+            "ciphertextHex": "9a60d55f493508d06fdc5156256fc3752b9923af09be8d4f0611169de746d24ecaf1707cac36edc760d76d55c2f5b866634933d446489185a90b"
+        },
+        {
+            "key": "correct horse battery staple",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintext": "password protected",
+            "ciphertextHex": "c1e30c206722e43cbe60a7375a0ef950dc7dfb71a0b5fec0607dba3f3ddfb3772e70c454c20e3788939758d33a78"
+        }
+    ],
+    "files": [
+        {
+            "key": "GPwsu2Xvy0VDM6qzlHI8lhVo0EhmkNFd",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "plaintextHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+            "ciphertextHex": "748a1edb73b07b6dbe9d3cb05fe0cd11740085872dbe0f129f9632f1111e1865d3ce1ce807aecd74730d5b66b50cfc71e71232a9d4bd3aede01ca017647725fffb734e6f0cb80cb0fe2059d9e641880815b4b19184a9aca24ef454f277a2876eedbfddceb34507cfa7bd28f0860f840e039d5d8fcbe5e19c54c1d298648e049be831b65eefaf72210f54eebe71be514fcc396e5550705fb638a05f0723a197db05d3813814d0e84afc272aff010fff2d9573ab0f07abe7de597d6efbf07910fa3d52b44bdbedd769d6d8ba8f26d95a3bbb676f21f5d4434593f0ce49a264b9d780da26675aeb6c8bf5e62473675520f1835b24a610d4abe1b5500674cc8c42661ede104ebac8717d7321ef92e8e89c554ec6e85921a757c1b5ad5449"
+        }
+    ],
+    "verifiers": [
+        {
+            "password": "correct horse battery staple",
+            "salt": "tN-Oc84Ewb8STvPiJ8QJf_9RSxbsDa8t",
+            "verifier": "e8e323c6a85353ef08f2282d64b5190150620e0080aeddb088c15450af2495c3"
+        }
+    ]
+}

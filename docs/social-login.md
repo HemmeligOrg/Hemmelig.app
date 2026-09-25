@@ -47,19 +47,52 @@ Use the `HEMMELIG_AUTH_GENERIC_OAUTH` environment variable with a JSON array of 
 
 Each provider in the array must include:
 
-| Field              | Required | Description                                                                |
-| ------------------ | -------- | -------------------------------------------------------------------------- |
-| `providerId`       | Yes      | Unique identifier for the provider (used in callback URLs)                 |
-| `clientId`         | Yes      | OAuth client ID from your identity provider                                |
-| `clientSecret`     | Yes      | OAuth client secret from your identity provider                            |
-| `discoveryUrl`     | No\*     | OpenID Connect discovery URL (e.g., `/.well-known/openid-configuration`)   |
-| `authorizationUrl` | No\*     | OAuth authorization endpoint (required if no `discoveryUrl`)               |
-| `tokenUrl`         | No\*     | OAuth token endpoint (required if no `discoveryUrl`)                       |
-| `userInfoUrl`      | No\*     | OAuth user info endpoint (required if no `discoveryUrl`)                   |
-| `scopes`           | No       | Array of OAuth scopes (default: `["openid", "profile", "email"]`)          |
-| `pkce`             | No       | Enable PKCE (Proof Key for Code Exchange) - recommended for public clients |
+| Field              | Required | Description                                                                                           |
+| ------------------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| `providerId`       | Yes      | Unique identifier for the provider (used in callback URLs)                                            |
+| `clientId`         | Yes      | OAuth client ID from your identity provider                                                           |
+| `clientSecret`     | Yes      | OAuth client secret from your identity provider                                                       |
+| `discoveryUrl`     | No\*     | OpenID Connect discovery URL (e.g., `/.well-known/openid-configuration`)                              |
+| `authorizationUrl` | No\*     | OAuth authorization endpoint (required if no `discoveryUrl`)                                          |
+| `tokenUrl`         | No\*     | OAuth token endpoint (required if no `discoveryUrl`)                                                  |
+| `userInfoUrl`      | No\*     | OAuth user info endpoint (required if no `discoveryUrl`)                                              |
+| `scopes`           | No       | Array of OAuth scopes (default: `["openid", "profile", "email"]`)                                     |
+| `pkce`             | No       | Enable PKCE (Proof Key for Code Exchange) - recommended for public clients                            |
+| `displayName`      | No       | Name in the button text, for example `Company ID` gives "Continue with Company ID". Max 64 characters |
+| `label`            | No       | Full button text, shown as is in place of the default text. Max 64 characters                         |
+| `icon`             | No       | Button icon as a base64 data URI of a PNG, SVG or WebP image, smaller than 512 KB                     |
 
 \*You must provide either `discoveryUrl` OR all three of (`authorizationUrl`, `tokenUrl`, `userInfoUrl`).
+
+#### Custom Button Text and Icon
+
+By default, the login button shows the provider ID, for example "Continue with Keycloak". To show a name that your users know, set `displayName` or `label` on the provider. To show your own logo, set `icon`.
+
+The icon must be a data URI. The Content Security Policy allows images only from the app itself and from data URIs, so Hemmelig ignores a remote image URL. An invalid `displayName`, `label` or `icon` is ignored with a log message, and the provider stays enabled.
+
+To make a data URI from an image file, run:
+
+```bash
+echo "data:image/svg+xml;base64,$(base64 -w0 company-logo.svg)"
+```
+
+Example:
+
+```bash
+HEMMELIG_AUTH_GENERIC_OAUTH=[{"providerId":"keycloak","discoveryUrl":"https://keycloak.example.com/realms/myrealm/.well-known/openid-configuration","clientId":"hemmelig","clientSecret":"your-client-secret","label":"Log in with Company ID","icon":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="}]
+```
+
+#### Hide the Username and Password Form
+
+To send all users through single sign-on, set `HEMMELIG_HIDE_PASSWORD_LOGIN=true`. The login page then shows only the social login buttons. The option has an effect only when at least one social provider is enabled.
+
+```bash
+HEMMELIG_HIDE_PASSWORD_LOGIN=true
+```
+
+To show the form again, for example for an admin account, open `/login?showLogin=true`.
+
+This is a UI option only. The server still accepts username and password sign-in, so it does not replace access control. To stop new email and password accounts, use `HEMMELIG_DISABLE_EMAIL_PASSWORD_SIGNUP` as well.
 
 #### Example: Authentik
 

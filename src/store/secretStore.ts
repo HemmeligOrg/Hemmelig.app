@@ -17,14 +17,29 @@ interface SecretState {
     views: number;
     isBurnable: boolean;
     ipRange: string | null;
+    /** The number of files attached to the created secret. */
+    fileCount: number;
+    /** The creator's delete token for the created secret. */
+    deleteToken: string | null;
     setSecretIdAndKeys: (
         secretId: string | null,
         decryptionKey: string | null,
-        password: string | null
+        password: string | null,
+        deleteToken?: string | null
     ) => void;
     setSecretData: (
         data: Partial<
-            Pick<SecretState, 'secret' | 'title' | 'expiresAt' | 'views' | 'isBurnable' | 'ipRange'>
+            Pick<
+                SecretState,
+                | 'secret'
+                | 'title'
+                | 'password'
+                | 'expiresAt'
+                | 'views'
+                | 'isBurnable'
+                | 'ipRange'
+                | 'fileCount'
+            >
         >
     ) => void;
     resetSecret: () => void;
@@ -39,6 +54,15 @@ const getDefaultExpiration = () => {
         : DEFAULT_EXPIRATION_SECONDS;
 };
 
+/** Default max views when the instance has no setting */
+const DEFAULT_MAX_VIEWS = 1;
+
+// Get the default max views from instance settings, fallback to 1
+const getDefaultViews = () => {
+    const defaultMaxViews = useHemmeligStore.getState().settings?.defaultMaxViews;
+    return defaultMaxViews && defaultMaxViews >= 1 ? defaultMaxViews : DEFAULT_MAX_VIEWS;
+};
+
 const defaultState = {
     secretId: null,
     decryptionKey: null,
@@ -46,15 +70,17 @@ const defaultState = {
     secret: '',
     title: '',
     expiresAt: DEFAULT_EXPIRATION_SECONDS,
-    views: 1,
+    views: DEFAULT_MAX_VIEWS,
     isBurnable: false,
     ipRange: null,
+    fileCount: 0,
+    deleteToken: null,
 };
 
 export const useSecretStore = create<SecretState>((set) => ({
     ...defaultState,
-    setSecretIdAndKeys: (secretId, decryptionKey, password) =>
-        set({ secretId, decryptionKey, password }),
+    setSecretIdAndKeys: (secretId, decryptionKey, password, deleteToken = null) =>
+        set({ secretId, decryptionKey, password, deleteToken }),
     setSecretData: (data) => set((state) => ({ ...state, ...data })),
     resetSecret: () => {
         const settingsStore = useSecretSettingsStore.getState();
@@ -67,7 +93,7 @@ export const useSecretStore = create<SecretState>((set) => ({
                 isBurnable: settingsStore.settings.isBurnable,
             });
         } else {
-            set({ ...defaultState, expiresAt: defaultExpiration });
+            set({ ...defaultState, expiresAt: defaultExpiration, views: getDefaultViews() });
         }
     },
 }));
@@ -86,6 +112,21 @@ useHemmeligStore.subscribe((state, prevState) => {
             useSecretStore.getState().setSecretData({
                 expiresAt: state.settings.defaultSecretExpiration * SECONDS_PER_HOUR,
             });
+        }
+    }
+});
+
+// Initialize max views from instance settings when the hemmelig store is updated
+useHemmeligStore.subscribe((state, prevState) => {
+    const defaultMaxViews = state.settings?.defaultMaxViews;
+    if (defaultMaxViews && defaultMaxViews !== prevState.settings?.defaultMaxViews) {
+        const secretStore = useSecretStore.getState();
+        const settingsStore = useSecretSettingsStore.getState();
+        // Only update while the user has not changed the views and does not
+        // keep own settings. Saved user preferences win.
+        const previousDefault = prevState.settings?.defaultMaxViews || DEFAULT_MAX_VIEWS;
+        if (!settingsStore.saveSettings && secretStore.views === previousDefault) {
+            useSecretStore.getState().setSecretData({ views: defaultMaxViews });
         }
     }
 });

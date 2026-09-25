@@ -2,25 +2,26 @@ interface ToggleSwitchProps {
     checked: boolean;
     onChange: (checked: boolean) => void;
     disabled?: boolean;
+    label?: string;
 }
 
-export function ToggleSwitch({ checked, onChange, disabled = false }: ToggleSwitchProps) {
+export function ToggleSwitch({ checked, onChange, disabled = false, label }: ToggleSwitchProps) {
     return (
         <button
             type="button"
+            role="switch"
+            aria-checked={checked}
+            aria-label={label}
             onClick={() => !disabled && onChange(!checked)}
-            className={`
-    relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-white dark:ring-offset-dark-800 touch-manipulation
-    ${checked ? 'bg-teal-500' : 'bg-gray-300 dark:bg-dark-600'}
-    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
-   `}
             disabled={disabled}
+            className={`relative flex-none w-9 h-5 rounded-full transition-colors touch-manipulation ${
+                checked ? 'bg-accent' : 'bg-line'
+            } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
             <span
-                className={`
-     inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 shadow-lg
-     ${checked ? 'translate-x-6' : 'translate-x-1'}
-    `}
+                className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white dark:bg-fg shadow-sm transition-transform ${
+                    checked ? 'translate-x-4' : 'translate-x-0'
+                }`}
             />
         </button>
     );

@@ -64,8 +64,50 @@ async function globalSetup(config: FullConfig) {
             console.error('Failed to complete setup:', await setupResponse.text());
         } else {
             console.log('Test user created successfully');
+            // Change settings only on the fresh test instance that this run set up.
+            // A reused development server keeps its own settings.
+            await disableRateLimiting(baseURL);
         }
     }
+}
+
+/**
+ * Turns off the API rate limit for the test instance. The default limit is
+ * 100 requests per minute for each IP address. The suite sends more requests
+ * than that from one IP, so sign-in fails in the later tests.
+ */
+async function disableRateLimiting(baseURL: string) {
+    const signInResponse = await fetch(`${baseURL}/api/auth/sign-in/username`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Origin: baseURL },
+        body: JSON.stringify({ username: TEST_USER.username, password: TEST_USER.password }),
+    });
+    if (!signInResponse.ok) {
+        throw new Error(
+            `Test user sign-in failed with status ${signInResponse.status}: ${await signInResponse.text()}`
+        );
+    }
+
+    const cookie = signInResponse.headers
+        .getSetCookie()
+        .map((value) => value.split(';')[0])
+        .join('; ');
+    const headers = { 'Content-Type': 'application/json', Origin: baseURL, Cookie: cookie };
+
+    // A read creates the settings row when it does not exist yet.
+    await fetch(`${baseURL}/api/instance/settings`, { headers });
+
+    const updateResponse = await fetch(`${baseURL}/api/instance/settings`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ enableRateLimiting: false }),
+    });
+    if (!updateResponse.ok) {
+        throw new Error(
+            `Could not turn off rate limiting: ${updateResponse.status} ${await updateResponse.text()}`
+        );
+    }
+    console.log('Rate limiting turned off for the test instance');
 }
 
 export default globalSetup;

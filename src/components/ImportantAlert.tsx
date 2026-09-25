@@ -1,12 +1,15 @@
-import { Info, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { hashString } from '../lib/hash';
 import { useHemmeligStore } from '../store/hemmeligStore';
 
 const DISMISS_KEY_PREFIX = 'importantAlertDismissed_';
 
+/** The instance-wide notice banner above the header. A dismissal lasts 7 days. */
 export function ImportantAlert() {
+    const { t } = useTranslation();
     const { settings } = useHemmeligStore();
 
     const getDismissKey = () => DISMISS_KEY_PREFIX + hashString(settings.importantMessage || '');
@@ -26,21 +29,22 @@ export function ImportantAlert() {
         setDismissed(true);
     };
 
-    if (!settings.importantMessage || dismissed) {
+    if (!settings.importantMessage?.trim() || dismissed) {
         return null;
     }
 
     return (
-        <div className="bg-gray-50 dark:bg-dark-700/50 border border-gray-200 dark:border-dark-600 p-4 mb-4">
-            <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-teal-500 dark:text-teal-400 flex-shrink-0 mt-0.5" />
-                <div className="flex-1 text-sm text-gray-700 dark:text-slate-300 prose prose-sm dark:prose-invert prose-p:my-0 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-teal-600 dark:prose-a:text-teal-400 max-w-none">
+        <div className="bg-warn/10 border-b border-warn/30 text-warn text-sm">
+            <div className="max-w-page mx-auto px-6 py-2.5 flex items-start gap-3">
+                <span className="font-mono text-xs pt-0.5">{t('important_alert.label')}</span>
+                <div className="flex-1 min-w-0 prose prose-sm max-w-none text-warn prose-p:my-0 prose-p:text-warn prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-warn prose-a:underline prose-strong:text-warn">
                     <Markdown>{settings.importantMessage}</Markdown>
                 </div>
                 <button
+                    type="button"
                     onClick={handleDismiss}
-                    className="flex-shrink-0 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300"
-                    aria-label="Dismiss"
+                    className="flex-none p-0.5 text-warn/70 hover:text-warn cursor-pointer"
+                    aria-label={t('important_alert.dismiss')}
                 >
                     <X className="w-4 h-4" />
                 </button>

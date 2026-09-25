@@ -1,19 +1,24 @@
-import { Eye, File as FileIcon, Lock, Plus, Shield, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLoaderData } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Button, buttonClassName } from '../../components/Button';
 import { Modal } from '../../components/Modal';
+import { PageHeader } from '../../components/PageHeader';
+import { Segmented } from '../../components/Segmented';
+import { StatGrid } from '../../components/StatGrid';
+import { Table, TableEmpty, TableHead, TableRow } from '../../components/Table';
+import { Tag } from '../../components/Tag';
 import { api } from '../../lib/api';
-import { formatDate, getTimeRemaining } from '../../utils/date';
 
 interface Secret {
     id: string;
     createdAt: Date;
     expiresAt?: Date;
-    views: number;
+    views: number | null;
     isPasswordProtected: boolean;
     url: string;
-    ipRange?: string;
+    ipRange?: string | null;
     isBurnable: boolean;
     fileCount: number;
     isExpired?: boolean;
@@ -23,10 +28,38 @@ interface SecretsLoaderData {
     data: Secret[];
 }
 
+type Filter = 'all' | 'active' | 'expired';
+
+const COLUMNS = 'grid-cols-[minmax(0,1.4fr)_minmax(0,1.4fr)_80px_110px_100px_64px]';
+
+const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+    ['day', 86400],
+    ['hour', 3600],
+    ['minute', 60],
+];
+
+/** Formats a date relative to now, for example "2 minutes ago" or "in 3 days". */
+const formatRelative = (date: Date, locale: string) => {
+    const diffSeconds = (date.getTime() - Date.now()) / 1000;
+    const absSeconds = Math.abs(diffSeconds);
+    if (absSeconds >= 30 * 86400) {
+        return date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    const formatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    for (const [unit, seconds] of RELATIVE_UNITS) {
+        if (absSeconds >= seconds) {
+            return formatter.format(Math.round(diffSeconds / seconds), unit);
+        }
+    }
+    return formatter.format(0, 'second');
+};
+
 export function SecretsPage() {
     const rawData = useLoaderData() as SecretsLoaderData;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage ?? i18n.language;
     const [secrets, setSecrets] = useState<Secret[]>([]);
+    const [filter, setFilter] = useState<Filter>('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [secretToDelete, setSecretToDelete] = useState<string | null>(null);
 
@@ -59,229 +92,126 @@ export function SecretsPage() {
     };
 
     const confirmDelete = async () => {
-        if (secretToDelete) {
-            try {
-                await api.secrets[':id'].$delete({ param: { id: secretToDelete } });
-                setSecrets(secrets.filter((secret) => secret.id !== secretToDelete));
-                closeDeleteModal();
-            } catch (error) {
-                console.error('Failed to delete secret:', error);
+        if (!secretToDelete) return;
+        const id = secretToDelete;
+        try {
+            const response = await api.secrets[':id'].$delete({ param: { id } });
+            if (!response.ok) {
+                throw new Error(`Delete request failed with status ${response.status}`);
             }
+            setSecrets((current) => current.filter((secret) => secret.id !== id));
+        } catch (error) {
+            console.error('Failed to delete secret:', error);
+            toast.error(t('secrets_page.toast.delete_error'));
+        } finally {
+            closeDeleteModal();
         }
     };
 
+    const activeCount = secrets.filter((secret) => !secret.isExpired).length;
+    const rows = secrets.filter((secret) => {
+        if (filter === 'active') return !secret.isExpired;
+        if (filter === 'expired') return secret.isExpired;
+        return true;
+    });
+
+    const protectionTags = (secret: Secret) => {
+        const tags: string[] = [];
+        if (secret.isPasswordProtected) tags.push(t('secrets_page.tags.password'));
+        if (secret.ipRange) tags.push(t('secrets_page.tags.ip'));
+        // A secret without a view limit burns at expiry. The API flag `isBurnable`
+        // controls only the webhook event, so it does not decide the tag.
+        if (secret.views === null) tags.push(t('secrets_page.tags.burn'));
+        if (secret.fileCount > 0) {
+            tags.push(t('secrets_page.tags.files', { count: secret.fileCount }));
+        }
+        return tags.length > 0 ? tags : [t('secrets_page.tags.link_key')];
+    };
+
+    const expiresLabel = (secret: Secret) => {
+        if (!secret.expiresAt) return t('secrets_page.table.never_expires');
+        if (secret.isExpired) return t('secrets_page.table.expired_time');
+        return formatRelative(secret.expiresAt, locale);
+    };
+
     return (
-        <div className="p-4 sm:p-6">
-            {/* Header */}
-            <div className="mb-5">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div>
-                        <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                            {t('secrets_page.title')}
-                        </h1>
-                        <p className="text-gray-500 dark:text-slate-400 text-xs mt-0.5">
-                            {t('secrets_page.description')}
-                        </p>
-                    </div>
-                    <Link
-                        to="/"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-medium transition-colors w-fit"
-                    >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>{t('secrets_page.create_secret_button')}</span>
+        <div className="grid gap-5 content-start">
+            <PageHeader
+                title={t('secrets_page.title')}
+                description={t('secrets_page.description')}
+                action={
+                    <Link to="/" className={buttonClassName({ variant: 'primary' })}>
+                        + {t('secrets_page.create_secret_button')}
                     </Link>
-                </div>
-            </div>
+                }
+            />
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-                <div className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-3">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 flex items-center justify-center bg-teal-500/10 text-teal-500">
-                            <Shield className="w-4 h-4" />
-                        </div>
-                        <div>
-                            <p className="text-xl font-bold text-gray-900 dark:text-white">
-                                {secrets.length}
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-slate-400">
-                                {t('secrets_page.total_secrets')}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <StatGrid
+                stats={[
+                    { label: t('secrets_page.stats.total'), value: secrets.length },
+                    { label: t('secrets_page.stats.active'), value: activeCount },
+                    {
+                        label: t('secrets_page.stats.expired'),
+                        value: secrets.length - activeCount,
+                    },
+                ]}
+            />
 
-            {/* Mobile: Card Layout */}
-            <div className="sm:hidden space-y-2">
-                {secrets.map((secret) => (
-                    <div
-                        key={secret.id}
-                        className="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 p-3"
-                    >
-                        <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <div className="w-7 h-7 flex items-center justify-center bg-teal-500/10 text-teal-500">
-                                    <Shield className="w-3.5 h-3.5" />
-                                </div>
-                                <span
-                                    className={`inline-flex items-center px-1.5 py-0.5 text-xs font-medium ${
-                                        secret.isExpired
-                                            ? 'bg-red-500/10 text-red-500'
-                                            : 'bg-green-500/10 text-green-500'
-                                    }`}
-                                >
-                                    {secret.isExpired
-                                        ? t('secrets_page.table.expired_status')
-                                        : `${secret.views} ${t('secrets_page.table.views_left')}`}
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => openDeleteModal(secret.id)}
-                                className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
-                            >
-                                <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
+            <Segmented<Filter>
+                label={t('secrets_page.filter_label')}
+                value={filter}
+                onChange={setFilter}
+                options={[
+                    { value: 'all', label: t('secrets_page.filter.all') },
+                    { value: 'active', label: t('secrets_page.filter.active') },
+                    { value: 'expired', label: t('secrets_page.filter.expired') },
+                ]}
+            />
 
-                        <p className="text-xs font-mono text-gray-700 dark:text-slate-300 truncate mb-2">
+            <Table minWidthClassName="min-w-[780px]">
+                <TableHead className={COLUMNS}>
+                    <span>{t('secrets_page.table.id_header')}</span>
+                    <span>{t('secrets_page.table.protection_header')}</span>
+                    <span>{t('secrets_page.table.views_left_header')}</span>
+                    <span>{t('secrets_page.table.expires_header')}</span>
+                    <span>{t('secrets_page.table.created_header')}</span>
+                    <span />
+                </TableHead>
+                {rows.map((secret) => (
+                    <TableRow key={secret.id} className={COLUMNS} dim={secret.isExpired}>
+                        <span className="font-mono text-ui truncate" title={secret.id}>
                             {secret.id}
-                        </p>
-
-                        <div className="flex items-center flex-wrap gap-1.5 text-xs text-gray-500 dark:text-slate-400">
-                            {secret.isPasswordProtected && (
-                                <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-1.5 py-0.5">
-                                    <Lock className="w-3 h-3" />
-                                </span>
-                            )}
-                            {secret.fileCount > 0 && (
-                                <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-1.5 py-0.5">
-                                    <FileIcon className="w-3 h-3" />
-                                    {secret.fileCount}
-                                </span>
-                            )}
-                            <span className="flex items-center gap-1 bg-gray-100 dark:bg-dark-700 px-1.5 py-0.5">
-                                <Eye className="w-3 h-3" />
-                                {secret.views}
-                            </span>
-                        </div>
-
-                        <div className="mt-2 pt-2 border-t border-gray-100 dark:border-dark-600 text-xs text-gray-500 dark:text-slate-400">
-                            <span>{formatDate(secret.createdAt)}</span>
-                            <span className="mx-1.5">·</span>
-                            <span>
-                                {getTimeRemaining(secret.expiresAt) === 'Never expires'
-                                    ? t('secrets_page.table.never_expires')
-                                    : getTimeRemaining(secret.expiresAt) === 'Expired'
-                                      ? t('secrets_page.table.expired_time')
-                                      : getTimeRemaining(secret.expiresAt)}
-                            </span>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Desktop: Table Layout */}
-            <div className="hidden sm:block bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-600 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 dark:bg-dark-700/50 border-b border-gray-200 dark:border-dark-600">
-                            <tr>
-                                <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-600 dark:text-slate-400">
-                                    {t('secrets_page.table.secret_header')}
-                                </th>
-                                <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-600 dark:text-slate-400">
-                                    {t('secrets_page.table.created_header')}
-                                </th>
-                                <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-600 dark:text-slate-400">
-                                    {t('secrets_page.table.status_header')}
-                                </th>
-                                <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-600 dark:text-slate-400 hidden lg:table-cell">
-                                    {t('secrets_page.table.views_header')}
-                                </th>
-                                <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-600 dark:text-slate-400">
-                                    {t('secrets_page.table.actions_header')}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-dark-600">
-                            {secrets.map((secret) => (
-                                <tr
-                                    key={secret.id}
-                                    className="hover:bg-gray-50 dark:hover:bg-dark-700/30 transition-colors"
-                                >
-                                    <td className="px-4 py-2.5">
-                                        <div className="flex items-center gap-2.5">
-                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-teal-500/10 text-teal-500">
-                                                <Shield className="w-4 h-4" />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                                                    {secret.id}
-                                                </p>
-                                                <div className="flex items-center gap-1.5 mt-0.5">
-                                                    {secret.isPasswordProtected && (
-                                                        <Lock className="w-3 h-3 text-gray-400" />
-                                                    )}
-                                                    {secret.fileCount > 0 && (
-                                                        <div className="flex items-center gap-0.5">
-                                                            <FileIcon className="w-3 h-3 text-gray-400" />
-                                                            <span className="text-xs text-gray-500">
-                                                                {secret.fileCount}
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-2.5 text-xs text-gray-500 dark:text-slate-400">
-                                        {formatDate(secret.createdAt)}
-                                    </td>
-                                    <td className="px-4 py-2.5">
-                                        <div>
-                                            <span
-                                                className={`inline-flex items-center px-1.5 py-0.5 text-xs font-medium ${
-                                                    secret.isExpired
-                                                        ? 'bg-red-500/10 text-red-500'
-                                                        : 'bg-green-500/10 text-green-500'
-                                                }`}
-                                            >
-                                                {secret.isExpired
-                                                    ? t('secrets_page.table.expired_status')
-                                                    : `${secret.views} ${t('secrets_page.table.views_left')}`}
-                                            </span>
-                                            <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                                                {getTimeRemaining(secret.expiresAt) ===
-                                                'Never expires'
-                                                    ? t('secrets_page.table.never_expires')
-                                                    : getTimeRemaining(secret.expiresAt) ===
-                                                        'Expired'
-                                                      ? t('secrets_page.table.expired_time')
-                                                      : getTimeRemaining(secret.expiresAt)}
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-2.5 text-xs text-gray-500 dark:text-slate-400 hidden lg:table-cell">
-                                        <div className="flex items-center gap-1">
-                                            <Eye className="w-3.5 h-3.5" />
-                                            <span>{secret.views}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-2.5">
-                                        <button
-                                            onClick={() => openDeleteModal(secret.id)}
-                                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                                            title={t('secrets_page.table.delete_secret_tooltip')}
-                                        >
-                                            <Trash2 className="w-3.5 h-3.5" />
-                                        </button>
-                                    </td>
-                                </tr>
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                            {protectionTags(secret).map((tag) => (
+                                <Tag key={tag}>{tag}</Tag>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </div>
+                        <span className="font-mono text-ui">{secret.views ?? '—'}</span>
+                        <span
+                            className={`text-ui ${secret.isExpired ? 'text-faint' : 'text-fg-3'}`}
+                        >
+                            {expiresLabel(secret)}
+                        </span>
+                        <span className="text-ui text-muted">
+                            {formatRelative(secret.createdAt, locale)}
+                        </span>
+                        <Button
+                            variant="danger"
+                            size="inline"
+                            className="justify-self-end"
+                            title={t('secrets_page.table.delete_secret_tooltip')}
+                            onClick={() => openDeleteModal(secret.id)}
+                        >
+                            {t('common.delete')}
+                        </Button>
+                    </TableRow>
+                ))}
+                {rows.length === 0 && <TableEmpty>{t('secrets_page.empty')}</TableEmpty>}
+            </Table>
+
+            <p className="m-0 text-ui text-faint">{t('secrets_page.footnote')}</p>
+
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeDeleteModal}
@@ -290,7 +220,7 @@ export function SecretsPage() {
                 confirmText={t('secrets_page.table.delete_confirm_button')}
                 cancelText={t('secrets_page.table.delete_cancel_button')}
             >
-                <p>{t('secrets_page.table.delete_confirmation_text')}</p>
+                <p className="m-0">{t('secrets_page.table.delete_confirmation_text')}</p>
             </Modal>
         </div>
     );

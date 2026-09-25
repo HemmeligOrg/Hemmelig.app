@@ -1,6 +1,6 @@
 {
     "name": "hemmelig",
-    "version": "7.0.0",
+    "version": "7.1.0",
     "description": "CLI for creating encrypted, self-destructing secrets via Hemmelig",
     "type": "module",
     "main": "dist/index.js",
