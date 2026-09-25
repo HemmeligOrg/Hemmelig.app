@@ -209,7 +209,10 @@ export function SecretForm() {
                         ) : (
                             <>
                                 {t('composer.create_link')}
-                                <span className="opacity-70">{isMac ? '⌘↵' : 'Ctrl ↵'}</span>
+                                {/* Touch devices have no shortcut keys, so show the hint only with a mouse or trackpad. */}
+                                <span className="hidden opacity-70 pointer-fine:inline">
+                                    {isMac ? '⌘↵' : 'Ctrl ↵'}
+                                </span>
                             </>
                         )}
                     </Button>

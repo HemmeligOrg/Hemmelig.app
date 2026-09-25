@@ -35,3 +35,24 @@ test.describe('Home Page', () => {
         }
     });
 });
+
+test.describe('Composer shortcut hint', () => {
+    test('shows the shortcut hint with a mouse', async ({ authenticatedPage }) => {
+        await authenticatedPage.goto('/');
+
+        const createButton = authenticatedPage.getByRole('button', { name: /create link/i });
+        await expect(createButton.getByText(/↵/)).toBeVisible();
+    });
+
+    test.describe('on a touch device', () => {
+        test.use({ hasTouch: true, isMobile: true });
+
+        test('hides the shortcut hint', async ({ authenticatedPage }) => {
+            await authenticatedPage.goto('/');
+
+            const createButton = authenticatedPage.getByRole('button', { name: /create link/i });
+            await expect(createButton).toBeVisible();
+            await expect(createButton.getByText(/↵/)).toBeHidden();
+        });
+    });
+});
