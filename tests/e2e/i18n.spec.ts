@@ -22,6 +22,6 @@ test('should resolve regional Czech and render translated labels', async ({ page
     });
     await page.goto('/register');
 
-    await expect(page.getByPlaceholder('Vytvořte heslo')).toBeVisible();
+    await expect(page.getByLabel('Heslo', { exact: true })).toBeVisible();
     await expect(page.getByText('Vytvořit účet', { exact: true }).first()).toBeVisible();
 });

@@ -48,7 +48,7 @@ test('Czech locale keeps Secret and Dashboard as product terms', async () => {
     assert.doesNotMatch(productCopy, /tajemstv|tajemn/u);
 });
 
-test('Czech locale renders one, few, and other time plurals', async () => {
+test('Czech locale renders one, few, and other count plurals', async () => {
     const [english, czech] = await Promise.all([readLocale('en'), readLocale('cs')]);
     const i18n = i18next.createInstance();
 
@@ -70,6 +70,29 @@ test('Czech locale renders one, few, and other time plurals', async () => {
             assert.equal(i18n.t(`secret_requests_page.time.${unit}`, { count }), cases[index]);
         }
     }
+
+    for (const [key, cases] of Object.entries({
+        'secrets_page.tags.files': ['1 soubor', '2 soubory', '4 soubory', '5 souborů'],
+        'secret_page.after_views_left': ['zbývá 1', 'zbývá: 2', 'zbývá: 4', 'zbývá: 5'],
+        'secret_page.views_left': [
+            'zbývá 1 zobrazení',
+            'zbývá 2 zobrazení',
+            'zbývá 4 zobrazení',
+            'zbývá 5 zobrazení',
+        ],
+        'secret_requests_page.table.views': [
+            '1 zobrazení',
+            '2 zobrazení',
+            '4 zobrazení',
+            '5 zobrazení',
+        ],
+        'composer.summary.views': ['1 zobrazení', '2 zobrazení', '4 zobrazení', '5 zobrazení'],
+        'composer.summary.files': ['1 soubor', '2 soubory', '4 soubory', '5 souborů'],
+    })) {
+        for (const [index, count] of [1, 2, 4, 5].entries()) {
+            assert.equal(i18n.t(key, { count }), cases[index], `${key}: ${count}`);
+        }
+    }
 });
 
 test('Czech locale contains every English key and only Czech plural extensions', async () => {
@@ -77,9 +100,15 @@ test('Czech locale contains every English key and only Czech plural extensions',
     const englishPaths = scalarPaths(english).sort();
     const czechPaths = scalarPaths(czech).sort();
     const czechPluralExtensions = [
+        'composer.summary.files_few',
+        'composer.summary.views_few',
+        'secret_page.after_views_left_few',
+        'secret_page.views_left_few',
+        'secret_requests_page.table.views_few',
         'secret_requests_page.time.days_few',
         'secret_requests_page.time.hours_few',
         'secret_requests_page.time.minutes_few',
+        'secrets_page.tags.files_few',
     ];
 
     assert.deepEqual(

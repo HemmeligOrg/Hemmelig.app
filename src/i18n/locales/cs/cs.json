@@ -9,6 +9,35 @@
             "server": "Přístup k serveru",
             "credit_card": "Platební karta",
             "email": "Emailový účet"
+        },
+        "field_line": "{{label}}: ",
+        "fields": {
+            "username": "Uživatelské jméno",
+            "password": "Heslo",
+            "url": "URL",
+            "notes": "Poznámky",
+            "service": "Služba",
+            "api_key": "API klíč",
+            "api_secret": "API secret",
+            "environment": "Prostředí",
+            "expires": "Platnost do",
+            "host": "Hostitel",
+            "port": "Port",
+            "database": "Databáze",
+            "ssl": "SSL",
+            "hostname": "Název hostitele",
+            "ip_address": "IP adresa",
+            "ssh_port": "SSH port",
+            "password_or_key": "Heslo / klíč",
+            "cardholder_name": "Jméno držitele karty",
+            "card_number": "Číslo karty",
+            "expiry_date": "Datum platnosti",
+            "cvv": "CVV",
+            "billing_address": "Fakturační adresa",
+            "email": "E-mail",
+            "imap_server": "Server IMAP",
+            "smtp_server": "Server SMTP",
+            "recovery_email": "Záložní e-mail"
         }
     },
     "editor": {
@@ -77,7 +106,10 @@
         "uploading": "Nahrávání...",
         "upload_file": "Nahrát soubor",
         "file_too_large": "Soubor „{{fileName}}“ ({{fileSize}} MB) překračuje maximální velikost {{maxSize}} MB",
-        "max_size_exceeded": "Celková velikost souborů překračuje maximum {{maxSize}} MB"
+        "max_size_exceeded": "Celková velikost souborů překračuje maximum {{maxSize}} MB",
+        "attach": "+ Přiložit soubor",
+        "max_size": "max. {{size}} MB",
+        "remove": "Odebrat {{fileName}}"
     },
     "footer": {
         "tagline": "Hemmelig, [heˈm(ɛ)li], znamená norsky „tajemství“",
@@ -104,7 +136,12 @@
         "invites": "Pozvánky",
         "instance": "Instance",
         "sign_out": "Odhlásit se",
-        "hemmelig": "Hemmelig"
+        "hemmelig": "Hemmelig",
+        "new_secret": "+ Nový secret",
+        "workspace": "pracovní prostor",
+        "admin": "správa",
+        "open_menu": "Otevřít nabídku",
+        "close_menu": "Zavřít nabídku"
     },
     "secret_settings": {
         "secret_created_title": "Secret byl vytvořen!",
@@ -116,7 +153,27 @@
         "copy_url_button": "Kopírovat URL",
         "burn_secret_button": "Zničit secret",
         "max_secrets_per_user_info": "Můžete vytvořit až {{count}} secretů.",
-        "failed_to_burn": "Secret se nepodařilo zničit. Zkuste to znovu."
+        "failed_to_burn": "Secret se nepodařilo zničit. Zkuste to znovu.",
+        "facts": {
+            "expires": "Platnost do",
+            "expires_in": "za {{duration}}",
+            "views": "Zobrazení",
+            "burn_at_expiry": "smazat po vypršení platnosti",
+            "password": "Heslo",
+            "password_required": "vyžadováno",
+            "none": "žádné",
+            "ip": "IP",
+            "any_ip": "libovolná",
+            "files": "Soubory"
+        },
+        "show_password": "Zobrazit",
+        "hide_password": "Skrýt",
+        "show_qr": "QR kód",
+        "hide_qr": "Skrýt QR kód",
+        "qr_title": "QR kód úplného odkazu",
+        "qr_description": "Naskenujte jej pro otevření na jiném zařízení. Obsahuje klíč, proto s ním zacházejte stejně jako s odkazem.",
+        "password_warning": "Klíč se odvozuje z hesla, takže samotný odkaz k dešifrování nestačí. Heslo pošlete jiným kanálem.",
+        "your_secrets": "Vaše secrets"
     },
     "security_settings": {
         "security_title": "Zabezpečení",
@@ -142,7 +199,8 @@
         "ip_address_cidr_placeholder": "192.168.1.0/24 nebo 203.0.113.5",
         "ip_address_cidr_hint": "K secretu budou mít přístup pouze požadavky z těchto IP adres",
         "burn_after_time_title": "Zničit po uplynutí času",
-        "burn_after_time_description": "Zničit secret až po uplynutí času"
+        "burn_after_time_description": "Zničit secret až po uplynutí času",
+        "remember_description": "Příště použít stejné nastavení platnosti, zobrazení a smazání (v tomto prohlížeči)."
     },
     "title_field": {
         "placeholder": "Název",
@@ -151,7 +209,9 @@
     "views_slider": {
         "min_views": "1",
         "max_views": "999",
-        "views_label": "zobrazení"
+        "views_label": "zobrazení",
+        "decrease": "Méně zobrazení",
+        "increase": "Více zobrazení"
     },
     "account_page": {
         "title": "Nastavení účtu",
@@ -170,10 +230,16 @@
             "username_label": "Uživatelské jméno",
             "email_label": "E-mailová adresa",
             "saving_button": "Ukládání...",
-            "save_changes_button": "Uložit změny"
+            "save_changes_button": "Uložit změny",
+            "username_description": "Používá se k přihlášení.",
+            "email_description": "Slouží k přihlášení a obnovení přístupu.",
+            "save_button": "Uložit",
+            "saved": "Profil byl uložen.",
+            "save_error": "Profil se nepodařilo uložit. Zkuste to znovu."
         },
         "profile_settings": {
-            "username_taken": "Uživatelské jméno je již obsazeno"
+            "username_taken": "Uživatelské jméno je již obsazeno",
+            "email_taken": "E-mail se již používá"
         },
         "security_settings": {
             "title": "Nastavení zabezpečení",
@@ -189,7 +255,10 @@
             "changing_password_button": "Měním...",
             "change_password_button": "Změnit heslo",
             "password_change_success": "Heslo se úspěšně změnilo!",
-            "password_change_error": "Nepodařilo se změnit heslo. Zkuste to prosím znovu."
+            "password_change_error": "Nepodařilo se změnit heslo. Zkuste to prosím znovu.",
+            "new_password_description": "Alespoň 8 znaků, včetně velkého písmene, malého písmene a číslice.",
+            "show_password": "Zobrazit heslo",
+            "hide_password": "Skrýt heslo"
         },
         "two_factor": {
             "title": "Dvoufaktorové ověření",
@@ -216,7 +285,14 @@
             "backup_codes_title": "Záložní kódy",
             "backup_codes_description": "Tyto záložní kódy uložte na bezpečné místo. Můžete je použít k přístupu ke svému účtu, pokud ztratíte přístup ke své aplikaci ověřovatele.",
             "backup_codes_warning": "Každý kód lze použít pouze jednou. Uložte je bezpečně!",
-            "backup_codes_saved": "Záložní kódy mám uložené"
+            "backup_codes_saved": "Záložní kódy mám uložené",
+            "status_on": "Zapnuto. Při přihlášení je vyžadován kód z ověřovací aplikace.",
+            "status_off": "Vypnuto. Pro přihlášení můžete přidat ověřovací aplikaci TOTP.",
+            "enable": "Zapnout",
+            "disable": "Vypnout",
+            "scan_and_verify": "Naskenujte kód ověřovací aplikací a zadejte šestimístný kód.",
+            "verify_button": "Ověřit",
+            "backup_codes_shown_once": "Záložní kódy se zobrazí pouze jednou. Uložte je na bezpečné místo."
         },
         "danger_zone": {
             "title": "Nebezpečná zóna",
@@ -229,7 +305,10 @@
             "delete_account_bullet4": "Tuto akci nelze vrátit zpět",
             "delete_account_confirm": "Jste si jisti, že chcete smazat svůj účet? Tuto akci nelze zrušit.",
             "delete_account_button": "Smazat účet",
-            "deleting_account_button": "Smazání účtu..."
+            "deleting_account_button": "Smazání účtu...",
+            "delete_account_summary": "Smaže váš účet, API klíče a všechny secrets, které jste vytvořili. Odkazy přestanou fungovat.",
+            "confirm_placeholder": "pro potvrzení zadejte {{username}}",
+            "delete_error": "Účet se nepodařilo smazat. Zkuste to znovu."
         },
         "developer": {
             "title": "API klíče",
@@ -254,7 +333,13 @@
             "last_used": "Poslední použité",
             "expires": "Platí",
             "docs_hint": "Zjistěte, jak používat API klíče v",
-            "api_docs": "Dokumentace API"
+            "api_docs": "Dokumentace API",
+            "copy": "Kopírovat",
+            "copied": "Zkopírováno",
+            "revoke": "Odvolat",
+            "used": "použito {{time}}",
+            "never_used": "nikdy nepoužito",
+            "expired": "platnost vypršela"
         }
     },
     "analytics_page": {
@@ -280,7 +365,8 @@
             "date": "Datum",
             "trend": "Změna",
             "vs_previous": "oproti předchozímu dni",
-            "no_data": "Zatím nejsou k dispozici žádné údaje o aktivitě."
+            "no_data": "Zatím nejsou k dispozici žádné údaje o aktivitě.",
+            "per_day": "za den"
         },
         "locale": "cs-CZ",
         "top_countries": {
@@ -310,7 +396,9 @@
             "date": "Datum",
             "trend": "Změna",
             "vs_previous": "oproti předchozímu dni",
-            "no_data": "Zatím nejsou k dispozici žádné údaje o návštěvách."
+            "no_data": "Zatím nejsou k dispozici žádné údaje o návštěvách.",
+            "unique_visitors": "Unikátní návštěvníci",
+            "page_views": "Zobrazení stránek"
         },
         "secret_requests": {
             "total": "Žádosti o secrety",
@@ -318,7 +406,20 @@
         },
         "loading": "Načítám analytiku...",
         "no_permission": "Nemáte povolení prohlížet si analytiku.",
-        "failed_to_fetch": "Nepodařilo se získat analytická data."
+        "failed_to_fetch": "Nepodařilo se získat analytická data.",
+        "range": {
+            "label": "Časové období",
+            "7d": "7 dnů",
+            "14d": "14 dnů",
+            "30d": "30 dnů"
+        },
+        "chart": {
+            "keyboard_hint": "Hodnoty jednotlivých dnů můžete procházet šipkami vlevo a vpravo."
+        },
+        "daily_table": {
+            "show": "Zobrazit denní údaje",
+            "hide": "Skrýt denní údaje"
+        }
     },
     "instance_page": {
         "title": "Nastavení instance",
@@ -414,7 +515,135 @@
             "restart_service_button": "Restartovat službu",
             "clear_cache_button": "Vyčistit mezipaměť",
             "export_logs_button": "Exportovat záznamy"
-        }
+        },
+        "managed_notice": "Spravovaný režim — nastavení pochází z proměnných prostředí a zde je nelze měnit.",
+        "note_default": "Změny se projeví u nových secrets.",
+        "note_managed": "Ve spravovaném režimu nelze měnit.",
+        "headings": {
+            "secret_options": "Nastavení secrets",
+            "rate_limiting": "Omezení požadavků"
+        },
+        "units": {
+            "kb": "KB",
+            "seconds": "s"
+        },
+        "fields": {
+            "instance_name": {
+                "label": "Název instance",
+                "description": "Zobrazuje se vedle loga a v názvu stránky."
+            },
+            "logo": {
+                "label": "Logo"
+            },
+            "instance_description": {
+                "label": "Popis",
+                "description": "Zobrazuje se na úvodní stránce."
+            },
+            "important_message": {
+                "label": "Důležité oznámení",
+                "description": "Banner na všech veřejných stránkách. Podporuje Markdown. Pokud zůstane prázdné, nezobrazí se.",
+                "placeholder": "Údržba v neděli ve 02:00 UTC"
+            },
+            "default_expiration": {
+                "label": "Výchozí platnost",
+                "description": "Předvyplní se při vytváření secretu.",
+                "hours": "{{count}} h"
+            },
+            "max_secret_size": {
+                "label": "Maximální velikost secretu",
+                "description": "Platí pro text secretu i přiložené soubory."
+            },
+            "password_protection": {
+                "label": "Ochrana heslem",
+                "description": "Tvůrci mohou vyžadovat heslo."
+            },
+            "ip_restriction": {
+                "label": "Omezení IP adres",
+                "description": "Tvůrci mohou omezit přístup na IP adresu nebo rozsah CIDR."
+            },
+            "file_uploads": {
+                "label": "Nahrávání souborů",
+                "description": "Šifrované přílohy pro přihlášené uživatele."
+            },
+            "rate_limiting": {
+                "label": "Omezení požadavků",
+                "description": "Pro každou IP adresu klienta."
+            },
+            "rate_limit_requests": {
+                "label": "Požadavky",
+                "description": "V jednom časovém okně."
+            },
+            "rate_limit_window": {
+                "label": "Časové okno",
+                "description": "Délka jednoho časového okna."
+            },
+            "require_invite_code": {
+                "label": "Vyžadovat zvací kód",
+                "description": "K registraci je potřeba kód. Do nabídky přidá Pozvánky."
+            },
+            "allowed_email_domains": {
+                "label": "Povolené e-mailové domény",
+                "description": "Oddělené čárkou. Prázdné pole povolí všechny."
+            },
+            "require_registered_user": {
+                "label": "Pouze registrovaní uživatelé",
+                "description": "Vytvářet mohou jen přihlášení. Číst může každý s odkazem."
+            },
+            "social_login_only": {
+                "label": "Pouze přihlášení přes externí službu",
+                "description": "Zakáže registraci pomocí e-mailu a hesla."
+            },
+            "webhooks": {
+                "label": "Webhooky",
+                "description": "Odešle událost metodou POST na váš endpoint."
+            },
+            "webhook_url": {
+                "label": "Endpoint",
+                "description": "Pro každou událost obdrží požadavek POST."
+            },
+            "webhook_secret": {
+                "label": "Podpisový klíč",
+                "description": "Data jsou podepsána pomocí HMAC. Podpis je v hlavičce X-Hemmelig-Signature."
+            },
+            "webhook_on_view": {
+                "label": "Při zobrazení",
+                "description": "Spustí se při otevření secretu."
+            },
+            "webhook_on_burn": {
+                "label": "Při smazání",
+                "description": "Spustí se při smazání secretu."
+            },
+            "metrics": {
+                "label": "Metriky Prometheus",
+                "description": "Zpřístupní /api/metrics."
+            },
+            "metrics_secret": {
+                "label": "Bearer token",
+                "description": "Sběr metrik odesílá Authorization: Bearer <token>. Prázdné pole vypne ověřování."
+            },
+            "metrics_endpoint": {
+                "label": "Endpoint",
+                "description": "Prometheus získává metriky z této cesty."
+            },
+            "logo_dark": {
+                "label": "Logo pro tmavý režim",
+                "description": "Zobrazí se v tmavém režimu. Pokud zůstane prázdné, použije se logo výše."
+            },
+            "default_theme": {
+                "label": "Výchozí motiv",
+                "description": "Pro návštěvníky, kteří si motiv nevybrali.",
+                "dark": "Tmavý",
+                "light": "Světlý",
+                "system": "Podle systému"
+            },
+            "default_max_views": {
+                "label": "Výchozí počet zobrazení",
+                "description": "Předvyplní se při vytváření secretu. 1 až 9999."
+            }
+        },
+        "note_saved": "Uloženo. Změny se projeví u nových secrets.",
+        "note_save_failed": "Neuloženo. Přečtěte si chybu a zkuste to znovu.",
+        "env_locked": "Nastaveno proměnnou {{variable}}. Změňte ji v prostředí, pokud chcete upravit toto nastavení."
     },
     "secrets_page": {
         "title": "Vaše secrety",
@@ -424,7 +653,8 @@
         "filter": {
             "all_secrets": "Všechny secrety",
             "active": "Aktivní",
-            "expired": "Po platnosti"
+            "expired": "Po platnosti",
+            "all": "Vše"
         },
         "total_secrets": "Celkem secretů",
         "active_secrets": "Aktivní",
@@ -452,7 +682,31 @@
             "delete_confirmation_title": "Jste si jistí?",
             "delete_confirmation_text": "Tuto akci nelze vrátit zpět. Secret bude trvale smazán.",
             "delete_confirm_button": "Ano, smazat",
-            "delete_cancel_button": "Zrušit"
+            "delete_cancel_button": "Zrušit",
+            "id_header": "ID",
+            "protection_header": "Ochrana",
+            "views_left_header": "Zbývající zobrazení",
+            "expires_header": "Platnost do"
+        },
+        "stats": {
+            "total": "Celkem",
+            "active": "Aktivní",
+            "expired": "Prošlé"
+        },
+        "filter_label": "Filtrovat secrets",
+        "empty": "Nic tu není.",
+        "footnote": "Názvy i obsah jsou šifrované, proto se zobrazují jen ID a metadata. Odkazy nelze znovu zkopírovat — klíč se neukládá.",
+        "tags": {
+            "password": "heslo",
+            "ip": "IP",
+            "burn": "smazání",
+            "files_one": "{{count}} soubor",
+            "files_few": "{{count}} soubory",
+            "files_other": "{{count}} souborů",
+            "link_key": "klíč v odkazu"
+        },
+        "toast": {
+            "delete_error": "Secret se nepodařilo smazat."
         }
     },
     "users_page": {
@@ -483,7 +737,8 @@
             "activity_header": "Činnost",
             "last_login_header": "Poslední přihlášení",
             "actions_header": "Akce",
-            "created_at": "Vytvořeno v"
+            "created_at": "Vytvořeno v",
+            "joined_header": "Registrován"
         },
         "status": {
             "active": "Aktivní",
@@ -513,6 +768,11 @@
             "role_label": "Role",
             "save_button": "Přidat uživatele",
             "cancel_button": "Zrušit"
+        },
+        "actions": {
+            "edit": "Upravit",
+            "ban": "Zablokovat",
+            "unban": "Odblokovat"
         }
     },
     "forgot_password_page": {
@@ -548,7 +808,12 @@
         "continue_with_github": "Pokračovat přes GitHub",
         "no_account_question": "Nemáte účet?",
         "sign_up_link": "Registrovat se",
-        "unexpected_error": "Došlo k neočekávané chybě. Zkuste to znovu."
+        "unexpected_error": "Došlo k neočekávané chybě. Zkuste to znovu.",
+        "sign_in_to": "Přihlásit se do {{name}}",
+        "require_account_notice": "Pro vytváření secrets je v této instanci nutný účet.",
+        "or": "nebo",
+        "login_failed": "Přihlášení se nezdařilo: {{message}}",
+        "show_password": "Zobrazit heslo"
     },
     "register_page": {
         "back_to_hemmelig": "Zpět do Hemmelig",
@@ -618,7 +883,20 @@
         "delete_modal_title": "Smazat secret",
         "delete_modal_message": "Opravdu chcete tento secret smazat? Tuto akci nelze vrátit zpět.",
         "decryption_failed": "Secret se nepodařilo dešifrovat. Zkontrolujte heslo nebo dešifrovací klíč.",
-        "fetch_error": "Při načítání secretu došlo k chybě. Zkuste to znovu."
+        "fetch_error": "Při načítání secretu došlo k chybě. Zkuste to znovu.",
+        "after_burns_at_expiry": "smaže se po vypršení platnosti",
+        "after_last_view": "poslední zobrazení · smazáno ze serveru",
+        "after_views_left_one": "zbývá {{count}}",
+        "after_views_left_few": "zbývá: {{count}}",
+        "after_views_left_other": "zbývá: {{count}}",
+        "views_left_one": "zbývá {{count}} zobrazení",
+        "views_left_few": "zbývá {{count}} zobrazení",
+        "views_left_other": "zbývá {{count}} zobrazení",
+        "copy_html": "html",
+        "copy_base64": "base64",
+        "delete_confirm_question": "Smazat pro všechny?",
+        "wrong_password": "Nesprávné heslo.",
+        "gate_burns_at_expiry": "Smaže se po vypršení platnosti bez ohledu na počet otevření."
     },
     "expiration": {
         "28_days": "28 dní",
@@ -630,7 +908,8 @@
         "4_hours": "4 hodiny",
         "1_hour": "1 hodina",
         "30_minutes": "30 minut",
-        "5_minutes": "5 minut"
+        "5_minutes": "5 minut",
+        "default_hours": "{{hours}} h"
     },
     "error_display": {
         "clear_errors_button_title": "Smazat chyby"
@@ -639,7 +918,8 @@
         "title": "Secret nebyl nalezen",
         "message": "Hledaný secret neexistuje, vypršela jeho platnost nebo byl zničen.",
         "error_details": "Podrobnosti chyby:",
-        "go_home_button": "Přejít na domovskou stránku"
+        "go_home_button": "Přejít na domovskou stránku",
+        "kicker": "404 · secret nenalezen"
     },
     "organization_page": {
         "title": "Nastavení organizace",
@@ -728,7 +1008,19 @@
             "fetch_error": "Nepodařilo se získat kódy pozvánek",
             "create_error": "Kód pozvánky se nepodařilo vytvořit",
             "delete_error": "Kód pozvánky se nepodařilo deaktivovat"
-        }
+        },
+        "close": "Zavřít",
+        "invites_off": "Zvací kódy jsou vypnuté. Registrovat se může každý, kdo splňuje podmínky.",
+        "require_invite_code": "Vyžadovat zvací kód →",
+        "form": {
+            "max_uses": "Maximální počet použití",
+            "expires_in": "Platnost",
+            "days": "{{count}} d",
+            "never": "nikdy",
+            "generate": "Vygenerovat"
+        },
+        "copy": "Kopírovat",
+        "copied": "Zkopírováno"
     },
     "social_login": {
         "continue_with": "Přihlásit přes {{provider}}",
@@ -796,7 +1088,13 @@
         "verifying": "Ověřuji...",
         "verify_button": "Ověřit",
         "invalid_code": "Neplatný ověřovací kód. Zkuste to prosím znovu.",
-        "unexpected_error": "Nastala neočekávaná chyba. Zkuste to prosím znovu."
+        "unexpected_error": "Nastala neočekávaná chyba. Zkuste to prosím znovu.",
+        "invalid_backup_code": "Neplatný záložní kód. Zkuste to znovu.",
+        "backup_description": "Zadejte jeden ze záložních kódů, které jste si uložili při zapnutí dvoufázového ověření.",
+        "code_label": "Ověřovací kód",
+        "backup_code_label": "Záložní kód",
+        "use_backup_code": "Nemáte přístup k zařízení? Použijte záložní kód.",
+        "use_totp_code": "Použít kód z ověřovací aplikace"
     },
     "common": {
         "error": "Chyba",
@@ -805,19 +1103,24 @@
         "ok": "OK",
         "delete": "Smazat",
         "deleting": "Mazání...",
-        "loading": "Načítání..."
+        "loading": "Načítání...",
+        "copy": "Kopírovat",
+        "copied": "Zkopírováno"
     },
     "pagination": {
         "showing": "Zobrazeno {{start}} až {{end}} z {{total}} výsledků",
         "previous_page": "Předchozí stránka",
-        "next_page": "Další strana"
+        "next_page": "Další strana",
+        "summary": "{{start}}–{{end}} z {{total}} · stránka {{page}} z {{pages}}",
+        "label": "Stránkování"
     },
     "not_found_page": {
         "title": "Stránka nenalezena",
         "message": "Tahle stránka se vypařila, stejně jako naše secrety.",
         "hint": "Stránka, kterou hledáte, neexistuje nebo byla přesunuta.",
         "go_home_button": "Přejít domů",
-        "create_secret_button": "Vytvořit secret"
+        "create_secret_button": "Vytvořit secret",
+        "kicker": "404 · stránka nenalezena"
     },
     "error_boundary": {
         "title": "Něco se pokazilo.",
@@ -826,7 +1129,8 @@
         "error_details": "Údaje o chybě:",
         "unknown_error": "Nastala neznámá chyba.",
         "try_again_button": "Zkusit znovu",
-        "go_home_button": "Přejít domů"
+        "go_home_button": "Přejít domů",
+        "kicker": "neočekávaná chyba"
     },
     "secret_requests_page": {
         "title": "Žádosti o secrety",
@@ -840,7 +1144,16 @@
             "link_expires_header": "Platnost odkazu",
             "copy_link_tooltip": "Kopírovat odkaz pro odesílatele",
             "view_secret_tooltip": "Zobrazit secret",
-            "cancel_tooltip": "Zrušit žádost"
+            "cancel_tooltip": "Zrušit žádost",
+            "request_header": "Žádost",
+            "created_header": "Vytvořeno",
+            "meta": "{{views}} · {{expiry}} od odeslání",
+            "views_one": "{{count}} zobrazení",
+            "views_few": "{{count}} zobrazení",
+            "views_other": "{{count}} zobrazení",
+            "copy_link": "Kopírovat odkaz",
+            "cancel": "Zrušit",
+            "open_with_key": "Otevřít s klíčem"
         },
         "status": {
             "pending": "Čekající",
@@ -850,14 +1163,14 @@
         },
         "time": {
             "days_one": "{{count}} den",
-            "days_few": "{{count}} dny",
             "days_other": "{{count}} dní",
             "hours_one": "{{count}} hodina",
-            "hours_few": "{{count}} hodiny",
             "hours_other": "{{count}} hodin",
             "minutes_one": "{{count}} minuta",
-            "minutes_few": "{{count}} minuty",
-            "minutes_other": "{{count}} minut"
+            "minutes_other": "{{count}} minut",
+            "days_few": "{{count}} dny",
+            "hours_few": "{{count}} hodiny",
+            "minutes_few": "{{count}} minuty"
         },
         "link_modal": {
             "title": "Odkaz pro odesílatele",
@@ -877,7 +1190,8 @@
             "cancelled": "Žádost zrušena",
             "fetch_error": "Nepodařilo se získat detaily žádosti",
             "cancel_error": "Nepodařilo se zrušit žádost"
-        }
+        },
+        "footnote": "Požádaný vyplní secret ve svém prohlížeči a pošle vám klíč. S ním jej pak otevřete zde."
     },
     "create_request_page": {
         "title": "Vytvořit žádost o secret",
@@ -925,12 +1239,38 @@
             "webhook_secret_warning": "Tuto hodnotu si nyní uložte. Už se znovu nezobrazí a slouží k ověření podpisů webhooku.",
             "expires_at": "Platnost odkazu končí: {{date}}",
             "create_another_button": "Vytvořit další žádost",
-            "view_all_button": "Zobrazit všechny žádosti"
+            "view_all_button": "Zobrazit všechny žádosti",
+            "link_label": "Odkaz na žádost — pošlete jej člověku, který má secret",
+            "copy": "Kopírovat",
+            "copied": "Zkopírováno",
+            "open_as_creator": "Otevřít jako tvůrce",
+            "back_to_requests": "Zpět na žádosti"
         },
         "toast": {
             "created": "Žádost o secret byla úspěšně vytvořena",
             "create_error": "Žádost o secret se nepodařilo vytvořit",
             "copied": "Zkopírováno do schránky"
+        },
+        "fields": {
+            "title_label": "Název",
+            "title_hint": "Zobrazí se požádanému.",
+            "title_placeholder": "Přístupové údaje API pro projekt X",
+            "description_label": "Popis",
+            "description_hint": "Volitelný kontext.",
+            "valid_for_label": "Platnost odkazu",
+            "valid_for_hint": "Jak dlouho bude odkaz na žádost fungovat.",
+            "expires_in_label": "Platnost secretu po odeslání",
+            "expires_in_hint": "Počítá se od odeslání.",
+            "max_views_label": "Maximální počet zobrazení",
+            "max_views_hint": "1–9999",
+            "ip_label": "Omezení IP adres",
+            "ip_hint": "Volitelná IP adresa nebo rozsah CIDR.",
+            "ip_placeholder": "10.0.0.0/24",
+            "prevent_burn_label": "Nesmazat po vyčerpání zobrazení",
+            "prevent_burn_hint": "Po vyčerpání zobrazení ponechat; smazat až po vypršení platnosti.",
+            "webhook_label": "Webhook",
+            "webhook_hint": "Oznámí odeslání.",
+            "webhook_placeholder": "https://…"
         }
     },
     "request_secret_page": {
@@ -949,7 +1289,9 @@
             "password_protected_note": "Tento secret bude chráněn heslem",
             "encryption_note": "Secret se před odesláním zašifruje ve vašem prohlížeči. Dešifrovací klíč bude pouze ve výsledné URL, kterou budete sdílet.",
             "submitting_button": "Šifrování a odesílání...",
-            "submit_button": "Odeslat secret"
+            "submit_button": "Odeslat secret",
+            "placeholder": "Vložte secret. Před odesláním se zašifruje.",
+            "settings_note": "nastavení určené žadatelem"
         },
         "success": {
             "title": "Secret byl vytvořen!",
@@ -963,6 +1305,59 @@
             "created": "Secret byl úspěšně odeslán",
             "create_error": "Secret se nepodařilo odeslat",
             "copied": "Zkopírováno do schránky"
+        },
+        "kicker": "// žádost o secret"
+    },
+    "composer": {
+        "title_placeholder": "Název (volitelný, šifrovaný)",
+        "placeholder": "Vložte heslo, klíč, konfiguraci…",
+        "options_show": "Možnosti ▾",
+        "options_hide": "Možnosti ▴",
+        "create_link": "Vytvořit odkaz",
+        "shortcut_hint": "Vytvořit odkaz ({{shortcut}})",
+        "summary": {
+            "burn_after_time": "smazat po uplynutí doby",
+            "views_one": "{{count}} zobrazení",
+            "views_few": "{{count}} zobrazení",
+            "views_other": "{{count}} zobrazení",
+            "password": "heslo",
+            "ip": "IP {{range}}",
+            "files_one": "{{count}} soubor",
+            "files_few": "{{count}} soubory",
+            "files_other": "{{count}} souborů"
         }
+    },
+    "home_page": {
+        "kicker": "// hemmelig [heˈm(ɛ)li] — norsky „secret“",
+        "title": "Sdílejte secrets, které se po přečtení samy smažou.",
+        "subtitle": "Obsah se před odesláním šifruje v tomto panelu. Server ukládá pouze šifrovaná data bez klíče.",
+        "features": {
+            "encrypted_title": "šifrováno zde",
+            "encrypted_body": "AES-256-GCM běží ve vašem prohlížeči. Nešifrovaný obsah tento panel nikdy neopustí.",
+            "fragment_title": "klíč ve #fragmentu",
+            "fragment_body": "Prohlížeč neposílá obsah za <mono>#</mono>. Server klíč nikdy neuvidí.",
+            "gone_title": "po přečtení zmizí",
+            "gone_body": "Smaže se při posledním zobrazení nebo po vypršení platnosti, podle toho, co nastane dřív."
+        }
+    },
+    "important_alert": {
+        "label": "oznámení",
+        "dismiss": "Zavřít"
+    },
+    "language_picker": {
+        "label": "Vybrat jazyk"
+    },
+    "expiration_short": {
+        "5m": "5 min",
+        "30m": "30 min",
+        "1h": "1 h",
+        "4h": "4 h",
+        "12h": "12 h",
+        "1d": "1 d",
+        "3d": "3 d",
+        "7d": "7 d",
+        "14d": "14 d",
+        "28d": "28 d",
+        "hours": "{{hours}} h"
     }
 }
