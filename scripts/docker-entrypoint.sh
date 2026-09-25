@@ -28,8 +28,9 @@ warn_uploads() {
     fi
 }
 
-# The image ships /app/database and /app/uploads owned by app with a USER app
-# default, but operators may mount volumes over them owned by another UID.
+# The image ships /app/database and /app/uploads owned by app, and the
+# entrypoint starts as root by default (no USER directive), but operators
+# may mount volumes over them owned by another UID.
 # Root can repair that ownership; anyone else can only report it.
 if [ "$(id -u)" = "0" ]; then
     # Started as root (plain `docker run` / compose default): take ownership
@@ -54,7 +55,7 @@ if [ "$(id -u)" = "0" ]; then
         env HOME=/home/app sh -c 'npx prisma migrate deploy && exec npx tsx server.ts'
 fi
 
-# Already non-root: `USER app` default, k8s runAsNonRoot, or an arbitrary
+# Already non-root: k8s runAsUser/runAsNonRoot, or an arbitrary
 # `--user` UID. Nothing we can (or should) fix permission-wise here, so
 # fail fast on an unwritable database dir and warn on uploads instead of
 # dying later inside `prisma migrate deploy` with a cryptic error.

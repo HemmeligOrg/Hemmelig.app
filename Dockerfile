@@ -69,5 +69,8 @@ ENV DATABASE_URL=file:/app/database/hemmelig.db
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health/ready || exit 1
 
-USER app
+# No USER directive on purpose: docker-compose.yml bind-mounts ./database,
+# which Docker creates owned by root. Starting as root lets the entrypoint
+# fix data-dir ownership and then drop privileges to app via setpriv.
+# Kubernetes users can still set runAsUser, as in #528.
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
