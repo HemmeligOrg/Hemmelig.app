@@ -5,7 +5,7 @@ Hemmelig uses a **zero-knowledge architecture** where all encryption and decrypt
 ## How It Works
 
 1. **Secret Creation**: When you create a secret, it's encrypted in your browser before being sent to the server
-2. **Key Transmission**: The decryption key is passed via URL fragment (`#decryptionKey=...`), which is never sent to the server
+2. **Key Transmission**: The decryption key is in the URL fragment of the link, for example `/s/<id>#<key>`. The browser never sends the fragment to the server
 3. **Secret Retrieval**: When viewing a secret, the encrypted data is fetched and decrypted locally in your browser
 
 ## Why URL Fragments?
@@ -14,14 +14,16 @@ The decryption key is placed in the URL fragment (the part after `#`) for a crit
 
 **URL fragments are never transmitted to servers.**
 
-When you visit a URL like `https://example.com/secret/abc123#decryptionKey=xyz`:
+When you visit a URL like `https://example.com/s/abc123#xyz`:
 
-- The browser sends a request to `https://example.com/secret/abc123`
-- The fragment (`#decryptionKey=xyz`) stays in your browser
+- The browser sends a request to `https://example.com/s/abc123`
+- The fragment (`#xyz`) stays in your browser
 - Server logs, proxies, load balancers, and CDNs never see the fragment
 - The key exists only in the browser's address bar and JavaScript
 
 This is defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-3.5) and is a fundamental behavior of all web browsers.
+
+Links in the older form `/secret/<id>#decryptionKey=<key>` still work.
 
 ### What This Means
 
@@ -79,7 +81,7 @@ When you set a password on a secret:
 - The password is used to derive the encryption key with PBKDF2 and the secret's unique salt
 - The client sends only a verifier, the SHA-256 digest of the derived key, to the server
 - The server stores the verifier and compares it on retrieval without ever seeing the password or key
-- The URL does **not** include the `#decryptionKey=...` fragment
+- The URL does **not** include the `#<key>` fragment
 - The recipient must enter the password manually to decrypt the secret
 - This allows you to share the URL and password through separate channels for additional security
 

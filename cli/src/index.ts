@@ -125,7 +125,7 @@ function uint8ArrayToObject(arr: Uint8Array): Record<string, number> {
  *   views: 1
  * });
  *
- * console.log(result.url); // https://hemmelig.app/secret/abc123#decryptionKey=...
+ * console.log(result.url); // https://hemmelig.app/s/abc123#...
  * ```
  */
 export async function createSecret(options: SecretOptions): Promise<CreateSecretResult> {
@@ -200,11 +200,9 @@ export async function createSecret(options: SecretOptions): Promise<CreateSecret
 
     const data = (await response.json()) as { id: string };
 
-    // Construct the URL
+    // Construct the short link: /s/<id>#<key>
     // If no password was provided, include the decryption key in the URL fragment
-    const url = password
-        ? `${baseUrl}/secret/${data.id}`
-        : `${baseUrl}/secret/${data.id}#decryptionKey=${encryptionKey}`;
+    const url = password ? `${baseUrl}/s/${data.id}` : `${baseUrl}/s/${data.id}#${encryptionKey}`;
 
     return {
         url,

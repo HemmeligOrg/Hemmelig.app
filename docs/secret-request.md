@@ -97,7 +97,7 @@ function verifyWebhook(payload, signature, timestamp, secret) {
 ## Security
 
 - **Client-side encryption** - Secrets are encrypted in the creator's browser before transmission
-- **Decryption key in URL fragment** - The `#decryptionKey=...` never reaches the server
+- **Decryption key in URL fragment** - The `#<key>` fragment never reaches the server
 - **Single-use tokens** - Request links use 256-bit cryptographically secure tokens
 - **Timing-safe validation** - Prevents timing attacks on token verification
 

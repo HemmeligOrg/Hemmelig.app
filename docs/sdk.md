@@ -74,4 +74,4 @@ Generated SDKs handle API communication only. **You must implement client-side e
 
 Hemmelig uses AES-256-GCM encryption. See the [encryption documentation](./encryption.md) for implementation details.
 
-The decryption key should be passed via URL fragments (`#decryptionKey=...`) which are never sent to the server.
+Put the decryption key in the URL fragment of the link, for example `https://example.com/s/<id>#<key>`. Browsers never send the fragment to the server.

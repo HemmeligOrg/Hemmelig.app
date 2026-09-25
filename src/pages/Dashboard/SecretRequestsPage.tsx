@@ -215,7 +215,7 @@ export function SecretRequestsPage() {
                                 )}
                                 {request.status === 'fulfilled' && request.secretId && (
                                     <a
-                                        href={`/secret/${request.secretId}`}
+                                        href={`/s/${request.secretId}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         title={t('secret_requests_page.table.view_secret_tooltip')}

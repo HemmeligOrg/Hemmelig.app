@@ -82,7 +82,7 @@ const result = await createSecret({
     baseUrl: 'https://hemmelig.app', // optional
 });
 
-console.log(result.url); // https://hemmelig.app/secret/abc123#decryptionKey=...
+console.log(result.url); // https://hemmelig.app/s/abc123#...
 console.log(result.id); // abc123
 ```
 
@@ -139,7 +139,7 @@ share-secret:
 - All encryption happens locally using AES-256-GCM
 - Keys are derived using PBKDF2 with 1,300,000 iterations
 - Password-protected secrets send only a verifier of the derived key. The password never reaches the server
-- The decryption key is in the URL fragment (`#decryptionKey=...`), which is never sent to the server
+- The decryption key is in the URL fragment (`/s/<id>#<key>`), which is never sent to the server
 - The server only stores encrypted data
 
 ## License

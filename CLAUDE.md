@@ -14,7 +14,7 @@ This is the heart of Hemmelig. Before you write a single line of code, make sure
 
 - All encryption/decryption happens **client-side only** using the Web Crypto API
 - The server **never** sees plaintext secrets - only encrypted blobs
-- Decryption keys live in URL fragments (`#decryptionKey=...`), which browsers **never send to servers**
+- Decryption keys live in URL fragments (`/s/<id>#<key>`), which browsers **never send to servers**
 - This is our fundamental security promise to users - **do not compromise this under any circumstances**
 
 ### How Encryption Works

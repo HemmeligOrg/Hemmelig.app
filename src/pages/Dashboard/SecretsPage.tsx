@@ -73,7 +73,7 @@ export function SecretsPage() {
                         ...secret,
                         createdAt: new Date(secret.createdAt),
                         expiresAt,
-                        url: `/secret/${secret.id}`,
+                        url: `/s/${secret.id}`,
                         isExpired: expiresAt ? expiresAt < now : false,
                     };
                 })
