@@ -50,7 +50,7 @@ RUN npm ci --omit=dev --ignore-scripts && \
 
 # Final image
 FROM node:25-slim
-RUN apt-get update && apt-get install -y wget openssl ca-certificates gosu && rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update && apt-get install -y wget openssl ca-certificates && rm -rf /var/lib/apt/lists/* && \
     groupadd -r app && useradd -r -g app -m -d /home/app app
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
@@ -81,4 +81,8 @@ ENV NPM_CONFIG_CACHE=/tmp/.npm \
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health/ready || exit 1
 
+# No USER directive on purpose: docker-compose.yml bind-mounts ./database,
+# which Docker creates owned by root. Starting as root lets the entrypoint
+# fix data-dir ownership and then drop privileges to app via setpriv.
+# Kubernetes users can still set runAsUser, as in #528.
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
