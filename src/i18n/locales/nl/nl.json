@@ -344,7 +344,7 @@
     },
     "analytics_page": {
         "title": "Statistieken",
-        "description": "Gebruik van de hele instantie. Nooit inhoud.",
+        "description": "Geaggregeerd gebruik op deze server.",
         "time_range": {
             "last_7_days": "Laatste 7 dagen",
             "last_14_days": "Laatste 14 dagen",
@@ -445,7 +445,7 @@
         },
         "general_settings": {
             "title": "Algemene instellingen",
-            "description": "Basisconfiguratie van de instantie",
+            "description": "Basisconfiguratie van de server",
             "instance_name_label": "Naam van de server",
             "logo_label": "Logo server",
             "logo_upload": "Logo uploaden",
@@ -647,7 +647,7 @@
     },
     "secrets_page": {
         "title": "Geheimen",
-        "description": "Alles wat je op deze instantie hebt gemaakt.",
+        "description": "Alles wat je op deze server hebt gemaakt.",
         "create_secret_button": "Nieuw geheim",
         "search_placeholder": "Geheimen zoeken...",
         "filter": {
@@ -710,7 +710,7 @@
     },
     "users_page": {
         "title": "Gebruikers",
-        "description": "Mensen met een account op deze instantie.",
+        "description": "Mensen met een account op deze server.",
         "add_user_button": "Gebruiker toevoegen",
         "search_placeholder": "Zoek op gebruikersnaam of e-mail",
         "filter": {
@@ -809,7 +809,7 @@
         "sign_up_link": "Registreren",
         "unexpected_error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw.",
         "sign_in_to": "Inloggen bij {{name}}",
-        "require_account_notice": "Deze instantie vereist een account om geheimen te maken.",
+        "require_account_notice": "Deze server vereist een account om geheimen te maken.",
         "or": "of",
         "login_failed": "Inloggen mislukt: {{message}}",
         "show_password": "Wachtwoord tonen"
@@ -1042,7 +1042,7 @@
         "error": "Kan beheerdersaccount niet aanmaken",
         "passwords_mismatch": "Wachtwoorden komen niet overeen",
         "password_too_short": "Wachtwoord moet minimaal 8 tekens bevatten",
-        "note": "Deze configuratie kan slechts één keer worden doorlopen. Het beheerdersaccount heeft volledige toegang om deze instantie te beheren."
+        "note": "Deze configuratie kan slechts één keer worden doorlopen. Het beheerdersaccount heeft volledige toegang om deze server te beheren."
     },
     "theme_toggle": {
         "switch_to_light": "Overschakelen naar lichte modus",
@@ -1320,8 +1320,8 @@
     },
     "home_page": {
         "kicker": "// hemmelig [heˈm(ɛ)li] — Noors voor ‘geheim’",
-        "title": "Deel geheimen die zichzelf vernietigen nadat ze zijn gelezen.",
-        "subtitle": "Versleuteld in dit tabblad vóór het uploaden. De server bewaart versleutelde tekst waarvoor hij geen sleutel heeft.",
+        "title": "Deel vertrouwelijke informatie die na het lezen verdwijnt.",
+        "subtitle": "In dit tabblad versleuteld vóór het uploaden. De server kan de opgeslagen informatie niet ontsleutelen.",
         "features": {
             "encrypted_title": "hier versleuteld",
             "encrypted_body": "AES-256-GCM draait in je browser. De platte tekst verlaat het tabblad nooit.",
