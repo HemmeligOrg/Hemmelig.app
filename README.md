@@ -1,4 +1,11 @@
-**Looking for serious maintainer(s), see [issue](https://github.com/HemmeligOrg/Hemmelig.app/issues/536).**
+> [!IMPORTANT]
+> **This repository is archived.** It is read-only and gets no more fixes, features, or releases.
+>
+> Feel free to fork it and continue the work. Forks keep the terms of the [O'Saasy License](LICENSE).
+>
+> The hosted service at [hemmelig.app](https://hemmelig.app) continues to run. It now develops in its own direction, separate from this repository.
+>
+> Thank you to everyone who contributed code, translations, bug reports, and ideas.
 
 <div align="center">
   <img src="banner.png" alt="hemmelig" />
